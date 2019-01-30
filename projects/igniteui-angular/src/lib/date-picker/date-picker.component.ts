@@ -54,7 +54,6 @@ import {
     parseDateFormat,
     trimUnderlines,
     createDate,
-    getSpinnedDateInput,
     getFormatMask,
     IFormatOptions,
     IFormatViews,
@@ -67,7 +66,8 @@ import {
     trimMaskSymbols,
     isFullMonthInput,
     isFullDayInput,
-    isFullYearInput
+    isFullYearInput,
+    getModifiedDateInput
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -975,7 +975,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
 
         this.getEditElement().value =
-            getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPosition, SPIN_DELTA * sign, this.isSpinLoop);
+            getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, SPIN_DELTA * sign, this.isSpinLoop);
         this.calculateDate(event.target.value, event.type);
         this._setCursorPosition(cursorPosition);
     }

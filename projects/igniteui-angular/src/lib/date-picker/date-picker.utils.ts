@@ -407,14 +407,14 @@ export function getNumericFormatPrefix(formatType: string): string {
 /**
  *@hidden
  */
-export function getSpinnedDateInput(dateFormatParts: any[],
+export function getModifiedDateInput(dateFormatParts: any[],
     inputValue: string,
     position: number,
     delta: number,
     isSpinLoop: boolean): string {
-    const spinnedDatePart = getDatePartOnPosition(dateFormatParts, position);
-    const datePartType = spinnedDatePart.type;
-    const datePartFormatType = spinnedDatePart.formatType;
+    const datePart = getDatePartOnPosition(dateFormatParts, position);
+    const datePartType = datePart.type;
+    const datePartFormatType = datePart.formatType;
     let newValue;
     switch (datePartFormatType) {
         case FORMAT_DESC.LONG:
@@ -438,7 +438,7 @@ export function getSpinnedDateInput(dateFormatParts: any[],
 
     let maxValue, minValue;
     if (!isNaN(newValue)) {
-        const minMax = getMinMaxValue(dateFormatParts, spinnedDatePart, inputValue);
+        const minMax = getMinMaxValue(dateFormatParts, datePart, inputValue);
         minValue = minMax[0];
         maxValue = minMax[1];
     }
@@ -465,8 +465,8 @@ export function getSpinnedDateInput(dateFormatParts: any[],
         }
     }
 
-    const startIdx = spinnedDatePart.position[0];
-    const endIdx = spinnedDatePart.position[1];
+    const startIdx = datePart.position[0];
+    const endIdx = datePart.position[1];
     const start = inputValue.slice(0, startIdx);
     const end = inputValue.slice(endIdx, inputValue.length);
     let changedPart: string;
@@ -513,12 +513,12 @@ export function getSpinnedDateInput(dateFormatParts: any[],
 /**
  *@hidden
  */
-export function getMinMaxValue(dateFormatParts: any[], spinnedDatePart, inputValue: string): any[] {
+export function getMinMaxValue(dateFormatParts: any[], datePart, inputValue: string): any[] {
     let maxValue, minValue;
-    switch (spinnedDatePart.type) {
+    switch (datePart.type) {
         case DATE_PARTS.MONTH: {
             // Max 12 months
-            if (spinnedDatePart.formatType === FORMAT_DESC.LONG || spinnedDatePart.formatType === FORMAT_DESC.SHORT) {
+            if (datePart.formatType === FORMAT_DESC.LONG || datePart.formatType === FORMAT_DESC.SHORT) {
                 minValue = 0;
                 maxValue = NUMBER_OF_MONTHS - 1;
             } else {
@@ -535,7 +535,7 @@ export function getMinMaxValue(dateFormatParts: any[], spinnedDatePart, inputVal
             break;
         }
         case DATE_PARTS.YEAR: {
-            if (spinnedDatePart.formatType === FORMAT_DESC.TWO_DIGITS) {
+            if (datePart.formatType === FORMAT_DESC.TWO_DIGITS) {
                 minValue = 0;
                 maxValue = 99;
             } else {
