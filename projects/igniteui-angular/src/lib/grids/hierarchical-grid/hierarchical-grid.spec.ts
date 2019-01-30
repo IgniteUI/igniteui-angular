@@ -10,6 +10,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { DisplayDensity } from '../../core/displayDensity';
 
 describe('Basic IgxHierarchicalGrid', () => {
     configureTestSuite();
@@ -217,6 +218,30 @@ describe('Basic IgxHierarchicalGrid', () => {
         row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         expect(row1.expanded).toBe(true);
     });
+
+    it('should render correctly when display density is changed', fakeAsync(() => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+
+        hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        tick(100);
+
+        expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+        expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+
+        hierarchicalGrid.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        tick(100);
+
+        expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+        expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+    }));
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {

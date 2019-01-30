@@ -30,7 +30,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent, IgxGridExpandState } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
@@ -75,7 +75,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     @Input()
     set expandChildren(value: boolean) {
         this._expandChildren = value;
-        this.childrenExpandState = value ? IgxGridExpandState.EXPANDED : IgxGridExpandState.COLLAPSED;
         this.getGridsForIsland(this.key).forEach((grid) => {
             if (document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
