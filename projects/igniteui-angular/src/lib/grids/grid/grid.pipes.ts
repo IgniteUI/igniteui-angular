@@ -19,15 +19,24 @@ import { IgxGridBaseComponent } from '../grid-base.component';
     pure: true
 })
 export class IgxGridSortingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor() { }
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
-    public transform(collection: any[], expressions: ISortingExpression[], pipeTrigger: number): any[] {
+    public transform(collection: any[], expressions: ISortingExpression[], id: string, pipeTrigger: number): any[] {
+        const grid = this.gridAPI.get(id);
+        let result: any[];
+
         if (!expressions.length) {
-            return collection;
+            result = collection;
+        } else {
+            result = DataUtil.sort(cloneArray(collection), expressions);
         }
+        grid.filteredSortedData = result;
 
-        return DataUtil.sort(cloneArray(collection), expressions);
+        return result;
     }
 }
 
