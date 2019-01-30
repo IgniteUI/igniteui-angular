@@ -4261,7 +4261,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.endEdit(false);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            if (editCell) {
+                editCell.inEditMode = false;
+            } else {
+                this.endEdit(false);
+            }
         }
 
         if (!text) {
