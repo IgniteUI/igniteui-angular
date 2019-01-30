@@ -15,14 +15,14 @@
 /// @property {map} item-background-active [igx-color: ('grays', 100), hexrgba: ()] - The active list item background color.
 /// @property {map} item-text-color-active [igx-color: ('grays', 800)] - The active list item text color.
 ///
-/// @prop {Number} list-border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
 ///
 /// @see $default-palette
 
 $_light-list: (
 
-    list-border-radius: 0,
+    border-radius: 0,
     item-border-radius: 0,
 
     background: #fff,

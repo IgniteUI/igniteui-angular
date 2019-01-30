@@ -16,7 +16,7 @@
 /// @param {Color} $item-background-active [null] - The active list item background color.
 /// @param {Color} $item-text-color-active [null] - The active list item text color.
 ///
-/// @param {border-radius} $list-border-radius [null] - The border radius used for list component.
+/// @param {border-radius} $border-radius [null] - The border radius used for list component.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
 ///
 /// @requires $default-palette
@@ -34,7 +34,7 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $list-border-radius: null,
+    $border-radius: null,
     $item-border-radius: null,
     $background: null,
     $header-background: null,
@@ -48,8 +48,8 @@
     $list-schema: map-get($schema, $name);
     $theme: apply-palette($list-schema, $palette);
 
-    $list-border-radius: round-borders(
-        if($list-border-radius, $list-border-radius, map-get($list-schema, 'list-border-radius')), 0, 24px
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($list-schema, 'border-radius')), 0, 24px
     );
 
     $item-border-radius: round-borders(
@@ -87,7 +87,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        list-border-radius: $list-border-radius,
+        border-radius: $border-radius,
         item-border-radius: $item-border-radius,
         background: $background,
         header-background: $header-background,
@@ -119,7 +119,7 @@
         height: 100%;
         overflow: hidden;
         z-index: 0;
-        border-radius: --var($theme, 'list-border-radius');
+        border-radius: --var($theme, 'border-radius');
     }
 
     %igx-list-empty {
