@@ -16,7 +16,8 @@ import {
     Inject,
     NgZone,
     AfterViewInit,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    HostListener
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -614,6 +615,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     //     event.preventDefault();
     // }
 
+    // @HostListener('keydown', ['$event'])
+    // public onKeyDownEvent(event) {
+    //     // event.preventDefault();
+    //     this.onKeyDown(event);
+    // }
+
     /**
      *Method that sets the selected date.
      *```typescript
@@ -797,9 +804,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     public clear(): void {
         this.deselectDate();
-        requestAnimationFrame(() => {
-            this._setCursorPosition(0);
-        });
+        this._setCursorPosition(0);
     }
 
     public calculateDate(dateString: string, invokedByEvent: string): void {
@@ -900,8 +905,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                     && cursorPosition <= weekDayPart.position[1]) {
                     event.preventDefault();
                 }
-
-                return;
+                break;
         }
     }
 
@@ -941,35 +945,27 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             && event.inputType !== 'deleteContentBackward') {
             this._isInEditMode = true;
             this.calculateDate(inputValue, event.type);
-            requestAnimationFrame(() => {
-                this._setCursorPosition(cursorPosition);
-            });
+            this._setCursorPosition(cursorPosition);
         }
     }
 
     private spinValue(event) {
         event.preventDefault();
-        const cursorPosition = this._getCursorPosition();
-        const inputValue = event.target.value;
-        let sign = 0;
         this._isInEditMode = true;
-
+        const inputValue = event.target.value;
+        const cursorPosition = this._getCursorPosition();
+        let sign = 0;
         if (event.key) {
             sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
         }
-
         if (event.deltaY) {
             sign = (event.deltaY > 0) ? -1 : 1;
         }
 
         this.getEditElement().value =
             getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPosition, SPIN_DELTA * sign, this.isSpinLoop);
-
         this.calculateDate(event.target.value, event.type);
-
-        requestAnimationFrame(() => {
-            this._setCursorPosition(cursorPosition);
-        });
+        this._setCursorPosition(cursorPosition);
     }
 
     private _onOpened(): void {
@@ -1015,7 +1011,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     private _setCursorPosition(start: number, end: number = start): void {
-        this.getEditElement().setSelectionRange(start, end);
+        requestAnimationFrame(() => {
+            this.getEditElement().setSelectionRange(start, end);
+        });
     }
 
     private _getFormatOptions(format: string): void {
