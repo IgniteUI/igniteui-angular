@@ -11,7 +11,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
-    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
+    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix`,`igx-hint` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
     ```html
         <!-- customize combo input --->
         <igx-combo #myCombo [data]="myGenres">
@@ -52,8 +52,6 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `Theme Elevations & Shadows` - Components with shadows, set by an elevation level or otherwise, are now fully configurable by the user via schema and/or theme properties. User can also provide a custom elevations set to component themes that support them.
     - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
-- `igxToggleAction`
-    - when applied `igxToggleAction` will set its host element as the position strategy target.
 - `IgxTreeGridComponent`
     - We can now search in the treegrid's data by using the `findNext` and the `findPrev` methods and we can clear the search results with the `clearSearch` method.
 - `IgxTextHighlightDirective`
