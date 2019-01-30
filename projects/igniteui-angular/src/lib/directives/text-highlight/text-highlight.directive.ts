@@ -180,11 +180,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public page: number;
 
     /**
-     * The content child element that should be hidden when there is a highlight
-     */
-    public contentChildElement: ElementRef;
-
-    /**
      * @hidden
      */
     public parentElement: any;
@@ -416,11 +411,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     private clearChildElements(originalContentHidden: boolean): void {
-        const childToHide = this.contentChildElement ? this.contentChildElement.nativeElement :
-                            this.parentElement.firstElementChild ? this.parentElement.firstElementChild : null;
-        if (childToHide) {
-            this.renderer.setProperty(childToHide, 'hidden', originalContentHidden);
-        }
+        this.renderer.setProperty(this.element.nativeElement, 'hidden', originalContentHidden);
 
         if (this._div !== null) {
             this.renderer.removeChild(this.parentElement, this._div);

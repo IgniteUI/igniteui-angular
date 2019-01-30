@@ -479,7 +479,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
         const rowID = this._gridAPI.get_row_id(this.id, rowData);
         const record = this.processedRecords.get(rowID);
-        this._gridAPI.expand_path_to_recrod(this.id, record);
+        this._gridAPI.expand_path_to_record(this.id, record);
         const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
 
         super.scrollTo(rowIndex, column);
