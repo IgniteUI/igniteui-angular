@@ -310,10 +310,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
 
         this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
-            if (this.isChildGridRecord(view.context.$implicit)) {
-                const index = view.context.index;
-                const tmplOutlet = this.templateOutlets.toArray()[index];
-                tmplOutlet._viewContainerRef.detach(0);
+            const rowData = view.context.$implicit;
+            if (this.isChildGridRecord(rowData)) {
+                const cachedData = this.childGridTemplates.get(rowData.rowID);
+                if (cachedData) {
+                    const tmlpOutlet = cachedData.owner;
+                    tmlpOutlet._viewContainerRef.detach(0);
+                }
             }
         });
 
