@@ -15,13 +15,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     protected getRowByIndex(index) {
         const selector = this.getRowSelector();
-        const rows = this.grid.nativeElement.querySelectorAll(
-            `${selector}[data-rowindex="${index}"]`);
+        const rows = Array.from(this.grid.nativeElement.querySelectorAll(
+            `${selector}[data-rowindex="${index}"]`));
         let row;
-         rows.forEach((r) => {
-           if (r.closest('igx-hierarchical-grid').getAttribute('id') === this.grid.id) {
-                row = r;
-           }
+        rows.forEach((r) => {
+            const parentGrid = this.getClosestElemByTag(r, 'igx-hierarchical-grid');
+            if (parentGrid && parentGrid.getAttribute('id') === this.grid.id) {
+                    row = r;
+            }
         });
         return row;
     }
@@ -276,10 +277,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
     private focusPrevChild(elem, visibleColumnIndex, grid) {
         const grids = [];
-        const gridElems = elem.querySelectorAll('igx-hierarchical-grid');
+        const gridElems = Array.from(elem.querySelectorAll('igx-hierarchical-grid'));
         const childLevel = grid.childLayoutList.first.level;
         gridElems.forEach((hg) => {
-            if (parseInt(hg.closest('igx-child-grid-row').getAttribute('data-level'), 10) === childLevel) {
+            const parentRow = this.getClosestElemByTag(hg, 'igx-child-grid-row');
+            if (parentRow && parseInt(parentRow.getAttribute('data-level'), 10) === childLevel) {
                 grids.push(hg);
             }
         });
@@ -514,5 +516,16 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.navigateDown(rowElement, currentRowIndex, visibleColumnIndex);
         }
+    }
+
+    private getClosestElemByTag(sourceElem, targetTag) {
+        let result = sourceElem;
+        while (result !== null && result.nodeType === 1) {
+            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
+                return result;
+            }
+            result = result.parentNode;
+        }
+        return null;
     }
 }
