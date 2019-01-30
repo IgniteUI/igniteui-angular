@@ -41,7 +41,7 @@
     $theme: apply-palette($toast-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($toast-schema, 'border-radius')), 0, 24px
+        if($border-radius, $border-radius, map-get($toast-schema, 'border-radius')), 0, 26px
     );
 
     @if not($text-color) and $background {

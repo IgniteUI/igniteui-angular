@@ -17,7 +17,7 @@
 /// @param {Color} $item-text-color-active [null] - The active list item text color.
 ///
 /// @param {border-radius} $list-border-radius [null] - The border radius used for list component.
-/// @param {border-radius} $list-item-border-radius [null] - The border radius used for list item.
+/// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -35,7 +35,7 @@
     $schema: $light-schema,
 
     $list-border-radius: null,
-    $list-item-border-radius: null,
+    $item-border-radius: null,
     $background: null,
     $header-background: null,
     $header-text-color: null,
@@ -52,8 +52,8 @@
         if($list-border-radius, $list-border-radius, map-get($list-schema, 'list-border-radius')), 0, 24px
     );
 
-    $list-item-border-radius: round-borders(
-        if($list-item-border-radius, $list-item-border-radius, map-get($list-schema, 'list-item-border-radius')), 0, 24px
+    $item-border-radius: round-borders(
+        if($item-border-radius, $item-border-radius, map-get($list-schema, 'item-border-radius')), 0, 24px
     );
 
     @if not($header-background) and $background {
@@ -88,7 +88,7 @@
         name: $name,
         palette: $palette,
         list-border-radius: $list-border-radius,
-        list-item-border-radius: $list-item-border-radius,
+        item-border-radius: $item-border-radius,
         background: $background,
         header-background: $header-background,
         header-text-color: $header-text-color,
@@ -152,7 +152,7 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
-        border-radius: --var($theme, 'list-item-border-radius');
+        border-radius: --var($theme, 'item-border-radius');
     }
 
     %igx-list-item-pan {
@@ -172,7 +172,7 @@
         color: --var($theme, 'item-text-color');
         background-color: --var($theme, 'item-background');
         z-index: 2;
-        border-radius: --var($theme, 'list-item-border-radius');
+        border-radius: --var($theme, 'item-border-radius');
     }
 
     %igx-list-item-content--active {

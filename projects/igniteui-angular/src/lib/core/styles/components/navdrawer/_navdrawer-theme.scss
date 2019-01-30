@@ -45,8 +45,8 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
-    $right-border-radius: null,
-    $left-border-radius: null,
+    $border-radius: null,
+
     $background: null,
     $border-color: null,
 
@@ -67,12 +67,8 @@
     $navdrawer-schema: map-get($schema, $name);
     $theme: apply-palette($navdrawer-schema, $palette);
 
-    $right-border-radius: round-borders(
-        if($right-border-radius, $right-border-radius, map-get($navdrawer-schema, 'right-border-radius')), 0, 36px
-    );
-
-    $left-border-radius: round-borders(
-        if($left-border-radius, $left-border-radius, map-get($navdrawer-schema, 'left-border-radius')), 0, 36px
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($navdrawer-schema, 'border-radius')), 0, 36px
     );
 
     @if not($item-header-text-color) and $background {
@@ -115,8 +111,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        right-border-radius: $right-border-radius,
-        left-border-radius: $left-border-radius,
+        border-radius: $border-radius,
         background: $background,
         border-color: $border-color,
         item-text-color:$item-text-color,
