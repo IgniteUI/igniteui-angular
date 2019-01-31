@@ -119,6 +119,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         return 8; // current styling item text padding
     }
 
+    // TODO: refactor duplicated code + set translateX when exiting the method.
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
         // avoid flickering when scrolling
         if (!initialCall) {
@@ -202,7 +203,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // when there is scroll and the list container is always in the visible port.
         if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] === 0 &&
             this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] === 0) {
-            transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+            transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
             transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
                 this.adjustItemTextPadding()}px)`;
             contentElement.style.transform = transformString.trim();
@@ -212,10 +213,9 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] !== 0 ||
             this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] !== 0) {
             console.log('container has scroll');
-            // TODO SCROLL TO SELECTED ITEM
             // If the first couple of items are selected and there is space, do not scroll
             if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] !== 0 && !OUT_OF_BOUNDS) {
-                transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+                transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
                 transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
                     this.adjustItemTextPadding()}px)`;
                 contentElement.style.transform = transformString.trim();
@@ -226,6 +226,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 // handle options opt2, opt3, opt4, opt5
                 if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] > ITEM_HEIGHT) {
                     if (OUT_OF_BOUNDS.DIRECTION === -1) {
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
                         transformString += `translateY(${START.Y - ITEM_HEIGHT + this.settings.verticalDirection * size.height -
                             this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
@@ -234,7 +235,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                         return;
                     }
                     if (OUT_OF_BOUNDS.DIRECTION === 1) {
-                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
+                        transformString += `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
                             ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
                         console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.DIRECTION === 1');
@@ -245,18 +247,18 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] < ITEM_HEIGHT) {
                     console.log('handle option opt6');
                     if (OUT_OF_BOUNDS.DIRECTION === -1) {
-                        // tslint:disable-next-line:max-line-length
+                        // tslint:disable:max-line-length
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
                         transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
                     }
                     if (OUT_OF_BOUNDS.DIRECTION === 1) {
-                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
+                        transformString += `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
                             ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
                     }
                 }
-                console.log(`to select there is scroll and container is OUT_OF_BOUNDS..so scroll
-                                    and leave the container positioned on top of the input`);
             }
             if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] === 0 &&
                 this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] !== 0
@@ -267,19 +269,21 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 if (OUT_OF_BOUNDS) {
                     if (OUT_OF_BOUNDS.DIRECTION === -1) {
                         // tslint:disable-next-line:max-line-length
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
                         transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
                         console.log('OUT_OF_BOUNDS.DIRECTION === -1');
                     }
                     if (OUT_OF_BOUNDS.DIRECTION === 1) {
-                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
+                        transformString += `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
                             ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
                         contentElement.style.transform = transformString.trim();
                         console.log('OUT_OF_BOUNDS.DIRECTION === 1');
                     }
                 }
                 if (!OUT_OF_BOUNDS) {
-                    transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+                    transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px)`;
                     transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
                         this.adjustItemTextPadding()}px)`;
                     contentElement.style.transform = transformString.trim();
