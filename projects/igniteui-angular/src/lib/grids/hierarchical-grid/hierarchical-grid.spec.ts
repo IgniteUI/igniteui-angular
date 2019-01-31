@@ -219,6 +219,33 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(row1.expanded).toBe(true);
     });
 
+    it('should allow setting expandChildren after bound to data to rowIsland', () => {
+        // set first row as expanded.
+        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        hierarchicalGrid.cdr.detectChanges();
+        const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        // verify row is expanded
+        expect(row1.expanded).toBe(true);
+        // expand children for the rowIsland should be false by default
+        expect(fixture.componentInstance.rowIsland.expandChildren).toBeFalsy();
+        fixture.componentInstance.rowIsland.expandChildren = true;
+        fixture.detectChanges();
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+        const childRow = childGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        expect(childRow.expanded).toBe(true);
+        let rows = childGrid.dataRowList.toArray();
+        rows.forEach((r) => {
+            expect(r.expanded).toBe(true);
+        });
+        fixture.componentInstance.rowIsland.expandChildren = false;
+        fixture.detectChanges();
+        rows = childGrid.dataRowList.toArray();
+        rows.forEach((r) => {
+            expect(r.expanded).toBe(false);
+        });
+
+    });
+
     it('should render correctly when display density is changed', fakeAsync(() => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
