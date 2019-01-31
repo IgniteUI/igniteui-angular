@@ -44,7 +44,7 @@ const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, AfterViewInit {
+export class IgxGridCellComponent implements OnInit {
 
     /**
      * Gets the column of the cell.
@@ -273,15 +273,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        const result = editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
-                                      this.cellID.columnID === editableCell.cellID.columnID : false;
-
-        if (result && !this._inEditMode && this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.observe();
-        }
-        this._inEditMode = result;
-
-        return result;
+        return editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
+                              this.cellID.columnID === editableCell.cellID.columnID : false;
     }
 
     /**
@@ -469,8 +462,23 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @ViewChild('inlineEditor', { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    private _highlight: IgxTextHighlightDirective;
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
-    protected highlight: IgxTextHighlightDirective;
+    protected set highlight(value: IgxTextHighlightDirective) {
+        this._highlight = value;
+
+        if (this._highlight && this.grid.lastSearchInfo.searchText) {
+            this._highlight.highlight(this.grid.lastSearchInfo.searchText,
+                this.grid.lastSearchInfo.caseSensitive,
+                this.grid.lastSearchInfo.exactMatch);
+            this._highlight.activateIfNecessary();
+        }
+    }
+
+    protected get highlight() {
+        return this._highlight;
+    }
 
     /**
      * Sets the current edit value while a cell is in edit mode.
@@ -506,7 +514,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
-    private _inEditMode: boolean;
 
     constructor(
         protected gridSelection: IgxGridSelectionService,
@@ -651,20 +658,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.cdr.markForCheck();
-    }
-
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngAfterViewInit() {
-        if (this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.highlight(this.grid.lastSearchInfo.searchText,
-                this.grid.lastSearchInfo.caseSensitive,
-                this.grid.lastSearchInfo.exactMatch);
-            this.highlight.activateIfNecessary();
-        }
     }
 
     /**
