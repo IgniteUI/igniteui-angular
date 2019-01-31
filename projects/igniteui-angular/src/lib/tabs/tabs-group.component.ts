@@ -162,7 +162,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 50) {
+    public select(focusDelay = 200) {
         if (this.disabled || this.isSelected) {
             return;
         }
@@ -181,11 +181,17 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
 
     private _handleSelection() {
         const tabElement = this.relatedTab.nativeTabItem.nativeElement;
-        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
 
+        // Scroll to the left
         if (tabElement.offsetLeft < this._tabs.offset) {
             this._tabs.scrollElement(tabElement, false);
-        } else if (tabElement.offsetLeft + tabElement.offsetWidth > viewPortOffsetWidth + this._tabs.offset) {
+        }
+
+        // Scroll to the right
+        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
+        const delta = (tabElement.offsetLeft + tabElement.offsetWidth) - (viewPortOffsetWidth + this._tabs.offset);
+        // Fix for IE 11, a difference is accumulated from the widths calculations
+        if (delta > 1) {
             this._tabs.scrollElement(tabElement, true);
         }
 

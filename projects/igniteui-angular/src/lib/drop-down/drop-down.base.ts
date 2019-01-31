@@ -4,7 +4,7 @@ import {
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
-import { DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
 let NEXT_ID = 0;

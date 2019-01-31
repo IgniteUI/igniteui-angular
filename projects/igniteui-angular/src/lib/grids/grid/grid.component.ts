@@ -229,39 +229,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     set groupingExpansionState(value) {
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-
-        let highlightItem = null;
-        if (this.collapsedHighlightedItem) {
-            highlightItem = this.collapsedHighlightedItem.item;
-        } else if (this.lastSearchInfo.matchInfoCache.length) {
-            highlightItem = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex].item;
-        }
-
         this._groupingExpandState = cloneArray(value);
-
-        this.refreshSearch();
-
-        if (highlightItem !== null && this.groupingExpressions.length) {
-            const index = this.filteredSortedData.indexOf(highlightItem);
-            const groupRow = this.getGroupByRecords()[index];
-
-            if (!this.isExpandedGroup(groupRow)) {
-                IgxTextHighlightDirective.clearActiveHighlight(this.id);
-                this.collapsedHighlightedItem = {
-                    info: activeInfo,
-                    item: highlightItem
-                };
-            } else if (this.collapsedHighlightedItem !== null) {
-                const collapsedInfo = this.collapsedHighlightedItem.info;
-                IgxTextHighlightDirective.setActiveHighlight(this.id, {
-                    columnIndex: collapsedInfo.columnIndex,
-                    rowIndex: collapsedInfo.rowIndex,
-                    index: collapsedInfo.index,
-                    page: collapsedInfo.page
-                });
-            }
-        }
         this.cdr.detectChanges();
     }
 
@@ -502,7 +470,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.restoreHighlight();
     }
 
     /**
@@ -518,7 +485,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-        this.restoreHighlight();
     }
 
     /**
@@ -626,51 +592,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             $implicit: rowData,
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
-    }
-
-    // This method's idea is to get by how much each data row is offset by the group by rows before it.
-    /**
-    * @hidden
-    */
-    protected getGroupIncrementData(): number[] {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
-            const groupsRecords = this.getGroupByRecords();
-            const groupByIncrements = [];
-            const values = [];
-
-            let prevHierarchy = null;
-            let increment = 0;
-
-            groupsRecords.forEach((gbr) => {
-                if (values.indexOf(gbr) === -1) {
-                    let levelIncrement = 1;
-
-                    if (prevHierarchy !== null) {
-                        levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
-                    } else {
-                        // This is the first level we stumble upon, so we haven't accounted for any of its parents
-                        levelIncrement += gbr.level;
-                    }
-
-                    increment += levelIncrement;
-                    prevHierarchy = gbr;
-                    values.push(gbr);
-                }
-
-                groupByIncrements.push(increment);
-            });
-            return groupByIncrements;
-        } else {
-            return null;
-        }
-    }
-
-    private getLevelIncrement(currentIncrement, currentHierarchy, prevHierarchy) {
-        if (currentHierarchy !== prevHierarchy && !!prevHierarchy && !!currentHierarchy) {
-            return this.getLevelIncrement(++currentIncrement, currentHierarchy.groupParent, prevHierarchy.groupParent);
-        } else {
-            return currentIncrement;
-        }
     }
 
     /**
@@ -782,27 +703,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
      * @hidden
      */
-    protected scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {
-        if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-            this.toggleGroup(groupByRecord);
+    protected scrollTo( row: any | number, column: any | number): void {
+        if (this.groupingExpressions && this.groupingExpressions.length) {
+            const groupByRecords = this.getGroupByRecords();
+            const rowIndex = this.filteredSortedData.indexOf(row);
+            const groupByRecord = groupByRecords[rowIndex];
+
+            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
+                this.toggleGroup(groupByRecord);
+            }
         }
 
-        super.scrollTo(row, column, page, groupByRecord);
-    }
-
-    /**
-     * @hidden
-     */
-    protected resolveFilteredSortedData(): any[] {
-        let data: any[] = super.resolveFilteredSortedData();
-
-        if (this.sortingExpressions &&
-            this.sortingExpressions.length > 0) {
-
-            const sortingPipe = new IgxGridSortingPipe();
-            data = sortingPipe.transform(data, this.sortingExpressions, -1);
-        }
-        return data;
+        super.scrollTo(row, column);
     }
 
     /**
