@@ -100,10 +100,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
                 : (this._tabs.selectedIndex === tabsArray.length - 1) ? 0 : this._tabs.selectedIndex + 1;
         }
         const tab = tabsArray[index];
-        const viewPortWidth = this._tabs.viewPort.nativeElement.offsetWidth;
-        const nativeTabElement = tab.nativeTabItem.nativeElement;
-        const focusDelay = (nativeTabElement.offsetWidth + nativeTabElement.offsetLeft - this._tabs.offset > viewPortWidth) ? 200 : 50;
-        tab.select(focusDelay);
+        tab.select(200);
     }
 
     /**
@@ -162,7 +159,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     /**
      * @hidden
      */
-    public select(focusDelay = 50) {
+    public select(focusDelay = 200) {
         this.relatedGroup.select(focusDelay);
     }
 }
