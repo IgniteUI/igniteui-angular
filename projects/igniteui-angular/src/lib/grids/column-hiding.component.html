@@ -12,7 +12,7 @@
 
 <div class="igx-column-hiding__columns"
     [style.max-height]="columnsAreaMaxHeight">
-    <igx-checkbox igxColumnHidingItem
+    <igx-checkbox
         *ngFor="let columnItem of hidableColumns"
         class="igx-column-hiding__columns-item"
         (onColumnVisibilityChanged)="onVisibilityChanged($event)"
