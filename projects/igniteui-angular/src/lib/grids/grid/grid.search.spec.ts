@@ -880,6 +880,7 @@ describe('IgxGrid - search API', () => {
 
             grid.perPage = 10;
             fix.detectChanges();
+            await wait();
 
             highlight = grid.nativeElement.querySelector('.' + component.activeClass);
             expect(highlight).toBeNull();

@@ -132,8 +132,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.rowSelectable) {
             this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
-
-        this.restoreHighlight();
     }
 
     /**

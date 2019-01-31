@@ -26,10 +26,12 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
-    useFactory: () => {
-        return () => new IgxHierarchicalTransactionService();
-    }
+    useFactory: hierarchicalTransactionServiceFactory
 };
+
+export function hierarchicalTransactionServiceFactory() {
+    return () => new IgxHierarchicalTransactionService();
+}
 
 export interface IPathSegment {
     rowID: any;
