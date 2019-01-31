@@ -16,7 +16,7 @@ import {
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs, isIE } from '../core/utils';

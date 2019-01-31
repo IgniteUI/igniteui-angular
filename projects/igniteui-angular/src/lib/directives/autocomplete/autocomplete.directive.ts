@@ -74,7 +74,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     protected id: string;
     protected dropDownOpened$ = new Subject<boolean>();
     protected get model() {
-        return this.ngModel ? this.ngModel : this.formControl;
+        return this.ngModel || this.formControl;
     }
 
     /**
@@ -202,30 +202,31 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         if (this.collapsed) {
             this.open();
-        } else {
-            this.unhighlightFirstItem();
         }
     }
 
     /**
      * @hidden
      */
-    @HostListener('blur', ['$event'])
-    onBlur() {
+    @HostListener('keydown.Tab', ['$event'])
+    @HostListener('keydown.Shift.Tab', [`$event`])
+    onTab() {
         this.close();
     }
 
     /**
      * @hidden
      */
-    handleFocus() {}
-
-    /**
-     * @hidden
-     */
     handleKeyDown(event) {
         if (!this.collapsed) {
-            super.handleKeyDown(event);
+            switch (event.key.toLowerCase()) {
+                case 'space':
+                case 'spacebar':
+                case ' ':
+                    return;
+                default:
+                    super.handleKeyDown(event);
+            }
         }
     }
 
@@ -272,15 +273,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.close();
     }
 
-    private unhighlightFirstItem() {
-        this.dropDown.focusedItem = null;
-        const firstItem = this.dropDown.items[0];
-        if (firstItem) {
-            firstItem.isFocused = false;
-        }
-    }
-
     private highlightFirstItem() {
+        const focusedItem = this.dropDown.focusedItem;
+        if (focusedItem) {
+            focusedItem.focused = false;
+            this.dropDown.focusedItem = null;
+        }
         const firstItem = this.dropDown.items[0];
         if (firstItem) {
             firstItem.isFocused = true;

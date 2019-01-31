@@ -13,6 +13,7 @@ import { IgxIconModule } from '../../icon';
 import { ConnectedPositioningStrategy, VerticalAlignment } from '../../services';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 
 describe('IgxAutocomplete', () => {
     let fixture;
@@ -68,7 +69,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
-            autocomplete.onBlur();
+            autocomplete.onTab();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -102,7 +103,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
         }));
-        it('Should select item and close dropdown with ENTER/SPACE key', fakeAsync(() => {
+        it('Should select item and close dropdown with ENTER and do not close it with SPACE key', fakeAsync(() => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.sendInput(input, startsWith, fixture);
@@ -123,6 +124,22 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+            expect(fixture.componentInstance.townSelected).toBe('bu');
+            expect(input.value).toBe('bu');
+        }));
+        it('Should select item when drop down item is clicked', fakeAsync(() => {
+            const startsWith = 's';
+            const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+            UIInteractions.sendInput(input, startsWith, fixture);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            const targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_ITEM))[0];
+            targetElement.nativeElement.click();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -332,7 +349,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Stara Zagora', cancel: false });
 
-            fixture.componentInstance.onItemSelected = function(args) { args.cancel = true; };
+            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
@@ -572,7 +589,7 @@ describe('IgxAutocomplete', () => {
         <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocomplete]='settings' />
+            [igxAutocomplete]='settings' (onItemSelected)="onItemSelected($event)"/>
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
     </igx-input-group>
@@ -590,7 +607,7 @@ class AutocompleteComponent {
     townSelected;
     public towns;
     settings: AutocompleteOverlaySettings = null;
-    onItemSelected;
+    onItemSelected(args) { }
 
     constructor() {
         this.towns = [

@@ -264,7 +264,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
         }
         this.gridAPI.update_row(value, this.gridID, this.rowID);
         this.cdr.markForCheck();
-        this.grid.refreshSearch();
     }
 
     /**

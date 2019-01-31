@@ -8,7 +8,7 @@ import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { DropDownActionKey } from '../drop-down/drop-down-navigation.directive';
+import { DropDownActionKey } from '../drop-down/drop-down.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
