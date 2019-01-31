@@ -740,9 +740,12 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            cell.inEditMode = false;
-            await wait(30);
+            const nextCell = grid.getCellByColumn(0, 'JobTitle').nativeElement;
+            nextCell.dispatchEvent(new Event('click'));
+            await wait();
             fix.detectChanges();
+
+            expect(cell.nativeElement.innerText.trim()).toBe('Casey Houston');
         });
     });
 
@@ -1205,13 +1208,38 @@ describe('IgxGrid - search API', () => {
     });
 
     /* Grid with Avatar */
-    it('Cells with no text should be excluded from the search', () => {
-        fix = TestBed.createComponent(GridWithAvatarComponent);
-        grid = fix.componentInstance.grid;
-        fix.detectChanges();
+    describe('', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridWithAvatarComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        });
 
-        const matches = grid.findNext('https');
-        expect(matches).toBe(0);
+        it('Cells with no text should be excluded from the search', () => {
+            const matches = grid.findNext('https');
+            expect(matches).toBe(0);
+        });
+
+        it('Cells with custom template should be excluded from search when pin/unpin', () => {
+            grid.columns[1].pinned = true;
+            fix.detectChanges();
+
+            const matches = grid.findNext('https');
+            expect(matches).toBe(0);
+
+            let cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
+            expect(cell.children.length).toBe(1);
+            let image = cell.querySelector('.cell__inner, .avatar-cell');
+            expect(image.hidden).toBeFalsy();
+
+            grid.columns[1].pinned = false;
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
+            expect(cell.children.length).toBe(1);
+            image = cell.querySelector('.cell__inner, .avatar-cell');
+            expect(image.hidden).toBeFalsy();
+        });
     });
 
     function findNext(currentGrid: IgxGridComponent, text: string) {
