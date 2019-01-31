@@ -11,6 +11,7 @@
             <div class="density-chooser" style="margin-bottom: 16px">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
             </div>
+
             <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
                 [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
                 [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
@@ -20,6 +21,10 @@
                     [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
                     [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
                 </igx-column>
+
+                <ng-template igxToolbarCustomContent>
+                    <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+                </ng-template>
             </igx-tree-grid>
 
             <div class="topMargin">

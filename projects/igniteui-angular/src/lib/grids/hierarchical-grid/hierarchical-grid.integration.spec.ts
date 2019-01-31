@@ -476,6 +476,97 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrids.length).toEqual(2);
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
         });
+
+        it('should allow scrolling to the last row after page size has been changed and rows are expanded.', (async() => {
+            hierarchicalGrid.paging = true;
+            hierarchicalGrid.perPage = 20;
+            hierarchicalGrid.reflow();
+            fixture.detectChanges();
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+            hierarchicalGrid.perPage = 5;
+            fixture.detectChanges();
+
+            await wait(30);
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+
+            // expand first
+            hierarchicalGrid.getRowByKey('0').nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+
+            // scroll bottom
+            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+            fixture.detectChanges();
+            await wait(30);
+
+            // check last row is loaded and is in view
+            let rows = hierarchicalGrid.rowList.toArray();
+            let lastRow = rows[rows.length - 1];
+
+            expect(lastRow instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(lastRow.index).toBe(5);
+            expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
+
+            hierarchicalGrid.getRowByKey('1').nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+            fixture.detectChanges();
+            await wait(30);
+
+            // check last row is loaded and is in view
+            rows = hierarchicalGrid.rowList.toArray();
+            lastRow = rows[rows.length - 1];
+
+            expect(lastRow instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(lastRow.index).toBe(6);
+            expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
+
+            hierarchicalGrid.getRowByKey('2').nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+            fixture.detectChanges();
+            await wait(30);
+
+            // check last row is loaded and is in view
+            rows = hierarchicalGrid.rowList.toArray();
+            lastRow = rows[rows.length - 1];
+
+            expect(lastRow instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(lastRow.index).toBe(7);
+            expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
+
+            hierarchicalGrid.getRowByKey('3').nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+            fixture.detectChanges();
+            await wait(30);
+
+            // check last row is loaded and is in view
+            rows = hierarchicalGrid.rowList.toArray();
+            lastRow = rows[rows.length - 1];
+
+            expect(lastRow instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(lastRow.index).toBe(8);
+            expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
+
+            hierarchicalGrid.getRowByKey('4').nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+            fixture.detectChanges();
+            await wait(30);
+
+            // check last row is loaded and is in view
+            rows = hierarchicalGrid.rowList.toArray();
+            lastRow = rows[rows.length - 1];
+
+            expect(lastRow instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(lastRow.index).toBe(9);
+        }));
     });
 
     describe('Toolbar', () => {

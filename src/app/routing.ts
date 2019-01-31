@@ -61,6 +61,7 @@ import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remot
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
 
 const appRoutes = [
     {
@@ -317,6 +318,10 @@ const appRoutes = [
     {
         path: 'gridPercentage',
         component: GridColumnPercentageWidthsSampleComponent
+    },
+    {
+        path: 'gridSearch',
+        component: GridSearchComponent
     }
 ];
 

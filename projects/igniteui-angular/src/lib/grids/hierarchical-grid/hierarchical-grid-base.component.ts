@@ -30,7 +30,7 @@ export const IgxHierarchicalTransactionServiceFactory = {
 };
 
 export function hierarchicalTransactionServiceFactory() {
-    return new IgxHierarchicalTransactionService();
+    return () => new IgxHierarchicalTransactionService();
 }
 
 export interface IPathSegment {

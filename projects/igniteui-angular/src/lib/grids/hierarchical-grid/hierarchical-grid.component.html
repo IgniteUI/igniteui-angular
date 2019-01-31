@@ -56,7 +56,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
-        | gridSort:sortingExpressions:pipeTrigger
+        | gridSort:sortingExpressions:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
