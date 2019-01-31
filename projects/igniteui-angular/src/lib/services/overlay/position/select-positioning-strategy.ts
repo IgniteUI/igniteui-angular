@@ -85,7 +85,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
     }
 
-    private LIST_OUT_OF_BOUNDS(elementContainer: {top: number, bottom: number}, document: Document): {
+    private LIST_OUT_OF_BOUNDS(elementContainer: { top: number, bottom: number }, document: Document): {
         DIRECTION: ENUM_DIRECTION,
         AMOUNT: number
     } {
@@ -120,6 +120,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
+        // avoid flickering when scrolling
+        if (!initialCall) {
+            return;
+        }
+
         const inputRect = this.select.input.nativeElement.getBoundingClientRect();
         const inputGroupRect = this.select.inputGroup.element.nativeElement.getBoundingClientRect();
         const START = {
@@ -139,6 +144,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // This should maybe be recursive?
 
         // const ITEM_VISIBLE_INDEX = this.CHECK_ITEM_POSITION_IN_VIEW(contentElement, this.select.selectedItem.element.nativeElement);
+        const inputBoundRect = this.select.input.nativeElement.getBoundingClientRect();
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect();
         // assume selected item is always visible
@@ -154,7 +160,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const OUT_OF_BOUNDS: {
             DIRECTION: ENUM_DIRECTION,
             AMOUNT: number
-        } = this.LIST_OUT_OF_BOUNDS({ top: CURRENT_POSITION_Y, bottom: CURRENT_BOTTOM_Y}, document);
+        } = this.LIST_OUT_OF_BOUNDS({ top: CURRENT_POSITION_Y, bottom: CURRENT_BOTTOM_Y }, document);
         if (OUT_OF_BOUNDS) {
             console.log('OUT_OF_BOUNDS');
             let CONTAINER_CAN_BE_SCROLLED = 0;
@@ -175,11 +181,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             } else {
                 if (OUT_OF_BOUNDS.DIRECTION === ENUM_DIRECTION.TOP) {
                     CURRENT_POSITION_Y =
-                    /* if OUT_OF_BOUNDS on TOP, move the container DOWN by one item height minus half the input and
-                    item height difference (48px-32px)/2, thus position the container down so the first item LTP  match input LTP.
-                    --> <mat-select> like */
-                    this.select.inputGroup.element.nativeElement.getBoundingClientRect().height - (ITEM_HEIGHT -
-                     (ITEM_HEIGHT - INPUT_HEIGHT) / 2);
+                        /* if OUT_OF_BOUNDS on TOP, move the container DOWN by one item height minus half the input and
+                        item height difference (48px-32px)/2, thus position the container down so the first item LTP  match input LTP.
+                        --> <mat-select> like */
+                        this.select.inputGroup.element.nativeElement.getBoundingClientRect().height - (ITEM_HEIGHT -
+                            (ITEM_HEIGHT - INPUT_HEIGHT) / 2);
 
                 } else {
                     /* if OUT_OF_BOUNDS on BOTTOM, move the container DOWN by one item height minus half the input and
@@ -192,9 +198,94 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         }
         let transformString = '';
 
-        transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
-        transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-            this.adjustItemTextPadding()}px)`;
-        contentElement.style.transform = transformString.trim();
+        // Handle scenarios where there the list container has no scroll &&
+        // when there is scroll and the list container is always in the visible port.
+        if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] === 0 &&
+            this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] === 0) {
+            transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+            transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+                this.adjustItemTextPadding()}px)`;
+            contentElement.style.transform = transformString.trim();
+        }
+
+        // Handle scenarios where there the list container has scroll
+        if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] !== 0 ||
+            this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] !== 0) {
+            console.log('container has scroll');
+            // TODO SCROLL TO SELECTED ITEM
+            // If the first couple of items are selected and there is space, do not scroll
+            if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] !== 0 && !OUT_OF_BOUNDS) {
+                transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+                transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+                    this.adjustItemTextPadding()}px)`;
+                contentElement.style.transform = transformString.trim();
+            }
+            // If Out of boundaries and there is available scrolling down -  do scroll
+            if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] !== 0 && OUT_OF_BOUNDS) {
+                // the following works if there is enough scrolling available
+                // handle options opt2, opt3, opt4, opt5
+                if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] > ITEM_HEIGHT) {
+                    if (OUT_OF_BOUNDS.DIRECTION === -1) {
+                        transformString += `translateY(${START.Y - ITEM_HEIGHT + this.settings.verticalDirection * size.height -
+                            this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                        contentElement.firstElementChild.scrollTop += selectedItemBoundRect.y - ITEM_HEIGHT;
+                        console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.DIRECTION === -1');
+                        return;
+                    }
+                    if (OUT_OF_BOUNDS.DIRECTION === 1) {
+                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                            ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                        console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.DIRECTION === 1');
+                    }
+                }
+                // If one of the last items is selected and there is no more scroll remaining to scroll the selected item
+                // handle options  opt6
+                if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] < ITEM_HEIGHT) {
+                    console.log('handle option opt6');
+                    if (OUT_OF_BOUNDS.DIRECTION === -1) {
+                        // tslint:disable-next-line:max-line-length
+                        transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                    }
+                    if (OUT_OF_BOUNDS.DIRECTION === 1) {
+                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                            ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                    }
+                }
+                console.log(`to select there is scroll and container is OUT_OF_BOUNDS..so scroll
+                                    and leave the container positioned on top of the input`);
+            }
+            if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] === 0 &&
+                this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[-1] !== 0
+            ) {
+                // handle lst options opt7, opt8, opt9
+                console.log('handle options  opt7, opt8, opt9');
+                // tslint:disable-next-line:max-line-length
+                if (OUT_OF_BOUNDS) {
+                    if (OUT_OF_BOUNDS.DIRECTION === -1) {
+                        // tslint:disable-next-line:max-line-length
+                        transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                        console.log('OUT_OF_BOUNDS.DIRECTION === -1');
+                    }
+                    if (OUT_OF_BOUNDS.DIRECTION === 1) {
+                        transformString = `translateY(${START.Y - (listBoundRect.y + listBoundRect.height) +
+                            ITEM_HEIGHT + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
+                        contentElement.style.transform = transformString.trim();
+                        console.log('OUT_OF_BOUNDS.DIRECTION === 1');
+                    }
+                }
+                if (!OUT_OF_BOUNDS) {
+                    transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
+                    transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+                        this.adjustItemTextPadding()}px)`;
+                    contentElement.style.transform = transformString.trim();
+                    console.log('!OUT_OF_BOUNDS');
+                }
+            }
+        }
     }
 }
