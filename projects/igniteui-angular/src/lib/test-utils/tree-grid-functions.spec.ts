@@ -218,7 +218,7 @@ export class TreeGridFunctions {
     public static verifyTreeRowHasCollapsedIcon(treeRowDOM) {
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const igxIcon = indicatorDiv.query(By.css('igx-icon'));
-        expect(igxIcon.nativeElement.textContent).toEqual('chevron_right');
+        expect(igxIcon.nativeElement.textContent).toEqual('expand_less');
     }
 
     public static verifyTreeRowHasExpandedIcon(treeRowDOM) {
