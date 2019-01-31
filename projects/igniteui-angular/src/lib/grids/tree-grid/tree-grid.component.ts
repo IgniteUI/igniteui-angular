@@ -95,6 +95,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public flatData: any[];
 
     /**
+    * @hidden
+    */
+    public processedExpandedFlatData: any[];
+
+    /**
      * Returns an array of the root level `ITreeGridRecord`s.
      * ```typescript
      * // gets the root record with index=2
@@ -381,8 +386,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
-
-                this.refreshSearch();
             }
         } else {
             if (this.primaryKey && this.foreignKey) {
@@ -474,34 +477,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    protected restoreHighlight(): void {
-    }
+    protected scrollTo(row: any | number, column: any | number): void {
+        const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
+        const rowID = this._gridAPI.get_row_id(this.id, rowData);
+        const record = this.processedRecords.get(rowID);
+        this._gridAPI.expand_path_to_recrod(this.id, record);
+        const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
 
-    /**
-     * @hidden
-     */
-    public refreshSearch(updateActiveInfo?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public clearSearch() {
+        super.scrollTo(rowIndex, column);
     }
 
     /**
