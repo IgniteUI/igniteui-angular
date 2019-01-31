@@ -68,7 +68,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
-import { IgxGridSelectionService } from '../core/grid-selection';
+import { IgxGridSelectionService, GridSelectionRange } from '../core/grid-selection';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1449,6 +1449,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         const rList = this._dataRowList.filter((item) => {
             return item.element.nativeElement.parentElement !== null;
+        }).sort((a, b) => {
+            return a.index - b.index;
         });
         res.reset(rList);
         return res;
@@ -4234,19 +4236,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Output()
     onRangeSelection = new EventEmitter<any>();
 
-    // TODO: Refactor
+    // TODO: Refactor !!!
     dragSelect(event) {
 
-        if (!this.gridSelection.inDragMode) {
+        if (!this.gridSelection.dragMode) {
             return;
         }
 
         const {x, y, x1, y1, x2, y2 } = this.parseDimensions(event) as any;
         const isValid = () =>  {
-            if (this.gridSelection.inDragMode) {
+            if (this.gridSelection.dragMode) {
                 (document.activeElement as any).blur();
             }
-            return this.gridSelection.inDragMode;
+            return this.gridSelection.dragMode;
         };
 
         if (x <= (x1 * 1.2)) {
@@ -4265,25 +4267,60 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     out() {
         // TODO: Do we really need that 🤔
-        this.gridSelection.inDragMode = false;
+        this.gridSelection.dragMode = false;
+    }
+
+    isDefined(arg: any) {
+        return arg !== undefined && arg !== null;
+    }
+
+    selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined) {
+        if (!this.isDefined(arg)) {
+            this.gridSelection.clear();
+            this.cdr.markForCheck();
+            return;
+        }
+        if (arg instanceof Array) {
+            arg.forEach(range => this.setSelection(range));
+        } else {
+            this.setSelection(arg);
+        }
+        this.cdr.markForCheck();
+    }
+
+    columnToVisibleIndex(field: string | number): number {
+        const visibleColumns = this.visibleColumns;
+        if (typeof field === 'number') {
+            return field;
+        }
+        return visibleColumns.find(column => column.field === field).visibleIndex;
     }
 
 
-    setSelection(x1, x2, y1, y2) {
-        this.gridSelection.startNode = [x1, y1];
-        this.gridSelection.updateDragSelection(x2, y2);
-        this.gridSelection.addRangeMeta(x2, y2);
+    setSelection(range: GridSelectionRange): void {
+        this.gridSelection.startNode = [range.rowStart, this.columnToVisibleIndex(range.columnStart)];
+        this.gridSelection.updateDragSelection(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
+        this.gridSelection.addRangeMeta(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
         this.gridSelection.startNode = null;
-        this.cdr.markForCheck();
+    }
+
+    getSelectedRanges() {
+        const r = this.gridSelection.ranges;
+        console.log(r);
+        return r;
     }
 
     getSelectedData() {
         const rs = [];
-        const combined = Array.from(this.gridSelection.selection);
         const source = (this.filteredData && this.filteredData.length ) ? this.filteredData : this.data;
         const visibleColumns = this.visibleColumns;
 
-        // TODO: Add boundry check when accessing `source`
+        /*
+            Boundry check for `filteredData`
+        */
+        const combined = Array.from(this.gridSelection.selection)
+            .filter((tuple) => tuple[0] < source.length);
+
 
         for (const [row, set] of combined) {
             const arr = Array.from(set);

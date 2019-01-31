@@ -53,7 +53,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRemoteOnDemandComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -1392,7 +1392,7 @@ describe('IgxGrid Component Tests', () => {
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 const firstCellElement = targetCell.nativeElement;
                 fixture.detectChanges();
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 // TO button
                 fixture.componentInstance.moveNext(true);
@@ -1421,7 +1421,7 @@ describe('IgxGrid Component Tests', () => {
                 const lastCellElement = targetCell.nativeElement;
                 targetCell.nativeElement.focus();
                 fixture.detectChanges();
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 // TO button
                 fixture.componentInstance.moveNext(false);
@@ -1448,7 +1448,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
                 await wait(500);
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
                 fixture.detectChanges();
@@ -1483,7 +1483,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 tick();
                 fixture.detectChanges();
                 const navSpyR = spyOn((<any>grid).navigation, 'moveNextEditable').and.callThrough();
@@ -1516,7 +1516,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // from pinned to pinned
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 tick();
@@ -1557,7 +1557,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // jump over 3 hidden, both editable and not
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 tick();
@@ -1609,7 +1609,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // jump over 1 hidden, pinned
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 tick();
@@ -1659,7 +1659,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.componentInstance.columnGroupingFlag = true;
                 fixture.detectChanges();
                 targetCell = fixture.componentInstance.focusGridCell(0, 'ReleaseDate');
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 fixture.detectChanges();
@@ -1709,7 +1709,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.componentInstance.columnGroupingFlag = true;
                 fixture.detectChanges();
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
-                targetCell.onKeydownEnterEditMode({});
+                targetCell.onKeydownEnterEditMode();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 tick();
@@ -1933,7 +1933,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 const nonEditableCell = grid.getCellByColumn(0, 'ProductID');
-                nonEditableCell.onFocus({});
+                nonEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
@@ -1958,7 +1958,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 const nonEditableCell = grid.getCellByColumn(2, 'ProductID');
-                nonEditableCell.onFocus({});
+                nonEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
@@ -1983,7 +1983,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
-                otherEditableCell.onFocus({});
+                otherEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
@@ -3087,7 +3087,7 @@ describe('IgxGrid Component Tests', () => {
                 const initialState = grid.transactions.getAggregatedChanges(false);
 
                 // Enter edit mode
-                cellDate.onKeydownEnterEditMode({ stopPropagation: () => {}, preventDefault: () => {}});
+                cellDate.onKeydownEnterEditMode();
                 tick();
                 fixture.detectChanges();
                 // Perform Shift + Tab to UnitsInStock
@@ -3901,7 +3901,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
     }
     public focusGridCell(rowIndex: number, columnName: string): IgxGridCellComponent {
         const targetCell = this.getCell(rowIndex, columnName);
-        targetCell.onFocus(new Event('focus'));
+        targetCell.onFocus(new FocusEvent('focus'));
         return targetCell;
     }
 

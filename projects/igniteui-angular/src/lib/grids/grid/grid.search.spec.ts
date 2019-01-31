@@ -408,7 +408,7 @@ describe('IgxGrid - search API', () => {
         it('Active highlight should be updated when a column is pinned/unpinned', () => {
             let cellName = grid.getCellByColumn(0, 'Name').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
@@ -438,7 +438,7 @@ describe('IgxGrid - search API', () => {
         it('Active highlight should be updated when a column is hidden/shown', () => {
             let cellName = grid.getCellByColumn(0, 'Name').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('casey');
 
@@ -471,7 +471,7 @@ describe('IgxGrid - search API', () => {
 
             let cell = grid.getCellByColumn(0, 'ID').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('1');
 
@@ -511,7 +511,7 @@ describe('IgxGrid - search API', () => {
             let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('director');
             await wait();
@@ -580,7 +580,7 @@ describe('IgxGrid - search API', () => {
             let celiaSoftwareCell = grid.getCellByColumn(4, 'JobTitle').nativeElement;
             let leslieSoftwareCell = grid.getCellByColumn(8, 'JobTitle').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('software');
             jackSoftwareCell = grid.getCellByColumn(3, 'JobTitle').nativeElement;
@@ -610,7 +610,7 @@ describe('IgxGrid - search API', () => {
         it('Highlights should be properly updated when a row is added', () => {
             const tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
             let activeHighlight: any;
-            let highlights: any[];
+            let highlights: NodeListOf<Element>;
 
             grid.findNext('director');
             grid.findNext('director');

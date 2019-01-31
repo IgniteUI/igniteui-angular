@@ -11,27 +11,29 @@ export interface GridSelectionRange {
 @Injectable()
 export class IgxGridSelectionService {
 
-    inDragMode = false;
+    dragMode = false;
     startNode;
     ctrlEnabled = false;
     shiftEnabled = false;
     kbShiftEnabled = false;
-    kbStartNode = null;
 
     selection = new Map<number, Set<number>>();
     metaSelection: Set<string> = new Set<string>();
 
 
+    get ranges(): GridSelectionRange[] {
+        return Array.from(this.metaSelection).map(range => JSON.parse(range));
+    }
+
     resetState() {
-        this.inDragMode = false;
-        this.startNode = null;
+        this.dragMode = false;
+        // this.startNode = null;
         this.ctrlEnabled = false;
         this.shiftEnabled = false;
         this.kbShiftEnabled = false;
-        this.kbStartNode = null;
     }
 
-    add_single(row: number, column: number) {
+    add_single(row: number, column: number): void {
         this.selection.has(row) ? this.selection.get(row).add(column) :
             this.selection.set(row, new Set<number>()).get(row).add(column);
 
@@ -87,7 +89,26 @@ export class IgxGridSelectionService {
         return { rowStart, rowEnd, columnStart, columnEnd };
     }
 
-    updateDragSelection(row: number, column: number) {
+    initKeyboardState(row: number, column: number, key: string, shiftKeyPressed: boolean) {
+        if (!this.kbShiftEnabled && shiftKeyPressed) {
+            this.kbShiftEnabled = shiftKeyPressed && key !== 'tab';
+            this.startNode = [row, column];
+        } else if (this.kbShiftEnabled && !shiftKeyPressed) {
+            this.kbShiftEnabled = false;
+            this.startNode = null;
+        }
+    }
+
+    pointerDownShiftKey(row: number, column: number): void {
+        this.clear();
+        this.updateDragSelection(row, column);
+        this.addRangeMeta(row, column);
+        this.resetState();
+        this.startNode = [row, column];
+    }
+
+
+    updateDragSelection(row: number, column: number): void {
 
         const { rowStart, rowEnd, columnStart, columnEnd } = this.getBoundries(row, column);
 
@@ -103,7 +124,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    clear() {
+    clear(): void {
         this.selection.clear();
         this.metaSelection.clear();
     }

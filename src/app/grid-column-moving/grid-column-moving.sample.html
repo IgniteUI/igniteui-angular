@@ -36,9 +36,10 @@
             Drag mode: {{ grid1.gridSelection.inDragMode }}
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton (click)="grid1.setSelection(1, 10, 1, 10)">Select 💯 cells</button>
+                <button igxButton (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select 💯 cells</button>
                 <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
                 <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
+                <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
             </div>
         </div>
     </div>

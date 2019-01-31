@@ -2,11 +2,9 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { take } from 'rxjs/operators';
 import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -30,7 +28,7 @@ describe('IgxGrid - Cell component', () => {
                 ColumnEditablePropertyTestComponent,
                 GridColumnWidthsComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
@@ -356,7 +354,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 9);
                 await wait();
 
-                expect (() => previousCell.onClick({})).not.toThrow();
+                expect (() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
             }));
 
             it('should exit edit mode on sorting', (async () => {
