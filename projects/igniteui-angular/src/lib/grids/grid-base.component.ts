@@ -3857,7 +3857,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected autogenerateColumns() {
         const data = this.gridAPI.get_all_data(this.id);
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const fields = Object.keys(data && data.length !== 0 ? data[0] : []);
+        const fields = this.generateDataFields(data);
         const columns = [];
 
         fields.forEach((field) => {
@@ -3872,6 +3872,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (data && data.length > 0) {
             this.shouldGenerate = false;
         }
+    }
+
+    protected generateDataFields(data: any[]): string[] {
+        return Object.keys(data && data.length !== 0 ? data[0] : []);
     }
 
     /**
