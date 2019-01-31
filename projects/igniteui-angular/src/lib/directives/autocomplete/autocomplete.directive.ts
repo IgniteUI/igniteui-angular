@@ -208,8 +208,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /**
      * @hidden
      */
-    @HostListener('blur', ['$event'])
-    onBlur() {
+    @HostListener('keydown.Tab', ['$event'])
+    @HostListener('keydown.Shift.Tab', [`$event`])
+    onTab() {
         this.close();
     }
 

@@ -13,6 +13,7 @@ import { IgxIconModule } from '../../icon';
 import { ConnectedPositioningStrategy, VerticalAlignment } from '../../services';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 
 describe('IgxAutocomplete', () => {
     let fixture;
@@ -70,7 +71,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
-            autocomplete.onBlur();
+            autocomplete.onTab();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -128,6 +129,22 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
             expect(fixture.componentInstance.townSelected).toBe('bu');
             expect(input.value).toBe('bu');
+        }));
+        it('Should select item when drop down item is clicked', fakeAsync(() => {
+            const startsWith = 's';
+            const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+            UIInteractions.sendInput(input, startsWith, fixture);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            const targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_ITEM))[0];
+            targetElement.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
+            expect(input.value).toBe(filteredTowns[0]);
         }));
         it('Should not open dropdown on input focusing', () => {
             input.nativeElement.focused = true;
