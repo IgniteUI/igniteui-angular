@@ -31,21 +31,21 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
     }
 
-    private CHECK_ITEM_POSITION_IN_VIEW(contentElement: HTMLElement, itemElement: HTMLElement): number {
-        const elements = contentElement.querySelectorAll('igx-select-item');
-        let itemIndex = 0;
-        elements.forEach((element, index) => {
-            const elementRect = element.getBoundingClientRect() as DOMRect;
-            if (elementRect.y + elementRect.height < elementRect.height) {
-                itemIndex--;
-                return;
-            }
-            if (element === itemElement) {
-                itemIndex += index;
-            }
-        });
-        return itemIndex;
-    }
+    // private CHECK_ITEM_POSITION_IN_VIEW(contentElement: HTMLElement, itemElement: HTMLElement): number {
+    //     const elements = contentElement.querySelectorAll('igx-select-item');
+    //     let itemIndex = 0;
+    //     elements.forEach((element, index) => {
+    //         const elementRect = element.getBoundingClientRect() as DOMRect;
+    //         if (elementRect.y + elementRect.height < elementRect.height) {
+    //             itemIndex--;
+    //             return;
+    //         }
+    //         if (element === itemElement) {
+    //             itemIndex += index;
+    //         }
+    //     });
+    //     return itemIndex;
+    // }
 
     private GET_ITEMS_OUT_OF_VIEW(contentElement: HTMLElement, itemHeight: number): {
         '-1': number,
@@ -137,16 +137,26 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // ASSUME SAME ITEM HEIGHT
         // Position item to be on top of the input (START.Y -= ITEM_VISIBLE_INDEX * ITEM_HEIGHT)
         // This should maybe be recursive?
-        const ITEM_VISIBLE_INDEX = this.CHECK_ITEM_POSITION_IN_VIEW(contentElement, this.select.selectedItem.element.nativeElement);
+
+        // const ITEM_VISIBLE_INDEX = this.CHECK_ITEM_POSITION_IN_VIEW(contentElement, this.select.selectedItem.element.nativeElement);
+        const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
+        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect();
+        // assume selected item is always visible
+        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
+        const selectedItemBottomListOffset = selectedItemBoundRect.y - listBoundRect.y + selectedItemBoundRect.height;
+
+
         const ITEM_HEIGHT = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
         const INPUT_HEIGHT = this.select.input.nativeElement.getBoundingClientRect().height;
-        let CURRENT_POSITION_Y = START.Y - ITEM_VISIBLE_INDEX * ITEM_HEIGHT;
+
+        let CURRENT_POSITION_Y = START.Y - selectedItemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
         const OUT_OF_BOUNDS: {
             DIRECTION: ENUM_DIRECTION,
             AMOUNT: number
         } = this.LIST_OUT_OF_BOUNDS({ top: CURRENT_POSITION_Y, bottom: CURRENT_BOTTOM_Y}, document);
         if (OUT_OF_BOUNDS) {
+            console.log('OUT_OF_BOUNDS');
             let CONTAINER_CAN_BE_SCROLLED = 0;
             const NUMBER_OF_ITEMS_NEEDED = OUT_OF_BOUNDS.AMOUNT / ITEM_HEIGHT;
             const NUMBER_OF_ITEMS_OUT_OF_VIEW: {
@@ -159,8 +169,9 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     OUT_OF_BOUNDS.DIRECTION * NUMBER_OF_ITEMS_NEEDED * ITEM_HEIGHT;
             }
             if (CONTAINER_CAN_BE_SCROLLED) {
+                console.log('CONTAINER_CAN_BE_SCROLLED');
                 contentElement.scrollTop += CONTAINER_CAN_BE_SCROLLED;
-                CURRENT_POSITION_Y = START.Y - ITEM_VISIBLE_INDEX * ITEM_HEIGHT;
+
             } else {
                 if (OUT_OF_BOUNDS.DIRECTION === ENUM_DIRECTION.TOP) {
                     CURRENT_POSITION_Y =
@@ -180,17 +191,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             }
         }
         let transformString = '';
+
         transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
         transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
             this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
-        const boundingRect = contentElement.getBoundingClientRect();
-        // if (this.LIST_OUT_OF_BOUNDS({ top: boundingRect.top, bottom: boundingRect.bottom }, document)) {
-        //     this.position(contentElement, size, document, initialCall, minSize);
-        // }
-    }
-
-    getItemOffsets(select) {
-
     }
 }
