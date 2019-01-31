@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
-import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy } from '../../services';
+import {
+    IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
+    AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy, HorizontalAlignment
+} from '../../services';
 import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -21,11 +23,12 @@ describe('IgxToggle', () => {
                 IgxToggleServiceInjectComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
-                TestWithOnPushComponent
+                TestWithOnPushComponent,
+                TestWithThreeToggleActionsComponent
             ],
             imports: [NoopAnimationsModule, IgxToggleModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('IgxToggleDirective is defined', () => {
@@ -252,9 +255,97 @@ describe('IgxToggle', () => {
         expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
     }));
 
+    it('fix for #3636 - ToggleAction should provide its element as target', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
+        fixture.detectChanges();
+
+        let button = fixture.componentInstance.button1.nativeElement;
+        button.click();
+        tick();
+        fixture.detectChanges();
+
+        let toggle = fixture.debugElement.query(By.css('#toggle1'));
+        let toggleRect = toggle.nativeElement.getBoundingClientRect();
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        button = fixture.componentInstance.button2.nativeElement;
+        button.click();
+        fixture.detectChanges();
+
+        toggle = fixture.debugElement.query(By.css('#toggle2'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        button = fixture.componentInstance.button3.nativeElement;
+        button.click();
+        tick();
+        fixture.detectChanges();
+
+        toggle = fixture.debugElement.query(By.css('#toggle3'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+    }));
+
+    it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
+        fixture.detectChanges();
+
+        let button = fixture.componentInstance.button1.nativeElement;
+        button.click();
+        button = fixture.componentInstance.button2.nativeElement;
+        button.click();
+        button = fixture.componentInstance.button3.nativeElement;
+        button.click();
+        fixture.detectChanges();
+        tick();
+
+        let toggle = fixture.debugElement.query(By.css('#toggle1'));
+        let toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button1.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle2'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button2.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle3'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button3.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        document.documentElement.scrollTop += 100;
+        document.dispatchEvent(new Event('scroll'));
+        tick();
+
+        toggle = fixture.debugElement.query(By.css('#toggle1'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button1.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle2'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button2.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle3'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button3.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+    }));
+
     describe('overlay settings', () => {
         configureTestSuite();
-        it('should pass correct defaults from IgxToggleActionDiretive and respect outsideClickClose', fakeAsync(() => {
+        it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
@@ -321,7 +412,7 @@ describe('IgxToggle', () => {
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
             };
-            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy();
+            fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
             fixture.detectChanges();
 
             fixture.componentInstance.toggleAction.onClick();
@@ -329,12 +420,12 @@ describe('IgxToggle', () => {
             let positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
             expect(positionStrategy.settings.target).toBe(button);
 
-            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy({ target: document.body });
+            fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy({ target: document.body });
             fixture.detectChanges();
 
             fixture.componentInstance.toggleAction.onClick();
             positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
-            expect(positionStrategy.settings.target).toBe(document.body);
+            expect(positionStrategy.settings.target).toBe(button);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
@@ -401,8 +492,8 @@ describe('IgxToggle', () => {
 })
 export class IgxToggleTestComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    public open() {}
-    public close() {}
+    public open() { }
+    public close() { }
 }
 @Component({
     template: `
@@ -434,7 +525,7 @@ export class IgxToggleActionTestComponent {
     <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
     `
 })
-export class IgxToggleOutletComponent extends IgxToggleActionTestComponent {}
+export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
 
 @Component({
     template: `
@@ -464,9 +555,8 @@ export class IgxOverlayServiceComponent {
     /**
      *
      */
-    constructor(public overlay: IgxOverlayService) {}
+    constructor(public overlay: IgxOverlayService) { }
 }
-
 
 @Component({
     template: `
@@ -479,4 +569,50 @@ export class IgxOverlayServiceComponent {
 })
 export class TestWithOnPushComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+}
+
+@Component({
+    template: `
+        <button #button1 igxToggleAction="toggle1" [overlaySettings]="overlaySettings" style="position:absolute; left: 100px; top: 10%">
+            BUTTON 1
+        </button>
+        <div id="toggle1" igxToggle style="width: 100px; height: 100px;">
+            <p>
+                Toggle 1
+            </p>
+        </div>
+
+        <button #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:absolute; left: 300px; top: 50%">
+            BUTTON 2
+        </button>
+        <div id="toggle2" igxToggle style="width: 100px; height: 100px;">
+            <p>
+                Toggle 2
+            </p>
+        </div>
+
+        <button #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:absolute; left: 500px; top: 110%">
+            BUTTON 3
+        </button>
+        <div id="toggle3" igxToggle style="width: 100px; height: 100px;">
+            <p>
+                Toggle 3
+            </p>
+        </div>
+    `
+})
+export class TestWithThreeToggleActionsComponent implements OnInit {
+    @ViewChild('button1') public button1: ElementRef;
+    @ViewChild('button2') public button2: ElementRef;
+    @ViewChild('button3') public button3: ElementRef;
+
+    overlaySettings: OverlaySettings = {};
+
+    ngOnInit(): void {
+        this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Left,
+            horizontalStartPoint: HorizontalAlignment.Right
+        });
+        this.overlaySettings.closeOnOutsideClick = false;
+    }
 }
