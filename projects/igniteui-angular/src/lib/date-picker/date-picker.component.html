@@ -31,7 +31,8 @@
         'igx-date-picker--vertical': vertical && mode !== 'editable'
     }">
     <igx-calendar #calendar [hasHeader]="hasHeader" [formatOptions]="formatOptions" [formatViews]="formatViews"
-        [locale]="locale" [vertical]="vertical && mode !== 'editable'" [weekStart]="weekStart" (onSelection)="handleSelection($event)"></igx-calendar>
+        [locale]="locale" [vertical]="vertical && mode !== 'editable'" [weekStart]="weekStart" [specialDates]="specialDates"
+        [disabledDates]="disabledDates" (onSelection)="handleSelection($event)"></igx-calendar>
 
     <div class="igx-date-picker__buttons" *ngIf=" mode==='readonly' &&
         (cancelButtonLabel || todayButtonLabel)">

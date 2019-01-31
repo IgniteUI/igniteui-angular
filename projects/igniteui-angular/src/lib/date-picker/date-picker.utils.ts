@@ -1,3 +1,5 @@
+import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular';
+
 /**
  * This enumeration is used to configure whether the date picker has an editable input
  * or is readonly - the date is selected only through a popup calendar.
@@ -142,8 +144,7 @@ export const WEEKDAYS_NAMES_ARRAY = [
  *@hidden
  */
 export function getYearFormatType(format: string): string {
-    const occurences = format.match(new RegExp(DATE_CHARS.YEAR_CHAR, 'g')).length;
-    switch (occurences) {
+    switch (format.match(new RegExp(DATE_CHARS.YEAR_CHAR, 'g')).length) {
         case 1: {
             // y (2020)
             return FORMAT_DESC.NUMERIC;
@@ -163,22 +164,21 @@ export function getYearFormatType(format: string): string {
  *@hidden
  */
 export function getMonthFormatType(format: string): string {
-    const occurences = format.match(new RegExp(DATE_CHARS.MONTH_CHAR, 'g')).length;
-    switch (occurences) {
+    switch (format.match(new RegExp(DATE_CHARS.MONTH_CHAR, 'g')).length) {
         case 1: {
-            // M
+            // M (8)
             return FORMAT_DESC.NUMERIC;
         }
         case 2: {
-            // MM
+            // MM (08)
             return FORMAT_DESC.TWO_DIGITS;
         }
         case 3: {
-            // MMM
+            // MMM (Dec)
             return FORMAT_DESC.SHORT;
         }
         case 4: {
-            // MMMM
+            // MMMM (December)
             return FORMAT_DESC.LONG;
         }
     }
@@ -188,14 +188,13 @@ export function getMonthFormatType(format: string): string {
  *@hidden
  */
 export function getDayFormatType(format: string): string {
-    const occurences = format.match(new RegExp(DATE_CHARS.DAY_CHAR, 'g')).length;
-    switch (occurences) {
+    switch (format.match(new RegExp(DATE_CHARS.DAY_CHAR, 'g')).length) {
         case 1: {
-            // d
+            // d (6)
             return FORMAT_DESC.NUMERIC;
         }
         case 2: {
-            // dd
+            // dd (06)
             return FORMAT_DESC.TWO_DIGITS;
         }
     }
@@ -205,8 +204,7 @@ export function getDayFormatType(format: string): string {
  *@hidden
  */
 export function getWeekDayFormatType(format: string): string {
-    const occurences = format.match(new RegExp(DATE_CHARS.WEEKDAY_CHAR, 'g')).length;
-    switch (occurences) {
+    switch (format.match(new RegExp(DATE_CHARS.WEEKDAY_CHAR, 'g')).length) {
         case 3: {
             // EEE (Tue)
             return FORMAT_DESC.SHORT;
@@ -745,6 +743,69 @@ export function isFullYearInput(dateFormatParts: any[], value: any): boolean {
 export function getDatePartOnPosition(dateFormatParts: any[], position: number) {
     return dateFormatParts.filter((element) =>
         element.position[0] <= position && position <= element.position[1] && element.type !== SEPARATOR)[0];
+}
+
+/**
+ *@hidden
+ */
+export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const dateInMs = date.getTime();
+
+    for (const descriptor of ranges) {
+        const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
+            r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
+        switch (descriptor.type) {
+            case (DateRangeType.After):
+                if (dateInMs > dRanges[0].getTime()) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Before):
+                if (dateInMs < dRanges[0].getTime()) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Between):
+                const dRange = dRanges.map(d => d.getTime());
+                const min = Math.min(dRange[0], dRange[1]);
+                const max = Math.max(dRange[0], dRange[1]);
+                if (dateInMs >= min && dateInMs <= max) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Specific):
+                const datesInMs = dRanges.map(d => d.getTime());
+                for (const specificDateInMs of datesInMs) {
+                    if (dateInMs === specificDateInMs) {
+                        return true;
+                    }
+                }
+
+                break;
+            case (DateRangeType.Weekdays):
+                const day = date.getDay();
+                if (day % 6 !== 0) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Weekends):
+                const weekday = date.getDay();
+                if (weekday % 6 === 0) {
+                    return true;
+                }
+
+                break;
+            default:
+                return false;
+        }
+    }
+
+    return false;
 }
 
 /**

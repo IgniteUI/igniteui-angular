@@ -40,7 +40,7 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy
 } from '../services';
-import { DateRangeDescriptor } from '../core/dates/dateRange';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -67,7 +67,8 @@ import {
     isFullMonthInput,
     isFullDayInput,
     isFullYearInput,
-    getModifiedDateInput
+    getModifiedDateInput,
+    isDateInRanges
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -75,6 +76,11 @@ import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 
 let NEXT_ID = 0;
+
+export interface IgxDatePickerDisabledDateEventArgs {
+    datePicker: IgxDatePickerComponent;
+    currentValue: Date;
+}
 
 /**
  * **Ignite UI for Angular Date Picker** -
@@ -89,7 +95,11 @@ let NEXT_ID = 0;
  */
 @Component({
     providers:
-        [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
+        [{
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxDatePickerComponent,
+            multi: true
+        }],
     // tslint:disable-next-line:component-selector
     selector: 'igx-date-picker',
     styles: [':host {display: block;}'],
@@ -449,7 +459,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public mode = DatePickerInteractionMode.READONLY;
 
     /**
-     *An @Input property that sets whether `IgxDatePickerComponent` date parts would spin continously.
+     *An @Input property that sets whether `IgxDatePickerComponent` date parts would spin continuously.
      *```html
      *<igx-date-picker [isSpinLoop]="false"></igx-date-picker>
      *```
@@ -503,6 +513,20 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     @Output()
     public onSelection = new EventEmitter<Date>();
+
+    /**
+    *An @Output property that is fired when the user enters disabled date in the date-picker editor.
+    *```typescript
+    *public onDisabledDate(event){
+    *    alert("This date is disabled!");
+    *}
+    *```
+    *```html
+    *<igx-date-picker (onDisabledDate)="onDisabledDate($event)"></igx-date-picker>
+    *```
+    */
+    @Output()
+    public onDisabledDate = new EventEmitter<IgxDatePickerDisabledDateEventArgs>();
 
     /*
      * @hidden
@@ -848,8 +872,17 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 newValue.setMilliseconds(originalDateValue.getMilliseconds());
             }
 
-            this.value = newValue;
-            this._onChangeCallback(newValue);
+            if (this.disabledDates === null
+                || (this.disabledDates !== null && !isDateInRanges(newValue, this.disabledDates))) {
+                this.value = newValue;
+                this._onChangeCallback(newValue);
+            } else {
+                const args: IgxDatePickerDisabledDateEventArgs = {
+                    datePicker: this,
+                    currentValue: newValue,
+                };
+                this.onDisabledDate.emit(args);
+            }
         }
     }
 
@@ -901,6 +934,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 }
                 break;
             default:
+                this.preventWeekdayChange(event);
                 return;
         }
     }
@@ -935,13 +969,13 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         const dayStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue, false);
         const monthStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue, false);
 
-        // While editting, if the input is deleted, total clean up
+        // While editing, if the input is deleted, total clean up
         if (dayValue === '' && monthValue === '' && yearValue === '') {
             this._cleanInput = true;
             this.deselectDate();
         }
 
-        // While editting, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
+        // While editing, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
         if (dayValue === '' || monthValue === '' || yearValue === '') {
             this.deselectDate();
             requestAnimationFrame(() => {
@@ -1007,7 +1041,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
     }
 
-    // Focus a date, after the calendar appearence into DOM.
+    // Focus a date, after the calendar appearance into DOM.
     private _focusCalendarDate(): void {
         requestAnimationFrame(() => {
             this.calendar.focusActiveDate();
