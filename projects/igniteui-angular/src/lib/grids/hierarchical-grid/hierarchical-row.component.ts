@@ -82,6 +82,10 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
                 return v.rowID !== this.rowID;
             });
         }
+        grid.cdr.detectChanges();
+        requestAnimationFrame(() => {
+            grid.reflow();
+        });
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
