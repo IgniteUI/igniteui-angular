@@ -49,6 +49,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
+    @HostBinding('class.igx-grid__tr--expanded')
     public get expanded() {
         return this.grid.isExpanded(this.rowData);
     }
