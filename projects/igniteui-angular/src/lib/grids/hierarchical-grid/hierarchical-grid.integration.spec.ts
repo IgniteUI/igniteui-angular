@@ -346,6 +346,21 @@ describe('IgxHierarchicalGrid Integration', () => {
             const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
             expect(headerCheckbox.indeterminate).toBeTruthy();
         });
+
+        it('should show empty filter message when there are no records matching the filter', () => {
+            fixture.componentInstance.data = [];
+            fixture.detectChanges();
+
+            const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody-content'));
+            expect(gridBody.nativeElement.innerText).toMatch(hierarchicalGrid.emptyGridMessage);
+
+            fixture.componentInstance.data = fixture.componentInstance.generateData(40, 3);
+            fixture.detectChanges();
+
+            hierarchicalGrid.filter('ID', '123450', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fixture.detectChanges();
+            expect(gridBody.nativeElement.innerText).toMatch(hierarchicalGrid.emptyFilteredGridMessage);
+        });
     });
 
     describe('Summaries', () => {
