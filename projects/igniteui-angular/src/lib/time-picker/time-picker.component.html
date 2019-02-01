@@ -27,7 +27,7 @@
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
         <label igxLabel>Time</label>
-        <input igxInput [value]="displayTime" [disabled]="disabled" tabindex="0" readonly />
+        <input igxInput [value]="displayTime || ''" [disabled]="disabled" tabindex="0" readonly />
     </igx-input-group>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
