@@ -650,11 +650,11 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         await wait(100);
         fixture.detectChanges();
 
-        const child1Cell = child1.getCellByColumn(9, 'childData2');
+        const child1Cell = child1.getCellByColumn(9, 'childData');
 
         expect(child1Cell.selected).toBe(true);
         expect(child1Cell.rowIndex).toBe(9);
-        expect(child1Cell.columnIndex).toBe(7);
+        expect(child1Cell.columnIndex).toBe(6);
 
         // Tab from last cell in 1st child
         child1Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab'}));
@@ -697,6 +697,27 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         expect(child1Cell.selected).toBe(true);
         expect(child1Cell.focused).toBe(true);
         expect(child1Cell.rowIndex).toBe(0);
+    }));
+
+    it('should navigate to last cell in previous row for child grid using Shift+Tab', (async () => {
+        const childGrid2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
+        childGrid2.verticalScrollContainer.scrollTo(2);
+        await wait(100);
+        fixture.detectChanges();
+
+        const child2FirstCell = childGrid2.getCellByColumn(2, 'ID');
+        child2FirstCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+
+        // Shift + Tab insdie 2nd child
+        child2FirstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+
+        const child2LastCell = childGrid2.getCellByColumn(1, 'childData2');
+        expect(child2LastCell.selected).toBeTruthy();
+        expect(child2LastCell.focused).toBeTruthy();
     }));
 });
 
@@ -759,6 +780,8 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
     <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'"
     [expandChildren]='true' #hierarchicalGrid>
         <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="'100px'">
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
+            </igx-row-island>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
         </igx-row-island>

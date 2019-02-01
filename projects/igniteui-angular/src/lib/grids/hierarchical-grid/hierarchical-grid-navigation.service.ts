@@ -234,12 +234,19 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
-        if (visibleColumnIndex === 0 && this.grid.parent) {
-            if (rowIndex === 0 && this.grid.allowFiltering) {
+        if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent) {
+            if (this.grid.allowFiltering) {
                 this.moveFocusToFilterCell();
             } else {
-                this.navigateUp(currentRowEl, rowIndex,
-                    this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex);
+                const prevSiblingChild = this.getChildGridRowContainer().previousElementSibling;
+                if (prevSiblingChild) {
+                    const gridElem = prevSiblingChild.querySelectorAll('igx-hierarchical-grid')[0];
+                    const prevGridCols = this.getChildGrid(gridElem.getAttribute('id'), this.grid.parent).unpinnedColumns;
+                    this.navigateUp(currentRowEl, rowIndex, prevGridCols[prevGridCols.length - 1].visibleIndex);
+                } else {
+                    this.navigateUp(currentRowEl, rowIndex,
+                        this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex);
+                }
             }
         } else {
             super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex);
