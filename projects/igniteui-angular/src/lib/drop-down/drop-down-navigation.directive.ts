@@ -2,13 +2,8 @@ import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBase } from './drop-down.base';
+import { DropDownActionKey } from './drop-down.common';
 
-/** Key actions that have designated handlers in IgxDropDownComponent */
-export enum DropDownActionKey {
-    ESCAPE = 'escape',
-    ENTER = 'enter',
-    SPACE = 'space'
-}
 /**
  * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBase component
  */

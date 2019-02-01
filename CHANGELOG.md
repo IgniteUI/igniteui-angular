@@ -2,10 +2,60 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
+- `igxGrid` now has `isLoading` input property. When enabled will show loading indicator, until the data is available. It can be best utilized for remote scenarios. Another input property `loadingGridTemplate` allows customizing the loading indicator.
+    ```html
+    <!-- Example -->
+
+    <igx-grid [isLoading]="true" ...>
+    </igx-grid>
+    ```
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
+    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix`,`igx-hint` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <label igxLabel>Genres</label>
+            <igx-prefix><igx-icon>music_note</igx-icon></igx-prefix>
+        </igx-combo>
+     ```
+    - **Feature** the default combo 'clear' and 'toggle' icons can now be templated. Two new directives are added (with selector `[igxComboClearIcon]` and `[igxComboToggleIcon]`). Passing an `ng-template` with one of the directives will overwrite the default conent of the respective icon. Functionality will remain unaffected. Expample:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <ng-template igxComboToggleIcon let-collapsed>
+                <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+            </ng-template>
+        </igx-combo>
+    ```
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+    - Added an `@Input` for the `index` property (such as the one coming from ngFor) of the `IgxDropDownItem` component. This **deprecates** the automatic index calculation.
+    ```html
+        <igx-drop-down>
+            <igx-drop-down-item *ngFor="let item of items; let i = index" [index]="i">
+                {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    ```
+    - **Feature** `IgxDropDownGroupComponent` has been added. It allows for easier grouping of multi-level data, without the need of flattening it. The `igx-drop-down-item-group` tag accepts `igx-drop-down-item`s and displays them in the appropriate grouped fashion.
+        ```html
+            <igx-drop-down>
+                <igx-drop-down-item-group *ngFor="let country of contries" [label]="country.name">
+                    <igx-drop-down-item *ngFor="let city of country.cities" [value]='city.refNo'>
+                        {{ city.name }}
+                    </igx-drop-down-item>
+                </igx-drop-down-item-group>
+            </igx-drop-down>
+        ```
+- `Theme Elevations & Shadows` - Components with shadows, set by an elevation level or otherwise, are now fully configurable by the user via schema and/or theme properties. User can also provide a custom elevations set to component themes that support them.
+    - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
+- `IgxTreeGridComponent`
+    - We can now search in the treegrid's data by using the `findNext` and the `findPrev` methods and we can clear the search results with the `clearSearch` method.
+- `IgxTextHighlightDirective`
+    - `IgxTextHighlightDirective.page` input property is **deprecated**. `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are also **deprecated**. Instead, `row` and `column` optional properties are added.
 
 ## 7.1.2
 ### Features
@@ -15,7 +65,7 @@ All notable changes for each version of this project will be documented in this 
     + `cellTemplate` - the template for the column cells
     + `headerTemplate` - the template for the column header
     + `cellEditorTemplate` - the template for the column cells when a cell is in edit mode
-    + ```html
+      ```html
         <!-- Example -->
 
         <igx-grid ...>
@@ -70,7 +120,6 @@ All notable changes for each version of this project will be documented in this 
 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
-
 
 ## 7.1.0
 ### Features

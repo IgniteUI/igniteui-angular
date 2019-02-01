@@ -57,7 +57,7 @@ export function DeprecateProperty(message: string): PropertyDecorator {
         // the target doesn't contain a descriptor for that property, so create one
         // use backing field to set/get the value of the property to ensure there won't be infinite recursive calls
         const newKey = generateUniqueKey(target, key);
-        return Object.defineProperty(target, key, {
+        Object.defineProperty(target, key, {
             configurable: true,
             enumerable: true,
             set: function(value) {
@@ -87,7 +87,7 @@ function generateUniqueKey(target: any, key: string): string {
 /**
  * @hidden
  */
-function showMessage(message: string, isMessageShown: boolean): boolean {
+export function showMessage(message: string, isMessageShown: boolean): boolean {
     if (!isMessageShown && isDevMode()) {
         console.warn(message);
     }

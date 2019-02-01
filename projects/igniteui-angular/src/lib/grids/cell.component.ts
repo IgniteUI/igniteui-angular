@@ -38,7 +38,7 @@ import { DataType } from '../data-operations/data-util';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, AfterViewInit {
+export class IgxGridCellComponent implements OnInit {
 
     /**
      * Gets the column of the cell.
@@ -267,15 +267,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        const result = editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
-                                      this.cellID.columnID === editableCell.cellID.columnID : false;
-
-        if (result && !this._inEditMode && this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.observe();
-        }
-        this._inEditMode = result;
-
-        return result;
+        return editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
+                              this.cellID.columnID === editableCell.cellID.columnID : false;
     }
 
     /**
@@ -463,8 +456,23 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @ViewChild('inlineEditor', { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    private _highlight: IgxTextHighlightDirective;
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
-    private highlight: IgxTextHighlightDirective;
+    protected set highlight(value: IgxTextHighlightDirective) {
+        this._highlight = value;
+
+        if (this._highlight && this.grid.lastSearchInfo.searchText) {
+            this._highlight.highlight(this.grid.lastSearchInfo.searchText,
+                this.grid.lastSearchInfo.caseSensitive,
+                this.grid.lastSearchInfo.exactMatch);
+            this._highlight.activateIfNecessary();
+        }
+    }
+
+    protected get highlight() {
+        return this._highlight;
+    }
 
     /**
      * Sets the current edit value while a cell is in edit mode.
@@ -493,12 +501,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
         }
     }
+
+    public isInCompositionMode = false;
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
-    private _inEditMode: boolean;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
@@ -620,20 +629,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.cdr.markForCheck();
-        this.grid.refreshSearch();
-    }
-
-
-    /**
-     *@hidden
-     */
-    public ngAfterViewInit() {
-        if (this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.highlight(this.grid.lastSearchInfo.searchText,
-                this.grid.lastSearchInfo.caseSensitive,
-                this.grid.lastSearchInfo.exactMatch);
-            this.highlight.activateIfNecessary();
-        }
     }
 
     /**
@@ -761,10 +756,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'arrowleft':
             case 'left':
                 if (ctrl && key === 'home') {
+                    this.nativeElement.blur();
                     this.grid.navigation.goToFirstCell();
                     return;
                 }
                 if (ctrl || key === 'home') {
+                    this.nativeElement.blur();
                     this.grid.navigation.onKeydownHome(this.rowIndex);
                     break;
                 }
@@ -774,10 +771,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'arrowright':
             case 'right':
                 if (ctrl && key === 'end') {
+                    this.nativeElement.blur();
                     this.grid.navigation.goToLastCell();
                     return;
                 }
                 if (ctrl || key === 'end') {
+                    this.nativeElement.blur();
                     this.grid.navigation.onKeydownEnd(this.rowIndex);
                     break;
                 }
@@ -820,6 +819,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownEnterEditMode(event) {
+        if (this.isInCompositionMode) {
+            return;
+        }
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
@@ -876,7 +878,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
     private isKeySupportedInCell(key) {
         return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
-
     }
 
     /**

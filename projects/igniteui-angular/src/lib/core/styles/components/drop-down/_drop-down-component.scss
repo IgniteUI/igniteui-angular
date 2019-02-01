@@ -38,4 +38,12 @@
     @include e(header) {
         @extend %igx-drop-down__header !optional;
     }
+
+    @include e(group) {
+        @extend %igx-drop-down__group !optional;
+    }
+
+    @include e(group, $m: disabled) {
+        @extend %igx-drop-down__item--disabled !optional;
+    }
 }

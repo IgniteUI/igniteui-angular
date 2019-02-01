@@ -13,7 +13,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownModule } from '../drop-down/drop-down.component';
+import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridCellComponent } from './cell.component';
@@ -61,6 +61,7 @@ import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
+import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxListComponent, IgxListModule } from '../list';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
 
@@ -143,6 +144,7 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
+        IgxProgressBarModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxGridExcelStyleFilteringComponent,
@@ -174,6 +176,7 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
+        IgxProgressBarModule
         IgxListModule,
         IgxFilterModule
     ],
