@@ -314,7 +314,9 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(overlaySettings);
+        if (this.toggleDirective.collapsed) {
+            this.toggleDirective.open(overlaySettings);
+        }
     }
 
     /**
@@ -325,7 +327,9 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     close() {
-        this.toggleDirective.close();
+        if (!this.toggleDirective.collapsed) {
+            this.toggleDirective.close();
+        }
     }
 
     /**
