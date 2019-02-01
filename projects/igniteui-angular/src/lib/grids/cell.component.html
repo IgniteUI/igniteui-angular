@@ -1,7 +1,7 @@
 <ng-template #defaultCell>
     <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
         [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
-        [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'"
+        [row]="row.rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"
         class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
         grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
 </ng-template>
