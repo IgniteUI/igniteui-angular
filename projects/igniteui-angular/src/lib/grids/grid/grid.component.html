@@ -44,7 +44,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
-                <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">reorder</igx-icon>
+                <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">unfold_less</igx-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="showRowCheckboxes">
