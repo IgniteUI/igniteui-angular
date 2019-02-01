@@ -2450,6 +2450,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.reflow();
+            this.refreshSearch(true, true);
         });
     }
 
@@ -3363,7 +3364,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param updateActiveInfo
      * @memberof IgxGridBaseComponent
      */
-    public refreshSearch(updateActiveInfo?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean, updateUI?: boolean): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -3374,6 +3375,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index) {
                         this.lastSearchInfo.activeMatchIndex = i;
+                    }
+                });
+            }
+            if (updateUI) {
+                this.rowList.forEach((r) => {
+                    if (r.cells) {
+                        r.cells.forEach((c) => {
+                            c.highlightText(
+                                this.lastSearchInfo.searchText,
+                                 this.lastSearchInfo.caseSensitive,
+                                 this.lastSearchInfo.exactMatch);
+                        });
                     }
                 });
             }
