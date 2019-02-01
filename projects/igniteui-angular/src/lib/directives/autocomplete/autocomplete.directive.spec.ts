@@ -237,12 +237,16 @@ fdescribe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             const targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_ITEM))[0];
+            targetElement.nativeElement.tabIndex = 0;
+            targetElement.nativeElement.focus();
             targetElement.nativeElement.click();
+            targetElement.nativeElement.tabIndex = -1;
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(input.value).toBe(filteredTowns[0]);
+            expect(input.nativeElement).toBe(document.activeElement);
         }));
         it('Should filter and populate dropdown list with matching values on every key stroke', () => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));

@@ -271,6 +271,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
+        this.nativeElement.click();
     }
 
     private highlightFirstItem() {
