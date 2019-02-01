@@ -4298,10 +4298,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
     setSelection(range: GridSelectionRange): void {
-        this.gridSelection.startNode = [range.rowStart, this.columnToVisibleIndex(range.columnStart)];
-        this.gridSelection.updateDragSelection(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
-        this.gridSelection.addRangeMeta(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
-        this.gridSelection.startNode = null;
+        // this.gridSelection.startNode = [range.rowStart, this.columnToVisibleIndex(range.columnStart)];
+        // this.gridSelection.dragSelect(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
+        // this.gridSelection.addRangeMeta(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
+        // this.gridSelection.startNode = null;
     }
 
     getSelectedRanges() {
@@ -4389,7 +4389,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.endEdit(false);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            if (editCell) {
+                editCell.inEditMode = false;
+            } else {
+                this.endEdit(false);
+            }
         }
 
         if (!text) {
