@@ -1837,7 +1837,6 @@
     }
 
     %igx-grid__tr--highlighted {
-        //box-shadow: inset 3px 0 0 --var($theme, 'row-highlight');
         position: relative;
 
         &::after {
@@ -1845,12 +1844,26 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 3px;
+            width: 4px;
             height: 100%;
             background: --var($theme, 'row-highlight');
             z-index: 3;
         }
+
+        &.igx-grid__tr--expanded {
+            &::after {
+                height: calc(100% + 1px);
+            }
+        }
+
+        %igx-grid__tr--edited {
+            &::before {
+                left: 4px;
+            }
+        }
     }
+
+
 
     %igx-grid__hierarchical-expander {
         user-select: none;

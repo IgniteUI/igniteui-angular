@@ -224,7 +224,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     get childLayoutKeys() {
-        const keys = this.childLayoutList.map((item) => item.key);
+        const layoutsList = this.parentIsland ? this.parentIsland.children : this.childLayoutList;
+        const keys = layoutsList.map((item) => item.key);
         return keys;
     }
 
