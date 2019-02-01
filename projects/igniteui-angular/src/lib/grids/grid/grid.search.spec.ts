@@ -725,7 +725,7 @@ describe('IgxGrid - search API', () => {
             grid.findNext('12');
             const rowIndexes = [1, 3, 4, 5];
 
-            rowIndexes.forEach(ind => {
+            rowIndexes.forEach((ind) => {
                 const cell = grid.getCellByColumn(ind, 'HireDate');
                 const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
                 const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
@@ -733,10 +733,8 @@ describe('IgxGrid - search API', () => {
 
                 // Check whether search does not change the cell's value
                 expect(cellChildren.length).toBe(2);
-                expect(cellChildren[0].innerText).toEqual(cell.value);
+                expect(cell.nativeElement.innerText.trim()).toBe(cell.value);
                 expect(cellChildren[0].hidden).toBeTruthy();
-
-                expect(cellChildren[1].innerText).toEqual(cell.value);
                 expect(cellChildren[1].hidden).toBeFalsy();
 
                 expect(highlights.length).toBe(1);
