@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
+const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const DEBOUNCETIME = 50;
 
 export class HelperUtils {
@@ -245,4 +246,49 @@ export class HelperUtils {
             await wait(DEBOUNCETIME);
             resolve();
         })
+
+    public static selectCellsRange =
+        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            await wait();
+            fix.detectChanges();
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            await wait();
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static selectCellsRangeWithShiftKey =
+        (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement, true);
+            await wait();
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static verifyCellsRegionSelected(grid, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex, selected = true) {
+        const startRow = startRowIndex < endRowIndex ? startRowIndex : endRowIndex;
+        const endRow = startRowIndex < endRowIndex ? endRowIndex : startRowIndex;
+        const startCol = startColumnIndex < endColumnIndex ? startColumnIndex : endColumnIndex;
+        const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
+        for (let i = startCol; i <= endCol; i++) {
+            for (let j = startRow; j <= endRow; j++) {
+                const cell = grid.getCellByColumn(j, grid.columns[i].field);
+                HelperUtils.verifyCellSelected(cell, selected);
+            }
+        }
+    }
+
+    public static verifyCellSelected(cell, selected = true) {
+        expect(cell.selected).toBe(selected);
+        expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
+    }
 }

@@ -20,10 +20,12 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, shift = false, ctrl = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyPressed,
-            bubbles: bubbles
+            bubbles: bubbles,
+            shiftKey: shift,
+            ctrlKey: ctrl
         });
         elem.dispatchEvent(keyboardEvent);
     }
@@ -88,6 +90,19 @@ export class UIInteractions {
         Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
         Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
         element.dispatchEvent(pointerEvent);
+    }
+
+    public static simulatePointerOverCellEvent(eventName: string, element, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
     public static clearOverlay() {
