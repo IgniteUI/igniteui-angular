@@ -20,7 +20,7 @@
     </select>
 </ng-template>
 
-<div class="igx-grid__thead">
+<div class="igx-grid__thead" [style.width.px]='outerWidth'>
     <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow>
         <div class="igx-grid__tr" [style.width.px]='calcWidth + 1' role="row">
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
@@ -46,7 +46,7 @@
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
 
-<div class="igx-grid__tbody">
+<div class="igx-grid__tbody" [style.width.px]='outerWidth'>
     <div class="igx-grid__tbody-content" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
@@ -80,13 +80,13 @@
     </div>
 </div>
 
-<div class="igx-grid__tfoot"  [style.width.px]='outerWidth' role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot"  [style.width.px]='outerWidth' role="rowgroup" [style.height.px]='summariesHeight' #tfoot [style.width.px]='outerWidth'>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight' *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0" class="igx-grid__summaries"  #summaryRow>
     </igx-grid-summary-row>
     <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight' [style.width.px]="scrollWidth"></div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0" [style.width.px]='outerWidth'>
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
@@ -94,7 +94,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator>
+<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator [style.width.px]='outerWidth'>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

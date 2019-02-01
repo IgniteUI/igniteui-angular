@@ -3617,7 +3617,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
-            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
+                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            } else {
+                return this.defaultTargetBodyHeight;
+            }
         } else {
             gridHeight = parseInt(this._height, 10);
         }
@@ -3639,7 +3643,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+        return this.hasVerticalSroll() ? this.calcWidth + 1 + this.scrollWidth : this.calcWidth + 1;
     }
     /**
      * @hidden
@@ -3679,6 +3683,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return columnWidth.toString();
     }
 
+    protected _getContainerWidth() {
+        const el = this.document.getElementById(this.nativeElement.id);
+        return el ? el.offsetWidth : null;
+    }
+
     /**
      * @hidden
      * Sets grid width i.e. this.calcWidth
@@ -3686,8 +3695,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected calculateGridWidth() {
         let width;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        const el = this.document.getElementById(this.nativeElement.id);
-
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
@@ -3696,8 +3703,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = parseInt(this._width, 10);
         }
 
-        if (!width && el) {
-            width = el.offsetWidth;
+        if (!width) {
+            width = this._getContainerWidth();
         }
 
 
