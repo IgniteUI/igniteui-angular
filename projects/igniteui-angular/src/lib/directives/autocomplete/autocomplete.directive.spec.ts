@@ -14,6 +14,8 @@ import { ConnectedPositioningStrategy, VerticalAlignment } from '../../services'
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
+const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';
+const CSS_CLASS_DROP_DOWN_ITEM_SELECTED = 'igx-drop-down__item--selected';
 
 fdescribe('IgxAutocomplete', () => {
     let fixture;
@@ -51,8 +53,6 @@ fdescribe('IgxAutocomplete', () => {
             group = fixture.componentInstance.group;
             input = fixture.componentInstance.input;
             dropDown = fixture.componentInstance.dropDown;
-            input.nativeElement.click();
-            expect(dropDown.collapsed).toBeTruthy();
         }));
         it('Should open/close dropdown properly', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
@@ -248,14 +248,67 @@ fdescribe('IgxAutocomplete', () => {
             expect(input.value).toBe(filteredTowns[0]);
             expect(input.nativeElement).toBe(document.activeElement);
         }));
+        it('Should filter and select duplicated items properly', fakeAsync(() => {
+            fixture.componentInstance.towns.push('Sofia', 'Sofia');
+            fixture.detectChanges();
+            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            let startsWith = 'so';
+            let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+
+            const verifyDropdownItems = function() {
+                expect(dropdownListElement.children.length).toEqual(filteredTowns.length);
+                for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
+                    expect(dropdownListElement.children[itemIndex].nativeElement.textContent.trim()).toEqual(filteredTowns[itemIndex]);
+                    const isFocused = itemIndex === 0 ? true : false;
+                    expect(dropdownListElement.children[itemIndex].classes[CSS_CLASS_DROP_DOWN_ITEM_FOCUSED]).toEqual(isFocused);
+                    expect(dropDown.items[itemIndex].focused).toEqual(isFocused);
+                }
+            };
+
+            UIInteractions.sendInput(input, startsWith, fixture);
+            fixture.detectChanges();
+            tick();
+            verifyDropdownItems();
+
+            startsWith = 'sof';
+            filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+            UIInteractions.sendInput(input, startsWith, fixture);
+            fixture.detectChanges();
+            tick();
+            verifyDropdownItems();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(input.value).toEqual(filteredTowns[1]);
+            expect(fixture.componentInstance.townSelected).toEqual(filteredTowns[1]);
+
+            startsWith = 'sof';
+            filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+            UIInteractions.sendInput(input, startsWith, fixture);
+            fixture.detectChanges();
+            tick();
+            verifyDropdownItems();
+
+            startsWith = 'so';
+            filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+            UIInteractions.sendInput(input, startsWith, fixture);
+            fixture.detectChanges();
+            tick();
+            verifyDropdownItems();
+
+        }));
         it('Should filter and populate dropdown list with matching values on every key stroke', () => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
-            const verifyDropdownItems = function() {
+            const verifyDropdownItems = function () {
                 const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
                 UIInteractions.sendInput(input, startsWith, fixture);
                 fixture.detectChanges();
                 expect(dropdownListElement.children.length).toEqual(filteredTowns.length);
-                for ( let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex ++) {
+                for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
                     expect(dropdownListElement.children[itemIndex].nativeElement.textContent.trim()).toBe(filteredTowns[itemIndex]);
                 }
             };
@@ -492,7 +545,7 @@ fdescribe('IgxAutocomplete', () => {
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
         });
-        it('Should navigate to first/last item with Home/End keys', fakeAsync (() => {
+        it('Should navigate to first/last item with Home/End keys', fakeAsync(() => {
             UIInteractions.sendInput(input, 'r', fixture);
             fixture.detectChanges();
             expect(dropDown.items[0].focused).toBeTruthy();
@@ -631,7 +684,8 @@ fdescribe('IgxAutocomplete', () => {
             expect(dropdownListElement.children.length).toEqual(0);
             expect(textarea.nativeElement.value).toBe(filteredTowns[0]);
         }));
-        it('Should be instantiated properly on ReactiveForm', fakeAsync(() => {fixture = TestBed.createComponent(AutocompleteFormComponent);
+        it('Should be instantiated properly on ReactiveForm', fakeAsync(() => {
+            fixture = TestBed.createComponent(AutocompleteFormComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             input = fixture.componentInstance.input;
