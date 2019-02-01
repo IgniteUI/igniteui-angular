@@ -361,6 +361,25 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
             expect(gridBody.nativeElement.innerText).toMatch(hierarchicalGrid.emptyFilteredGridMessage);
         });
+
+        it('should apply classes to the header when filter row is visible', () => {
+            hierarchicalGrid.rowSelectable = true;
+            fixture.detectChanges();
+            const headerExpander: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander');
+            const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__cbx-selection');
+
+            expect(headerExpander.classList.contains('igx-grid__hierarchical-expander--push')).toBeFalsy();
+            expect(headerCheckbox.classList.contains('igx-grid__cbx-selection--push')).toBeFalsy();
+
+            // open filter row
+            const filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            const filterCellChip = filteringCells[0].query(By.css('igx-chip'));
+            filterCellChip.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(headerExpander.classList.contains('igx-grid__hierarchical-expander--push')).toBeTruthy();
+            expect(headerCheckbox.classList.contains('igx-grid__cbx-selection--push')).toBeTruthy();
+        });
     });
 
     describe('Summaries', () => {

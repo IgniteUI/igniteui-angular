@@ -225,6 +225,10 @@
         @extend %igx-grid-row--filtered !optional;
     }
 
+    @include e(tr, $m: expanded) {
+        @extend %igx-grid__tr--expanded !optional;
+    }
+
     @include e(tree-grouping-indicator) {
         @extend %igx-grid__tree-grouping-indicator !optional;
     }
@@ -268,6 +272,10 @@
 
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
+    }
+
+    @include e(cbx-selection, $m: push) {
+        @extend %grid__cbx-selection--push !optional;
     }
 
     @include e(group-row) {
@@ -395,8 +403,12 @@
         @extend %igx-grid__hierarchical-expander !optional;
     }
 
-    @include e(hierarchical-action-indent, $m: header) {
+    @include e(hierarchical-expander, $m: header) {
         @extend %igx-grid__hierarchical-expander--header !optional;
+    }
+
+    @include e(hierarchical-expander, $m: push) {
+        @extend %igx-grid__hierarchical-expander--push !optional;
     }
 
     @include e(hierarchical-indent, $m: scroll) {
@@ -420,6 +432,10 @@
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
+        }
+
+        @include e(cbx-selection, $m: push) {
+            @extend %grid__cbx-selection--push--cosy !optional;
         }
 
         @include e(drag-ghost-image) {
@@ -486,8 +502,8 @@
             @extend %igx-grid__hierarchical-expander--cosy !optional;
         }
 
-        @include e(hierarchical-expander, $m: header) {
-            @extend %igx-grid__hierarchical-expander--header--cosy !optional;
+        @include e(hierarchical-expander, $m: push) {
+            @extend %igx-grid__hierarchical-expander--push--cosy !optional;
         }
 
         @for $i from 1 through 10 {
@@ -508,6 +524,10 @@
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
+        }
+
+        @include e(cbx-selection, $m: push) {
+            @extend %grid__cbx-selection--push--compact !optional;
         }
 
         @include e(drag-ghost-image) {
@@ -574,8 +594,8 @@
             @extend %igx-grid__hierarchical-expander--compact !optional;
         }
 
-        @include e(hierarchical-hierarchical-expander, $m: header) {
-            @extend %igx-grid__hierarchical-expander--header--compact !optional;
+        @include e(hierarchical-expander, $m: push) {
+            @extend %igx-grid__hierarchical-expander--push--compact !optional;
         }
 
         @for $i from 1 through 10 {

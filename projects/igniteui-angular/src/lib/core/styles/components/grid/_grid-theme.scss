@@ -568,7 +568,7 @@
             }
         }
 
-        %grid__cbx-selection {
+        %grid__cbx-selection--push {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'comfortable') - rem(20px)) / 2;
         }
@@ -584,14 +584,14 @@
     }
 
     %grid-thead--cosy {
-        %grid__cbx-selection {
+        %grid__cbx-selection--push--cosy {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'cosy') - rem(20px)) / 2;
         }
     }
 
     %grid-thead--compact {
-        %grid__cbx-selection {
+        %grid__cbx-selection--push--compact {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'compact') - rem(20px)) / 2;
         }
@@ -767,6 +767,10 @@
                 color: --var($theme, 'row-selected-text-color');
             }
         }
+    }
+
+    %igx-grid__tr--expanded {
+        border-bottom-color: transparent;
     }
 
     %igx-grid__tr--edit {
@@ -1422,6 +1426,7 @@
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: map-get($grid-grouping-indicator-padding, 'comfortable');
+        border-right: 1px solid transparent;
 
         &::after {
             content: '';
@@ -1858,6 +1863,7 @@
         cursor: pointer;
         z-index: 3;
         color: --var($theme, 'expand-icon-color');
+        border-right: 1px solid transparent;
 
         &:focus {
             outline: none;
@@ -1892,25 +1898,31 @@
 
     %igx-grid__hierarchical-expander--header {
         background: inherit;
-        align-items: flex-start;
         border-right: 1px solid --var($theme, 'header-border-color');
         z-index: 3;
 
         igx-icon {
-            min-height: map-get($grid-header-height, 'comfortable');
-            max-height: map-get($grid-header-height, 'comfortable');
             display: flex;
             align-items: center;
         }
     }
 
-    %igx-grid__hierarchical-expander--header--cosy {
+    %igx-grid__hierarchical-expander--push {
+        align-items: flex-start;
+
+        igx-icon {
+            min-height: map-get($grid-header-height, 'comfortable');
+            max-height: map-get($grid-header-height, 'comfortable');
+        }
+    }
+
+    %igx-grid__hierarchical-expander--push--cosy {
         igx-icon {
             min-height: map-get($grid-header-height, 'cosy');
         }
     }
 
-    %igx-grid__hierarchical-expander--header--compact {
+    %igx-grid__hierarchical-expander--push--compact {
         igx-icon {
             min-height: map-get($grid-header-height, 'compact');
         }

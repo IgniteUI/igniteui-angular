@@ -543,6 +543,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this.hgridAPI.getChildGrids(inDeph);
     }
 
+    protected generateDataFields(data: any[]): string[] {
+        return super.generateDataFields(data).filter((field) => {
+            return this.childLayoutKeys.indexOf(field) === -1;
+        });
+    }
+
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
     }
