@@ -2,21 +2,77 @@
     <igx-icon [attr.draggable]="false" (click)="onIconClick($event)">filter_list</igx-icon>
 </span>
 
-<igx-drop-down #dropdown>
-    <div style="width:300px; height:500px;" >
-        <span>{{ column.field }}</span>
-        <span>Sorting</span>
-        <igx-buttongroup #sortButtonGroup [multiSelection]="false">
-            <span #ascButton type="button" igxButton [attr.data-togglable]="true"  (click)="onSortButtonClicked(1)">
-                <igx-icon>arrow_upwards</igx-icon>
-                Ascending
-            </span>
-            <span #descButton type="button" igxButton [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
-                    <igx-icon>arrow_downwards</igx-icon>
-                Descending
-            </span>
-        </igx-buttongroup>
-        <span (click)="onPin()" *ngIf="!column.pinned">Pin Column<igx-icon>pin_drop</igx-icon></span>
-        <span (click)="onPin()" *ngIf="column.pinned">Unpin Column<igx-icon>pin_drop</igx-icon></span>
+<div (onClosing)="onDropDownClosing()" (onOpening)="onDropDownOpening()" #dropdown style="background:black;width:300px; height:600px;flex-direction:column; display: flex" (mouseenter)="onMenuMouseEnter($event)" igxToggle>
+    <span>{{ column.field }}</span>
+    <span>Sorting</span>
+    <igx-buttongroup #sortButtonGroup [multiSelection]="false">
+        <span #ascButton type="button" igxButton [attr.data-togglable]="true"  (click)="onSortButtonClicked(1)">
+            <igx-icon>arrow_upwards</igx-icon>
+            Ascending
+        </span>
+        <span #descButton type="button" igxButton [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
+                <igx-icon>arrow_downwards</igx-icon>
+            Descending
+        </span>
+    </igx-buttongroup>
+    <span>Column moving</span>
+    <div>
+        <button igxButton [disabled]="canMoveLeft" (click)="onMoveButtonClicked(-1)">
+            <igx-icon>arrow_back</igx-icon>
+            Move left
+        </button>
+        <button igxButton [disabled]="canMoveRigth" (click)="onMoveButtonClicked(1)">
+            Move rigth
+            <igx-icon>arrow_forwards</igx-icon>
+        </button>
+    </div>
+    <span (click)="onPin()" *ngIf="!column.pinned">Pin column<igx-icon>pin_drop</igx-icon></span>
+    <span (click)="onPin()" *ngIf="column.pinned">Unpin column<igx-icon>pin_drop</igx-icon></span>
+    <span (click)="onHide()" >Hide column<igx-icon>remove_red_eye</igx-icon></span>
+    <span (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave()" >Text filter<igx-icon>keyboard_arrow_right</igx-icon></span>
+    <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+        <igx-prefix>
+            <igx-icon >search</igx-icon>
+        </igx-prefix>
+        <input
+            #input
+            igxInput
+            tabindex="0"
+            [(ngModel)]="searchValue"
+            placeholder="Search"
+            autocomplete="off"/>
+        <igx-suffix *ngIf="searchValue || searchValue === 0" (click)="clearInput()" tabindex="0">
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+    <igx-list [style.height.px]="250">
+            <div  [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item tabindex="0" *igxFor="let item of uniqueItems | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
+                    <igx-checkbox 
+                    [value]="item"
+                    [checked]="item.isSelected" 
+                    [disableRipple]="true" 
+                    [indeterminate]="item.indeterminate"
+                    [disableTransitions]="true"
+                    (change)="onCheckboxChange($event)">
+                        {{item.value}}
+                    </igx-checkbox>
+                </igx-list-item>
+            </div>
+        </igx-list>
+    <div>
+        <button igxButton (click)="closeDialog()">Cancel</button>
+        <button igxButton (click)="applyFilter()">Apply</button>
+    </div>
+</div>
+
+<igx-drop-down #subMenu (onClosed)="onSubMenuClosed()" (onSelection)="onSubMenuSelection($event)">
+    <div style="width: 200px" (mouseover)="onSubMenuMouseEnter()" (mouseout)="onSubMenuMouseLeave()" >
+        <igx-drop-down-item
+            *ngFor="let condition of conditions"
+            [value]="condition">
+            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
+        </igx-drop-down-item>
     </div>
 </igx-drop-down>

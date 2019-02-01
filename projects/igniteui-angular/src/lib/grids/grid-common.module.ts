@@ -61,6 +61,8 @@ import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
+import { IgxListComponent, IgxListModule } from '../list';
+import { IgxFilterModule } from '../directives/filter/filter.directive';
 
 @NgModule({
     declarations: [
@@ -146,7 +148,9 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxGridExcelStyleFilteringComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxListComponent,
+        IgxFilterModule
     ],
     imports: [
         CommonModule,
@@ -169,7 +173,9 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnHidingModule,
         IgxDropDownModule,
         IgxButtonGroupModule,
-        IgxColumnPinningModule
+        IgxColumnPinningModule,
+        IgxListModule,
+        IgxFilterModule
     ],
     providers: [
         IgxSelectionAPIService,

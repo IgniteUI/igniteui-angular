@@ -27,6 +27,7 @@ import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
+import { FilterMode } from '../tree-grid';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -2781,6 +2782,161 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         expect(sundayLabel).toEqual('So');
     }));
+});
+
+describe('IgxGrid - Filtering actions - Excel style filtering', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridFilteringComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule.forRoot()]
+        })
+            .compileComponents();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('Should sorts the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should move column left/right when clicking buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should pin/unpin column when clicking buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should hide column when click on button.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should activate clear button when a value is entered in the first input.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should not select values in list if two values with Or operator are entered and one of them has operator different from ‘equals’.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should change selection of the list when changing And/Or operator.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should change selection of the list when changing operator.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should populate inputs when deselect all values and then select two.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should clear the filter when select ‘all filters’ item.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
+    it('Should open another filter dialog and populates the correct operator when selecting ‘Contains‘, ‘Does not contain‘, etc.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        //TODO
+    }));
+
 });
 
 export class CustomFilter extends IgxFilteringOperand {
