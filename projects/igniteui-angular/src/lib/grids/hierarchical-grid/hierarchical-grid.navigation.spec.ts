@@ -109,7 +109,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     it('should allow navigation with Tab from parent into child.', (async () => {
         // scroll to last column
         const horizontalScrDir = hierarchicalGrid.dataRowList.toArray()[0].virtDirRow;
-        horizontalScrDir.scrollTo(7);
+        horizontalScrDir.scrollTo(6);
         await wait(100);
         fixture.detectChanges();
         const lastCell = hierarchicalGrid.getCellByKey(0, 'childData2');
@@ -151,7 +151,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
-        horizontalScrDir.scrollTo(7);
+        horizontalScrDir.scrollTo(6);
         await wait(100);
         fixture.detectChanges();
 
@@ -208,7 +208,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         // correct cell should be focused
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.focused).toBe(true);
-        expect(childLastCell.columnIndex).toBe(7);
+        expect(childLastCell.columnIndex).toBe(6);
         expect(childLastCell.rowIndex).toBe(9);
 
         // parent should be scrolled down
@@ -224,7 +224,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
 
         const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
-        horizontalScrDir.scrollTo(7);
+        horizontalScrDir.scrollTo(6);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
@@ -355,7 +355,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 
     it('should horizontally scroll first cell in view when navigating from parent into child with Tab', (async () => {
         const horizontalScrDir = hierarchicalGrid.dataRowList.toArray()[0].virtDirRow;
-        horizontalScrDir.scrollTo(7);
+        horizontalScrDir.scrollTo(6);
 
         await wait(100);
         fixture.detectChanges();
@@ -402,7 +402,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childLastRowCell.selected).toBe(true);
         expect(childLastRowCell.focused).toBe(true);
         expect(childLastRowCell.rowIndex).toBe(9);
-        expect(childLastRowCell.columnIndex).toBe(7);
+        expect(childLastRowCell.columnIndex).toBe(6);
     }));
 
     it('should move focus to last data cell in grid when ctrl+end is used.', (async () => {
@@ -420,7 +420,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(lastDataCell.selected).toBe(true);
         expect(lastDataCell.focused).toBe(true);
         expect(lastDataCell.rowIndex).toBe(38);
-        expect(lastDataCell.columnIndex).toBe(7);
+        expect(lastDataCell.columnIndex).toBe(6);
     }));
     it('if next child cell is not in view should scroll parent so that it is in view.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(4);
