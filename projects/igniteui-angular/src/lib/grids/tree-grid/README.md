@@ -160,7 +160,4 @@ this.treegrid1.deleteRow(rowForDel.rowID);
 |Limitation|Description|
 |--- |--- |
 |Templating Tree Cells|When templating a tree cell, content that spans outside the boundaries of the cell will not be shown unless positioned in an overlay.|
-|Summaries|Summaries are currently not supported for the tree grid.|
-|Search API|Search API is currently not supported for the tree grid.|
-|Export|Exporting is currently not supported for the tree grid.|
 |Group By|Group By feature is not supported, because it is inherent to the tree grid.|
