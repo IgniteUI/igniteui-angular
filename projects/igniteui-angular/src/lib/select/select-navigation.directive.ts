@@ -96,7 +96,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this.inputStream += event.key;
         const focusedItem = this.target.focusedItem as IgxSelectItemComponent;
         // select the item
-        if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.startsWith(this.inputStream)) {
+        if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.toLowerCase().startsWith(this.inputStream.toLowerCase())) {
             return;
         }
         this.activateItemByText(this.inputStream);
