@@ -3,7 +3,7 @@
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
     </div>
-    <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [displayDensity]="density" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true"
+    <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [displayDensity]="density" [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true"
         [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded" #hGrid>
         <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column-group header="Information">
