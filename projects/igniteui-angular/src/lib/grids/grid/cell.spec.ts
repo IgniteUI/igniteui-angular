@@ -677,14 +677,12 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const cells = rows[1].querySelectorAll('igx-grid-cell');
         const lastCell = cells[cells.length - 1];
-        const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
-
         expect(lastCell.textContent.trim()).toEqual('990');
 
         // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
         expect(lastCell.getBoundingClientRect().left +
             lastCell.offsetWidth +
-            verticalScroll.offsetWidth).toEqual(grid.outerWidth);
+            grid.scrollWidth).toEqual(parseInt(grid.width, 10));
     }));
 
     it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {
