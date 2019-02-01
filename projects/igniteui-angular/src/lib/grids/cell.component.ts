@@ -19,7 +19,7 @@ import { getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridSelectionService } from '../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode } from '../core/grid-selection';
 
 const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
                                 'home', 'end', 'space', 'spacebar', ' ']);
@@ -480,6 +480,10 @@ export class IgxGridCellComponent implements OnInit {
         return this._highlight;
     }
 
+    protected get selectionNode(): ISelectionNode {
+        return { row: this.rowIndex, column: this.visibleColumnIndex };
+    }
+
     /**
      * Sets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
@@ -527,6 +531,11 @@ export class IgxGridCellComponent implements OnInit {
      * @internal
      */
     public _updateCellSelectionStatus(fireFocus = true, event) {
+        const selection = this.gridSelection;
+        const pointerState = selection.pointerState;
+        const keyboardState = selection.keyboardState;
+        const node = this.selectionNode;
+
         // TODO: Refactor this. We won't need the `_clear/saveCellSelection` methods in their current form.
         if (fireFocus) {
             this.nativeElement.focus();
@@ -535,15 +544,15 @@ export class IgxGridCellComponent implements OnInit {
             // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
             this.grid.endEdit(true);
         }
-        if (this.gridSelection.kbShiftEnabled) {
-            this.gridSelection.updateDragSelection(this.rowIndex, this.visibleColumnIndex);
+        if (keyboardState.shift) {
+            selection.dragSelect(node, keyboardState);
             this.grid.onSelection.emit({ cell: this, event });
-            this.grid.onRangeSelection.emit(this.gridSelection.getBoundries(this.rowIndex, this.visibleColumnIndex));
+            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, keyboardState));
             return;
         }
-        if (!this.gridSelection.ctrlEnabled) {
-            this.gridSelection.clear();
-            this.gridSelection.add_single(this.rowIndex, this.visibleColumnIndex);
+        if (!pointerState.ctrl && !pointerState.shift) {
+            selection.clear();
+            selection.add(node);
         }
         // if (this.selected) {
         //     this.
@@ -626,7 +635,7 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     public isCellSelected() {
-        return this.gridSelection.isSelected(this.rowIndex, this.visibleColumnIndex);
+        return this.gridSelection.selected(this.selectionNode);
     }
 
     /**
@@ -668,16 +677,18 @@ export class IgxGridCellComponent implements OnInit {
     @HostListener('pointerdown', ['$event.ctrlKey', '$event.shiftKey'])
     pointerdown(ctrlKey: boolean, shiftKey: boolean) {
         const selectionService = this.gridSelection;
+        const pointerState = selectionService.pointerState;
+        const node = this.selectionNode;
 
-        selectionService.ctrlEnabled = ctrlKey;
-        selectionService.shiftEnabled = shiftKey;
-        selectionService.kbShiftEnabled = false;
+        pointerState.ctrl = ctrlKey;
+        pointerState.shift = shiftKey;
+        selectionService.initKeyboardState();
 
-        this._updateCellSelectionStatus(true, event);
+        this._updateCellSelectionStatus(false, event);
         this.clearTextSelection();
 
         if (shiftKey) {
-            selectionService.pointerDownShiftKey(this.rowIndex, this.visibleColumnIndex);
+            selectionService.pointerDownShiftKey(node);
             return;
         }
 
@@ -685,8 +696,8 @@ export class IgxGridCellComponent implements OnInit {
             selectionService.clear();
         }
 
-        selectionService.add_single(this.rowIndex, this.visibleColumnIndex);
-        selectionService.startNode = [this.rowIndex, this.visibleColumnIndex];
+        selectionService.add(node);
+        pointerState.node = node;
     }
 
     /**
@@ -696,12 +707,14 @@ export class IgxGridCellComponent implements OnInit {
      */
     @HostListener('pointerenter', ['$event.buttons'])
     pointerenter(buttons: number) {
-        this.gridSelection.dragMode = buttons === 1 ? true : false;
-        if (!this.gridSelection.dragMode) {
+        const selection = this.gridSelection;
+
+        selection.dragMode = buttons === 1 ? true : false;
+        if (!selection.dragMode) {
             return;
         }
         this.clearTextSelection();
-        this.gridSelection.updateDragSelection(this.rowIndex, this.visibleColumnIndex);
+        selection.dragSelect(this.selectionNode, selection.pointerState);
     }
 
     /**
@@ -711,8 +724,9 @@ export class IgxGridCellComponent implements OnInit {
     @HostListener('pointerup')
     pointerup() {
         if (this.gridSelection.dragMode) {
-            this.grid.onRangeSelection.emit(this.gridSelection.getBoundries(this.rowIndex, this.visibleColumnIndex));
-            this.gridSelection.addRangeMeta(this.rowIndex, this.visibleColumnIndex);
+            const node = this.selectionNode;
+            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, this.gridSelection.pointerState));
+            this.gridSelection.addRangeMeta(node, this.gridSelection.pointerState);
             this.gridSelection.resetState();
         }
     }
@@ -839,12 +853,14 @@ export class IgxGridCellComponent implements OnInit {
         const key = event.key.toLowerCase();
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        const node = this.selectionNode;
 
         if (!SUPPORTED_KEYS.has(key)) {
             return;
         }
 
-        this.gridSelection.initKeyboardState(this.rowIndex, this.visibleColumnIndex, key, shift);
+        this.gridSelection.keyboardDownShiftKey(node, shift, shift && key === 'tab');
+        this.gridSelection.keyboardState.lastPassedNode = node;
 
 
         if (key === 'tab') {
@@ -901,36 +917,36 @@ export class IgxGridCellComponent implements OnInit {
                 if (ctrl) {
                     // TODO: ???
                     // this.nativeElement.blur();
-                    this.grid.navigation.onKeydownHome(this.rowIndex);
+                    this.grid.navigation.onKeydownHome(node.row);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
+                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, node.row, node.column);
                 break;
             case 'arrowright':
             case 'right':
                 if (ctrl) {
                     // TODO: ???
                     // this.nativeElement.blur();
-                    this.grid.navigation.onKeydownEnd(this.rowIndex);
+                    this.grid.navigation.onKeydownEnd(node.row);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
+                this.grid.navigation.onKeydownArrowRight(this.nativeElement, node.row, node.column);
                 break;
             case 'arrowup':
             case 'up':
                 if (ctrl) {
-                    this.grid.navigation.navigateTop(this.visibleColumnIndex);
+                    this.grid.navigation.navigateTop(node.column);
                     break;
                 }
-                this.grid.navigation.navigateUp(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
+                this.grid.navigation.navigateUp(this.row.nativeElement, node.row, node.column);
                 break;
             case 'arrowdown':
             case 'down':
                 if (ctrl) {
-                    this.grid.navigation.navigateBottom(this.visibleColumnIndex);
+                    this.grid.navigation.navigateBottom(node.column);
                     break;
                 }
-                this.grid.navigation.navigateDown(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
+                this.grid.navigation.navigateDown(this.row.nativeElement, node.row, node.column);
                 break;
             case 'enter':
             case 'f2':

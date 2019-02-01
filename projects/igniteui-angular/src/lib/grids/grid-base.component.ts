@@ -4298,10 +4298,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
     setSelection(range: GridSelectionRange): void {
-        this.gridSelection.startNode = [range.rowStart, this.columnToVisibleIndex(range.columnStart)];
-        this.gridSelection.updateDragSelection(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
-        this.gridSelection.addRangeMeta(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
-        this.gridSelection.startNode = null;
+        // this.gridSelection.startNode = [range.rowStart, this.columnToVisibleIndex(range.columnStart)];
+        // this.gridSelection.dragSelect(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
+        // this.gridSelection.addRangeMeta(range.rowEnd, this.columnToVisibleIndex(range.columnEnd));
+        // this.gridSelection.startNode = null;
     }
 
     getSelectedRanges() {
