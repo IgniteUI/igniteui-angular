@@ -287,6 +287,16 @@ export class HelperUtils {
         }
     }
 
+    public static verifySelectedRange(grid, columnStart, columnEnd, rowStart, rowEnd, rangeIndex = 0, selectedRanges = 1) {
+        const range = grid.getSelectedRanges();
+            expect(range).toBeDefined();
+            expect(range.length).toBe(selectedRanges);
+            expect(range[rangeIndex].columnStart).toBe(columnStart);
+            expect(range[rangeIndex].columnEnd).toBe(columnEnd);
+            expect(range[rangeIndex].rowStart).toBe(rowStart);
+            expect(range[rangeIndex].rowEnd).toBe(rowEnd);
+    }
+
     public static verifyCellSelected(cell, selected = true) {
         expect(cell.selected).toBe(selected);
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);

@@ -3,6 +3,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule} from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SelectionWithScrollsComponent } from '../../test-utils/grid-samples.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
@@ -15,7 +17,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             declarations: [
                 SelectionWithScrollsComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
@@ -269,6 +271,123 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(150);
 
             HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 6, 5);
+        }));
+    });
+
+    describe('MCS - features integration', () => {
+        let fix;
+        let grid;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(SelectionWithScrollsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+
+        it('Sorting -  selection should not change when sorting is performed', (async () => {
+            const column = grid.getColumnByName('ID');
+            column.sortable = true;
+            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const firstCell = grid.getCellByColumn(1, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            grid.sort({fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false});
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            const rowID = grid.selectedCells[0].cellID.rowID;
+            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            grid.clearSort();
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            expect(grid.selectedCells[0].cellID.rowID).not.toBe(rowID);
+        }));
+
+        it('Sorting - selection containing selected cell out of the view should not change when sorting is performed', (async () => {
+            const column = grid.getColumnByName('ID');
+            column.sortable = true;
+            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 2, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO'};
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+            grid.sort({fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false});
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+            grid.clearSort();
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+        }));
+
+        it('Filtering - selected range should not change when filtering is performed', (async () => {
+            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const firstCell = grid.getCellByColumn(0, 'ParentID');
+            const secondCell = grid.getCellByColumn(3, 'HireDate');
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            grid.filter( 'Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            grid.clearFilter();
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+        }));
+
+        it('Filtering - selected range should not change when filtering result is smaller that selected range', (async () => {
+            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate'};
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+
+            grid.filter( 'Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+            grid.clearFilter();
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+        }));
+
+        it('Filtering - selected range should not change when filtering result is empty that selected range', (async () => {
+            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 0, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO'};
+            grid.selectRange(range);
+            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+
+            grid.filter( 'Name', 'leon', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+            grid.clearFilter();
+            fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+
         }));
     });
 });
