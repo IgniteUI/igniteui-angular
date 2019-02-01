@@ -114,10 +114,10 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         const items = this.target.items as IgxSelectItemComponent[];
         const activeItemIndex = items.indexOf(this.target.focusedItem as IgxSelectItemComponent) || 0;
         // ^ this is focused OR selected if the dd is closed
-        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && x.itemText.startsWith(text));
+        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
 
         if (!nextItem) {
-            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && x.itemText.startsWith(text));
+            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
         }
 
         if (!nextItem) {
