@@ -10,7 +10,7 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -29,11 +29,12 @@ describe('CSV Grid Exporter', () => {
             declarations: [
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
+                IgxTreeGridPrimaryForeignKeyComponent,
+                ProductsComponent
             ],
             imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(async(() => {
@@ -303,6 +304,38 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData('');
     });
 
+    it('should skip column formatter when \'onColunmExporting\' skipFormatter is true', async () => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.columns[1].formatter = ((val: string) => {
+            return val.toUpperCase();
+        });
+        grid.columns[2].formatter = ((val: string) => {
+            return val.toLowerCase();
+        });
+        grid.cdr.detectChanges();
+
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
+
+        exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            val.skipFormatter = true;
+        });
+        grid.cdr.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyData(wrapper.simpleGridData, 'Columns formatter should be skipped.');
+
+        exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            val.skipFormatter = false;
+        });
+        grid.cdr.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
+    });
+
+
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
@@ -383,6 +416,29 @@ describe('CSV Grid Exporter', () => {
             }
         });
 
+        it('should skip the column formatter when onColumnExporting skipFormatter is true.', async () => {
+            treeGrid.columns[3].formatter = ((val: string) => {
+                return val.toLowerCase();
+            });
+            treeGrid.columns[4].formatter = ((val: number) => {
+                return val * 12; // months
+            });
+            treeGrid.cdr.detectChanges();
+            let wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
+
+            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+                val.skipFormatter = true;
+            });
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData, 'Columns\' formatter should be skipped.');
+
+            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+                val.skipFormatter = false;
+            });
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
+        });
     });
 
     function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {

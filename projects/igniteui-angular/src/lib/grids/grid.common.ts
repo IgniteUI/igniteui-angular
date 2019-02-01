@@ -27,7 +27,6 @@ import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } fr
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
-
 /**
  * @hidden
  */
