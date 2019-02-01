@@ -532,6 +532,7 @@ export class IgxGridCellComponent implements OnInit {
      */
     public _updateCellSelectionStatus(fireFocus = true, event) {
         const selection = this.gridSelection;
+        const pointerState = this.gridSelection.pointerState;
         const keyboardState = selection.keyboardState;
         const node = this.selectionNode;
 
@@ -549,10 +550,11 @@ export class IgxGridCellComponent implements OnInit {
             this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, keyboardState));
             return;
         }
-        // if (this.selected) {
-        //     this.
-        //     return;
-        // }
+        if (!pointerState.ctrl && !pointerState.shift && !selection.dragMode) {
+            selection.clear();
+            selection.add(node);
+        }
+
         this._clearCellSelection();
         // // this._saveCellSelection();
         const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
@@ -679,7 +681,7 @@ export class IgxGridCellComponent implements OnInit {
         pointerState.shift = shiftKey;
         selectionService.initKeyboardState();
 
-        this._updateCellSelectionStatus(false, event);
+        this._updateCellSelectionStatus(true, event);
         this.clearTextSelection();
 
         if (shiftKey) {
