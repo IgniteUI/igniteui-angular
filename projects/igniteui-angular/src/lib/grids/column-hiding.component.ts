@@ -118,7 +118,10 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
         super(cdr);
     }
 
-    private get hidableColumns() {
+    /**
+     *@hidden
+     */
+    public get hidableColumns() {
         return this.columnItems.filter((col) => !col.disabled);
     }
 
