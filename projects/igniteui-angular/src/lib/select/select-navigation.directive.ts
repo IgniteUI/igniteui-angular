@@ -52,6 +52,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                         }
                         if (nextItem) {
                             this.target.selectItem(nextItem);
+                            this.target.navigateItem(nextItem.index);
                         }
                     }
                     event.preventDefault();
@@ -66,6 +67,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                         }
                         if (previousItem) {
                             this.target.selectItem(previousItem);
+                            this.target.navigateItem(previousItem.index);
                         }
                     }
                     event.preventDefault();
@@ -126,6 +128,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             this.target.navigateItem(items.indexOf(nextItem));
         } else {
             this.target.selectItem(nextItem);
+            this.target.navigateItem(items.indexOf(nextItem));
         }
     }
 }
