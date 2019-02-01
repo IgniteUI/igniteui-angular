@@ -1837,7 +1837,6 @@
     }
 
     %igx-grid__tr--highlighted {
-        //box-shadow: inset 3px 0 0 --var($theme, 'row-highlight');
         position: relative;
 
         &::after {
@@ -1846,7 +1845,7 @@
             top: 0;
             left: 0;
             width: 4px;
-            height: 100%;
+            height: calc(100% + 1px);
             background: --var($theme, 'row-highlight');
             z-index: 3;
         }
