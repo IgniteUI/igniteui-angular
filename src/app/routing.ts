@@ -60,6 +60,7 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { BannerSampleComponent } from './banner/banner.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { SelectFormSampleComponent } from './select/select-form.sample';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
 
 const appRoutes = [
     {
@@ -315,6 +316,10 @@ const appRoutes = [
     {
         path: 'gridPercentage',
         component: GridColumnPercentageWidthsSampleComponent
+    },
+    {
+        path: 'gridSearch',
+        component: GridSearchComponent
     }
 ];
 

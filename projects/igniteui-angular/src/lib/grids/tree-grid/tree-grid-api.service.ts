@@ -58,7 +58,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const treeRecord = grid.records.get(rowID);
 
         if (treeRecord) {
-            const isExpanded = this.get_row_expansion_state(id, rowID, treeRecord.level);
+            const isExpanded = this.get_row_expansion_state(id, treeRecord);
             expandedStates.set(rowID, !isExpanded);
             grid.expansionStates = expandedStates;
         }
@@ -105,15 +105,34 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         });
     }
 
-    public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
+    public expand_path_to_record(id: string, record: ITreeGridRecord) {
+        const grid = this.get(id);
+        const expandedStates = grid.expansionStates;
+
+        while (record.parent) {
+            record = record.parent;
+            const expanded = this.get_row_expansion_state(id, record);
+
+            if (!expanded) {
+                expandedStates.set(record.rowID, true);
+            }
+        }
+        grid.expansionStates = expandedStates;
+
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
+    }
+
+    public get_row_expansion_state(id: string, record: ITreeGridRecord): boolean {
         const grid = this.get(id);
         const states = grid.expansionStates;
-        const expanded = states.get(rowID);
+        const expanded = states.get(record.rowID);
 
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return indentationLevel < grid.expansionDepth;
+            return record.level < grid.expansionDepth;
         }
     }
 

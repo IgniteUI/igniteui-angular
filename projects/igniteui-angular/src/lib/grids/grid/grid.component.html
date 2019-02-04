@@ -75,7 +75,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data | gridTransaction:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
-        | gridSort:sortingExpressions:pipeTrigger
+        | gridSort:sortingExpressions:id:pipeTrigger
         | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
         | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
@@ -131,6 +131,13 @@
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
+</ng-template>
+
+<ng-template #defaultLoadingGrid>
+    <div class="igx-grid__loading">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
 </ng-template>
 
 <ng-template #defaultDropArea>

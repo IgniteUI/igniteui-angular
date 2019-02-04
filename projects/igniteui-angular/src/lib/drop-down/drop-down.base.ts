@@ -4,7 +4,7 @@ import {
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
-import { DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
 let NEXT_ID = 0;
@@ -214,7 +214,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this._focusedItem.index;
+            index = currentIndex ? currentIndex : this._focusedItem.itemIndex;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
         this.navigateItem(newIndex);
