@@ -55,6 +55,9 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
+        setTimeout(() => {
+            this.hGrid.isLoading = true;
+        }, 100);
         this.remoteService.getData({ parentID: null, level: 0, key: 'Customers' }, (data) => {
             this.remoteData = data['value'];
         });
@@ -69,6 +72,9 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     }
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+        setTimeout(() => {
+            event.grid.isLoading = true;
+        }, 100);
         this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
             event.grid.data = data['value'];
             event.grid.cdr.detectChanges();

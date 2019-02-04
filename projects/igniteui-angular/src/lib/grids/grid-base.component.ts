@@ -180,6 +180,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
+    private _isLoading = false;
     private _locale = null;
     /**
      * An accessor that sets the resource strings.
@@ -680,7 +681,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    @Input() isLoading = false;
+    @Input()
+    set isLoading(value: boolean) {
+        this._isLoading = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+        }
+    }
+
+    /**
+     * An accessor that returns whether the grid is showing loading indicator.
+     */
+    get isLoading(): boolean {
+        return this._isLoading;
+    }
 
     /**
      * A property that allows the columns to be auto-generated once again after the initialization of the grid.
