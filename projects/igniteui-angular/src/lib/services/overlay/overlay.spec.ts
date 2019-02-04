@@ -3416,7 +3416,17 @@ export class SimpleDynamicWithDirectiveComponent {
 @Component({
     template: `
         <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
-    `
+    `,
+    styles: [`button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84px;
+        height: 84px;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }`]
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
