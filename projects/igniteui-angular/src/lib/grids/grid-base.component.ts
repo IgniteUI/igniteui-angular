@@ -3672,6 +3672,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public get outerWidth() {
         return this.hasVerticalSroll() ? this.calcWidth + 1 + this.scrollWidth : this.calcWidth + 1;
     }
+
+    /**
+     * @hidden
+     * Gets the visible content height that includes header + tbody + footer.
+     */
+    public getVisibleContentHeight() {
+        let height = this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+        if (this.hasSummarizedColumns) {
+            height += this.tfoot.nativeElement.clientHeight;
+        }
+        return height;
+    }
+
     /**
      * @hidden
      */

@@ -196,7 +196,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             this.colResizingService.column = this.column;
             this.colResizingService.showResizer = true;
             this.colResizingService.isColumnResizing = true;
-            this.colResizingService.resizerHeight = this.calcResizerHeight;
             this.colResizingService.startResizePos = event.clientX;
         } else {
             this.colResizingService.resizeCursor = null;
@@ -218,23 +217,5 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;
-    }
-
-    /**
-     * @hidden
-     */
-    get calcResizerHeight(): number {
-
-        let height = this.column.grid.theadRow.nativeElement.clientHeight + this.column.grid.tbody.nativeElement.clientHeight;
-
-        if (this.column.grid.hasSummarizedColumns) {
-            height += this.column.grid.tfoot.nativeElement.clientHeight;
-        }
-
-        if (this.column.level !== 0) {
-            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height;
-        }
-
-        return height;
     }
 }
