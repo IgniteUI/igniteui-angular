@@ -105,7 +105,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         });
     }
 
-    public expand_path_to_recrod(id: string, record: ITreeGridRecord) {
+    public expand_path_to_record(id: string, record: ITreeGridRecord) {
         const grid = this.get(id);
         const expandedStates = grid.expansionStates;
 

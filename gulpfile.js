@@ -173,7 +173,7 @@ gulp.task('typedoc-theme-ts', () => {
             `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
         ])
         .pipe(ts({
-            target: "es5",
+            target: "es2017",
             moduleResolution: 'node',
             module: 'commonjs'
         }))
