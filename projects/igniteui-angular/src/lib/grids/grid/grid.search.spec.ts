@@ -747,6 +747,32 @@ describe('IgxGrid - search API', () => {
 
             expect(cell.nativeElement.innerText.trim()).toBe('Casey Houston');
         });
+
+        it('Search should not change the cell\'s value', async () => {
+            grid.findNext('12');
+            const rowIndexes = [1, 3, 4, 5];
+
+            rowIndexes.forEach((ind) => {
+                const cell = grid.getCellByColumn(ind, 'HireDate');
+                const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+                const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+                const cellChildren = cell.nativeElement.children;
+
+                // Check whether search does not change the cell's value
+                expect(cellChildren.length).toBe(2);
+                expect(cell.nativeElement.innerText.trim()).toBe(cell.value);
+                expect(cellChildren[0].hidden).toBeTruthy();
+                expect(cellChildren[1].hidden).toBeFalsy();
+
+                expect(highlights.length).toBe(1);
+                if (ind === 1) {
+                    expect(activeHighlight).toBe(highlights[0]);
+                } else {
+                    expect(activeHighlight).toBeNull();
+                }
+                expect(highlights[0].innerText).toEqual('12');
+            });
+        });
     });
 
     /* ScrollableGrid */
