@@ -42,7 +42,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, ContainerPositioningStrategy } from './grid.common';
+import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -3689,10 +3689,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             gridHeight = parseInt(this._height, 10);
         }
         const height = Math.abs(gridHeight - toolbarHeight -
-                this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight - groupAreaHeight -
-                footerBordersAndScrollbars -
-                this.scr.nativeElement.clientHeight);
+            this.theadRow.nativeElement.offsetHeight -
+            this.summariesHeight - pagingHeight - groupAreaHeight -
+            footerBordersAndScrollbars -
+            this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
             return this.defaultTargetBodyHeight;
@@ -4159,7 +4159,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public wheelHandler(isScroll = false) {
         // tslint:disable-next-line:no-bitwise
         if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-        // tslint:disable-next-line:no-bitwise
+            // tslint:disable-next-line:no-bitwise
             (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
             (document.activeElement as HTMLElement).blur();
         }
@@ -4179,7 +4179,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.endEdit(false);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            if (editCell) {
+                editCell.inEditMode = false;
+            } else {
+                this.endEdit(false);
+            }
         }
 
         if (this.collapsedHighlightedItem) {
@@ -4380,6 +4385,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupByRecords = this.getGroupByRecords();
         let collapsedRowsCount = 0;
 
+        const numberPipe = new IgxDecimalPipeComponent(this.locale);
+        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow, i) => {
             const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
@@ -4396,7 +4403,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 collapsedRowsCount++;
             }
             columnItems.forEach((c, j) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                const value = c.formatter ? c.formatter(dataRow[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
+                            : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     const pageIndex = this.paging ? Math.floor(i / this.perPage) : 0;

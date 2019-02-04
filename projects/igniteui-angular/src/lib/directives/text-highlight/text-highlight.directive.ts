@@ -196,9 +196,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
-    constructor(element: ElementRef, public renderer: Renderer2) {
-        this.parentElement = this.renderer.parentNode(element.nativeElement);
-
+    constructor(private element: ElementRef, public renderer: Renderer2) {
         IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
@@ -213,6 +211,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngOnDestroy() {
+        this.clearHighlight();
+
         if (this._observer !== null) {
             this._observer.disconnect();
         }
@@ -241,6 +241,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngAfterViewInit() {
+        this.parentElement = this.renderer.parentNode(this.element.nativeElement);
+
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
                 rowIndex: -1,
