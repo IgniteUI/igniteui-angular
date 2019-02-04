@@ -1,7 +1,8 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, ElementRef, Inject, HostBinding, Input, DoCheck } from '@angular/core';
+import { Component, ElementRef, Inject, HostBinding, Input, DoCheck, Optional } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
+import { IgxDropDownGroupComponent } from '../drop-down';
 
 let NEXT_ID = 0;
 
@@ -11,13 +12,14 @@ let NEXT_ID = 0;
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
-    constructor(
-        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
-        protected elementRef: ElementRef,
-        protected selection: IgxSelectionAPIService
-    ) {
-        super(dropDown, elementRef);
-    }
+    // constructor(
+    //     @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
+    //     protected elementRef: ElementRef,
+    //     protected selection: IgxSelectionAPIService,
+    //     @Optional() protected group: IgxDropDownGroupComponent
+    // ) {
+    //     super(dropDown, elementRef, group);
+    // }
 
     @HostBinding('attr.aria-disabled')
     public get ariaDisabled() {

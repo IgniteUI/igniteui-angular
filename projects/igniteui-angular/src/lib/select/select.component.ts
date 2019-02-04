@@ -4,7 +4,7 @@ import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild,
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { IgxDropDownModule } from '../drop-down/drop-down.component';
+import { IgxDropDownModule } from '../drop-down/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
