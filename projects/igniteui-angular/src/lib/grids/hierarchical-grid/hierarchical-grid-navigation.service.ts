@@ -412,6 +412,25 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return {grid: currGrid, prev: prev };
     }
 
+    private _getMinBottom(grid) {
+        let currGrid = grid;
+        let bottom = currGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+            bottom = Math.min(bottom, currGrid.tbody.nativeElement.getBoundingClientRect().bottom);
+        }
+        return bottom;
+    }
+
+    private _getMaxTop(grid) {
+        let currGrid = grid;
+        let top = currGrid.tbody.nativeElement.getBoundingClientRect().top;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top);
+        }
+        return top;
+    }
 
     private focusNextRow(elem, visibleColumnIndex, grid) {
         const cellSelector = this.getCellSelector(visibleColumnIndex);
@@ -420,9 +439,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             const closestScrollableGrid = this.getNextScrollableDown(grid).grid;
             // const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-            const containerGrid =  closestScrollableGrid || grid.rootGrid;
-            const diff = cell.getBoundingClientRect().bottom + cell.offsetHeight -
-            containerGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const gridBottom = this._getMinBottom(grid);
+            const diff = cell.getBoundingClientRect().bottom - gridBottom;
             const inView =  diff <= 0;
             if (!inView) {
                 this.scrollGrid(closestScrollableGrid, diff, () => cell.focus({ preventScroll: true }));
@@ -442,12 +460,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             let cell = cells[cells.length - 1];
             const rIndex = parseInt(elem.getAttribute('data-rowindex'), 10);
-            const scrGrid = this.getNextScrollable(grid).grid;
+            const scrGrid = grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ? grid :
+             this.getNextScrollable(grid).grid;
             const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
             grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : grid.rootGrid;
+            const gridTop = this._getMaxTop(grid);
             const scrTop = scrGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
             const diff = cell.getBoundingClientRect().bottom -
-            cell.offsetHeight - topGrid.tbody.nativeElement.getBoundingClientRect().top;
+            cell.offsetHeight - gridTop;
             if (scrTop !== 0 && diff < 0 && !inChild) {
                 this.scrollGrid(scrGrid, diff, () => {
                     const el = grid.navigation.getRowByIndex(rIndex);
