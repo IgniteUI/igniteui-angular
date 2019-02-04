@@ -348,18 +348,41 @@ export function getFormatMask(format: string): string {
 /**
  *@hidden
  */
-export function createDate(day: number, month: number, year: number): Date {
+export function createDate(dateFormatParts: any[], prevDateValue: Date, inputValue: string): Date {
+    const dayStr = getDayValueFromInput(dateFormatParts, inputValue);
+    const monthStr = getMonthValueFromInput(dateFormatParts, inputValue);
+    const yearStr = getYearValueFromInput(dateFormatParts, inputValue);
+    const yearFormat = getDateFormatPart(dateFormatParts, DATE_PARTS.YEAR).formatType;
+    const day = (dayStr !== '') ? Number(dayStr) : 1;
+    const month = (monthStr !== '') ? Number(monthStr) - 1 : 0;
+    let year;
+    if (yearStr === '') {
+        year = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? '00' : '2000';
+    } else {
+        year = yearStr;
+    }
+    let yearPrefix;
+    if (prevDateValue !== null) {
+        const originalYear = prevDateValue.getFullYear().toString();
+        if (originalYear.length === 4) {
+            yearPrefix = originalYear.substring(0, 2);
+        }
+    } else {
+        yearPrefix = '20';
+    }
+    const fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
+
     const date = new Date();
     date.setDate(day);
     date.setMonth(month);
-    date.setFullYear(year);
+    date.setFullYear(fullYear);
     return date;
 }
 
 /**
  *@hidden
  */
-export function trimMaskSymbols(mask: string): string {
+export function maskToPromptChars(mask: string): string {
     return mask.replace(/0|L/g, PROMPT_CHAR);
 }
 
@@ -628,6 +651,27 @@ export function getDateValueFromInput(dateFormatParts: any[], type: string, inpu
 /**
  *@hidden
  */
+export function getDayValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
+    return getDateValueFromInput(dateFormatParts, DATE_PARTS.DAY, inputValue, trim);
+}
+
+/**
+ *@hidden
+ */
+export function getMonthValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
+    return getDateValueFromInput(dateFormatParts, DATE_PARTS.MONTH, inputValue, trim);
+}
+
+/**
+ *@hidden
+ */
+export function getYearValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
+    return getDateValueFromInput(dateFormatParts, DATE_PARTS.YEAR, inputValue, trim);
+}
+
+/**
+ *@hidden
+ */
 export function getDateFormatPart(dateFormatParts: any[], type: string): any {
     return dateFormatParts.filter((datePart) => (datePart.type === type))[0];
 }
@@ -806,6 +850,30 @@ export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boole
     }
 
     return false;
+}
+
+export function checkForCompleteDateInput(dateFormatParts: any[], input: string): string {
+    const dayValue = getDayValueFromInput(dateFormatParts, input);
+    const monthValue = getMonthValueFromInput(dateFormatParts, input);
+    const yearValue = getYearValueFromInput(dateFormatParts, input);
+    const dayStr = getDayValueFromInput(dateFormatParts, input, false);
+    const monthStr = getMonthValueFromInput(dateFormatParts, input, false);
+
+    if (isFullDayInput(dateFormatParts, dayValue, dayStr)
+        && isFullMonthInput(dateFormatParts, monthValue, monthStr)
+        && isFullYearInput(dateFormatParts, yearValue)) {
+        return 'complete';
+    }
+
+    if (dayValue === '' && monthValue === '' && yearValue === '') {
+        return 'empty';
+    }
+
+    if (dayValue === '' || monthValue === '' || yearValue === '') {
+        return 'partial';
+    }
+
+    return '';
 }
 
 /**

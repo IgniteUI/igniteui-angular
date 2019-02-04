@@ -18,7 +18,7 @@
         <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
             [igxMask]="mask" [placeholder]="format" [focusedValuePipe]="inputValuePipe" [displayValuePipe]="displayValuePipe"
             (blur)="onBlur($event)" (wheel)="onWheel($event)" (input)="onInput($event)" />
-        <igx-suffix *ngIf="transformedDate !== ''" (click)="clear()">
+        <igx-suffix *ngIf="!isEmpty" (click)="clear()">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
     </igx-input-group>

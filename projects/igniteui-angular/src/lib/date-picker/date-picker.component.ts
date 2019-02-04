@@ -40,7 +40,7 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy
 } from '../services';
-import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
+import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -61,14 +61,11 @@ import {
     DEFAULT_LOCALE_DATE,
     SPIN_DELTA,
     addPromptCharsEditMode,
-    getDateValueFromInput,
     getDateFormatPart,
-    trimMaskSymbols,
-    isFullMonthInput,
-    isFullDayInput,
-    isFullYearInput,
     getModifiedDateInput,
-    isDateInRanges
+    isDateInRanges,
+    maskToPromptChars,
+    checkForCompleteDateInput
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -76,7 +73,6 @@ import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 
 let NEXT_ID = 0;
-
 export interface IgxDatePickerDisabledDateEventArgs {
     datePicker: IgxDatePickerComponent;
     currentValue: Date;
@@ -328,9 +324,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (this._value) {
             const formattedDate = this._transformDate(this._value);
             result = (this._isInEditMode) ? addPromptCharsEditMode(this.dateFormatParts, this.value, formattedDate) : formattedDate;
+            this.isEmpty = false;
         } else {
             if (this._cleanInput) {
-                result = trimMaskSymbols(this.mask);
+                result = maskToPromptChars(this.mask);
             }
         }
         return result;
@@ -384,6 +381,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this._value = date;
         this._onChangeCallback(date);
     }
+
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *```html
@@ -616,6 +614,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _value: Date;
     private _cleanInput = false;
     private _isInEditMode: boolean;
+    private _isEmpty = false;
     private _defaultDateFormat: string = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
 
     private _disabledDates: DateRangeDescriptor[] = null;
@@ -639,12 +638,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     //     event.preventDefault();
     // }
 
-    // @HostListener('keydown', ['$event'])
-    // public onKeyDownEvent(event) {
-    //     // event.preventDefault();
-    //     this.onKeyDown(event);
-    // }
-
     /**
      *Method that sets the selected date.
      *```typescript
@@ -661,6 +654,20 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public writeValue(value: Date) {
         this.value = value;
         this.cdr.markForCheck();
+    }
+
+    /**
+    *@hidden
+    */
+    public get isEmpty(): boolean {
+        return this._isEmpty;
+    }
+
+    /**
+    *@hidden
+    */
+    public set isEmpty(value: boolean) {
+        this._isEmpty = value;
     }
 
     /**
@@ -827,6 +834,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     public clear(): void {
+        this.isEmpty = true;
         this.deselectDate();
         this._setCursorPosition(0);
     }
@@ -835,41 +843,22 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (dateString !== '') {
             const trimmedData = trimUnderlines(dateString);
             const monthFormatType = getDateFormatPart(this.dateFormatParts, DATE_PARTS.MONTH).formatType;
-            const originalDateValue = this.value;
+            const prevDateValue = this.value;
             let newValue;
-
             if (monthFormatType === FORMAT_DESC.NUMERIC
                 || monthFormatType === FORMAT_DESC.TWO_DIGITS) {
-                let fullYear;
-                const strToManipulate = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
-
-                const day = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, strToManipulate);
-                const month = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, strToManipulate);
-                const year = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, strToManipulate);
-
-                const yearFormat = getDateFormatPart(this.dateFormatParts, DATE_PARTS.YEAR).formatType;
-                let yearPrefix;
-                if (originalDateValue !== null) {
-                    const originalYear = originalDateValue.getFullYear().toString();
-                    if (originalYear.length === 4) {
-                        yearPrefix = originalYear.substring(0, 2);
-                    }
-                } else {
-                    yearPrefix = '20';
-                }
-                fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
-
-                newValue = createDate(Number(day), Number(month) - 1, Number(fullYear));
+                const inputValue = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
+                newValue = createDate(this.dateFormatParts, prevDateValue, inputValue);
             } else {
                 newValue = new Date(trimmedData);
             }
 
             // Restore the time part if any
-            if (originalDateValue !== null) {
-                newValue.setHours(originalDateValue.getHours());
-                newValue.setMinutes(originalDateValue.getMinutes());
-                newValue.setSeconds(originalDateValue.getSeconds());
-                newValue.setMilliseconds(originalDateValue.getMilliseconds());
+            if (prevDateValue !== null) {
+                newValue.setHours(prevDateValue.getHours());
+                newValue.setMinutes(prevDateValue.getMinutes());
+                newValue.setSeconds(prevDateValue.getSeconds());
+                newValue.setMilliseconds(prevDateValue.getMilliseconds());
             }
 
             if (this.disabledDates === null
@@ -939,6 +928,45 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
     }
 
+    public onWheel(event) {
+        if (!this.preventWeekdayChange(event)) {
+            this.spinValue(event);
+        }
+    }
+
+    public onInput(event) {
+        const targetValue = event.target.value;
+        const cursorPosition = this._getCursorPosition();
+        const checkInput = checkForCompleteDateInput(this.dateFormatParts, targetValue);
+
+        if (targetValue !== maskToPromptChars(this.mask)) {
+            this.isEmpty = false;
+        }
+
+        // While editing, if the input is deleted, total clean up
+        if (checkInput === 'empty') {
+            this._cleanInput = true;
+            this.isEmpty = true;
+            this.deselectDate();
+        }
+
+        // While editing, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
+        if (checkInput === 'partial') {
+            this.deselectDate();
+            requestAnimationFrame(() => {
+                this.getEditElement().value = targetValue;
+                this._setCursorPosition(cursorPosition);
+            });
+        }
+
+        // If all date parts are completed, change the date-picker value, stay in edit mode
+        if (checkInput === 'complete' && event.inputType !== 'deleteContentBackward') {
+            this._isInEditMode = true;
+            this.calculateDate(targetValue, event.type);
+            this._setCursorPosition(cursorPosition);
+        }
+    }
+
     private preventWeekdayChange(event): boolean {
         const weekDayPart = getDateFormatPart(this.dateFormatParts, DATE_PARTS.WEEKDAY);
         const cursorPosition = this._getCursorPosition();
@@ -950,48 +978,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         ) {
             event.preventDefault();
             return true;
-        }
-    }
-
-    public onWheel(event) {
-        if (!this.preventWeekdayChange(event)) {
-            this.spinValue(event);
-        }
-    }
-
-    public onInput(event) {
-        const inputValue = event.target.value;
-        const cursorPosition = this._getCursorPosition();
-        // Mandatory date parts
-        const dayValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue);
-        const monthValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue);
-        const yearValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, inputValue);
-        const dayStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue, false);
-        const monthStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue, false);
-
-        // While editing, if the input is deleted, total clean up
-        if (dayValue === '' && monthValue === '' && yearValue === '') {
-            this._cleanInput = true;
-            this.deselectDate();
-        }
-
-        // While editing, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
-        if (dayValue === '' || monthValue === '' || yearValue === '') {
-            this.deselectDate();
-            requestAnimationFrame(() => {
-                this.getEditElement().value = inputValue;
-                this._setCursorPosition(cursorPosition);
-            });
-        }
-
-        // If all date parts are completed, change the date-picker value, stay in edit mode
-        if (isFullDayInput(this.dateFormatParts, dayValue, dayStr)
-            && isFullMonthInput(this.dateFormatParts, monthValue, monthStr)
-            && isFullYearInput(this.dateFormatParts, yearValue)
-            && event.inputType !== 'deleteContentBackward') {
-            this._isInEditMode = true;
-            this.calculateDate(inputValue, event.type);
-            this._setCursorPosition(cursorPosition);
         }
     }
 
