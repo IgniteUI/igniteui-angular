@@ -34,9 +34,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
     private defaultWindowToListOffset = 5; // Seems should be in settings
     private viewPort = this.getViewPort(document);
+   // private propListBoundRect = contentElement.getBoundingClientRect() as DOMRect;
 
-    private doBottomMagic67(start, ) {
-
+    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number, transformString: string ) {
+        const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
+        transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
+        contentElement.style.transform = transformString.trim();
+        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
+        console.log('positionAndScrollBottom');
     }
 
     private GET_ITEMS_OUT_OF_VIEW(contentElement: HTMLElement, itemHeight: number): {
@@ -129,11 +134,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const inputBoundRect = this.select.input.nativeElement.getBoundingClientRect();
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect();
-        // assume selected item is always visible
         const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
-        const selectedItemBottomListOffset = selectedItemBoundRect.y - listBoundRect.y + selectedItemBoundRect.height;
-
-
         const ITEM_HEIGHT = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
         const INPUT_HEIGHT = this.select.input.nativeElement.getBoundingClientRect().height;
 
@@ -200,17 +201,13 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                                 this.settings.verticalDirection * size.height}px)`;
                             contentElement.style.transform = transformString.trim();
                         } else {
-                            transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
-                            contentElement.style.transform = transformString.trim();
-                            contentElement.firstElementChild.scrollTop -= OUT_OF_BOUNDS.AMOUNT - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-                            // TODO Refactor code reuse --> this.doBottomMagic67(START.X,...  );
+                            this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.AMOUNT, transformString);
                             console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.DIRECTION === 1');
                         }
                     }
                 }
                 // If one of the last items is selected and there is no more scroll remaining to scroll the selected item
                 // handle options  opt6
-                // TODO consider scrolling the remaining scroll to the end if we want to deviate from mat-select.
                 if (this.GET_ITEMS_OUT_OF_VIEW(contentElement, ITEM_HEIGHT)[1] < ITEM_HEIGHT) {
                     console.log('handle option opt6');
                     if (OUT_OF_BOUNDS.DIRECTION === -1) {
@@ -220,10 +217,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     if (OUT_OF_BOUNDS.DIRECTION === 1) {
                         // handle lst options opt6
                         // position the container with default window offset
-                        transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
-                        contentElement.style.transform = transformString.trim();
-                        contentElement.firstElementChild.scrollTop -= OUT_OF_BOUNDS.AMOUNT - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-                        // TODO Refactor code reuse --> this.doBottomMagic67(START.X,...  );
+                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.AMOUNT, transformString);
                     }
                 }
             }
@@ -242,10 +236,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     if (OUT_OF_BOUNDS.DIRECTION === 1) {
                         // handle lst options opt7
                         // position the container with default window offset
-                        transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
-                        contentElement.style.transform = transformString.trim();
-                        contentElement.firstElementChild.scrollTop -= OUT_OF_BOUNDS.AMOUNT - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-                        // TODO Refactor code reuse --> this.doBottomMagic67(START.X,...  );
+                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.AMOUNT, transformString);
                         console.log('OUT_OF_BOUNDS.DIRECTION === 1');
                     }
                 }
