@@ -1,21 +1,19 @@
-<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
-        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'">
-    <ng-container *ngIf="column.dataType === 'boolean' || column.dataType === 'string' || formatter; else default" >
-        <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
-    </ng-container>
-    <ng-template #default>
-        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal: grid.locale) : (value | igxdate: grid.locale) }}</div>
-    </ng-template>
+<ng-template #defaultCell>
+    <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
+        [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+        [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'"
+        class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
+        grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="focused">
+            <input igxInput [value]="editValue" (input)="editValue = $event.target.value" (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false" [igxFocus]="focused">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="focused" type="number">
+            <input igxInput [value]="editValue" (input)="editValue = $event.target.value" (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false" [igxFocus]="focused" type="number">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">

@@ -1,11 +1,9 @@
-<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
-        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'">
-    <ng-container *ngIf="column.dataType === 'boolean' || column.dataType === 'string' || formatter; else default" >
-        <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
-    </ng-container>
-    <ng-template #default>
-        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal: grid.locale) : (value | igxdate: grid.locale) }}</div>
-    </ng-template>
+<ng-template #defaultCell>
+    <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
+        [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+        [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'"
+        class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
+        grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
@@ -30,7 +28,7 @@
         <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
     </ng-container>
     <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
-         (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
+        (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
     </div>
