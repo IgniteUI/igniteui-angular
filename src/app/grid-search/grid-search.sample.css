@@ -1,0 +1,7 @@
+.sample-buttons {
+    margin-top: 24px;
+}
+
+[igxButton]+[igxButton] {
+    margin-left: 8px;
+}
