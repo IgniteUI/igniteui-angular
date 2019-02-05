@@ -42,7 +42,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, ContainerPositioningStrategy } from './grid.common';
+import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -4208,7 +4208,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.endEdit(false);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            if (editCell) {
+                editCell.inEditMode = false;
+            } else {
+                this.endEdit(false);
+            }
         }
 
         if (!text) {
@@ -4393,9 +4398,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
+        const numberPipe = new IgxDecimalPipeComponent(this.locale);
+        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                const value = c.formatter ? c.formatter(dataRow[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
+                            : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 
