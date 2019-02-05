@@ -11,7 +11,7 @@ import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-fdescribe('IgxToggle', () => {
+describe('IgxToggle', () => {
     configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
