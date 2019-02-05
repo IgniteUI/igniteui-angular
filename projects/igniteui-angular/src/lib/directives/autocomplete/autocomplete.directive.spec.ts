@@ -17,7 +17,7 @@ const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_DROP_DOWN_ITEM_SELECTED = 'igx-drop-down__item--selected';
 
-fdescribe('IgxAutocomplete', () => {
+describe('IgxAutocomplete', () => {
     let fixture;
     let autocomplete: IgxAutocompleteDirective;
     let group: IgxInputGroupComponent;
