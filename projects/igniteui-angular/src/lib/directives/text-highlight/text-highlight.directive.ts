@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 interface ISearchInfo {
     searchedText: string;
@@ -24,10 +25,33 @@ interface ISearchInfo {
     exactMatch: boolean;
 }
 
+/**
+ * An interface describing information for the active highlight.
+ */
 export interface IActiveHighlightInfo {
-    rowIndex: number;
-    columnIndex: number;
-    page: number;
+    /**
+     * The row index of the highlight. This property is deprecated, use `row` instead.
+     */
+    rowIndex?: number;
+    /**
+     * The column index of the highlight. This property is deprecated, use `column` instead.
+     */
+    columnIndex?: number;
+    /**
+     * The page index of the highlight. This property is deprecated.
+     */
+    page?: number;
+    /**
+     * The row of the highlight.
+     */
+    row?: any;
+    /**
+     * The column of the highlight.
+     */
+    column?: any;
+    /**
+     * The index of the highlight.
+     */
     index: number;
 }
 
@@ -126,7 +150,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     /**
-     * The index of the row on which the directive is currently on.
+     * The identifier of the row on which the directive is currently on.
      *
      * ```html
      * <div
@@ -136,10 +160,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input('row')
-    public row: number;
+    public row: any;
 
     /**
-     * The index of the column on which the directive is currently on.
+     * The identifier of the column on which the directive is currently on.
      *
      * ```html
      * <div
@@ -149,20 +173,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input('column')
-    public column: number;
+    public column: any;
 
-    /**
-     * The index of the page on which the directive is currently on.
-     * It is used when the component containing the directive supports paging.
-     *
-     * ```html
-     * <div
-     *   igxTextHighlight
-     *   [page]="0">
-     * </div>
-     * ```
-     */
     @Input('page')
+    @DeprecateProperty(`IgxTextHighlightDirective 'page' input property is deprecated.`)
     public page: number;
 
     /**
@@ -188,17 +202,12 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public static clearActiveHighlight(groupName) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
-            rowIndex: -1,
-            columnIndex: -1,
-            page: -1,
             index: -1
         });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
-    constructor(element: ElementRef, public renderer: Renderer2) {
-        this.parentElement = this.renderer.parentNode(element.nativeElement);
-
+    constructor(private element: ElementRef, public renderer: Renderer2) {
         IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
@@ -213,6 +222,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngOnDestroy() {
+        this.clearHighlight();
+
         if (this._observer !== null) {
             this._observer.disconnect();
         }
@@ -241,11 +252,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngAfterViewInit() {
+        this.parentElement = this.renderer.parentNode(this.element.nativeElement);
+
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
-                rowIndex: -1,
-                columnIndex: -1,
-                page: -1,
                 index: -1
             });
         }
@@ -316,7 +326,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
-        if (group.columnIndex === this.column && group.rowIndex === this.row && group.page === this.page) {
+        const column = group.columnIndex === undefined ? group.column : group.columnIndex;
+        const row = group.rowIndex === undefined ? group.row : group.rowIndex;
+
+        if (column === this.column && row === this.row && group.page === this.page) {
             this.activate(group.index);
         }
     }
@@ -398,9 +411,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     private clearChildElements(originalContentHidden: boolean): void {
-        if (this.parentElement.firstElementChild) {
-            this.renderer.setProperty(this.parentElement.firstElementChild, 'hidden', originalContentHidden);
-        }
+        this.renderer.setProperty(this.element.nativeElement, 'hidden', originalContentHidden);
 
         if (this._div !== null) {
             this.renderer.removeChild(this.parentElement, this._div);
@@ -464,7 +475,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
     private appendDiv() {
         this._div = this.renderer.createElement('div');
-        this.renderer.addClass(this._div, this.containerClass);
+        if ( this.containerClass) {
+            this.renderer.addClass(this._div, this.containerClass);
+        }
         this.renderer.appendChild(this.parentElement, this._div);
     }
 

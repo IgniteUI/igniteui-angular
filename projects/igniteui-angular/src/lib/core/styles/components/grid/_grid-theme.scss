@@ -361,7 +361,6 @@
         cell-selected-text-color: $cell-selected-text-color,
 
         edit-mode-color: $edit-mode-color,
-        edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
 
@@ -1772,6 +1771,7 @@
         justify-content: space-between;
         background: --var($theme, 'filtering-row-background');
         color: --var($theme, 'filtering-row-text-color');
+        left: 0;
         bottom: 0;
         z-index: 3;
 

@@ -2,12 +2,18 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { OnInit, EventEmitter } from '@angular/core';
-import { DropDownActionKey } from './drop-down-navigation.directive';
 
 /** @hidden */
 export enum Navigate {
     Up = -1,
     Down = 1
+}
+
+/** Key actions that have designated handlers in IgxDropDownComponent */
+export enum DropDownActionKey {
+    ESCAPE = 'escape',
+    ENTER = 'enter',
+    SPACE = 'space'
 }
 
 /**

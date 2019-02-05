@@ -21,6 +21,9 @@
     <ng-container ngProjectAs="igx-prefix">
         <ng-content select="igx-prefix"></ng-content>
     </ng-container>
+    <ng-container ngProjectAs="igx-hint, [igxHint]">
+            <ng-content select="igx-hint, [igxHint]"></ng-content>
+        </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [placeholder]="placeholder"
         [disabled]="disabled" />
     <ng-container ngProjectAs="igx-suffix">
