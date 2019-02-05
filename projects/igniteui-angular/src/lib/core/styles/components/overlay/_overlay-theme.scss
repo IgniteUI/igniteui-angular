@@ -74,4 +74,8 @@
     %overlay-content--modal {
         pointer-events: initial;
     }
+
+    %igx-toggle--hidden {
+        display: none !important;
+    }
 }

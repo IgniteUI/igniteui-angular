@@ -29,3 +29,9 @@
         @extend %overlay-content--modal !optional;
     }
 }
+
+@include b(igx-toggle) {
+    @include m(hidden) {
+        @extend %igx-toggle--hidden !optional;
+    }
+}
