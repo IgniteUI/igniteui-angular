@@ -247,6 +247,7 @@ const SASSDOC_THEME = {
 
 gulp.task('sassdoc-clear-main', () => {
     del.sync(`${SASSDOC_THEME.JS_DIR}/main.js`)
+    del.sync(`${SASSDOC_THEME.JS_DIR}/main.d.ts`)
 })
 
 gulp.task('sassdoc-ts',
@@ -255,7 +256,7 @@ gulp.task('sassdoc-ts',
 
 gulp.task('sassdoc-js', ['sassdoc-ts'], () => {
     gulp.src([
-        `${SASSDOC_THEME.JS_DIR}/**/*.js`,
+        `${SASSDOC_THEME.JS_DIR}/**/!(tag-versions.req)*.js`,
     ])
     .pipe(concat('main.js'))
     .pipe(gulp.dest(SASSDOC_THEME.JS_DIR));
