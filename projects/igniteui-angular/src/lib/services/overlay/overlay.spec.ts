@@ -2480,7 +2480,7 @@ describe('igxOverlay', () => {
         }));
 
         // 4. Css
-        it('Should use component initial container\'s properties when is with 100% width/height and show in overlay element',
+        it('Should use component initial container\'s properties when is with 100% width and show in overlay element',
             fakeAsync(() => {
                 const fixture = TestBed.createComponent(WidthTestOverlayComponent);
                 fixture.detectChanges();

@@ -117,5 +117,4 @@ export interface OverlayInfo {
     closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
-    originalElementStyleSize?: Size;
 }
