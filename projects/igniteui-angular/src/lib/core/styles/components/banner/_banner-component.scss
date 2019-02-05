@@ -7,6 +7,9 @@
 ////
 
 @include b(igx-banner) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %igx-banner !optional;
 
     @include e(message) {

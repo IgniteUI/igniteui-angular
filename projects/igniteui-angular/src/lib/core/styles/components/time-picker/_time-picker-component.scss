@@ -1,4 +1,7 @@
 @include b(igx-time-picker) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
     @extend %time-picker-display !optional;
 
     @include e(header) {
