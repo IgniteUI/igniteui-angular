@@ -25,7 +25,6 @@
 @import '../components/drop-down/drop-down-theme';
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/grid-theme';
-@import '../components/grid-filtering/grid-filtering-theme';
 @import '../components/grid-summary/grid-summary-theme';
 @import '../components/grid-paginator/grid-paginator-theme';
 @import '../components/grid-toolbar/grid-toolbar-theme';
@@ -185,10 +184,6 @@
         @include igx-grid(igx-grid-theme($palette, $schema));
     }
 
-    @if not(index($exclude, 'igx-grid-filtering')) {
-        @include igx-grid-filtering(igx-grid-filtering-theme($palette, $schema));
-    }
-
     @if not(index($exclude, 'igx-grid-summary')) {
         @include igx-grid-summary(igx-grid-summary-theme($palette, $schema));
     }
@@ -225,11 +220,11 @@
         @include igx-grid-paginator(igx-grid-paginator-theme($palette, $schema));
     }
 
-    @if not(index($exclude, 'progress-circular')) {
+    @if not(index($exclude, 'igx-circular-bar')) {
         @include igx-progress-circular(igx-progress-circular-theme($palette, $schema));
     }
 
-    @if not(index($exclude, 'progress-linear')) {
+    @if not(index($exclude, 'igx-linear-bar')) {
         @include igx-progress-linear(igx-progress-linear-theme($palette, $schema));
     }
 
