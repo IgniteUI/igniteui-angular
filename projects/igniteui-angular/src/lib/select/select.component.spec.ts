@@ -15,6 +15,7 @@ const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'dropdownToggleButton';
 const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
@@ -241,8 +242,7 @@ describe('igxSelect', () => {
             expect(select.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(select.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
-        fit('Should properly emit closing events on item click', fakeAsync(() => {
-            select.items[0].selected = true;
+        it('Should properly emit closing events on item click', fakeAsync(() => {
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const selectedItemEl = selectList.children[2];
 
@@ -251,13 +251,8 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            spyOn(select.onOpening, 'emit');
-            spyOn(select.onOpened, 'emit');
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
-            spyOn(select, 'toggle').and.callThrough();
-            spyOn(select, 'open').and.callThrough();
-            spyOn(select, 'close').and.callThrough();
 
             selectedItemEl.nativeElement.click();
             tick();
@@ -308,11 +303,13 @@ describe('igxSelect', () => {
         it('Should render aria attributes properly', fakeAsync(() => {
             inputElement = fixture.nativeElement.querySelector('.' + CSS_CLASS_INPUT);
             const dropdownListElement = fixture.nativeElement.querySelector('.' + CSS_CLASS_DROPDOWN_LIST);
+            const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
 
             expect(inputElement.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(inputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
             expect(inputElement.nativeElement.getAttribute('aria-owns')).toEqual('igx-drop-down-0-list');
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
+            expect(toggleBtn.nativeElement.getAttribute('role')).toEqual('button');
             expect(dropdownListElement.getAttribute('role')).toEqual('listbox');
             expect(dropdownListElement.getAttribute('aria-hidden')).toEqual('true');
 
@@ -327,6 +324,22 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(dropdownListElement.getAttribute('aria-hidden')).toEqual('true');
+        }));
+        fit('Should render aria attributes on dropdown items properly', fakeAsync(() => {
+            select.items[0].selected = true;
+            const selectItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
+            selectItems.forEach(item => {
+                expect(item.nativeElement.getAttribute('role')).toEqual('option');
+                expect(item.nativeElement.getAttribute('aria-selected')).toEqual('false');
+                expect(item.nativeElement.getAttribute('aria-disabled')).toEqual('false');
+            });
+            const selectedItem = select.items[2];
+            const disabledItem = select.items[8];
+            selectedItem.selected = true;
+            disabledItem.disabled = true;
+            fixture.detectChanges();
+            expect(selectItems[selectedItem.index].nativeElement.getAttribute('aria-selected')).toEqual('true');
+            expect(selectItems[disabledItem.index].nativeElement.getAttribute('aria-disabled')).toEqual('true');
         }));
     });
     describe('Selection tests: ', () => {
