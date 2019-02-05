@@ -13,19 +13,21 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxColumnComponent, DropPosition } from '../grid';
-import { IgxDropDownComponent } from '../../drop-down';
+import { IgxDropDownComponent, IgxDropDownItemComponent } from '../../drop-down';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings } from '../../services';
 import { IgxButtonGroupComponent } from '../../buttonGroup/buttonGroup.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxFilteringService } from './grid-filtering.service';
+import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
-import { IFilteringOperation, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IFilteringOperation, IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
 import { IgxFilterOptions } from '../../directives/filter/filter.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { element } from 'protractor';
 import { cloneArray } from '../../core/utils';
+import { DataType } from '../../data-operations/data-util';
+import { IgxInputGroupComponent } from '../../input-group';
 
 /**
  * @hidden
@@ -42,10 +44,11 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     private isMouseOverSubMenu = false;
     private isMouseOverMoreFilters = false;
     private isSubMenuOpened = false;
-    private changedItems = [];
+    private originalItems = [];
 
     public uniqueItems = [];
     public searchValue: string;
+    public expressionsList = new Array<ExpressionUI>();
 
     private _positionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom
@@ -214,7 +217,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
             this._subMenuoverlaySettings.positionStrategy.settings.target = eventArgs.target;
 
             const gridRect = this.filteringService.grid.nativeElement.getBoundingClientRect();
-            const dropdownRect = this.dropdownElement.nativeElement.getBoundingClientRect();
+            const dropdownRect = this.dropdown.element.getBoundingClientRect();
 
             let x = dropdownRect.left + dropdownRect.width;
             let x1 = gridRect.left + gridRect.width;
@@ -266,11 +269,12 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         eventArgs.cancel = true;
         this.dropdown.close();
         this.subMenu.close();
+        this.customMenu.open(this._overlaySettings);
     }
 
     public closeDialog() {
-        this.uniqueItems = cloneArray(this.changedItems, true);
-        this.changedItems = [];
+        this.uniqueItems = cloneArray(this.originalItems, true);
+        this.originalItems = [];
         this.dropdown.close();
     }
 
@@ -279,7 +283,96 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public onDropDownOpening() {
-        this.changedItems = cloneArray(this.uniqueItems, true);
+        this.originalItems = cloneArray(this.uniqueItems, true);
+    }
+
+    public onCustomMenuOpening() {
+        this.expressionsList = [];
+        const exprUI = new ExpressionUI();
+        exprUI.expression = {
+            condition: IgxNumberFilteringOperand.instance().condition("greaterThan"),
+            fieldName: "UnitPrice",
+            ignoreCase: true,
+            searchVal: 20
+        };
+        exprUI.afterOperator = FilteringLogic.And;
+
+        this.expressionsList.push(exprUI);
+
+        const exprUI1 = new ExpressionUI();
+        exprUI1.expression = {
+            condition: IgxNumberFilteringOperand.instance().condition("greaterThan"),
+            fieldName: "UnitPrice",
+            ignoreCase: true,
+            searchVal: 20
+        };
+
+        this.expressionsList.push(exprUI1);
+    }
+
+    public toggleCustomMenuDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
+        this._overlaySettings.positionStrategy.settings.target = input.element.nativeElement;
+        targetDropDown.toggle(this._overlaySettings)
+    }
+
+    public getIconName(exp: ExpressionUI): string {
+        if (this.column.dataType === DataType.Boolean && exp.expression.condition === null) {
+            return this.getCondition(this.conditions[0]).iconName;
+        } else {
+            return exp.expression.condition.iconName;
+        }
+    }
+
+    public isConditionSelected(conditionName: string, exp: ExpressionUI): boolean {
+        if (exp.expression.condition) {
+            return exp.expression.condition.name === conditionName;
+        } else {
+            return false;
+        }
+    }
+
+    public onConditionsChanged(eventArgs: any, exp: ExpressionUI) {
+        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+        exp.expression.condition = this.getCondition(value);
+
+        if (this.inputValues) {
+            this.inputValues.nativeElement.focus();
+        }
+    }
+
+    public isValueSelected(value: string, exp: ExpressionUI): boolean {
+        if (exp.expression.searchVal) {
+            return exp.expression.searchVal === value;
+        } else {
+            return false;
+        }
+    }
+
+    public onValuesChanged(eventArgs: any, exp: ExpressionUI) {
+        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+        exp.expression.searchVal = value;
+
+        if (this.inputValues) {
+            this.inputValues.nativeElement.focus();
+        }
+    }
+
+    public onDropdownValuesOpening(targetDropdown: IgxDropDownComponent) {
+        targetDropdown.items.forEach(dropdownItem => {
+            if(dropdownItem.value === this.inputValues.nativeElement.value) {
+                dropdownItem.isSelected = true;
+                targetDropdown.setSelectedItem(dropdownItem.index);
+            } else {
+                dropdownItem.isSelected = false;
+            }
+        });
+    }
+
+    public onLogicOperatorButtonClicked(eventArgs, buttonGroup: IgxButtonGroupComponent, buttonIndex: number) {
+        if (buttonGroup.selectedButtons.length === 0) {
+            eventArgs.stopPropagation();
+            buttonGroup.selectButton(buttonIndex);
+        }
     }
 
     public applyFilter() {
@@ -288,20 +381,25 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         const unselectedItems = this.uniqueItems.find(el => el.value !== 'Select All' && el.isSelected === false);
 
         if(unselectedItems) {
-            selectedItems.forEach(element => {
-                filterTree.filteringOperands.push({
-                    condition: IgxStringFilteringOperand.instance().condition("equals"),
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.filteringIgnoreCase,
-                    searchVal: element.value
+            if (selectedItems.length === 0) {
+                //TODO
+                this.filteringService.grid.filter(this.column.field, null, filterTree);
+            } else {
+                selectedItems.forEach(element => {
+                    filterTree.filteringOperands.push({
+                        condition: IgxStringFilteringOperand.instance().condition("equals"),
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.filteringIgnoreCase,
+                        searchVal: element.value
+                    });
                 });
-            });
-            this.filteringService.grid.filter(this.column.field, null, filterTree);
+                this.filteringService.grid.filter(this.column.field, null, filterTree);
+            }
         } else {
             this.filteringService.grid.clearFilter(this.column.field);
         }
 
-        this.changedItems = [];
+        this.originalItems = [];
         this.dropdown.close();
     }
 
@@ -321,24 +419,28 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         this.dropdown.close();
     }
 
-    @ViewChild(IgxToggleDirective) 
+    @ViewChild('dropdown', { read: IgxToggleDirective }) 
     public dropdown: IgxToggleDirective;
 
-    @ViewChild('subMenu') 
+    @ViewChild('subMenu', { read: IgxDropDownComponent }) 
     public subMenu: IgxDropDownComponent;
 
-    @ViewChild('sortButtonGroup') 
+    @ViewChild('customMenu', { read: IgxToggleDirective }) 
+    public customMenu: IgxToggleDirective;
+
+    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent }) 
     public sortButtonGroup: IgxButtonGroupComponent;
 
-    @ViewChild('ascButton') 
+    @ViewChild('ascButton', { read: ElementRef }) 
     public ascButton: ElementRef;
 
-    @ViewChild('descButtonGroup') 
+    @ViewChild('descButtonGroup', { read: ElementRef }) 
     public descButton: ElementRef;
-
-    @ViewChild('dropdown') 
-    public dropdownElement: ElementRef;
 
     @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
+
+    @ViewChild('inputValues', { read: ElementRef })
+    protected inputValues: ElementRef;
+    
 }

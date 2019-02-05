@@ -64,6 +64,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxListComponent, IgxListModule } from '../list';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
+import { IgxComboModule } from '../combo';
 
 @NgModule({
     declarations: [
@@ -176,9 +177,10 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
         IgxListModule,
-        IgxFilterModule
+        IgxFilterModule,
+        IgxComboModule
     ],
     providers: [
         IgxSelectionAPIService,
