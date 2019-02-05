@@ -198,20 +198,7 @@ export class IgxColumnComponent implements AfterContentInit {
             }
             this.check();
             if (this.grid) {
-                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
-                if (!activeInfo) {
-                    return;
-                }
-                const oldIndex = activeInfo.columnIndex;
-
-                if (this.grid.lastSearchInfo.searchText) {
-                    if (this.index <= oldIndex) {
-                        const newIndex = this.hidden ? oldIndex - 1 : oldIndex + 1;
-                        IgxColumnComponent.updateHighlights(oldIndex, newIndex, this.grid);
-                    } else if (oldIndex === -1 && !this.hidden) {
-                        this.grid.refreshSearch();
-                    }
-                }
+                this.grid.refreshSearch(true);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
