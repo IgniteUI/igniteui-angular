@@ -141,11 +141,15 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
-            this.shouldPrevent(evt);
+            this.preventParentScroll(evt);
         }
     }
 
-    protected shouldPrevent(evt) {
+    /**
+     * @hidden
+     * When there is still room to scroll up/down prevent the parent elements from scrolling too.
+     */
+    protected preventParentScroll(evt) {
         const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
         const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
             this.IgxScrollInertiaScrollContainer.offsetHeight;
@@ -191,7 +195,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         this._touchPrevented = false;
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.shouldPrevent(event);
+            this.preventParentScroll(event);
         }
     }
 
@@ -269,7 +273,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.shouldPrevent(event);
+            this.preventParentScroll(event);
         }
     }
 
@@ -294,7 +298,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                     this._inertiaInit(speedX, speedY);
         }
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.shouldPrevent(event);
+            this.preventParentScroll(event);
         }
     }
 
