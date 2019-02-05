@@ -34,14 +34,31 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     /** Min distance/padding between the visible window TOP/BOTTOM and the IgxSelect list items container */
     private defaultWindowToListOffset = 5;
     private viewPort = this.getViewPort(document);
-   // private propListBoundRect = contentElement.getBoundingClientRect() as DOMRect;
 
-    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number, transformString: string ) {
+    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
         contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-        console.log('positionAndScrollBottom');
+        console.log('outBoundsAmount: ' + outBoundsAmount);
+        console.log('positionAndScrollBottom scrollTop: ' + contentElement.firstElementChild.scrollTop);
+    }
+
+    //TODO use defaultWindowToListOffset consistently in all scenarios
+    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string, size: Size) {
+        transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+            this.adjustItemTextPadding()}px)`;
+        contentElement.style.transform = transformString.trim();
+        console.log('positionNoScroll');
+    }
+
+    private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string, itemHeight: number, inputHeight: number) {
+        const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
+        transformString += `translateY(${this.viewPort.top + this.defaultWindowToListOffset}px)`;
+        contentElement.style.transform = transformString.trim();
+        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.adjustItemTextPadding() + this.defaultWindowToListOffset;
+        console.log('outBoundsAmount: ' + outBoundsAmount);
+        console.log('positionAndScrollTop scrollTop: ' + contentElement.firstElementChild.scrollTop);
     }
 
     private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
@@ -100,11 +117,13 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             Direction: Direction.None,
             Amount: 0
         };
-        if (documentElement.TOP > container.TOP) {
+        if (documentElement.TOP + this.defaultWindowToListOffset > container.TOP) {
             returnVals.Direction = Direction.Top;
-            returnVals.Amount = documentElement.TOP - container.TOP - this.defaultWindowToListOffset;
-        } else if (documentElement.BOTTOM < container.BOTTOM) {
+            // returnVals.Amount = documentElement.TOP - container.TOP - this.defaultWindowToListOffset;
+            returnVals.Amount = documentElement.TOP - container.TOP;
+        } else if (documentElement.BOTTOM - this.defaultWindowToListOffset  < container.BOTTOM) {
             returnVals.Direction = Direction.Bottom;
+            // returnVals.Amount = container.BOTTOM - documentElement.BOTTOM - this.defaultWindowToListOffset;
             returnVals.Amount = container.BOTTOM - documentElement.BOTTOM;
         } else {
             // there is enough space to fit the drop-down container on the window
@@ -167,20 +186,17 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // when there is scroll and the list container is always in the visible port.
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
             this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
-            transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-                this.adjustItemTextPadding()}px)`;
-            contentElement.style.transform = transformString.trim();
+            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
         }
 
         // Handle scenarios where there the list container has scroll
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 ||
             this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0) {
-            console.log('container has scroll');
+            console.log('container has scroll + top igxSelect opt2, opt3, opt4, opt5, opt6');
             // If the first couple of items are selected and there is space, do not scroll
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && !OUT_OF_BOUNDS) {
-                transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-                    this.adjustItemTextPadding()}px)`;
-                contentElement.style.transform = transformString.trim();
+                this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                console.log('container has scroll + top igxSelect opt2, opt3, opt4, opt5, opt6 If the first couple of items are selected and there is space, do not scroll');
             }
             // If Out of boundaries and there is available scrolling down -  do scroll
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
@@ -188,22 +204,19 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 // handle options opt2, opt3, opt4, opt5
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        transformString += `translateY(${START.Y - itemHeight + this.settings.verticalDirection * size.height -
-                            this.adjustItemTextPadding()}px)`;
-                        contentElement.style.transform = transformString.trim();
-                        contentElement.firstElementChild.scrollTop += selectedItemBoundRect.y - itemHeight;
                         console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.Direction === -1');
+                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount, transformString, itemHeight, inputHeight);
                         return;
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // it is one of the edge items so there is no more scrolling in that same Direction
                         if (contentElement.firstElementChild.scrollTop === 0) {
-                            transformString += `translateY(${START.Y + inputHeight - listBoundRect.height +
-                                this.settings.verticalDirection * size.height}px)`;
-                            contentElement.style.transform = transformString.trim();
+                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                            return;
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
                             console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.Direction === 1');
+                            return;
                         }
                     }
                 }
@@ -212,8 +225,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] < itemHeight) {
                     console.log('handle option opt6');
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
-                        contentElement.style.transform = transformString.trim();
+                        console.log('handle options opt6........OUT_OF_BOUNDS.Direction === -1');
+                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount, transformString, itemHeight, inputHeight);
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // handle lst options opt6
@@ -229,9 +242,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 console.log('handle options  opt7, opt8, opt9');
                 if (OUT_OF_BOUNDS) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        transformString += `translateY(${START.Y + this.settings.verticalDirection * size.height - this.adjustItemTextPadding()}px)`;
-                        contentElement.style.transform = transformString.trim();
-                        console.log('OUT_OF_BOUNDS.Direction === -1');
+                        console.log('handle options  opt7, opt8, opt9........OUT_OF_BOUNDS.Direction === -1');
+                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // handle lst options opt7
@@ -242,9 +254,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 }
                 // handle lst options opt8, opt9 --> these are OK.
                 if (!OUT_OF_BOUNDS) {
-                    transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-                        this.adjustItemTextPadding()}px)`;
-                    contentElement.style.transform = transformString.trim();
+                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
                     console.log('!OUT_OF_BOUNDS');
                 }
             }
