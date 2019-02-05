@@ -325,7 +325,7 @@ describe('igxSelect', () => {
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(dropdownListElement.getAttribute('aria-hidden')).toEqual('true');
         }));
-        fit('Should render aria attributes on dropdown items properly', fakeAsync(() => {
+        it('Should render aria attributes on dropdown items properly', () => {
             select.items[0].selected = true;
             const selectItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
             selectItems.forEach(item => {
@@ -340,7 +340,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(selectItems[selectedItem.index].nativeElement.getAttribute('aria-selected')).toEqual('true');
             expect(selectItems[disabledItem.index].nativeElement.getAttribute('aria-disabled')).toEqual('true');
-        }));
+        });
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -1268,6 +1268,35 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
+        it('Should display selected item over input when there is ample space to open', fakeAsync(() => {
+            // TODO
+        }));
+        it('Should display selected item over input when there is some space above to open and first item is selected', fakeAsync(() => {
+            // TODO
+            // starts from the input top left point
+        }));
+        // tslint:disable-next-line:max-line-length
+        it('Should display selected item over input and possible items above and below when there is some space above to open and item in the middle of the list is selected',
+        fakeAsync(() => {
+            // TODO
+        }));
+        it('Should display selected item and all possible items above when there is some space above to open and last item is selected',
+        fakeAsync(() => {
+            // TODO
+        }));
+        it('Should display selected item and all possible items above when there is some space below to open and first item is selected',
+        fakeAsync(() => {
+            // TODO
+        }));
+         // tslint:disable-next-line:max-line-length
+        it('Should display selected item over input and possible items above and below when there is some space below to open and item in the middle of the list is selected',
+        fakeAsync(() => {
+            // TODO
+        }));
+        it('Should display selected item over input when there is some space below to open and last item is selected', fakeAsync(() => {
+            // TODO
+            // starts from the input bottom left point
+        }));
     });
 });
 
