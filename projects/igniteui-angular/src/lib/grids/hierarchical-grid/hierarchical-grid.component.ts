@@ -36,6 +36,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 
 let NEXT_ID = 0;
 
@@ -251,6 +252,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
     private scrollLeft = 0;
+    private hierarchicalNavigation;
 
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
@@ -283,6 +285,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             summaryService,
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+        this.hierarchicalNavigation = navigation;
     }
 
     /**
@@ -556,5 +559,123 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
+    }
+
+    protected find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+        const childGrids = this.getChildGrids(false);
+        const prevActiveMatchIndex = this.lastSearchInfo.activeMatchIndex;
+        super._applyHightlights(text, increment, caseSensitive, exactMatch);
+        childGrids.forEach((grid) => {
+            grid.find(text, increment, caseSensitive, exactMatch, scroll);
+            const matchCache = grid.lastSearchInfo.matchInfoCache;
+            const parentRec = this.hgridAPI.getParentRowId(grid);
+            // last index that belongs to the parent row
+            const insertIndex = this.lastSearchInfo.matchInfoCache.findIndex((info, index) => {
+                return info.row === parentRec &&
+                (this.lastSearchInfo.matchInfoCache.length - 1 === index ||
+                    this.lastSearchInfo.matchInfoCache[index + 1].row !== parentRec);
+            });
+            const itemsToAdd = [];
+            matchCache.forEach((matchCacheItem) => {
+                if (this.lastSearchInfo.matchInfoCache.indexOf(matchCacheItem) === -1) {
+                    itemsToAdd.push(matchCacheItem);
+                }
+            });
+            itemsToAdd.reverse().forEach(item => {
+                this.lastSearchInfo.matchInfoCache.splice(insertIndex + 1, 0, item);
+            });
+        });
+        if (this.parent === null && this.lastSearchInfo.matchInfoCache.length > 0 &&
+            this.lastSearchInfo.matchInfoCache.length >= this.lastSearchInfo.activeMatchIndex) {
+                const prevMatchInfo = this.lastSearchInfo.matchInfoCache[prevActiveMatchIndex];
+                IgxTextHighlightDirective.clearActiveHighlight(prevMatchInfo.grid.id);
+                const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
+                IgxTextHighlightDirective.setActiveHighlight(matchInfo.grid.id, {
+                    column: matchInfo.column,
+                    row: matchInfo.row,
+                    index: matchInfo.index,
+                });
+                if (scroll !== false) {
+                    if (matchInfo.grid.parent === null) {
+                        this.scrollTo(matchInfo.row, matchInfo.column);
+                    } else {
+                        this.scrollToChildGridCell(matchInfo.grid, matchInfo.row, matchInfo.column);
+                    }
+                }
+        }
+        return this.lastSearchInfo.matchInfoCache.length;
+    }
+
+    public clearSearch() {
+        super.clearSearch();
+        const childGrids = this.getChildGrids(false);
+        childGrids.forEach((grid) => {
+            grid.clearSearch();
+        });
+    }
+
+    public refreshSearch(updateActiveInfo?: boolean, updateUI?: boolean): number {
+        if (this.lastSearchInfo.searchText) {
+            return this.rootGrid.find(
+                this.lastSearchInfo.searchText,
+                0,
+                this.lastSearchInfo.caseSensitive,
+                this.lastSearchInfo.exactMatch,
+                false);
+        } else {
+            return 0;
+        }
+    }
+
+    protected scrollToChildGridCell(grid: IgxHierarchicalGridComponent, row: any, column: any) {
+        const gridsToScroll = [];
+        let currGrid = grid;
+        while (currGrid.parent) {
+            const parentRec = currGrid.parent.hgridAPI.getParentRowId(currGrid);
+            const childIndex = currGrid.parent.verticalScrollContainer.igxForOf.indexOf(parentRec);
+            gridsToScroll.push({grid: currGrid, parentRec: parentRec, childIndex: childIndex});
+            currGrid = currGrid.parent;
+        }
+        // start top to bottom
+        gridsToScroll.reverse();
+        gridsToScroll.forEach((info) => {
+            // check if parent is expanded
+            const gridToScroll = info.grid.parent;
+            console.log('check if should scroll grid: ' + gridToScroll.id);
+            console.log('to index: ' + info.childIndex);
+            // check if already visible
+            if (gridToScroll.verticalScrollContainer.state.startIndex >= info.childIndex ||
+                info.childIndex >= gridToScroll.verticalScrollContainer.state.startIndex +
+                gridToScroll.verticalScrollContainer.state.chunkSize) {
+                    console.log('scroll grid: ' + gridToScroll.id);
+                    console.log('to index: ' + info.childIndex);
+                    gridToScroll.scrollTo(info.childIndex, 0);
+            }
+            if (!gridToScroll.isExpanded(info.parentRec)) {
+                // expand parent row if collapsed
+                const state = gridToScroll.hierarchicalState;
+                state.push({ rowID: gridToScroll.primaryKey ? info.parentRec[gridToScroll.primaryKey] : info.parentRec });
+                gridToScroll.hierarchicalState = [...state];
+            }
+        });
+        requestAnimationFrame(() => {
+            // check cell is in view, if it is not fully in view scroll more so that it is fully visible.
+            const cell = grid.getCellByKey(row, column);
+            const diffBottom =  cell.nativeElement.getBoundingClientRect().bottom -
+            this.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const diffTop = cell.nativeElement.getBoundingClientRect().bottom -
+            cell.nativeElement.offsetHeight - this.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
+            if (diffBottom > 0) {
+                const closestScrollableDownGrid = this.hierarchicalNavigation.getNextScrollableDown(grid).grid;
+                console.log('scroll grid: ' +  closestScrollableDownGrid.id);
+                console.log('with: ' + diffBottom);
+                closestScrollableDownGrid.verticalScrollContainer.addScrollTop(diffBottom);
+            } else if (diffTop < 0) {
+                const closestScrollableUpGrid = this.hierarchicalNavigation.getNextScrollable(grid).grid;
+                console.log('scroll grid: ' +  closestScrollableUpGrid.id);
+                console.log('with: ' + diffTop);
+                closestScrollableUpGrid.verticalScrollContainer.addScrollTop(diffTop);
+            }
+        });
     }
 }

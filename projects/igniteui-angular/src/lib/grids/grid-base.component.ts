@@ -4174,21 +4174,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return col.field + col.calcWidth;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
-        if (!this.rowList) {
-            return 0;
-        }
-
-        const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editModeCell) {
-            this.endEdit(false);
-        }
-
+    protected _applyHightlights(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
         if (!text) {
             this.clearSearch();
             return 0;
         }
-
         const caseSensitiveResolved = caseSensitive ? true : false;
         const exactMatchResolved = exactMatch ? true : false;
         let rebuildCache = false;
@@ -4226,6 +4216,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else if (this.lastSearchInfo.activeMatchIndex < 0) {
             this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
         }
+    }
+    protected find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+        if (!this.rowList) {
+            return 0;
+        }
+
+        const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editModeCell) {
+            this.endEdit(false);
+        }
+
+        this._applyHightlights(text, increment, caseSensitive, exactMatch, scroll);
 
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
@@ -4378,6 +4380,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
+                                grid: this
                             });
                         }
                     } else {
@@ -4389,6 +4392,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                                 row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
+                                grid: this
                             });
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
