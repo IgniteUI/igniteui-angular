@@ -51,7 +51,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     @Input('value')
     set value(value: any) {
-        this.nativeElement.value = value;
+        this.nativeElement.value = value || '';
         this.checkValidity();
     }
     /**
@@ -155,6 +155,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
 
+        // Make sure we do not invalidate the input on init
+        if (!this.ngControl) {
+            this._valid = IgxInputState.INITIAL;
+        }
         // Also check the control's validators for required
         if (!this.inputGroup.isRequired && this.ngControl && this.ngControl.control.validator) {
             const validation = this.ngControl.control.validator({} as AbstractControl);
