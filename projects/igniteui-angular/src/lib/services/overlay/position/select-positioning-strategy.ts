@@ -40,7 +40,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
-     //   contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() ) + this.defaultWindowToListOffset;
+        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset); //  - 2 * this.defaultWindowToListOffset Fix defaultWindowToListOffset maybe remove this from the listOutOfBounds Check
+        console.log('outBoundsAmount: ' + outBoundsAmount);
         console.log('positionAndScrollBottom scrollTop: ' + contentElement.firstElementChild.scrollTop);
     }
 
@@ -56,8 +57,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         transformString += `translateY(${this.viewPort.top + this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
-        contentElement.firstElementChild.scrollTop += outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-        console.log('positionAndScrollTop');
+        // contentElement.firstElementChild.scrollTop += outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
+        contentElement.firstElementChild.scrollTop += outBoundsAmount;
+        console.log('outBoundsAmount: ' + outBoundsAmount);
+        console.log('positionAndScrollTop scrollTop: ' + contentElement.firstElementChild.scrollTop);
     }
 
     private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
@@ -118,10 +121,12 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         };
         if (documentElement.TOP > container.TOP) {
             returnVals.Direction = Direction.Top;
-            returnVals.Amount = documentElement.TOP - container.TOP - this.defaultWindowToListOffset;
+            // returnVals.Amount = documentElement.TOP - container.TOP - this.defaultWindowToListOffset;
+            returnVals.Amount = documentElement.TOP - container.TOP;
         } else if (documentElement.BOTTOM < container.BOTTOM) {
             returnVals.Direction = Direction.Bottom;
-            returnVals.Amount = container.BOTTOM - documentElement.BOTTOM - this.defaultWindowToListOffset;
+            // returnVals.Amount = container.BOTTOM - documentElement.BOTTOM - this.defaultWindowToListOffset;
+            returnVals.Amount = container.BOTTOM - documentElement.BOTTOM;
         } else {
             // there is enough space to fit the drop-down container on the window
             return null;
@@ -201,12 +206,13 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 // handle options opt2, opt3, opt4, opt5
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        transformString += `translateY(${START.Y - itemHeight + this.settings.verticalDirection * size.height -
-                            this.adjustItemTextPadding()}px)`;
-                        contentElement.style.transform = transformString.trim();
-                        contentElement.firstElementChild.scrollTop += selectedItemBoundRect.y - itemHeight;
+                        // transformString += `translateY(${START.Y - itemHeight + this.settings.verticalDirection * size.height -
+                        //     this.adjustItemTextPadding()}px)`;
+                        // contentElement.style.transform = transformString.trim();
+                        // contentElement.firstElementChild.scrollTop += selectedItemBoundRect.y - itemHeight;
                         console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.Direction === -1');
-                        return;
+                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount, transformString);
+                       // return;
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // it is one of the edge items so there is no more scrolling in that same Direction
@@ -215,9 +221,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                             //     this.settings.verticalDirection * size.height}px)`;
                             // contentElement.style.transform = transformString.trim();
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                            return;
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
                             console.log('handle options opt2, opt3, opt4, opt5........OUT_OF_BOUNDS.Direction === 1');
+                            return;
                         }
                     }
                 }
