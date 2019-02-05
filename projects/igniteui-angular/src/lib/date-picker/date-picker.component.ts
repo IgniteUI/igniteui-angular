@@ -73,6 +73,10 @@ import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 
 let NEXT_ID = 0;
+/**
+ * This interface is used to provide information about date picker reference and its current value
+ * when onDisabledDate event is fired.
+ */
 export interface IgxDatePickerDisabledDateEventArgs {
     datePicker: IgxDatePickerComponent;
     currentValue: Date;

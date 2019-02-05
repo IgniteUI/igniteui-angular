@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -62,6 +62,7 @@ describe('IgxDatePicker', () => {
             expect(domDatePicker.id).toBe('customDatePicker');
         });
 
+        // TO FIX
         it('Datepicker open/close event', async () => {
             const dom = fixture.debugElement;
 
@@ -70,7 +71,7 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onOpen, 'emit');
             spyOn(datePicker.onClose, 'emit');
 
-            target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+            UIInteractions.clickElement(target);
             fixture.detectChanges();
             await wait();
 
@@ -78,7 +79,7 @@ describe('IgxDatePicker', () => {
             expect(datePicker.onOpen.emit).toHaveBeenCalledWith(datePicker);
 
             const overlay = dom.query(By.css('.igx-dialog'));
-            overlay.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+            UIInteractions.clickElement(overlay);
             await wait(350); // destroy timeout...
             expect(datePicker.onClose.emit).toHaveBeenCalled();
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
@@ -132,6 +133,7 @@ describe('IgxDatePicker', () => {
             expect(label).not.toBeNull();
         });
 
+        // TO FIX
         it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
             const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
             let overlayToggle = document.getElementsByTagName('igx-toggle');
@@ -152,6 +154,7 @@ describe('IgxDatePicker', () => {
             expect(overlayToggle.length).toEqual(0);
         }));
 
+        // TO FIX
         it('When datepicker is closed and the dialog disappear the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
@@ -208,6 +211,7 @@ describe('IgxDatePicker', () => {
             expect(inputTarget.value).toEqual(todayToEnLocale);
         });
 
+        // TO FIX
         it('Set formatOptions for month to be numeric', () => {
             const getMonthFromPickerDate = fixture.componentInstance.date.getMonth() + 1;
 
@@ -228,10 +232,10 @@ describe('IgxDatePicker', () => {
         const dom = fixture.debugElement;
         const datePickerTarget = dom.query(By.css('.igx-date-picker__input-date'));
 
-        datePickerTarget.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        UIInteractions.clickElement(datePickerTarget);
         fixture.detectChanges();
 
-        const firstDayValue = dom.query(By.css('.igx-calendar__label')).nativeElement.innerText;
+        const firstDayValue = dom.query(By.css('.igx-calendar__label')).nativeElement.innerText.trim();
         const expectedResult = 'Mon';
 
         expect(firstDayValue).toBe(expectedResult);
@@ -279,6 +283,7 @@ describe('IgxDatePicker', () => {
         expect(boundValue).toEqual(expectedRes);
     }));
 
+    // TO FIX
     it('Retemplate a DatePicker input group', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
         tick();
@@ -308,6 +313,7 @@ describe('IgxDatePicker', () => {
         expect(datePicker.value).toBe(null);
     });
 
+    // TO FIX
     it('Should not alter hours, minutes, seconds and milliseconds when changing date.', () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         const debugElement = fixture.debugElement;
@@ -335,6 +341,7 @@ describe('IgxDatePicker', () => {
         expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
     });
 
+    // TO FIX
     it('Should focus the today date', async () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         const datePicker = fixture.componentInstance.datePicker;
@@ -343,7 +350,7 @@ describe('IgxDatePicker', () => {
 
         const target = dom.query(By.css('.igx-date-picker__input-date'));
 
-        target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        UIInteractions.clickElement(target);
         fixture.detectChanges();
         await wait();
 

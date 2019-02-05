@@ -10,7 +10,12 @@ export enum DatePickerInteractionMode {
 }
 
 /**
- *@hidden
+ * This enumeration is used to configure the date picker to operate with pre-defined format option used in angular DatePipe.
+ * 'https://angular.io/api/common/DatePipe'
+ * 'shortDate': equivalent to 'M/d/yy' (6/15/15).
+ * 'mediumDate': equivalent to 'MMM d, y' (Jun 15, 2015).
+ * 'longDate': equivalent to 'MMMM d, y' (June 15, 2015).
+ * 'fullDate': equivalent to 'EEEE, MMMM d, y' (Monday, June 15, 2015).
  */
 export const enum PREDEFINED_FORMAT_OPTIONS {
     SHORT_DATE = 'shortDate',
@@ -115,6 +120,9 @@ export interface IFormatOptions {
     year?: string;
 }
 
+/**
+ * This array contains both short and long months naming.
+ */
 export const MONTHS_NAMES_ARRAY = [
     { long: 'January', short: 'Jan' },
     { long: 'February', short: 'Feb' },
@@ -130,6 +138,9 @@ export const MONTHS_NAMES_ARRAY = [
     { long: 'December', short: 'Dec' }
 ];
 
+/**
+ * This array contains both short and long week days naming.
+ */
 export const WEEKDAYS_NAMES_ARRAY = [
     { long: 'Monday', short: 'Mon' },
     { long: 'Tuesday', short: 'Tue' },
@@ -371,11 +382,11 @@ export function createDate(dateFormatParts: any[], prevDateValue: Date, inputVal
         yearPrefix = '20';
     }
     const fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
-
     const date = new Date();
     date.setDate(day);
     date.setMonth(month);
     date.setFullYear(fullYear);
+
     return date;
 }
 
@@ -397,7 +408,7 @@ export function trimUnderlines(value: string): string {
  *@hidden
  */
 export function getLongMonthName(value: Date): string {
-    return value.toLocaleString('en', {
+    return value.toLocaleString(DEFAULT_LOCALE_DATE, {
         month: 'long'
     });
 }
@@ -406,7 +417,7 @@ export function getLongMonthName(value: Date): string {
  *@hidden
  */
 export function getLongDayName(value: Date): string {
-    return value.toLocaleString('en', {
+    return value.toLocaleString(DEFAULT_LOCALE_DATE, {
         weekday: 'long'
     });
 }
@@ -443,11 +454,6 @@ export function getModifiedDateInput(dateFormatParts: any[],
             if (datePartType === DATE_PARTS.MONTH) {
                 newValue = getMonthIndexByName(dateFormatParts, inputValue) - 1;
             }
-
-            // Not implemented for now
-            // if (datePartType === DATE_PARTS.WEEKDAY) {
-            //     newValue = getDayIndexByName(dateFormatParts, inputValue);
-            // }
             break;
         }
         default: {
@@ -506,17 +512,6 @@ export function getModifiedDateInput(dateFormatParts: any[],
                 changedPart = (monthName.length < promptCharToAdd) ? `${monthName}${suffix}` : `${monthName}`;
             }
 
-            // Not implemented for now
-            // if (datePartType === DATE_PARTS.WEEKDAY) {
-            //     const dayName = geDayNameByIndex(dateFormatParts, newValue);
-            //     let suffix = '';
-            //     const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_WEEKDAY_SYMBOLS - dayName.length) : 3;
-            //     for (let i = 0; i < promptCharToAdd; i++) {
-            //         suffix += PROMPT_CHAR;
-            //     }
-            //     changedPart = (dayName.length < promptCharToAdd) ? `${dayName}${suffix}` : `${dayName}`;
-            // }
-
             break;
         }
         default: {
@@ -566,11 +561,6 @@ export function getMinMaxValue(dateFormatParts: any[], datePart, inputValue: str
             }
             break;
         }
-        // case DATE_PARTS.WEEKDAY: {
-        //     minValue = 0;
-        //     maxValue = 6;
-        //     break;
-        // }
     }
     return [minValue, maxValue];
 }
@@ -633,9 +623,7 @@ export function addPromptCharsEditMode(dateFormatParts: any[], date: Date, input
                 dateArray.join('');
             }
         }
-
     }
-
     return dateArray.join('');
 }
 
