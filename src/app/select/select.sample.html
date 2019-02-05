@@ -2,7 +2,8 @@
 <br>
 <br>
 <igx-select #select
-    [width]="'260px'" [placeholder]="'Pick One'"
+    [width]="'260px'"
+    [placeholder]="'Pick One'"
     [(ngModel)]="value"
     (onOpening)="testOnOpening($event)"
     (onOpened)="testOnOpened()"
@@ -13,14 +14,12 @@
     [overlaySettings]="customOverlaySettings"
 >
     <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix igxButton="icon" igxRipple>
+    <igx-prefix igxPrefix>
         <igx-icon fontSet="material">alarm</igx-icon>
     </igx-prefix>
     <igx-select-item>None</igx-select-item>
     <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field"
-        isFocused="inx === 1"
-         >
+        [value]="item.field">
         {{ item.field }}
     </igx-select-item>
 </igx-select>
@@ -40,7 +39,7 @@
 <br>
 <igx-select #select1
     [width]="'260px'" [placeholder]="'Pick One'"
-    [(ngModel)]="value"
+    [value]="value"
     (onOpening)="testOnOpening($event)"
     (onOpened)="testOnOpened()"
     (onClosing)="testOnClosing($event)"
@@ -50,15 +49,19 @@
     [overlaySettings]="customOverlaySettings"
 >
     <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix igxButton="icon" igxRipple>
+    <igx-prefix igxPrefix>
         <igx-icon fontSet="material">alarm</igx-icon>
     </igx-prefix>
+    <igx-prefix igxPrefix>
+        <igx-icon fontSet="material">alarm</igx-icon>
+    </igx-prefix>
+    <igx-suffix>
+        <igx-icon fontSet="material">alarm</igx-icon>
+    </igx-suffix>
     <igx-select-item>None</igx-select-item>
     <igx-select-item *ngFor="let item of items; let inx=index"
         [value]="item.field"
-
         isFocused="inx === 1"
-
          >
         {{ item.field }}
     </igx-select-item>
@@ -67,17 +70,17 @@
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br/>
 <igx-select #select2
     [width]="'260px'" [placeholder]="'Pick One'"
-    [(ngModel)]="value"
+
     (onOpening)="testOnOpening($event)"
     (onOpened)="testOnOpened()"
     (onClosing)="testOnClosing($event)"
@@ -86,14 +89,10 @@
     [disabled]="false"
     [overlaySettings]="customOverlaySettings"
 >
-    <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix igxButton="icon" igxRipple>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
     <igx-select-item>None</igx-select-item>
     <igx-select-item *ngFor="let item of items; let inx=index"
         [value]="item.field"
-        isFocused="inx === 1"
+
          >
         {{ item.field }}
     </igx-select-item>
