@@ -457,7 +457,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         if (this.input) {
-            this.input.nativeElement.focus();
+            // Add requestAnimationFrame becasue of an issue in IE, where you are still able to write in the input,
+            // if it has been focused and then set to readonly.
+            requestAnimationFrame(() => this.input.nativeElement.focus());
         }
     }
 
