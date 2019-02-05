@@ -519,26 +519,26 @@ describe('igxCombo', () => {
             spyOn(combo.dropdown, 'toggle').and.callThrough();
             spyOn(combo.dropdown, 'open').and.callThrough();
             spyOn(combo.dropdown, 'close').and.callThrough();
+
             combo.onArrowDown(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowDown' }));
             tick();
             fix.detectChanges();
-            expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
-            combo.onArrowDown(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowDown' }));
 
+            combo.onArrowDown(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowDown' }));
             fix.detectChanges();
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.collapsed).toEqual(false);
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
             combo.onArrowUp(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowUp' }));
 
+            combo.handleKeyDown(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowUp' }));
             fix.detectChanges();
-            expect(combo.dropdown.toggle).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
             combo.onArrowUp(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' }));
 
+            combo.handleKeyDown(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' }));
             fix.detectChanges();
-            expect(combo.dropdown.toggle).toHaveBeenCalledTimes(3);
             expect(combo.dropdown.close).toHaveBeenCalledTimes(2);
         }));
         it('Should fire dropdown opening/closing events when dropdown button has been clicked', fakeAsync(() => {

@@ -173,6 +173,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
+        if (!this._collapsed) {
+            return;
+        }
+
         this._collapsed = false;
         this.cdr.detectChanges();
 
@@ -222,6 +226,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public close() {
+        if (this._collapsed) {
+            return;
+        }
+
         this.overlayService.hide(this._overlayId);
     }
 

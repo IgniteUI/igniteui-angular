@@ -10,6 +10,7 @@ import {
 import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
 
 describe('IgxToggle', () => {
     configureTestSuite();
@@ -238,7 +239,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.onClosing, 'emit').and.callThrough();
         spyOn(toggle.onClosed, 'emit').and.callThrough();
 
-        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+        toggle.onClosing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = true);
 
         toggle.open();
         fixture.detectChanges();
@@ -253,6 +254,10 @@ describe('IgxToggle', () => {
 
         expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+
+        toggle.close();
+        fixture.detectChanges();
+        tick();
 
         toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
         toggle.open();
