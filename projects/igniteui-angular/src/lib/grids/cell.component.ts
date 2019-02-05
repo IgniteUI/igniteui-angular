@@ -681,16 +681,13 @@ export class IgxGridCellComponent implements OnInit {
         pointerState.shift = shiftKey;
         selectionService.initKeyboardState();
 
-        this._updateCellSelectionStatus(true, event);
-        this.clearTextSelection();
-
         if (shiftKey) {
+            if (!pointerState.node) {
+                pointerState.node = node;
+            }
             selectionService.pointerDownShiftKey(node);
+            this.clearTextSelection();
             return;
-        }
-
-        if (!ctrlKey) {
-            selectionService.clear();
         }
 
         pointerState.node = node;
@@ -723,8 +720,17 @@ export class IgxGridCellComponent implements OnInit {
         if (this.gridSelection.dragMode) {
             this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, this.gridSelection.pointerState));
             this.gridSelection.addRangeMeta(node, this.gridSelection.pointerState);
-            this.gridSelection.resetState();
+            this.gridSelection.dragMode = false;
             return;
+        }
+        if (this.gridSelection.pointerState.shift) {
+            this.clearTextSelection();
+            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, this.gridSelection.pointerState));
+            this.gridSelection.addRangeMeta(node, this.gridSelection.pointerState);
+            return;
+        }
+        if (!this.gridSelection.pointerState.ctrl) {
+            this.gridSelection.clear();
         }
         this.gridSelection.add(node);
     }
@@ -858,6 +864,9 @@ export class IgxGridCellComponent implements OnInit {
         }
 
         this.gridSelection.keyboardDownShiftKey(node, shift, shift && key === 'tab');
+        if (!this.gridSelection.keyboardState.lastPassedNode) {
+            this.gridSelection.clear();
+        }
         this.gridSelection.keyboardState.lastPassedNode = node;
 
 

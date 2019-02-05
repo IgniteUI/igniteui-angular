@@ -33,7 +33,7 @@
                                                     [dataType]="c.type">
                 </igx-column>
             </igx-grid>
-            Drag mode: {{ grid1.gridSelection.inDragMode }}
+            Drag mode: {{ grid1.gridSelection.dragMode }}
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
                 <button igxButton (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select 💯 cells</button>

@@ -70,7 +70,7 @@
 </div>
 
 <div class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" role="rowgroup" (pointerover)="dragSelect($event)" (pointerleave)="out()" [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
+    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="gridSelection.dragMode = $event" (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="gridSelection.dragMode" [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data | gridTransaction:id:pipeTrigger
