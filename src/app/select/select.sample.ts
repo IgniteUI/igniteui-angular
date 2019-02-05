@@ -16,7 +16,8 @@ export class SelectSampleComponent implements OnInit {
     @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
     public items: any[] = [];
 
-    public value = 'notContainedInItemsValue';
+    //public value = 'notContainedInItemsValue';
+    public value: 'opt1'; // value not set
 
     customOverlaySettings: OverlaySettings = {
         modal: false,

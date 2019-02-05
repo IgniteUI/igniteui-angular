@@ -34,8 +34,14 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
-    /** @hidden @internal TODO: igx-select class hostbind? */
+    // /** @hidden @internal TODO: igx-select class hostbind? */
     public cssClass = false;
+
+    /**
+     * @hidden
+     */
+    // @HostBinding('class.igx-select')
+    // public cssClass = true;
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
@@ -49,7 +55,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
      */
     @Input() public value: any;
     /**
-     * An @Input property that sets how input placeholder.
+     * An @Input property that sets input placeholder.
      *
      */
     @Input() public placeholder = '';
@@ -169,6 +175,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             ),
             scrollStrategy: new AbsoluteScrollStrategy(),
         });
+        // super.open({
+        //     modal: false,
+        //     closeOnOutsideClick: true,
+        //     positionStrategy: new SelectPositioningStrategy(
+        //         this.input.nativeElement, //get this from settings.target but what if it is a point and not HTMLElement?
+        //         this.selectedItem.element.nativeElement,
+        //         { target: this.inputGroup.element.nativeElement,
+        //             closeAnimation: fadeOut,
+        //             openAnimation: fadeIn
+        //         }
+        //     ),
+        //     scrollStrategy: new AbsoluteScrollStrategy(),
+        // });
     }
 
     // Initially the items are still not existing, so handle ngAfterContentInit

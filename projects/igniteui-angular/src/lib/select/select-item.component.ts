@@ -26,11 +26,6 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
         return this.disabled;
     }
 
-    @HostBinding('style.paddingLeft')
-    public get paddingLeft() {
-        return (<any>this.dropDown).getElementPadding();
-    }
-
     @HostBinding('attr.role')
     public get ariaRole() {
         return 'option';
