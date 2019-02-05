@@ -75,7 +75,7 @@ export class OverlaySampleComponent implements OnInit {
                         this._overlaySettings = {
                             positionStrategy: new AutoPositionStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -83,7 +83,7 @@ export class OverlaySampleComponent implements OnInit {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
                         document.getElementById('brd').classList.add('selected');
                         document.getElementById('blsp').classList.add('selected');
                         break;
@@ -91,7 +91,7 @@ export class OverlaySampleComponent implements OnInit {
                         this._overlaySettings = {
                             positionStrategy: new ConnectedPositioningStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -99,7 +99,7 @@ export class OverlaySampleComponent implements OnInit {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
                         document.getElementById('brd').classList.add('selected');
                         document.getElementById('blsp').classList.add('selected');
                         break;
@@ -120,7 +120,7 @@ export class OverlaySampleComponent implements OnInit {
                                 minSize: { width: 150, height: 150 }
                             }),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -128,7 +128,7 @@ export class OverlaySampleComponent implements OnInit {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
                         document.getElementById('brd').classList.add('selected');
                         document.getElementById('blsp').classList.add('selected');
                         break;

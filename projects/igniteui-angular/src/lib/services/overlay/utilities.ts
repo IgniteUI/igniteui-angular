@@ -38,6 +38,7 @@ export interface PositionSettings {
     openAnimation?: AnimationReferenceMetadata;
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
+    /** The size up to which element may shrink when shown in elastic position strategy */
     minSize?: Size;
 }
 
