@@ -42,7 +42,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, ContainerPositioningStrategy } from './grid.common';
+import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -69,6 +69,7 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange } from '../core/grid-selection';
+import { DragScrollDirection } from './drag-select.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2091,6 +2092,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /* End of toolbar related definitions */
 
+    // TODO: Document
+    @Output()
+    onRangeSelection = new EventEmitter<GridSelectionRange>();
+
     /**
      * @hidden
      */
@@ -2305,7 +2310,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     constructor(
-        protected gridSelection: IgxGridSelectionService,
+        public gridSelection: IgxGridSelectionService,
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
@@ -4215,59 +4220,41 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.cdr.markForCheck();
     }
 
-    parseDimensions(event) {
-        const clientRect = this.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect();
-        const [x, y] = [event.clientX, event.clientY];
-        const dimensions = {};
-
-        dimensions['x'] = x;
-        dimensions['y'] = y;
-        dimensions['width'] = clientRect.width;
-        dimensions['height'] = clientRect.height;
-        dimensions['x1'] = clientRect.x;
-        dimensions['x2'] = dimensions['x1'] + clientRect.width;
-        dimensions['y1'] = clientRect.y;
-        dimensions['y2'] = dimensions['y1'] + clientRect.height;
-
-        return dimensions;
-    }
-
-    // tslint:disable-next-line:member-ordering
-    @Output()
-    onRangeSelection = new EventEmitter<any>();
-
-    // TODO: Refactor !!!
-    dragSelect(event) {
-
-        if (!this.gridSelection.dragMode) {
-            return;
+    dragScroll(dir: DragScrollDirection): void {
+        this.wheelHandler();
+        const scrollDelta = 32;
+        switch (dir) {
+            case DragScrollDirection.LEFT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
+                break;
+            case DragScrollDirection.RIGHT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
+                break;
+            case DragScrollDirection.TOP:
+                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                break;
+            case DragScrollDirection.BOTTOM:
+                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                break;
+            case DragScrollDirection.BOTTOMLEFT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
+                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                break;
+            case DragScrollDirection.BOTTOMRIGHT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
+                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                break;
+            case DragScrollDirection.TOPLEFT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
+                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                break;
+            case DragScrollDirection.TOPRIGHT:
+                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
+                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                break;
+            default:
+                return;
         }
-
-        const {x, y, x1, y1, x2, y2 } = this.parseDimensions(event) as any;
-        const isValid = () =>  {
-            if (this.gridSelection.dragMode) {
-                (document.activeElement as any).blur();
-            }
-            return this.gridSelection.dragMode;
-        };
-
-        if (x <= (x1 * 1.2)) {
-            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.parentVirtDir.getHorizontalScroll().scrollLeft -= 20);
-        } else if (x >= (x2 * 0.9)) {
-            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.parentVirtDir.getHorizontalScroll().scrollLeft += 20);
-        }
-
-        if (y <= (y1 * 1.2)) {
-            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.verticalScrollContainer.getVerticalScroll().scrollTop -= 20);
-        } else if (y >= (y2 * 0.9)) {
-            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.verticalScrollContainer.getVerticalScroll().scrollTop += 20);
-        }
-
-    }
-
-    out() {
-        // TODO: Do we really need that 🤔
-        this.gridSelection.dragMode = false;
     }
 
     isDefined(arg: any) {
@@ -4582,9 +4569,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
+        const numberPipe = new IgxDecimalPipeComponent(this.locale);
+        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                const value = c.formatter ? c.formatter(dataRow[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
+                            : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 

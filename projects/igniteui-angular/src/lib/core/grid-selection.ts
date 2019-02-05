@@ -131,15 +131,18 @@ export class IgxGridSelectionService {
     }
 
     keyboardDownShiftKey(node: ISelectionNode, shift: boolean, shiftTab: boolean) {
+        this.initPointerState();
         if (!this.keyboardState.shift && shift) {
             this.keyboardState.shift = !shiftTab;
             this.keyboardState.node = node;
         } else if (this.keyboardState.shift && !shift) {
             this.initKeyboardState();
+            this.clear();
         }
     }
 
     pointerDownShiftKey(node: ISelectionNode): void {
+        this.initKeyboardState();
         this.clear();
         this.dragSelect(node, this.pointerState);
         this.addRangeMeta(node, this.pointerState);

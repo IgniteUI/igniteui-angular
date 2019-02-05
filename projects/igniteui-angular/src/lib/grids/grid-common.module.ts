@@ -62,6 +62,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSelectionService } from '../core/grid-selection';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
+import { IgxGridDragSelectDirective } from './drag-select.directive';
 
 @NgModule({
     declarations: [
@@ -92,7 +93,8 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxGridDragSelectDirective
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -146,7 +148,8 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxGridDragSelectDirective
     ],
     imports: [
         CommonModule,
