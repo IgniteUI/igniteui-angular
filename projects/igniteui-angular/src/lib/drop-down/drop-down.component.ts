@@ -175,9 +175,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        if (this.toggleDirective.collapsed) {
-            this.toggleDirective.open(overlaySettings);
-        }
+        this.toggleDirective.open(overlaySettings);
     }
 
     /**
@@ -188,9 +186,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public close() {
-        if (!this.toggleDirective.collapsed) {
-            this.toggleDirective.close();
-        }
+        this.toggleDirective.close();
     }
 
     /**
