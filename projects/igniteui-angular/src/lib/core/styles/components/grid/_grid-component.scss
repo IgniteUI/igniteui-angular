@@ -580,3 +580,53 @@
         @extend %igx-group-label__count-badge !optional;
     }
 }
+
+@include b(igx-excel-filter) {
+    @include e(menu) {
+        @extend %grid-excel-menu !optional;
+    }
+
+    @include e(menu-header) {
+        @extend %grid-excel-menu__header !optional;
+    }
+
+    @include e(menu-main) {
+        @extend %grid-excel-main !optional;
+    }
+
+    @include e(menu-footer) {
+        @extend %grid-excel-menu__footer !optional;
+    }
+
+    @include e(sort) {
+        @extend %grid-excel-sort !optional;
+    }
+
+    @include e(move) {
+        @extend %grid-excel-move !optional;
+    }
+
+    @include e(move-buttons) {
+        @extend %grid-excel-move__buttons !optional;
+    }
+
+    @include e(actions) {
+        @extend %grid-excel-actions !optional;
+    }
+
+    @include e(actions-pin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-unpin) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-hide) {
+        @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(actions-filter) {
+        @extend %grid-excel-actions__action !optional;
+    }
+}

@@ -1815,4 +1815,112 @@
             background: linear-gradient(to left, white, transparent);
         }
     }
+
+    %grid-excel-menu {
+        width: inherit;
+        background: --var($theme, 'filtering-row-background');
+        box-shadow: igx-elevation($elevations, 6);
+        border-radius: 4px;
+
+        @include igx-button-group(igx-button-group-theme(
+            $shadow: none,
+            $schema: $dark-schema,
+            $item-background: --var($theme, 'filtering-row-background'),
+            $item-hover-background: igx-color($palette, 'grays', 200),
+            $item-selected-background: igx-color($palette, 'grays', 200),
+            $item-text-color: igx-color($palette, 'grays', 700),
+            $item-hover-text-color: igx-color($palette, 'grays', 800),
+            $item-selected-text-color: igx-color($palette, 'grays', 800),
+            $item-border-color: transparent,
+            $item-selected-border-color: transparent
+        ));
+    }
+
+    %grid-excel-menu__header {
+        padding: rem(16px);
+    }
+
+    %grid-excel-menu__footer {
+        display: flex;
+        justify-content: space-between;
+        padding: rem(8px) rem(16px);
+
+        [igxButton] {
+            flex-grow: 1;
+
+            + [igxButton] {
+                margin-left: rem(16px);
+            }
+        }
+    }
+
+    %grid-excel-sort {
+        padding: rem(8px) rem(16px);
+
+        igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+            margin-right: rem(8px);
+        }
+    }
+
+    %grid-excel-actions {
+        padding: rem(8px) rem(16px);
+    }
+
+    %grid-excel-move {
+        margin-bottom: rem(8px);
+    }
+
+    %grid-excel-move__buttons {
+        display: flex;
+        justify-content: space-between;
+
+        [igxButton] {
+            flex-grow: 1;
+
+            + [igxButton] {
+                margin-left: rem(8px);
+            }
+        }
+
+        igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        igx-icon + span,
+        span + igx-icon {
+            margin-left: rem(8px);
+        }
+    }
+
+    %grid-excel-actions__action {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: rem(8px) rem(16px);
+        margin: 0 -#{rem(16px)};
+        cursor: pointer;
+
+        &:hover {
+            background: igx-color($palette, 'grays', 100);
+        }
+    }
+
+    %grid-excel-main {
+        padding: 0 rem(16px);
+
+        igx-list {
+            margin: rem(8px) -#{rem(16px)} 0;
+            border-top: 1px dashed igx-color($palette, 'grays', 500);
+            border-bottom: 1px dashed igx-color($palette, 'grays', 500);
+        }
+
+        igx-list-item {
+            background: #333;
+        }
+    }
 }

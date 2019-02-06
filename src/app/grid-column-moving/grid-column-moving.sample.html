@@ -16,7 +16,8 @@
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
                 [width]="'900px'"
-                [height]="'800px'">
+                [height]="'800px'"
+                [style.zIndex]="'1'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"

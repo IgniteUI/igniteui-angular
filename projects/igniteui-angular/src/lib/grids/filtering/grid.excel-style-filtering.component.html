@@ -1,57 +1,113 @@
-<span >
-    <igx-icon [attr.draggable]="false" (click)="onIconClick($event)">filter_list</igx-icon>
-</span>
+<igx-icon [attr.draggable]="false" (click)="onIconClick($event)">filter_list</igx-icon>
 
-<div #dropdown (onClosing)="onDropDownClosing()" (onOpening)="onDropDownOpening()" style="background:black;width:300px; height:600px;flex-direction:column; display: flex" (mouseenter)="onMenuMouseEnter($event)" igxToggle>
-    <span>{{ column.field }}</span>
-    <span>Sorting</span>
-    <igx-buttongroup #sortButtonGroup [multiSelection]="false">
-        <span #ascButton type="button" igxButton [attr.data-togglable]="true"  (click)="onSortButtonClicked(1)">
-            <igx-icon>arrow_upwards</igx-icon>
-            Ascending
-        </span>
-        <span #descButton type="button" igxButton [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
+<article #dropdown igxToggle
+    class="igx-excel-filter__menu"
+    (onClosing)="onDropDownClosing()"
+    (onOpening)="onDropDownOpening()"
+    (mouseenter)="onMenuMouseEnter($event)"
+    >
+    <header class="igx-excel-filter__menu-header">
+        <h4 class="igx-typography__h6">{{ column.field }}</h4>
+    </header>
+
+    <section class="igx-excel-filter__sort">
+        <header class="igx-typography__overline">Sorting</header>
+
+        <igx-buttongroup #sortButtonGroup [multiSelection]="false">
+            <span igxButton #ascButton type="button" [attr.data-togglable]="true" (click)="onSortButtonClicked(1)">
+                <igx-icon>arrow_upwards</igx-icon>
+                <span>Ascending</span>
+            </span>
+
+            <span igxButton #descButton type="button" [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
                 <igx-icon>arrow_downwards</igx-icon>
-            Descending
-        </span>
-    </igx-buttongroup>
-    <span>Column moving</span>
-    <div>
-        <button igxButton [disabled]="canMoveLeft" (click)="onMoveButtonClicked(-1)">
-            <igx-icon>arrow_back</igx-icon>
-            Move left
-        </button>
-        <button igxButton [disabled]="canMoveRigth" (click)="onMoveButtonClicked(1)">
-            Move rigth
-            <igx-icon>arrow_forwards</igx-icon>
-        </button>
-    </div>
-    <span (click)="onPin()" *ngIf="!column.pinned">Pin column<igx-icon>pin_drop</igx-icon></span>
-    <span (click)="onPin()" *ngIf="column.pinned">Unpin column<igx-icon>pin_drop</igx-icon></span>
-    <span (click)="onHide()" >Hide column<igx-icon>remove_red_eye</igx-icon></span>
-    <span (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave()" >Text filter<igx-icon>keyboard_arrow_right</igx-icon></span>
-    <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
-        <igx-prefix>
-            <igx-icon >search</igx-icon>
-        </igx-prefix>
-        <input
-            #input
-            igxInput
-            tabindex="0"
-            [(ngModel)]="searchValue"
-            placeholder="Search"
-            autocomplete="off"/>
-        <igx-suffix *ngIf="searchValue || searchValue === 0" (click)="clearInput()" tabindex="0">
-            <igx-icon>clear</igx-icon>
-        </igx-suffix>
-    </igx-input-group>
-    <igx-list [style.height.px]="250">
-            <div  [style.overflow]="'hidden'" [style.position]="'relative'">
-                <igx-list-item tabindex="0" *igxFor="let item of uniqueItems | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
-                    <igx-checkbox 
+                <span>Descending</span>
+            </span>
+        </igx-buttongroup>
+    </section>
+
+    <section class="igx-excel-filter__actions">
+
+        <article class="igx-excel-filter__move">
+            <header class="igx-typography__overline">Column moving</header>
+            <section class="igx-excel-filter__move-buttons">
+                <button
+                    igxButton
+                    [disabled]="canMoveLeft"
+                    (click)="onMoveButtonClicked(-1)">
+                    <igx-icon>arrow_back</igx-icon>
+                    <span>left</span>
+                </button>
+
+                <!-- TODO: Rename canMoveRigth to canMoveRight -->
+                <button
+                    igxButton
+                    [disabled]="canMoveRigth"
+                    (click)="onMoveButtonClicked(1)">
+                    <span>right</span>
+                    <igx-icon>arrow_forwards</igx-icon>
+                </button>
+            </section>
+        </article>
+
+        <div class="igx-excel-filter__actions-pin"
+            (click)="onPin()"
+            *ngIf="!column.pinned">
+            <span>Pin column</span>
+            <igx-icon>pin_drop</igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-unpin"
+            (click)="onPin()"
+            *ngIf="column.pinned">
+            <span>Unpin column</span>
+            <igx-icon>pin_drop</igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-hide"
+            (click)="onHide()">
+            <span>Hide column</span>
+            <igx-icon>remove_red_eye</igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-filter"
+            (mouseenter)="onMouseEnter($event)"
+            (mouseleave)="onMouseLeave()">
+            <span>Text filter</span>
+            <igx-icon>keyboard_arrow_right</igx-icon>
+        </div>
+    </section>
+
+    <section class="igx-excel-filter__menu-main">
+        <igx-input-group
+            type="box"
+            [displayDensity]="'compact'"
+            [supressInputAutofocus]="true">
+            <igx-icon igxPrefix>search</igx-icon>
+            <input
+                #input
+                igxInput
+                tabindex="0"
+                [(ngModel)]="searchValue"
+                placeholder="Search"
+                autocomplete="off"/>
+            <igx-icon
+                igxSuffix
+                *ngIf="searchValue || searchValue === 0"
+                (click)="clearInput()"
+                tabindex="0">
+                clear
+            </igx-icon>
+        </igx-input-group>
+
+        <igx-list [style.height.px]="250">
+            <div [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item tabindex="0"
+                    *igxFor="let item of uniqueItems | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
+                    <igx-checkbox
                     [value]="item"
-                    [checked]="item.isSelected" 
-                    [disableRipple]="true" 
+                    [checked]="item.isSelected"
+                    [disableRipple]="true"
                     [indeterminate]="item.indeterminate"
                     [disableTransitions]="true"
                     (change)="onCheckboxChange($event)">
@@ -60,11 +116,13 @@
                 </igx-list-item>
             </div>
         </igx-list>
-    <div>
+    </section>
+
+    <footer class="igx-excel-filter__menu-footer">
         <button igxButton (click)="closeDialog()">Cancel</button>
-        <button igxButton (click)="applyFilter()">Apply</button>
-    </div>
-</div>
+        <button igxButton="raised" (click)="applyFilter()">Apply</button>
+    </footer>
+</article>
 
 <igx-drop-down #subMenu (onClosed)="onSubMenuClosed()" (onSelection)="onSubMenuSelection($event)">
     <div style="width: 200px" (mouseover)="onSubMenuMouseEnter()" (mouseout)="onSubMenuMouseLeave()" >
@@ -77,23 +135,23 @@
     </div>
 </igx-drop-down>
 
-<div #customMenu style="background:black;width:550px; height:400px;flex-direction:column; display: flex" igxToggle
+<div #customMenu style="width:550px; height:400px;flex-direction:column; display: flex" igxToggle
     (onOpening)="onCustomMenuOpening()">
     <span>Custom auto-filter on column: {{ column.field }}</span>
     <div *ngFor="let item of expressionsList">
         <div style="flex-direction:row; display: flex" >
-            
+
             <igx-drop-down #dropdownConditions [height]="'200px'" (onSelection)="onConditionsChanged($event, item)">
                 <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition, item)">
                     <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
                     <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
                 </igx-drop-down-item>
             </igx-drop-down>
-            <igx-input-group 
-                #inputGroupConditions 
-                (click)="toggleCustomMenuDropDown(inputGroupConditions, dropdownConditions)" 
-                type="box" 
-                [displayDensity]="'compact'" 
+            <igx-input-group
+                #inputGroupConditions
+                (click)="toggleCustomMenuDropDown(inputGroupConditions, dropdownConditions)"
+                type="box"
+                [displayDensity]="'compact'"
                 [supressInputAutofocus]="true">
                 <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
                     <igx-icon fontSet="filtering-icons" [name]="getIconName(item)"></igx-icon>
