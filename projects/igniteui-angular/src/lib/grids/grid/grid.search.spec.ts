@@ -465,6 +465,33 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
+        it('Highlights should be updated after a column is hidden and another column is already hidden', () => {
+            grid.columns[0].hidden = true;
+            fix.detectChanges();
+
+            let activeHighlight: any;
+            let highlights: any[];
+
+            grid.findNext('an');
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(3);
+            expect(activeHighlight).toBe(highlights[0]);
+            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(3);
+            expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
+
+            grid.columns[1].hidden = true;
+            fix.detectChanges();
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(1);
+            expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
+        });
+
         it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
             grid.columns[0].dataType = DataType.Number;
             fix.detectChanges();
