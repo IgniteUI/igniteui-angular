@@ -606,6 +606,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
+    protected scrollTo(row: any, column: any | number): void {
+        let indexInView = this.verticalScrollContainer.igxForOf.indexOf(row);
+        let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
+        if (indexInView === -1 && this.paging) {
+            //  row is on another page, change page and check for visible index again
+            const dataRowIndex = this.filteredSortedData.indexOf(row);
+            this.page = Math.floor(dataRowIndex / this.perPage);
+            this.cdr.detectChanges();
+            indexInView = this.verticalScrollContainer.igxForOf.indexOf(row);
+        }
+        // check if it is already in view
+        if (!this.verticalScrollContainer.isIndexInView(this.verticalScrollContainer.igxForOf.indexOf(row))) {
+            this.scrollDirective(this.verticalScrollContainer, indexInView);
+        }
+
+        const scrollRow = this.rowList.find(r => r.virtDirRow);
+        const virtDir = scrollRow ? scrollRow.virtDirRow : null;
+
+        if (this.pinnedColumns.length) {
+            if (columnIndex >= this.pinnedColumns.length) {
+                columnIndex -= this.pinnedColumns.length;
+                this.scrollDirective(virtDir, columnIndex);
+            }
+        } else {
+            this.scrollDirective(virtDir, columnIndex);
+        }
+    }
+
     public clearSearch() {
         super.clearSearch();
         const childGrids = this.getChildGrids(false);
@@ -631,33 +659,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         const gridsToScroll = [];
         let currGrid = grid;
         while (currGrid.parent) {
-            const parentRec = currGrid.parent.hgridAPI.getParentRowId(currGrid);
-            const childIndex = currGrid.parent.verticalScrollContainer.igxForOf.indexOf(parentRec);
-            gridsToScroll.push({grid: currGrid, parentRec: parentRec, childIndex: childIndex});
+            gridsToScroll.push(currGrid);
             currGrid = currGrid.parent;
         }
         // start top to bottom
         gridsToScroll.reverse();
-        gridsToScroll.forEach((info) => {
+        gridsToScroll.forEach((grd) => {
             // check if parent is expanded
-            const gridToScroll = info.grid.parent;
-            console.log('check if should scroll grid: ' + gridToScroll.id);
-            console.log('to index: ' + info.childIndex);
-            // check if already visible
-            if (gridToScroll.verticalScrollContainer.state.startIndex >= info.childIndex ||
-                info.childIndex >= gridToScroll.verticalScrollContainer.state.startIndex +
-                gridToScroll.verticalScrollContainer.state.chunkSize) {
-                    console.log('scroll grid: ' + gridToScroll.id);
-                    console.log('to index: ' + info.childIndex);
-                    gridToScroll.scrollTo(info.childIndex, 0);
-            }
-            if (!gridToScroll.isExpanded(info.parentRec)) {
-                // expand parent row if collapsed
+            const gridToScroll = grd.parent;
+            const parentRec = grd.parent.hgridAPI.getParentRowId(grd);
+             // expand parent row if collapsed
+            if (!gridToScroll.isExpanded(parentRec)) {
                 const state = gridToScroll.hierarchicalState;
-                state.push({ rowID: gridToScroll.primaryKey ? info.parentRec[gridToScroll.primaryKey] : info.parentRec });
+                state.push({ rowID: gridToScroll.primaryKey ? parentRec[gridToScroll.primaryKey] : parentRec });
                 gridToScroll.hierarchicalState = [...state];
+                gridToScroll.cdr.detectChanges();
             }
+            gridToScroll.scrollTo(parentRec, 0);
         });
+        grid.scrollTo(row, column);
         requestAnimationFrame(() => {
             // check cell is in view, if it is not fully in view scroll more so that it is fully visible.
             const cell = grid.getCellByKey(row, column);
@@ -667,13 +687,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             cell.nativeElement.offsetHeight - this.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
             if (diffBottom > 0) {
                 const closestScrollableDownGrid = this.hierarchicalNavigation.getNextScrollableDown(grid).grid;
-                console.log('scroll grid: ' +  closestScrollableDownGrid.id);
-                console.log('with: ' + diffBottom);
                 closestScrollableDownGrid.verticalScrollContainer.addScrollTop(diffBottom);
             } else if (diffTop < 0) {
                 const closestScrollableUpGrid = this.hierarchicalNavigation.getNextScrollable(grid).grid;
-                console.log('scroll grid: ' +  closestScrollableUpGrid.id);
-                console.log('with: ' + diffTop);
                 closestScrollableUpGrid.verticalScrollContainer.addScrollTop(diffTop);
             }
         });

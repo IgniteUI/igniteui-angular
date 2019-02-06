@@ -4352,7 +4352,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
+    protected scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
         }

@@ -442,6 +442,24 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * Returns whether the specified index is in the visible viewport.
+     * ```typescript
+     * this.parentVirtDir.isIndexInView(5);
+     * ```
+     * @param index
+     */
+    public isIndexInView(index) {
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const scr = this.igxForScrollOrientation === 'horizontal' ?
+        this.hScroll.scrollLeft : this.vh.instance.elementRef.nativeElement.scrollTop;
+
+        if (this.sizesCache[index] >= scr && this.sizesCache[index] <= scr + containerSize) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Scrolls to the specified index.
      * ```typescript
      * this.parentVirtDir.scrollTo(5);
