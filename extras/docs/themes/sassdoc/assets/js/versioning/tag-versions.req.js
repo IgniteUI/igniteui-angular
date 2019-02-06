@@ -9,7 +9,7 @@
         xhrFields: {
             withCredentials: false
         }
-    }).done((data) =>  {
+    }).done(function (data) {
         let folders = data.folders;
         const select = $('#versions');
         folders = folders.reverse();
@@ -28,7 +28,7 @@
         }
     });
 
-    $('#versions').on('change', (...rest) => {
+    $('#versions').on('change', function () {
         const val = $('#versions').val();
         sessionStorage.sassOption = val;
         window.location.assign(val);
