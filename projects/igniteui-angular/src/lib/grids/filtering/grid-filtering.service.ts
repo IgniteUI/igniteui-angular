@@ -118,10 +118,10 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Execute filtering on the grid.
      */
-    public filter(field: string): void {
+    public filter(field: string, expressionUIList = null): void {
         this.isFiltering = true;
 
-        const expressionsTree = this.createSimpleFilteringTree(field);
+        const expressionsTree = this.createSimpleFilteringTree(field, expressionUIList);
         this.grid.filter(field, null, expressionsTree);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -226,8 +226,8 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Generate filtering tree for a given column from existing ExpressionUIs.
      */
-    public createSimpleFilteringTree(columnId: string): FilteringExpressionsTree {
-        const expressionsList = this.getExpressions(columnId);
+    public createSimpleFilteringTree(columnId: string, expressionUIList = null): FilteringExpressionsTree {
+        const expressionsList = expressionUIList ? expressionUIList : this.getExpressions(columnId);
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, columnId);
         let currAndBranch: FilteringExpressionsTree;
         let currExpressionUI: ExpressionUI;
