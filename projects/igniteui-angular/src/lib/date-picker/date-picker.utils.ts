@@ -373,7 +373,7 @@ export function createDate(dateFormatParts: any[], prevDateValue: Date, inputVal
         year = yearStr;
     }
     let yearPrefix;
-    if (prevDateValue !== null) {
+    if (prevDateValue !== null && prevDateValue !== undefined) {
         const originalYear = prevDateValue.getFullYear().toString();
         if (originalYear.length === 4) {
             yearPrefix = originalYear.substring(0, 2);
@@ -452,7 +452,12 @@ export function getModifiedDateInput(dateFormatParts: any[],
         case FORMAT_DESC.LONG:
         case FORMAT_DESC.SHORT: {
             if (datePartType === DATE_PARTS.MONTH) {
-                newValue = getMonthIndexByName(dateFormatParts, inputValue) - 1;
+                if (getMonthIndexByName(dateFormatParts, inputValue) !== -1) {
+                    newValue = getMonthIndexByName(dateFormatParts, inputValue) - 1;
+                } else {
+                    newValue = 0;
+                }
+
             }
             break;
         }
@@ -464,12 +469,18 @@ export function getModifiedDateInput(dateFormatParts: any[],
     }
 
     let maxValue, minValue;
-    if (!isNaN(newValue)) {
-        const minMax = getMinMaxValue(dateFormatParts, datePart, inputValue);
-        minValue = minMax[0];
-        maxValue = minMax[1];
+    // if (!isNaN(newValue)) {
+    const minMax = getMinMaxValue(dateFormatParts, datePart, inputValue);
+    minValue = minMax[0];
+    maxValue = minMax[1];
+    // }
+    if (isNaN(newValue)) {
+        if (minValue === 'infinite') {
+            newValue = 2000;
+        } else {
+            newValue = minValue;
+        }
     }
-
     let tempValue = newValue;
     tempValue += delta;
 

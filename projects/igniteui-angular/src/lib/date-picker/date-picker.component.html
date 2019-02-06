@@ -25,24 +25,4 @@
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-
-<div #calendarContainer class="igx-date-picker" [ngClass]="{
-        'igx-date-picker--dropdown': mode === 'editable',
-        'igx-date-picker--vertical': vertical && mode !== 'editable'
-    }">
-    <igx-calendar #calendar [hasHeader]="hasHeader" [formatOptions]="formatOptions" [formatViews]="formatViews"
-        [locale]="locale" [vertical]="vertical && mode !== 'editable'" [weekStart]="weekStart" [specialDates]="specialDates"
-        [disabledDates]="disabledDates" (onSelection)="handleSelection($event)"></igx-calendar>
-
-    <div class="igx-date-picker__buttons" *ngIf=" mode==='readonly' &&
-        (cancelButtonLabel || todayButtonLabel)">
-        <button *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="closeCalendar()">
-            {{ cancelButtonLabel }}
-        </button>
-        <button *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="triggerTodaySelection()">
-            {{ todayButtonLabel }}
-        </button>
-    </div>
-</div>
-
 <div igxOverlayOutlet #datePickerOutlet></div>
