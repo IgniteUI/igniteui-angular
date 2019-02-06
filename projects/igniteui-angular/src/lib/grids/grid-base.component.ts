@@ -3644,7 +3644,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
-            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
+                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            } else {
+                return this.defaultTargetBodyHeight;
+            }
         } else {
             gridHeight = parseInt(this._height, 10);
         }
