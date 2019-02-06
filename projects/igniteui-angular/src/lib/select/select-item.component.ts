@@ -2,13 +2,16 @@ import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.componen
 import { Component, ElementRef, Inject, HostBinding, Input, DoCheck, Optional } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
-import { IgxDropDownGroupComponent } from '../drop-down';
+import { IgxDropDownGroupComponent, IgxDropDownItemBase } from '../drop-down';
 
 let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-select-item',
-    templateUrl: 'select-item.component.html'
+    templateUrl: 'select-item.component.html',
+    providers: [{
+        provide: IgxDropDownItemComponent, useExisting: IgxSelectItemComponent
+    }]
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 

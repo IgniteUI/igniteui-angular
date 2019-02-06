@@ -1,8 +1,8 @@
 // tslint:disable:max-line-length
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, getPointFromPositionsSettings } from './../utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, getPointFromPositionsSettings, Point } from './../utilities';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 import { IPositionStrategy } from '.';
-import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
+import { fadeOut, fadeIn } from '../../../animations/main';
 import { IgxSelectComponent } from '../../../select/select.component';
 
 enum Direction {
@@ -18,39 +18,43 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Top,
-        openAnimation: scaleInVerTop,
-        closeAnimation: scaleOutVerTop,
-        minSize: { width: 0, height: 0 }
+        openAnimation: fadeIn,
+        closeAnimation: fadeOut
     };
     public settings: PositionSettings;
 
     constructor(public select: IgxSelectComponent, settings?: PositionSettings) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
-
     }
 
     /** Min distance/padding between the visible window TOP/BOTTOM and the IgxSelect list items container */
     private defaultWindowToListOffset = 5;
     private viewPort = this.getViewPort(document);
+    private deltaY: number;
+    private deltaX: number;
 
     private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
         contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
+        this.deltaY = this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string, size: Size) {
         transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
             this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
+        this.deltaY = CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+            this.adjustItemTextPadding() - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
         transformString += `translateY(${this.viewPort.top + this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
         contentElement.firstElementChild.scrollTop += outBoundsAmount + this.adjustItemTextPadding() + this.defaultWindowToListOffset;
+        this.deltaY = this.viewPort.top + this.defaultWindowToListOffset - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
     private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
@@ -126,9 +130,13 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         return 8; // current styling item text padding
     }
 
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
+    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         // avoid flickering when scrolling
+        // use the extended connected-positioning-strategy to position the items container when there is scroll (viewport is less then the browser window.
         if (!initialCall) {
+            const point = new Point(this.deltaX, this.select.input.nativeElement.getBoundingClientRect().y + this.deltaY);
+            this.settings.target = point;
+            super.position(contentElement, size);
             return;
         }
 
@@ -141,10 +149,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const LIST_HEIGHT = contentElement.getBoundingClientRect().height;
         const inputBoundRect = this.select.input.nativeElement.getBoundingClientRect();
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect();
         const itemHeight = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
-        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
         const inputHeight = this.select.input.nativeElement.getBoundingClientRect().height;
+        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect() ? this.select.selectedItem.element.nativeElement.getBoundingClientRect() : null;
+        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
 
         let CURRENT_POSITION_Y = START.Y - selectedItemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
@@ -170,6 +178,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const selectedItemPadding = window.getComputedStyle(this.select.selectedItem.element.nativeElement).paddingLeft;
         const numericPadding = parseInt(selectedItemPadding.slice(0, selectedItemPadding.indexOf('p')), 10);
         transformString += `translateX(${START.X - numericPadding}px)`;
+        this.deltaX = START.X - numericPadding;
 
         // Handle scenarios where there the list container has no scroll &&
         // when there is scroll and the list container is always in the visible port.
