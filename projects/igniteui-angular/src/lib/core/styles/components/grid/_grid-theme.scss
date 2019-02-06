@@ -769,7 +769,7 @@
     }
 
     %igx-grid__tr--expanded {
-        border-bottom-color: transparent;
+        border-bottom: none;
     }
 
     %igx-grid__tr--edit {
@@ -1850,12 +1850,6 @@
             z-index: 3;
         }
 
-        &.igx-grid__tr--expanded {
-            &::after {
-                height: calc(100% + 1px);
-            }
-        }
-
         %igx-grid__tr--edited {
             &::before {
                 left: 4px;
@@ -1866,7 +1860,7 @@
             left: 4px;
         }
     }
-    
+
     %igx-grid__tr-container {
         border-bottom: 1px solid --var($theme, 'row-border-color');
     }
