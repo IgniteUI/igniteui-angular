@@ -158,7 +158,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         return this.input.nativeElement.getBoundingClientRect().x - this.inputGroup.element.nativeElement.getBoundingClientRect().x + `px`;
     }
     public open(overlaySettings?: OverlaySettings) {
-        if (this.disabled) {
+        if (this.disabled || this.items.length === 0) {
             return;
         }
 

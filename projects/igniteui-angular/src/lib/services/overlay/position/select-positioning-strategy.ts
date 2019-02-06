@@ -47,7 +47,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
         this.deltaY = CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-        this.adjustItemTextPadding() - this.select.input.nativeElement.getBoundingClientRect().y;
+            this.adjustItemTextPadding() - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
@@ -149,10 +149,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const LIST_HEIGHT = contentElement.getBoundingClientRect().height;
         const inputBoundRect = this.select.input.nativeElement.getBoundingClientRect();
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect();
         const itemHeight = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
-        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
         const inputHeight = this.select.input.nativeElement.getBoundingClientRect().height;
+        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect() ? this.select.selectedItem.element.nativeElement.getBoundingClientRect() : null;
+        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
 
         let CURRENT_POSITION_Y = START.Y - selectedItemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
