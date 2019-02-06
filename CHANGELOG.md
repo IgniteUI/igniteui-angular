@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 6.2.8
+### Features
+- `igxGrid`
+    - `Group By`
+        - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related group row and when it points down clicking on it would expand the group row.
+        - The collapse/expand all icons have also been updated to reflect the new group row icons better.
+        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Dow to reflect the new icons.
+- `igxTreeGrid`
+    - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
+    - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
+
 ## 6.2.5
 
 ### Bug Fixes
