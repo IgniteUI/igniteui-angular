@@ -616,10 +616,12 @@
 
     @include e(actions-pin) {
         @extend %grid-excel-actions__action !optional;
+        @extend %grid-excel-actions__pin !optional;
     }
 
     @include e(actions-unpin) {
         @extend %grid-excel-actions__action !optional;
+        @extend %grid-excel-actions__unpin !optional;
     }
 
     @include e(actions-hide) {
@@ -628,5 +630,27 @@
 
     @include e(actions-filter) {
         @extend %grid-excel-actions__action !optional;
+    }
+
+    @include e(secondary) {
+        @extend %grid-excel-menu__secondary !optional;
+    }
+
+    @include e(secondary-header) {
+        @extend %grid-excel-menu__header !optional;
+        @extend %grid-excel-menu__secondary-header !optional;
+    }
+
+    @include e(secondary-footer) {
+        @extend %grid-excel-menu__footer !optional;
+        @extend %grid-excel-menu__secondary-footer !optional;
+    }
+
+    @include e(condition) {
+        @extend %grid-excel-menu__condition !optional;
+    }
+
+    @include e(add-filter) {
+        @extend %grid-excel-menu__add-filter !optional;
     }
 }

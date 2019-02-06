@@ -655,7 +655,7 @@
         display: inline-flex;
         align-items: center;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        transition: all $transition-timing;
+        transition: color $transition-timing;
     }
 
     %form-group-prefix {
