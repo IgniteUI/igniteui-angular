@@ -262,6 +262,17 @@ export class HelperUtils {
             resolve();
         })
 
+
+    public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            fix.detectChanges();
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            fix.detectChanges();
+        }
+
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
@@ -273,6 +284,16 @@ export class HelperUtils {
             fix.detectChanges();
             resolve();
         })
+
+    public static selectCellsRangeWithShiftKeyNoWait (fix, startCell, endCell)  {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', startCell.nativeElement);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement, true);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+            fix.detectChanges();
+        }
 
     public static verifyCellsRegionSelected(grid, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex, selected = true) {
         const startRow = startRowIndex < endRowIndex ? startRowIndex : endRowIndex;
