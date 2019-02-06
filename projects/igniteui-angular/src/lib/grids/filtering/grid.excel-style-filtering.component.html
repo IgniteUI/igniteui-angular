@@ -160,7 +160,8 @@
             [supressInputAutofocus]="true">
 
             <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
-                <igx-icon fontSet="filtering-icons" [name]="getIconName(item)"></igx-icon>
+                <igx-icon *ngIf="item.expression.condition" fontSet="filtering-icons" [name]="getIconName(item)"></igx-icon>
+                <igx-icon *ngIf="!item.expression.condition">filter_list</igx-icon>
             </igx-prefix>
 
             <input
@@ -168,7 +169,7 @@
                 tabindex="0"
                 placeholder="placeholder"
                 autocomplete="off"
-                [value]="item.expression.condition.name"
+                [value]="getConditionName(item.expression.condition)"
                 [readonly]="true"
             />
         </igx-input-group>
@@ -187,7 +188,8 @@
                 placeholder="placeholder"
                 autocomplete="off"
                 [igxDropDownItemNavigation]="dropdownValues"
-                [value]="item.expression.searchVal"/>
+                [(ngModel)]="item.expression.searchVal"
+               />
 
             <igx-icon igxSuffix tabindex="0"
                 (click)="toggleCustomMenuDropDown(inputGroupValues, dropdownValues)"
@@ -196,7 +198,7 @@
             </igx-icon>
         </igx-input-group>
 
-        <button igxButton="icon">
+        <button (click)="onRemoveButtonClick(item)" igxButton="icon">
             <igx-icon>cancel</igx-icon>
         </button>
 
@@ -219,17 +221,19 @@
         </igx-buttongroup>
     </section>
 
-    <button igxButton class="igx-excel-filter__add-filter">
+    <button igxButton
+        class="igx-excel-filter__add-filter"
+        (click)="onAddButtonClick()">
         <igx-icon>add</igx-icon>
         <span>Add Filter</span>
     </button>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton>Clear filter</button>
+        <button igxButton (click)="onClearButtonClick()">Clear filter</button>
 
         <div>
-            <button igxButton>Cancel</button>
-            <button igxButton="raised">Apply</button>
+            <button igxButton (click)="onCancelButtonClick()">Cancel</button>
+            <button igxButton="raised" (click)="onApplyButtonClick()">Apply</button>
         </div>
     </footer>
 </article>
