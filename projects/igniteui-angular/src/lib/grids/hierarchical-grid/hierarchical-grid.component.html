@@ -79,6 +79,7 @@
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
             <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' [ngClass]="{
+                'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
             }">
                     <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex" [rowData]="rowData" [layout]='layout' #row>
