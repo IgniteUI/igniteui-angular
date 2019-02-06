@@ -8,10 +8,7 @@ let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-select-item',
-    templateUrl: 'select-item.component.html',
-    providers: [{
-        provide: IgxDropDownItemComponent, useExisting: IgxSelectItemComponent
-    }]
+    templateUrl: 'select-item.component.html'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 

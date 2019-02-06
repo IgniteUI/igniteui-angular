@@ -28,6 +28,6 @@
         (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
         (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
         [attr.id]="this.listId" [attr.role]="'listbox'">
-        <ng-content select="igx-select-item">
+        <ng-content select="igx-select-item, igx-select-item-group">
         </ng-content>
     </div>

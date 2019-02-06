@@ -1,106 +1,67 @@
 <div class="sampleWrapper">
-<br>
-<br>
-<igx-select #select
-    [width]="'260px'"
-    [placeholder]="'Pick One'"
-    [(ngModel)]="value"
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field">
-        {{ item.field }}
-    </igx-select-item>
-</igx-select>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<igx-select #select1
-    [width]="'260px'" [placeholder]="'Pick One'"
-    [value]="value"
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-suffix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-suffix>
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field"
-        isFocused="inx === 1"
-         >
-        {{ item.field }}
-    </igx-select-item>
-</igx-select>
-<br>
-<br>
-<br>
-<br>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br/>
-<igx-select #select2
-    [width]="'260px'" [placeholder]="'Pick One'"
-
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field"
-
-         >
-        {{ item.field }}
-    </igx-select-item>
-</igx-select>
-<br/>
+    <br>
+    <br>
+    <igx-select #select [width]="'260px'" [placeholder]="'Pick One'" [(ngModel)]="value" (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
+        [disabled]="false" [overlaySettings]="customOverlaySettings">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+    <br>
+    <br>
+    <igx-select #select1 [width]="'260px'" [placeholder]="'Pick One'" [value]="value" (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
+        [disabled]="false" [overlaySettings]="customOverlaySettings">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-suffix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-suffix>
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field" isFocused="inx === 1">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+    <br>
+    <br />
+    <igx-select #select2 [width]="'260px'" [placeholder]="'Pick One'" (onOpening)="testOnOpening($event)" (onOpened)="testOnOpened()"
+        (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
+        [disabled]="false" [overlaySettings]="customOverlaySettings">
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+    <br />
+    <br />
+    <igx-select #select3 [width]="'260px'" [placeholder]="'Pick One'" [(ngModel)]="value" (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
+        [disabled]="false" [overlaySettings]="customOverlaySettings">
+        <label igxLabel>Group</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item>OutsideGroup</igx-select-item>
+        <igx-select-item-group label="Group">
+            <igx-select-item value="InsideGroup1">InsideGroup1</igx-select-item>
+            <igx-select-item value="InsideGroup2">InsideGroup2</igx-select-item>
+            <igx-select-item value="InsideGroup3">InsideGroup3</igx-select-item>
+        </igx-select-item-group>
+    </igx-select>
 </div>
 
-<div style="padding-left: 50px">
+<div style="padding: 100px 60px">
     <!-- <span>IgxSelect - value:
         <span class="spanValue">{{value}}</span>
     </span>
@@ -134,12 +95,14 @@
     <span>IgxSelectItemComponent - 5th item is disabled:
         <span class="spanValue">{{select.items[3].disabled}}</span>
     </span>
-    <br/>
-    <span>
-        <button (click)="handleOpen()">Open</button>
-        <button (click)="handleClose()">Close</button>
-        <button (click)="handleToggle()">Toggle</button>
-        <button (click)="toggleDisabled()">toggleDisable</button>
-    </span> -->
+    <br/> -->
+<br/><br/>
+<span>
+    <button (click)="handleOpen()">Open</button>
+    <button (click)="handleClose()">Close</button>
+    <button (click)="handleToggle()">Toggle</button>
+    <button (click)="toggleDisabled()">toggleDisable</button>
+    <button (click)="openCustomOverlaySettings()">openCustomOverlay</button>
+</span>
 </div>
 <div class="testDiv"></div>

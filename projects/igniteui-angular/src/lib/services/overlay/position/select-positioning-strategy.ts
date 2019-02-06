@@ -175,10 +175,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             }
         }
         let transformString = '';
-        const selectedItemPadding = window.getComputedStyle(this.select.selectedItem.element.nativeElement).paddingLeft;
-        const numericPadding = parseInt(selectedItemPadding.slice(0, selectedItemPadding.indexOf('p')), 10);
-        transformString += `translateX(${START.X - numericPadding}px)`;
-        this.deltaX = START.X - numericPadding;
+        const selectedItemElement = this.select.selectedItem.element.nativeElement;
+        const itemPadding = window.getComputedStyle(selectedItemElement).paddingLeft;
+        const itemTextIndent = window.getComputedStyle(selectedItemElement).textIndent;
+        const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10);
+        const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10);
+
+        transformString += `translateX(${START.X - numericPadding - numericTextIndent}px)`;
+        this.deltaX = START.X - numericPadding - numericTextIndent;
 
         // Handle scenarios where there the list container has no scroll &&
         // when there is scroll and the list container is always in the visible port.

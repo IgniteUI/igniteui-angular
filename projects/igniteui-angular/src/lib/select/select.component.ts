@@ -43,8 +43,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
-    // @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true})
-    // public children: QueryList<IgxSelectItemComponent>;
+    @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true})
+    public children: QueryList<IgxSelectItemComponent>;
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
 
     /**

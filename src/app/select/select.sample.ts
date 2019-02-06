@@ -1,9 +1,9 @@
+import { ConnectedPositioningStrategy } from './../../../projects/igniteui-angular/src/lib/services/overlay/position/connected-positioning-strategy';
 import { AbsoluteScrollStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
 // tslint:disable-next-line:max-line-length
-import { SelectPositioningStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/position/select-positioning-strategy';
 import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings } from 'igniteui-angular';
+import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -18,15 +18,8 @@ export class SelectSampleComponent implements OnInit {
 
     //public value = 'notContainedInItemsValue';
     public value: 'opt1'; // value not set
+    public customOverlaySettings: OverlaySettings;
 
-    customOverlaySettings: OverlaySettings = {
-        modal: false,
-        closeOnOutsideClick: true,
-        positionStrategy: new SelectPositioningStrategy(
-            this.igxSelect
-        ),
-        scrollStrategy: new AbsoluteScrollStrategy()
-    };
     public ngOnInit() {
         for (let i = 1; i < 10; i ++) {
             const item = { field: 'opt' + i };
@@ -61,8 +54,8 @@ export class SelectSampleComponent implements OnInit {
 
     public handleOpen() {
         if (this.igxSelect.collapsed) {
-            // console.log('onOpen.....................: ');
-            this.igxSelect.open(this.customOverlaySettings);
+            console.log('onOpen.....................:');
+            this.igxSelect.open();
         }
     }
 
@@ -76,6 +69,29 @@ export class SelectSampleComponent implements OnInit {
     public toggleDisabled() {
         this.igxSelect.disabled = !this.igxSelect.disabled;
         // console.log('toggleDisabled.....................: ');
+    }
 
+    public openCustomOverlaySettings() {
+        if (this.igxSelect.collapsed) {
+        const positionSettings = {
+            target: this.igxSelect.inputGroup.element.nativeElement,
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom
+        };
+
+        const customOverlaySettings = {
+            modal: true,
+            closeOnOutsideClick: false,
+            positionStrategy: new ConnectedPositioningStrategy(
+                positionSettings
+            ),
+            scrollStrategy: new AbsoluteScrollStrategy()
+        };
+            console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
+            this.customOverlaySettings = customOverlaySettings;
+            this.igxSelect.open(customOverlaySettings);
+        }
     }
 }
