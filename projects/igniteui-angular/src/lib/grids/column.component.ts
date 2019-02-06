@@ -1032,6 +1032,10 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pinned = false;
 
         const targetColumn = grid._unpinnedColumns[index];
+
+        const args = { column: this, unpinnedFromIndex: oldIndex };
+        grid.onColumnPinning.emit(args);
+
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
