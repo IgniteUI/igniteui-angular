@@ -12,26 +12,25 @@
     }).done((data) =>  {
         let folders = data.folders;
         const select = $('#versions')
-        const lastVersion = folders.slice(-1)[0];
-
         folders = folders.reverse();
+
         folders.forEach(f => {
             select.append($('<option>', {
-                value: `${baseUrl}/angular-docs/${f}/typescript`,
+                value: `${baseUrl}/products/ignite-ui-angular/docs/${f}/typescript`,
                 text: f
             }));
         });
 
-        select.val(`${baseUrl}/angular-docs/${lastVersion}/typescript`);
+        select.val(`${baseUrl}/products/ignite-ui-angular/docs/${folders[0]}/typescript`);
 
-        if (sessionStorage.apiVersion) {
-            select.val(sessionStorage.apiVersion);
+        if (sessionStorage.typedocOption) {
+            select.val(sessionStorage.typedocOption);
         }
     });
 
     $('#versions').on('change', (...rest) => {
         const val = $('#versions').val();
-        sessionStorage.apiVersion = val;
+        sessionStorage.typedocOption = val;
         window.location.assign(val);
     });
 })();
