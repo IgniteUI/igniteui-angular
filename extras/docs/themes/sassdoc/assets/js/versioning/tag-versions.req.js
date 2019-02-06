@@ -10,15 +10,19 @@
             withCredentials: false
         }
     }).done((data) =>  {
-        const folders = data.folders;
-        const select = $('#versions')
+        let folders = data.folders;
+        const select = $('#versions');
+        const lastVersion = folders.slice(-1)[0];
 
+        folders = folders.reverse();
         folders.forEach(f => {
             select.append($('<option>', {
                 value: `${baseUrl}/angular-docs/${f}/sass`,
                 text: f
             }));
         });
+
+        select.val(`${baseUrl}/angular-docs/${lastVersion}/sass`);
 
         if (sessionStorage.apiVersion) {
             select.val(sessionStorage.apiVersion);

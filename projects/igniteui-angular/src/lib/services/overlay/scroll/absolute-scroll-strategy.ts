@@ -45,6 +45,6 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
     }
 
     private onScroll = () => {
-        this._overlayService.reposition(this._id);
+        this._overlayService.repositionAll();
     }
 }
