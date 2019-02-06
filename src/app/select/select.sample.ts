@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import { ConnectedPositioningStrategy } from './../../../projects/igniteui-angular/src/lib/services/overlay/position/connected-positioning-strategy';
 import { AbsoluteScrollStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
 // tslint:disable-next-line:max-line-length

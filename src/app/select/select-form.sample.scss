@@ -1,23 +1,69 @@
-.wrap {
-    flex-direction: column;
-}
-
-.wrap, .selects, .buttons, .inputs {
+.select-sample-content,
+.inputs,
+.selects,
+.wrap,
+.buttons {
     display: flex;
 }
 
-igx-select, button {
-    flex: 1 1 auto;
-    position: inherit;
+.select-sample-content {
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 289px);
+    max-width: 600px;
+    min-height: 300px;
+    margin: 30px auto;
+    padding: 30px;
+    background: rgba(0, 0, 0, .1);
+    box-sizing: border-box;
 }
 
-input {
-    flex: 1 1 auto;
+.from {
+    flex: 1 0 0%;
+}
+
+.inputs,
+.selects {
+
+    > * {
+        flex: 1 0 0%;
+        margin-left: 16px;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+}
+
+.wrap {
+    margin-bottom: 32px;
+
+    flex-direction: column;
+
+    > div {
+        margin-bottom: 24px;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
 }
 
 .buttons {
-    padding-top: 250px;
+    justify-content: flex-end;
+
+    > * {
+        flex: 1 0 0%;
+        margin-left: 16px;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    margin-bottom: 32px;
 }
-// .igx-drop-down {
-//     position: relative !important;
-// }
+
+.warn {
+    color: darkorange;
+}
