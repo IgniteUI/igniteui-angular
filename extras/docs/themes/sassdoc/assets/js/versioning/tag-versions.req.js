@@ -14,7 +14,7 @@
         const select = $('#versions');
         folders = folders.reverse();
 
-        folders.forEach(f => {
+        folders.forEach(function (f) {
             select.append($('<option>', {
                 value: `${baseUrl}/products/ignite-ui-angular/docs/${f}/sass`,
                 text: f
