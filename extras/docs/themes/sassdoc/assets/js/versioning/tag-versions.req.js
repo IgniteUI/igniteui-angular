@@ -9,12 +9,13 @@
         xhrFields: {
             withCredentials: false
         }
-    }).done((data) =>  {
+    }).done(function (data) {
         let folders = data.folders;
         const select = $('#versions');
+        const lastVersion = folders.slice(-1)[0];
         folders = folders.reverse();
 
-        folders.forEach(f => {
+        folders.forEach(function (f) {
             select.append($('<option>', {
                 value: `${baseUrl}/products/ignite-ui-angular/docs/${f}/sass`,
                 text: f
@@ -28,7 +29,7 @@
         }
     });
 
-    $('#versions').on('change', (...rest) => {
+    $('#versions').on('change', function () {
         const val = $('#versions').val();
         sessionStorage.sassOption = val;
         window.location.assign(val);
