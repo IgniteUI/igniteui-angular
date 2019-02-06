@@ -11,7 +11,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 
-import { IgxDropDownItemBase, IgxDropDownBase } from '../drop-down';
+import { IgxDropDownItemBase } from '../drop-down';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
@@ -20,9 +20,7 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
-import { timer, Subscription } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
-import { fadeIn, fadeOut } from '../animations/main';
 
 const noop = () => { };
 @Component({
@@ -163,18 +161,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         if (this.disabled) {
             return;
         }
-        super.open({
-            modal: false,
-            closeOnOutsideClick: true,
-            positionStrategy: new SelectPositioningStrategy(
-                this,
-                { target: this.inputGroup.element.nativeElement,
-                    closeAnimation: fadeOut,
-                    openAnimation: fadeIn
-                }
-            ),
-            scrollStrategy: new AbsoluteScrollStrategy(),
-        });
+
+        if (overlaySettings) {
+            super.open(overlaySettings);
+        } else {
+            super.open({
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new SelectPositioningStrategy(this),
+                scrollStrategy: new AbsoluteScrollStrategy(),
+            });
+        }
         // super.open({
         //     modal: false,
         //     closeOnOutsideClick: true,
@@ -209,7 +206,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         this.scrollToItem(this.selectedItem);
     }
 }
-
 @NgModule({
     declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
     exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
