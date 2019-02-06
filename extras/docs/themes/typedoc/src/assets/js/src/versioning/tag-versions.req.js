@@ -9,13 +9,13 @@
         xhrFields: {
             withCredentials: false
         }
-    }).done((data) =>  {
+    }).done(function (data) {
         let folders = data.folders;
-        const select = $('#versions')
+        const select = $('#versions');
         const lastVersion = folders.slice(-1)[0];
-
         folders = folders.reverse();
-        folders.forEach(f => {
+
+        folders.forEach(function (f) {
             select.append($('<option>', {
                 value: `${baseUrl}/angular-docs/${f}/typescript`,
                 text: f
@@ -29,7 +29,7 @@
         }
     });
 
-    $('#versions').on('change', (...rest) => {
+    $('#versions').on('change', function () {
         const val = $('#versions').val();
         sessionStorage.apiVersion = val;
         window.location.assign(val);
