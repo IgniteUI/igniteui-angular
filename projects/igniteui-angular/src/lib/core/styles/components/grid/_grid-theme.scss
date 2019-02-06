@@ -1866,8 +1866,10 @@
             left: 4px;
         }
     }
-
-
+    
+    %igx-grid__tr-container {
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+    }
 
     %igx-grid__hierarchical-expander {
         user-select: none;

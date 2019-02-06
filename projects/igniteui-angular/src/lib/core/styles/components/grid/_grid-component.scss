@@ -160,6 +160,10 @@
         @extend %grid-row--group !optional;
     }
 
+    @include e(tr-container) {
+        @extend %igx-grid__tr-container !optional;
+    }
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
