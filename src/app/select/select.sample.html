@@ -1,145 +1,116 @@
+<app-page-header title="Ripple">
+    Animates a click/tap to a component as a series of fading waves.
+</app-page-header>
+
 <div class="sampleWrapper">
-<br>
-<br>
-<igx-select #select
-    [width]="'260px'"
-    [placeholder]="'Pick One'"
-    [(ngModel)]="value"
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field">
-        {{ item.field }}
-    </igx-select-item>
-</igx-select>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<igx-select #select1
-    [width]="'260px'" [placeholder]="'Pick One'"
-    [value]="value"
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <label igxLabel>Sample Label</label>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-prefix igxPrefix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-prefix>
-    <igx-suffix>
-        <igx-icon fontSet="material">alarm</igx-icon>
-    </igx-suffix>
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field"
-        isFocused="inx === 1"
-         >
-        {{ item.field }}
-    </igx-select-item>
-</igx-select>
-<br>
-<br>
-<br>
-<br>
+    <igx-select #select
+        [width]="'260px'"
+        [placeholder]="'Pick One'"
+        [(ngModel)]="value"
+        (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()"
+        (onClosing)="testOnClosing($event)"
+        (onClosed)="testOnClosed()"
+        (onSelection)="testOnSelection($event)"
+        [disabled]="false"
+        [overlaySettings]="customOverlaySettings"
+    >
+        <label igxLabel>Sample Label</label>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br/>
-<igx-select #select2
-    [width]="'260px'" [placeholder]="'Pick One'"
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
 
-    (onOpening)="testOnOpening($event)"
-    (onOpened)="testOnOpened()"
-    (onClosing)="testOnClosing($event)"
-    (onClosed)="testOnClosed()"
-    (onSelection)="testOnSelection($event)"
-    [disabled]="false"
-    [overlaySettings]="customOverlaySettings"
->
-    <igx-select-item>None</igx-select-item>
-    <igx-select-item *ngFor="let item of items; let inx=index"
-        [value]="item.field"
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index"
+            [value]="item.field">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
 
-         >
-        {{ item.field }}
-    </igx-select-item>
+    <igx-select #select1
+        [width]="'260px'" [placeholder]="'Pick One'"
+        [value]="value"
+        (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()"
+        (onClosing)="testOnClosing($event)"
+        (onClosed)="testOnClosed()"
+        (onSelection)="testOnSelection($event)"
+        [disabled]="false"
+        [overlaySettings]="customOverlaySettings"
+    >
+        <label igxLabel>Sample Label</label>
+        <igx-suffix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-suffix>
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index"
+            [value]="item.field"
+            isFocused="inx === 1"
+             >
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+
+    <igx-select #select2
+        [width]="'260px'" [placeholder]="'Pick One'"
+
+        (onOpening)="testOnOpening($event)"
+        (onOpened)="testOnOpened()"
+        (onClosing)="testOnClosing($event)"
+        (onClosed)="testOnClosed()"
+        (onSelection)="testOnSelection($event)"
+        [disabled]="false"
+        [overlaySettings]="customOverlaySettings"
+    >
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item *ngFor="let item of items; let inx=index"
+            [value]="item.field"
+
+             >
+            {{ item.field }}
+        </igx-select-item>
 </igx-select>
-<br/>
 </div>
 
-<div style="padding-left: 50px">
-    <!-- <span>IgxSelect - value:
-        <span class="spanValue">{{value}}</span>
-    </span>
-    <br/>
-  <span>selectedItem - value:
-        <span class="spanValue">{{select.selectedItem.value}}</span>
-    </span>
-    <br/>
-     <span>IgxSelect - collapsed:
-        <span class="spanValue">{{select.collapsed}}</span>
-    </span>
-    <br/>
-    <span>IgxSelect - overlaySettings:
 
-    </span>
-    <br/>
-    <span>IgxSelect - disabled:
-        <span class="spanValue">{{select.disabled}}</span>
-    </span>
-    <br/>
-    <span>IgxSelectItemComponent - 2nd item is focused:
+<!-- <span>IgxSelect - value:
+    <span class="spanValue">{{value}}</span>
+</span>
+<br/>
+<span>selectedItem - value:
+    <span class="spanValue">{{select.selectedItem.value}}</span>
+</span>
+<br/>
+ <span>IgxSelect - collapsed:
+    <span class="spanValue">{{select.collapsed}}</span>
+</span>
+<br/>
+<span>IgxSelect - overlaySettings:
 
-        <span class="spanValue">{{select.items[1].isFocused}}</span>
-    </span>
-    <br/>
-    <span>IgxSelectItemComponent - 2nd item is selected :
+</span>
+<br/>
+<span>IgxSelect - disabled:
+    <span class="spanValue">{{select.disabled}}</span>
+</span>
+<br/>
+<span>IgxSelectItemComponent - 2nd item is focused:
 
-        <span class="spanValue">{{select.items[1].isSelected}}</span>
-    </span>
-    <br/>
-    <span>IgxSelectItemComponent - 5th item is disabled:
-        <span class="spanValue">{{select.items[3].disabled}}</span>
-    </span>
-    <br/>
-    <span>
-        <button (click)="handleOpen()">Open</button>
-        <button (click)="handleClose()">Close</button>
-        <button (click)="handleToggle()">Toggle</button>
-        <button (click)="toggleDisabled()">toggleDisable</button>
-    </span> -->
-</div>
-<div class="testDiv"></div>
+    <span class="spanValue">{{select.items[1].isFocused}}</span>
+</span>
+<br/>
+<span>IgxSelectItemComponent - 2nd item is selected :
+
+    <span class="spanValue">{{select.items[1].isSelected}}</span>
+</span>
+<br/>
+<span>IgxSelectItemComponent - 5th item is disabled:
+    <span class="spanValue">{{select.items[3].disabled}}</span>
+</span>
+<br/>
+<span>
+    <button (click)="handleOpen()">Open</button>
+    <button (click)="handleClose()">Close</button>
+    <button (click)="handleToggle()">Toggle</button>
+    <button (click)="toggleDisabled()">toggleDisable</button>
+</span> -->

@@ -1,22 +1,12 @@
-span {
-    display: inline;
-    color: greenyellow;
-    margin-left: 250px;
-}
-.spanValue {
-    display: inline;
-    color: #e41c77;
-    margin-left:5px;
-}
-igx-select {
-    margin-top: 320px;
-}
-
-.igx-drop-down__item {
-    font-size: 1rem;
-}
-
 .sampleWrapper {
-    width: 280px;
-    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 289px);
+    max-width: 600px;
+    min-height: 300px;
+    margin: 30px auto;
+    padding: 30px;
+    background: rgba(0, 0, 0, .1);
+    box-sizing: border-box;
 }
