@@ -4,6 +4,7 @@ about: Get general information or clarification
 title: ''
 labels: 'question'
 assignees: ''
+projects: https://github.com/orgs/IgniteUI/projects/16
 
 ---
 
