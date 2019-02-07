@@ -3,8 +3,6 @@
 </app-page-header>
 
 <div class="sampleWrapper">
-    <br>
-    <br>
     <igx-select #select [width]="'260px'" [placeholder]="'Pick One'" [(ngModel)]="value" (onOpening)="testOnOpening($event)"
         (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
         [disabled]="false" [overlaySettings]="customOverlaySettings">
@@ -17,17 +15,12 @@
             {{ item.field }}
         </igx-select-item>
     </igx-select>
-    <br>
-    <br>
     <igx-select #select1 [width]="'260px'" [placeholder]="'Pick One'" [value]="value" (onOpening)="testOnOpening($event)"
         (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
         [disabled]="false" [overlaySettings]="customOverlaySettings">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
-        </igx-prefix>
-        <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon fontSet="material">favorite</igx-icon>
         </igx-prefix>
         <igx-suffix>
             <igx-icon fontSet="material">alarm</igx-icon>
@@ -37,8 +30,7 @@
             {{ item.field }}
         </igx-select-item>
     </igx-select>
-    <br>
-    <br />
+
     <igx-select #select2 [width]="'260px'" [placeholder]="'Pick One'" (onOpening)="testOnOpening($event)" (onOpened)="testOnOpened()"
         (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
         [disabled]="false" [overlaySettings]="customOverlaySettings">
@@ -47,8 +39,6 @@
             {{ item.field }}
         </igx-select-item>
     </igx-select>
-    <br />
-    <br />
     <igx-select #select3 [width]="'260px'" [placeholder]="'Pick One'" [(ngModel)]="value" (onOpening)="testOnOpening($event)"
         (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
         [disabled]="false" [overlaySettings]="customOverlaySettings">
@@ -63,9 +53,17 @@
             <igx-select-item value="InsideGroup3">InsideGroup3</igx-select-item>
         </igx-select-item-group>
     </igx-select>
+
+    <div class="sample-actions">
+        <button igxButton="raised" (click)="handleOpen()">Open</button>
+        <button igxButton="raised" (click)="handleClose()">Close</button>
+        <button igxButton="raised" (click)="handleToggle()">Toggle</button>
+        <button igxButton="raised" (click)="toggleDisabled()">toggleDisable</button>
+        <button igxButton="raised" (click)="openCustomOverlaySettings()">openCustomOverlay</button>
+    </div>
 </div>
 
-<div style="padding: 100px 60px">
+
     <!-- <span>IgxSelect - value:
         <span class="spanValue">{{value}}</span>
     </span>
@@ -79,8 +77,7 @@
     </span>
     <br/>
     <span>IgxSelect - overlaySettings:
-
-<!-- <span>IgxSelect - value:
+<span>IgxSelect - value:
     <span class="spanValue">{{value}}</span>
 </span>
 <br/>
@@ -114,13 +111,5 @@
         <span class="spanValue">{{select.items[3].disabled}}</span>
     </span>
     <br/> -->
-<br/><br/>
-<span>
-    <button (click)="handleOpen()">Open</button>
-    <button (click)="handleClose()">Close</button>
-    <button (click)="handleToggle()">Toggle</button>
-    <button (click)="toggleDisabled()">toggleDisable</button>
-    <button (click)="openCustomOverlaySettings()">openCustomOverlay</button>
-</span>
-</div>
+
 <div class="testDiv"></div>
