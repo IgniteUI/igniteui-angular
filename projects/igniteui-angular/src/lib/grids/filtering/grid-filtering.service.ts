@@ -326,19 +326,6 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    public resolveFilteredSortedData(): any[] {
-        let data: any[] = this.filteredData ? this.filteredData : this.sortedData;
-        if (!this.filteredData && this.grid.transactions.enabled) {
-            data = DataUtil.mergeTransactions(
-                cloneArray(data),
-                this.grid.transactions.getAggregatedChanges(true),
-                this.grid.primaryKey
-            );
-        }
-
-        return data;
-    }
-
     public get filteredData() {
         return this.grid.filteredData;
     }
