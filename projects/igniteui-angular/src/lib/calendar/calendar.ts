@@ -332,3 +332,10 @@ export class Calendar {
         return date.getFullYear() > year;
     }
 }
+
+
+export const IGX_CALENDAR_COMPONENT = 'IgxCalendarComponentToken';
+
+export interface IgxCalendarBase {
+    viewDate: Date;
+}

@@ -8,9 +8,11 @@ import {
     QueryList,
     HostBinding,
     forwardRef,
-    DoCheck
+    DoCheck,
+    Inject,
+    Optional
 } from '@angular/core';
-import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges } from '../../calendar';
+import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges, IGX_CALENDAR_COMPONENT, IgxCalendarBase } from '../../calendar';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -313,12 +315,6 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public onDateSelection = new EventEmitter<ICalendarDate>();
 
     /**
-     *@hidden
-     */
-    @Output()
-    public onViewChanged = new EventEmitter<any>();
-
-    /**
      * @hidden
      */
     @ViewChildren(forwardRef(() => IgxDayItemComponent), { read: IgxDayItemComponent })
@@ -434,7 +430,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     /**
      * @hidden
      */
-    constructor() {
+    constructor(@Optional() @Inject(IGX_CALENDAR_COMPONENT) public calendar: IgxCalendarBase) {
         this.calendarModel = new Calendar();
 
         this.calendarModel.firstWeekDay = this.weekStart;
@@ -654,7 +650,9 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this.animationAction = 'prev';
             this.isKeydownTrigger = true;
-            this.onViewChanged.emit(this._nextDate);
+            if (this.calendar) {
+                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
+            }
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
@@ -689,7 +687,9 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this.animationAction = 'next';
             this.isKeydownTrigger = true;
-            this.onViewChanged.emit(this._nextDate);
+            if (this.calendar) {
+                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
+            }
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
@@ -722,7 +722,9 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this.animationAction = 'prev';
             this.isKeydownTrigger = true;
-            this.onViewChanged.emit(this._nextDate);
+            if (this.calendar) {
+                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
+            }
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
@@ -756,7 +758,9 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this.animationAction = 'next';
             this.isKeydownTrigger = true;
-            this.onViewChanged.emit(this._nextDate);
+            if (this.calendar) {
+                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
+            }
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;

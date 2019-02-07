@@ -9,9 +9,7 @@ import {
     Input,
     Output,
     ViewChild,
-    ElementRef,
-    AfterViewInit,
-    OnDestroy
+    ElementRef
 } from '@angular/core';
 import { fadeIn, scaleInCenter } from '../animations/main';
 import {
@@ -23,9 +21,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { KEYS } from '../core/utils';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ICalendarDate } from './calendar';
+import { ICalendarDate, IGX_CALENDAR_COMPONENT } from './calendar';
 
 let NEXT_ID = 0;
 
@@ -47,6 +43,10 @@ let NEXT_ID = 0;
             multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxCalendarComponent
+        },
+        {
+            provide: IGX_CALENDAR_COMPONENT,
+            useExisting: IgxCalendarComponent
         }
     ],
     animations: [
@@ -63,7 +63,7 @@ let NEXT_ID = 0;
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxDaysViewComponent implements AfterViewInit, OnDestroy {
+export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -323,33 +323,12 @@ export class IgxCalendarComponent extends IgxDaysViewComponent implements AfterV
         month: true,
         year: false
     };
-    /**
-     *@hidden
-     */
-    private destroy$ = new Subject<boolean>();
 
     /**
      *@hidden
      */
     constructor(public elementRef: ElementRef) {
-        super();
-    }
-
-    /**
-     *@hidden
-     */
-    public ngAfterViewInit() {
-        this.daysView.onViewChanged.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            this.viewDate = this.calendarModel.timedelta(event, 'month', 0);
-        });
-    }
-
-    /**
-     *@hidden
-     */
-    public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
+        super(null);
     }
 
     /**
