@@ -1948,10 +1948,16 @@
         min-width: 520px;
         background: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 6);
+        border-radius: rem(4px);
     }
 
     %grid-excel-menu__secondary-header {
         border-bottom: 1px solid igx-color($palette, 'grays', 300);
+    }
+
+    %grid-excel-menu__secondary-main {
+        max-height: 232px;
+        overflow: auto;
     }
 
     %grid-excel-menu__secondary-footer {

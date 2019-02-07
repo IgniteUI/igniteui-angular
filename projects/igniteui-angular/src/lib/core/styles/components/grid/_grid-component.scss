@@ -641,6 +641,10 @@
         @extend %grid-excel-menu__secondary-header !optional;
     }
 
+    @include e(secondary-main) {
+        @extend %grid-excel-menu__secondary-main !optional;
+    }
+
     @include e(secondary-footer) {
         @extend %grid-excel-menu__footer !optional;
         @extend %grid-excel-menu__secondary-footer !optional;

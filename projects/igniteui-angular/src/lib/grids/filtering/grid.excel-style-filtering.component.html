@@ -144,90 +144,92 @@
         </h4>
     </header>
 
-    <section *ngFor="let item of expressionsList; let last = last;" class="igx-excel-filter__condition">
-        <igx-drop-down #dropdownConditions [height]="'200px'" (onSelection)="onConditionsChanged($event, item, inputValues)">
-            <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition, item)">
-                <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-                <span>{{ translateCondition(condition) }}</span>
-            </igx-drop-down-item>
-        </igx-drop-down>
+    <article class="igx-excel-filter__secondary-main">
+        <section *ngFor="let item of expressionsList; let last = last;" class="igx-excel-filter__condition">
+            <igx-drop-down #dropdownConditions [height]="'200px'" (onSelection)="onConditionsChanged($event, item, inputValues)">
+                <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition, item)">
+                    <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+                    <span>{{ translateCondition(condition) }}</span>
+                </igx-drop-down-item>
+            </igx-drop-down>
 
-        <igx-input-group
-            #inputGroupConditions
-            (click)="toggleCustomMenuDropDown(inputGroupConditions, dropdownConditions)"
-            type="box"
-            [displayDensity]="'compact'"
-            [supressInputAutofocus]="true">
+            <igx-input-group
+                #inputGroupConditions
+                (click)="toggleCustomMenuDropDown(inputGroupConditions, dropdownConditions)"
+                type="box"
+                [displayDensity]="'compact'"
+                [supressInputAutofocus]="true">
 
-            <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
-                <igx-icon *ngIf="item.expression.condition" fontSet="filtering-icons" [name]="getIconName(item)"></igx-icon>
-                <igx-icon *ngIf="!item.expression.condition">filter_list</igx-icon>
-            </igx-prefix>
+                <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
+                    <igx-icon *ngIf="item.expression.condition" fontSet="filtering-icons" [name]="getIconName(item)"></igx-icon>
+                    <igx-icon *ngIf="!item.expression.condition">filter_list</igx-icon>
+                </igx-prefix>
 
-            <input
-                igxInput
-                tabindex="0"
-                placeholder="placeholder"
-                autocomplete="off"
-                [value]="getConditionName(item.expression.condition)"
-                [readonly]="true"
-            />
-        </igx-input-group>
+                <input
+                    igxInput
+                    tabindex="0"
+                    placeholder="placeholder"
+                    autocomplete="off"
+                    [value]="getConditionName(item.expression.condition)"
+                    [readonly]="true"
+                />
+            </igx-input-group>
 
-        <igx-drop-down #dropdownValues [height]="'200px'" (onSelection)="onValuesChanged($event, item, inputValues)" (onOpening)="onDropdownValuesOpening(dropdownValues, inputValues)">
-            <igx-drop-down-item *ngFor="let filterItem of uniqueItems" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem, item)">
-                <span>{{ filterItem.value }}</span>
-            </igx-drop-down-item>
-        </igx-drop-down>
+            <igx-drop-down #dropdownValues [height]="'200px'" (onSelection)="onValuesChanged($event, item, inputValues)" (onOpening)="onDropdownValuesOpening(dropdownValues, inputValues)">
+                <igx-drop-down-item *ngFor="let filterItem of uniqueItems" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem, item)">
+                    <span>{{ filterItem.value }}</span>
+                </igx-drop-down-item>
+            </igx-drop-down>
 
-        <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
-            <input
-                #inputValues
-                igxInput
-                tabindex="0"
-                placeholder="placeholder"
-                autocomplete="off"
-                [igxDropDownItemNavigation]="dropdownValues"
-                [(ngModel)]="item.expression.searchVal"
-               />
+            <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+                <input
+                    #inputValues
+                    igxInput
+                    tabindex="0"
+                    placeholder="placeholder"
+                    autocomplete="off"
+                    [igxDropDownItemNavigation]="dropdownValues"
+                    [(ngModel)]="item.expression.searchVal"
+                />
 
-            <igx-icon igxSuffix tabindex="0"
-                (click)="toggleCustomMenuDropDown(inputGroupValues, dropdownValues)"
-                [igxDropDownItemNavigation]="dropdownValues">
-                arrow_drop_down
-            </igx-icon>
-        </igx-input-group>
+                <igx-icon igxSuffix tabindex="0"
+                    (click)="toggleCustomMenuDropDown(inputGroupValues, dropdownValues)"
+                    [igxDropDownItemNavigation]="dropdownValues">
+                    arrow_drop_down
+                </igx-icon>
+            </igx-input-group>
 
-        <button (click)="onRemoveButtonClick(item)" igxButton="icon" *ngIf="expressionsList.length > 1">
-            <igx-icon>cancel</igx-icon>
+            <button (click)="onRemoveButtonClick(item)" igxButton="icon" *ngIf="expressionsList.length > 1">
+                <igx-icon>cancel</igx-icon>
+            </button>
+
+            <igx-buttongroup #logicOperatorButtonGroup
+                *ngIf="!last"
+                [multiSelection]="false">
+                <span igxButton
+                    #andButton
+                    [selected]="true"
+                    type="button"
+                    (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0, item)">
+                    And
+                </span>
+
+                <span igxButton
+                    #orButton
+                    type="button"
+                    (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1, item)">
+                    Or
+                </span>
+            </igx-buttongroup>
+        </section>
+
+        <button igxButton
+            class="igx-excel-filter__add-filter"
+            (click)="onAddButtonClick()">
+            <igx-icon>add</igx-icon>
+            <span>Add Filter</span>
         </button>
-
-        <igx-buttongroup #logicOperatorButtonGroup
-            *ngIf="!last"
-            [multiSelection]="false">
-            <span igxButton
-                #andButton
-                [selected]="true"
-                type="button"
-                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0, item)">
-                And
-            </span>
-
-            <span igxButton
-                #orButton
-                type="button"
-                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1, item)">
-                Or
-            </span>
-        </igx-buttongroup>
-    </section>
-
-    <button igxButton
-        class="igx-excel-filter__add-filter"
-        (click)="onAddButtonClick()">
-        <igx-icon>add</igx-icon>
-        <span>Add Filter</span>
-    </button>
+    </article>
 
     <footer class="igx-excel-filter__secondary-footer">
         <button igxButton (click)="onClearButtonClick()">Clear filter</button>
