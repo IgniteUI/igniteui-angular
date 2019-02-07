@@ -361,7 +361,6 @@
         cell-selected-text-color: $cell-selected-text-color,
 
         edit-mode-color: $edit-mode-color,
-        edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
 
@@ -987,12 +986,39 @@
         border-right: $grid-header-border;
         outline-style: none;
         overflow: hidden;
+        transition: color 250ms ease-in-out;
+    }
+
+    %igx-grid__th--sortable {
+        cursor: pointer;
+
+        %grid-cell-header-title {
+            cursor: pointer;
+        }
+
+        &:hover {
+            color: igx-color($palette, 'grays', 900);
+
+            .sort-icon {
+                opacity: 1;
+            }
+        }
     }
 
     %grid-cell-header--filtering {
         background: --var($theme, 'filtering-header-background');
         color: --var($theme, 'filtering-header-text-color');
         z-index: 3;
+    }
+
+    %igx-grid__th--filtrable {
+        cursor: pointer;
+
+        &:hover {
+            %grid-cell-header-title {
+                cursor: pointer;
+            }
+        }
     }
 
     %grid-cell-header--cosy {
@@ -1041,8 +1067,30 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
-            color: igx-color($palette, 'secondary');
+            color: igx-color($palette, 'grays', 500);
+
+            &:hover {
+                color: igx-color($palette, 'secondary', 500);
+            }
         }
+    }
+
+    %igx-grid__th--sorted {
+        color: igx-color($palette, 'grays', 900);
+
+        .sort-icon {
+            opacity: 1;
+            color: igx-color($palette, 'secondary', 500);
+
+            &:hover {
+                color: igx-color($palette, 'secondary', 600);
+            }
+        }
+    }
+
+    .sort-icon {
+        opacity: 0;
+        transition: all 250ms ease-in-out;
     }
 
     %grid-cell-header-icons--cosy {
@@ -1723,6 +1771,7 @@
         justify-content: space-between;
         background: --var($theme, 'filtering-row-background');
         color: --var($theme, 'filtering-row-text-color');
+        left: 0;
         bottom: 0;
         z-index: 3;
 

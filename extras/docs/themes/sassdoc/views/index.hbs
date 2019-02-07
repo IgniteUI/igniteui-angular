@@ -17,6 +17,13 @@
         <link rel="stylesheet" href="https://use.typekit.net/zhy2hpz.css">
         <link rel="stylesheet" href="assets/css/main.css" />
 
+        {{!-- <script src="../assets/js/versioning/tag-versions.req.js"></script> --}}
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js" integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/jquery-migrate.min.js"></script>
+
+
         <!-- Google Tag Manager -->
         <script>
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -28,7 +35,7 @@
         <!-- End Google Tag Manager -->
     </head>
 
-    <body data-base-url="{{retrieveEnvLink}}">
+    <body data-base-url="{{baseURl}}" data-api-versions-json="{{versionsUrl}}">
 
     <!-- Google Tag Manager (noscript) -->
         <noscript>
@@ -39,6 +46,7 @@
 
         {{> header}}
 
+        <script src="assets/js/versioning/tag-versions.req.js"></script>
     {{!
      ! You can access any variable you set in your configuration file from the `view` object.
      ! Basically your configuration file is passed to the view as the `view` object.
@@ -169,9 +177,7 @@
     <script src="assets/js/vendor/highlight.pack.js"></script>
     <script src="https://unpkg.com/lunr/lunr.js"></script>
     <script>window.sassdocIndex = {{{json idx}}}</script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js" integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/jquery-migrate.min.js"></script>
+
     <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/plugins.nav.js"></script>
     <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/navigation.js"></script>
     <script src="assets/js/main.js"></script>

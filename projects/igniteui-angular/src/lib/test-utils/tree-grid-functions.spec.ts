@@ -30,6 +30,12 @@ export class TreeGridFunctions {
         return rowDOM.query(By.css('igx-tree-grid-cell'));
     }
 
+    public static getCell(fix, rowIndex, columnKey) {
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
+        return rowCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey)[0];
+    }
+
     public static getTreeCells(fix) {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
     }
@@ -43,6 +49,12 @@ export class TreeGridFunctions {
         const allNormalCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
         const allDOMCells = allTreeCells.concat(allNormalCells);
         return allDOMCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey);
+    }
+
+    public static getAllCells(fix) {
+        const allTreeCells = fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
+        const allNormalCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
+        return allTreeCells.concat(allNormalCells);
     }
 
     public static getCellValue(fix, rowIndex, columnKey) {
@@ -218,13 +230,13 @@ export class TreeGridFunctions {
     public static verifyTreeRowHasCollapsedIcon(treeRowDOM) {
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const igxIcon = indicatorDiv.query(By.css('igx-icon'));
-        expect(igxIcon.nativeElement.textContent).toEqual('chevron_right');
+        expect(igxIcon.nativeElement.textContent).toEqual('expand_more');
     }
 
     public static verifyTreeRowHasExpandedIcon(treeRowDOM) {
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
         const igxIcon = indicatorDiv.query(By.css('igx-icon'));
-        expect(igxIcon.nativeElement.textContent).toEqual('expand_more');
+        expect(igxIcon.nativeElement.textContent).toEqual('expand_less');
     }
 
     public static verifyTreeRowIconPosition(treeRowDOM, indentationLevel) {

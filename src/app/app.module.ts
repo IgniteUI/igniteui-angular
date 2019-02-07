@@ -79,6 +79,8 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
+import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
 
 const components = [
     AppComponent,
@@ -146,7 +148,9 @@ const components = [
     RadioSampleComponent,
     TooltipSampleComponent,
     GridColumnPercentageWidthsSampleComponent,
-    CalendarViewsSampleComponent
+    CalendarViewsSampleComponent,
+    GridSearchBoxComponent,
+    GridSearchComponent
 ];
 
 @NgModule({

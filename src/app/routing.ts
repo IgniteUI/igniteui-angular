@@ -59,6 +59,7 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
 
 const appRoutes = [
     {
@@ -310,6 +311,10 @@ const appRoutes = [
     {
         path: 'gridPercentage',
         component: GridColumnPercentageWidthsSampleComponent
+    },
+    {
+        path: 'gridSearch',
+        component: GridSearchComponent
     }
 ];
 
