@@ -1,9 +1,12 @@
+@import './excel-filtering-component';
+
 ////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} bem-block
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
+/// @requires {mixin} _excel-filtering-partial
 ////
 
 @include b(igx-grid) {
@@ -545,6 +548,8 @@
             }
         }
     }
+
+    @include _excel-filtering-partial();
 }
 
 @include b(igx-drop-area) {
@@ -590,89 +595,5 @@
 
     @include e(count-badge) {
         @extend %igx-group-label__count-badge !optional;
-    }
-}
-
-@include b(igx-excel-filter) {
-    @extend %grid-excel-filter !optional;
-
-    @include e(menu) {
-        @extend %grid-excel-menu !optional;
-    }
-
-    @include e(icon) {
-        @extend %grid-excel-icon !optional;
-    }
-
-    @include e(menu-header) {
-        @extend %grid-excel-menu__header !optional;
-    }
-
-    @include e(menu-main) {
-        @extend %grid-excel-main !optional;
-    }
-
-    @include e(menu-footer) {
-        @extend %grid-excel-menu__footer !optional;
-    }
-
-    @include e(sort) {
-        @extend %grid-excel-sort !optional;
-    }
-
-    @include e(move) {
-        @extend %grid-excel-move !optional;
-    }
-
-    @include e(move-buttons) {
-        @extend %grid-excel-move__buttons !optional;
-    }
-
-    @include e(actions) {
-        @extend %grid-excel-actions !optional;
-    }
-
-    @include e(actions-pin) {
-        @extend %grid-excel-actions__action !optional;
-        @extend %grid-excel-actions__pin !optional;
-    }
-
-    @include e(actions-unpin) {
-        @extend %grid-excel-actions__action !optional;
-        @extend %grid-excel-actions__unpin !optional;
-    }
-
-    @include e(actions-hide) {
-        @extend %grid-excel-actions__action !optional;
-    }
-
-    @include e(actions-filter) {
-        @extend %grid-excel-actions__action !optional;
-    }
-
-    @include e(secondary) {
-        @extend %grid-excel-menu__secondary !optional;
-    }
-
-    @include e(secondary-header) {
-        @extend %grid-excel-menu__header !optional;
-        @extend %grid-excel-menu__secondary-header !optional;
-    }
-
-    @include e(secondary-main) {
-        @extend %grid-excel-menu__secondary-main !optional;
-    }
-
-    @include e(secondary-footer) {
-        @extend %grid-excel-menu__footer !optional;
-        @extend %grid-excel-menu__secondary-footer !optional;
-    }
-
-    @include e(condition) {
-        @extend %grid-excel-menu__condition !optional;
-    }
-
-    @include e(add-filter) {
-        @extend %grid-excel-menu__add-filter !optional;
     }
 }
