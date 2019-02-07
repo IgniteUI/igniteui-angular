@@ -16,12 +16,12 @@
 
         folders.forEach(function (f) {
             select.append($('<option>', {
-                value: `${baseUrl}/products/ignite-ui-angular/docs/${f}/sass`,
+                value: baseUrl + "/products/ignite-ui-angular/docs/" + f + "/sass",
                 text: f
             }));
         });
 
-        select.val(`${baseUrl}/products/ignite-ui-angular/docs/${folders[0]}/sass`);
+        select.val(baseUrl + "/products/ignite-ui-angular/docs/" + folders[0] + "/sass");
 
         if (sessionStorage.sassOption) {
             select.val(sessionStorage.sassOption);

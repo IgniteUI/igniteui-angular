@@ -16,12 +16,12 @@
 
         folders.forEach(function (f) {
             select.append($('<option>', {
-                value: `${baseUrl}/products/ignite-ui-angular/docs/${f}/typescript`,
+                value: baseUrl + "/products/ignite-ui-angular/docs/" + f + "/typescript",
                 text: f
             }));
         });
 
-        select.val(`${baseUrl}/products/ignite-ui-angular/docs/${folders[0]}/typescript`);
+        select.val(baseUrl + "/products/ignite-ui-angular/docs/" + folders[0] + "/typescript");
 
         if (sessionStorage.typedocOption) {
             select.val(sessionStorage.typedocOption);
