@@ -144,8 +144,8 @@
         </h4>
     </header>
 
-    <section *ngFor="let item of expressionsList" class="igx-excel-filter__condition">
-        <igx-drop-down #dropdownConditions [height]="'200px'" (onSelection)="onConditionsChanged($event, item)">
+    <section *ngFor="let item of expressionsList; let last = last;" class="igx-excel-filter__condition">
+        <igx-drop-down #dropdownConditions [height]="'200px'" (onSelection)="onConditionsChanged($event, item, inputValues)">
             <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition, item)">
                 <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
                 <span>{{ translateCondition(condition) }}</span>
@@ -174,7 +174,7 @@
             />
         </igx-input-group>
 
-        <igx-drop-down #dropdownValues [height]="'200px'" (onSelection)="onValuesChanged($event, item)" (onOpening)="onDropdownValuesOpening(dropdownValues)">
+        <igx-drop-down #dropdownValues [height]="'200px'" (onSelection)="onValuesChanged($event, item, inputValues)" (onOpening)="onDropdownValuesOpening(dropdownValues, inputValues)">
             <igx-drop-down-item *ngFor="let filterItem of uniqueItems" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem, item)">
                 <span>{{ filterItem.value }}</span>
             </igx-drop-down-item>
@@ -198,24 +198,25 @@
             </igx-icon>
         </igx-input-group>
 
-        <button (click)="onRemoveButtonClick(item)" igxButton="icon">
+        <button (click)="onRemoveButtonClick(item)" igxButton="icon" *ngIf="expressionsList.length > 1">
             <igx-icon>cancel</igx-icon>
         </button>
 
         <igx-buttongroup #logicOperatorButtonGroup
-            *ngIf="item.afterOperator !== undefind"
+            *ngIf="!last"
             [multiSelection]="false">
             <span igxButton
                 #andButton
+                [selected]="true"
                 type="button"
-                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0)">
+                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0, item)">
                 And
             </span>
 
             <span igxButton
                 #orButton
                 type="button"
-                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1)">
+                (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1, item)">
                 Or
             </span>
         </igx-buttongroup>
