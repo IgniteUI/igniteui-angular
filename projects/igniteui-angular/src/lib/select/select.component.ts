@@ -95,6 +95,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         return this.listId;
     }
 
+    /**
+     * An @Input property that sets how the select will be styled.
+     * The allowed values are `line`, `box` and `border`. The default is `line`.
+     * ```html
+     *<igx-select [type]="'box'">
+     * ```
+     */
+    @Input()
+    public type = 'line';
+
     public get listId() {
         return this.id + '-list';
     }

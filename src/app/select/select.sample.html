@@ -17,7 +17,7 @@
     </igx-select>
     <igx-select #select1 [width]="'260px'" [placeholder]="'Pick One'" [value]="value" (onOpening)="testOnOpening($event)"
         (onOpened)="testOnOpened()" (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
-        [disabled]="false">
+        [disabled]="false" [type]="'box'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
             <igx-icon fontSet="material">favorite</igx-icon>
@@ -33,7 +33,7 @@
 
     <igx-select #select2 [width]="'260px'" [placeholder]="'Pick One'" (onOpening)="testOnOpening($event)" (onOpened)="testOnOpened()"
         (onClosing)="testOnClosing($event)" (onClosed)="testOnClosed()" (onSelection)="testOnSelection($event)"
-        [disabled]="false">
+        [disabled]="false" [type]="'border'">
         <igx-select-item>None</igx-select-item>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
             {{ item.field }}
