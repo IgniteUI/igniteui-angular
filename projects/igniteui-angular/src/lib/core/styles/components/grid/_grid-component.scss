@@ -594,8 +594,14 @@
 }
 
 @include b(igx-excel-filter) {
+    @extend %grid-excel-filter !optional;
+
     @include e(menu) {
         @extend %grid-excel-menu !optional;
+    }
+
+    @include e(icon) {
+        @extend %grid-excel-icon !optional;
     }
 
     @include e(menu-header) {

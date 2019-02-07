@@ -1865,10 +1865,22 @@
         }
     }
 
+    %grid-excel-filter {
+        height: rem(15px);
+    }
+
+    %grid-excel-icon {
+        &.igx-icon {
+            width: rem(15px);
+            height: rem(15px);
+            font-size: rem(15px);
+        }
+    }
+
     %grid-excel-menu {
         width: inherit;
         background: --var($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevations, 6);
+        box-shadow: igx-elevation($elevations, 12);
         border-radius: 4px;
 
         @include igx-button-group(igx-button-group-theme(
@@ -1996,7 +2008,7 @@
     %grid-excel-menu__secondary {
         min-width: 520px;
         background: --var($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevations, 6);
+        box-shadow: igx-elevation($elevations, 12);
         border-radius: rem(4px);
     }
 
