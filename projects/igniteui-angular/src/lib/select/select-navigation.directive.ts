@@ -77,8 +77,9 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             }
         }
 
-        if (!this.target.collapsed && key === 'tab') {
+        if (!this.target.collapsed && (key === 'tab' || key === ' ')) {
             this.target.close();
+            return;
         }
         super.handleKeyDown(event);
     }
