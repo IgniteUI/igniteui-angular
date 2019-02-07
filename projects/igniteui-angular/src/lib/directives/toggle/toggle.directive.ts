@@ -18,7 +18,7 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
+import { OverlayCancelableEventArgs, OverlayAnimationEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
@@ -36,6 +36,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
+    private _overlayAnimationSub: Subscription;
+    private _openAnimationInProgress: OverlayAnimationEventArgs;
+    private _closeAnimationInProgress: OverlayAnimationEventArgs;
 
     /**
      * Emits an event after the toggle container is opened.
@@ -196,6 +199,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         this.unsubscribe();
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+            this._openAnimationInProgress = null;
             this.onOpened.emit();
         });
         this._overlayClosingSub = this.overlayService
@@ -216,6 +220,32 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
+        this._overlayAnimationSub = this.overlayService.onAnimation
+            .pipe(...this._overlaySubFilter)
+            .subscribe((e: OverlayAnimationEventArgs) => {
+                if (e.animationType === 'open') {
+                    this._openAnimationInProgress = e;
+                }
+                if (e.animationType === 'close') {
+                    this._closeAnimationInProgress = e;
+                }
+            });
+    }
+
+    /**
+     * If there is open animation in progress this method will finish is.
+     * If there is no open animation in progress this method will open the toggle with no animation.
+     * @param overlaySettings setting to use for opening the toggle
+     */
+    protected forceOpen(overlaySettings?: OverlaySettings) {
+        if (this._openAnimationInProgress) {
+            this._openAnimationInProgress.animationPlayer.finish();
+        } else if (this._collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.openAnimation;
+            overlaySettings.positionStrategy.settings.openAnimation = null;
+            this.open(overlaySettings);
+            overlaySettings.positionStrategy.settings.openAnimation = animation;
+        }
     }
 
     /**
@@ -231,6 +261,22 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this.overlayService.hide(this._overlayId);
+    }
+
+    /**
+     * If there is close animation in progress this method will finish is.
+     * If there is no close animation in progress this method will close the toggle with no animation.
+     * @param overlaySettings settings to use for closing the toggle
+     */
+    protected forceClose(overlaySettings?: OverlaySettings) {
+        if (this._closeAnimationInProgress) {
+            this._closeAnimationInProgress.animationPlayer.finish();
+        } else if (!this._collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
+            overlaySettings.positionStrategy.settings.closeAnimation = null;
+            this.close();
+            overlaySettings.positionStrategy.settings.closeAnimation = animation;
+        }
     }
 
     /**
@@ -279,6 +325,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     private overlayClosed = () => {
+        this._closeAnimationInProgress = null;
         this._collapsed = true;
         this.cdr.detectChanges();
         delete this._overlayId;
@@ -290,6 +337,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.clearSubscription(this._overlayOpenedSub);
         this.clearSubscription(this._overlayClosingSub);
         this.clearSubscription(this._overlayClosedSub);
+        this.clearSubscription(this._overlayAnimationSub);
     }
 
     private clearSubscription(subscription: Subscription) {
