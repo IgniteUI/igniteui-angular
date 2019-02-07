@@ -441,6 +441,7 @@ describe('IgxAutocomplete', () => {
             filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
+            tick();
             expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[0].value).toBe(filteredTowns[0]);
@@ -475,6 +476,7 @@ describe('IgxAutocomplete', () => {
             fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
+            tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
@@ -521,6 +523,7 @@ describe('IgxAutocomplete', () => {
             startsWith = 'w';
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
+            tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(3);
             expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.dropDown.open).toHaveBeenCalledTimes(2);
@@ -581,6 +584,7 @@ describe('IgxAutocomplete', () => {
             // Check that dropdown does not preserve focus on last item
             UIInteractions.sendInput(input, 'r', fixture);
             fixture.detectChanges();
+            tick();
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
         }));
@@ -624,7 +628,14 @@ describe('IgxAutocomplete', () => {
             dropDown = fixture.componentInstance.dropDown;
             input.nativeElement.click();
 
-            // TODO UI test to check that drop down is shown above the input when this works
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            const ddRect = dropdownListElement.nativeElement.getBoundingClientRect();
+            const gRect = group.element.nativeElement.getBoundingClientRect();
+            expect(ddRect.bottom).toEqual(gRect.top);
+            expect(ddRect.left).toEqual(gRect.left);
         }));
     });
     describe('Other elements integration tests', () => {
@@ -713,7 +724,7 @@ describe('IgxAutocomplete', () => {
         <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocomplete]='settings' (onItemSelected)="onItemSelected($event)"/>
+            [igxAutocompleteSettings]='settings' (onItemSelected)="onItemSelected($event)"/>
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
     </igx-input-group>
@@ -772,7 +783,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" formControlName="towns" type="text" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocomplete]='settings' />
+            [igxAutocompleteSettings]='settings' />
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
     </igx-input-group>

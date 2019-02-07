@@ -48,10 +48,15 @@ import { OverlaySettings } from '../services';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
-    @ViewChild(IgxToggleDirective)
-    protected toggleDirective: IgxToggleDirective;
-
     protected destroy$ = new Subject<boolean>();
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild(IgxToggleDirective)
+    public toggleDirective: IgxToggleDirective;
+
     /**
      * @hidden
      * @internal

@@ -7,8 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy,
-    IScrollStrategy, IPositionStrategy } from '../../services/index';
+import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/index';
 import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
 import { IgxInputGroupComponent } from '../../input-group/index';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
@@ -68,7 +67,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private settings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
+        positionStrategy: new AutoPositionStrategy({ target: this.parentElement })
     };
 
     protected id: string;
@@ -286,6 +285,16 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             this.dropDown.focusedItem = firstItem;
         }
         this.cdr.detectChanges();
+
+        this.reposition();
+    }
+
+    /**
+     * If we have a custom strategy that is showing drop down above the input and after filtering is applied in the drop down,
+     * then reposition of the drop down should be called in order to align the filtered drop down to the top of the input.
+     */
+    private reposition() {
+        setTimeout(() => { this.dropDown.toggleDirective.reposition(); });
     }
 
     /**

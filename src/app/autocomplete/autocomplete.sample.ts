@@ -39,7 +39,9 @@ export class AutocompleteSampleComponent {
         this.settings = {
             positionStrategy: new ConnectedPositioningStrategy({
                 closeAnimation: null,
-                openAnimation: null
+                openAnimation: null,
+                verticalDirection: VerticalAlignment.Top,
+                verticalStartPoint: VerticalAlignment.Top
             })
         };
         this.enabled = false;

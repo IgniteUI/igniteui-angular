@@ -10,7 +10,7 @@
                             [igxAutocomplete]='townsPanel'/>
                         <label igxLabel for="towns">Towns</label>
                     </igx-input-group>
-                    <igx-drop-down #townsPanel>
+                    <igx-drop-down #townsPanel maxHeight="400px">
                         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
                             {{town}}
                         </igx-drop-down-item>
