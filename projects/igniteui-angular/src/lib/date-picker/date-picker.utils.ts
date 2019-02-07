@@ -78,7 +78,11 @@ export const enum DATE_PARTS {
 /**
  *@hidden
  */
-export const MAX_MONTH_SYMBOLS = 9;
+export const MAX_LONG_MONTH_SYMBOLS = 9;
+/**
+ *@hidden
+ */
+export const MAX_SHORT_MONTH_SYMBOLS = 3;
 /**
  *@hidden
  */
@@ -457,7 +461,6 @@ export function getModifiedDateInput(dateFormatParts: any[],
                 } else {
                     newValue = 0;
                 }
-
             }
             break;
         }
@@ -469,11 +472,10 @@ export function getModifiedDateInput(dateFormatParts: any[],
     }
 
     let maxValue, minValue;
-    // if (!isNaN(newValue)) {
     const minMax = getMinMaxValue(dateFormatParts, datePart, inputValue);
     minValue = minMax[0];
     maxValue = minMax[1];
-    // }
+
     if (isNaN(newValue)) {
         if (minValue === 'infinite') {
             newValue = 2000;
@@ -516,13 +518,13 @@ export function getModifiedDateInput(dateFormatParts: any[],
             if (datePartType === DATE_PARTS.MONTH) {
                 const monthName = getMonthNameByIndex(dateFormatParts, newValue);
                 let suffix = '';
-                const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_MONTH_SYMBOLS - monthName.length) : 3;
+                const promptCharToAdd =
+                    (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_LONG_MONTH_SYMBOLS - monthName.length) : MAX_SHORT_MONTH_SYMBOLS;
                 for (let i = 0; i < promptCharToAdd; i++) {
                     suffix += PROMPT_CHAR;
                 }
-                changedPart = (monthName.length < promptCharToAdd) ? `${monthName}${suffix}` : `${monthName}`;
+                changedPart = (datePartFormatType === FORMAT_DESC.LONG) ? `${monthName}${suffix}` : `${monthName}`;
             }
-
             break;
         }
         default: {
@@ -607,8 +609,8 @@ export function addPromptCharsEditMode(dateFormatParts: any[], date: Date, input
         if (dateFormatParts[i].type === DATE_PARTS.MONTH) {
             if (dateFormatParts[i].formatType === FORMAT_DESC.LONG) {
                 const startPos = offset + dateFormatParts[i].initialPosition + monthName.length;
-                const endPos = startPos + MAX_MONTH_SYMBOLS - monthName.length;
-                offset += MAX_MONTH_SYMBOLS - 4;
+                const endPos = startPos + MAX_LONG_MONTH_SYMBOLS - monthName.length;
+                offset += MAX_LONG_MONTH_SYMBOLS - 4;
                 for (let j = startPos; j < endPos; j++) {
                     dateArray.splice(j, 0, PROMPT_CHAR);
                 }
@@ -900,8 +902,8 @@ function fillDatePartsPositions(dateArray: any[]): void {
                 }
                 case FORMAT_DESC.LONG: {
                     // Offset 9 positions for long month name
-                    dateArray[i].position = [currentPos, currentPos + MAX_MONTH_SYMBOLS];
-                    currentPos += MAX_MONTH_SYMBOLS;
+                    dateArray[i].position = [currentPos, currentPos + MAX_LONG_MONTH_SYMBOLS];
+                    currentPos += MAX_LONG_MONTH_SYMBOLS;
                     break;
                 }
                 default: {
