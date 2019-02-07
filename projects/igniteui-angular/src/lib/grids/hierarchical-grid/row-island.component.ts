@@ -62,7 +62,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     public key: string;
 
     /**
-     * Sets if all immediate children of the `IgxRowIslandComponent` should be expanded/collapsed.
+     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
      *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
@@ -88,7 +88,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     }
 
     /**
-     * Sets if all immediate children of the `IgxRowIslandComponent` should be expanded/collapsed.
+     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
      * ```typescript
      * const expanded = this.rowIsland.expandChildren;
      * ```
