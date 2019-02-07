@@ -2773,7 +2773,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].children[0].innerText
+        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].children[0].innerText;
 
         expect(sundayLabel).toEqual('So');
     }));
