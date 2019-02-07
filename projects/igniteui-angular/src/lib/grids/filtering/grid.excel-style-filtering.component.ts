@@ -7,6 +7,7 @@ import {
     ElementRef,
     ChangeDetectionStrategy,
 } from '@angular/core';
+import { useAnimation } from '@angular/animations';
 import { IgxColumnComponent } from '../grid';
 import { IgxDropDownComponent, IgxDropDownItemComponent, ISelectionEventArgs } from '../../drop-down';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings } from '../../services';
@@ -47,8 +48,16 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
 
     private _positionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: fadeIn,
-        closeAnimation: fadeOut
+        openAnimation: useAnimation(fadeIn, {
+            params: {
+                duration: '250ms'
+            }
+        }),
+        closeAnimation: useAnimation(fadeOut, {
+            params: {
+                duration: '200ms'
+            }
+        })
     };
 
     private _subMenuPositionSettings = {
