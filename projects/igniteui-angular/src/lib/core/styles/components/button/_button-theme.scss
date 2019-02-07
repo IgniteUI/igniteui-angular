@@ -20,6 +20,13 @@
 /// @param {Color} $flat-focus-background [null] - The focus background color of a flat button.
 /// @param {Color} $flat-focus-text-color [null] - The focus text color of a flat button.
 ///
+/// @param {Color} $outlined-background [null] - The background color of an outlined button.
+/// @param {Color} $outlined-text-color [null] - The idle text color of an outlined button.
+/// @param {Color} $outlined-hover-background [null] - The hover background color of an outlined button.
+/// @param {Color} $outlined-hover-text-color [null] - The hover text color of an outlined button.
+/// @param {Color} $outlined-focus-background [null] - The focus background color of an outlined button.
+/// @param {Color} $outlined-focus-text-color [null] - The focus text color of an outlined button.
+///
 /// @param {Color} $raised-background [null] - The background color of a raised button.
 /// @param {Color} $raised-text-color [null] - The idle text color of a raised button.
 /// @param {Color} $raised-hover-background [null] - The hover background of a raised button.
@@ -81,6 +88,14 @@
     $flat-focus-background: null,
     $flat-focus-text-color: null,
 
+    $outlined-text-color: null,
+    $outlined-border-color: null,
+    $outlined-background: null,
+    $outlined-hover-background: null,
+    $outlined-hover-text-color: null,
+    $outlined-focus-background: null,
+    $outlined-focus-text-color: null,
+
     $raised-text-color: null,
     $raised-background: null,
     $raised-hover-background: null,
@@ -135,6 +150,26 @@
 
     @if not($flat-focus-text-color) and $flat-focus-background {
         $flat-focus-text-color: text-contrast($flat-focus-background);
+    }
+
+    @if not($outlined-text-color) and $outlined-background {
+        $outlined-text-color: text-contrast($outlined-background);
+    }
+
+    @if not($outlined-hover-background) and $outlined-background {
+        $outlined-hover-background: lighten($outlined-background, 5%);
+    }
+
+    @if not($outlined-focus-background) and $outlined-background {
+        $outlined-focus-background: lighten($outlined-background, 5%);
+    }
+
+    @if not($outlined-hover-text-color) and $outlined-hover-background {
+        $outlined-hover-text-color: text-contrast($outlined-hover-background);
+    }
+
+    @if not($outlined-focus-text-color) and $outlined-focus-background {
+        $outlined-focus-text-color: text-contrast($outlined-focus-background);
     }
 
     @if not($raised-text-color) and $raised-background {
@@ -239,6 +274,14 @@
         flat-focus-background: $flat-focus-background,
         flat-focus-text-color: $flat-focus-text-color,
 
+        outlined-text-color: $outlined-text-color,
+        outlined-border-color: $outlined-border-color,
+        outlined-background: $outlined-background,
+        outlined-hover-background: $outlined-hover-background,
+        outlined-hover-text-color: $outlined-hover-text-color,
+        outlined-focus-background: $outlined-focus-background,
+        outlined-focus-text-color: $outlined-focus-text-color,
+
         raised-text-color: $raised-text-color,
         raised-background: $raised-background,
         raised-hover-background: $raised-hover-background,
@@ -280,7 +323,7 @@
 @mixin igx-button($theme) {
     @include igx-root-css-vars($theme);
 
-    $button-border: none;
+    $button-border: 1px solid transparent;
     $button-width: rem(88px);
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
@@ -329,6 +372,23 @@
         &:active {
             background: --var($theme, 'flat-focus-background');
             color: --var($theme, 'flat-focus-text-color');
+        }
+    }
+
+    %igx-button--outlined {
+        border-color: --var($theme, 'outlined-border-color');
+        background: --var($theme, 'outlined-background');
+        color: --var($theme, 'outlined-text-color');
+
+        &:hover {
+            background: --var($theme, 'outlined-hover-background');
+            color: --var($theme, 'outlined-hover-text-color');
+        }
+
+        &:focus,
+        &:active {
+            background: --var($theme, 'outlined-focus-background');
+            color: --var($theme, 'outlined-focus-text-color');
         }
     }
 
@@ -417,8 +477,13 @@
         pointer-events: none;
         box-shadow: none;
 
-        &%igx-button--flat {
+        &%igx-button--flat,
+        &%igx-button--outlined {
             background: transparent !important;
+        }
+
+        &:focus {
+            box-shadow: none;
         }
     }
 }

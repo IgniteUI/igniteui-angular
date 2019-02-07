@@ -13,7 +13,13 @@
 /// @prop {Map} flat-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a flat button.
 /// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
 /// @prop {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
-/// @prop {Map} raised-background [igx-color: ('secondary', 500)] - The background color of a raised button.
+/// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
+/// @prop {Map} outlined-border-color [igx-color: ('grays', 300)] - The border color of an outlined button.
+/// @prop {Color} outlined-hover-background [transparent] - The hover background color of an outlined button.
+/// @prop {Map} outlined-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of an outlined button.
+/// @prop {Map} outlined-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of an outlined button.
+/// @prop {Map} outlined-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of an outlined button.
+/// @prop {Map} raised-background [igx-color: ('secondary', 500)] - The background color of an raised button.
 /// @prop {Map} raised-text-color [igx-contrast-color: ('secondary', 500)] - The idle text color of a raised button.
 /// @prop {Map} raised-hover-background [igx-color: ('secondary', 300)] - The hover background of a raised button.
 /// @prop {Map} raised-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a raised button.
@@ -64,6 +70,34 @@ $_light-button: (
     ),
 
     flat-focus-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    outlined-background: transparent,
+
+    outlined-border-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    outlined-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    outlined-hover-background: (
+        igx-color: ('secondary', 500),
+        rgba: .05
+    ),
+
+    outlined-hover-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    outlined-focus-background: (
+        igx-color: ('secondary', 400),
+        rgba: .12
+    ),
+
+    outlined-focus-text-color: (
         igx-color: ('secondary', 500)
     ),
 
