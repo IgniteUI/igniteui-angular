@@ -423,7 +423,10 @@
 
     @include igx-scope('.igx-typography') {
         %igx-tabs__item-label {
-            @include igx-type-style($type-scale, $label);
+            @include igx-type-style($type-scale, $label) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
         }
     }
 }

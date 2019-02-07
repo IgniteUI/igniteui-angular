@@ -104,7 +104,9 @@
 
     @include igx-scope('.igx-typography') {
         %igx-toast-display {
-            @include igx-type-style($type-scale, $text);
+            @include igx-type-style($type-scale, $text) {
+                margin: 0;
+            }
         }
     }
 }
