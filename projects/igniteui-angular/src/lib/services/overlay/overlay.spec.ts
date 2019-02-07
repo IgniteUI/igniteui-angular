@@ -1314,7 +1314,6 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
-
             expect(document.documentElement.scrollTop).toEqual(0);
             let overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             let overlayChildPosition: DOMRect = overlayElement.lastElementChild.getBoundingClientRect() as DOMRect;
@@ -2363,7 +2362,7 @@ describe('igxOverlay', () => {
             tick();
             const styles = css(overlayWrapper);
             const expectedBackgroundColor = 'background-color: rgba(0, 0, 0, 0.38)';
-            const appliedBackgroundStyles = styles[3];
+            const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));
 
@@ -3417,7 +3416,17 @@ export class SimpleDynamicWithDirectiveComponent {
 @Component({
     template: `
         <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
-    `
+    `,
+    styles: [`button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84px;
+        height: 84px;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }`]
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
