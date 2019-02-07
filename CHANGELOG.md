@@ -77,6 +77,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
+- `Remove CSS Normalization` - Some users were complaining we reset too many browser styles - lists and heading styles in particular. We no longer do CSS normalization on an application level. Users who depended on our CSS browser normalization will have to handle that on their own going forward.
 
 ## 7.1.2
 ### Features
