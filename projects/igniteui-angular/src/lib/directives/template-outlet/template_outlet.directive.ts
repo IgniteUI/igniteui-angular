@@ -23,10 +23,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
     @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
     @Output()
-    public onViewCreated = new EventEmitter<any>();
+    public onViewCreated = new EventEmitter<IViewChangeEventArgs>();
 
     @Output()
-    public onViewMoved = new EventEmitter<any>();
+    public onViewMoved = new EventEmitter<IViewChangeEventArgs>();
 
 
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
@@ -151,6 +151,12 @@ enum TemplateOutletAction {
     MoveView,
     UseCachedView,
     UpdateViewContext
+}
+
+export interface IViewChangeEventArgs {
+    owner: IgxTemplateOutletDirective;
+    view: EmbeddedViewRef<any>;
+    context: Object;
 }
 
 /**
