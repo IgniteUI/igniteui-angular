@@ -18,11 +18,20 @@
             [attr.aria-activedescendant]="this.selectedItem"
             />
         <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
-            <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
+            <!-- <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
             <ng-template #toggleUp>
                 <igx-icon fontSet="material">arrow_drop_up</igx-icon>
-            </ng-template>
+            </ng-template> -->
+
+            <ng-container *ngIf="toggleIconTemplate">
+                <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
+                </ng-container>
+            <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
         </igx-suffix>
+        <!-- optionally add support for other suffix-es -->
+        <ng-container ngProjectAs="igx-suffix">
+            <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+        </ng-container>
     </igx-input-group>
     <div class="igx-drop-down__list" igxToggle [style.maxHeight]="maxHeight"
         (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"

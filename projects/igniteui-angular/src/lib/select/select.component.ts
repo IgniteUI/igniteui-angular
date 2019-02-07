@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit, HostBinding } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit, HostBinding, Directive, TemplateRef } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -21,6 +21,16 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.c
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
 import { CancelableEventArgs } from '../core/utils';
+
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxSelectToggleIcon]'
+})
+export class IgxSelectToggleIconDirective {
+}
 
 const noop = () => { };
 @Component({
@@ -104,6 +114,27 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
      */
     @Input()
     public type = 'line';
+
+    /**
+     * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.toggleIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectToggleIcon let-collapsed>
+     *          <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
+     */
+    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
+    public toggleIconTemplate: TemplateRef<any> = null;
 
     public get listId() {
         return this.id + '-list';
@@ -211,8 +242,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
 }
 @NgModule({
-    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
-    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
+    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
+    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: []
