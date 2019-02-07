@@ -26,7 +26,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -4444,13 +4444,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
+        let delayScrolling = false;
 
         if (this.paging) {
-            this.page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - this.page * this.perPage;
+            const page = Math.floor(rowIndex / this.perPage);
+            rowIndex = rowIndex - page * this.perPage;
+
+            if (this.page !== page) {
+                delayScrolling = true;
+                this.page = page;
+            }
         }
 
-        this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        }
 
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;

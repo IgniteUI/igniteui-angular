@@ -21,14 +21,16 @@
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
-                                                    [groupable]="true"
+                                                    [groupable]="c.groupable"
                                                     [resizable]="c.resizable"
-
-                                                    [sortable]="true"
-                                                    [filterable]="true"
+                                                    [width]="c.width"
+                                                    [sortable]="c.sortable"
+                                                    [filterable]="c.filterable"
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
-                                                    [hasSummary]="true"
+                                                    [hasSummary]="c.summary"
+                                                    [minWidth]="c.minWidth"
+                                                    [maxWidth]="c.maxWidth"
                                                     [dataType]="c.type">
                 </igx-column>
             </igx-grid>

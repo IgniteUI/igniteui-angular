@@ -47,6 +47,8 @@ export class IgxGridHeaderComponent implements DoCheck {
             'asc': this.ascending,
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
+            'igx-grid__th--sortable': this.column.sortable,
+            'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--sorted': this.sorted
         };
 
@@ -80,7 +82,7 @@ export class IgxGridHeaderComponent implements DoCheck {
             // are material icons ligature strings
             return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
         }
-        return 'none';
+        return 'arrow_upward';
     }
 
     get sorted() {
@@ -129,14 +131,7 @@ export class IgxGridHeaderComponent implements DoCheck {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
             } else if (this.column.sortable) {
-                const groupingExpr = this.grid.groupingExpressions ?
-                    this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
-                const sortDir = groupingExpr ?
-                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
-                    : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
-                this.sortDirection = sortDir;
-                this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
-                    strategy: this.column.sortStrategy });
+                this.triggerSort();
             }
         }
     }
@@ -152,5 +147,23 @@ export class IgxGridHeaderComponent implements DoCheck {
     protected getSortDirection() {
         const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
+    }
+
+    public onSortingIconClick(event) {
+        if (this.grid.filteringService.isFilterRowVisible) {
+            event.stopPropagation();
+            this.triggerSort();
+        }
+    }
+
+    private triggerSort() {
+        const groupingExpr = this.grid.groupingExpressions ?
+            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
+        const sortDir = groupingExpr ?
+            this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
+            : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+        this.sortDirection = sortDir;
+        this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
+            strategy: this.column.sortStrategy });
     }
 }
