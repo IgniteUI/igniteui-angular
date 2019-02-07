@@ -147,14 +147,15 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         };
 
         const LIST_HEIGHT = contentElement.getBoundingClientRect().height;
-        const inputBoundRect = this.select.input.nativeElement.getBoundingClientRect();
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const itemHeight = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
+        // use the selectedItem or the first one to position the items list container.
+        const itemElement = this.select.selectedItem ? this.select.selectedItem.element.nativeElement : this.select.getFirstItemElement();
         const inputHeight = this.select.input.nativeElement.getBoundingClientRect().height;
-        const selectedItemBoundRect = this.select.selectedItem.element.nativeElement.getBoundingClientRect() ? this.select.selectedItem.element.nativeElement.getBoundingClientRect() : null;
-        const selectedItemTopListOffset = selectedItemBoundRect.y - listBoundRect.y;
+        const itemBoundRect = itemElement.getBoundingClientRect();
+        const itemTopListOffset = itemBoundRect.y - listBoundRect.y;
+        const itemHeight = itemElement.getBoundingClientRect().height;
 
-        let CURRENT_POSITION_Y = START.Y - selectedItemTopListOffset;
+        let CURRENT_POSITION_Y = START.Y - itemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
 
         const OUT_OF_BOUNDS: {
@@ -175,9 +176,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             }
         }
         let transformString = '';
-        const selectedItemElement = this.select.selectedItem.element.nativeElement;
-        const itemPadding = window.getComputedStyle(selectedItemElement).paddingLeft;
-        const itemTextIndent = window.getComputedStyle(selectedItemElement).textIndent;
+        const itemPadding = window.getComputedStyle(itemElement).paddingLeft;
+        const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10);
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10);
 

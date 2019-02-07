@@ -43,7 +43,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
-    @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true})
+    @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
 
@@ -154,16 +154,23 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
-    public getElementPadding() {
-        return this.input.nativeElement.getBoundingClientRect().x - this.inputGroup.element.nativeElement.getBoundingClientRect().x + `px`;
+    public getFirstItemElement(): HTMLElement {
+        return this.children.first.element.nativeElement;
     }
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled || this.items.length === 0) {
             return;
         }
 
+        // open with the overlaySettings passed to the open method (if such)
         if (overlaySettings) {
             super.open(overlaySettings);
+            return;
+        }
+        // open with the overlaySettings passed as input ([overlaySettings]="customOverlaySettings")
+        if (this.overlaySettings) {
+            super.open(this.overlaySettings);
+            // default overlay settings, positionStrategy and scrollStrategy
         } else {
             super.open({
                 modal: false,
@@ -172,19 +179,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
                 scrollStrategy: new AbsoluteScrollStrategy(),
             });
         }
-        // super.open({
-        //     modal: false,
-        //     closeOnOutsideClick: true,
-        //     positionStrategy: new SelectPositioningStrategy(
-        //         this.input.nativeElement, //get this from settings.target but what if it is a point and not HTMLElement?
-        //         this.selectedItem.element.nativeElement,
-        //         { target: this.inputGroup.element.nativeElement,
-        //             closeAnimation: fadeOut,
-        //             openAnimation: fadeIn
-        //         }
-        //     ),
-        //     scrollStrategy: new AbsoluteScrollStrategy(),
-        // });
     }
 
     // Initially the items are still not existing, so handle ngAfterContentInit
