@@ -3,9 +3,8 @@ import { ConnectedPositioningStrategy } from './../../../projects/igniteui-angul
 import { AbsoluteScrollStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
 // tslint:disable-next-line:max-line-length
 import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
-
+import { Component, OnInit, ViewChild, AfterContentInit } from '@angular/core';
+import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings, HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom } from 'igniteui-angular';
 @Component({
     // tslint:disable-next-line:component-selector
     selector: 'app-select-sample',
@@ -19,6 +18,7 @@ export class SelectSampleComponent implements OnInit {
 
     //public value = 'notContainedInItemsValue';
     public value: 'opt1'; // value not set
+    public disabledItemValue: 'InsideGroup1'; //
     public customOverlaySettings: OverlaySettings;
 
     public ngOnInit() {
@@ -26,6 +26,25 @@ export class SelectSampleComponent implements OnInit {
             const item = { field: 'opt' + i };
             this.items.push(item);
         }
+        const positionSettings = {
+            target: this.igxSelect.inputGroup.element.nativeElement,
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: scaleInTop,
+            closeAnimation: scaleOutBottom
+        };
+
+        const customOverlaySettings = {
+            modal: true,
+            closeOnOutsideClick: false,
+            positionStrategy: new ConnectedPositioningStrategy(
+                positionSettings
+            ),
+            scrollStrategy: new AbsoluteScrollStrategy()
+        };
+        this.customOverlaySettings = customOverlaySettings;
     }
 
     public testOnSelection(evt: ISelectionEventArgs) {
@@ -79,7 +98,9 @@ export class SelectSampleComponent implements OnInit {
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
             horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: scaleInTop,
+            closeAnimation: scaleOutBottom
         };
 
         const customOverlaySettings = {
@@ -91,7 +112,6 @@ export class SelectSampleComponent implements OnInit {
             scrollStrategy: new AbsoluteScrollStrategy()
         };
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
-            this.customOverlaySettings = customOverlaySettings;
             this.igxSelect.open(customOverlaySettings);
         }
     }
