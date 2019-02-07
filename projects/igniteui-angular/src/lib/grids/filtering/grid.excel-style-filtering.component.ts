@@ -5,6 +5,7 @@ import {
     ViewChild,
     AfterViewInit,
     ElementRef,
+    HostBinding,
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
@@ -77,6 +78,9 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         positionStrategy: new ConnectedPositioningStrategy(this._subMenuPositionSettings),
         scrollStrategy: new CloseScrollStrategy()
     };
+
+    @HostBinding('class.igx-excel-filter')
+    className = 'igx-excel-filter';
 
     @Input()
     get column(): IgxColumnComponent {
