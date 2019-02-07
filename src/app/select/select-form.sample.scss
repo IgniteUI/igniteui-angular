@@ -9,7 +9,6 @@
 .select-sample-content {
     flex-direction: column;
     justify-content: space-between;
-    height: calc(100% - 289px);
     max-width: 600px;
     min-height: 300px;
     margin: 30px auto;
@@ -24,7 +23,6 @@
 
 .inputs,
 .selects {
-
     > * {
         flex: 1 0 0%;
         margin-left: 16px;
