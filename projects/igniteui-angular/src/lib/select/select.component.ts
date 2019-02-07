@@ -48,7 +48,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
 
     /**
-     * An @Input property that sets how the input value.
+     * An @Input property that sets the input value.
      *
      */
     @Input() public value: any;
@@ -142,7 +142,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
-        if (newSelection.isHeader || newSelection.disabled || newSelection === null) {
+        if (newSelection.disabled || newSelection === null) {
             return;
         }
 
