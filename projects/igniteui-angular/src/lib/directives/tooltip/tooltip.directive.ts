@@ -229,7 +229,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         // If Tooltip is opened or about to be hidden
         if (!this.target.collapsed || this.target.toBeHidden) {
-            //  TODO: should we reset toBeHidden here?
+            //  TODO: should we reset toBeHidden here
             clearTimeout(this.target.timeoutId);
 
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
