@@ -4295,15 +4295,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     getSelectedRanges() {
-        const r = this.gridSelection.ranges;
-        console.log(r);
-        return r;
+        return this.gridSelection.ranges;
     }
 
     getSelectedData() {
         const rs = [];
-        const source = (this.filteredData && this.filteredData.length ) ? this.filteredData : this.data;
-        const visibleColumns = this.visibleColumns;
+        const source = (this.filteredSortedData.length || this.filteringExpressionsTree.filteringOperands.length)
+            ? this.filteredSortedData : this.data;
+        const visibleColumns = this.visibleColumns.sort((a, b) => a.visibleIndex - b.visibleIndex);
 
         /*
             Boundry check for `filteredData`
@@ -4311,12 +4310,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const combined = Array.from(this.gridSelection.selection)
             .filter((tuple) => tuple[0] < source.length);
 
-
+        // TODO: Simplify
         for (const [row, set] of combined) {
             const arr = Array.from(set);
+            let column;
             let record = {};
             for (const each of arr) {
-                record[visibleColumns[each].field] = source[row][visibleColumns[each].field];
+                column = visibleColumns[each];
+                if (column) {
+                    record[column.field] = source[row][column.field];
+                }
             }
             rs.push(record);
             record = {};
