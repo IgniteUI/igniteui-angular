@@ -351,36 +351,40 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should scroll properly when using paging', async () => {
+            grid.height = '240px';
             grid.paging = true;
             grid.perPage = 7;
+            fix.detectChanges();
+            await wait(16);
+
             const searchString = 'assoc';
-            fix.detectChanges();
-
             grid.findNext(searchString);
-            grid.findNext(searchString);
-            await wait();
             fix.detectChanges();
+            await wait(16);
 
-            expect(grid.page).toBe(1);
+            expect(grid.page).toBe(0);
             let highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             expect(highlight).not.toBeNull();
-
-            grid.findPrev(searchString);
-            await wait();
-            fix.detectChanges();
-
-            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            expect(highlight).not.toBeNull();
             expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
-            expect(grid.page).toBe(0);
-            grid.findPrev(searchString);
-            await wait();
-            fix.detectChanges();
 
-            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            expect(highlight).not.toBeNull();
-            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+            grid.findNext(searchString);
+            fix.detectChanges();
+            await wait(16);
+
             expect(grid.page).toBe(1);
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+
+            grid.findPrev(searchString);
+            await wait(50);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.page).toBe(0);
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {

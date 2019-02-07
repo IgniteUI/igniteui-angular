@@ -150,7 +150,7 @@ npm start
 
 You can include Ignite UI for Angular in your project as a dependency using the NPM package.
 
-`npm install igniteui-angular --save-dev`
+`npm install igniteui-angular`
 
 ## Contributing
 [Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-for-Angular)
@@ -164,7 +164,7 @@ The [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) is 
 
 To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html).
 
-All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html).
+All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting_started.html).
 
 ## Roadmap
 [Roadmap document](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)
