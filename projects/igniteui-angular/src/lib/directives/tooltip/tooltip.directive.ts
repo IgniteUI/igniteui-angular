@@ -41,6 +41,9 @@ export interface ITooltipHideEventArgs {
     selector: '[igxTooltipTarget]'
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit {
+    private openAnimationInProgress: boolean;
+    private closeAnimationInProgress: boolean;
+
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -195,6 +198,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
+        this.target.onClosed.subscribe(() => {
+            this.closeAnimationInProgress = false;
+        });
+        this.target.onOpened.subscribe(() => {
+            this.openAnimationInProgress = false;
+        });
     }
 
     private checkOutletAndOutsideClick() {
@@ -220,6 +229,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         // If Tooltip is opened or about to be hidden
         if (!this.target.collapsed || this.target.toBeHidden) {
+            //  TODO: should we reset toBeHidden here?
             clearTimeout(this.target.timeoutId);
 
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
@@ -227,10 +237,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             if (hidingArgs.cancel) {
                 return true;
-            } else {
-                this.target.close();
-                this.target.toBeHidden = false;
             }
+
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
         }
 
         return false;
@@ -242,7 +253,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         // If tooltip is about to be opened
         if (this.target.toBeShown) {
-            clearTimeout(this.target.timeoutId);
             this.target.toBeShown = false;
             this.target.toBeHidden = false;
             return true;
@@ -263,7 +273,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
+        //  TODO: should we clear here the timer?
         this.target.toBeHidden = true;
+        if (this.mergedOverlaySettings.positionStrategy.settings.closeAnimation) {
+            this.closeAnimationInProgress = true;
+        }
         this.target.close();
         this.target.toBeHidden = false;
     }
@@ -300,6 +314,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.toBeShown = true;
         this.target.timeoutId = setTimeout(() => {
+            if (this.mergedOverlaySettings.positionStrategy.settings.openAnimation) {
+                this.openAnimationInProgress = true;
+            }
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
             this.target.toBeShown = false;
         }, this.showDelay);
@@ -329,6 +346,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.toBeHidden = true;
         this.target.timeoutId = setTimeout(() => {
+            if (this.mergedOverlaySettings.positionStrategy.settings.closeAnimation) {
+                this.closeAnimationInProgress = true;
+            }
             this.target.close(); // Call close() of IgxTooltipDirective
             this.target.toBeHidden = false;
         }, this.hideDelay);
@@ -379,10 +399,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             if (hidingArgs.cancel) {
                 return;
-            } else {
-                this.target.close();
-                this.target.toBeHidden = false;
             }
+            //  if for some reason there is open animation started finish it
+            this.target.forceOpen(this.mergedOverlaySettings);
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
         }
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
@@ -394,6 +416,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.toBeShown = true;
         this.target.timeoutId = setTimeout(() => {
+            if (this.mergedOverlaySettings.positionStrategy.settings.openAnimation) {
+                this.openAnimationInProgress = true;
+            }
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
             this.target.toBeShown = false;
         }, this.showDelay);
@@ -408,6 +433,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     public hideTooltip() {
         if (this.target.collapsed && this.target.toBeShown) {
+            //  TODO: should we reset toBeShown here?
             clearTimeout(this.target.timeoutId);
         }
 
@@ -424,6 +450,16 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.toBeHidden = true;
         this.target.timeoutId = setTimeout(() => {
+            //  if close animation is in progress do nothing
+            if (this.closeAnimationInProgress) {
+                return;
+            }
+            //  if open animation is in progress finish it
+            this.target.forceOpen(this.mergedOverlaySettings);
+
+            if (this.mergedOverlaySettings.positionStrategy.settings.closeAnimation) {
+                this.closeAnimationInProgress = true;
+            }
             this.target.close(); // Call close() of IgxTooltipDirective
             this.target.toBeHidden = false;
         }, this.hideDelay);
@@ -457,11 +493,13 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 
     /**
      * @hidden
+     * Returns whether close time out has started
      */
     public toBeHidden = false;
 
     /**
      * @hidden
+     * Returns whether open time out has started
      */
     public toBeShown = false;
 
