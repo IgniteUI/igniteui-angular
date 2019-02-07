@@ -1135,7 +1135,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        const currentDay = calendar.query(By.css('igx-day-item.igx-calendar__date--current'));
         currentDay.nativeElement.click();
         flush();
         fix.detectChanges();
@@ -1173,7 +1173,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        const currentDay = calendar.query(By.css('igx-day-item.igx-calendar__date--current'));
         currentDay.nativeElement.click();
         flush();
         fix.detectChanges();
@@ -1258,7 +1258,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        const currentDay = calendar.query(By.css('igx-day-item.igx-calendar__date--current'));
         currentDay.nativeElement.click();
         flush();
         fix.detectChanges();
@@ -2773,7 +2773,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].innerText;
+        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].children[0].innerText
 
         expect(sundayLabel).toEqual('So');
     }));
