@@ -458,16 +458,16 @@ describe('igxOverlay', () => {
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
             const element = {} as HTMLElement;
             const autoStrat1 = new AutoPositionStrategy();
-            autoStrat1.position(element, null, null, false, null);
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new AutoPositionStrategy();
-            autoStrat2.position(element, null, null, false, null);
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new AutoPositionStrategy();
-            autoStrat3.position(element, null, null, false, null);
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
@@ -476,16 +476,16 @@ describe('igxOverlay', () => {
             const element = {} as HTMLElement;
             const autoStrat1 = new ElasticPositionStrategy();
 
-            autoStrat1.position(element, null, null, false, null);
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new ElasticPositionStrategy();
-            autoStrat2.position(element, null, null, false, null);
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new ElasticPositionStrategy();
-            autoStrat3.position(element, null, null, false, null);
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
