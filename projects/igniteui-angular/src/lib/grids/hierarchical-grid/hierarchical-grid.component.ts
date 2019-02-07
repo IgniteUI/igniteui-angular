@@ -245,6 +245,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public parent = null;
 
+    /**
+     * @hidden
+     */
+    public childRow: IgxChildGridRowComponent;
+
     private _hierarchicalState = [];
     private _data;
     private _filteredData = null;
@@ -675,16 +680,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 gridToScroll.hierarchicalState = [...state];
                 gridToScroll.cdr.detectChanges();
             }
-            gridToScroll.scrollTo(parentRec, 0);
+            const childRec =  grd.childRow.rowData;
+            if (gridToScroll.verticalScrollContainer.igxForOf.indexOf(parentRec) === -1) {
+                // in case parent rec is not in view (is on another page) scroll it in view
+                gridToScroll.scrollTo(parentRec, 0);
+            } else {
+                gridToScroll.scrollTo(childRec, 0);
+            }
         });
         grid.scrollTo(row, column);
         requestAnimationFrame(() => {
             // check cell is in view, if it is not fully in view scroll more so that it is fully visible.
             const cell = grid.getCellByKey(row, column);
             const diffBottom =  cell.nativeElement.getBoundingClientRect().bottom -
-            this.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            grid.hierarchicalNavigation._getMinBottom(grid);
             const diffTop = cell.nativeElement.getBoundingClientRect().bottom -
-            cell.nativeElement.offsetHeight - this.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
+            cell.nativeElement.offsetHeight -  grid.hierarchicalNavigation._getMaxTop(grid);
             if (diffBottom > 0) {
                 const closestScrollableDownGrid = this.hierarchicalNavigation.getNextScrollableDown(grid).grid;
                 closestScrollableDownGrid.verticalScrollContainer.addScrollTop(diffBottom);

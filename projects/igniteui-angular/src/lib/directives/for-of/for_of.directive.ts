@@ -453,7 +453,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const scr = this.igxForScrollOrientation === 'horizontal' ?
         this.hScroll.scrollLeft : this.vh.instance.elementRef.nativeElement.scrollTop;
 
-        if (this.sizesCache[index] >= scr && this.sizesCache[index] <= scr + containerSize) {
+        if (this.sizesCache[index + 1] > scr && this.sizesCache[index] < scr + containerSize) {
             return true;
         }
         return false;
