@@ -10,7 +10,7 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 
 describe('IgxGrid - Multi Cell selection', () => {
-    configureTestSuite();
+   configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -54,7 +54,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(grid.selectedCells.length).toBe(4);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
 
             firstCell = grid.getCellByColumn(2, 'ParentID');
             secondCell = grid.getCellByColumn(3, 'ID');
@@ -64,8 +64,8 @@ describe('IgxGrid - Multi Cell selection', () => {
             range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 2);
-            HelperUtils.verifyCellsRegionSelected(grid, 2, 0, 3, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 0, 1);
         });
 
         it('Should be able to select multiple cells with Ctrl key and mouse click', () => {
@@ -115,14 +115,14 @@ describe('IgxGrid - Multi Cell selection', () => {
             let range = { rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 3 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 0, 3, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
 
             UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, true);
             UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(8);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 3, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 2, 3);
             range = { rowStart: 0, rowEnd: 3, columnStart: 2, columnEnd: 3 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
@@ -164,7 +164,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(expectedData1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(grid.getSelectedRanges()).toEqual([range]);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 0, 7, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 0, 1);
 
             const thirdCell = grid.getCellByColumn(6, 'Name');
             UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, true);
@@ -185,13 +185,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(grid.getSelectedRanges()).toEqual([range]);
             expect(grid.getSelectedData()).toEqual(expectedData2);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 0, 6, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 6, 0, 2);
 
             grid.verticalScrollContainer.scrollTo(0);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 0, 4, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(grid.getSelectedData()).toEqual(expectedData2);
         }));
@@ -221,7 +221,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(expectedData1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range1);
             expect(grid.getSelectedRanges()).toEqual([range1]);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 2, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
 
             // Click on another cell holding control
             UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, false, true);
@@ -230,7 +230,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedRanges()).toEqual([range1, range2]);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 2, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
             HelperUtils.verifyCellSelected(thirdCell);
 
             // Click on a cell in the region and verify it is not changed
@@ -239,7 +239,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 2, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
             HelperUtils.verifyCellSelected(thirdCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedData()).toEqual(expectedData2);
@@ -286,7 +286,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
 
             cell = grid.getCellByColumn(2, 'ParentID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
@@ -294,7 +294,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
 
             cell = grid.getCellByColumn(2, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
@@ -303,7 +303,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 1, 2);
-            HelperUtils.verifyCellsRegionSelected(grid, 2, 1, 2, 3, false);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 2, 1, 3, false);
 
             cell = grid.getCellByColumn(1, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
@@ -320,7 +320,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 0, 1, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
         }));
 
         it('Should be able to select and move scroll with arrow keys and holding Shift', (async () => {
@@ -338,7 +338,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 3, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 3);
 
             cell = grid.getCellByColumn(3, 'HireDate');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
@@ -347,7 +347,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 3, 4);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 4);
 
             cell = grid.getCellByColumn(3, 'Age');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
@@ -356,7 +356,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 3, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 5);
 
             cell = grid.getCellByColumn(3, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
@@ -365,7 +365,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 4, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 4, 2, 5);
 
             cell = grid.getCellByColumn(4, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
@@ -374,7 +374,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 5, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 5, 2, 5);
 
             cell = grid.getCellByColumn(5, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
@@ -383,7 +383,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 2, 6, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 6, 2, 5);
         }));
 
         it('Should not fire event when no new cells are selected', (async () => {
@@ -425,7 +425,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range2);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 0, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 1, 1);
             expect(grid.getSelectedRanges()).toEqual([range2]);
 
             cell = grid.getCellByColumn(0, 'ID');
@@ -435,8 +435,18 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 0, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 1, 1);
             expect(grid.getSelectedRanges()).toEqual([range2]);
+        }));
+
+        it('Should be able to navigate with the keyboard when a range is selected by dragging', (async () => {
+            const firstCell = grid.getCellByColumn(1, 'ParentID');
+            const secondCell = grid.getCellByColumn(3, 'Name');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 2 );
         }));
     });
 
@@ -461,18 +471,18 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             const rowID = grid.selectedCells[0].cellID.rowID;
-            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             grid.clearSort();
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 4);
+            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             expect(grid.selectedCells[0].cellID.rowID).not.toBe(rowID);
         }));
 
@@ -485,15 +495,15 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+            HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+            HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
             grid.clearSort();
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 5, 2, 7);
+            HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
         }));
 
         it('Filtering - selected range should not change when filtering is performed', (async () => {
@@ -504,17 +514,17 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
             grid.clearFilter();
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
         }));
 
         it('Filtering - selected range should not change when filtering result is smaller that selected range', (async () => {
@@ -523,36 +533,36 @@ describe('IgxGrid - Multi Cell selection', () => {
             grid.selectRange(range);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
 
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
             grid.clearFilter();
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 4);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
         }));
 
         it('Filtering - selected range should not change when filtering result is empty that selected range', (async () => {
             // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 0, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
-            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
 
             grid.filter('Name', 'leon', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
             grid.clearFilter();
             fix.detectChanges();
 
             // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 0, 5, 0, 7);
+            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
 
         }));
     });

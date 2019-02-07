@@ -295,7 +295,7 @@ export class HelperUtils {
             fix.detectChanges();
         }
 
-    public static verifyCellsRegionSelected(grid, startRowIndex, startColumnIndex, endRowIndex, endColumnIndex, selected = true) {
+    public static verifyCellsRegionSelected(grid, startRowIndex, endRowIndex, startColumnIndex,  endColumnIndex, selected = true) {
         const startRow = startRowIndex < endRowIndex ? startRowIndex : endRowIndex;
         const endRow = startRowIndex < endRowIndex ? endRowIndex : startRowIndex;
         const startCol = startColumnIndex < endColumnIndex ? startColumnIndex : endColumnIndex;
@@ -308,7 +308,7 @@ export class HelperUtils {
         }
     }
 
-    public static verifySelectedRange(grid, columnStart, columnEnd, rowStart, rowEnd, rangeIndex = 0, selectedRanges = 1) {
+    public static verifySelectedRange(grid, rowStart, rowEnd, columnStart, columnEnd, rangeIndex = 0, selectedRanges = 1) {
         const range = grid.getSelectedRanges();
             expect(range).toBeDefined();
             expect(range.length).toBe(selectedRanges);
