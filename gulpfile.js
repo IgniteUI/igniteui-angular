@@ -31,7 +31,7 @@ const STYLES = {
 };
 
 const TYPEDOC_THEME = {
-    SRC: './extras/docs/themes/typedoc/src/',
+    SRC: `${path.join(__dirname, "extras", "docs", "themes", "typedoc", "src")}`,
     DIST: './extras/docs/themes/typedoc/bin/',
     STYLES: {
         ENTRY: './assets/css/main.sass',
@@ -170,18 +170,18 @@ gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
 
 gulp.task('typedoc-theme-ts', () => {
     gulp.src([
-            `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
+            `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
         ])
         .pipe(ts({
             target: "es2017",
             moduleResolution: 'node',
-            module: 'commonjs'
+            module: 'commonjs',
         }))
-        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
+        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
 });
 
 gulp.task('typedoc-copy-config', () => {
-    const themePath = path.normalize("./extras/docs/themes/config.json");
+    const themePath = path.join(__dirname, "extras", "docs", "themes", "config.json");
     gulp.src([themePath])
         .pipe(gulp.dest(TYPEDOC_THEME.DIST));
 });
