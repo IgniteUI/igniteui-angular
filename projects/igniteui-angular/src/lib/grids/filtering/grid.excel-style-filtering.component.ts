@@ -96,7 +96,6 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this._overlaySettings.outlet = this.column.grid.outletDirective;
         this._subMenuoverlaySettings.outlet = this.column.grid.outletDirective;
-        this.populateUniqueValues();
     }
 
     get canMoveLeft() {
@@ -108,7 +107,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     get conditions() {
-        return this.column.filters.conditionList().filter(c => c != 'empty' && c !== 'notEmpty' && c != 'null' && c !== 'notNull');
+        return this.column.filters.conditionList();
     }
 
     get filterOptions() {
@@ -136,6 +135,8 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
             }
         });
     }
+
+    
 
     /**
      * Returns the filtering operation condition for a given value.
@@ -273,7 +274,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
-        this.selectedOperator = eventArgs.newSelection.value;
+        this.selectedOperator = eventArgs.newSelection.value ? eventArgs.newSelection.value : 'equals';
         eventArgs.cancel = true;
         this.dropdown.close();
         this.subMenu.close();
@@ -291,6 +292,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public onDropDownOpening() {
+        this.populateUniqueValues();
         this.originalItems = cloneArray(this.uniqueItems, true);
     }
 
@@ -444,8 +446,8 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public onApplyButtonClick() {
-        //TODO
-        // remove bad expression UIs
+        this.expressionsList = this.expressionsList.filter(
+            element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
         this.filteringService.filter(this.column.field, this.expressionsList);
         this.customMenu.close();
     }

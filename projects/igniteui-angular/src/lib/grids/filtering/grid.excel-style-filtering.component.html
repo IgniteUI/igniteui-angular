@@ -132,6 +132,10 @@
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
+        <igx-drop-down-item>
+            <igx-icon>filter_list</igx-icon>
+            <span style="margin-left: 16px">Custom Filter...</span>
+        </igx-drop-down-item>
     </div>
 </igx-drop-down>
 
@@ -180,13 +184,14 @@
                     <span>{{ filterItem.value }}</span>
                 </igx-drop-down-item>
             </igx-drop-down>
-
+            
             <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <input
                     #inputValues
                     igxInput
                     tabindex="0"
-                    placeholder="placeholder"
+                    placeholder="Type value here..."
+                    [disabled]="item.expression.condition && item.expression.condition.isUnary"
                     autocomplete="off"
                     [igxDropDownItemNavigation]="dropdownValues"
                     [(ngModel)]="item.expression.searchVal"
@@ -208,7 +213,7 @@
                 [multiSelection]="false">
                 <span igxButton
                     #andButton
-                    [selected]="true"
+                    [selected]="item.afterOperator === 0"
                     type="button"
                     (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0, item)">
                     And
@@ -216,6 +221,7 @@
 
                 <span igxButton
                     #orButton
+                    [selected]="item.afterOperator === 1"
                     type="button"
                     (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1, item)">
                     Or
