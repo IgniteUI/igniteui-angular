@@ -175,9 +175,9 @@ gulp.task('typedoc-theme-ts', () => {
         .pipe(ts({
             target: "es2017",
             moduleResolution: 'node',
-            module: 'commonjs',
+            module: 'commonjs'
         }))
-        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
+        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
 });
 
 gulp.task('typedoc-copy-config', () => {
