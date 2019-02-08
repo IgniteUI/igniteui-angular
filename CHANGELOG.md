@@ -58,6 +58,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxTextHighlightDirective.page` input property is **deprecated**. `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are also **deprecated**. Instead, `row` and `column` optional properties are added.
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
+- `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
