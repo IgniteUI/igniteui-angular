@@ -1779,12 +1779,13 @@ describe('igxOverlay', () => {
                 const componentEl_2 = overlayWrapper_2.children[0].children[0];
                 const componentRect_1 = componentEl_1.getBoundingClientRect();
                 const componentRect_2 = componentEl_2.getBoundingClientRect();
-                expect(componentRect_1.left).toEqual(buttonRect.right); // Will be positioned on the right of the button
-                expect(componentRect_1.left).toEqual(componentRect_2.left); // Are on the same spot
+                // Will be positioned on the right of the button
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(buttonRect.right));
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(componentRect_2.left)); // Are on the same spot
                 // expect(componentRect_1.top).toEqual(buttonRect.top - componentEl_1.clientHeight); // Will be positioned on top of button
-                expect(componentRect_1.top).toEqual(componentRect_2.top); // Will have the same top
-                expect(componentRect_1.width).toEqual(componentRect_2.width); // Will have the same width
-                expect(componentRect_1.height).toEqual(componentRect_2.height); // Will have the same height
+                expect(Math.round(componentRect_1.top)).toEqual(Math.round(componentRect_2.top)); // Will have the same top
+                expect(Math.round(componentRect_1.width)).toEqual(Math.round(componentRect_2.width)); // Will have the same width
+                expect(Math.round(componentRect_1.height)).toEqual(Math.round(componentRect_2.height)); // Will have the same height
             }));
 
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
