@@ -8,11 +8,9 @@ import {
     QueryList,
     HostBinding,
     forwardRef,
-    DoCheck,
-    Inject,
-    Optional
+    DoCheck
 } from '@angular/core';
-import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges, IGX_CALENDAR_COMPONENT, IgxCalendarBase } from '../../calendar';
+import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges } from '../../calendar';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -317,6 +315,12 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     /**
      * @hidden
      */
+    @Output()
+    public onViewChnaged = new EventEmitter<Date>();
+
+    /**
+     * @hidden
+     */
     @ViewChildren(forwardRef(() => IgxDayItemComponent), { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
 
@@ -430,7 +434,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     /**
      * @hidden
      */
-    constructor(@Optional() @Inject(IGX_CALENDAR_COMPONENT) public calendar: IgxCalendarBase) {
+    constructor() {
         this.calendarModel = new Calendar();
 
         this.calendarModel.firstWeekDay = this.weekStart;
@@ -648,16 +652,15 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this._nextDate.setDate(this._nextDate.getDate() - 7);
 
-            this.animationAction = 'prev';
             this.isKeydownTrigger = true;
-            if (this.calendar) {
-                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
-            }
+            this.animationAction = 'prev';
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
                 this.focusPreviousUpDate(day, true);
             };
+
+            this.onViewChnaged.emit(this._nextDate);
         }
     }
 
@@ -685,16 +688,15 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
 
             this._nextDate.setDate(this._nextDate.getDate() + 7);
 
-            this.animationAction = 'next';
             this.isKeydownTrigger = true;
-            if (this.calendar) {
-                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
-            }
+            this.animationAction = 'next';
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
                 this.focusNextDownDate(day, true);
             };
+
+            this.onViewChnaged.emit(this._nextDate);
         }
     }
 
@@ -720,16 +722,15 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             const dayItem = dates[dates.indexOf(node)];
             this._nextDate = new Date(dayItem.date.date);
 
-            this.animationAction = 'prev';
             this.isKeydownTrigger = true;
-            if (this.calendar) {
-                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
-            }
+            this.animationAction = 'prev';
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
                 this.focusPreviousDate(day);
             };
+
+            this.onViewChnaged.emit(this._nextDate);
         }
     }
 
@@ -756,16 +757,15 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             const dayItem = dates[dates.indexOf(node)];
             this._nextDate = new Date(dayItem.date.date);
 
-            this.animationAction = 'next';
             this.isKeydownTrigger = true;
-            if (this.calendar) {
-                this.calendar.viewDate = this.calendarModel.timedelta(this._nextDate, 'month', 0);
-            }
+            this.animationAction = 'next';
 
             this.callback = (items?, next?) => {
                 const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
                 this.focusNextDate(day);
             };
+
+            this.onViewChnaged.emit(this._nextDate);
         }
     }
 

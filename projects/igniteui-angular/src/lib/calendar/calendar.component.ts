@@ -21,7 +21,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { KEYS } from '../core/utils';
-import { ICalendarDate, IGX_CALENDAR_COMPONENT } from './calendar';
+import { ICalendarDate } from './calendar';
 
 let NEXT_ID = 0;
 
@@ -42,10 +42,6 @@ let NEXT_ID = 0;
         {
             multi: true,
             provide: NG_VALUE_ACCESSOR,
-            useExisting: IgxCalendarComponent
-        },
-        {
-            provide: IGX_CALENDAR_COMPONENT,
             useExisting: IgxCalendarComponent
         }
     ],
@@ -328,7 +324,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      *@hidden
      */
     constructor(public elementRef: ElementRef) {
-        super(null);
+        super();
     }
 
     /**
@@ -438,6 +434,13 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
 
         this.selectDateFromClient(instance.date);
         this.onSelection.emit(this.selectedDates);
+    }
+
+    /**
+     * @hidden
+     */
+    public viewChanged(event) {
+        this.viewDate = this.calendarModel.timedelta(event, 'month', 0);
     }
 
     /**

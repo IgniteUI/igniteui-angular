@@ -43,6 +43,7 @@
                    [selection]="selection"
                    [disabledDates]="disabledDates"
                    [specialDates]="specialDates"
+                   (onViewChnaged)="viewChanged($event)"
                    (onDateSelection)="childClicked($event)">
     </igx-days-view>
 </div>
