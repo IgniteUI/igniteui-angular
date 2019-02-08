@@ -5,11 +5,6 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-
-@include b(igx-grid-hierarchical) {
-    @extend %igx-grid-hierarchical !optional;
-}
-
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
