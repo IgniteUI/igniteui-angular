@@ -87,6 +87,14 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             await testExpandCollapse(fix, treeGrid, 3, 'HireDate', 10, 7);
         });
 
+        it('should expand/collapse row when Alt + arrow Up/Down keys are pressed on a treeCell', async () => {
+            await testExpandCollapse(fix, treeGrid, 0, 'ID', 10, 4, true);
+        });
+
+        it('should expand/collapse row when Alt + arrow Up/Down keys are pressed on a gridCell', async () => {
+            await testExpandCollapse(fix, treeGrid, 3, 'HireDate', 10, 7, true);
+        });
+
         it('should not change selection when press Alt + arrow Left/Right keys on a cell in a row without children', async () => {
             spyOn(treeGrid.onRowToggle, 'emit').and.callThrough();
             const cell = treeGrid.getCellByColumn(1, 'Name');
@@ -735,7 +743,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
     const testExpandCollapse =
-        (fixture, treegrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse) =>
+        (fixture, treegrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse, useUpDown = false) =>
             new Promise(async (resolve, reject) => {
                 spyOn(treegrid.onRowToggle, 'emit').and.callThrough();
                 let cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
@@ -749,7 +757,9 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
                 expect(cell.focused).toEqual(true);
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+                cell.nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: useUpDown ? 'ArrowUp' : 'ArrowLeft', altKey: true })
+                );
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
@@ -761,7 +771,9 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 expect(cell.focused).toEqual(true);
                 expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+                cell.nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: useUpDown ? 'ArrowUp' : 'ArrowLeft', altKey: true })
+                );
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
@@ -773,7 +785,9 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 expect(cell.focused).toEqual(true);
                 expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+                cell.nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: useUpDown ? 'ArrowDown' : 'ArrowRight', altKey: true })
+                );
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
@@ -785,7 +799,9 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 expect(cell.focused).toEqual(true);
                 expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+                cell.nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: useUpDown ? 'ArrowDown' : 'ArrowRight', altKey: true })
+                );
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
