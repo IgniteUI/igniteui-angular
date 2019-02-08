@@ -727,8 +727,10 @@ export class IgxGridCellComponent implements OnInit {
 
         if (event.altKey) {
             if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
-                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                const collapse = (this.row as any).expanded &&
+                                (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+                const expand = !(this.row as any).expanded &&
+                                (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
                 if (collapse) {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
@@ -923,6 +925,6 @@ export class IgxGridCellComponent implements OnInit {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key.toLowerCase()) !== -1;
     }
 }
