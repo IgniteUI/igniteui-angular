@@ -64,6 +64,11 @@ export interface OverlayEventArgs {
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
 }
 
+export interface OverlayClosingEventArgs extends OverlayCancelableEventArgs {
+        /** Browser event */
+        event?: Event;
+}
+
 export interface OverlayAnimationEventArgs {
     /** Id of the overlay as returned by the `show()` method */
     id: string;

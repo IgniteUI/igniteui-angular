@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs, OverlayCancelableEventArgs } from './utilities';
+import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs, OverlayClosingEventArgs } from './utilities';
 
 import {
     ApplicationRef,
@@ -69,7 +70,7 @@ export class IgxOverlayService implements OnDestroy {
      * }
      * ```
      */
-    public onClosing = new EventEmitter<OverlayCancelableEventArgs>();
+    public onClosing = new EventEmitter<OverlayClosingEventArgs>();
 
     /**
      * Emitted after the component is closed and all animations are finished.
@@ -204,6 +205,9 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     hide(id: string) {
+        this._hide(id);
+    }
+    _hide(id: string, event?: Event) {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {
@@ -212,6 +216,9 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         const eventArgs = { id, componentRef: info.componentRef, cancel: false };
+        if (event) {
+            Object.assign(eventArgs, { event });
+        }
         this.onClosing.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
@@ -533,7 +540,7 @@ export class IgxOverlayService implements OnDestroy {
             }
             if (info.settings.closeOnOutsideClick) {
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
-                    this.hide(info.id);
+                    this._hide(info.id, ev);
                 } else {
                     return;
                 }

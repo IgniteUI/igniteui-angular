@@ -3277,16 +3277,21 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            spyOn(overlay, '_hide').and.callThrough();
+            spyOn(overlay.onClosing, 'emit');
 
-            overlay.show(SimpleDynamicComponent, overlaySettings);
+            const firstCallId = overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
+            expect(overlay._hide).toHaveBeenCalledTimes(0);
 
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
+            expect(overlay._hide).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
+                    event: new MouseEvent('click') });
         }));
 
     });

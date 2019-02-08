@@ -61,6 +61,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `Remove CSS Normalization` - Some users were complaining we reset too many browser styles - lists and heading styles in particular. We no longer do CSS normalization on an application level. Users who depended on our CSS browser normalization will have to handle that on their own going forward.
 
+- `igxOverlayService`
+    - `onClosing` event arguments are of type `OverlayClosingEventArgs`. They extend the `OverlayCancelableEventArgs` by adding the browser event. That latter is useful to get context information, when closing of the overlay is executed by outside click.
+
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
