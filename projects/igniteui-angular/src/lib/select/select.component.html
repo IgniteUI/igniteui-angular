@@ -28,7 +28,7 @@
             <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
         </igx-suffix>
     </igx-input-group>
-    <div class="igx-drop-down__list igx-select__list" igxToggle [style.maxHeight]="maxHeight"
+    <div class="igx-drop-down__list--select" igxToggle [style.maxHeight]="maxHeight"
         (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
         (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
         [attr.id]="this.listId" [attr.role]="'listbox'">
