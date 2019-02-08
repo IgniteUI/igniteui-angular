@@ -450,26 +450,34 @@
 
     @include igx-scope('.igx-typography') {
         %cal-header-year {
-            @include igx-type-style($type-scale, $header-year);
+            @include igx-type-style($type-scale, $header-year) {
+                margin: 0;
+            }
         }
 
         %cal-header-date {
             @include igx-type-style($type-scale, $header-date) {
                 line-height: rem(42px);
+                margin: 0;
             }
         }
 
         %cal-picker-date {
-            @include igx-type-style($type-scale, $picker-date);
+            @include igx-type-style($type-scale, $picker-date) {
+                margin: 0;
+            }
         }
 
         %cal-value {
-            @include igx-type-style($type-scale, $content);
+            @include igx-type-style($type-scale, $content) {
+                margin: 0;
+            }
         }
 
         %cal-value--year-current {
             @include igx-type-style($type-scale, $content) {
                 font-size: rem(24px);
+                margin: 0;
             }
         }
     }

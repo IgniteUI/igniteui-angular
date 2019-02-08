@@ -6,10 +6,10 @@
 /// @requires {mixin} bem-mod
 ////
 @include b(igx-overlay) {
-    width: 0;
-    height: 0;
     $block: bem--selector-to-string(&);
     @include register-component(igx-overlay);
+
+    @extend %overlay-display !optional;
 
     @include e(wrapper) {
         @extend %overlay-wrapper !optional;
@@ -27,5 +27,11 @@
     @include e(content, $m: modal) {
         @extend %overlay-content !optional;
         @extend %overlay-content--modal !optional;
+    }
+}
+
+@include b(igx-toggle) {
+    @include m(hidden) {
+        @extend %igx-toggle--hidden !optional;
     }
 }
