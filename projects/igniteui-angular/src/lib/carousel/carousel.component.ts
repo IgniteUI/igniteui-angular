@@ -40,7 +40,11 @@ export enum Direction { NONE, NEXT, PREV }
  */
 @Component({
     selector: 'igx-carousel',
-    templateUrl: 'carousel.component.html'
+    templateUrl: 'carousel.component.html',
+    styles: [`
+    :host {
+        outline-style: none
+    }`]
 })
 
 export class IgxCarouselComponent implements OnDestroy {
