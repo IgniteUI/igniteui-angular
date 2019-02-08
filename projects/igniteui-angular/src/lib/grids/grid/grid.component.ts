@@ -776,4 +776,24 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         }
     }
 
+    getSelectedData(): any[] {
+        if (this.groupingExpressions.length) {
+            const source = [];
+
+            const igxGridUnwind2019 = (group) => {
+                source.push(null);
+                if (group.groups.length) {
+                    group.groups.forEach(igxGridUnwind2019);
+                } else {
+                    source.push(...group.records);
+                }
+            };
+            this.verticalScrollContainer.igxForOf
+                .filter((item) => item.expression && item.level === 0)
+                .forEach(igxGridUnwind2019);
+            return this.extractDataFromSelection(source);
+        } else {
+            return super.getSelectedData();
+        }
+    }
 }

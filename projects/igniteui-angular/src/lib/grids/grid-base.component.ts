@@ -4298,33 +4298,38 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.gridSelection.ranges;
     }
 
-    getSelectedData() {
-        const rs = [];
-        const source = (this.filteredSortedData.length || this.filteringExpressionsTree.filteringOperands.length)
-            ? this.filteredSortedData : this.data;
+    extractDataFromSelection(source: any[]) {
+        let column: IgxColumnComponent;
+        let record = {};
+
+        const selectedData = [];
+        const selectionMap = Array.from(this.gridSelection.selection)
+            .filter((tuple) => tuple[0] < source.length);
         const visibleColumns = this.visibleColumns.sort((a, b) => a.visibleIndex - b.visibleIndex);
 
-        /*
-            Boundry check for `filteredData`
-        */
-        const combined = Array.from(this.gridSelection.selection)
-            .filter((tuple) => tuple[0] < source.length);
 
-        // TODO: Simplify
-        for (const [row, set] of combined) {
-            const arr = Array.from(set);
-            let column;
-            let record = {};
-            for (const each of arr) {
+        for (const [row, set] of selectionMap) {
+            if (!source[row]) {
+                continue;
+            }
+            const temp = Array.from(set);
+            for (const each of temp) {
                 column = visibleColumns[each];
                 if (column) {
                     record[column.field] = source[row][column.field];
                 }
             }
-            rs.push(record);
+            selectedData.push(record);
             record = {};
         }
-        return rs;
+        return selectedData;
+    }
+
+    getSelectedData() {
+        const source = (this.filteredSortedData.length || this.filteringExpressionsTree.filteringOperands.length)
+            ? this.filteredSortedData : this.data;
+
+        return this.extractDataFromSelection(source);
     }
 
     /**
