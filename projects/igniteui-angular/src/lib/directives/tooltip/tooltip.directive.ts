@@ -10,6 +10,7 @@ import { HorizontalAlignment, AutoPositionStrategy, PositionSettings } from '../
 import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
+import { Subscription } from 'rxjs';
 
 export interface ITooltipShowEventArgs {
     target: IgxTooltipTargetDirective;
@@ -40,9 +41,11 @@ export interface ITooltipHideEventArgs {
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]'
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
     private openAnimationInProgress: boolean;
     private closeAnimationInProgress: boolean;
+    private onClosedSubscription: Subscription;
+    private onOpenedSubscription: Subscription;
 
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
@@ -198,10 +201,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
-        this.target.onClosed.subscribe(() => {
+        this.onClosedSubscription = this.target.onClosed.subscribe(() => {
             this.closeAnimationInProgress = false;
         });
-        this.target.onOpened.subscribe(() => {
+        this.onOpenedSubscription = this.target.onOpened.subscribe(() => {
             this.openAnimationInProgress = false;
         });
     }
@@ -464,6 +467,25 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.toBeHidden = false;
         }, this.hideDelay);
     }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.unsubscribe();
+    }
+
+    private unsubscribe() {
+        this.clearSubscription(this.onOpenedSubscription);
+        this.clearSubscription(this.onClosedSubscription);
+    }
+
+    private clearSubscription(subscription: Subscription) {
+        if (subscription && !subscription.closed) {
+            subscription.unsubscribe();
+        }
+    }
+
 }
 
 let NEXT_ID = 0;
