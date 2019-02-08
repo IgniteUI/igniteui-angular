@@ -18,5 +18,9 @@
 }
 
 @include b(igx-svg-container) {
-    @extend %igx-svg-container !optional
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
 }
