@@ -789,7 +789,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
                 }
             };
             this.verticalScrollContainer.igxForOf
-                .filter((item) => item.expression && item.level === 0)
+                .filter((item) => item.expression && item.level === 0 && this.isExpandedGroup(item))
                 .forEach(igxGridUnwind2019);
             return this.extractDataFromSelection(source);
         } else {
