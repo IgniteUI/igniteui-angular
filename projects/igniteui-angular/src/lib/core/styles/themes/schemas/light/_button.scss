@@ -14,7 +14,8 @@
 /// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
 /// @prop {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
 /// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
-/// @prop {Map} outlined-border-color [igx-color: ('grays', 300)] - The border color of an outlined button.
+/// @prop {Map} outlined-outline-color [igx-color: ('grays', 300)] - The border color of an outlined button.
+/// @prop {Map} outlined-disabled-outline-color [igx-color: ('grays', 300)] - The border color of an outlined button.
 /// @prop {Color} outlined-hover-background [transparent] - The hover background color of an outlined button.
 /// @prop {Map} outlined-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of an outlined button.
 /// @prop {Map} outlined-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of an outlined button.
@@ -75,7 +76,11 @@ $_light-button: (
 
     outlined-background: transparent,
 
-    outlined-border-color: (
+    outlined-outline-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    outlined-disabled-outline-color: (
         igx-color: ('grays', 300)
     ),
 

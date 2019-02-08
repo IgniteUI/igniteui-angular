@@ -22,6 +22,8 @@
 ///
 /// @param {Color} $outlined-background [null] - The background color of an outlined button.
 /// @param {Color} $outlined-text-color [null] - The idle text color of an outlined button.
+/// @param {Color} $outlined-outline-color [null] - The outline color of an outlined button.
+/// @param {Color} $outlined-disabled-outline-color [null] - The outline color of an outlined, disabled button.
 /// @param {Color} $outlined-hover-background [null] - The hover background color of an outlined button.
 /// @param {Color} $outlined-hover-text-color [null] - The hover text color of an outlined button.
 /// @param {Color} $outlined-focus-background [null] - The focus background color of an outlined button.
@@ -89,7 +91,8 @@
     $flat-focus-text-color: null,
 
     $outlined-text-color: null,
-    $outlined-border-color: null,
+    $outlined-outline-color: null,
+    $outlined-disabled-outline-color: null,
     $outlined-background: null,
     $outlined-hover-background: null,
     $outlined-hover-text-color: null,
@@ -275,7 +278,8 @@
         flat-focus-text-color: $flat-focus-text-color,
 
         outlined-text-color: $outlined-text-color,
-        outlined-border-color: $outlined-border-color,
+        outlined-outline-color: $outlined-outline-color,
+        outlined-disabled-outline-color: $outlined-disabled-outline-color,
         outlined-background: $outlined-background,
         outlined-hover-background: $outlined-hover-background,
         outlined-hover-text-color: $outlined-hover-text-color,
@@ -352,7 +356,7 @@
         border-radius: --var($theme, 'button-roundness');
         cursor: pointer;
         user-select: none;
-        outline: none;
+        outline-style: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         white-space: nowrap;
@@ -376,7 +380,7 @@
     }
 
     %igx-button--outlined {
-        border-color: --var($theme, 'outlined-border-color');
+        border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
 
@@ -480,6 +484,10 @@
         &%igx-button--flat,
         &%igx-button--outlined {
             background: transparent !important;
+        }
+
+        &%igx-button--outlined {
+            border-color: --var($theme, 'outlined-disabled-outline-color');
         }
 
         &:focus {
