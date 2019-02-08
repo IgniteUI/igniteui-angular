@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { IgxCalendarComponent } from '../calendar';
 import { DatePickerInteractionMode } from 'igniteui-angular';
 
@@ -27,6 +27,12 @@ export class IgxCalendarContainerComponent {
 
     @Output()
     public onTodaySelection = new EventEmitter();
+
+    @HostListener('keydown.esc', ['$event'])
+    public onSpaceClick(event) {
+        event.preventDefault();
+        this.onClose.emit();
+    }
 
     public closeCalendar() {
         this.onClose.emit();

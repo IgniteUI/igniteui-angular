@@ -28,8 +28,8 @@ import {
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
-import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
-import { filter, takeUntil, throttle } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     OverlaySettings,
@@ -105,7 +105,7 @@ export interface IgxDatePickerDisabledDateEventArgs {
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
-export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAccessor, EditorProvider, OnInit, OnDestroy, AfterViewInit {
+export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -338,7 +338,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _zone: NgZone,
         private cdr: ChangeDetectorRef) { }
 
     /**
@@ -561,6 +560,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     protected readonlyInput: ElementRef;
 
     /**
+     * @hidden
+     */
+    @ViewChild('datePickerOutlet', { read: ElementRef })
+    public outletDirective: ElementRef;
+
+    /**
      *@hidden
      */
     @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
@@ -614,12 +619,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
 
-    // @HostListener('keydown.spacebar', ['$event'])
-    // @HostListener('keydown.space', ['$event'])
-    // public onSpaceClick(event) {
-    //     this.openCalendar(event);
-    //     // event.preventDefault();
-    // }
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onSpaceClick(event) {
+        this.openCalendar(event);
+        event.preventDefault();
+    }
 
     /**
      *Method that sets the selected date.
@@ -677,17 +682,18 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             verticalDirection: VerticalAlignment.Bottom,
         };
 
+        const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
         this._dropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-            outlet: this.outlet
+            outlet: outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
-            outlet: this.outlet
+            outlet: outlet
         };
 
         this._overlayService.onOpening.pipe(
@@ -711,21 +717,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (this.mode === DatePickerInteractionMode.EDITABLE) {
             this._getFormatOptions(this.format);
             this.dateFormatParts = parseDateFormat(this.format);
-        }
-    }
-
-    /**
-    *@hidden
-    */
-    public ngAfterViewInit(): void {
-        if (this.mode === DatePickerInteractionMode.EDITABLE) {
-            this._zone.runOutsideAngular(() => {
-                fromEvent(this.getEditElement(), 'keydown')
-                    .pipe(throttle(() => interval(0, animationFrameScheduler)), takeUntil(this._destroy$))
-                    .subscribe((event) => {
-                        this.onKeyDown(event);
-                    });
-            });
         }
     }
 
@@ -1002,12 +993,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     private _onOpened(event): void {
-        // this._initializeCalendarContainer(event);
-
         this._onTouchedCallback();
         this.onOpen.emit(this);
 
-        if (this.calendar && this.value) {
+        if (this.calendar) {
             this._focusCalendarDate();
         }
     }
@@ -1016,8 +1005,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.collapsed = true;
         this.onClose.emit(this);
 
-        if (this.editableInput) {
-            this.editableInput.nativeElement.focus();
+        if (this.getEditElement()) {
+            this.getEditElement().focus();
         }
     }
 

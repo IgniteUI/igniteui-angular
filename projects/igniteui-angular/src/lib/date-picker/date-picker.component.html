@@ -4,7 +4,7 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData" [value]="displayData || ''"
+        <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData || ''"
             [disabled]="disabled" readonly />
     </igx-input-group>
 </ng-template>
@@ -16,8 +16,9 @@
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
         <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
-            [igxMask]="mask" [placeholder]="format" [focusedValuePipe]="inputValuePipe" [displayValuePipe]="displayValuePipe"
-            (blur)="onBlur($event)" (wheel)="onWheel($event)" (input)="onInput($event)" />
+            [igxMask]="mask" [placeholder]="format" [focusedValuePipe]="inputValuePipe"
+            [displayValuePipe]="displayValuePipe" (blur)="onBlur($event)" (wheel)="onWheel($event)"
+            (input)="onInput($event)" (keydown)="onKeyDown($event)" />
         <igx-suffix *ngIf="!isEmpty" (click)="clear()">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
