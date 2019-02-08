@@ -462,13 +462,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     }
 
-    /**
-     * @hidden
-     */
-    protected calcMaxSummaryHeight() {
-        return 0;
-    }
-
     /** @hidden */
     public generateRowPath(rowId: any): any[] {
         const path: any[] = [];

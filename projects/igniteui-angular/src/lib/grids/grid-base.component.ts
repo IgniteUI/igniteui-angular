@@ -26,7 +26,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -3670,7 +3670,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 1 + this.scrollWidth : this.calcWidth + 1;
+        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
     }
 
     /**
@@ -3723,11 +3723,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return columnWidth.toString();
     }
 
-    protected _getContainerWidth() {
-        const el = this.document.getElementById(this.nativeElement.id);
-        return el ? el.offsetWidth : null;
-    }
-
     /**
      * @hidden
      * Sets grid width i.e. this.calcWidth
@@ -3735,6 +3730,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected calculateGridWidth() {
         let width;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const el = this.document.getElementById(this.nativeElement.id);
+
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
@@ -3743,8 +3740,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = parseInt(this._width, 10);
         }
 
-        if (!width) {
-            width = this._getContainerWidth();
+        if (!width && el) {
+            width = el.offsetWidth;
         }
 
 
@@ -4361,13 +4358,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
+        let delayScrolling = false;
 
         if (this.paging) {
-            this.page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - this.page * this.perPage;
+            const page = Math.floor(rowIndex / this.perPage);
+            rowIndex = rowIndex - page * this.perPage;
+
+            if (this.page !== page) {
+                delayScrolling = true;
+                this.page = page;
+            }
         }
 
-        this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        }
 
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
