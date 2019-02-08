@@ -58,11 +58,25 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public children: QueryList<IgxSelectItemComponent>;
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
 
+    private _value: any;
     /**
      * An @Input property that sets the input value.
      *
      */
-    @Input() public value: any;
+    @Input()
+    public get value(): any {
+        return this._value;
+    }
+    public set value(v: any) {
+        this._value = v;
+        if (v && this.items.find(x => x.value === v)) {
+            this.selection.set(this.id, new Set([this.value]));
+        } else {
+            this.selection.clear(this.id); // 0 , ''
+        }
+        // update input group value
+        this.cdr.detectChanges();
+    }
     /**
      * An @Input property that sets input placeholder.
      *
@@ -157,13 +171,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public writeValue = (value: any) => {
         // 1. Set the input value
         // 2. Select the new item from the drop down
-        if (value) {
             this.value = value;
-            if (this.items.find(x => x.value === value)) {
-                this.selection.set(this.id, new Set([this.value]));
-            }
-        }
-    }
+     }
 
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
