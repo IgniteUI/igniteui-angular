@@ -20,7 +20,8 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
-    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
+    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
+        contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 contentElement.parentElement.style.justifyContent = 'flex-start';
