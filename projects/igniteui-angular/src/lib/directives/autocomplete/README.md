@@ -20,8 +20,10 @@ The simplest use-case for an end-user should be attaching the directive to an in
 
 The following keyboards can be used when navigating through the drop down items:
 
- - `Arrow Down` - will move to next drop down item.
- - `Arrow Up` - will move to previous drop down item.
+ - `Arrow Down`, `Arrow Up`, `Alt` + `Arrow Down`, `Alt` + `Arrow Up` will open drop down, if closed.
+ - Typing in the input will open drop down, if closed.
+ - `Arrow Down` - will move to next drop down item, if drop down opened.
+ - `Arrow Up` - will move to previous drop down item, if drop down opened.
  - `End` will move to last drop down item.
  - `Home` will move to first drop down item.
  - `Enter` will confirm the already selected item and will close the drop down.
