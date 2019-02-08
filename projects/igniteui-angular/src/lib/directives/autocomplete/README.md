@@ -14,9 +14,9 @@ The simplest use-case for an end-user should be attaching the directive to an in
 </igx-drop-down>
 ```
 
-#Features
+# Features
 
-##Keyboard navigation
+## Keyboard navigation
 
 The following keyboards can be used when navigating through the drop down items:
 
@@ -24,15 +24,15 @@ The following keyboards can be used when navigating through the drop down items:
  - `Arrow Up` - will move to previous drop down item.
  - `End` will move to last drop down item.
  - `Home` will move to first drop down item.
- - `Enter` will confirm the already selected items and will close the drop down.
+ - `Enter` will confirm the already selected item and will close the drop down.
  - `Esc` will close the drop down.
 
 > Note: When autocomplete is opened an then the first item in the list is automatically selected. The same is valid when list is filtered.
 
-##Selection and model binding
+## Selection and model binding
 
-When value is selected in the drop down, then host element value is automatically updated.
-What you need is to define the value property of the drop down item and bind it. Then on selection, the autocomplete will update the bound input value:
+When value is selected in the drop down, then input element value is automatically updated.
+In order to achieve that define the value property of the drop down item and bind it. Then on selection, the autocomplete will update the bound input value:
 
 ```html
 <igx-input-group class="group">
@@ -61,7 +61,7 @@ export class AutocompleteSampleComponent {
 }
 ```
 
-##Enable/Disable autocomplete drop down
+## Enable/Disable autocomplete drop down
 
 The following sample defines `igxAutocompleteDisabled`, which allows to dynamically enable and disable the autocomplete drop down:
 
@@ -96,7 +96,50 @@ export class AutocompleteSampleComponent {
 
 > Note: When autocomplete is dynamically disabled, then it will be automatically closed.
 
-##Compatibility support
+### Drop Down settings
+The igx-autocomplete drop down positioning, scrolling strategy and outlet can be configured using, the `igxAutocompleteSettings` option. It allows values from type `AutocompleteOverlaySettings`.
+
+The following example displays that the positioning of the drop down can be set to be always above the input, where the directive is applied. It also disables opening and closing animations. For that purpose the `ConnectedPositioningStrategy` is used:
+
+```html
+<igx-input-group #inputGroup>
+    <input igxInput name="towns" type="text"
+        [igxAutocomplete]='townsPanel'
+        [igxAutocompleteSettings]='settings'/>
+    <label igxLabel for="towns">Towns</label>
+</igx-input-group>
+<igx-drop-down #townsPanel>
+    <igx-drop-down-item *ngFor="let town of towns">
+        {{town}}
+    </igx-drop-down-item>
+</igx-drop-down>
+```
+
+```typescript
+@Component({
+    selector: 'app-autocomplete-sample',
+    styleUrls: ['autocomplete.sample.css'],
+    templateUrl: `autocomplete.sample.html`
+})
+export class AutocompleteSampleComponent {
+    constructor() {
+        this.towns = [ 'Sofia', 'Plovdiv', 'Varna', 'Burgas'];
+    }
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent }) inputGroup: IgxInputGroupComponent;
+
+    this.settings = {
+        positionStrategy: new ConnectedPositioningStrategy({
+            closeAnimation: null,
+            openAnimation: null,
+            verticalDirection: VerticalAlignment.Top
+        })
+    };
+}
+```
+
+> Note: The default positioning strategy is `AutoPositionStrategy` and drop down is opened according to the available space.
+
+## Compatibility support
 
 Applying the `igxAutocomplete` directive will decorate the element with the following aria attributes:
  - role="combobox" - role of the element, where the directive is applied.
@@ -113,6 +156,7 @@ The drop-down component, used as provider for suggestions, will expose the follo
 # API Summary
 
 Properties
+
 | Name   | Type | Description |
 |:----------|:------|:------|
 | `igxAutocomplete` | `IgxDropDownComponent` | reference to the template providing a markup for the drop down |
@@ -120,12 +164,14 @@ Properties
 | `igxAutocompleteSettings` | `AutocompleteOverlaySettings` | Settings to configure drop down overlay |
 
 Methods
+
 | Name   |  Description |
 |:----------|:------|
 | `open` | list of options to choose from |
 | `close` |  list of options to choose from |
 
 Events
+
 | Name   |  Description | Cancelable |
 |:----------|:------|:------|
 | `onItemSelected` | list of options to choose from | true
@@ -134,6 +180,7 @@ Events
 # Examples
 
 ## Defining autocomplete with filtering
+Using the `igxDropDown` as `igxAutocomplete` options provider allows the developer to define a custom options panel. Drop down features like grouping, custom templating and using all drop down options allows modifications on the drop down applied as autocomplete provider. The following sample demonstrates custom filtering applied to the drop down items:
 
 ```html
 <igx-input-group class="group">
@@ -142,7 +189,7 @@ Events
         [igxAutocomplete]='townsPanel'/>
     <label igxLabel for="towns">Towns</label>
 </igx-input-group>
-<igx-drop-down #townsPanel>
+<igx-drop-down #townsPanel maxHeight="400px">
     <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
         {{town}}
     </igx-drop-down-item>
@@ -168,5 +215,3 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
     }
 }
 ```
-
-## Defining autocomplete with grouping
