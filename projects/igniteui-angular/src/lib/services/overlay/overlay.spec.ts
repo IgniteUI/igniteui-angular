@@ -458,16 +458,16 @@ describe('igxOverlay', () => {
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
             const element = {} as HTMLElement;
             const autoStrat1 = new AutoPositionStrategy();
-            autoStrat1.position(element, null, null, false, null);
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new AutoPositionStrategy();
-            autoStrat2.position(element, null, null, false, null);
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new AutoPositionStrategy();
-            autoStrat3.position(element, null, null, false, null);
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
@@ -476,16 +476,16 @@ describe('igxOverlay', () => {
             const element = {} as HTMLElement;
             const autoStrat1 = new ElasticPositionStrategy();
 
-            autoStrat1.position(element, null, null, false, null);
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new ElasticPositionStrategy();
-            autoStrat2.position(element, null, null, false, null);
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new ElasticPositionStrategy();
-            autoStrat3.position(element, null, null, false, null);
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
@@ -1262,7 +1262,6 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
-
             expect(document.documentElement.scrollTop).toEqual(0);
             let overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             let overlayChildPosition: DOMRect = overlayElement.lastElementChild.getBoundingClientRect() as DOMRect;
@@ -1780,12 +1779,13 @@ describe('igxOverlay', () => {
                 const componentEl_2 = overlayWrapper_2.children[0].children[0];
                 const componentRect_1 = componentEl_1.getBoundingClientRect();
                 const componentRect_2 = componentEl_2.getBoundingClientRect();
-                expect(componentRect_1.left).toEqual(buttonRect.right); // Will be positioned on the right of the button
-                expect(componentRect_1.left).toEqual(componentRect_2.left); // Are on the same spot
+                // Will be positioned on the right of the button
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(buttonRect.right));
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(componentRect_2.left)); // Are on the same spot
                 // expect(componentRect_1.top).toEqual(buttonRect.top - componentEl_1.clientHeight); // Will be positioned on top of button
-                expect(componentRect_1.top).toEqual(componentRect_2.top); // Will have the same top
-                expect(componentRect_1.width).toEqual(componentRect_2.width); // Will have the same width
-                expect(componentRect_1.height).toEqual(componentRect_2.height); // Will have the same height
+                expect(Math.round(componentRect_1.top)).toEqual(Math.round(componentRect_2.top)); // Will have the same top
+                expect(Math.round(componentRect_1.width)).toEqual(Math.round(componentRect_2.width)); // Will have the same width
+                expect(Math.round(componentRect_1.height)).toEqual(Math.round(componentRect_2.height)); // Will have the same height
             }));
 
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
@@ -2313,7 +2313,7 @@ describe('igxOverlay', () => {
             tick();
             const styles = css(overlayWrapper);
             const expectedBackgroundColor = 'background-color: rgba(0, 0, 0, 0.38)';
-            const appliedBackgroundStyles = styles[3];
+            const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));
 
@@ -3364,7 +3364,17 @@ export class SimpleDynamicWithDirectiveComponent {
 @Component({
     template: `
         <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
-    `
+    `,
+    styles: [`button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84px;
+        height: 84px;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }`]
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
