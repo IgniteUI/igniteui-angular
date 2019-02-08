@@ -207,6 +207,17 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /**
      * @hidden
      */
+    @HostListener('keydown.ArrowDown', ['$event'])
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    @HostListener('keydown.ArrowUp', ['$event'])
+    @HostListener('keydown.Alt.ArrowUp', ['$event'])
+    onArrowDown() {
+        this.open();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Tab', ['$event'])
     @HostListener('keydown.Shift.Tab', [`$event`])
     onTab() {
@@ -233,6 +244,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Closes autocomplete drop down
      */
     public close() {
+        if (this.collapsed) {
+            return;
+        }
         this.dropDown.close();
         this.dropDownOpened$.next();
     }
@@ -241,6 +255,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Opens autocomplete drop down
      */
     public open() {
+        if (!this.collapsed) {
+            return;
+        }
         const settings = Object.assign({}, this.settings, this.autocompleteSettings);
         if (!settings.positionStrategy.settings.target) {
             settings.positionStrategy.settings.target = this.parentElement;

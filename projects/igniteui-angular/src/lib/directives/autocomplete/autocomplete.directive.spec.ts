@@ -84,6 +84,52 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
+        it('Should open drop down on (Alt+)ArrowUp/ArrowDown', fakeAsync(() => {
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+
+            const altKey = true;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
         it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
             spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete, 'close').and.callThrough();
