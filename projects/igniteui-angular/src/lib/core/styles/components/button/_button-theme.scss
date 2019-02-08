@@ -478,14 +478,25 @@
     }
 
     %igx-button--disabled {
-        color: --var($theme, 'disabled-color') !important;
-        background: --var($theme, 'disabled-background') !important;
         pointer-events: none;
         box-shadow: none;
 
         &%igx-button--flat,
+        &%igx-button--outlined,
+        &%igx-button--raised,
+        &%igx-button--fab,
+        &%igx-button--icon {
+            color: --var($theme, 'disabled-color');
+        }
+
+        &%igx-button--raised,
+        &%igx-button--fab {
+            background: --var($theme, 'disabled-background');
+        }
+
+        &%igx-button--flat,
         &%igx-button--outlined {
-            background: transparent !important;
+            background: transparent;
         }
 
         &%igx-button--outlined {
