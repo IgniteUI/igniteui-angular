@@ -1,0 +1,28 @@
+<div *ngIf="isDefaultView" [@animateView]="activeView" class="igx-calendar__body">
+    <div class="igx-calendar-picker">
+        <div class="igx-calendar-picker__prev" (click)="previousYear()">
+            <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
+        </div>
+        <div>
+            <span (click)="activeViewDecade()" class="igx-calendar-picker__date">
+                {{ formattedYear(viewDate) }}
+            </span>
+        </div>
+        <div class="igx-calendar-picker__next" (click)="nextYear()">
+            <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
+        </div>
+    </div>
+
+    <igx-months-view [@animateChange]="animateAction" #months style="height: 308px"
+                     [date]="viewDate"
+                     [locale]="locale"
+                     [monthFormat]="_formatOptions.month"
+                     (onMonthSelection)="selectMonth($event)" >
+    </igx-months-view>
+</div>
+<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade
+                [date]="viewDate"
+                [locale]="locale"
+                [yearFormat]="_formatOptions.year"
+                (onYearSelection)="selectYear($event)">
+</igx-years-view>

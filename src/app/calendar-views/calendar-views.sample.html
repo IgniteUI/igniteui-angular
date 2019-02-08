@@ -5,18 +5,27 @@
             <div class="calendar-sample" style="width: 400px">
                 <h4 class="sample-title">Default Calendar</h4>
                 <igx-card>
-                    <igx-calendar name="calendar" [(ngModel)]="date1" #calendar
-                                                  [viewDate]="date1"
+                    <igx-calendar name="calendar" [(ngModel)]="dates" #calendar
+                                                  [viewDate]="dates[0]"
                                                   [weekStart]="'1'"
                                                   [locale]="locale"
                                                   [specialDates]="specialDates"
                                                   [disabledDates]="disabledDates"
-                                                  [selection]="'single'">
+                                                  [selection]="'multi'">
                     </igx-calendar>
                 </igx-card>
             </div>
-            {{ date1 }}
+            {{ dates }}
         </article>
+        <article class="sample-column">
+                <div class="calendar-sample" style="width: 400px">
+                    <h4 class="sample-title">Month Picker</h4>
+                    <igx-card>
+                        <igx-month-picker [(ngModel)]="date1" [viewDate]="date1"></igx-month-picker>
+                    </igx-card>
+                </div>
+                {{ date1 }}
+            </article>
     </section>
     <div class="sample-content">
         <section class="sample-content">

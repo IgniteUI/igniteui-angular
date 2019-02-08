@@ -207,12 +207,27 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     get activeView(): CalendarView {
         return this._activeView;
     }
+    /**
+     * Sets the current active view of the calendar.
+     * ```typescript
+     * this.calendar.activeView = activeView;
+     * ```
+     */
+    set activeView(val: CalendarView) {
+        this._activeView = val;
+    }
 
     /**
      * @hidden
      */
     get monthAction(): string {
         return this._monthAction;
+    }
+    /**
+     * @hidden
+     */
+    set monthAction(val: string) {
+        this._monthAction = val;
     }
     /**
      * Gets the header template.
