@@ -79,7 +79,7 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
-        fit('verify tooltip default position', fakeAsync(() => {
+        it('verify tooltip default position', fakeAsync(() => {
             hoverElement(button);
             flush();
             verifyTooltipPosition(tooltipNativeElement, button, true);
@@ -424,7 +424,7 @@ describe('IgxTooltip', () => {
             buttonTwo = fix.debugElement.query(By.css('.buttonTwo'));
         }));
 
-        fit('Same tooltip shows on different targets depending on which target is hovered', fakeAsync(() => {
+        it('Same tooltip shows on different targets depending on which target is hovered', fakeAsync(() => {
             hoverElement(buttonOne);
             flush();
 
