@@ -335,16 +335,6 @@ export class OverlaySampleComponent implements OnInit {
         this.igxDropDown.toggle(this._overlaySettings);
     }
 
-    public resizeAndSoOn() {
-        this.items = [];
-        for (let item = 0; item < 1; item++) {
-            this.items.push(`Item ${item}`);
-        }
-
-        this.cdr.detectChanges();
-        (<any>this.igxDropDown).toggleDirective.reposition();
-    }
-
     ngOnInit(): void {
         this.igxDropDown.element.childElements[0].style.maxHeight = '100%';
     }

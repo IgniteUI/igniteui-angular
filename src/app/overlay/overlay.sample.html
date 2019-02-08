@@ -80,7 +80,6 @@
         <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'"
             [style.top]="buttonTop + '%'" [style.left]="buttonLeft + '%'">Toggle</button>
         <igx-drop-down width="200px">
-            <button (click)="resizeAndSoOn()">Resize and so on...</button>
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
                     {{ item }}
