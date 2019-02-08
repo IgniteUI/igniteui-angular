@@ -233,7 +233,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * If there is open animation in progress this method will finish is.
+     * If there is open animation in progress this method will finish it.
      * If there is no open animation in progress this method will open the toggle with no animation.
      * @param overlaySettings setting to use for opening the toggle
      */
@@ -264,7 +264,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * If there is close animation in progress this method will finish is.
+     * If there is close animation in progress this method will finish it.
      * If there is no close animation in progress this method will close the toggle with no animation.
      * @param overlaySettings settings to use for closing the toggle
      */
