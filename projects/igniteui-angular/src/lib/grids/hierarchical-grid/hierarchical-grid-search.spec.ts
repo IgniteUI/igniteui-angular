@@ -13,7 +13,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-fdescribe('IgxHierarchicalGrid Search - ', () => {
+describe('IgxHierarchicalGrid Search - ', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
