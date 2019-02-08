@@ -11,7 +11,7 @@ import {
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -22,7 +22,7 @@ import { first } from 'rxjs/operators';
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
