@@ -59,8 +59,8 @@ All notable changes for each version of this project will be documented in this 
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
-
 - `Remove CSS Normalization` - Some users were complaining we reset too many browser styles - lists and heading styles in particular. We no longer do CSS normalization on an application level. Users who depended on our CSS browser normalization will have to handle that on their own going forward.
+- `igxOverlayService` - the height of the shown element/component is not cached anymore. The height will be calculated each time position method of position strategy is called.
 
 ## 7.1.2
 ### Features

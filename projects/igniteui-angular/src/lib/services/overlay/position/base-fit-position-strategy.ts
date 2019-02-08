@@ -6,14 +6,13 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     protected _initialSettings: PositionSettings;
     protected _initialSize: Size;
 
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
-        this._initialSize = size;
+    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         super.position(contentElement, size);
         if (!initialCall) {
             return;
         }
         this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
-        this.settings = this._initialSettings ? Object.assign({}, this.settings, this._initialSettings) : this.settings;
+        this.settings = Object.assign({}, this.settings, this._initialSettings);
         const elementRect: ClientRect = contentElement.getBoundingClientRect();
         const viewPort: ClientRect = {
             left: 0,
@@ -24,11 +23,11 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             height: window.innerHeight,
         };
         if (this.shouldFitHorizontal(this.settings, elementRect, viewPort)) {
-            this.fitHorizontal(contentElement, this.settings, elementRect, viewPort, minSize);
+            this.fitHorizontal(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
 
         if (this.shouldFitVertical(this.settings, elementRect, viewPort)) {
-            this.fitVertical(contentElement, this.settings, elementRect, viewPort, minSize);
+            this.fitVertical(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
     }
 
