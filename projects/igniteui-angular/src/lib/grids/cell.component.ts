@@ -544,6 +544,8 @@ export class IgxGridCellComponent implements OnInit {
             // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
             this.grid.endEdit(true);
         }
+
+        keyboardState.lastPassedNode = node;
         if (keyboardState.shift) {
             selection.dragSelect(node, keyboardState);
             this.grid.onSelection.emit({ cell: this, event });

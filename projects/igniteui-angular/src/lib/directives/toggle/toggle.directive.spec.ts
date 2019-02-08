@@ -266,8 +266,8 @@ describe('IgxToggle', () => {
 
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         button = fixture.componentInstance.button2.nativeElement;
         button.click();
@@ -275,8 +275,8 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         button = fixture.componentInstance.button3.nativeElement;
         button.click();
@@ -285,8 +285,8 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
     }));
 
     it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
@@ -305,20 +305,20 @@ describe('IgxToggle', () => {
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         document.documentElement.scrollTop += 100;
         document.dispatchEvent(new Event('scroll'));
@@ -327,20 +327,20 @@ describe('IgxToggle', () => {
         toggle = fixture.debugElement.query(By.css('#toggle1'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
     }));
 
     describe('overlay settings', () => {
@@ -531,7 +531,7 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
     template: `
         <button igxToggleAction="toggleID">Open/Close Toggle</button>
         <div igxToggle id="toggleID">
-            <p>Some content</p>
+            <span>Some content</span>
         </div>
     `
 })
@@ -543,9 +543,11 @@ export class IgxToggleServiceInjectComponent {
 @Component({
     template: `
         <div igxToggle id="toggleID">
-            <p>Some content</p>
+            <span>Some content</span>
         </div>
-        <div #other> <p>Some more content</p> </div>
+        <div #other>
+            <span>Some more content</span>
+        </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -562,7 +564,7 @@ export class IgxOverlayServiceComponent {
     template: `
         <button igxToggleAction="toggleID">Open/Close Toggle</button>
         <div igxToggle id="toggleID">
-            <p>Some content</p>
+            <span>Some content</span>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -577,27 +579,21 @@ export class TestWithOnPushComponent {
             BUTTON 1
         </button>
         <div id="toggle1" igxToggle style="width: 100px; height: 100px;">
-            <p>
-                Toggle 1
-            </p>
+            <span>Toggle 1</span>
         </div>
 
         <button #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:absolute; left: 300px; top: 50%">
             BUTTON 2
         </button>
         <div id="toggle2" igxToggle style="width: 100px; height: 100px;">
-            <p>
-                Toggle 2
-            </p>
+            <span>Toggle 2</span>
         </div>
 
         <button #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:absolute; left: 500px; top: 110%">
             BUTTON 3
         </button>
         <div id="toggle3" igxToggle style="width: 100px; height: 100px;">
-            <p>
-                Toggle 3
-            </p>
+            <span>Toggle 3</span>
         </div>
     `
 })
