@@ -19,7 +19,9 @@
     $font-weight: null,
     $line-height: null,
     $letter-spacing: null,
-    $text-transform: null
+    $text-transform: null,
+    $margin-top: null,
+    $margin-bottom: null,
 ) {
     @return (
         font-family: $font-family,
@@ -27,7 +29,9 @@
         font-size: $font-size,
         letter-spacing: $letter-spacing,
         text-transform: $text-transform,
-        line-height: $line-height
+        line-height: $line-height,
+        margin-top: $margin-top,
+        margin-bottom: $margin-bottom,
     );
 }
 
@@ -82,42 +86,54 @@
             $font-weight: 300,
             $letter-spacing: rem(-1.5px),
             $line-height: rem(112px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: rem(56px),
         ),
         h2: igx-type-style(
             $font-size: rem(60px),
             $font-weight: 300,
             $letter-spacing: rem(-.5px),
             $line-height: rem(71px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: rem(28px),
         ),
         h3: igx-type-style(
             $font-size: rem(48px),
             $font-weight: 400,
             $letter-spacing: 0,
             $line-height: rem(57px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: 0,
         ),
         h4: igx-type-style(
             $font-size: rem(34px),
             $font-weight: 400,
             $letter-spacing: rem(.25px),
             $line-height: rem(40px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: 0,
         ),
         h5: igx-type-style(
             $font-size: rem(24px),
             $font-weight: 400,
             $letter-spacing: 0,
             $line-height: rem(28px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: 0,
         ),
         h6: igx-type-style(
             $font-size: rem(20px),
             $font-weight: 600,
             $letter-spacing: rem(.15px),
             $line-height: rem(24px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: 0,
+            $margin-bottom: 0,
         ),
         subtitle-1: igx-type-style(
             $font-size: rem(16px),
@@ -138,36 +154,37 @@
             $font-weight: 400,
             $letter-spacing: rem(.5px),
             $line-height: rem(28px),
-            $text-transform: none
+            $text-transform: none,
+            $margin-top: rem(28px),
+            $margin-bottom: 0,
         ),
         body-2: igx-type-style(
             $font-size: rem(14px),
             $font-weight: 400,
             $letter-spacing: rem(.25px),
             $line-height: rem(20px),
-            $text-transform: none
+            $text-transform: none,
         ),
         button: igx-type-style(
             $font-size: rem(14px),
             $font-weight: 600,
             $letter-spacing: rem(.75px),
             $line-height: rem(16px),
-            $text-transform: uppercase
+            $text-transform: uppercase,
         ),
         caption: igx-type-style(
             $font-size: rem(12px),
             $font-weight: 400,
             $letter-spacing: rem(.4px),
             $line-height: rem(16px),
-            $text-transform: none
+            $text-transform: none,
         ),
         overline: igx-type-style(
             $font-size: rem(10px),
             $font-weight: 400,
             $letter-spacing: rem(1.5px),
             $line-height: rem(16px),
-            $text-transform: uppercase
-
+            $text-transform: uppercase,
         )
     );
 
