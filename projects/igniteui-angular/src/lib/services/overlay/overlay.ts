@@ -215,10 +215,7 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
-        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
-        if (event) {
-            Object.assign(eventArgs, { event });
-        }
+        const eventArgs = { id, componentRef: info.componentRef, cancel: false, event };
         this.onClosing.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
