@@ -296,11 +296,15 @@
     @include igx-scope('.igx-typography') {
         %igx-drop-down__header,
         %igx-drop-down__group > label {
-            @include igx-type-style($type-scale, $header);
+            @include igx-type-style($type-scale, $header) {
+                margin : 0;
+            }
         }
 
         %igx-drop-down__item {
-            @include igx-type-style($type-scale, $item);
+            @include igx-type-style($type-scale, $item) {
+                margin: 0;
+            }
         }
     }
 }

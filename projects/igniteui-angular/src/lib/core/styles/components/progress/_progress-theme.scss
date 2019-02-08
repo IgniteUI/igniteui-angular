@@ -172,6 +172,23 @@
     %linear-value--hidden {
         display: none;
     }
+
+    @include keyframes('indeterminate-bar') {
+        0% {
+            transform: scaleX(0) translateX(-100%);
+            transform-origin: left;
+        }
+
+        50% {
+            transform: scaleX(1) translateX(50%);
+            transform-origin: right;
+        }
+
+        100% {
+            transform: scaleX(0) translateX(200%);
+            transform-origin: right;
+        }
+    }
 }
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
@@ -275,32 +292,15 @@
     %circular-text--hidden {
         visibility: hidden;
     }
-}
 
-@include keyframes('indeterminate-bar') {
-    0% {
-        transform: scaleX(0) translateX(-100%);
-        transform-origin: left;
-    }
+    @include keyframes('indeterminate-accordion') {
+        50% {
+            stroke-dashoffset: 260;
+            stroke-dasharray: 289;
+        }
 
-    50% {
-        transform: scaleX(1) translateX(50%);
-        transform-origin: right;
-    }
-
-    100% {
-        transform: scaleX(0) translateX(200%);
-        transform-origin: right;
-    }
-}
-
-@include keyframes('indeterminate-accordion') {
-    50% {
-        stroke-dashoffset: 260;
-        stroke-dasharray: 289;
-    }
-
-    100% {
-        stroke-dashoffset: -180;
+        100% {
+            stroke-dashoffset: -180;
+        }
     }
 }
