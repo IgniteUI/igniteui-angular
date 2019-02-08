@@ -59,6 +59,9 @@ All notable changes for each version of this project will be documented in this 
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
+
+- `Remove CSS Normalization` - Some users were complaining we reset too many browser styles - lists and heading styles in particular. We no longer do CSS normalization on an application level. Users who depended on our CSS browser normalization will have to handle that on their own going forward.
+
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
