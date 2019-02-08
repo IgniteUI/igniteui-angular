@@ -27,8 +27,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
     //  TODO: extract transform setting in util function
     let transformString = '';
-    transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
-    transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
+    const xLocation = Math.round(startPoint.x + this.settings.horizontalDirection * size.width);
+    const yLocation = Math.round(startPoint.y + this.settings.verticalDirection * size.height);
+    transformString += `translateX(${xLocation}px) `;
+    transformString += `translateY(${yLocation}px)`;
     contentElement.style.transform = transformString.trim();
   }
 }
