@@ -42,14 +42,15 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
-    // /** @hidden @internal TODO: igx-select class hostbind? */
+    // /** @hidden @internal do not use the drop-down container class? */
     public cssClass = false;
 
     /**
      * @hidden
      */
+    // Currently there is no need to add a css class to wrap the component
     // @HostBinding('class.igx-select')
-    // public cssClass = true;
+    // public selectCssClass = true;
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;

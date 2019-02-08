@@ -1,5 +1,5 @@
 // tslint:disable:max-line-length
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, getPointFromPositionsSettings, Point } from './../utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from './../utilities';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 import { IPositionStrategy } from '.';
 import { fadeOut, fadeIn } from '../../../animations/main';
@@ -42,12 +42,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.deltaY = this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
-    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string, size: Size) {
-        transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-            this.adjustItemTextPadding()}px)`;
+    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string) {
+        transformString += `translateY(${CURRENT_POSITION_Y - this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
-        this.deltaY = CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
-            this.adjustItemTextPadding() - this.select.input.nativeElement.getBoundingClientRect().y;
+        this.deltaY = CURRENT_POSITION_Y - this.adjustItemTextPadding() - this.select.input.nativeElement.getBoundingClientRect().y;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
@@ -188,7 +186,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // when there is scroll and the list container is always in the visible port.
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
             this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
-            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
         }
 
         // Handle scenarios where there the list container has scroll
@@ -196,7 +194,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0) {
             // If the first couple of items are selected and there is space, do not scroll
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && !OUT_OF_BOUNDS) {
-                this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
             }
             // If Out of boundaries and there is available scrolling down -  do scroll
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
@@ -210,7 +208,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // it is one of the edge items so there is no more scrolling in that same Direction
                         if (this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
-                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                             return;
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
@@ -237,7 +235,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 // handle lst options opt7, opt8, opt9
                 if (OUT_OF_BOUNDS) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         // handle lst options opt7
@@ -247,7 +245,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 }
                 // handle lst options opt8, opt9 --> these are OK.
                 if (!OUT_OF_BOUNDS) {
-                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString, size);
+                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                 }
             }
         }
