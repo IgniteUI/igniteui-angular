@@ -3,21 +3,36 @@
     <section class="sample-content">
         <div>
             <p>Directions</p>
-            <div class="radio-group">
-                <p>Horizontal Direction</p>
-                <igx-radio *ngFor="let item of horizontalDirections" value="{{item}}" name="hd" [(ngModel)]="horizontalDirection" (change)="onChange($event)">{{item}}</igx-radio>
+            <div class="direction-container">
+                <div id="tld" class="direction" (click)="setDirection($event)"></div>
+                <div id="tcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="trd" class="direction" (click)="setDirection($event)"></div>
             </div>
-            <div class="radio-group">
-                <p>Vertical Direction</p>
-                <igx-radio *ngFor="let item of verticalDirections" value="{{item}}" name="vd" [(ngModel)]="verticalDirection" (change)="onChange($event)">{{item}}</igx-radio>
+            <div class="direction-container">
+                <div id="mld" class="direction" (click)="setDirection($event)"></div>
+                <div id="mcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="mrd" class="direction" (click)="setDirection($event)"></div>
             </div>
-            <div class="radio-group">
-                <p>Horizontal Start Point</p>
-                <igx-radio *ngFor="let item of horizontalStartPoints" value="{{item}}" name="hsp" [(ngModel)]="horizontalStartPoint" (change)="onChange($event)">{{item}}</igx-radio>
+            <div class="direction-container">
+                <div id="bld" class="direction" (click)="setDirection($event)"></div>
+                <div id="bcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="brd" class="direction selected" (click)="setDirection($event)"></div>
             </div>
-            <div class="radio-group">
-                <p>Vertical Start Point</p>
-                <igx-radio *ngFor="let item of verticalStartPoints" value="{{item}}" name="vsp" [(ngModel)]="verticalStartPoint" (change)="onChange($event)">{{item}}</igx-radio>
+            <p>Starting Point</p>
+            <div class="start-point-container">
+                <div id="tlsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="tcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="trsp" class="start-point" (click)="setStartPoint($event)"></div>
+            </div>
+            <div class="start-point-container">
+                <div id="mlsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="mcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="mrsp" class="start-point" (click)="setStartPoint($event)"></div>
+            </div>
+            <div class="start-point-container">
+                <div id="blsp" class="start-point selected" (click)="setStartPoint($event)"></div>
+                <div id="bcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="brsp" class="start-point" (click)="setStartPoint($event)"></div>
             </div>
         </div>
         <div>
@@ -46,22 +61,25 @@
             <p>Strategies</p>
             <div class="radio-group">
                 <p>Position Strategies</p>
-                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps" [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps" [(ngModel)]="positionStrategy"
+                    (change)="onChange($event)">{{item}}</igx-radio>
             </div>
             <div class="radio-group">
                 <p>Scroll Strategies</p>
-                <igx-radio *ngFor="let item of scrollStrategies" value="{{item}}" name="ss" [(ngModel)]="scrollStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+                <igx-radio *ngFor="let item of scrollStrategies" value="{{item}}" name="ss" [(ngModel)]="scrollStrategy"
+                    (change)="onChange($event)">{{item}}</igx-radio>
             </div>
         </div>
         <div>
             <p>Settings</p>
             <igx-switch class="settings" labelPosition="after" [(ngModel)]="closeOnOutsideClick" name="close" [value]="closeOnOutsideClick"
                 (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
-            <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal" (change)="onSwitchChange($event)">Modal</igx-switch>
+            <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal"
+                (change)="onSwitchChange($event)">Modal</igx-switch>
         </div>
-        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'" [style.top]="buttonTop + '%'"
-            [style.left]="buttonLeft + '%'">Toggle</button>
-        <igx-drop-down height="200px" width="200px">
+        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'"
+            [style.top]="buttonTop + '%'" [style.left]="buttonLeft + '%'">Toggle</button>
+        <igx-drop-down width="200px">
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
                     {{ item }}
