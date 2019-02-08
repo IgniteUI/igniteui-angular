@@ -158,7 +158,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onDataChanged = new EventEmitter<any>();
 
     @Output()
-    public onBeforeViewDestroyed = new EventEmitter<any>();
+    public onBeforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 
     /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
