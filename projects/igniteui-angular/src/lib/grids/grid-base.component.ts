@@ -25,8 +25,8 @@ import {
     InjectionToken,
     Optional
 } from '@angular/core';
-import { Subject, interval } from 'rxjs';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -4295,15 +4295,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     getSelectedRanges() {
-        const r = this.gridSelection.ranges;
-        console.log(r);
-        return r;
+        return this.gridSelection.ranges;
     }
 
     getSelectedData() {
         const rs = [];
-        const source = (this.filteredData && this.filteredData.length ) ? this.filteredData : this.data;
-        const visibleColumns = this.visibleColumns;
+        const source = (this.filteredSortedData.length || this.filteringExpressionsTree.filteringOperands.length)
+            ? this.filteredSortedData : this.data;
+        const visibleColumns = this.visibleColumns.sort((a, b) => a.visibleIndex - b.visibleIndex);
 
         /*
             Boundry check for `filteredData`
@@ -4311,12 +4310,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const combined = Array.from(this.gridSelection.selection)
             .filter((tuple) => tuple[0] < source.length);
 
-
+        // TODO: Simplify
         for (const [row, set] of combined) {
             const arr = Array.from(set);
+            let column;
             let record = {};
             for (const each of arr) {
-                record[visibleColumns[each].field] = source[row][visibleColumns[each].field];
+                column = visibleColumns[each];
+                if (column) {
+                    record[column.field] = source[row][column.field];
+                }
             }
             rs.push(record);
             record = {};
@@ -4532,13 +4535,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
+        let delayScrolling = false;
 
         if (this.paging) {
-            this.page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - this.page * this.perPage;
+            const page = Math.floor(rowIndex / this.perPage);
+            rowIndex = rowIndex - page * this.perPage;
+
+            if (this.page !== page) {
+                delayScrolling = true;
+                this.page = page;
+            }
         }
 
-        this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        }
 
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
