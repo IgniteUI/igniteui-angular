@@ -13,11 +13,13 @@ import {
     Inject,
     NgZone,
     forwardRef,
-    Optional
+    Optional,
+    OnInit,
+    TemplateRef
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
@@ -28,6 +30,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
@@ -54,11 +57,12 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [ IgxTreeGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
+    private _data;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -77,6 +81,56 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             const oldId = this._id;
             this._id = value;
             this._gridAPI.reset(oldId, this._id);
+        }
+    }
+
+    /**
+     * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
+     * ```html
+     * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+    }
+
+    /**
+     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    get filteredData() {
+        return this._filteredData;
+    }
+
+    /**
+     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * this.grid.filteredData = [{
+     *       ID: 1,
+     *       Name: "A"
+     * }];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    set filteredData(value) {
+        this._filteredData = value;
+
+        if (this.rowSelectable) {
+            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
     }
 
@@ -241,9 +295,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     private _gridAPI: IgxTreeGridAPIService;
+    private _filteredData = null;
 
     constructor(
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
@@ -253,7 +308,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
+        navigation: IgxTreeGridNavigationService,
         filteringService: IgxFilteringService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -262,6 +317,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
+    public ngOnInit() {
+        this._gridAPI.register(this);
+        super.ngOnInit();
+    }
 
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
@@ -399,64 +458,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        const flatDataWithCascadeOnDeleteAndTransactions =
-            this.primaryKey &&
-            this.foreignKey &&
-            this.cascadeOnDelete &&
-            this.transactions.enabled;
+        this._gridAPI.deleteRowById(this.id, rowId);
 
-        if (flatDataWithCascadeOnDeleteAndTransactions) {
-            this.transactions.startPending();
-        }
-
-        super.deleteRowById(rowId);
-
-        if (flatDataWithCascadeOnDeleteAndTransactions) {
-            this.transactions.endPending(true);
-        }
-    }
-
-    /** @hidden */
-    protected deleteRowFromData(rowID: any, index: number) {
-        if (this.primaryKey && this.foreignKey) {
-            super.deleteRowFromData(rowID, index);
-
-            if (this.cascadeOnDelete) {
-                const treeRecord = this.records.get(rowID);
-                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
-                    for (let i = 0; i < treeRecord.children.length; i++) {
-                        const child = treeRecord.children[i];
-                        super.deleteRowById(child.rowID);
-                    }
-                }
-            }
-        } else {
-            const record = this.records.get(rowID);
-            const collection = record.parent ? record.parent.data[this.childDataKey] : this.data;
-            index = this.primaryKey ?
-                collection.map(c => c[this.primaryKey]).indexOf(rowID) :
-                collection.indexOf(rowID);
-
-            const selectedChildren = [];
-            this._gridAPI.get_selected_children(this.id, record, selectedChildren);
-                if (selectedChildren.length > 0) {
-                this.deselectRows(selectedChildren);
-            }
-
-            if (this.transactions.enabled) {
-                const path = this.generateRowPath(rowID);
-                this.transactions.add({
-                        id: rowID,
-                        type: TransactionType.DELETE,
-                        newValue: null,
-                        path: path
-                    },
-                    collection[index]
-                );
-            } else {
-                collection.splice(index, 1);
-            }
-        }
     }
 
     /** @hidden */
@@ -493,5 +496,26 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             $implicit: rowData,
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
+    }
+
+    /**
+    * @hidden
+    */
+    public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
+        }
+
+        if (this.dataLength === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.flatData[rowIndex], value);
     }
 }

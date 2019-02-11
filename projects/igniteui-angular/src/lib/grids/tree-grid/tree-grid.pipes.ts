@@ -6,7 +6,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISortingExpression } from '../../../public_api';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent, IgxSummaryResult } from '../grid';
+import { IgxGridBaseComponent, IgxSummaryResult, IGridDataBindable } from '../grid';
 
 /**
  *@hidden
@@ -18,7 +18,7 @@ import { IgxGridBaseComponent, IgxSummaryResult } from '../grid';
 export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -130,7 +130,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 export class IgxTreeGridFlatteningPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -191,7 +191,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 export class IgxTreeGridSortingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -233,7 +233,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
 export class IgxTreeGridPagingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -267,7 +267,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
 
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
