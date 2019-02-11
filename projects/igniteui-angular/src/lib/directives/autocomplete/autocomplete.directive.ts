@@ -317,6 +317,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.dropdown.width = this.parentElement.clientWidth + 'px';
         this.dropdown.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.dropdown.onOpened.pipe(first()).subscribe(() => { this.highlightFirstItem(); });
+        this.dropdown.onClosing.pipe().subscribe((args) => { this.onDropDownClosing(args); });
         this.dropdown.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(() => this.highlightFirstItem());
     }
 
@@ -362,6 +363,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     private reposition() {
         setTimeout(() => { this.dropdown.toggleDirective.reposition(); });
+    }
+
+    private onDropDownClosing(args) {
+        if (args.event && this.parentElement.contains(args.event.target)) {
+            args.cancel = true;
+        }
     }
 
     /**

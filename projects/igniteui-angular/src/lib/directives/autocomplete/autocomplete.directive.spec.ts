@@ -149,6 +149,26 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
         }));
+        it('Should not close the dropdown when clicked on a input or the group', fakeAsync(() => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            input.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            group.element.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            document.body.click();
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
         it('Should select item and close dropdown with ENTER and do not close it with SPACE key', fakeAsync(() => {
             let startsWith = 's';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
