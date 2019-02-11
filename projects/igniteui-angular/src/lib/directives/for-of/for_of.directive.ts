@@ -157,6 +157,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Output()
     public onDataChanged = new EventEmitter<any>();
 
+    @Output()
+    public onBeforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
+
     /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
@@ -381,7 +384,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (!this.igxForOf) {
                     return;
                 }
-                this.initSizesCache(this.igxForOf);
+                this._updateSizeCache();
                 this._zone.run(() => {
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
@@ -597,6 +600,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public getSizeAt(index: number) {
         return this.sizesCache[index + 1] - this.sizesCache[index];
+    }
+
+    /**
+     * Returns the scroll offset of the element at the specified index.
+     * ```typescript
+     * this.parentVirtDir.getScrollForIndex(1);
+     * ```
+     */
+    public getScrollForIndex(index: number, bottom?: boolean) {
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const scroll = bottom ? this.sizesCache[index + 1] - containerSize : this.sizesCache[index];
+        return scroll;
     }
 
     /**
@@ -940,6 +955,26 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return totalSize;
     }
 
+    protected _updateSizeCache() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.initSizesCache(this.igxForOf);
+            return;
+        }
+        const scr = this.vh.instance.elementRef.nativeElement;
+
+        const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
+        const newHeight =  this.initSizesCache(this.igxForOf);
+
+        const diff = oldHeight - newHeight;
+
+        // if data has been changed while container is scrolled
+        // should update scroll top/left according to change so that same startIndex is in view
+        if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
+            this.recalcUpdateSizes();
+            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+        }
+    }
     /**
      * @hidden
      */
@@ -1030,8 +1065,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    private _calcHeight(): number {
-        let height = this.initSizesCache(this.igxForOf);
+    protected _calcHeight(): number {
+        let height;
+        if (this.heightCache) {
+            height = this.heightCache.reduce((acc, val) => acc + val, 0);
+        } else {
+            height = this.initSizesCache(this.igxForOf);
+        }
         this._virtHeight = height;
         if (height > this._maxHeight) {
             this._virtHeightRatio = height / this._maxHeight;
@@ -1062,6 +1102,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
+        this.onBeforeViewDestroyed.emit(oldElem);
         oldElem.destroy();
 
         this.state.chunkSize--;
@@ -1251,11 +1292,20 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                this._updateSizeCache();
-                this._applyChanges(changes);
-                this.cdr.markForCheck();
-                this._updateScrollOffset();
-                this.onDataChanged.emit();
+                const operations = [];
+                changes.forEachOperation((op) => operations.push(op));
+                if (operations.length > 0) {
+                    // only update if some operation was done - adding/removing/moving of items
+                    this._updateSizeCache();
+                    this._applyChanges(changes);
+                    this.cdr.markForCheck();
+                    this._updateScrollOffset();
+                    this.onDataChanged.emit();
+                } else {
+                    this._updateViews(this.state.chunkSize);
+                    this.cdr.markForCheck();
+                    this._updateScrollOffset();
+                }
             }
         }
     }
@@ -1313,10 +1363,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.state.chunkSize++;
     }
 
-    protected _applyChanges(changes: IterableChanges<T>) {
-        const prevChunkSize = this.state.chunkSize;
-        this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+    protected _updateViews(prevChunkSize) {
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex;
@@ -1356,6 +1403,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 });
             }
         }
+    }
+    protected _applyChanges(changes: IterableChanges<T>) {
+        const prevChunkSize = this.state.chunkSize;
+        this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
+        this._updateViews(prevChunkSize);
     }
 }
 /**
