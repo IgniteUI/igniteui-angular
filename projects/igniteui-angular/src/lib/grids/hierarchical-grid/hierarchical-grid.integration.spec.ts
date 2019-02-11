@@ -678,12 +678,12 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
-            
+
             const toolbars = fixture.debugElement.queryAll(By.css('igx-grid-toolbar'));
             expect(toolbars.length).toEqual(3);
-            expect(toolbars[0].query(By.css('button')).nativeElement.innerText.trim()).toEqual("Parent Button");
-            expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual("Child 1 Button");
-            expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual("Child 2 Button");
+            expect(toolbars[0].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Parent Button');
+            expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 1 Button');
+            expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 2 Button');
         });
     });
 
