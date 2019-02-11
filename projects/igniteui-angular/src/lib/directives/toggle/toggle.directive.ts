@@ -18,8 +18,8 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
-import { CancelableEventArgs } from '../../core/utils';
+import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
@@ -111,7 +111,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
     /**
@@ -197,8 +197,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosingSub = this.overlayService
             .onClosing
             .pipe(...this._overlaySubFilter)
-            .subscribe((e: OverlayCancelableEventArgs) => {
-                const eventArgs: CancelableEventArgs = { cancel: false };
+            .subscribe((e: OverlayClosingEventArgs) => {
+                const eventArgs: CancelableBrowserEventArgs = { cancel: false, event: e.event };
                 this.onClosing.emit(eventArgs);
                 e.cancel = eventArgs.cancel;
 
