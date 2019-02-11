@@ -22,8 +22,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
+  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
+    size = contentElement.getBoundingClientRect();
 
     //  TODO: extract transform setting in util function
     let transformString = '';

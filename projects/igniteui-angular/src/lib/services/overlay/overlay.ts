@@ -167,16 +167,11 @@ export class IgxOverlayService implements OnDestroy {
             this.updateSize(info);
             this._overlayInfos.push(info);
 
-            const elementStyle = info.elementRef.nativeElement.style;
-            if (settings.positionStrategy instanceof ElasticPositionStrategy) {
-                info.originalElementStyleSize = { width: elementStyle.width, height: elementStyle.height };
-            }
             settings.positionStrategy.position(
                 info.elementRef.nativeElement.parentElement,
                 { width: info.initialSize.width, height: info.initialSize.height },
                 document,
-                true,
-                settings.positionStrategy.settings.minSize);
+                true);
             settings.scrollStrategy.initialize(this._document, this, id);
             settings.scrollStrategy.attach();
         }
@@ -262,15 +257,16 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
+        const contentElement = overlayInfo.elementRef.nativeElement.parentElement;
+        const contentElementRect = contentElement.getBoundingClientRect();
         overlayInfo.settings.positionStrategy.position(
-            overlayInfo.elementRef.nativeElement.parentElement,
+            contentElement,
             {
-                width: overlayInfo.elementRef.nativeElement.parentElement.clientWidth,
-                height: overlayInfo.elementRef.nativeElement.parentElement.clientHeight
+                width: contentElementRect.width,
+                height: contentElementRect.height
             },
             this._document,
-            false,
-            overlayInfo.settings.positionStrategy.settings.minSize);
+            false);
     }
 
     private getOverlayInfo(component: any): OverlayInfo {
@@ -310,7 +306,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private moveElementToOverlay(info: OverlayInfo) {
         const wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(wrapperElement, info.settings);
+        const contentElement = this.getContentElement(wrapperElement, info.settings.modal);
         this.getOverlayElement(info).appendChild(wrapperElement);
         const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
@@ -326,9 +322,9 @@ export class IgxOverlayService implements OnDestroy {
         return wrapper;
     }
 
-    private getContentElement(wrapperElement: HTMLElement, settings: OverlaySettings): HTMLElement {
+    private getContentElement(wrapperElement: HTMLElement, modal: boolean): HTMLElement {
         const content: HTMLElement = this._document.createElement('div');
-        if (settings.modal) {
+        if (modal) {
             content.classList.add('igx-overlay__content--modal');
             content.addEventListener('click', (ev: Event) => {
                 ev.stopPropagation();
@@ -365,10 +361,9 @@ export class IgxOverlayService implements OnDestroy {
             info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
         }
 
-        // set content div size only if element to show has size
-        if (info.initialSize.width !== 0 && info.initialSize.height !== 0) {
+        // set content div width only if element to show has width
+        if (info.initialSize.width !== 0) {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
-            info.elementRef.nativeElement.parentElement.style.height = info.initialSize.height + 'px';
         }
     }
 
@@ -409,12 +404,6 @@ export class IgxOverlayService implements OnDestroy {
         if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
-        }
-
-        //  restore the element's original width and height if any
-        if (info.originalElementStyleSize) {
-            info.elementRef.nativeElement.style.height = info.originalElementStyleSize.height;
-            info.elementRef.nativeElement.style.width = info.originalElementStyleSize.width;
         }
 
         this.onClosed.emit({ id: info.id, componentRef: info.componentRef });

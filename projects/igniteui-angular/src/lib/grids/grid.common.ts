@@ -462,6 +462,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             return;
         }
 
+        if (this.column && this.cms.column.grid.id !== this.column.grid.id) {
+            this.cms.icon.innerText = 'block';
+            return;
+        }
+
         if (this.isDropTarget &&
             this.cms.column !== this.column &&
             this.cms.column.level === this.column.level &&
@@ -515,6 +520,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         event.preventDefault();
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
+
+        if (this.cms.column.grid.id !== this.column.grid.id) {
             return;
         }
 

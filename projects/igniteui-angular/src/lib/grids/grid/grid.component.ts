@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Conten
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -66,7 +66,7 @@ export interface IGroupingDoneEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden
@@ -88,6 +88,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     protected groupingDiffer;
+    private _data;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
 
@@ -111,11 +112,62 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         }
     }
 
+    /**
+     * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
+     * ```html
+     * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseComponent
+    */
+    @Input()
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+    }
+
+    /**
+     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get filteredData() {
+        return this._filteredData;
+    }
+
+    /**
+     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * this.grid.filteredData = [{
+     *       ID: 1,
+     *       Name: "A"
+     * }];
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set filteredData(value) {
+        this._filteredData = value;
+
+        if (this.rowSelectable) {
+            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
+        }
+    }
+
     private _gridAPI: IgxGridAPIService;
+    private _filteredData = null;
 
     constructor(
         gridSelection: IgxGridSelectionService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
@@ -597,6 +649,23 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     }
 
     /**
+    * @hidden
+    */
+   public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
+        }
+
+        if (this.dataLength === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
      * @hidden
      */
     protected getGroupByRecords(): IGroupByRecord[] {
@@ -752,6 +821,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     }
 
     public ngOnInit() {
+        this._gridAPI.register(this);
         super.ngOnInit();
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
             this.endEdit(true);

@@ -797,22 +797,22 @@ describe('IgxGrid - search API', () => {
 
         it('findNext scrolls to cells out of view', async () => {
             grid.findNext('30');
-            await wait();
+            await wait(100);
             expect(isInView(29, grid.virtualizationState)).toBeTruthy();
 
             grid.findNext('1887');
-            await wait();
+            await wait(100);
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
         it('findPrev scrolls to cells out of view', async () => {
             grid.findPrev('30');
-            await wait();
+            await wait(100);
             fix.detectChanges();
             expect(isInView(29, grid.virtualizationState)).toBeTruthy();
 
             grid.findPrev('1887');
-            await wait();
+            await wait(100);
             fix.detectChanges();
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
@@ -1058,7 +1058,8 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-
+            await wait();
+            fix.detectChanges();
             grid.findNext('software');
             await wait();
             fix.detectChanges();
@@ -1076,7 +1077,7 @@ describe('IgxGrid - search API', () => {
             });
             grid.paging = true;
             grid.perPage = 6;
-
+            fix.detectChanges();
             grid.findNext('Software');
             await wait();
             fix.detectChanges();

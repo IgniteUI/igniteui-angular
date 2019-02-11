@@ -50,7 +50,6 @@
 
     %overlay-wrapper {
         position: fixed;
-        display: flex;
         top: 0;
         left: 0;
         bottom: 0;
@@ -59,11 +58,16 @@
         transition: background-color .25s $ease-in-out-quad;
         pointer-events: none;
         z-index: 10;
+        overflow: auto;
     }
 
     %overlay-wrapper--modal {
         background-color: --var($theme, 'background-color');
         pointer-events: initial;
+    }
+
+    %overlay-wrapper--flex {
+        display: flex;
     }
 
     %overlay-content {
@@ -77,5 +81,9 @@
 
     %igx-toggle--hidden {
         display: none !important;
+    }
+
+    %overlay-content--elastic {
+        overflow: auto;
     }
 }
