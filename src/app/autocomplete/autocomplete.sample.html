@@ -5,7 +5,7 @@
             <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit($event)">
                 <div class="box">
                     <igx-input-group class="group">
-                        <igx-prefix igxRipple><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
+                        <igx-prefix><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
                         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsPanel'/>
                         <label igxLabel for="towns">Towns</label>
@@ -18,11 +18,11 @@
                 </div>
                 <div class="box">
                     <igx-input-group class="group">
-                        <igx-prefix igxRipple><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
+                        <igx-prefix><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
                         <input igxInput name="townsDetailed" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsDetailedPanel' [igxAutocompleteSettings]='settings' />
                         <label igxLabel for="townsDetailed">Towns Detailed</label>
-                        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+                        <igx-suffix><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
                     </igx-input-group>
                     <igx-drop-down #townsDetailedPanel>
                         <igx-drop-down-item *ngFor="let town of townsDetailed | startsWith:townSelected:'name'" [value]="town.name">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="box">
                     <igx-input-group class="group">
-                        <igx-prefix igxRipple><igx-icon fontSet="material">{{ enabled ? 'place' : 'not_interested' }}</igx-icon> </igx-prefix>
+                        <igx-prefix><igx-icon fontSet="material">{{ enabled ? 'place' : 'not_interested' }}</igx-icon> </igx-prefix>
                         <input igxInput name="townsDisabled" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsDetailedPanel'
                             [igxAutocompleteDisabled]="!enabled"/>

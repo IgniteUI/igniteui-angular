@@ -61,7 +61,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         super(null);
     }
 
-    private _disabled = false;
     private settings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -91,17 +90,19 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    target;
-
-    /**
-     * @hidden
-     * @internal
+     * Sets the target of the autocomplete directive
+     *
+     * ```html
+     * <!-- Set -->
+     * <input [igxAutocomplete]="dropdown" />
+     * ...
+     * <igx-drop-down #dropdown>
+     * ...
+     * </igx-drop-down>
+     * ```
      */
     @Input('igxAutocomplete')
-    public dropdown: IgxDropDownComponent;
+    public target: IgxDropDownComponent;
 
     /**
      * Enables/disables autocomplete component
@@ -120,13 +121,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocompleteDisabled')
-    get disabled() {
-        return this._disabled;
-    }
-    set disabled(value) {
-        this._disabled = value;
-        this.close();
-    }
+    public disabled = false;
 
     /**
      * Provide overlay settings for the autocomplete drop down
@@ -200,7 +195,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     @HostBinding('attr.aria-owns')
     public get ariaOwns() {
-        return this.dropdown.id;
+        return this.target.id;
     }
 
     /**
@@ -225,7 +220,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     @HostListener('keydown.ArrowUp', ['$event'])
     @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    onArrowDown() {
+    onArrowDown(event: Event) {
+        event.preventDefault();
         this.open();
     }
 
@@ -295,7 +291,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (this.collapsed) {
             return;
         }
-        this.dropdown.close();
+        this.target.close();
         this.dropDownOpened$.next();
     }
 
@@ -310,17 +306,16 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!settings.positionStrategy.settings.target) {
             settings.positionStrategy.settings.target = this.parentElement;
         }
-        this.dropdown.open(settings);
-        this.target = this.dropdown;
-        this.dropdown.width = this.parentElement.clientWidth + 'px';
-        this.dropdown.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
-        this.dropdown.onOpened.pipe(first()).subscribe(() => { this.highlightFirstItem(); });
-        this.dropdown.onClosing.pipe(takeUntil(this.dropDownOpened$)).subscribe((args) => { this.onDropDownClosing(args); });
-        this.dropdown.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(() => this.highlightFirstItem());
+        this.target.open(settings);
+        this.target.width = this.parentElement.clientWidth + 'px';
+        this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
+        this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem);
+        this.target.onClosing.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.onDropDownClosing);
+        this.target.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.highlightFirstItem);
     }
 
     private get collapsed(): boolean {
-        return this.dropdown ? this.dropdown.collapsed : true;
+        return this.target ? this.target.collapsed : true;
     }
 
     private select = (value: ISelectionEventArgs) => {
@@ -339,19 +334,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.nativeElement.click();
     }
 
-    private highlightFirstItem() {
-        const focusedItem = this.dropdown.focusedItem;
-        if (focusedItem) {
-            focusedItem.focused = false;
-            this.dropdown.focusedItem = null;
-        }
-        const firstItem = this.dropdown.items[0];
-        if (firstItem) {
-            firstItem.isFocused = true;
-            this.dropdown.focusedItem = firstItem;
-        }
+    private highlightFirstItem = () => {
+        this.target.navigateFirst();
         this.cdr.detectChanges();
-
         this.reposition();
     }
 
@@ -360,10 +345,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * then reposition of the drop down should be called in order to align the filtered drop down to the top of the input.
      */
     private reposition() {
-        setTimeout(() => { this.dropdown.toggleDirective.reposition(); });
+        setTimeout(() => { this.target.toggleDirective.reposition(); });
     }
 
-    private onDropDownClosing(args) {
+    private onDropDownClosing = (args) => {
         if (args.event && this.parentElement.contains(args.event.target)) {
             args.cancel = true;
         }

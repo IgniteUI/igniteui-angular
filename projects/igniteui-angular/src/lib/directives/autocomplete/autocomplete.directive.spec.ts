@@ -140,6 +140,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
 
             autocomplete.disabled = true;
+            autocomplete.close();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -281,7 +282,7 @@ describe('IgxAutocomplete', () => {
         it('Should not open dropdown when disabled', () => {
             fixture.detectChanges();
             spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete.dropdown, 'open').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
 
             autocomplete.disabled = true;
@@ -292,7 +293,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListElement.children.length).toEqual(0);
             expect(autocomplete.open).toHaveBeenCalledTimes(0);
-            expect(autocomplete.dropdown.open).toHaveBeenCalledTimes(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
         });
         it('Should select item when drop down item is clicked', fakeAsync(() => {
             const startsWith = 's';
@@ -552,14 +553,14 @@ describe('IgxAutocomplete', () => {
             spyOn(autocomplete, 'handleKeyDown').and.callThrough();
             spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.dropdown, 'open').and.callThrough();
-            spyOn(autocomplete.dropdown, 'close').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
+            spyOn(autocomplete.target, 'close').and.callThrough();
 
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.dropdown.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             startsWith = 'ga';
             UIInteractions.sendInput(input, startsWith, fixture);
@@ -567,9 +568,9 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             // Keeps dropdown opened
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.dropdown.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.close).toHaveBeenCalledTimes(0);
-            expect(autocomplete.dropdown.close).toHaveBeenCalledTimes(0);
+            expect(autocomplete.target.close).toHaveBeenCalledTimes(0);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             tick();
@@ -577,7 +578,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             expect(autocomplete.close).toHaveBeenCalledTimes(1);
-            expect(autocomplete.dropdown.close).toHaveBeenCalledTimes(2);
+            expect(autocomplete.target.close).toHaveBeenCalledTimes(2);
 
             // IgxDropDownItemNavigationDirective handleKeyDown is not called when dropdown is closed
             spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
@@ -592,7 +593,7 @@ describe('IgxAutocomplete', () => {
             tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(3);
             expect(autocomplete.open).toHaveBeenCalledTimes(2);
-            expect(autocomplete.dropdown.open).toHaveBeenCalledTimes(2);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(2);
         }));
         it('Should navigate through dropdown items with arrow up/down keys', () => {
             UIInteractions.sendInput(input, 'a', fixture);
