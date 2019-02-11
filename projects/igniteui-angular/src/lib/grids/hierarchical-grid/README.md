@@ -184,7 +184,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 - `IgxHierarchicalGrid`
     |Name|Type|Getter|Setter|Description|
     |--- |--- |--- |--- |--- |
-    | foreignKey | `any` | true | false | The unique identifier for the parent row |
+    | foreignKey | `any` | true | false | The unique identifier of the parent row |
 
 
 Defining handlers for this event emitter is done using declarative event binding:

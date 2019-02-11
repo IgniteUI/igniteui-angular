@@ -186,6 +186,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @memberof IgxHierarchicalGridComponent
      */
     public get foreignKey() {
+        if (!this.parent) {
+            return null;
+        }
         return this.parent.hgridAPI.getParentRowId(this);
     }
 
