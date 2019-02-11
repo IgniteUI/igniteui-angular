@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IgxTextAlign } from 'igniteui-angular';
 
 @Component({
     selector: 'app-progressbar-sample',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
 })
 
 export class ProgressbarSampleComponent {
+    public positionCenter: IgxTextAlign;
+    public positionEnd: IgxTextAlign;
 
     currentValue: number;
     type: string;
@@ -24,5 +27,10 @@ export class ProgressbarSampleComponent {
 
     randomIntFromInterval(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    public ngOnInit() {
+        this.positionCenter = IgxTextAlign.CENTER;
+        this.positionEnd = IgxTextAlign.END;
     }
 }
