@@ -179,6 +179,13 @@ Below is the list of all inputs that the developers may set to configure the gri
     | onGridCreated | Emitted when a grid is being created for this row island | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
 
 
+### Properties
+
+- `IgxHierarchicalGrid`
+    |Name|Type|Getter|Setter|Description|
+    |--- |--- |--- |--- |--- |
+    | foreignKey | `any` | true | false | The unique identifier for the parent row |
+
 
 Defining handlers for this event emitter is done using declarative event binding:
 
