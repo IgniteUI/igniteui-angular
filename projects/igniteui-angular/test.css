@@ -14,3 +14,7 @@ body {
 body > * {
     height: 100%;
 }
+
+.no-height {
+    height: unset;
+}

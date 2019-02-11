@@ -13,3 +13,20 @@
     width: 100%;
     justify-content: space-between;
 }
+
+.direction, .start-point {
+    width: 30px;
+    height: 30px;
+    background-color: #dddddd;
+    display: inline-block;
+    border: 1px solid black;
+    margin: 0;
+}
+
+.direction-container, .start-point-container {
+    height: 31px;
+}
+
+.selected {
+    background-color: #777777;
+}
