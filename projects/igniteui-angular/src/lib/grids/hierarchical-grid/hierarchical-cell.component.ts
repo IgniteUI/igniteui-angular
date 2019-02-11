@@ -4,6 +4,7 @@ import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
      OnInit, AfterViewInit, forwardRef, HostListener } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -15,11 +16,12 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     protected hSelection;
     protected _rootGrid;
     constructor(
+        protected gridSelection: IgxGridSelectionService,
         public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
         public selection: IgxHierarchicalSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private helement: ElementRef) {
-            super(gridAPI, selection, cdr, helement);
+            super(gridSelection, gridAPI, selection, cdr, helement);
             this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 

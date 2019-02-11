@@ -33,6 +33,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
@@ -174,6 +175,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     private isInit = false;
 
     constructor(
+        public gridSelection: IgxGridSelectionService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -189,6 +191,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
+            gridSelection,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,

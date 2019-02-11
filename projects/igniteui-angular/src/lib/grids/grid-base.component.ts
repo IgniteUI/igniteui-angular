@@ -4271,7 +4271,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     getSelectedData() {
         const source = (this.filteredSortedData.length || this.filteringExpressionsTree.filteringOperands.length)
-            ? this.filteredSortedData : this.data;
+            ? this.filteredSortedData : (this as any).data;
 
         return this.extractDataFromSelection(source);
     }
