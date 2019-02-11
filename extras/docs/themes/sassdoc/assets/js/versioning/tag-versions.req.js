@@ -9,25 +9,28 @@
         xhrFields: {
             withCredentials: false
         }
-    }).done((data) =>  {
-        const folders = data.folders;
-        const select = $('#versions')
+    }).done(function (data) {
+        let folders = data.folders;
+        const select = $('#versions');
+        folders = folders.reverse();
 
-        folders.forEach(f => {
+        folders.forEach(function (f) {
             select.append($('<option>', {
-                value: `${baseUrl}/angular-docs/${f}/sass`,
+                value: baseUrl + "/products/ignite-ui-angular/docs/" + f + "/sass",
                 text: f
             }));
         });
 
-        if (sessionStorage.apiVersion) {
-            select.val(sessionStorage.apiVersion);
+        select.val(baseUrl + "/products/ignite-ui-angular/docs/" + folders[0] + "/sass");
+
+        if (sessionStorage.sassOption) {
+            select.val(sessionStorage.sassOption);
         }
     });
 
-    $('#versions').on('change', (...rest) => {
+    $('#versions').on('change', function () {
         const val = $('#versions').val();
-        sessionStorage.apiVersion = val;
+        sessionStorage.sassOption = val;
         window.location.assign(val);
     });
 })();

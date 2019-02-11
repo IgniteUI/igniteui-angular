@@ -452,6 +452,23 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
     });
+
+    it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        expect(parentRow.expanded).toBe(true);
+        let parentCell = parentRow.cells.toArray()[0];
+        parentCell.nativeElement.focus();
+        fixture.detectChanges();
+        // collapse
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+        fixture.detectChanges();
+        expect(parentRow.expanded).toBe(false);
+        // expand
+        parentCell = parentRow.cells.toArray()[0];
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+        fixture.detectChanges();
+        expect(parentRow.expanded).toBe(true);
+    });
 });
 
 

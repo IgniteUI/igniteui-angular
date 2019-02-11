@@ -468,6 +468,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     /**
      * @hidden
+     * Gets the visible content height that includes header + tbody + footer.
+     * For hierarchical child grid it may be scrolled and not fully visible.
+     */
+    public  getVisibleContentHeight() {
+        let height = super.getVisibleContentHeight();
+        if (this.parent) {
+            const rootHeight = this.rootGrid.getVisibleContentHeight();
+            const topDiff = this.nativeElement.getBoundingClientRect().top - this.rootGrid.nativeElement.getBoundingClientRect().top;
+            height = rootHeight - topDiff > height ? height : rootHeight - topDiff ;
+        }
+        return height;
+    }
+
+    /**
+     * @hidden
     */
    public collapseAllRows() {
         this.hierarchicalState = [];

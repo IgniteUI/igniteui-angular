@@ -129,14 +129,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         return ref;
     }
 
-    protected _getContainerWidth() {
-        let el = this.document.getElementById(this.nativeElement.id);
-        if (el && this.parentIsland) {
-            el = el.parentNode;
-        }
-        return el ? el.offsetWidth : null;
-    }
-
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
         const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);

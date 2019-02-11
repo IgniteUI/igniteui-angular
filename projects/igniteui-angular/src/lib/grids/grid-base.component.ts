@@ -26,7 +26,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -42,7 +42,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, ContainerPositioningStrategy } from './grid.common';
+import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -180,6 +180,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
+    private _isLoading = false;
     private _locale = null;
     /**
      * An accessor that sets the resource strings.
@@ -680,7 +681,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    @Input() isLoading = false;
+    @Input()
+    set isLoading(value: boolean) {
+        this._isLoading = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+        }
+    }
+
+    /**
+     * An accessor that returns whether the grid is showing loading indicator.
+     */
+    get isLoading(): boolean {
+        return this._isLoading;
+    }
 
     /**
      * A property that allows the columns to be auto-generated once again after the initialization of the grid.
@@ -3656,8 +3670,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 1 + this.scrollWidth : this.calcWidth + 1;
+        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
     }
+
+    /**
+     * @hidden
+     * Gets the visible content height that includes header + tbody + footer.
+     */
+    public getVisibleContentHeight() {
+        let height = this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+        if (this.hasSummarizedColumns) {
+            height += this.tfoot.nativeElement.clientHeight;
+        }
+        return height;
+    }
+
     /**
      * @hidden
      */
@@ -3696,11 +3723,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return columnWidth.toString();
     }
 
-    protected _getContainerWidth() {
-        const el = this.document.getElementById(this.nativeElement.id);
-        return el ? el.offsetWidth : null;
-    }
-
     /**
      * @hidden
      * Sets grid width i.e. this.calcWidth
@@ -3708,6 +3730,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected calculateGridWidth() {
         let width;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const el = this.document.getElementById(this.nativeElement.id);
+
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
@@ -3716,8 +3740,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = parseInt(this._width, 10);
         }
 
-        if (!width) {
-            width = this._getContainerWidth();
+        if (!width && el) {
+            width = el.offsetWidth;
         }
 
 
@@ -4224,7 +4248,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.endEdit(false);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            if (editCell) {
+                editCell.inEditMode = false;
+            } else {
+                this.endEdit(false);
+            }
         }
 
         this._applyHightlights(text, increment, caseSensitive, exactMatch, scroll);
@@ -4331,13 +4360,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
+        let delayScrolling = false;
 
         if (this.paging) {
-            this.page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - this.page * this.perPage;
+            const page = Math.floor(rowIndex / this.perPage);
+            rowIndex = rowIndex - page * this.perPage;
+
+            if (this.page !== page) {
+                delayScrolling = true;
+                this.page = page;
+            }
         }
 
-        this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+        }
 
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
@@ -4368,9 +4409,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
+        const numberPipe = new IgxDecimalPipeComponent(this.locale);
+        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                const value = c.formatter ? c.formatter(dataRow[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
+                            : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 

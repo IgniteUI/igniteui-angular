@@ -1,17 +1,19 @@
-<igx-hierarchical-grid #grid1 [isLoading]="true" [data]="remoteData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
+<button (click)='setterBindingChange()'>Set rowSelectable via binding</button>
+<button (click)='setterChange()'>Set rowSelectable via setter on 1st row island</button>
+<igx-hierarchical-grid #grid1 [data]="remoteData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
     <igx-column field="CustomerID"></igx-column>
     <igx-column field="CompanyName"></igx-column>
     <igx-column field="ContactName"></igx-column>
     <igx-column field="ContactTitle"></igx-column>
     <igx-column field="Country"></igx-column>
     <igx-column field="Phone"></igx-column>
-    <igx-row-island #rowIsland1 [key]="'Orders'" [isLoading]="true" [height]="'300px'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)">
+    <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
         <igx-column field="OrderID"></igx-column>
         <igx-column field="OrderDate"></igx-column>
         <igx-column field="ShipCountry"></igx-column>
         <igx-column field="ShipCity"></igx-column>
         <igx-column field="ShipAddress"></igx-column>
-        <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'200px'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland2)">
+        <igx-row-island #rowIsland2 [key]="'Order_Details'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
             <igx-column field="ProductID"></igx-column>
             <igx-column field="UnitPrice"></igx-column>
             <igx-column field="Quantity"></igx-column>
@@ -19,5 +21,3 @@
         </igx-row-island>
     </igx-row-island>
 </igx-hierarchical-grid>
-<button (click)='setterBindingChange()'>Set rowSelectable via binding</button>
-<button (click)='setterChange()'>Set rowSelectable via setter on 1st row island</button>
