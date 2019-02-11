@@ -59,14 +59,14 @@
             (click)="onPin()"
             *ngIf="!column.pinned">
             <span>Pin column</span>
-            <igx-icon>lock</igx-icon>
+            <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
         </div>
 
         <div class="igx-excel-filter__actions-unpin"
             (click)="onPin()"
             *ngIf="column.pinned">
             <span>Unpin column</span>
-            <igx-icon>lock_open</igx-icon>
+            <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
         </div>
 
         <div class="igx-excel-filter__actions-hide"
@@ -189,7 +189,7 @@
                     <span>{{ filterItem.value }}</span>
                 </igx-drop-down-item>
             </igx-drop-down>
-            
+
             <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <input
                     #inputValues
