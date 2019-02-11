@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
@@ -351,7 +351,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    onToggleClosing(e: CancelableEventArgs) {
+    onToggleClosing(e: CancelableBrowserEventArgs) {
         super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }

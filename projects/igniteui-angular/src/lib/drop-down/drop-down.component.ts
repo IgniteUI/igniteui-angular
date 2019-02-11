@@ -19,7 +19,7 @@ import { IgxDropDownBase } from './drop-down.base';
 import { DropDownActionKey } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
-import { CancelableEventArgs, isIE } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
@@ -124,7 +124,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -267,7 +267,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden
      */
-    public onToggleClosing(e: CancelableEventArgs) {
+    public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
     }
 
