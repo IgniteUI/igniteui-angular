@@ -209,15 +209,21 @@
 
     @include igx-scope('.igx-typography') {
         %igx-expansion-panel__header-title {
-            @include igx-type-style($type-scale, $title);
+            @include igx-type-style($type-scale, $title) {
+                margin: 0;
+            }
         }
 
         %igx-expansion-panel__header-description {
-            @include igx-type-style($type-scale, $description);
+            @include igx-type-style($type-scale, $description) {
+                margin: 0;
+            }
         }
 
         %igx-expansion-panel__body {
-            @include igx-type-style($type-scale, $body);
+            @include igx-type-style($type-scale, $body) {
+                margin: 0;
+            }
         }
     }
 }

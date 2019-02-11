@@ -241,19 +241,27 @@
 
     @include igx-scope('.igx-typography') {
         %igx-card-header-title {
-            @include igx-type-style($type-scale, $title);
+            @include igx-type-style($type-scale, $title) {
+                margin: 0;
+            }
         }
 
         %igx-card-header-title--small {
-            @include igx-type-style($type-scale, $title-small);
+            @include igx-type-style($type-scale, $title-small) {
+                margin: 0;
+            }
         }
 
         %igx-card-header-subtitle {
-            @include igx-type-style($type-scale, $subtitle);
+            @include igx-type-style($type-scale, $subtitle) {
+                margin: 0;
+            }
         }
 
         %igx-card-content-text {
-            @include igx-type-style($type-scale, $content);
+            @include igx-type-style($type-scale, $content) {
+                margin: 0;
+            }
         }
     }
 }

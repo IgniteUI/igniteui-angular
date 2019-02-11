@@ -118,6 +118,9 @@
         -webkit-tap-highlight-color: transparent;
         outline: none;
         transition: color .2s ease;
+        font-size: inherit;
+        font-family: inherit;
+        cursor: pointer;
 
         &:hover {
             color: --var($theme, 'button-color');

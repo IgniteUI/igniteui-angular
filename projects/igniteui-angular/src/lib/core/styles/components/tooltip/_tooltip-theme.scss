@@ -99,18 +99,21 @@
     $text-desktop: map-get($categories, 'text-desktop');
     $text-mobile: map-get($categories, 'text-mobile');
 
-    %tooltip--mobile {
-        @include igx-type-style($type-scale, $text-mobile);
-    }
 
-    @if $text-desktop != null {
-        %tooltip--desktop {
-            @include igx-type-style($type-scale, $text-desktop);
+    @include igx-scope('.igx-typography') {
+        %tooltip--mobile {
+            @include igx-type-style($type-scale, $text-mobile);
         }
-    } @else {
-        %tooltip--desktop {
-            font-size: rem(10px);
-            font-weight: 600;
+
+        @if $text-desktop != null {
+            %tooltip--desktop {
+                @include igx-type-style($type-scale, $text-desktop);
+            }
+        } @else {
+            %tooltip--desktop {
+                font-size: rem(10px);
+                font-weight: 600;
+            }
         }
     }
 }

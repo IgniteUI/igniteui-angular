@@ -233,8 +233,24 @@
             outline-style: none;
         }
 
+        input,
+        textarea {
+            font: inherit;
+            margin: 0;
+        }
+
+        textarea {
+            overflow: auto;
+        }
+
         // Don't show the number spinner
         input[type='number']::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            height: auto;
+        }
+
+        input[type='search']::-webkit-search-cancel-button,
+        input[type='search']::-webkit-search-decoration {
             -webkit-appearance: none;
         }
     }
@@ -885,16 +901,22 @@
         }
 
         %form-group-input {
-            @include igx-type-style($type-scale, $input-text);
+            @include igx-type-style($type-scale, $input-text) {
+                margin: 0;
+            }
         }
 
         %form-group-helper {
-            @include igx-type-style($type-scale, $helper-text);
+            @include igx-type-style($type-scale, $helper-text) {
+                margin: 0;
+            }
         }
 
         %form-group-prefix,
         %form-group-suffix {
-            @include igx-type-style($type-scale, $input-text);
+            @include igx-type-style($type-scale, $input-text) {
+                margin: 0;
+            }
         }
     }
 }
