@@ -1,4 +1,3 @@
-//#region imports
 import {
     Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
     NgModule, ElementRef, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
@@ -11,7 +10,6 @@ import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStra
 import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
 import { IgxInputGroupComponent } from '../../input-group/index';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
-//#endregion
 
 /**
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
@@ -317,7 +315,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.dropdown.width = this.parentElement.clientWidth + 'px';
         this.dropdown.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.dropdown.onOpened.pipe(first()).subscribe(() => { this.highlightFirstItem(); });
-        this.dropdown.onClosing.pipe().subscribe((args) => { this.onDropDownClosing(args); });
+        this.dropdown.onClosing.pipe(takeUntil(this.dropDownOpened$)).subscribe((args) => { this.onDropDownClosing(args); });
         this.dropdown.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(() => this.highlightFirstItem());
     }
 
