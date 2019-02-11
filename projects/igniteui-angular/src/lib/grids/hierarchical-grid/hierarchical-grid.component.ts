@@ -115,7 +115,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
-    public hierarchicalState: HierarchicalStateRecord[] = [];
+    get hierarchicalState(): HierarchicalStateRecord[] {
+        return this._hierarchicalState;
+    }
+    set hierarchicalState(value) {
+        this._hierarchicalState = value;
+        requestAnimationFrame(() => {
+            this.refreshSearch();
+        });
+    }
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
