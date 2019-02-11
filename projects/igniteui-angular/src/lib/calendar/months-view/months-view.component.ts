@@ -6,7 +6,6 @@ import {
     HostBinding,
     HostListener,
     ViewChildren,
-    forwardRef,
     QueryList,
     ElementRef
 } from '@angular/core';
@@ -124,7 +123,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @ViewChildren(forwardRef(() => IgxCalendarMonthDirective), { read: IgxCalendarMonthDirective })
+    @ViewChildren(IgxCalendarMonthDirective, { read: IgxCalendarMonthDirective })
     public dates: QueryList<IgxCalendarMonthDirective>;
 
 
@@ -243,6 +242,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const node = this.dates.find((date) => date.isCurrentMonth);
         if (!node) {
@@ -266,6 +266,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const node = this.dates.find((date) => date.isCurrentMonth);
         if (!node) {
@@ -289,6 +290,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const node = this.dates.find((date) => date.isCurrentMonth);
         if (!node) { return; }
@@ -310,6 +312,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const node = this.dates.find((date) => date.isCurrentMonth);
         if (!node) { return; }
@@ -331,6 +334,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const month = this.dates.toArray()[0];
 
@@ -346,6 +350,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const months = this.dates.toArray();
         const month = months[months.length - 1];

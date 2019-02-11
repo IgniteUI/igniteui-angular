@@ -10,7 +10,7 @@
                                                   [weekStart]="'1'"
                                                   [locale]="locale"
                                                   [specialDates]="specialDates"
-                                                  [disabledDates]="disabledDates"
+
                                                   [selection]="'multi'">
                     </igx-calendar>
                 </igx-card>
@@ -21,7 +21,11 @@
                 <div class="calendar-sample" style="width: 400px">
                     <h4 class="sample-title">Month Picker</h4>
                     <igx-card>
-                        <igx-month-picker [(ngModel)]="date1" [viewDate]="date1"></igx-month-picker>
+                        <igx-month-picker [(ngModel)]="date1"
+                                          [viewDate]="viewDate"
+                                          [formatOptions]="formatOptions"
+                                          [locale]="localeDe">
+                        </igx-month-picker>
                     </igx-card>
                 </div>
                 {{ date1 }}

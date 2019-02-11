@@ -7,7 +7,6 @@ import {
     ViewChildren,
     QueryList,
     HostBinding,
-    forwardRef,
     DoCheck
 } from '@angular/core';
 import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges } from '../../calendar';
@@ -321,7 +320,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     /**
      * @hidden
      */
-    @ViewChildren(forwardRef(() => IgxDayItemComponent), { read: IgxDayItemComponent })
+    @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
 
 
