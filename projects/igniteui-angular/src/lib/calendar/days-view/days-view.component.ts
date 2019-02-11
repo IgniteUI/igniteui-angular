@@ -410,10 +410,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      *
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        return 'igx-calendar';
-    }
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
     /**
      * @hidden
@@ -980,7 +978,9 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
                     date.nativeElement.focus();
                 }, parseInt(slideInRight.options.params.duration, 10));
             } else if (this.callback) {
-                this.callback(this.dates, this._nextDate);
+                setTimeout(() => {
+                    this.callback(this.dates, this._nextDate);
+                }, parseInt(slideInRight.options.params.duration, 10));
             }
         }
     }

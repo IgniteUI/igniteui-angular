@@ -18,6 +18,8 @@ export class CalendarViewsSampleComponent implements OnInit {
         new Date(2019, 1, 8)
     ];
 
+    viewDate = new Date(2019, 1, 7);
+
     locale = 'en';
 
     disabledDates = [{

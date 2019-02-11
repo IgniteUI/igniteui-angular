@@ -118,10 +118,8 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        return 'igx-calendar';
-    }
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
     /**
      * @hidden

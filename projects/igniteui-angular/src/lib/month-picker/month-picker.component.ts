@@ -43,18 +43,23 @@ import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/
     selector: 'igx-month-picker',
     templateUrl: 'month-picker.component.html'
 })
-export class IgxMonthPickerComponent extends IgxCalendarComponent implements ControlValueAccessor {
+export class IgxMonthPickerComponent extends IgxCalendarComponent {
 
-    public animateAction = '';
+    public yearAction = '';
 
-    public previousYear() {
-        this.animateAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+    public animationDone() {
+        this.yearAction = '';
+        this.monthsView.el.nativeElement.focus();
     }
 
     public nextYear() {
-        this.animateAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.yearAction = 'next';
+        super.nextYear();
+    }
+
+    public previousYear() {
+        this.yearAction = 'prev';
+        super.previousYear();
     }
 
     public selectMonth(event: Date) {

@@ -13,11 +13,12 @@
         </div>
     </div>
 
-    <igx-months-view [@animateChange]="animateAction" #months style="height: 308px"
+    <igx-months-view [@animateChange]="yearAction" #months
+                     (@animateChange.done)="animationDone()"
                      [date]="viewDate"
                      [locale]="locale"
                      [monthFormat]="_formatOptions.month"
-                     (onMonthSelection)="selectMonth($event)" >
+                     (onMonthSelection)="selectMonth($event)">
     </igx-months-view>
 </div>
 <igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade

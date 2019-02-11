@@ -151,12 +151,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      *
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        if (this.vertical) {
-            return 'igx-calendar--vertical';
-        }
-        return 'igx-calendar';
+    @HostBinding('class.igx-calendar--vertical')
+    get styleVerticalClass(): boolean {
+        return this.vertical;
     }
 
     /**

@@ -124,10 +124,8 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        return 'igx-calendar';
-    }
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
     /**
      * The default `tabindex` attribute for the component.
