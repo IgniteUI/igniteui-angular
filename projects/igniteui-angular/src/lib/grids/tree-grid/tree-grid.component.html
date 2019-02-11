@@ -26,8 +26,10 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="rowSelectable">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                <div class="igx-grid__cbx-selection" #headerCheckboxContainer  [ngClass]="{
+                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
+                }">
+                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -58,7 +60,6 @@
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:page:perPage:id:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
-
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>

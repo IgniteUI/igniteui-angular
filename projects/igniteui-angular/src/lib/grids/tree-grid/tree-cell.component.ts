@@ -5,8 +5,8 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseComponent } from '../grid';
 import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 
 @Component({
     selector: 'igx-tree-grid-cell',
@@ -17,7 +17,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
 
     constructor(
                 gridSelection: IgxGridSelectionService,
-                gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+                gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 selection: IgxSelectionAPIService,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,

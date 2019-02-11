@@ -11,7 +11,7 @@ import {
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxGridSelectionService } from '../../core/grid-selection';
 
@@ -23,7 +23,7 @@ import { IgxGridSelectionService } from '../../core/grid-selection';
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         private gridSelection: IgxGridSelectionService,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
@@ -192,10 +192,9 @@ export class IgxGridGroupByRowComponent {
 
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
 
-        if (this.isToggleKey(key)) {
-            if (!alt) { return; }
-            if ((this.expanded && (key === 'left' || key === 'arrowleft')) ||
-            (!this.expanded && (key === 'right' || key === 'arrowright'))) {
+        if (alt && this.isToggleKey(key)) {
+            if ((this.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup')) ||
+            (!this.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown'))) {
                 this.toggle();
             }
             return;
@@ -265,7 +264,7 @@ export class IgxGridGroupByRowComponent {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key) !== -1;
     }
 
 }

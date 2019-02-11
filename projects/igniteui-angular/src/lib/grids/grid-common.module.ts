@@ -61,6 +61,7 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSelectionService } from '../core/grid-selection';
+import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 
@@ -181,6 +182,7 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxColumnMovingService,
         IgxGridNavigationService,
         IgxColumnResizingService,
+        IgxGridSummaryService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
