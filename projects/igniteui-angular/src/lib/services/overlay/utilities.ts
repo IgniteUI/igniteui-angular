@@ -5,7 +5,7 @@ import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -64,9 +64,7 @@ export interface OverlayEventArgs {
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
 }
 
-export interface OverlayClosingEventArgs extends OverlayCancelableEventArgs {
-        /** Browser event */
-        event?: Event;
+export interface OverlayClosingEventArgs extends OverlayEventArgs, CancelableBrowserEventArgs {
 }
 
 export interface OverlayAnimationEventArgs {

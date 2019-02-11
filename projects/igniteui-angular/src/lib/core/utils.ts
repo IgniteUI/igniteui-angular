@@ -254,3 +254,8 @@ export interface CancelableEventArgs {
      */
     cancel: boolean;
 }
+
+export interface CancelableBrowserEventArgs extends CancelableEventArgs {
+    /** Browser event */
+    event: Event;
+}
