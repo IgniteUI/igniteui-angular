@@ -1,0 +1,19 @@
+<div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+    <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
+    <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
+</div>
+
+<ng-container *ngIf="rowSelectable">
+        <div class="igx-grid__cbx-selection">
+            <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        </div>
+</ng-container>
+
+<ng-container *ngIf="pinnedColumns.length > 0">
+    <igx-hierarchical-grid-cell *ngFor="let col of notGroups(pinnedColumns)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-hierarchical-grid-cell>
+</ng-container>
+
+<ng-template igxGridFor let-col [igxGridForOf]="notGroups(unpinnedColumns)" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcWidth"' [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+    <igx-hierarchical-grid-cell [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-hierarchical-grid-cell>
+</ng-template>
+

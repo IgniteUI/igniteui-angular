@@ -43,7 +43,13 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridPagingPipe,
+    IgxGridSortingPipe,
+    IgxGridFilteringPipe,
+    IgxGridSummaryPipe
   ],
   imports: [
     CommonModule,
