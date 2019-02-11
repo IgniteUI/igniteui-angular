@@ -3230,17 +3230,15 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, '_hide').and.callThrough();
             spyOn(overlay.onClosing, 'emit');
 
             const firstCallId = overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay._hide).toHaveBeenCalledTimes(0);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
 
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
-            expect(overlay._hide).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit)
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,

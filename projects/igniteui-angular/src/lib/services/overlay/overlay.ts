@@ -202,7 +202,8 @@ export class IgxOverlayService implements OnDestroy {
     hide(id: string) {
         this._hide(id);
     }
-    _hide(id: string, event?: Event) {
+
+    private _hide(id: string, event?: Event) {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {

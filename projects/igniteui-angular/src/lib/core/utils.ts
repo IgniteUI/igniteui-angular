@@ -257,5 +257,5 @@ export interface CancelableEventArgs {
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     /** Browser event */
-    event: Event;
+    event?: Event;
 }

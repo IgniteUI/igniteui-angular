@@ -86,7 +86,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxOverlayService` - the height of the shown element/component is not cached anymore. The height will be calculated each time position method of position strategy is called.
 
 - `igxOverlayService`
-    - `onClosing` event arguments are of type `OverlayClosingEventArgs`. They extend the `OverlayCancelableEventArgs` by adding the browser event as a property. That latter is useful to get context information, when closing of the overlay is executed by outside click. Note that in the other cases, when overlay is closed, the browser event will be undefined. This affects all the components and directives that use `igxOverlay` `onClosing` event - `igxToggle`, `igxDropDown`, `igxCombo`, `igxSelect` and `igxAutocomplete`. When they emit the respective `onClosing` event, the arguments are of type `CancelableBrowserEventArgs`, including the browser event as well.
+    - `onClosing` event arguments are of type `OverlayClosingEventArgs` that adds an optional `event` property with the original DOM event. The browser event is available when closing of the overlay is caused by an outside click. This also affects all components and directives that use `igxOverlay` service - `igxToggle`, `igxDropDown`, `igxCombo`, `igxSelect` and `igxAutocomplete`. When they emit their respective `onClosing` event, the arguments are of type `CancelableBrowserEventArgs`, including the optional browser event.
 
 ## 7.1.2
 ### Features
