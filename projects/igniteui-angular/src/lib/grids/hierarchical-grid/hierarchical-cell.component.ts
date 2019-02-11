@@ -1,4 +1,5 @@
-import { IgxGridCellComponent, GridBaseAPIService } from '../grid';
+import { IgxGridCellComponent } from '../cell.component';
+import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
      OnInit, AfterViewInit, forwardRef, HostListener } from '@angular/core';
