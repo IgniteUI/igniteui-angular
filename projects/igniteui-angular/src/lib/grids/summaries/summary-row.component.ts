@@ -9,7 +9,7 @@ import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { DisplayDensity } from '../../core/density';
 
@@ -55,7 +55,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
     public virtDirRow: IgxGridForOfDirective<any>;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) {}
 
