@@ -400,14 +400,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
-        return record.childGridData !== undefined;
+        return record.childGridsData !== undefined;
     }
 
     /**
      * @hidden
      */
     public trackChanges(index, rec) {
-        if (rec.childGridData !== undefined) {
+        if (rec.childGridsData !== undefined) {
             // if is child rec
             return rec.rowID;
         }
@@ -485,7 +485,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isExpanded(record: any): boolean {
         let inState;
-        if (record.childGridData !== undefined) {
+        if (record.childGridsData !== undefined) {
             inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
         } else {
             inState = !!this.hierarchicalState.find(v => {
