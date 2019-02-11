@@ -11,8 +11,9 @@ import { mergeObjects } from '../../core/utils';
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
-        return data ? data : [];
+        let data = grid.flatData ? grid.flatData : [];
+        data = transactions ? grid.dataWithAddedInTransactionRows : data;
+        return data;
     }
 
     public get_summary_data(id) {
@@ -153,6 +154,68 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
+    public deleteRowById(gridID: string, rowID: any) {
+        const treeGrid = this.get(gridID);
+        const flatDataWithCascadeOnDeleteAndTransactions =
+        treeGrid.primaryKey &&
+        treeGrid.foreignKey &&
+        treeGrid.cascadeOnDelete &&
+        treeGrid.transactions.enabled;
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
+            treeGrid.transactions.startPending();
+        }
+
+        super.deleteRowById(gridID, rowID);
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
+            treeGrid.transactions.endPending(true);
+        }
+    }
+
+    public deleteRowFromData(gridID: string, rowID: any, index: number) {
+        const treeGrid = this.get(gridID);
+        if (treeGrid.primaryKey && treeGrid.foreignKey) {
+            super.deleteRowFromData(gridID, rowID, index);
+
+            if (treeGrid.cascadeOnDelete) {
+                const treeRecord = treeGrid.records.get(rowID);
+                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
+                    for (let i = 0; i < treeRecord.children.length; i++) {
+                        const child = treeRecord.children[i];
+                        super.deleteRowById(gridID, child.rowID);
+                    }
+                }
+            }
+        } else {
+            const record = treeGrid.records.get(rowID);
+            const collection = record.parent ? record.parent.data[treeGrid.childDataKey] : treeGrid.data;
+            index = treeGrid.primaryKey ?
+                collection.map(c => c[treeGrid.primaryKey]).indexOf(rowID) :
+                collection.indexOf(rowID);
+
+            const selectedChildren = [];
+            this.get_selected_children(treeGrid.id, record, selectedChildren);
+            if (selectedChildren.length > 0) {
+                treeGrid.deselectRows(selectedChildren);
+            }
+
+            if (treeGrid.transactions.enabled) {
+                const path = treeGrid.generateRowPath(rowID);
+                treeGrid.transactions.add({
+                    id: rowID,
+                    type: TransactionType.DELETE,
+                    newValue: null,
+                    path: path
+                },
+                    collection[index]
+                );
+            } else {
+                collection.splice(index, 1);
+            }
+        }
+    }
+
     /**
      * Updates related row of provided grid's data source with provided new row value
      * @param grid Grid to update data for
@@ -166,7 +229,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         rowID: any,
         rowValueInDataSource: any,
         rowCurrentValue: any,
-        rowNewValue: {[x: string]: any}) {
+        rowNewValue: { [x: string]: any }) {
         if (grid.transactions.enabled) {
             const path = grid.generateRowPath(rowID);
             const transaction: HierarchicalTransaction = {

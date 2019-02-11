@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule } from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -75,7 +75,11 @@ import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
+import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
+import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
@@ -149,6 +153,11 @@ const components = [
     TypographySampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
+    HierarchicalGridSampleComponent,
+    HierarchicalGridRemoteSampleComponent,
+    HierarchicalGridUpdatingSampleComponent,
+    DisplayFormatPipe,
+    InputFormatPipe,
     GridColumnPercentageWidthsSampleComponent,
     GridSearchBoxComponent,
     GridSearchComponent
@@ -165,6 +174,7 @@ const components = [
         IgxIconModule,
         IgxGridModule.forRoot(),
         IgxTreeGridModule,
+        IgxHierarchicalGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,

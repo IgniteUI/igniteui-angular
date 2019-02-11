@@ -60,6 +60,7 @@ import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
+import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 
 @NgModule({
@@ -176,6 +177,7 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxColumnMovingService,
         IgxGridNavigationService,
         IgxColumnResizingService,
+        IgxGridSummaryService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
