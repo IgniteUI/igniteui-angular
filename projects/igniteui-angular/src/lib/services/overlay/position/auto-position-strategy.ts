@@ -15,7 +15,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy implements IPo
                 break;
         }
 
-        super.position(element, this._initialSize);
+        this.positionElement(element, settings);
     }
 
     fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
@@ -30,6 +30,13 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy implements IPo
                 break;
         }
 
-        super.position(element, this._initialSize);
+        this.positionElement(element, settings);
+    }
+
+    private positionElement(element: HTMLElement, settings: PositionSettings) {
+        const originalSettings = Object.assign({}, this.settings);
+        this.settings = settings;
+        super.position(element, null);
+        this.settings = originalSettings;
     }
 }
