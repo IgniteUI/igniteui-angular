@@ -5,11 +5,6 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-
-@include b(igx-grid-hierarchical) {
-    @extend %igx-grid-hierarchical !optional;
-}
-
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -160,9 +155,25 @@
         @extend %grid-row--group !optional;
     }
 
+    @include e(tr-container) {
+        @extend %igx-grid__tr-container !optional;
+    }
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
+    }
+
+    @include e(th, $m: sortable) {
+        @extend %igx-grid__th--sortable !optional;
+    }
+
+    @include e(th, $m: filtrable) {
+        @extend %igx-grid__th--filtrable !optional;
+    }
+
+    @include e(th, $m: sorted) {
+        @extend %igx-grid__th--sorted !optional;
     }
 
     @include e(th, $m: number) {

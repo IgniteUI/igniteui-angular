@@ -1,13 +1,17 @@
+<button igxButton="raised" (click)="addRow()">Add Row Parent</button>
+<button igxButton="raised" (click)="deleteRow()">Delete Row Parent</button>
+<button igxButton="raised" (click)="logTransactionsMain()">Parent Transactions</button>
+<button igxButton="raised" (click)="logTransactionsIsland1()">RI1 Transactions</button>
 <div class="wrapper">
         <igx-hierarchical-grid #grid1 [data]="remoteData" [rowEditable]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false"
-                [height]="'600px'" [width]="'800px'" #hGrid>
+                [height]="'800px'" [width]="'100%'" #hGrid>
                 <igx-column field="CustomerID"></igx-column>
                 <igx-column field="CompanyName"></igx-column>
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
                 <igx-column field="Country"></igx-column>
                 <igx-column field="Phone"></igx-column>
-                <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'300px'" [primaryKey]="'OrderID'" [autoGenerate]="false"
+                <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'400px'" [primaryKey]="'OrderID'" [autoGenerate]="false"
                         [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)"
                         [rowEditable]="true">
                         <igx-column field="OrderID"></igx-column>
@@ -15,7 +19,7 @@
                         <igx-column field="ShipCountry"></igx-column>
                         <igx-column field="ShipCity"></igx-column>
                         <igx-column field="ShipAddress"></igx-column>
-                        <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'200px'" [primaryKey]="'ProductID'"
+                        <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'300px'" [primaryKey]="'ProductID'"
                                 [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland2)">
                                 <igx-column field="ProductID"></igx-column>
                                 <igx-column field="UnitPrice"></igx-column>
@@ -24,11 +28,4 @@
                         </igx-row-island>
                 </igx-row-island>
         </igx-hierarchical-grid>
-
-        <br />
-
-        <button igxButton="raised" (click)="addRow()">Add Row Parent</button>
-        <button igxButton="raised" (click)="deleteRow()">Delete Row Parent</button>
-        <button igxButton="raised" (click)="logTransactionsMain()">Parent Transactions</button>
-        <button igxButton="raised" (click)="logTransactionsIsland1()">RI1 Transactions</button>
 </div>
