@@ -17,9 +17,8 @@ export class SelectSampleComponent implements OnInit {
     @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
     public items: any[] = [];
 
-    //public value = 'notContainedInItemsValue';
-    public value: 'opt1'; // value not set
-    public disabledItemValue: 'InsideGroup1'; //
+    public value: 'opt1';
+    public disabledItemValue: 'InsideGroup1';
     public customOverlaySettings: OverlaySettings;
 
     public ngOnInit() {

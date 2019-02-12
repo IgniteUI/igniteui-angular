@@ -238,7 +238,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         if (this.disabled || this.items.length === 0) {
             return;
         }
-
+        if (!this.selectedItem) {
+            this.navigateFirst();
+        }
         if (overlaySettings) {
             super.open(overlaySettings);
             return;

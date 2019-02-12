@@ -174,6 +174,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10) || 0;
 
         transformString += `translateX(${START.X - numericPadding - numericTextIndent}px)`;
+        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
         this.deltaX = START.X - numericPadding - numericTextIndent;
 
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
