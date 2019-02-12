@@ -302,7 +302,7 @@ export class HelperUtils {
         const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
         for (let i = startCol; i <= endCol; i++) {
             for (let j = startRow; j <= endRow; j++) {
-                const cell = grid.getCellByColumn(j, grid.columns[i].field);
+                const cell = grid.getCellByColumn(j, grid.columnList.find(col => col.visibleIndex === i).field);
                 HelperUtils.verifyCellSelected(cell, selected);
             }
         }
