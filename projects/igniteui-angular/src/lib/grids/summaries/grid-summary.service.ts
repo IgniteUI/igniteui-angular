@@ -55,6 +55,12 @@ export class IgxGridSummaryService {
                 return;
             }
             this.removeAllTreeGridSummaries(rowID, columnName);
+        } else if (this.isHierarchicalGrid) {
+            if (this.grid.transactions.enabled && this.deleteOperation) {
+                this.deleteOperation = false;
+                this.summaryCacheMap.clear();
+                return;
+            }
         } else {
            const summaryIds = this.getSummaryID(rowID, this.grid.groupingExpressions);
            summaryIds.forEach(id => {
@@ -210,6 +216,10 @@ export class IgxGridSummaryService {
 
     private get isTreeGrid() {
         return this.grid.nativeElement.tagName.toLowerCase() === 'igx-tree-grid';
+    }
+
+    private get isHierarchicalGrid() {
+        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
     }
 
 }

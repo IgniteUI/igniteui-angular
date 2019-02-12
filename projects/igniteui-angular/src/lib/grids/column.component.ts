@@ -30,7 +30,7 @@ import {
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
     IgxFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
@@ -880,7 +880,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
     /**
      *@hidden
      */
@@ -1417,7 +1417,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) {
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
     }
