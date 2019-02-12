@@ -49,6 +49,7 @@
 ///
 /// @prop {Number} flat-border-radius [.2] - The border radius fraction used for flat button.
 /// @prop {Number} raised-border-radius [.2] - The border radius fraction used for raised button.
+/// @prop {Number} outlined-border-radius [1] - The border radius fraction used for outlined button.
 /// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
 /// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
 /// @see $default-palette
@@ -57,6 +58,8 @@ $_light-button: (
     flat-border-radius: .2,
 
     raised-border-radius: .2,
+
+    outlined-border-radius: .2,
 
     fab-border-radius: 1,
 

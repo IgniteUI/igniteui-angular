@@ -14,6 +14,7 @@
 
 /// @param {border-radius} $flat-border-radius [null] - The border radius used for flat button.
 /// @param {border-radius} $raised-border-radius [null] - The border radius used for raised button.
+/// @param {border-radius} $outlined-border-radius [null] - The border radius used for outlined button.
 /// @param {border-radius} $fab-border-radius [null] - The border radius used for fab button.
 /// @param {border-radius} $icon-border-radius [null] - The border radius used for icon button.
 
@@ -90,6 +91,7 @@
     $raised-border-radius: null,
     $fab-border-radius: null,
     $icon-border-radius: null,
+    $outlined-border-radius: null,
 
     $flat-text-color: null,
     $flat-background: null,
@@ -157,6 +159,10 @@
 
     $icon-border-radius: round-borders(
         if($icon-border-radius, $icon-border-radius, map-get($button-schema, 'icon-border-radius')), 0, 20px
+    );
+
+    $outlined-border-radius: round-borders(
+        if($outlined-border-radius, $outlined-border-radius, map-get($button-schema, 'outlined-border-radius')), 0, 20px
     );
 
     @if not($flat-text-color) and $flat-background {
@@ -297,6 +303,7 @@
         raised-border-radius: $raised-border-radius,
         fab-border-radius: $fab-border-radius,
         icon-border-radius: $icon-border-radius,
+        outlined-border-radius: $outlined-border-radius,
 
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
@@ -412,6 +419,7 @@
         border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
+        border-radius: --var($theme, 'outlined-border-radius');
 
         &:hover {
             background: --var($theme, 'outlined-hover-background');
