@@ -1,8 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs,
-    OverlayCancelableEventArgs, OverlayClosingEventArgs } from './utilities';
+import {
+    OverlaySettings,
+    OverlayEventArgs,
+    OverlayInfo,
+    OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs
+} from './utilities';
 
 import {
     ApplicationRef,
@@ -184,11 +190,16 @@ export class IgxOverlayService implements OnDestroy {
             this.setupModalWrapper(info);
         }
 
-        if (info.settings.positionStrategy.settings.openAnimation) {
-            this.playOpenAnimation(info);
-        } else {
-            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-        }
+        //  show overlay in set time out. This allow us to return the id before overlay appears
+        setTimeout(() => {
+            if (info.settings.positionStrategy.settings.openAnimation) {
+                this.playOpenAnimation(info);
+            } else {
+                //  to eliminate flickering show the element just before onOpened fire
+                info.elementRef.nativeElement.parentElement.visibility = null;
+                this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+            }
+        }, 0);
 
         return id;
     }
@@ -342,6 +353,9 @@ export class IgxOverlayService implements OnDestroy {
             ev.stopPropagation();
         });
 
+        //  hide element to eliminate flickering. Show the element exactly before animation starts
+        content.style.visibility = 'hidden';
+
         wrapperElement.appendChild(content);
         return content;
     }
@@ -447,6 +461,9 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
+
+        //  to eliminate flickering show the element just before animation start
+        info.elementRef.nativeElement.parentElement.style.visibility = null;
         info.openAnimationPlayer.play();
     }
 
