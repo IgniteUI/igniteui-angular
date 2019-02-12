@@ -342,7 +342,7 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false, event: undefined });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(2);
 
             tick();
@@ -362,7 +362,8 @@ describe('igxOverlay', () => {
             overlayInstance.hide(secondCallId);
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.onClosing.emit).
+                toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false, event: undefined });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(4);
 
             tick();
@@ -3229,16 +3230,19 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            spyOn(overlay.onClosing, 'emit');
 
-            overlay.show(SimpleDynamicComponent, overlaySettings);
+            const firstCallId = overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
 
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
+                    event: new MouseEvent('click') });
         }));
 
     });
