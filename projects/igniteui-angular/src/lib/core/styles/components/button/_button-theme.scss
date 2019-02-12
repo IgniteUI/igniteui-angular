@@ -359,7 +359,7 @@
     $button-width: rem(88px);
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
-    $button-transition: background .15s ease-out, box-shadow .15s ease-out;
+    $button-transition: all .15s $ease-in-out-cubic;
 
     $button-disabled-shadow: none;
 
