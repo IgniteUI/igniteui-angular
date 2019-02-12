@@ -23,7 +23,7 @@
             }));
         });
 
-        const version = folders.find(v => window.location.href.includes(v));
+        const version = folders.filter(function(v){ return window.location.href.indexOf(v) >= 0; })[0];
         if (version) {
             select.val(baseUrl + version + "/sass");
         } else {
