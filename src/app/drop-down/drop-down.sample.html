@@ -1,8 +1,17 @@
 <div class="sample-wrapper">
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
-        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle
-            dropdown</button>
+        <div>
+            <button igxButton="raised" igxRipple (click)="open()" style="display: block">
+                Open dropdown
+            </button>
+            <button igxButton="raised" igxRipple (click)="close()" style="display: block">
+                Close dropdown
+            </button>
+            <button #button igxButton="raised" igxRipple (click)="toggleDropDown()"
+                [igxDropDownItemNavigation]="dropdown1" style="display: block">Toggle
+                dropdown</button>
+        </div>
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
                 [isSelected]="item.selected">
@@ -12,7 +21,8 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">With
+        <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown2"
+            [igxDropDownItemNavigation]="dropdown2">With
             action directive</button>
         <igx-drop-down #dropdown2 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
@@ -22,7 +32,8 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">igxToggle</button>
+        <button #button igxButton="raised" igxRipple [igxToggleAction]="toggle"
+            [igxToggleOutlet]="outlet">igxToggle</button>
         <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
             <div *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
@@ -31,7 +42,8 @@
             </div>
         </div>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
+        <button #button igxButton="raised" igxRipple [igxToggleAction]="menu"
+            [igxDropDownItemNavigation]="menu">Menu</button>
         <igx-drop-down #menu (onSelection)="onSelectionMenu($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 <div class="igx-drop-down__item-template">
