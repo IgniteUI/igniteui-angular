@@ -188,6 +188,24 @@ export class IgxExpansionPanelHeaderComponent {
          evt.preventDefault();
      }
 
+    /** @hidden @internal */
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    public openPanel(event: KeyboardEvent) {
+        if (event.altKey) {
+            this.panel.expand(event);
+            this.onInteraction.emit({ event: event, panel: this.panel });
+        }
+     }
+
+     /** @hidden @internal */
+     @HostListener('keydown.Alt.ArrowUp', ['$event'])
+     public closePanel(event: KeyboardEvent) {
+        if (event.altKey) {
+            this.panel.collapse(event);
+            this.onInteraction.emit({ event: event, panel: this.panel });
+        }
+     }
+
      /**
      * @hidden
      */
