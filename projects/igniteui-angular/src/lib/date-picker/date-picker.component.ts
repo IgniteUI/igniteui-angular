@@ -99,7 +99,6 @@ export interface IgxDatePickerDisabledDateEventArgs {
         }],
     // tslint:disable-next-line:component-selector
     selector: 'igx-date-picker',
-    styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
 export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {

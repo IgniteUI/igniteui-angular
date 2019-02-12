@@ -1,9 +1,10 @@
-import { Component, ViewChild, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { IgxCalendarComponent } from '../calendar';
 import { DatePickerInteractionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'igx-calendar-container',
+    styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html'
 })
 export class IgxCalendarContainerComponent {
@@ -27,6 +28,19 @@ export class IgxCalendarContainerComponent {
 
     @Output()
     public onTodaySelection = new EventEmitter();
+
+    @HostBinding('class.igx-date-picker')
+    public styleClass = 'igx-date-picker';
+
+    @HostBinding('class.igx-date-picker--dropdown')
+    get dropdownCSS(): boolean {
+        return this.mode === DatePickerInteractionMode.EDITABLE;
+    }
+
+    @HostBinding('class.igx-date-picker--vertical')
+    get verticalCSS(): boolean {
+        return this.vertical && this.mode === DatePickerInteractionMode.READONLY;
+    }
 
     @HostListener('keydown.esc', ['$event'])
     public onSpaceClick(event) {
