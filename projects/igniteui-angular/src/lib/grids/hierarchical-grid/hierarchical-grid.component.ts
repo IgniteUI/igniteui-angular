@@ -332,6 +332,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 });
             });
         }
+
+        this.toolbarCustomContentTemplates = this.parentIsland ?
+            this.parentIsland.toolbarCustomContentTemplates :
+            this.toolbarCustomContentTemplates;
     }
 
     /**
