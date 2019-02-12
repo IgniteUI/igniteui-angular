@@ -44,8 +44,12 @@ import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-st
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
+import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
+import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { SelectFormSampleComponent } from './select/select-form.sample';
 
@@ -54,6 +58,10 @@ const appRoutes = [
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'autocomplete',
+        component: AutocompleteSampleComponent
     },
     {
         path: 'avatar',
@@ -247,6 +255,15 @@ const appRoutes = [
     {
         path: 'tooltip',
         component: TooltipSampleComponent
+    }, {
+        path: 'hierarchicalGrid',
+        component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridRemote',
+        component: HierarchicalGridRemoteSampleComponent
+    }, {
+        path: 'hierarchicalGridUpdating',
+        component: HierarchicalGridUpdatingSampleComponent
     },
     {
         path: 'gridPercentage',

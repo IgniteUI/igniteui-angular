@@ -6,7 +6,7 @@ import { IgxSelectComponent } from './select.component';
 import { IgxSelectModule } from './select.component';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { FormsModule } from '@angular/forms';
-import { wait } from '../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -14,7 +14,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'dropdownToggleButton';
-const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list--select';
 const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
@@ -439,49 +439,42 @@ describe('igxSelect', () => {
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             let selectedItemIndex = 5;
 
-            const checkItemSelection = function () {
-                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
-                expect(selectedItems.length).toEqual(1);
-                const currentSelectedItem = select.items[selectedItemIndex] as IgxSelectItemComponent;
-                expect(select.selectedItem).toEqual(currentSelectedItem);
-                expect(currentSelectedItem.selected).toBeTruthy();
-                expect(select.selectionValue.toString().trim()).toEqual(currentSelectedItem.value);
-                expect(select.value).toEqual(currentSelectedItem.value);
-                expect(select.input.value.toString().trim()).toEqual(currentSelectedItem.value);
-            };
-
             select.toggle();
             tick();
             fixture.detectChanges();
             selectList.children[selectedItemIndex].nativeElement.click();
             tick();
             fixture.detectChanges();
-            checkItemSelection();
+            verifySelectedItem(selectedItemIndex);
 
             selectedItemIndex = 15;
             select.selectItem(select.items[selectedItemIndex]);
             tick();
             fixture.detectChanges();
-            checkItemSelection();
+            verifySelectedItem(selectedItemIndex);
 
-            // selectedItemIndex = 8;
-            // select.value = select.items[selectedItemIndex].value.toString();
-            // console.log(select.value);
-            // fixture.detectChanges();
-            // tick();
-            // checkItemSelection();
+            selectedItemIndex = 8;
+            select.value = select.items[selectedItemIndex].value.toString();
+            fixture.detectChanges();
+            tick();
+            verifySelectedItem(selectedItemIndex);
+        }));
+        it('Should clear selection when value property does not match any item', fakeAsync(() => {
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            const selectedItemIndex = 5;
 
-            // console.log(select.selectionValue);
-            // select.toggle();
-            // tick();
-            // fixture.detectChanges();
-            // checkItemSelection();
+            select.value = select.items[selectedItemIndex].value.toString();
+            fixture.detectChanges();
+            tick();
+            verifySelectedItem(selectedItemIndex);
 
-            // selectedItemIndex = -1;
-            // select.value = 'Ghost city';
-            // tick();
-            // fixture.detectChanges();
-            // checkItemSelection();
+            select.value = 'Ghost city';
+            tick();
+            fixture.detectChanges();
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(0);
+            expect(select.selectedItem).toBeUndefined();
+            expect(select.input.value).toEqual('');
         }));
         it('Should focus first item in dropdown if there is not selected item', fakeAsync(() => {
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
@@ -560,13 +553,13 @@ describe('igxSelect', () => {
             checkInputValue();
 
             // Select item - value property
-            // selectedItemIndex = 8;
-            // selectedItemValue = select.items[selectedItemIndex].value;
-            // select.value = select.items[selectedItemIndex].value.toString();
-            // fixture.detectChanges();
-            // tick();
-            // fixture.detectChanges();
-            // checkInputValue();
+            selectedItemIndex = 8;
+            selectedItemValue = select.items[selectedItemIndex].value;
+            select.value = select.items[selectedItemIndex].value.toString();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            checkInputValue();
         }));
         it('Should not append any text to the input box when no item is selected and value is not set or does not match any item',
             fakeAsync(() => {
@@ -604,7 +597,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 };
 
-                const verifyFocusedItem = function () {
+                const verifyFocusedItemIsNotSelected = function () {
                     expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
                     expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
                     expect(select.focusedItem).toEqual(focusedItem);
@@ -623,7 +616,7 @@ describe('igxSelect', () => {
                 navigateDropdownItems(arrowDownKeyEvent);
                 expect(select.value).toBeUndefined();
                 expect(select.input.value).toEqual('');
-                verifyFocusedItem();
+                verifyFocusedItemIsNotSelected();
 
                 // Focus item when there is a selected item
                 const selectedItem = select.items[13] as IgxSelectItemComponent;
@@ -635,12 +628,12 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 navigateDropdownItems(arrowUpKeyEvent);
                 focusedItem = select.items[selectedItem.index - navigationStep];
-                verifyFocusedItem();
+                verifyFocusedItemIsNotSelected();
 
                 // Change focused item when there is a selected item
                 navigateDropdownItems(arrowUpKeyEvent);
                 focusedItem = select.items[selectedItem.index - navigationStep * 2];
-                verifyFocusedItem();
+                verifyFocusedItemIsNotSelected();
             }));
         it('Should not select disabled item', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
@@ -691,7 +684,7 @@ describe('igxSelect', () => {
             expect(select.selectedItem).toEqual(selectedItem);
             expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
 
-            // Throws an error 'Cannot read property isHeader of null'
+            // Throws an error 'Cannot read property disabled of null'
             select.selectItem(null);
             fixture.detectChanges();
             expect(selectedItem.isSelected).toBeTruthy();
@@ -811,28 +804,29 @@ describe('igxSelect', () => {
             expect(select.onClosed.emit).toHaveBeenCalledTimes(2);
             expect(select.close).toHaveBeenCalledTimes(2);
         }));
-        it('Should properly emit onSelection event on value setting', () => {
+        it('Should properly emit onSelection event on value setting', fakeAsync(() => {
             spyOn(select.onSelection, 'emit');
             spyOn(select, 'selectItem').and.callThrough();
 
-            select.value = 'Rome';
+            select.value = select.items[4].value.toString();
             fixture.detectChanges();
+            tick();
             // expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
             // expect(select.selectItem).toHaveBeenCalledTimes(1);
             // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
 
-            select.value = 'Padua';
-            fixture.detectChanges();
+            // select.value = 'Padua';
+            // fixture.detectChanges();
             // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             // expect(select.selectItem).toHaveBeenCalledTimes(2);
             // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
 
             // onSelection should not be fired when value is set to non-existing item
-            select.value = 'Ghost city';
-            fixture.detectChanges();
+            // select.value = 'Ghost city';
+            // fixture.detectChanges();
             // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             // expect(select.selectItem).toHaveBeenCalledTimes(2);
-        });
+        }));
         it('Should properly emit onSelection event using selectItem method', () => {
             let selectedItem = select.items[4];
 
@@ -1229,42 +1223,249 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(0);
         }));
-        it('Should navigate to item which value starts with a certain character by pressing the corresponding key when dropdown is opened',
+        it('Should filter and navigate through items on character key navigation when dropdown is opened',
             fakeAsync(() => {
-                // TODO
+                select.items[0].selected = true;
+                select.open();
+                tick();
+                fixture.detectChanges();
+
+                const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
+                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                    inputElement.triggerEventHandler('keyup', { key: 'p' });
+                    tick();
+                    fixture.detectChanges();
+                    inputElement.triggerEventHandler('keyup', { key: 'a' });
+                    tick();
+                    fixture.detectChanges();
+                    verifyFocusedItem(filteredItemsInxs[index]);
+                    tick(500);
+                    fixture.detectChanges();
+                }
             }));
         it('Character key navigation when dropdown is opened should be case insensitive', fakeAsync(() => {
-            // TODO
+            select.items[0].selected = true;
+            select.open();
+            tick();
+            fixture.detectChanges();
+
+            const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
+
+            inputElement.triggerEventHandler('keyup', { key: 'L' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[1]);
+            tick(500);
+            fixture.detectChanges();
         }));
         it('Character key navigation when dropdown is opened should wrap selection',
             fakeAsync(() => {
-                // TODO
+                select.items[0].selected = true;
+                select.open();
+                tick();
+                fixture.detectChanges();
+
+                const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                    inputElement.triggerEventHandler('keyup', { key: 'l' });
+                    tick();
+                    fixture.detectChanges();
+                    verifyFocusedItem(filteredItemsInxs[index]);
+                    tick(500);
+                    fixture.detectChanges();
+                }
+                // Navigate back to the first filtered item to verify that selection is wrapped
+                inputElement.triggerEventHandler('keyup', { key: 'l' });
+                tick();
+                fixture.detectChanges();
+                verifyFocusedItem(filteredItemsInxs[0]);
+                tick(500);
+                fixture.detectChanges();
             }));
         it('Should filter and navigate items properly when pressing foreign character', fakeAsync(() => {
-            // TODO
-            // test with german/cirillyc letters
+            fixture.componentInstance.items = [
+                'Berlin',
+                'Überherrn',
+                'София',
+                'München',
+                'Überlingen',
+                'Stuttgart',
+                'Смолян',
+                'Übersee',
+                'Бургас',
+                'Karlsruhe',
+                'Östringen'];
+            fixture.detectChanges();
+            select.items[0].selected = true;
+            select.open();
+            tick();
+            fixture.detectChanges();
+
+            // German characters
+            let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
+            for (let index = 0; index < filteredItemsInxs.length; index++) {
+                inputElement.triggerEventHandler('keyup', { key: 'ü' });
+                tick();
+                fixture.detectChanges();
+                verifyFocusedItem(filteredItemsInxs[index]);
+                tick(500);
+                fixture.detectChanges();
+            }
+
+            // Ciryllic letters
+            filteredItemsInxs = fixture.componentInstance.filterCities('с');
+            for (let index = 0; index < filteredItemsInxs.length; index++) {
+                inputElement.triggerEventHandler('keyup', { key: 'с' });
+                tick();
+                fixture.detectChanges();
+                verifyFocusedItem(filteredItemsInxs[index]);
+                tick(500);
+                fixture.detectChanges();
+            }
         }));
         it('Should not change focus when pressing non-matching character and dropdown is opened', fakeAsync(() => {
-            // TODO
+            select.items[0].selected = true;
+            select.open();
+            tick();
+            fixture.detectChanges();
+
+            const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
+
+            // Verify that focus is unchanged
+            inputElement.triggerEventHandler('keyup', { key: 'w' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
         }));
-        it('Should select item which value starts with a certain character by pressing the corresponding key when dropdown is closed',
+        it('Should filter and select items on character key navigation when dropdown is closed',
             fakeAsync(() => {
-                // TODO
+                select.items[0].selected = true;
+                const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
+                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                    inputElement.triggerEventHandler('keyup', { key: 'p' });
+                    tick();
+                    fixture.detectChanges();
+                    inputElement.triggerEventHandler('keyup', { key: 'a' });
+                    tick();
+                    fixture.detectChanges();
+                    verifySelectedItem(filteredItemsInxs[index]);
+                    tick(500);
+                    fixture.detectChanges();
+                }
             }));
         it('Character key navigation when dropdown is closed should be case insensitive', fakeAsync(() => {
-            // TODO
+            select.items[0].selected = true;
+            const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            tick();
+            fixture.detectChanges();
+            verifySelectedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
+
+            inputElement.triggerEventHandler('keyup', { key: 'L' });
+            tick();
+            fixture.detectChanges();
+            verifySelectedItem(filteredItemsInxs[1]);
+            tick(500);
+            fixture.detectChanges();
         }));
         it('Character key navigation when dropdown is closed should wrap selection',
             fakeAsync(() => {
-                // TODO
+                select.items[0].selected = true;
+                const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                    inputElement.triggerEventHandler('keyup', { key: 'l' });
+                    tick();
+                    fixture.detectChanges();
+                    verifySelectedItem(filteredItemsInxs[index]);
+                    tick(500);
+                    fixture.detectChanges();
+                }
+                // Navigate back to the first filtered item to verify that selection is wrapped
+                inputElement.triggerEventHandler('keyup', { key: 'l' });
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(filteredItemsInxs[0]);
+                tick(500);
+                fixture.detectChanges();
             }));
         it('Should filter and select items properly when pressing foreign character', fakeAsync(() => {
-            // TODO
-            // test with german letters
+            fixture.componentInstance.items = [
+                'Berlin',
+                'Überherrn',
+                'София',
+                'München',
+                'Überlingen',
+                'Stuttgart',
+                'Смолян',
+                'Übersee',
+                'Бургас',
+                'Karlsruhe',
+                'Östringen'];
+            fixture.detectChanges();
+            select.items[0].selected = true;
+
+            // German characters
+            let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
+            for (let index = 0; index < filteredItemsInxs.length; index++) {
+                inputElement.triggerEventHandler('keyup', { key: 'ü' });
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(filteredItemsInxs[index]);
+                tick(500);
+                fixture.detectChanges();
+            }
+
+            // Ciryllic letters
+            filteredItemsInxs = fixture.componentInstance.filterCities('с');
+            for (let index = 0; index < filteredItemsInxs.length; index++) {
+                inputElement.triggerEventHandler('keyup', { key: 'с' });
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(filteredItemsInxs[index]);
+                tick(500);
+                fixture.detectChanges();
+            }
         }));
         it('Should not change selection when pressing non-matching character and dropdown is closed', fakeAsync(() => {
-            // TODO
-            // press q - there is not an item that starts with q
+            select.items[0].selected = true;
+            const filteredItemsInxs = fixture.componentInstance.filterCities('l');
+            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
+
+            // Verify that selection is unchanged
+            inputElement.triggerEventHandler('keyup', { key: 'q' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[0]);
+            tick(500);
+            fixture.detectChanges();
+
+            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem(filteredItemsInxs[1]);
+            tick(500);
+            fixture.detectChanges();
         }));
     });
     describe('Positioning tests: ', () => {
@@ -1277,22 +1478,22 @@ describe('igxSelect', () => {
         }));
         // tslint:disable-next-line:max-line-length
         it('Should display selected item over input and possible items above and below when there is some space above to open and item in the middle of the list is selected',
-        fakeAsync(() => {
-            // TODO
-        }));
+            fakeAsync(() => {
+                // TODO
+            }));
         it('Should display selected item and all possible items above when there is some space above to open and last item is selected',
-        fakeAsync(() => {
-            // TODO
-        }));
+            fakeAsync(() => {
+                // TODO
+            }));
         it('Should display selected item and all possible items above when there is some space below to open and first item is selected',
-        fakeAsync(() => {
-            // TODO
-        }));
-         // tslint:disable-next-line:max-line-length
+            fakeAsync(() => {
+                // TODO
+            }));
+        // tslint:disable-next-line:max-line-length
         it('Should display selected item over input and possible items above and below when there is some space below to open and item in the middle of the list is selected',
-        fakeAsync(() => {
-            // TODO
-        }));
+            fakeAsync(() => {
+                // TODO
+            }));
         it('Should display selected item over input when there is some space below to open and last item is selected', fakeAsync(() => {
             // TODO
             // starts from the input bottom left point
@@ -1312,7 +1513,6 @@ describe('igxSelect', () => {
 class IgxSelectSimpleComponent {
     @ViewChild('select', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
-    // public value: string = 'Hamburg';
     public items: string[] = [
         'New York',
         'Sofia',
@@ -1331,6 +1531,12 @@ class IgxSelectSimpleComponent {
         'Palermo',
         'Palma de Mallorca',
         'Amsterdam'];
+
+    // returns an array of the filtered items indexes
+    public filterCities(startsWith: string) {
+        return this.items.map((city, index) => city.toString().toLowerCase().startsWith(startsWith.toLowerCase()) ? index : undefined)
+            .filter(x => x);
+    }
 }
 
 @Component({

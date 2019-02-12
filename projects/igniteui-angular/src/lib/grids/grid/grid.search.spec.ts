@@ -351,36 +351,40 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should scroll properly when using paging', async () => {
+            grid.height = '240px';
             grid.paging = true;
             grid.perPage = 7;
+            fix.detectChanges();
+            await wait(16);
+
             const searchString = 'assoc';
-            fix.detectChanges();
-
             grid.findNext(searchString);
-            grid.findNext(searchString);
-            await wait();
             fix.detectChanges();
+            await wait(16);
 
-            expect(grid.page).toBe(1);
+            expect(grid.page).toBe(0);
             let highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             expect(highlight).not.toBeNull();
-
-            grid.findPrev(searchString);
-            await wait();
-            fix.detectChanges();
-
-            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            expect(highlight).not.toBeNull();
             expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
-            expect(grid.page).toBe(0);
-            grid.findPrev(searchString);
-            await wait();
-            fix.detectChanges();
 
-            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            expect(highlight).not.toBeNull();
-            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+            grid.findNext(searchString);
+            fix.detectChanges();
+            await wait(16);
+
             expect(grid.page).toBe(1);
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+
+            grid.findPrev(searchString);
+            await wait(50);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.page).toBe(0);
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {
@@ -463,6 +467,33 @@ describe('IgxGrid - search API', () => {
             highlights = cellName.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
+        });
+
+        it('Highlights should be updated after a column is hidden and another column is already hidden', () => {
+            grid.columns[0].hidden = true;
+            fix.detectChanges();
+
+            let activeHighlight: any;
+            let highlights: any[];
+
+            grid.findNext('an');
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(3);
+            expect(activeHighlight).toBe(highlights[0]);
+            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(3);
+            expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
+
+            grid.columns[1].hidden = true;
+            fix.detectChanges();
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+            expect(grid.lastSearchInfo.matchInfoCache.length).toBe(1);
+            expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
         });
 
         it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
@@ -766,22 +797,22 @@ describe('IgxGrid - search API', () => {
 
         it('findNext scrolls to cells out of view', async () => {
             grid.findNext('30');
-            await wait();
+            await wait(100);
             expect(isInView(29, grid.virtualizationState)).toBeTruthy();
 
             grid.findNext('1887');
-            await wait();
+            await wait(100);
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
         it('findPrev scrolls to cells out of view', async () => {
             grid.findPrev('30');
-            await wait();
+            await wait(100);
             fix.detectChanges();
             expect(isInView(29, grid.virtualizationState)).toBeTruthy();
 
             grid.findPrev('1887');
-            await wait();
+            await wait(100);
             fix.detectChanges();
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
@@ -1027,7 +1058,8 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-
+            await wait();
+            fix.detectChanges();
             grid.findNext('software');
             await wait();
             fix.detectChanges();
@@ -1045,7 +1077,7 @@ describe('IgxGrid - search API', () => {
             });
             grid.paging = true;
             grid.perPage = 6;
-
+            fix.detectChanges();
             grid.findNext('Software');
             await wait();
             fix.detectChanges();

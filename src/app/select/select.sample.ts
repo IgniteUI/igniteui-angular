@@ -1,10 +1,11 @@
-// tslint:disable:max-line-length
-import { ConnectedPositioningStrategy } from './../../../projects/igniteui-angular/src/lib/services/overlay/position/connected-positioning-strategy';
-import { AbsoluteScrollStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
-// tslint:disable-next-line:max-line-length
-import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
-import { Component, OnInit, ViewChild, AfterContentInit } from '@angular/core';
-import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings, HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom } from 'igniteui-angular';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    ISelectionEventArgs, CancelableEventArgs, OverlaySettings,
+    HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
+    AbsoluteScrollStrategy,
+    IgxSelectComponent
+} from 'igniteui-angular';
 @Component({
     // tslint:disable-next-line:component-selector
     selector: 'app-select-sample',
@@ -93,24 +94,24 @@ export class SelectSampleComponent implements OnInit {
 
     public openCustomOverlaySettings() {
         if (this.igxSelect.collapsed) {
-        const positionSettings = {
-            target: this.igxSelect.inputGroup.element.nativeElement,
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: scaleInTop,
-            closeAnimation: scaleOutBottom
-        };
+            const positionSettings = {
+                target: this.igxSelect.inputGroup.element.nativeElement,
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                openAnimation: scaleInTop,
+                closeAnimation: scaleOutBottom
+            };
 
-        const customOverlaySettings = {
-            modal: true,
-            closeOnOutsideClick: false,
-            positionStrategy: new ConnectedPositioningStrategy(
-                positionSettings
-            ),
-            scrollStrategy: new AbsoluteScrollStrategy()
-        };
+            const customOverlaySettings = {
+                modal: true,
+                closeOnOutsideClick: false,
+                positionStrategy: new ConnectedPositioningStrategy(
+                    positionSettings
+                ),
+                scrollStrategy: new AbsoluteScrollStrategy()
+            };
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
             this.igxSelect.open(customOverlaySettings);
         }

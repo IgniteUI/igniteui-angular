@@ -20,9 +20,8 @@ import { SelectPositioningStrategy } from './../services/overlay/position/select
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
 import { CancelableEventArgs } from '../core/utils';
-
+import { IgxLabelDirective } from '../directives/label/label.directive';
 
 /**
  * @hidden
@@ -50,7 +49,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
-    @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective)) label: IgxLabelDirective;
 
     private _value: any;
     /**

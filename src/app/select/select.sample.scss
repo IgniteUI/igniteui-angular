@@ -1,13 +1,19 @@
 .sampleWrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     max-width: 700px;
-    min-height: 400px;
     margin: 30px auto;
     padding: 30px;
     background: rgba(0, 0, 0, .1);
     box-sizing: border-box;
+
+    > * {
+        margin-bottom: 32px;
+    }
+
+    .sample-actions {
+        margin-bottom: 0;
+    }
 }
 
 .sample-actions {

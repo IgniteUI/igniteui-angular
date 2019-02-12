@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ISelectionEventArgs } from 'projects/igniteui-angular/src/lib/drop-down';
+import { ISelectionEventArgs } from 'igniteui-angular';
 
 let counter = 0;
 
