@@ -301,12 +301,18 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public changeDaysView = false;
 
     /**
-     * Emits an event when a selection is made in the days view.
-     * Provides reference the `date` property in the `IgxDaysViewComponent`.
+     * Emits an event when a date is selected.
+     * Provides reference the `selectedDates` property.
      * ```html
-     * <igx-days-view (onDateSelection)="onSelection($event)"></igx-days-view>
+     * <igx-calendar (onSelection) = "onSelection($event)"></igx-calendar>
      * ```
-     * @memberof IgxDaysViewComponent
+     * @memberof IgxCalendarComponent
+     */
+    @Output()
+    public onSelection = new EventEmitter<Date | Date[]>();
+
+    /**
+     * @hidden
      */
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
@@ -315,7 +321,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      * @hidden
      */
     @Output()
-    public onViewChnaged = new EventEmitter<Date>();
+    public onViewChanged = new EventEmitter<Date>();
 
     /**
      * @hidden
@@ -376,10 +382,6 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     /**
      *@hidden
      */
-    protected selectedDates;
-    /**
-     *@hidden
-     */
     protected formatterDay;
 
     /**
@@ -403,6 +405,10 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      * @hidden
      */
     public outOfRangeDates: DateRangeDescriptor[];
+    /**
+     *@hidden
+     */
+    public selectedDates;
 
     /**
      * The default css class applied to the component.
@@ -411,6 +417,14 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      */
     @HostBinding('class.igx-calendar')
     public styleClass = true;
+
+    /**
+     * The default `tabindex` attribute for the component.
+     *
+     * @hidden
+     */
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
 
     /**
      * @hidden
@@ -653,11 +667,13 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             this.animationAction = 'prev';
 
             this.callback = (items?, next?) => {
-                const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
-                this.focusPreviousUpDate(day, true);
+                const day = items.find((item) => item.date.date.getTime() === next.getTime());
+                if (day) {
+                    this.focusPreviousUpDate(day.nativeElement, true);
+                }
             };
 
-            this.onViewChnaged.emit(this._nextDate);
+            this.onViewChanged.emit(this._nextDate);
         }
     }
 
@@ -689,11 +705,13 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             this.animationAction = 'next';
 
             this.callback = (items?, next?) => {
-                const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
-                this.focusNextDownDate(day, true);
+                const day = items.find((item) => item.date.date.getTime() === next.getTime());
+                if (day) {
+                    this.focusNextDownDate(day.nativeElement, true);
+                }
             };
 
-            this.onViewChnaged.emit(this._nextDate);
+            this.onViewChanged.emit(this._nextDate);
         }
     }
 
@@ -723,11 +741,13 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             this.animationAction = 'prev';
 
             this.callback = (items?, next?) => {
-                const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
-                this.focusPreviousDate(day);
+                const day = items.find((item) => item.date.date.getTime() === next.getTime());
+                if (day) {
+                    this.focusPreviousDate(day.nativeElement);
+                }
             };
 
-            this.onViewChnaged.emit(this._nextDate);
+            this.onViewChanged.emit(this._nextDate);
         }
     }
 
@@ -758,11 +778,13 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
             this.animationAction = 'next';
 
             this.callback = (items?, next?) => {
-                const day = items.find((item) => item.date.date.getTime() === next.getTime()).nativeElement;
-                this.focusNextDate(day);
+                const day = items.find((item) => item.date.date.getTime() === next.getTime());
+                if (day) {
+                    this.focusNextDate(day.nativeElement);
+                }
             };
 
-            this.onViewChnaged.emit(this._nextDate);
+            this.onViewChanged.emit(this._nextDate);
         }
     }
 
@@ -964,6 +986,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public selectDay(event) {
         this.selectDateFromClient(event.date);
         this.onDateSelection.emit(event);
+
+        this.onSelection.emit(this.selectedDates);
     }
 
     /**

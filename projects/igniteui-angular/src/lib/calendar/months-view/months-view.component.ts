@@ -110,7 +110,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @memberof IgxMonthsViewComponent
      */
     @Output()
-    public onMonthSelection = new EventEmitter<Date>();
+    public onSelection = new EventEmitter<Date>();
 
     /**
      * The default css class applied to the component.
@@ -199,7 +199,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     public selectMonth(event) {
-        this.onMonthSelection.emit(event);
+        this.onSelection.emit(event);
 
         this.date = event;
         this._onChangeCallback(this.date);
@@ -366,7 +366,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.enter')
     public onKeydownEnter() {
-        this.onMonthSelection.emit(this.date);
+        this.onSelection.emit(this.date);
         this._onChangeCallback(this.date);
     }
 }

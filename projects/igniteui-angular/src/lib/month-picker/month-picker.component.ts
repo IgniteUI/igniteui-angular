@@ -1,10 +1,11 @@
 import {
     Component,
-    NgModule
+    NgModule,
+    HostListener
 } from '@angular/core';
 import { IgxCalendarModule, CalendarView, IgxCalendarComponent } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
@@ -45,35 +46,75 @@ import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/
 })
 export class IgxMonthPickerComponent extends IgxCalendarComponent {
 
+    /**
+     * @hidden
+     */
     public yearAction = '';
 
+    /**
+     * @hidden
+     */
     public animationDone() {
         this.yearAction = '';
-        this.monthsView.el.nativeElement.focus();
     }
 
+    /**
+     * @hidden
+     */
     public nextYear() {
         this.yearAction = 'next';
         super.nextYear();
     }
 
+    /**
+     * @hidden
+     */
     public previousYear() {
         this.yearAction = 'prev';
         super.previousYear();
     }
 
+    /**
+     * @hidden
+     */
     public selectMonth(event: Date) {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this._onChangeCallback(this.viewDate);
+
+        this.onSelection.emit(this.viewDate);
     }
 
+    /**
+     * @hidden
+     */
     public selectYear(event: Date) {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
+    }
 
-        requestAnimationFrame(() => {
-            this.monthsView.el.nativeElement.focus();
-        });
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.pageup', ['$event'])
+    public onKeydownPageUp(event: KeyboardEvent) {
+        super.onKeydownShiftPageUp(event);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.pagedown', ['$event'])
+    public onKeydownPageDown(event: KeyboardEvent) {
+        super.onKeydownShiftPageDown(event);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.shift.pageup', ['$event'])
+    @HostListener('keydown.shift.pagedown', ['$event'])
+    public onKeydownShiftPageDownUp(event: KeyboardEvent) {
+        event.stopPropagation();
     }
 }
 

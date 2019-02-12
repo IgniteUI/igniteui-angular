@@ -2,12 +2,10 @@ import { transition, trigger, useAnimation } from '@angular/animations';
 import {
     Component,
     ContentChild,
-    EventEmitter,
     forwardRef,
     HostBinding,
     HostListener,
     Input,
-    Output,
     ViewChild,
     ElementRef
 } from '@angular/core';
@@ -112,17 +110,6 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     public vertical = false;
 
     /**
-     * Emits an event when a selection is made in the calendar.
-     * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
-     * ```html
-     * <igx-calendar (onSelection) = "onSelection($event)"></igx-calendar>
-     * ```
-     * @memberof IgxCalendarComponent
-     */
-    @Output()
-    public onSelection = new EventEmitter<Date | Date[]>();
-
-    /**
      * The default `tabindex` attribute for the component.
      *
      * @hidden
@@ -173,6 +160,18 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      */
     @ViewChild('days', {read: IgxDaysViewComponent})
     public daysView: IgxDaysViewComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('monthsBtn')
+    public monthsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('yearsBtn')
+    public yearsBtn: ElementRef;
 
     /**
      * @hidden
@@ -372,17 +371,24 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
         this._monthAction = 'prev';
 
-        this.daysView.isKeydownTrigger = false;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = false;
+        }
     }
 
     /**
      * @hidden
      */
     public previousMonthKB(event) {
-        event.preventDefault();
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
 
-        this.previousMonth();
-        this.daysView.isKeydownTrigger = true;
+            this.previousMonth();
+            if (this.daysView) {
+                this.daysView.isKeydownTrigger = true;
+            }
+        }
     }
 
     /**
@@ -392,17 +398,24 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
         this._monthAction = 'next';
 
-        this.daysView.isKeydownTrigger = false;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = false;
+        }
     }
 
     /**
      * @hidden
      */
     public nextMonthKB(event) {
-        event.preventDefault();
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
 
-        this.nextMonth();
-        this.daysView.isKeydownTrigger = true;
+            this.nextMonth();
+            if (this.daysView) {
+                this.daysView.isKeydownTrigger = true;
+            }
+        }
     }
 
     /**
@@ -462,7 +475,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         this.viewDate = new Date(event.getFullYear(), this.viewDate.getMonth());
         this._activeView = CalendarView.DEFAULT;
 
-        this.elementRef.nativeElement.focus();
+        requestAnimationFrame(() => {
+            this.yearsBtn.nativeElement.focus();
+        });
     }
 
     /**
@@ -472,7 +487,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
         this._activeView = CalendarView.DEFAULT;
 
-        this.elementRef.nativeElement.focus();
+        requestAnimationFrame(() => {
+            this.monthsBtn.nativeElement.focus();
+        });
     }
 
     /**
@@ -516,6 +533,19 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     }
 
     /**
+     * Deselects date(s) (based on the selection type).
+     *```typescript
+     * this.calendar.deselectDate(new Date(`2018-06-12`));
+     *````
+     */
+    public deselectDate(value?: Date | Date[]) {
+        super.deselectDate(value);
+
+        this.daysView.selectedDates = this.selectedDates;
+        this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
      * @hidden
      */
     @HostListener('keydown.pageup', ['$event'])
@@ -523,7 +553,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         event.preventDefault();
         this.previousMonth();
 
-        this.daysView.isKeydownTrigger = true;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = true;
+        }
     }
 
     /**
@@ -534,7 +566,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         event.preventDefault();
         this.nextMonth();
 
-        this.daysView.isKeydownTrigger = true;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = true;
+        }
     }
 
     /**
@@ -545,7 +579,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         event.preventDefault();
         this.previousYear();
 
-        this.daysView.isKeydownTrigger = true;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = true;
+        }
     }
 
     /**
@@ -556,7 +592,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         event.preventDefault();
         this.nextYear();
 
-        this.daysView.isKeydownTrigger = true;
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = true;
+        }
     }
 
     /**
@@ -564,7 +602,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      */
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
-        this.daysView.onKeydownHome(event);
+        if (this.daysView) {
+            this.daysView.onKeydownHome(event);
+        }
     }
 
     /**
@@ -572,7 +612,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      */
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
-        this.daysView.onKeydownEnd(event);
+        if (this.daysView) {
+            this.daysView.onKeydownEnd(event);
+        }
     }
 
     /**

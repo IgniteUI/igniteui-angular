@@ -11,14 +11,12 @@ export class CalendarViewsSampleComponent implements OnInit {
     @ViewChild('calendar') calendar: IgxCalendarComponent;
     @ViewChild('daysView') daysView: IgxDaysViewComponent;
 
+    dates: Date | Date[];
     date = new Date(2018, 8, 5);
     date1 = new Date(2019, 1, 7);
-    dates = [
-        new Date(2019, 1, 7),
-        new Date(2019, 1, 8)
-    ];
 
     viewDate = new Date(2019, 1, 7);
+    selection = new Date(2018, 1, 13);
 
     locale = 'en';
     localeFr = 'fr';
@@ -48,6 +46,11 @@ export class CalendarViewsSampleComponent implements OnInit {
     }];
 
     ngOnInit() {
+        this.dates = [
+            new Date(2019, 1, 7),
+            new Date(2019, 1, 8)
+        ];
+
         this.daysView.disabledDates = [{
             type: DateRangeType.Between, dateRange: [
                 new Date(2019, 1, 22),
@@ -60,5 +63,29 @@ export class CalendarViewsSampleComponent implements OnInit {
                 new Date(2019, 1, 11)
             ]
         }];
+    }
+
+    onSelection(event) {
+        console.log(event);
+    }
+
+    select() {
+        // this.calendar.selectDate(new Date(2019, 1, 13));
+        this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    }
+
+    deselect() {
+        // this.calendar.deselectDate(new Date(2019, 1, 13));
+        this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    }
+
+    selectDV() {
+        this.daysView.selectDate(new Date(2019, 1, 13));
+        // this.daysView.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    }
+
+    deselectDV() {
+        this.daysView.deselectDate(new Date(2019, 1, 13));
+        // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 }

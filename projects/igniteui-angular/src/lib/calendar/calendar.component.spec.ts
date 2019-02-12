@@ -1630,7 +1630,7 @@ describe('IgxCalendar', () => {
 
             expect(prev.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Space');
+            UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(4);
@@ -1640,8 +1640,8 @@ describe('IgxCalendar', () => {
 
             expect(next.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Space');
-            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Space');
+            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(6);
