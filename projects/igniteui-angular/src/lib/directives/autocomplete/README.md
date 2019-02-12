@@ -24,8 +24,6 @@ The following keyboards can be used when navigating through the drop down items:
  - Typing in the input will open drop down, if closed.
  - `Arrow Down` - will move to next drop down item, if drop down opened.
  - `Arrow Up` - will move to previous drop down item, if drop down opened.
- - `End` will move to last drop down item.
- - `Home` will move to first drop down item.
  - `Enter` will confirm the already selected item and will close the drop down.
  - `Esc` will close the drop down.
 
