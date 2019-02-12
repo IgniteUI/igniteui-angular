@@ -1,27 +1,29 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
-// tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit, HostBinding, Directive, TemplateRef } from '@angular/core';
+import {
+    NgModule, Component, ContentChildren,
+    forwardRef, QueryList, ViewChild,
+    Input, ContentChild, AfterContentInit,
+    HostBinding, Directive, TemplateRef, EventEmitter
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemBase } from '../drop-down/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 
-import { IgxDropDownItemBase } from '../drop-down';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
 
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
-import { IgxLabelDirective } from '../input-group';
 import { CancelableEventArgs } from '../core/utils';
-
+import { IgxLabelDirective } from '../directives/label/label.directive';
 
 /**
  * @hidden
@@ -56,7 +58,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
-    @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective)) label: IgxLabelDirective;
 
     private _value: any;
     /**
@@ -171,8 +173,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public writeValue = (value: any) => {
         // 1. Set the input value
         // 2. Select the new item from the drop down
-            this.value = value;
-     }
+        this.value = value;
+    }
 
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
