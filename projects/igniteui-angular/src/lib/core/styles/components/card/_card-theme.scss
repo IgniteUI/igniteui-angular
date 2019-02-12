@@ -159,11 +159,11 @@
     %igx-card-content {
         flex-basis: 100%;
         padding: $card-content-padding;
+        color: --var($theme, 'content-text-color');
     }
 
     %igx-card-content-text {
         margin: $card-content-margin;
-        color: --var($theme, 'content-text-color');
     }
 
     %igx-card-media {
