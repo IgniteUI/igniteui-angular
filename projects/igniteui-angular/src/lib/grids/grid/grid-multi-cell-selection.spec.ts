@@ -1,8 +1,9 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { SelectionWithScrollsComponent } from '../../test-utils/grid-samples.spec';
+import { SelectionWithScrollsComponent, SelectionWithTransactionsComponent } from '../../test-utils/grid-samples.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -15,7 +16,8 @@ describe('IgxGrid - Multi Cell selection', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                SelectionWithScrollsComponent
+                SelectionWithScrollsComponent,
+                SelectionWithTransactionsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -461,109 +463,1149 @@ describe('IgxGrid - Multi Cell selection', () => {
         });
 
 
-        it('Sorting -  selection should not change when sorting is performed', (async () => {
+        it('Sorting -  selection should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
-            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = grid.getCellByColumn(1, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
-            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
+            const selectedData = [ { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')} ];
+            expect(grid.getSelectedData()).toEqual(selectedData);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            const filteredSelectedData = [ { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')} ];
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             const rowID = grid.selectedCells[0].cellID.rowID;
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
+            const data = grid.getSelectedData();
+            expect(data).not.toEqual(selectedData);
+            expect(data).toEqual(filteredSelectedData);
             grid.clearSort();
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
             expect(grid.selectedCells[0].cellID.rowID).not.toBe(rowID);
-        }));
+        });
 
-        it('Sorting - selection containing selected cell out of the view should not change when sorting is performed', (async () => {
+        it('Sorting - selection containing selected cell out of the view should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
-            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 2, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false},
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false}
+            ];
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
+            expect(grid.getSelectedData()).toEqual(selectedData);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
+            const sortedData = [
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'), Age: 43, OnPTO: false},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true }
+            ];
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
+            expect(grid.getSelectedData()).not.toEqual(selectedData);
+            expect(grid.getSelectedData()).toEqual(sortedData);
             grid.clearSort();
             fix.detectChanges();
 
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
-        }));
+            expect(grid.getSelectedData().length).toBe(selectedData.length);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
 
-        it('Filtering - selected range should not change when filtering is performed', (async () => {
-            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+        it('Filtering - selected range should not change when filtering is performed', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = grid.getCellByColumn(0, 'ParentID');
             const secondCell = grid.getCellByColumn(3, 'HireDate');
-            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            const selectedData = [ { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+            ];
             HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            const filteredSelectedData = [ { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+            ];
             HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
+            expect(grid.getSelectedData()).not.toEqual(selectedData);
+            expect(grid.getSelectedData()).toEqual(filteredSelectedData);
             grid.clearFilter();
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifySelectedRange(grid, 0, 3, 1, 3);
-        }));
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
 
-        it('Filtering - selected range should not change when filtering result is smaller that selected range', (async () => {
-            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+        });
+
+        it('Filtering - selected range should not change when filtering result is smaller that selected range', () => {
             const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
+            const selectedData = [
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011')},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
 
             HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
 
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
+            const filteredSelectedData = [ { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+            ];
 
             HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
+            expect(grid.getSelectedData()).not.toEqual(selectedData);
+            expect(grid.getSelectedData()).toEqual(filteredSelectedData);
             grid.clearFilter();
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
-        }));
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            // filtering in grid with enabled paging
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
 
-        it('Filtering - selected range should not change when filtering result is empty that selected range', (async () => {
-            // const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const range = { rowStart: 0, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO' };
+            const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(selectRange);
+            fix.detectChanges();
+            const selData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selData);
+            grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+            const fData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
+            expect(grid.getSelectedData()).toEqual(fData);
+        });
+
+        it('Filtering - selected range should not change when filtering result is empty that selected range', () => {
+            const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
-            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            const selectedData = [
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'),  Age: 43, OnPTO: false},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
+            expect(grid.getSelectedData()).toEqual(selectedData);
 
             grid.filter('Name', 'leon', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
+            expect(grid.dataRowList.length).toBe(0);
+            expect(grid.getSelectedData()).toEqual([]);
             grid.clearFilter();
             fix.detectChanges();
 
-            // expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 0, 7, 0, 5);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
 
+        it('Paging - selected range should be cleared on paging', () => {
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+
+            const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+            const selectedData = [{ ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.paginate(1);
+            fix.detectChanges();
+
+            expect(grid.getSelectedRanges().length).toBe(0);
+            expect(grid.getSelectedRanges()).toEqual([]);
+            expect(grid.getSelectedData().length).toBe(0);
+            expect(grid.getSelectedData()).toEqual([]);
+        });
+
+        it('Paging - selected range should be cleared when perPage items are changed', () => {
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 5);
+            expect(grid.getSelectedData().length).toBe(selectedData.length);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.perPage = 7;
+            fix.detectChanges();
+
+            expect(grid.getSelectedRanges().length).toBe(0);
+            expect(grid.getSelectedRanges()).toEqual([]);
+            expect(grid.getSelectedData().length).toBe(0);
+            expect(grid.getSelectedData()).toEqual([]);
+        });
+
+        it('Resizing - selected range should not change on resizing', fakeAsync(() => {
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid,  2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 4, 0, 3);
+            expect(grid.getSelectedData().length).toBe(selectedData.length);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const columnName = grid.getColumnByName('Name');
+            const initialWidth = columnName.width;
+            columnName.resizable = true;
+            fix.detectChanges();
+
+
+            const headers = fix.debugElement.queryAll(By.css('.igx-grid__th'));
+            const headerResArea = headers[2].parent.children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
+            tick();
+            fix.detectChanges();
+
+            const resizer = headers[2].parent.children[1].children[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 200, 15);
+            tick();
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 200, 15);
+            tick();
+            fix.detectChanges();
+
+            expect(columnName.width).not.toEqual(initialWidth);
+            HelperUtils.verifySelectedRange(grid,  2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 4, 0, 3);
+            expect(grid.getSelectedData().length).toBe(selectedData.length);
+            expect(grid.getSelectedData()).toEqual(selectedData);
         }));
+
+        it('Hiding - selection should be perserved on column hiding', () => {
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            const columnName = grid.getColumnByName('Name');
+            columnName.hidden = true;
+            fix.detectChanges();
+            const newSelectedData = [{ ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014'), Age: 31},
+                { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014'), Age: 44 }
+            ];
+
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+            columnName.hidden = false;
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        fit('Hiding - when hide last column which is in selected range, selection range is changed', (async() => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.dataRowList.first.virtDirRow.scrollTo(5);
+            await wait(100);
+            fix.detectChanges();
+
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 'HireDate', columnEnd: 'OnPTO' };
+            grid.selectRange(range);
+            fix.detectChanges();
+            const selectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
+            { HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true }
+            ];
+            HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 5);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            const columnName = grid.getColumnByName('OnPTO');
+            columnName.hidden = true;
+            await wait(20);
+            fix.detectChanges();
+            const newSelectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31},
+            { HireDate: new Date('May 4, 2014'), Age: 44}];
+            debugger;
+            HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 4);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+            columnName.hidden = false;
+            fix.detectChanges();
+            grid.dataRowList.first.virtDirRow.scrollTo(5);
+            await wait(100);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
+            HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 5);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        }));
+
+        it('Pinning - should be able to select cells from unpinned cols to pinned', (async() => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.dataRowList.first.virtDirRow.scrollTo(5);
+            await wait(100);
+            fix.detectChanges();
+
+            const columnName = grid.getColumnByName('OnPTO');
+            columnName.pinned = true;
+            fix.detectChanges();
+
+            const firstCell = grid.getCellByColumn(2, 'OnPTO');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            grid.dataRowList.first.virtDirRow.scrollTo(0);
+            await wait(100);
+            fix.detectChanges();
+
+            const selectedData = [
+                { OnPTO: false, ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { OnPTO: true, ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { OnPTO: false, ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 4);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            columnName.pinned = false;
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25}
+            ];
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 4);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        }));
+
+        it('Pinning - should be able to select cells from unpinned cols to pinned', (async() => {
+            const columnName = grid.getColumnByName('Age');
+            const secondCol = grid.getColumnByName('OnPTO');
+            secondCol.pinned = true;
+            columnName.pinned = true;
+            fix.detectChanges();
+
+            grid.dataRowList.first.virtDirRow.scrollTo(2);
+            await wait(100);
+            fix.detectChanges();
+
+            const firstCell = grid.getCellByColumn(2, 'Age');
+            const secondCell = grid.getCellByColumn(4, 'Name');
+
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', Age: 31},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', Age: 44},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', Age: 25}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 4);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        }));
+
+        it('Pinning - should be able to select cells from unpinned cols to pinned', () => {
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            const column = grid.getColumnByName('Name');
+            column.pinned = true;
+            fix.detectChanges();
+            const newSelectedData = [
+                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        });
+
+        it('Pinning - selection should remains the same when unpin column from selected area', () => {
+            const firstCol = grid.getColumnByName('ParentID');
+            const secondCol =  grid.getColumnByName('HireDate');
+
+            firstCol.pinned = true;
+            secondCol.pinned = true;
+            fix.detectChanges();
+
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, HireDate: new Date('May 4, 2014')},
+                { ParentID: 847,  HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 1);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            firstCol.pinned = false;
+            fix.detectChanges();
+
+            const newSelData = [
+                { HireDate: new Date('Sep 18, 2014'), ID: 317},
+                { HireDate: new Date('May 4, 2014'), ID: 225},
+                { HireDate: new Date('Dec 9, 2017'), ID: 663}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 1);
+            expect(grid.getSelectedData()).toEqual(newSelData);
+        });
+
+        it('GroupBy - should be able to select range when there is grouping applied ', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.clearGrouping();
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        });
+
+        it('GroupBy - selected range should remain the same when perform grouping ', () => {
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        });
+
+        it('GroupBy - selected range should change when collapse a group row', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.rowList.first.toggle();
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        });
+
+        it('Grouping - selected data should be empty when all group rows are collapsed', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.toggleAllGroupRows();
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.dataRowList.length).toBe(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            grid.toggleAllGroupRows();
+            fix.detectChanges();
+
+            expect(grid.dataRowList.lenght).not.toBe(0);
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('Moving - selection should not change when move columns inside selected range', () => {
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('HireDate'));
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.primaryKey = 'ID';
+            fix.detectChanges();
+
+            grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'));
+            const newSelectedData = [
+                { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        });
+
+        it('Summaries - selection range should not change when enable/disable summaries', (async () => {
+            grid.height = '600px';
+            await wait(100);
+            fix.detectChanges();
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+            grid.summaryCalculationMode = 'childLevelsOnly';
+            grid.getColumnByName('Name').hasSummary = true;
+            fix.detectChanges();
+
+            const firstCell = grid.getCellByColumn(1, 'ParentID');
+            const secondCell = grid.getCellByColumn(5, 'HireDate');
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 5, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.getColumnByName('Name').hasSummary = false;
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 5, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        }));
+
+        it('Summaries - selection range should not change when change summaryPosition', (async () => {
+            grid.height = '600px';
+            await wait(100);
+            fix.detectChanges();
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
+            });
+            grid.summaryCalculationMode = 'childLevelsOnly';
+            grid.getColumnByName('Name').hasSummary = true;
+            fix.detectChanges();
+
+            const firstCell = grid.getCellByColumn(1, 'ParentID');
+            const secondCell = grid.getCellByColumn(5, 'HireDate');
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 5, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.summaryPosition = 'top';
+            fix.detectChanges();
+            const newSelData = [
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 5, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelData);
+
+            grid.getColumnByName('Name').hasSummary = false;
+            fix.detectChanges();
+            const newSelectedData = [
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 5, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+        }));
+
+        it('CRUD - selection range should be preserved when delete a row', () => {
+            const firstCell = grid.getCellByColumn(2, 'ParentID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const row = grid.getRowByIndex(3);
+            row.delete();
+            fix.detectChanges();
+
+
+            const newSelectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+
+            grid.primaryKey = 'ID';
+            fix.detectChanges();
+
+            expect(grid.primaryKey).toBeDefined();
+
+            grid.deleteRow(15);
+            grid.deleteRow(101);
+            fix.detectChanges();
+
+            const newSelection = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelection);
+
+            grid.selectRange();
+            fix.detectChanges();
+
+            const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            let data = [
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false}
+            ];
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(data);
+
+            grid.deleteRow(957);
+            fix.detectChanges();
+
+            data = [
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false}
+            ];
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
+            expect(grid.getSelectedData()).toEqual(data);
+        });
+
+        it('CRUD - selected range should not change when add row', () => {
+            const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            let selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.sort({ fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            selectedData = [
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false});
+            fix.detectChanges();
+
+            selectedData = [
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017')},
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('CRUD - selected range should not change when update row', () => {
+            const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            let selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            const row = grid.getRowByIndex(2);
+            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            fix.detectChanges();
+
+            selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('CRUD - selected range should not change when update row', () => {
+            const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+
+            grid.getCellByColumn(0, 'ParentID').update(123);
+            grid.getCellByColumn(2, 'ParentID').update(847);
+            grid.getCellByColumn(3, 'Name').update('Paola Alicante');
+            fix.detectChanges();
+
+            let selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.primaryKey = 'ID';
+            fix.detectChanges();
+
+            grid.getCellByKey(475, 'ParentID').update(741);
+            grid.getCellByKey(317, 'ID').update(987);
+            grid.getCellByKey(663, 'Name').update('Peter Lincoln');
+            fix.detectChanges();
+
+            selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 987, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Peter Lincoln', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('Search - selection range should be preserved when perform search', () => {
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.findNext('re');
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            expect(grid.nativeElement.querySelector('.igx-highlight__active')).toBeDefined();
+            const cell = grid.getCellByColumn(3, 'Name');
+            expect(cell.nativeElement.querySelector('.igx-highlight')).toBeDefined();
+            expect(cell.nativeElement.classList.contains('igx-grid__td--selected')).toBeTruthy();
+            grid.findNext('re');
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(cell.nativeElement.querySelector('.igx-highlight__active')).toBeDefined();
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('Row Selection', () => {
+            grid.rowSelectable = true;
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const row = grid.getRowByIndex(3);
+            grid.selectRows([row.rowID]);
+            fix.detectChanges();
+
+            expect(row.isSelected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.getCellByColumn(3, 'ParentID');
+
+        });
+
+    });
+
+    describe('MCS - CRUD - transaction enabled', () => {
+        let fix;
+        let grid;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(SelectionWithTransactionsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('CRUD - selected range should not change when delete row', () => {
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            let selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const row = grid.getRowByIndex(3);
+            row.delete();
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.transactions.undo();
+            fix.detectChanges();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.transactions.redo();
+            fix.detectChanges();
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+            selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('CRUD - selected range should not change when update row', () => {
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const row = grid.getRowByIndex(3);
+            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+            grid.transactions.clear();
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.primaryKey = 'ID';
+            fix.detectChanges();
+
+            grid.updateRow({ ID: 112, ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017')}, 225);
+            fix.detectChanges();
+            const data = [
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017')},
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(data);
+
+            grid.transactions.undo();
+            fix.detectChanges();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.transactions.redo();
+            fix.detectChanges();
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
+            expect(grid.getSelectedData()).toEqual(data);
+        });
+
+        it('CRUD - selected range should not change when add row', () => {
+            const range = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            fix.detectChanges();
+
+            let selectedData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.sort({ fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            const newSelectedData = [
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false});
+            fix.detectChanges();
+
+            selectedData = [
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
+
+            grid.transactions.redo();
+            fix.detectChanges();
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
     });
 });

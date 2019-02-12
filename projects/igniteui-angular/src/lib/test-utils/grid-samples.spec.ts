@@ -881,3 +881,12 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
 export class SelectionWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
 }
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class SelectionWithTransactionsComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
