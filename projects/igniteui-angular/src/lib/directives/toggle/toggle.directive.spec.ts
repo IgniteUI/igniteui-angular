@@ -7,7 +7,7 @@ import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy, HorizontalAlignment
 } from '../../services';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -230,7 +230,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.onClosing, 'emit').and.callThrough();
         spyOn(toggle.onClosed, 'emit').and.callThrough();
 
-        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+        toggle.onClosing.subscribe((e: CancelableBrowserEventArgs) => e.cancel = true);
 
         toggle.open();
         fixture.detectChanges();
@@ -453,6 +453,7 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
 
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: new Event('click') });
             expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
 
