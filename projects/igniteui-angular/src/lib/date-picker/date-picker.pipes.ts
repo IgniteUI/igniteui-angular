@@ -3,6 +3,7 @@ import { IGX_DATE_PICKER_COMPONENT, IgxDatePickerBase } from './date-picker.comm
 import {
     trimUnderlines,
     maskToPromptChars,
+    addPromptCharsEditMode,
 
 } from './date-picker.utils';
 
@@ -31,7 +32,8 @@ export class DatePickerInputValuePipe implements PipeTransform {
     transform(value: any, args?: any): any {
         if (this._datePicker.value === null || this._datePicker.value === undefined) {
             return maskToPromptChars(this._datePicker.inputMask);
+        } else {
+            return addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
         }
-        return '';
     }
 }

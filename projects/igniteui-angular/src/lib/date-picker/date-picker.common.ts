@@ -7,4 +7,5 @@ export interface IgxDatePickerBase {
     mask: string;
     inputMask: string;
     rawDateString: string;
+    dateFormatParts: any[];
 }
