@@ -245,6 +245,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 case 'space':
                 case 'spacebar':
                 case ' ':
+                case 'home':
+                case 'end':
                     return;
                 default:
                     super.handleKeyDown(event);

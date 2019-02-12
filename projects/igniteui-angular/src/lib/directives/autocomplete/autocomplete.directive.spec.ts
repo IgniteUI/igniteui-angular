@@ -16,6 +16,7 @@ const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_DROP_DOWN_ITEM_SELECTED = 'igx-drop-down__item--selected';
+const INPUT_CSS_CLASS = 'igx-input-group__input';
 
 describe('IgxAutocomplete', () => {
     let fixture;
@@ -615,46 +616,26 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.items[0].focused).toBeTruthy();
             expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
         });
-        it('Should navigate to first/last item with Home/End keys', fakeAsync(() => {
+        it('Should not overwrite browser functionality for Home/End keys', () => {
             UIInteractions.sendInput(input, 'r', fixture);
             fixture.detectChanges();
-            expect(dropDown.items[0].focused).toBeTruthy();
+            expect(input.nativeElement.selectionEnd).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('end', input.nativeElement, true);
-            fixture.detectChanges();
-            expect(dropDown.items[dropDown.items.length - 1].focused).toBeTruthy();
-            expect(dropDown.items[0].focused).toBeFalsy();
+            const mockObj = {
+                key: 'Home',
+                code: 'Home',
+                preventDefault: () => {}
+            };
+            spyOn(mockObj, 'preventDefault');
+            const inputDebug = fixture.debugElement.queryAll(By.css('.' + INPUT_CSS_CLASS))[0];
+            inputDebug.triggerEventHandler('keydown', mockObj);
+            expect(mockObj.preventDefault).not.toHaveBeenCalled();
 
-            UIInteractions.triggerKeyDownEvtUponElem('home', input.nativeElement, true);
-            fixture.detectChanges();
-            expect(dropDown.items[0].focused).toBeTruthy();
-            expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
-            fixture.detectChanges();
-            expect(dropDown.items[2].focused).toBeTruthy();
-            expect(dropDown.items[0].focused).toBeFalsy();
-
-            UIInteractions.triggerKeyDownEvtUponElem('end', input.nativeElement, true);
-            fixture.detectChanges();
-            expect(dropDown.items[dropDown.items.length - 1].focused).toBeTruthy();
-            expect(dropDown.items[2].focused).toBeFalsy();
-
-            // Select last item
-            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
-            fixture.detectChanges();
-            tick();
-            expect(fixture.componentInstance.townSelected).toBe(dropDown.items[dropDown.items.length - 1].value);
-            expect(dropDown.collapsed).toBeTruthy();
-
-            // Check that dropdown does not preserve focus on last item
-            UIInteractions.sendInput(input, 'r', fixture);
-            fixture.detectChanges();
-            tick();
-            expect(dropDown.items[0].focused).toBeTruthy();
-            expect(dropDown.items[dropDown.items.length - 1].focused).toBeFalsy();
-        }));
+            mockObj.key = 'End';
+            mockObj.code = 'End';
+            inputDebug.triggerEventHandler('keydown', mockObj);
+            expect(mockObj.preventDefault).not.toHaveBeenCalled();
+        });
         it('Should apply default width to both input and dropdown list elements', () => {
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
