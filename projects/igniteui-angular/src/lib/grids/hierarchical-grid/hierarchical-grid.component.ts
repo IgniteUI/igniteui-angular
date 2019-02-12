@@ -643,6 +643,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.page = Math.floor(dataRowIndex / this.perPage);
             this.cdr.detectChanges();
             indexInView = this.verticalScrollContainer.igxForOf.indexOf(row);
+        } else if (indexInView === -1 && this.isChildGridRecord(row)) {
+            indexInView = this.verticalScrollContainer.igxForOf.findIndex((item) => item.rowID === row.rowID);
         }
         // check if it is already in view
         if (!this.verticalScrollContainer.isIndexInView(this.verticalScrollContainer.igxForOf.indexOf(row))) {
