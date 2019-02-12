@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 - **New component** `IgxHierarchicalGrid`:
     - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
 
-- **New component** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
     ```html
     <input igxInput type="text" [igxAutocomplete]="townsPanel" />
     <igx-drop-down #townsPanel>

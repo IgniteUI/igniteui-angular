@@ -151,11 +151,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Emitted after item from the drop down is selected
      *
      * ```html
-     * <input igxInput [igxAutocomplete]="townsPanel" (onItemSelected)='itemSelected()' />
+     * <input igxInput [igxAutocomplete]="townsPanel" (onItemSelected)='itemSelected($event)' />
      * ```
      */
     @Output()
-    onItemSelected = new EventEmitter<any>();
+    onItemSelected = new EventEmitter<IAutocompleteItemSelectionEventArgs>();
 
     /**
      * @hidden
@@ -331,7 +331,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
-        this.nativeElement.click();
+        this.nativeElement.focus();
     }
 
     private highlightFirstItem = () => {

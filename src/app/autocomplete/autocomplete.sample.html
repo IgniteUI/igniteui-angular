@@ -41,8 +41,9 @@
                     </igx-input-group>
                     <igx-switch name="toggle" [(ngModel)]="enabled"></igx-switch>
                 </div>
+                <igx-dialog #alert title="Submited value" [message]="townSelected" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
                 <div class="submit">
-                    <button igxButton>Submit</button>
+                    <button igxButton (click)="alert.open()">Submit</button>
                 </div>
             </form>
         </article>
