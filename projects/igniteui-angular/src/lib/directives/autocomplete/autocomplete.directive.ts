@@ -15,7 +15,7 @@ import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
  * @export
  */
-export interface IAutocompleteItemSelectionEventArgs extends CancelableEventArgs {
+export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs {
     /**
      * New value selected from the drop down
      */
@@ -155,7 +155,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Output()
-    onItemSelected = new EventEmitter<IAutocompleteItemSelectionEventArgs>();
+    onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
     /**
      * @hidden
@@ -326,7 +326,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
         const newValue = value.newSelection.value;
-        const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
+        const args: AutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
         if (args.cancel) {
             return;
