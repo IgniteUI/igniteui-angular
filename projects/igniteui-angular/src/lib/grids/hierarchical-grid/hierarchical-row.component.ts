@@ -54,8 +54,18 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         return this.grid.isExpanded(this.rowData);
     }
 
+    /**
+     * @hidden
+     */
     public get hasChildren() {
         return  !!this.grid.childLayoutKeys.length;
+    }
+
+    /**
+     * @hidden
+     */
+    public get expanderActive() {
+        return this.hasChildren && !this.added;
     }
 
     /**
@@ -73,6 +83,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * ```
      */
     public toggle() {
+        if (!this.expanderActive) {
+            return;
+        }
         const grid = this.gridAPI.get(this.grid.id);
         const state = this.gridAPI.get(this.grid.id).hierarchicalState;
         if (!this.expanded) {
