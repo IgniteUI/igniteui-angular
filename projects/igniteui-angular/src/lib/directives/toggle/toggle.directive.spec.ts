@@ -420,7 +420,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
 
             fixture.componentInstance.toggleAction.onClick();
@@ -442,7 +443,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
 
             // defaults
@@ -476,7 +478,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
             fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
             fixture.detectChanges();
@@ -533,7 +536,8 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
-                outlet: jasmine.any(IgxOverlayOutletDirective)
+                outlet: jasmine.any(IgxOverlayOutletDirective),
+                excludePositionTarget: true
             };
 
             fixture.componentInstance.toggleAction.onClick();
