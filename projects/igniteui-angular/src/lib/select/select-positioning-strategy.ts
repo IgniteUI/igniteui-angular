@@ -1,8 +1,8 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from './../utilities';
-import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { IPositionStrategy } from '.';
-import { fadeOut, fadeIn } from '../../../animations/main';
-import { IgxSelectComponent } from '../../../select/select.component';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from '../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
+import { IPositionStrategy } from '../services/overlay/position';
+import { fadeOut, fadeIn } from '../animations/main';
+import { IgxSelectComponent } from './select.component';
 
 enum Direction {
     Top = -1,

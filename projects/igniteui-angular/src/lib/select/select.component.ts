@@ -15,7 +15,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/inpu
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
+import { SelectPositioningStrategy } from './select-positioning-strategy';
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
