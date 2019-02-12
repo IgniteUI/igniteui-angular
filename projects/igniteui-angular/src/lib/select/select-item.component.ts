@@ -1,8 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, ElementRef, Inject, HostBinding, Input, DoCheck, Optional } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
-import { IgxDropDownGroupComponent, IgxDropDownItemBase } from '../drop-down';
+import { Component, HostBinding, Input, DoCheck } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -12,20 +9,17 @@ let NEXT_ID = 0;
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
-    // constructor(
-    //     @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
-    //     protected elementRef: ElementRef,
-    //     protected selection: IgxSelectionAPIService,
-    //     @Optional() protected group: IgxDropDownGroupComponent
-    // ) {
-    //     super(dropDown, elementRef, group);
-    // }
-
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-disabled')
     public get ariaDisabled() {
         return this.disabled;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.role')
     public get ariaRole() {
         return 'option';
@@ -45,12 +39,24 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
     @Input()
     public id = `igx-drop-down-item-${NEXT_ID++}`;
 
+    /**
+     * @hidden
+     */
     public get itemText() {
         return this.elementRef.nativeElement.innerText.trim();
     }
 
+    /**
+     * Sets/Gets if the item is the currently selected one in the select
+     *
+     * ```typescript
+     *  let mySelectedItem = this.select.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.selected; // true
+     * ```
+     */
+    @Input()
     public get selected() {
-        return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this.value);
+        return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this);
     }
 
     public set selected(value: any) {
