@@ -1,6 +1,10 @@
-import { Component, ViewChild, PipeTransform, Pipe } from '@angular/core';
-import { IgxDatePickerComponent } from 'igniteui-angular';
-import { DatePipe } from '@angular/common';
+import { Component, ViewChild, PipeTransform, Pipe, OnInit } from '@angular/core';
+import { IgxDatePickerComponent, DateRangeType } from 'igniteui-angular';
+import { DatePipe, formatDate } from '@angular/common';
+
+// import { registerLocaleData } from '@angular/common';
+// import localeDE from '@angular/common/locales/de';
+// import localeJA from '@angular/common/locales/ja';
 
 @Component({
     selector: 'app-date-picker-sample',
@@ -8,33 +12,85 @@ import { DatePipe } from '@angular/common';
     templateUrl: 'date-picker.sample.html'
 })
 
-export class DatePickerSampleComponent {
-    @ViewChild('datePicker') datePicker: IgxDatePickerComponent;
-    date = new Date('10/3/2018');
+export class DatePickerSampleComponent implements OnInit {
+    // @ViewChild('datePicker') datePicker: IgxDatePickerComponent;
+    // @ViewChild('editableDatePicker') editableDatePicker: IgxDatePickerComponent;
+    // date = new Date('10/3/2018');
+
+    // public labelVisibility = true;
+    // public testDate = new Date(2030, 1, 1, 15, 16, 17, 18);
+
+    // public date99: Date = new Date(2017, 7, 7);
+    public formatOptions = {
+        day: 'numeric',
+        month: 'long',
+        weekday: 'short',
+        year: 'numeric'
+    };
+    // @ViewChild('dp99') public datePicker99: IgxDatePickerComponent;
 
     public date1;
+    public date2;
+    public date3;
+    public date4;
+
+    public date5 = new Date('10/5/2020');
+
+    public range = [
+        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
+        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
+    ];
 
     formatter = (_: Date) => {
-        return _.toDateString();
+        return _.toLocaleString('en');
     }
 
-    public deselect() {
-        this.datePicker.deselectDate();
+    // public deselect(event) {
+    //     event.sender.deselectDate();
+    // }
+    public ngOnInit() {
+
+        // this.editableDatePicker.disabledDates = [{ type: DateRangeType.Specific, dateRange: this.range }];
+        // this.testdatePicker.value = this.testDate;
+
+        // const test = formatDate(this.date1, 'shortDate', 'ja');
+        // console.log('test ' + test);
+    }
+
+    // public test(event) {
+    //     console.log('open');
+    // }
+
+    public onClose(event) {
+        console.log('activeElement ' + document.activeElement);
     }
 
     constructor() {
-        const date = new Date();
-        date.setDate(10);
-        date.setMonth(2);
-        date.setFullYear(2018);
+        // registerLocaleData(localeJA);
+        // registerLocaleData(localeDE);
+        const date1 = new Date();
+        date1.setDate(8);
+        date1.setMonth(5);
+        date1.setFullYear(1978);
 
-        this.date1 = date;
+        const date2 = new Date();
+        date2.setDate(6);
+        date2.setMonth(4);
+        date2.setFullYear(2020);
+
+        const date3 = new Date();
+        date3.setDate(14);
+        date3.setMonth(10);
+        date3.setFullYear(2021);
+
+        this.date1 = date1;
+        this.date2 = date2;
+        this.date3 = date3;
+        this.date4 = date3;
 
         // this.date1.setDate(10);
-        // this.date1.setMonth(2);
+        // this.date1.setMonth(10);
         // this.date1.setFullYear(2018);
-
-        const test = new DateFormatPipe('en').transform(date, 'd.M.y');
     }
 }
 @Pipe({

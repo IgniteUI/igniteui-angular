@@ -5,29 +5,93 @@
             <h4 class="sample-title">Default Date Picker.</h4>
             <label>Date: {{ datePicker.value }}</label>
             <div class="preview">
-                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
+                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today" [(ngModel)]="date1"
+                    [vertical]="true" [weekStart]="4"></igx-date-picker>
             </div>
         </article> -->
 
-        <article class="datepicker-column">
+        <!-- <article class="datepicker-column">
             <h4 class="sample-title">Editable Date Picker bind with ngModel</h4>
             <label>Date: {{ editableDatePicker.value }}</label>
             <label>Format: {{ editableDatePicker.format }}</label>
             <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [(ngModel)]="date1">
+                <igx-date-picker #editableDatePicker mode="editable" [weekStart]="1" [(ngModel)]="date1"
+                    [isSpinLoop]="true" (onDisabledDate)="test($event)">
                 </igx-date-picker>
+                <button igxButton igxRipple type="raised" (click)="deselect($event)">Deselect date</button>
             </div>
-        </article>
+        </article> -->
 
         <!-- <article class="datepicker-column">
             <h4 class="sample-title">Editable Date Picker</h4>
-            <label>Date: {{ editableDatePicker1.value }}</label>
-            <label>Format: {{ editableDatePicker1.format }}</label>
+            <label>Date: {{ editableDatePicker6.value }}</label>
+            <label>Format: mediumDate {{ editableDatePicker6.format }}</label>
             <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker1 mode="editable" [value]="date1" format="longDate"></igx-date-picker>
+                <igx-date-picker #editableDatePicker6 mode="editable" [(ngModel)]="date4" format="mediumDate"
+                    [isSpinLoop]="true"></igx-date-picker>
             </div>
         </article> -->
+
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker</h4>
+            <label>Date: {{ editableDatePicker6.value }}</label>
+            <label>Format: longDate {{ editableDatePicker6.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker6 mode="editable" [(ngModel)]="date4" format="longDate"
+                    [isSpinLoop]="true"></igx-date-picker>
+            </div>
+        </article> -->
+
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker - shortDate</h4>
+            <label>Date: {{ editableDatePicker2.value | date:'fullDate'}}</label>
+            <label>Format: shortDate {{ editableDatePicker2.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker2 mode="editable" [(ngModel)]="date1" format="shortDate">
+                </igx-date-picker>
+            </div>
+        </article> -->
+
+
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker - custom format</h4>
+            <label>Date: {{ editableDatePicker3.value
+                | date:'fullDate' }}</label>
+            <label>Format: custom {{ editableDatePicker3.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker3 mode="editable" [(ngModel)]="date2" format="dd-MM-yyyy">
+                </igx-date-picker>
+            </div>
+        </article> -->
+
+        <!-- TO TEST -->
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker</h4>
+            <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
+            <label>Format: {{ editableDatePicker1.format }}</label>
+            <label>mask: {{ editableDatePicker1.mask }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker1 mode="editable" [(ngModel)]="date1" format="dd.MM.y" mask="M/d/y">
+                </igx-date-picker>
+            </div>
+        </article> -->
+
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker - mediumDate</h4>
+            <label>Date: {{ editableDatePicker4.value | date:'fullDate' }}</label>
+            <label>Format: mediumDate {{ editableDatePicker4.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker4 mode="editable" [(ngModel)]="date4" format="mediumDate">
+                </igx-date-picker>
+            </div>
+        </article> -->
+
+        <article class="datepicker-column">
+            <h4 class="sample-title">Readonly Date Picker</h4>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker [value]="date5"></igx-date-picker>
+            </div>
+        </article>
 
         <!-- <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date.</h4>
@@ -36,6 +100,7 @@
                 <igx-date-picker [value]="date"></igx-date-picker>
             </div>
         </article> -->
+
         <!-- <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
             <p class="sample-description">Detailed description to be added.</p>
@@ -43,6 +108,7 @@
                 <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter"></igx-date-picker>
             </div>
         </article> -->
+
         <!-- <article class="datepicker-column">
             <h4 class="sample-title">Vertical Date Picker</h4>
             <p class="sample-description">Detailed description to be added.</p>
@@ -53,9 +119,47 @@
 
         <!-- <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with retemplated input group.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
                 <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter">
+                    <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
+                        let-displayData="displayData">
+                        <igx-input-group (click)="openCalendar($event)">
+                            <label igxLabel>Date</label>
+                            <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                        </igx-input-group>
+                    </ng-template>
+                </igx-date-picker>
+            </div>
+        </article> -->
+
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Default Date Picker.</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
+                <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
+            </div>
+        </article> -->
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker</h4>
+            <label>Date: {{ dp1.value }}</label>
+            <div class="preview">
+                <igx-date-picker #dp1 mode="editable" format="d-M-y" [(ngModel)]="date1"></igx-date-picker>
+            </div>
+        </article> -->
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter" (onClose)="onClose($event)">
+                </igx-date-picker>
+            </div>
+        </article> -->
+        <!-- <article class="datepicker-column">
+            <h4 class="sample-title">Date Picker with retemplated input group.</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <igx-date-picker [value]="date" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
                         let-displayData="displayData">
                         <igx-input-group (click)="openCalendar($event)">
