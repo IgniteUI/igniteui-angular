@@ -55,7 +55,8 @@ export class HelperUtils {
         grid: IgxGridComponent,
         rowStartIndex: number,
         rowEndIndex: number,
-        colIndex?: number) => new Promise(async (resolve, reject) => {
+        colIndex?: number,
+        shift = false) => new Promise(async (resolve, reject) => {
             const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
             const row = grid.getRowByIndex(rowStartIndex);
             const cIndx = colIndex || 0;
@@ -68,23 +69,73 @@ export class HelperUtils {
                 return;
             }
 
-            UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, shift);
 
             if (nextRow) {
                 await wait(20);
-                HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex, shift)
                     .then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
                 grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                     next: async () => {
                         nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                        HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                        HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex, shift)
                             .then(() => { resolve(); });
                     }
                 });
             }
         })
+
+        public static navigateVerticallyToIndexWithSummaries = (
+            grid: IgxGridComponent,
+            rowStartIndex: number,
+            rowEndIndex: number,
+            colIndex?: number,
+            shift = false) => new Promise(async (resolve, reject) => {
+                const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+                const row = grid.getRowByIndex(rowStartIndex);
+                const cIndx = colIndex || 0;
+                const colKey = grid.columnList.toArray()[cIndx].field;
+                const nextIndex =  dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
+                let nextRow =  grid.getRowByIndex(nextIndex);
+                if (!nextRow) {
+                    nextRow = grid.summariesRowList.find( s => s.index === nextIndex);
+                }
+
+                let elem;
+                if (row) {
+                    elem = row instanceof IgxGridGroupByRowComponent ?
+                    row : grid.getCellByColumn(row.index, colKey);
+                } else {
+                    const summariRow = grid.summariesRowList.find( s => s.index === rowStartIndex) ;
+                    if (summariRow) {
+                        elem = summariRow.summaryCells.find(cell => cell.visibleColumnIndex === cIndx);
+                    }
+                }
+
+                if (rowStartIndex === rowEndIndex) {
+                    resolve();
+                    return;
+                }
+
+                UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, shift);
+
+                if (nextRow) {
+                    await wait(40);
+                    HelperUtils.navigateVerticallyToIndexWithSummaries(grid, nextIndex, rowEndIndex, colIndex, shift)
+                        .then(() => { resolve(); });
+                } else {
+                    // else wait for chunk to load.
+                    grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                        next: async () => {
+                            // nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                            HelperUtils.navigateVerticallyToIndexWithSummaries(grid, nextIndex, rowEndIndex, colIndex, shift)
+                                .then(() => { resolve(); });
+                        }
+                    });
+                }
+            })
 
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
@@ -231,7 +282,7 @@ export class HelperUtils {
         (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: key, shiftKey: shift, ctrlKey: ctrl }));
+            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
@@ -249,13 +300,11 @@ export class HelperUtils {
 
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            UIInteractions.simulateClickAndSelectCellEvent(startCell, shift, ctrl);
             await wait();
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-            await wait();
-            fix.detectChanges();
             UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
             await wait();
             fix.detectChanges();
@@ -264,35 +313,32 @@ export class HelperUtils {
 
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            UIInteractions.simulateClickAndSelectCellEvent(startCell, shift, ctrl);
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-            fix.detectChanges();
             UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
             fix.detectChanges();
         }
 
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement, true);
+            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
             await wait();
             fix.detectChanges();
             resolve();
         })
 
     public static selectCellsRangeWithShiftKeyNoWait (fix, startCell, endCell)  {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', startCell.nativeElement);
-            fix.detectChanges();
+        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
-            fix.detectChanges();
+        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        fix.detectChanges();
         }
 
     public static verifyCellsRegionSelected(grid, startRowIndex, endRowIndex, startColumnIndex,  endColumnIndex, selected = true) {
@@ -303,7 +349,9 @@ export class HelperUtils {
         for (let i = startCol; i <= endCol; i++) {
             for (let j = startRow; j <= endRow; j++) {
                 const cell = grid.getCellByColumn(j, grid.columnList.find(col => col.visibleIndex === i).field);
-                HelperUtils.verifyCellSelected(cell, selected);
+                if (cell) {
+                    HelperUtils.verifyCellSelected(cell, selected);
+                }
             }
         }
     }

@@ -1,17 +1,18 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxGridGroupByRowComponent } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SelectionWithScrollsComponent, SelectionWithTransactionsComponent } from '../../test-utils/grid-samples.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { DefaultSortingStrategy } from 'igniteui-angular';
 
 
 describe('IgxGrid - Multi Cell selection', () => {
-   configureTestSuite();
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -34,15 +35,53 @@ describe('IgxGrid - Multi Cell selection', () => {
         });
 
         it('Should be able to select a range with mouse dragging', () => {
-            const firstCell = grid.getCellByColumn(0, 'ID');
-            const secondCell = grid.getCellByColumn(2, 'Name');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const startCell =  grid.getCellByColumn(2, 'ParentID');
+            const endCell =  grid.getCellByColumn(3, 'ID');
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
 
-            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            expect(grid.selectedCells.length).toBe(9);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 2, 2);
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            fix.detectChanges();
+
+            expect(startCell.focused).toBe(true);
+
+            for (let i = 3; i < 5; i++) {
+              const cell = grid.getCellByColumn(i, grid.columns[i - 1].field);
+              UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+              fix.detectChanges();
+              HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
+            }
+
+            for (let i = 3; i >= 0; i--) {
+                const cell = grid.getCellByColumn(i, 'HireDate');
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                fix.detectChanges();
+                HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, 3);
+            }
+
+            for (let i = 2; i >= 0; i--) {
+                const cell = grid.getCellByColumn(0, grid.columns[i].field);
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                fix.detectChanges();
+                HelperUtils.verifyCellsRegionSelected(grid, 2, 0, 1, i);
+            }
+
+            for (let i = 1; i < 4; i++) {
+                const cell = grid.getCellByColumn(i, 'ID');
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                fix.detectChanges();
+                HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, 0);
+            }
+
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+            fix.detectChanges();
+
+            expect(startCell.focused).toBe(true);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 1, 0);
+            HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 1, 2);
+
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            const range = { rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 2 };
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
 
@@ -76,16 +115,14 @@ describe('IgxGrid - Multi Cell selection', () => {
             const thirdCell = grid.getCellByColumn(0, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', firstCell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', firstCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', secondCell.nativeElement, false, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', secondCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -93,8 +130,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(secondCell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, false, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -103,7 +139,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(thirdCell);
             expect(grid.selectedCells.length).toBe(3);
             expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }, { Name: 'Monica Reyes' }, { ID: 475 }]);
-            expect(grid.getSelectedRanges().length).toBe(3);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 2, 2, 2, 2, 1, 3);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 2, 3);
         });
 
         it('Should be able to select range when click on a cell and hold Shift key and click on another Cell', () => {
@@ -119,8 +157,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(8);
@@ -135,8 +172,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(1, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', firstCell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', firstCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             await wait();
             fix.detectChanges();
 
@@ -147,8 +183,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             const secondCell = grid.getCellByColumn(7, 'ParentID');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', secondCell.nativeElement, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', secondCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
             await wait();
             fix.detectChanges();
 
@@ -169,8 +204,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 0, 1);
 
             const thirdCell = grid.getCellByColumn(6, 'Name');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
             await wait();
             fix.detectChanges();
 
@@ -180,7 +214,7 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes' },
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson' },
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards' },
-                { ID: 15, ParentID: 19 , Name: 'Antonio Moreno'},
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno' },
                 { ID: 12, ParentID: 17, Name: 'Pedro Afonso' }
             ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
@@ -203,15 +237,11 @@ describe('IgxGrid - Multi Cell selection', () => {
             const secondCell = grid.getCellByColumn(0, 'ParentID');
             const thirdCell = grid.getCellByColumn(0, 'Name');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const range1 = { rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 1 };
-            const range2 = { rowStart: 0, rowEnd: 0, columnStart: 2, columnEnd: 2 };
-            const range3 = { rowStart: 1, rowEnd: 1, columnStart: 1, columnEnd: 1 };
             const expectedData1 = [
                 { ID: 475, ParentID: 147 },
                 { ID: 957, ParentID: 147 },
                 { ID: 317, ParentID: 147 }
             ];
-
             const expectedData2 = [
                 { ID: 475, ParentID: 147, Name: 'Michael Langdon' },
                 { ID: 957, ParentID: 147 },
@@ -220,46 +250,427 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             HelperUtils.selectCellsRangeWithShiftKeyNoWait(fix, firstCell, secondCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledWith({ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 1 });
             expect(grid.getSelectedData()).toEqual(expectedData1);
-            expect(selectionChangeSpy).toHaveBeenCalledWith(range1);
-            expect(grid.getSelectedRanges()).toEqual([range1]);
+            HelperUtils.verifySelectedRange(grid, 0, 2, 0, 1);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
 
             // Click on another cell holding control
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', thirdCell.nativeElement, false, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            expect(grid.getSelectedRanges()).toEqual([range1, range2]);
+            HelperUtils.verifySelectedRange(grid, 0, 2, 0, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2, 1, 2);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
             HelperUtils.verifyCellSelected(thirdCell);
 
             // Click on a cell in the region and verify it is not changed
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', cell.nativeElement, false, true);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(cell, false, true);
             fix.detectChanges();
 
             HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
             HelperUtils.verifyCellSelected(thirdCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedData()).toEqual(expectedData2);
-            expect(grid.getSelectedRanges()).toEqual([range1, range2, range3]);
+            HelperUtils.verifySelectedRange(grid, 0, 2, 0, 1, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2, 1, 3);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 2, 3);
 
             // Click on a cell without holding Ctrl
             cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', cell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            expect(grid.getSelectedData()).toEqual([{ID: 475}]);
-            expect(grid.getSelectedRanges()).toEqual([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+            expect(grid.getSelectedData()).toEqual([{ ID: 475 }]);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifyCellSelected(firstCell, false);
             HelperUtils.verifyCellSelected(secondCell, false);
             HelperUtils.verifyCellSelected(thirdCell, false);
+        });
+    });
+
+    describe('API', () => {
+        let fix;
+        let grid;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(SelectionWithScrollsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('Should select a single cell', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 2, rowEnd: 2, columnStart: 1, columnEnd: 1 };
+            const cell = grid.getCellByColumn(2, 'ParentID');
+            const expectedData = [
+                { ParentID: 147 }
+            ];
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellSelected(cell);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            expect(grid.getSelectedRanges()).toEqual([range]);
+        });
+
+        it('Should select a region', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 0, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
+            const expectedData = [
+                { ParentID: 147, Name: 'Michael Langdon' },
+                { ParentID: 147, Name: 'Thomas Hardy' },
+                { ParentID: 147, Name: 'Monica Reyes' }
+            ];
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 2, 1, 2);
+            HelperUtils.verifySelectedRange(grid, 0, 2, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+        });
+
+        it('Should select a region when one of cells is not visible', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 3, rowEnd: 7, columnStart: 'ID', columnEnd: 'ParentID' };
+            const expectedData = [
+                { ID: 225, ParentID: 847 },
+                { ID: 663, ParentID: 847 },
+                { ID: 15, ParentID: 19 },
+                { ID: 12, ParentID: 17 },
+                { ID: 101, ParentID: 17 }
+            ];
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 4, 0, 1);
+            HelperUtils.verifySelectedRange(grid, 3, 7, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(grid, 4, 7, 0, 1);
+            HelperUtils.verifySelectedRange(grid, 3, 7, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+        }));
+
+        it('Should select a region when two of cells are not visible', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 6, rowEnd: 6, columnStart: 'OnPTO', columnEnd: 'Age' };
+            const expectedData = [
+                { Age: 50, OnPTO: false }
+            ];
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 6, 6, 4, 5);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            grid.dataRowList.first.virtDirRow.scrollTo(5);
+            await wait(100);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 6, 6, 4, 5);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 6, 6, 4, 5);
+        }));
+
+        it('Should add new range when there is already added range', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range1 = { rowStart: 0, rowEnd: 1, columnStart: 'ID', columnEnd: 'ParentID' };
+            const range2 = { rowStart: 1, rowEnd: 2, columnStart: 'ParentID', columnEnd: 'Name' };
+            const expectedData1 = [
+                { ID: 475, ParentID: 147 },
+                { ID: 957, ParentID: 147 }
+            ];
+            const expectedData2 = [
+                { ID: 475, ParentID: 147 },
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy' },
+                { ParentID: 147, Name: 'Monica Reyes' }
+            ];
+
+            grid.selectRange(range1);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 1, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 0, 1);
+
+            grid.selectRange(range2);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 1, 0, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 1, 2, 1, 2, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData2);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 0, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+        });
+
+        it('Should add multiple ranges', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range1 = { rowStart: 0, rowEnd: 0, columnStart: 'ID', columnEnd: 'ParentID' };
+            const range2 = { rowStart: 2, rowEnd: 3, columnStart: 'ParentID', columnEnd: 'Name' };
+            const expectedData = [
+                { ID: 475, ParentID: 147 },
+                { ParentID: 147, Name: 'Monica Reyes' },
+                { ParentID: 147, Name: 'Laurence Johnson' }
+            ];
+
+            grid.selectRange([range1, range2]);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 2, 3, 1, 2, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 0, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
+        });
+
+        it('Should add multiple ranges when they have same cells', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range1 = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'ParentID' };
+            const range2 = { rowStart: 3, rowEnd: 1, columnStart: 'ParentID', columnEnd: 'ID' };
+            const expectedData = [
+                { ID: 957, ParentID: 147 },
+                { ID: 317, ParentID: 147 },
+                { ID: 225, ParentID: 847 }
+            ];
+
+            grid.selectRange([range1, range2]);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 1);
+        });
+
+        it('Should add multiple ranges when some of their cells are same', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range1 = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'ParentID' };
+            const range2 = { rowStart: 4, rowEnd: 2, columnStart: 'ParentID', columnEnd: 'ID' };
+            const expectedData = [
+                { ID: 957, ParentID: 147 },
+                { ID: 317, ParentID: 147 },
+                { ID: 225, ParentID: 847 },
+                { ID: 663, ParentID: 847 }
+            ];
+
+            grid.selectRange([range1, range2]);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 1);
+        });
+
+        it('Should not add range when column is hidden', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'Name' };
+            grid.getColumnByName('Name').hidden = true;
+            fix.detectChanges();
+
+            let errorMessage = '';
+            try {
+                grid.selectRange(range);
+            } catch (error) {
+                errorMessage = error.message;
+            }
+            finally {
+                fix.detectChanges();
+            }
+            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            expect(grid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should not add range when column is hidden and there is already selected range', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range1 = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'Name' };
+            const range2 = { rowStart: 0, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'OnPTO' };
+            const expectedData = [
+                { ID: 957, Name: 'Thomas Hardy' },
+                { ID: 317, Name: 'Monica Reyes' }
+            ];
+            grid.getColumnByName('ParentID').hidden = true;
+            fix.detectChanges();
+
+            grid.selectRange(range1);
+            fix.detectChanges();
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 0, 1);
+
+            let errorMessage = '';
+            try {
+                grid.selectRange(range2);
+            } catch (error) {
+                errorMessage = error.message;
+            }
+            finally {
+                fix.detectChanges();
+            }
+            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 0, 1);
+        });
+
+        it('Should not add range when column does not exist', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 1, rowEnd: 3, columnStart: 'NotExisting', columnEnd: 'Name' };
+
+            let errorMessage = '';
+            try {
+                grid.selectRange(range);
+            } catch (error) {
+                errorMessage = error.message;
+            }
+            finally {
+                fix.detectChanges();
+            }
+            expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            expect(grid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should add range when row does not exist', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: -7, rowEnd: 100, columnStart: 'ID', columnEnd: 'ID' };
+            const expectedData = [
+                { ID: 475 },
+                { ID: 957 },
+                { ID: 317 },
+                { ID: 225 },
+                { ID: 663 },
+                { ID: 15 },
+                { ID: 12 },
+                { ID: 101 }
+            ];
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, -7, 100, 0, 0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+        });
+
+        it('Should add range when columnStart index does not exist', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 0, rowEnd: 1, columnStart: -4, columnEnd: 0 };
+            const expectedData = [
+                { ID: 475 },
+                { ID: 957 }
+            ];
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 1, -4, 0);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+        });
+
+        it('Should add range when columnStart index does not exist', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 1, rowEnd: 2, columnStart: 5, columnEnd: 10 };
+            const expectedData = [
+                { OnPTO: true },
+                { OnPTO: false }
+            ];
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 1, 2, 5, 10);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+        });
+
+        it('Should not add range when columnStart and columnEnd indexes do not exist', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 1, rowEnd: 2, columnStart: 10, columnEnd: 100 };
+
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 1, 2, 10, 100);
+            expect(grid.getSelectedData()).toEqual([]);
+        });
+
+        it('Should be able to clear the selected ranges', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 1, rowEnd: 2, columnStart: 1, columnEnd: 2 };
+            const expectedData = [
+                { ParentID: 147, Name: 'Thomas Hardy' },
+                { ParentID: 147, Name: 'Monica Reyes' }
+            ];
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 1, 2, 1, 2);
+            expect(grid.getSelectedData()).toEqual(expectedData);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+
+            grid.selectRange();
+            fix.detectChanges();
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            expect(grid.getSelectedRanges().length).toEqual(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2, false);
+        });
+
+        it('Should be able to clear the selection when a single cell is selected', () => {
+            const cell = grid.getCellByColumn(1, 'ParentID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
+
+            grid.selectRange(null);
+            fix.detectChanges();
+            expect(grid.getSelectedRanges().length).toEqual(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            HelperUtils.verifyCellSelected(cell, false);
+        });
+
+        it('Should be able to clear the selection when there are no selected cells', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.selectRange();
+            fix.detectChanges();
+            expect(grid.getSelectedRanges().length).toEqual(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -276,11 +687,11 @@ describe('IgxGrid - Multi Cell selection', () => {
         it('Should be able to select a with arrow keys and holding Shift', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', cell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
-            await wait(50);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            await wait();
             fix.detectChanges();
             HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
 
@@ -289,6 +700,8 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
+            // HelperUtils.verifySelectedRange(grid, 1, 2, 1, 1, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 1, 2);
 
             cell = grid.getCellByColumn(2, 'ParentID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
@@ -297,6 +710,8 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 2, 1, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 1, 2);
 
             cell = grid.getCellByColumn(2, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
@@ -306,6 +721,8 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 1, 2);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 2, 1, 3, false);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 1, 2);
 
             cell = grid.getCellByColumn(1, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
@@ -316,6 +733,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell, false);
             cell = grid.getCellByColumn(1, 'ParentID');
             HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
             fix.detectChanges();
@@ -323,136 +741,551 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 0, 1, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 1, 2);
         }));
 
         it('Should be able to select and move scroll with arrow keys and holding Shift', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            let cell = grid.getCellByColumn(3, 'Name');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', cell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
-            await wait(50);
+            let cell = grid.getCellByColumn(1, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            await wait();
             fix.detectChanges();
             HelperUtils.verifyCellSelected(cell);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 3);
-
-            cell = grid.getCellByColumn(3, 'HireDate');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 4);
-
-            cell = grid.getCellByColumn(3, 'Age');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
+            for (let i = 3; i < 6; i++) {
+                cell = grid.getCellByColumn(1, grid.columns[i - 1].field);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
+                await wait(100);
+                fix.detectChanges();
+            }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 2, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 5);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 2, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 2, 5, 1, 2);
 
-            cell = grid.getCellByColumn(3, 'OnPTO');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 4, 2, 5);
-
-            cell = grid.getCellByColumn(4, 'OnPTO');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 5, 2, 5);
-
-            cell = grid.getCellByColumn(5, 'OnPTO');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
+            for (let i = 1; i < 6; i++) {
+                cell = grid.getCellByColumn(i, 'OnPTO');
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
+                await wait(100);
+                fix.detectChanges();
+            }
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
             HelperUtils.verifyCellsRegionSelected(grid, 3, 6, 2, 5);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 2, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 7, 2, 5, 1, 2);
+
+            for (let i = 7; i > 0; i--) {
+                cell = grid.getCellByColumn(i, 'OnPTO');
+                UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
+                await wait(100);
+                fix.detectChanges();
+            }
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(14);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 2, 5);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 2, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 0, 1, 2, 5, 1, 2);
+
+            for (let i = 5; i > 0; i--) {
+                cell = grid.getCellByColumn(0, grid.columns[i - 1].field);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
+                await wait(100);
+                fix.detectChanges();
+            }
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(18);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 1, 2);
+            // HelperUtils.verifySelectedRange(grid, 1, 1, 2, 2, 0, 2);
+            // HelperUtils.verifySelectedRange(grid, 0, 1, 0, 2, 1, 2);
         }));
 
         it('Should not fire event when no new cells are selected', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const range1 = { rowStart: 0, rowEnd: 1, columnStart: 1, columnEnd: 1 };
-            const range2 = { rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 1 };
-
-            let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', cell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', cell.nativeElement);
-            await wait(50);
+            let cell = grid.getCellByColumn(0, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            await wait(30);
             fix.detectChanges();
             HelperUtils.verifyCellSelected(cell);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
             await wait(50);
             fix.detectChanges();
-            await wait(50);
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            expect(selectionChangeSpy).toHaveBeenCalledWith(range1);
-            expect(grid.getSelectedRanges()).toEqual([range1]);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 1, 1);
-
-            cell = grid.getCellByColumn(0, 'ParentID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
-            await wait(50);
-            fix.detectChanges();
-            await wait(50);
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 1, 1);
-            expect(grid.getSelectedRanges()).toEqual([range1]);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
             await wait(50);
             fix.detectChanges();
-            await wait(50);
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            expect(selectionChangeSpy).toHaveBeenCalledWith(range2);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 1, 1);
-            expect(grid.getSelectedRanges()).toEqual([range2]);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            grid.dataRowList.first.virtDirRow.scrollTo(5);
+            await wait(100);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(7, 'OnPTO');
+            UIInteractions.simulateClickAndSelectCellEvent(cell, false, true);
+            await wait();
+            fix.detectChanges();
+            HelperUtils.verifyCellSelected(cell);
+
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 7, 7, 5, 5, 1, 2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
             await wait(50);
             fix.detectChanges();
-            await wait(50);
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 1, 1);
-            expect(grid.getSelectedRanges()).toEqual([range2]);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 7, 7, 5, 5, 1, 2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 7, 7, 5, 5, 1, 2);
         }));
 
         it('Should be able to navigate with the keyboard when a range is selected by dragging', (async () => {
             const firstCell = grid.getCellByColumn(1, 'ParentID');
-            const secondCell = grid.getCellByColumn(3, 'Name');
+            const secondCell = grid.getCellByColumn(4, 'Name');
+            const thirdCell = grid.getCellByColumn(2, 'ParentID');
+
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 3, 1, 2 );
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 2, 1, 2);
+            expect(firstCell.focused);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+            fix.detectChanges();
+            await wait(150);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellSelected(thirdCell);
+            HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1);
+        }));
+
+        it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', (async () => {
+            const firstCell = grid.getCellByColumn(0, 'Name');
+            const secondCell = grid.getCellByColumn(2, 'ID');
+            const thirdCell = grid.getCellByColumn(2, 'ParentID');
+
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            await HelperUtils.selectCellsRangeWithShiftKey(fix, firstCell, secondCell);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+             HelperUtils.verifySelectedRange(grid, 0, 2, 0, 2);
+            expect(secondCell.focused);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellSelected(thirdCell);
+            HelperUtils.verifyCellSelected(secondCell);
+            HelperUtils.verifyCellSelected(firstCell, false);
+            HelperUtils.verifySelectedRange(grid, 2, 2, 0, 1);
+        }));
+
+        it('Should be able to navigate with the keyboard when a range is selected by click ad holding Ctrl', (async () => {
+            const firstCell = grid.getCellByColumn(1, 'Name');
+            const secondCell = grid.getCellByColumn(2, 'HireDate');
+            const thirdCell = grid.getCellByColumn(1, 'HireDate');
+
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            HelperUtils.verifyCellSelected(secondCell);
+            expect(grid.selectedCells.length).toBe(2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellSelected(thirdCell);
+            HelperUtils.verifyCellSelected(firstCell, false);
+            HelperUtils.verifySelectedRange(grid, 1, 2, 3, 3);
+        }));
+
+        it('Should handle Shift + Ctrl + Arrow Down keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(2, 'Name');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 2, 7, 2, 2);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 2, 2);
+        }));
+
+        it('Should handle Shift + Ctrl + Arrow Up keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(4, 'ParentID');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 1, 1);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 1, 1);
+        }));
+
+        it('Should handle  Shift + Ctrl + Arrow Left keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(3, 'HireDate');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 3, 3, 3, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 3, 3);
+        }));
+
+        it('Should handle  Shift + Ctrl + Arrow Right keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(4, 'Name');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 4, 4, 2, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 4, 4, 2, 5);
+        }));
+
+        it('Should handle  Shift + Ctrl + Home  keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(3, 'HireDate');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('home', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 0, 3);
+        }));
+
+        it('Should handle  Shift + Ctrl + End  keys combination', (async () => {
+            const firstCell = grid.getCellByColumn(2, 'ID');
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 2, 5);
+        }));
+
+        it('Grouping: should select cells with arrow up and down keys', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.getColumnByName('ParentID').groupable = true;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(2, 'Name');
+
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            cell = grid.getCellByColumn(2, 'Name');
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            const row = grid.getRowByIndex(3);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            cell = grid.getCellByColumn(4, 'Name');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(2);
+            // HelperUtils.verifySelectedRange(grid, 2, 4, 3, 3 );
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            cell = grid.getCellByColumn(4, 'ParentID');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(4);
+            // HelperUtils.verifySelectedRange(grid, 2, 4, 2, 3 );
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            cell = grid.getCellByColumn(4, 'ParentID');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(4);
+            // HelperUtils.verifySelectedRange(grid, 2, 4, 2, 3 );
+
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', row.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
+            expect(grid.selectedCells.length).toBe(2);
+            // HelperUtils.verifySelectedRange(grid, 2, 2, 2, 3 );
+        }));
+
+        it('Grouping: should select cells with arrow up and down keys when there are scrolls', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.getColumnByName('ParentID').groupable = true;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(2, 'HireDate');
+
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(cell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            await HelperUtils.navigateVerticallyToIndex(grid, 2, 10, 3, true);
+            fix.detectChanges();
+            await wait(150);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
+            HelperUtils.verifySelectedRange(grid, 2, 10, 3, 3 );
+
+            cell = grid.getCellByColumn(10, 'HireDate');
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+            HelperUtils.verifySelectedRange(grid, 2, 10, 3, 4);
+
+            await HelperUtils.navigateVerticallyToIndex(grid, 10, 0, 4, true);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(11);
+            HelperUtils.verifySelectedRange(grid, 2, 1, 3, 4 );
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 3, 4);
+        }));
+
+        it('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.getColumnByName('ParentID').groupable = true;
+            grid.getColumnByName('Name').hasSummary = true;
+            grid.summaryCalculationMode = 'childLevelsOnly';
+            grid.height = '700px';
+            await wait(30);
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            await wait(50);
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(2, 'ParentID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(cell);
+
+            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 2, 10, 1, true);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 10, 1, 1);
+            expect(grid.selectedCells.length).toBe(5);
+
+            cell = grid.getCellByColumn(10, 'ParentID');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
+            await wait(150);
+            fix.detectChanges();
+            await wait(150);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 10, 1, 2);
+            expect(grid.selectedCells.length).toBe(10);
+
+            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 10, 3, 2, true);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 5, 1, 2);
+            expect(grid.selectedCells.length).toBe(4);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 2, 'ArrowLeft');
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'ArrowLeft');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 5, 1, 2);
+            expect(grid.selectedCells.length).toBe(4);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 0, 'ArrowUp');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(9);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 2, 0, 1);
+            expect(grid.selectedCells.length).toBe(2);
+        }));
+
+        it('Grouping and Summaries: should select cells with arrow up and down keys when there are scrolls', (async () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            grid.getColumnByName('ParentID').groupable = true;
+            grid.getColumnByName('Name').hasSummary = true;
+            grid.summaryCalculationMode = 'childLevelsOnly';
+            await wait(30);
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            await wait(30);
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(2, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifyCellSelected(cell);
+
+            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 2, 8, 0, true);
+            await wait(50);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 8, 0, 0);
+
+            for (let i = 0; i < 5; i++) {
+                HelperUtils.verifySummaryCellActive(fix, 8, i);
+                await HelperUtils.moveSummaryCell(fix, 8, i, 'ArrowRight', true);
+            }
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
+
+            await HelperUtils.moveSummaryCell(fix, 8, 5, 'ArrowUp', true);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 7, 0, 5);
+
+            // await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 7, 3, 0, true);
+            // await wait(50);
+            // fix.detectChanges();
+
+            // expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
         }));
     });
 
-    describe('MCS - features integration', () => {
+    describe('Features integration', () => {
         let fix;
         let grid;
 
@@ -785,7 +1618,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        fit('Hiding - when hide last column which is in selected range, selection range is changed', (async() => {
+        it('Hiding - when hide last column which is in selected range, selection range is changed', (async() => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
@@ -807,7 +1640,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             const newSelectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31},
             { HireDate: new Date('May 4, 2014'), Age: 44}];
-            debugger;
             HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
             HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 4);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -1443,7 +2275,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
     });
 
-    describe('MCS - CRUD - transaction enabled', () => {
+    describe('CRUD - transaction enabled', () => {
         let fix;
         let grid;
 

@@ -105,6 +105,12 @@ export class UIInteractions {
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
+    public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
+        element.nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+    }
+
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
