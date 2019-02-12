@@ -1302,7 +1302,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected handleCacheChanges(changes: IterableChanges<T>) {
-        // This is needed since indexes change when adding/removing. We only need one shifter since changes are sorted by record index.
         const identityChanges = [];
         const newHeightCache = [];
         const newSizesCache = [];
