@@ -50,12 +50,17 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'autocomplete',
+        component: AutocompleteSampleComponent
     },
     {
         path: 'avatar',

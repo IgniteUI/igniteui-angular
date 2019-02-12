@@ -85,9 +85,12 @@ import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-tr
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent, IgxAutocompletePipeStartsWith } from './autocomplete/autocomplete.sample';
 
 const components = [
     AppComponent,
+    IgxAutocompletePipeStartsWith,
+    AutocompleteSampleComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,

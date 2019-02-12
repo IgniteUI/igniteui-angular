@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,
@@ -40,6 +41,7 @@ import {
 import { IgxMonthPickerModule } from 'projects/igniteui-angular/src/lib/month-picker/month-picker.component';
 
 const igniteModules = [
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,

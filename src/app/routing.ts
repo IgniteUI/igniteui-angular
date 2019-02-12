@@ -63,12 +63,17 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'autocomplete',
+        component: AutocompleteSampleComponent
     },
     {
         path: 'avatar',

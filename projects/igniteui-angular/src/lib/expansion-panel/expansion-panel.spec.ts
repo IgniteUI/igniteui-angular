@@ -429,6 +429,8 @@ describe('igxExpansionPanel', () => {
         it('Should change panel expansion state on key interaction', fakeAsync(() => {
             const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
             const spaceEvent = new KeyboardEvent('keydown', { key: 'Space' });
+            const arrowUpEvent = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true });
+            const arrowDownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true });
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -475,6 +477,36 @@ describe('igxExpansionPanel', () => {
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(4);
+
+            panelHeader.dispatchEvent(arrowUpEvent);
+            tick();
+            fixture.detectChanges();
+            tick();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(5);
+
+            panelHeader.dispatchEvent(arrowDownEvent);
+            tick();
+            fixture.detectChanges();
+            tick();
+            timesExpanded++;
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(6);
+
+            panelHeader.dispatchEvent(arrowDownEvent);
+            tick();
+            fixture.detectChanges();
+            tick();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(7);
+
+            panelHeader.dispatchEvent(arrowUpEvent);
+            tick();
+            fixture.detectChanges();
+            tick();
+            timesCollapsed++;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(8);
         }));
         it('Should change panel expansion when using different methods', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
