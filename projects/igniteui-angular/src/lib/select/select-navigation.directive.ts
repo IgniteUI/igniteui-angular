@@ -44,31 +44,15 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                     return;
                 case 'arrowdown':
                     if (this.target.collapsed) {
-                        const selectedItemIndex = this.target.selectedItem.index;
-                        let nextItem = this.target.items[selectedItemIndex + 1] ?
-                            this.target.items[selectedItemIndex + 1] : this.target.items[selectedItemIndex];
-                        if (nextItem.disabled) {
-                            nextItem = this.target.items[nextItem.index + 1];
-                        }
-                        if (nextItem) {
-                            this.target.selectItem(nextItem);
-                            this.target.navigateItem(nextItem.index);
-                        }
+                        this.target.navigateNext();
+                        this.target.selectItem(this.target.focusedItem);
                     }
                     event.preventDefault();
                     return;
                 case 'arrowup':
                     if (this.target.collapsed) {
-                        const selectedItemIndex = this.target.selectedItem.index;
-                        let previousItem = this.target.items[selectedItemIndex - 1] ?
-                            this.target.items[selectedItemIndex - 1] : this.target.items[selectedItemIndex - 0];
-                        if (previousItem.disabled) {
-                            previousItem = this.target.items[previousItem.index - 1];
-                        }
-                        if (previousItem) {
-                            this.target.selectItem(previousItem);
-                            this.target.navigateItem(previousItem.index);
-                        }
+                        this.target.navigatePrev();
+                        this.target.selectItem(this.target.focusedItem);
                     }
                     event.preventDefault();
                     return;
