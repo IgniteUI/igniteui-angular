@@ -350,7 +350,7 @@ export function parseDateArray(dateFormatParts: any[], prevDateValue: Date, inpu
         return ['invalid', inputValue];
     }
 
-    if ((day < 1) || (day > daysInMonth(fullYear, month))) {
+    if ((day < 1) || (day > daysInMonth(fullYear, month + 1))) {
         return ['invalid', inputValue];
     }
 

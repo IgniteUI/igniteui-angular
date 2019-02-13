@@ -873,7 +873,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                     prevValue: prevDateValue
                 };
                 this.invalidDate = dateString;
-                console.log('calculate date this.invalidDate ' + this.invalidDate);
                 this.onValidationFailed.emit(args);
             }
         }
