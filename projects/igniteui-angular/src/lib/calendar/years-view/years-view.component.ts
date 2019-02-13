@@ -251,7 +251,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event) {
+    public onKeydownArrowDown(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -262,7 +262,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event) {
+    public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
 

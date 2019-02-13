@@ -367,12 +367,12 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * @hidden
      */
-    public previousMonth() {
+    public previousMonth(isKeydownTrigger: boolean = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
         this._monthAction = 'prev';
 
         if (this.daysView) {
-            this.daysView.isKeydownTrigger = false;
+            this.daysView.isKeydownTrigger = isKeydownTrigger;
         }
     }
 
@@ -384,22 +384,19 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
             event.preventDefault();
             event.stopPropagation();
 
-            this.previousMonth();
-            if (this.daysView) {
-                this.daysView.isKeydownTrigger = true;
-            }
+            this.previousMonth(true);
         }
     }
 
     /**
      * @hidden
      */
-    public nextMonth() {
+    public nextMonth(isKeydownTrigger: boolean = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
         this._monthAction = 'next';
 
         if (this.daysView) {
-            this.daysView.isKeydownTrigger = false;
+            this.daysView.isKeydownTrigger = isKeydownTrigger;
         }
     }
 
@@ -411,10 +408,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
             event.preventDefault();
             event.stopPropagation();
 
-            this.nextMonth();
-            if (this.daysView) {
-                this.daysView.isKeydownTrigger = true;
-            }
+            this.nextMonth(true);
         }
     }
 

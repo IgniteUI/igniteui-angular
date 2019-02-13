@@ -17,13 +17,13 @@
                      (@animateChange.done)="animationDone()"
                      [date]="viewDate"
                      [locale]="locale"
-                     [monthFormat]="_formatOptions.month"
+                     [monthFormat]="formatOptions.month"
                      (onSelection)="selectMonth($event)">
     </igx-months-view>
 </div>
 <igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade
                 [date]="viewDate"
                 [locale]="locale"
-                [yearFormat]="_formatOptions.year"
+                [yearFormat]="formatOptions.year"
                 (onSelection)="selectYear($event)">
 </igx-years-view>

@@ -52,13 +52,13 @@
 <igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months
                                     [date]="viewDate"
                                     [locale]="locale"
-                                    [monthFormat]="_formatOptions.month"
+                                    [monthFormat]="formatOptions.month"
                                     (onSelection)="changeMonth($event)" >
 </igx-months-view>
 
 <igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade
                                      [date]="viewDate"
                                      [locale]="locale"
-                                     [yearFormat]="_formatOptions.year"
+                                     [yearFormat]="formatOptions.year"
                                      (onSelection)="changeYear($event)">
 </igx-years-view>

@@ -121,6 +121,13 @@ export interface IFormattedParts {
     combined: string;
 }
 
+export interface IFormattingOptions {
+    day?: string;
+    month?: string;
+    weekday?: string;
+    year?: string;
+}
+
 export enum WEEKDAYS {
     SUNDAY = 0,
     MONDAY = 1,

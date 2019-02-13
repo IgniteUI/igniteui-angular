@@ -9,7 +9,7 @@ import {
     HostBinding,
     DoCheck
 } from '@angular/core';
-import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges } from '../../calendar';
+import { ICalendarDate, Calendar, WEEKDAYS, isDateInRanges, IFormattingOptions } from '../../calendar';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -18,12 +18,18 @@ import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 
 let NEXT_ID = 0;
 
+/**
+ * Sets the calender view - days, months or years.
+ */
 export enum CalendarView {
     DEFAULT,
     YEAR,
     DECADE
 }
 
+/**
+ * Sets the selction type - single, multi or range.
+ */
 export enum CalendarSelection {
     SINGLE = 'single',
     MULTI = 'multi',
@@ -84,6 +90,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
+
     /**
      * Sets the start day of the week.
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
@@ -108,6 +115,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get locale(): string {
         return this._locale;
     }
+
     /**
      * Sets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
@@ -137,6 +145,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get selection(): string {
         return this._selection;
     }
+
     /**
      * Sets the selection type of the calendar.
      * ```html
@@ -173,6 +182,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get viewDate(): Date {
         return this._viewDate;
     }
+
     /**
      * Sets the date that will be presented in the default view when the calendar renders.
      * ```html
@@ -199,6 +209,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get value(): Date | Date[] {
         return this.selectedDates;
     }
+
     /**
      * Sets the selected date(s) of the calendar.
      *
@@ -221,9 +232,10 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      * ```
      */
     @Input()
-    public get formatOptions(): object {
+    public get formatOptions(): IFormattingOptions {
         return this._formatOptions;
     }
+
     /**
      * Sets the date format options of the calendar.
      * ```html
@@ -231,7 +243,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
      * ```
      * @memberof IgxCalendarComponent
      */
-    public set formatOptions(formatOptions: object) {
+    public set formatOptions(formatOptions: IFormattingOptions) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
         this.initFormatters();
     }
@@ -246,6 +258,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
+
     /**
      * Sets the disabled dates' descriptors.
      * ```typescript
@@ -272,6 +285,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     public get specialDates(): DateRangeDescriptor[] {
         return this._specialDates;
     }
+
     /**
      * Sets the special dates' descriptors.
      * ```typescript

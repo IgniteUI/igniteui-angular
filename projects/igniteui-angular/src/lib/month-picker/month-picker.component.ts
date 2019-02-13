@@ -3,9 +3,11 @@ import {
     NgModule,
     HostListener,
     ElementRef,
-    ViewChild
+    ViewChild,
+    HostBinding,
+    Input
 } from '@angular/core';
-import { IgxCalendarModule, CalendarView, IgxCalendarComponent } from '../calendar/index';
+import { IgxCalendarModule, CalendarView, IgxCalendarComponent, IgxMonthsViewComponent } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,6 +15,7 @@ import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
 import { KEYS } from '../core/utils';
 
+let NEXT_ID = 0;
 @Component({
     providers: [
         {
@@ -48,6 +51,13 @@ import { KEYS } from '../core/utils';
     templateUrl: 'month-picker.component.html'
 })
 export class IgxMonthPickerComponent extends IgxCalendarComponent {
+    /**
+     * Sets/gets the `id` of the month picker.
+     * If not set, the `id` will have value `"igx-month-picker-0"`.
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-month-picker-${NEXT_ID++}`;
 
     /**
      * @hidden
@@ -59,6 +69,12 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
      */
     @ViewChild('yearsBtn')
     public yearsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('months', {read: IgxMonthsViewComponent})
+    public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
@@ -152,6 +168,28 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     @HostListener('keydown.shift.pagedown', ['$event'])
     public onKeydownShiftPageDownUp(event: KeyboardEvent) {
         event.stopPropagation();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.home', ['$event'])
+    public onKeydownHome(event: KeyboardEvent) {
+        if (this.monthsView) {
+            this.monthsView.el.nativeElement.focus();
+            this.monthsView.onKeydownHome(event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.end', ['$event'])
+    public onKeydownEnd(event: KeyboardEvent) {
+        if (this.monthsView) {
+            this.monthsView.el.nativeElement.focus();
+            this.monthsView.onKeydownEnd(event);
+        }
     }
 }
 
