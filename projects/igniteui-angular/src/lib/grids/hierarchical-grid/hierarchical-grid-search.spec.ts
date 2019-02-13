@@ -261,6 +261,33 @@ describe('IgxHierarchicalGrid Search - ', () => {
         expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row.ID).toEqual(parentData[2].ID);
     });
 
+    it('should order matchInfoCache correctly when there are multiple results in parent row.', async () => {
+        hierarchicalGrid.height = '500px';
+        fixture.detectChanges();
+
+         // expand parent row
+         (hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent).toggle();
+         await wait(30);
+         fixture.detectChanges();
+
+        const count = hierarchicalGrid.findNext('2');
+        await wait(30);
+        fixture.detectChanges();
+        expect(count).toBe(16);
+
+        const parentData = fixture.componentInstance.data;
+        const childData = fixture.componentInstance.data[2].childData;
+        const results = hierarchicalGrid.lastSearchInfo.matchInfoCache;
+
+        // fist two should be from parent
+        expect(results[0].row.ID).toEqual(parentData[2].ID);
+        expect(results[1].row.ID).toEqual(parentData[2].ID);
+
+        // next should be in child
+        expect(results[2].row.ID).toEqual(childData[0].ID);
+
+    });
+
     // Integration - Paging
     it('should change page and scoll to the cell in with active highlight when there are expanded records.',  async () => {
         hierarchicalGrid.paging = true;

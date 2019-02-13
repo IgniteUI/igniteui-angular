@@ -641,20 +641,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
    private _getInsertionIndex(pIndex, cache) {
        // find closest parent row data index that exists in match results
        // so that child results can be inserted there
-        const res = cache.map((item, index) => {
-                const dataIndex = item.grid.filteredSortedData.indexOf(item.row);
-                const origIndex = index;
-                return {dataIndex: dataIndex, origIndex: origIndex};
-            }).reduce(function (prev, curr) {
+       const data = cache.map((item, index) => {
+        const dataIndex = item.grid.filteredSortedData.indexOf(item.row);
+        const origIndex = index;
+        return {dataIndex: dataIndex, origIndex: origIndex};
+        });
+        const res = data.reduce(function (prev, curr) {
             return (Math.abs(curr.dataIndex - pIndex) < Math.abs(prev.dataIndex - pIndex) ? curr : prev);
           });
+          const allResParent = data.filter((item) => item.dataIndex === res.dataIndex);
           if (res.dataIndex <= pIndex) {
-              // insert after
-              return res.origIndex + 1;
-          } else {
-              // insert before
-            return res.origIndex;
-          }
+            // insert after last result from parent
+            return allResParent[allResParent.length - 1].origIndex + 1;
+        } else {
+            // insert before first result from parent
+          return allResParent[0].origIndex;
+        }
     }
 
     protected scrollTo(row: any, column: any | number): void {
