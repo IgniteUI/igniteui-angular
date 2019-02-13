@@ -21,24 +21,14 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         }
         const key = event.key.toLowerCase();
 
-        if (event.altKey) {
-            switch (key) {
-                case 'arrowdown':
-                    this.target.toggle();
-                    return;
-                case 'arrowup':
-                    this.target.toggle();
-                    return;
-                default:
-                    break;
-            }
+        if (event.altKey && (key === 'arrowdown' || key === 'arrowup')) {
+            this.target.toggle();
+            return;
         }
 
         if (this.target.collapsed) {
             switch (key) {
                 case 'enter':
-                    this.target.open();
-                    return;
                 case 'space':
                 case 'spacebar':
                 case ' ':
@@ -112,12 +102,10 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             return;
         }
 
-        if (!this.target.collapsed) {
-            this.target.navigateItem(items.indexOf(nextItem));
-        } else {
+        if (this.target.collapsed) {
             this.target.selectItem(nextItem);
-            this.target.navigateItem(items.indexOf(nextItem));
         }
+        this.target.navigateItem(items.indexOf(nextItem));
     }
 
     ngOnDestroy(): void {
