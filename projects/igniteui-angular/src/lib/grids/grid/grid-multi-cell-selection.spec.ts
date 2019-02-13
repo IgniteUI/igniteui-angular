@@ -1296,37 +1296,38 @@ describe('IgxGrid - Multi Cell selection', () => {
         });
 
 
-        it('Sorting -  selection should not change when sorting is performed', () => {
+        it('Sorting: selection should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const firstCell = grid.getCellByColumn(1, 'ParentID');
-            const secondCell = grid.getCellByColumn(4, 'HireDate');
-            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            HelperUtils.selectCellsRangeNoWait(fix, grid.getCellByColumn(1, 'ParentID'), grid.getCellByColumn(4, 'HireDate'));
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
-            const selectedData = [ { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+            const selectedData = [
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')} ];
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
-            const filteredSelectedData = [ { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+            const filteredSelectedData = [
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
                 { ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')} ];
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+            ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             const rowID = grid.selectedCells[0].cellID.rowID;
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
-            const data = grid.getSelectedData();
-            expect(data).not.toEqual(selectedData);
-            expect(data).toEqual(filteredSelectedData);
+            expect(grid.getSelectedData()).not.toEqual(selectedData);
+            expect(grid.getSelectedData()).toEqual(filteredSelectedData);
             grid.clearSort();
             fix.detectChanges();
 
@@ -1334,10 +1335,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            expect(grid.selectedCells[0].cellID.rowID).not.toBe(rowID);
         });
 
-        it('Sorting - selection containing selected cell out of the view should not change when sorting is performed', () => {
+        it('Sorting: selection containing selected cell out of the view should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -1353,8 +1353,6 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false},
                 { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false}
             ];
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
@@ -1374,12 +1372,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             grid.clearSort();
             fix.detectChanges();
 
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 5);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Filtering - selected range should not change when filtering is performed', () => {
+        it('Filtering: selected range should not change when filtering is performed', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = grid.getCellByColumn(0, 'ParentID');
             const secondCell = grid.getCellByColumn(3, 'HireDate');
@@ -1416,7 +1415,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
         });
 
-        it('Filtering - selected range should not change when filtering result is smaller that selected range', () => {
+        it('Filtering: selected range should not change when filtering result is smaller that selected range', () => {
             const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -1449,31 +1448,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 0, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            // filtering in grid with enabled paging
-            grid.paging = true;
-            grid.perPage = 5;
-            fix.detectChanges();
-
-            const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
-            grid.selectRange(selectRange);
-            fix.detectChanges();
-            const selData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
-            ];
-            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
-            expect(grid.getSelectedData()).toEqual(selData);
-            grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
-            fix.detectChanges();
-            const fData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            ];
-            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
-            expect(grid.getSelectedData()).toEqual(fData);
         });
 
-        it('Filtering - selected range should not change when filtering result is empty that selected range', () => {
+        it('Filtering: selected range should not change when filtering result is empty that selected range', () => {
             const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             const selectedData = [
@@ -1500,7 +1477,33 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Paging - selected range should be cleared on paging', () => {
+        it('Filtering, Paging: selected range should not change when perform filtering', () => {
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+
+            const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(selectRange);
+            fix.detectChanges();
+
+            const selData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selData);
+            grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            const fData = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            ];
+            HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
+            expect(grid.getSelectedData()).toEqual(fData);
+        });
+
+        it('Paging: selected range should be cleared on paging', () => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
@@ -1508,6 +1511,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
+
             const selectedData = [{ ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
@@ -1525,7 +1529,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual([]);
         });
 
-        it('Paging - selected range should be cleared when perPage items are changed', () => {
+        it('Paging: selected range should be cleared when perPage items are changed', () => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
@@ -1551,10 +1555,11 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual([]);
         });
 
-        it('Resizing - selected range should not change on resizing', fakeAsync(() => {
+        it('Resizing: selected range should not change on resizing', fakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
+
             const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
@@ -1567,7 +1572,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             const initialWidth = columnName.width;
             columnName.resizable = true;
             fix.detectChanges();
-
 
             const headers = fix.debugElement.queryAll(By.css('.igx-grid__th'));
             const headerResArea = headers[2].parent.children[1].nativeElement;
@@ -1590,23 +1594,25 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         }));
 
-        it('Hiding - selection should be perserved on column hiding', () => {
+        it('Hiding: selection should be perserved on column hiding', () => {
             const range = { rowStart: 2, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
-            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
             ];
             HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             const columnName = grid.getColumnByName('Name');
             columnName.hidden = true;
             fix.detectChanges();
-            const newSelectedData = [{ ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014'), Age: 31},
+
+            const newSelectedData = [
+                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014'), Age: 31},
                 { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014'), Age: 44 }
             ];
-
             HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -1618,7 +1624,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Hiding - when hide last column which is in selected range, selection range is changed', (async() => {
+        it('Hiding: when hide last column which is in selected range, selection range is changed', (async() => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
@@ -1627,24 +1633,28 @@ describe('IgxGrid - Multi Cell selection', () => {
             const range = { rowStart: 2, rowEnd: 3, columnStart: 'HireDate', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             fix.detectChanges();
+
             const selectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
             { HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true }
             ];
             HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
             HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             const columnName = grid.getColumnByName('OnPTO');
             columnName.hidden = true;
-            await wait(20);
+            await wait();
             fix.detectChanges();
-            const newSelectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31},
-            { HireDate: new Date('May 4, 2014'), Age: 44}];
+
+            const newSelectedData = [
+                { HireDate: new Date('Sep 18, 2014'), Age: 31},
+                { HireDate: new Date('May 4, 2014'), Age: 44}
+            ];
             HelperUtils.verifySelectedRange(grid,  2, 3, 3, 5);
             HelperUtils.verifyCellsRegionSelected(grid,  2, 3, 3, 4);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
             columnName.hidden = false;
             fix.detectChanges();
+
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
             fix.detectChanges();
@@ -1655,7 +1665,32 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         }));
 
-        it('Pinning - should be able to select cells from unpinned cols to pinned', (async() => {
+        it('Hiding: selected data shoudld be [] when all columns are hidden', () => {
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+            ];
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+
+            grid.columnList.forEach(col => col.hidden = true);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual([]);
+
+            grid.columnList.forEach(col => col.hidden = false);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid,  2, 3, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('Pinning: should be able to select cells from unpinned cols to pinned', (async() => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
@@ -1695,7 +1730,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
-        it('Pinning - should be able to select cells from unpinned cols to pinned', (async() => {
+        it('Pinning: should be able to select cells from unpinned cols to pinned', (async() => {
             const columnName = grid.getColumnByName('Age');
             const secondCol = grid.getColumnByName('OnPTO');
             secondCol.pinned = true;
@@ -1706,10 +1741,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait(100);
             fix.detectChanges();
 
-            const firstCell = grid.getCellByColumn(2, 'Age');
-            const secondCell = grid.getCellByColumn(4, 'Name');
-
-            await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            await HelperUtils.selectCellsRange(fix, grid.getCellByColumn(2, 'Age'),  grid.getCellByColumn(4, 'Name'));
             fix.detectChanges();
 
             const selectedData = [
@@ -1722,7 +1754,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         }));
 
-        it('Pinning - should be able to select cells from unpinned cols to pinned', () => {
+        it('Pinning: should be able to select cells from unpinned cols to pinned', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -1733,27 +1765,24 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             const column = grid.getColumnByName('Name');
             column.pinned = true;
             fix.detectChanges();
+
             const newSelectedData = [
                 { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014')},
                 { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014')},
                 { ID: 663, ParentID: 847, HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         });
 
-        it('Pinning - selection should remains the same when unpin column from selected area', () => {
+        it('Pinning: selection should remains the same when unpin column from selected area', () => {
             const firstCol = grid.getColumnByName('ParentID');
             const secondCol =  grid.getColumnByName('HireDate');
-
             firstCol.pinned = true;
             secondCol.pinned = true;
             fix.detectChanges();
@@ -1782,11 +1811,10 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelData);
         });
 
-        it('GroupBy - should be able to select range when there is grouping applied ', () => {
+        it('GroupBy: should be able to select range when there is grouping applied ', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
             });
-
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -1798,7 +1826,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.clearGrouping();
             fix.detectChanges();
 
@@ -1811,7 +1838,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         });
 
-        it('GroupBy - selected range should remain the same when perform grouping ', () => {
+        it('GroupBy: selected range should remain the same when perform grouping ', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -1824,7 +1851,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
             });
@@ -1838,7 +1864,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         });
 
-        it('GroupBy - selected range should change when collapse a group row', () => {
+        it('GroupBy: selected range should change when collapse a group row', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
             });
@@ -1853,7 +1879,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.rowList.first.toggle();
             fix.detectChanges();
 
@@ -1866,7 +1891,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         });
 
-        it('Grouping - selected data should be empty when all group rows are collapsed', () => {
+        it('Grouping: selected data should be empty when all group rows are collapsed', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
             });
@@ -1881,7 +1906,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.toggleAllGroupRows();
             fix.detectChanges();
 
@@ -1896,7 +1920,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Moving - selection should not change when move columns inside selected range', () => {
+        it('Moving: selection should not change when move columns inside selected range', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -1931,7 +1955,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         });
 
-        it('Summaries - selection range should not change when enable/disable summaries', (async () => {
+        it('Summaries: selection range should not change when enable/disable summaries', (async () => {
             grid.height = '600px';
             await wait(100);
             fix.detectChanges();
@@ -1967,7 +1991,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
-        it('Summaries - selection range should not change when change summaryPosition', (async () => {
+        it('Summaries: selection range should not change when change summaryPosition', (async () => {
             grid.height = '600px';
             await wait(100);
             fix.detectChanges();
@@ -2012,7 +2036,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
-        it('CRUD - selection range should be preserved when delete a row', () => {
+        it('CRUD: selection range should be preserved when delete a row', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -2023,14 +2047,12 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const row = grid.getRowByIndex(3);
             row.delete();
             fix.detectChanges();
-
 
             const newSelectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
@@ -2045,7 +2067,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             expect(grid.primaryKey).toBeDefined();
-
             grid.deleteRow(15);
             grid.deleteRow(101);
             fix.detectChanges();
@@ -2059,10 +2080,8 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelection);
-
             grid.selectRange();
             fix.detectChanges();
-
             const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2077,7 +2096,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(data);
-
             grid.deleteRow(957);
             fix.detectChanges();
 
@@ -2092,7 +2110,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(data);
         });
 
-        it('CRUD - selected range should not change when add row', () => {
+        it('CRUD: selected range should not change when add row', () => {
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2103,7 +2121,6 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2114,7 +2131,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.sort({ fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
@@ -2127,7 +2143,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false});
             fix.detectChanges();
 
@@ -2142,7 +2157,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('CRUD - selected range should not change when update row', () => {
+        it('CRUD: selected range should not change when update row', () => {
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2153,7 +2168,6 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2168,20 +2182,18 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
             ];
-
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('CRUD - selected range should not change when update row', () => {
+        it('CRUD: selected range should not change when update row', () => {
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
 
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
-
             grid.getCellByColumn(0, 'ParentID').update(123);
             grid.getCellByColumn(2, 'ParentID').update(847);
             grid.getCellByColumn(3, 'Name').update('Paola Alicante');
@@ -2215,7 +2227,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Search - selection range should be preserved when perform search', () => {
+        it('Search: selection range should be preserved when perform search', () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2285,7 +2297,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             grid = fix.componentInstance.grid;
         });
 
-        it('CRUD - selected range should not change when delete row', () => {
+        it('CRUD: selected range should not change when delete row', () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2305,17 +2317,17 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.transactions.undo();
             fix.detectChanges();
+
             HelperUtils.verifySelectedRange(grid, 2, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-
             grid.transactions.redo();
             fix.detectChanges();
             grid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+
             selectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
@@ -2326,7 +2338,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('CRUD - selected range should not change when update row', () => {
+        it('CRUD: selected range should not change when update row', () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2386,7 +2398,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(data);
         });
 
-        it('CRUD - selected range should not change when add row', () => {
+        it('CRUD: selected range should not change when add row', () => {
             const range = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
