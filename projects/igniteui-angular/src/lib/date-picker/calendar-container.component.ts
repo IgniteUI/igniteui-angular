@@ -1,7 +1,5 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { IgxCalendarComponent } from '../calendar';
-import { DatePickerInteractionMode } from 'igniteui-angular';
-import { KEYS } from '../core/utils';
+import { DatePickerInteractionMode, IgxCalendarComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'igx-calendar-container',

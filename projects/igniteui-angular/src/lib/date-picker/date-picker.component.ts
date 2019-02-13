@@ -358,7 +358,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      * ```typescript
      * let template = this.template();
      * ```
-     * @memberof IgxTimePickerComponent
+     * @memberof IgxDatePickerComponent
      */
     get template(): TemplateRef<any> {
         if (this.datePickerTemplateDirective) {
@@ -369,7 +369,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     /**
      * Gets the context passed to the input group template.
-     * @memberof IgxTimePickerComponent
+     * @memberof IgxDatePickerComponent
      */
     get context() {
         return {
@@ -395,14 +395,16 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     public set value(date: Date) {
         this._value = date;
-        if (this._value && !this._isInEditMode) {
+        this._onChangeCallback(date);
+
+        if (this._value
+            && !this._isInEditMode
+            && this.mode === DatePickerInteractionMode.EDITABLE) {
             this._transformedDate = this._getDisplayDate(this._value);
         }
         if (this._value === null) {
             this._transformedDate = '';
         }
-
-        this._onChangeCallback(date);
     }
 
     /**
