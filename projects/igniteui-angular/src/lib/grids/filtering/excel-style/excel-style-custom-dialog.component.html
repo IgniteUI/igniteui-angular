@@ -1,4 +1,3 @@
-
 <article #toggle igxToggle
     class="igx-excel-filter__secondary"
     (onOpening)="onCustomDialogOpening()">
@@ -9,29 +8,27 @@
     </header>
 
     <article class="igx-excel-filter__secondary-main">
-        <section  class="igx-excel-filter__condition">
+        <ng-container *ngIf="column.dataType === 'date'">
+            <igx-excel-style-date-expression *ngFor="let expression of expressionsList; let last = last;"
+                class="igx-excel-filter__condition"
+                [expressionUI]="expression"
+                [isLast]=last
+                [column]="column"
+                [expressionsList]="expressionsList"
+                [columnData]="columnData" >
+            </igx-excel-style-date-expression>
+        </ng-container>
 
-            <ng-container *ngIf="column.dataType === 'date'">
-                <igx-excel-style-date-expression *ngFor="let expression of expressionsList; let last = last;"
-                    [expressionUI]="expression"
-                    [isLast]=last
-                    [column]="column"
-                    [expressionsList]="expressionsList"
-                    [columnData]="columnData" >
-                </igx-excel-style-date-expression>
-            </ng-container>
-
-            <ng-container *ngIf="column.dataType != 'date'">
-                <igx-excel-style-default-expression *ngFor="let expression of expressionsList; let last = last;"
-                    [expressionUI]="expression"
-                    [isLast]=last
-                    [column]="column"
-                    [expressionsList]="expressionsList"
-                    [columnData]="columnData" >
-                </igx-excel-style-default-expression>
-            </ng-container>
-
-        </section>
+        <ng-container *ngIf="column.dataType != 'date'">
+            <igx-excel-style-default-expression *ngFor="let expression of expressionsList; let last = last;"
+                class="igx-excel-filter__condition"
+                [expressionUI]="expression"
+                [isLast]=last
+                [column]="column"
+                [expressionsList]="expressionsList"
+                [columnData]="columnData" >
+            </igx-excel-style-default-expression>
+        </ng-container>
 
         <button igxButton
             class="igx-excel-filter__add-filter"

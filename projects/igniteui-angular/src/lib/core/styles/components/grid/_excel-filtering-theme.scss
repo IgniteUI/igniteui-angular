@@ -64,6 +64,7 @@
     }
 
     %grid-excel-sort {
+        display: block;
         padding: rem(8px) rem(16px);
 
         header {
@@ -131,6 +132,7 @@
     }
 
     %grid-excel-main {
+        display: block;
         padding: 0 rem(16px);
 
         igx-list {

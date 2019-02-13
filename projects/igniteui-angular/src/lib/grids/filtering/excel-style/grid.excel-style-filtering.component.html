@@ -15,17 +15,17 @@
         <h4 class="igx-typography__h6">{{ column.field }}</h4>
     </header>
 
-    <section class="igx-excel-filter__sort">
-        <igx-excel-style-sorting [column]="column"></igx-excel-style-sorting>
-    </section>
+    <igx-excel-style-sorting
+        class="igx-excel-filter__sort"
+        [column]="column">
+    </igx-excel-style-sorting>
 
     <section class="igx-excel-filter__actions">
 
-        <article class="igx-excel-filter__move">
-            <section class="igx-excel-filter__move-buttons">
-                <igx-excel-style-column-moving [column]="column"></igx-excel-style-column-moving>
-            </section>
-        </article>
+        <igx-excel-style-column-moving
+            class="igx-excel-filter__move"
+            [column]="column">
+        </igx-excel-style-column-moving>
 
         <div class="igx-excel-filter__actions-pin"
             (click)="onPin()"
@@ -55,9 +55,12 @@
         </div>
     </section>
 
-    <section class="igx-excel-filter__menu-main">
-        <igx-excel-style-search #excelStyleSearch [column]="column" [data]="columnData"></igx-excel-style-search>
-    </section>
+    <igx-excel-style-search
+        class="igx-excel-filter__menu-main"
+        #excelStyleSearch
+        [column]="column"
+        [data]="columnData">
+    </igx-excel-style-search>
 
     <footer class="igx-excel-filter__menu-footer">
         <button igxButton (click)="closeDialog()">Cancel</button>
@@ -80,4 +83,8 @@
     </div>
 </igx-drop-down>
 
-<igx-excel-style-custom-dialog #customDialog [column]="column" [columnData]="columnData"></igx-excel-style-custom-dialog>
+<igx-excel-style-custom-dialog
+    #customDialog
+    [column]="column"
+    [columnData]="columnData">
+</igx-excel-style-custom-dialog>
