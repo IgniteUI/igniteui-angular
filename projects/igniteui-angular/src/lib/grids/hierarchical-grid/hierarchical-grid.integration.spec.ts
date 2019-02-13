@@ -158,7 +158,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(2);
         }));
 
-        fit('should remove expand indicator for uncommitted added rows', (async () => {
+        it('should remove expand indicator for uncommitted added rows', (async () => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
