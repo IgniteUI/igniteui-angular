@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NG_VALIDATORS } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -506,7 +506,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed

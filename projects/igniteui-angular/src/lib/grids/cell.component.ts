@@ -17,7 +17,8 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
+import { first } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -510,7 +511,7 @@ export class IgxGridCellComponent implements OnInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
@@ -542,7 +543,7 @@ export class IgxGridCellComponent implements OnInit {
         }
     }
 
-    private _clearCellSelection() {
+    protected _clearCellSelection() {
         const cell = this._getLastSelectedCell();
         if (cell) {
             cell.selected = false;
@@ -567,7 +568,7 @@ export class IgxGridCellComponent implements OnInit {
         this._saveCellSelection(this.selection.get_empty());
     }
 
-    private _saveCellSelection(newSelection?: Set<any>) {
+    protected _saveCellSelection(newSelection?: Set<any>) {
         const sel = this.selection.get(this.cellSelectionID);
         if (sel && sel.size > 0) {
             this.selection.set(this.prevCellSelectionID, sel);
@@ -578,7 +579,7 @@ export class IgxGridCellComponent implements OnInit {
         this.selection.set(this.cellSelectionID, newSelection);
     }
 
-    private _getLastSelectedCell() {
+    protected _getLastSelectedCell() {
         const cellID = this.selection.first_item(this.cellSelectionID);
         if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
@@ -726,8 +727,10 @@ export class IgxGridCellComponent implements OnInit {
 
         if (event.altKey) {
             if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
-                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                const collapse = (this.row as any).expanded &&
+                                (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+                const expand = !(this.row as any).expanded &&
+                                (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
                 if (collapse) {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
@@ -922,6 +925,6 @@ export class IgxGridCellComponent implements OnInit {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key.toLowerCase()) !== -1;
     }
 }

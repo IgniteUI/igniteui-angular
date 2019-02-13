@@ -39,6 +39,7 @@ export class IgxRowEditTabStopDirective {
         @Inject(forwardRef(() => IgxGridNavigationService)) navigationService) {
             this.grid = grid;
             this.navigationService = navigationService;
+            this.navigationService.grid = grid;
         }
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])

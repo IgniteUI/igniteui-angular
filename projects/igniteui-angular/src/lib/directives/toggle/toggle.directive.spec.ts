@@ -7,7 +7,7 @@ import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy, HorizontalAlignment
 } from '../../services';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
@@ -522,6 +522,7 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
 
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: new Event('click') });
             expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
 

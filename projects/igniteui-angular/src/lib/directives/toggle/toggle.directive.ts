@@ -111,7 +111,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
     /**
@@ -206,8 +206,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosingSub = this.overlayService
             .onClosing
             .pipe(...this._overlaySubFilter)
-            .subscribe((e: OverlayCancelableEventArgs) => {
-                const eventArgs: CancelableEventArgs = { cancel: false };
+            .subscribe((e: OverlayClosingEventArgs) => {
+                const eventArgs: CancelableBrowserEventArgs = { cancel: false, event: e.event };
                 this.onClosing.emit(eventArgs);
                 e.cancel = eventArgs.cancel;
 
