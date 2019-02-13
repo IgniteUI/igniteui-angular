@@ -15,7 +15,7 @@
             [attr.aria-expanded]="ariaExpanded"
             [attr.aria-haspopup]="ariaHasPopUp"
             [attr.aria-owns]="ariaOwns"
-            [attr.aria-activedescendant]="this.selectedItem"
+            [attr.aria-activedescendant]="this.selectedItem?.id"
             />
         <!-- optionally add support for other suffix-es -->
         <ng-container ngProjectAs="igx-suffix">
