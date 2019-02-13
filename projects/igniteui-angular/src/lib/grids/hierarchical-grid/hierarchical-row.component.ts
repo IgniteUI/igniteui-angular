@@ -73,6 +73,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * ```
      */
     public toggle() {
+        if (this.added) {
+            return;
+        }
         const grid = this.gridAPI.get(this.grid.id);
         const state = this.gridAPI.get(this.grid.id).hierarchicalState;
         if (!this.expanded) {

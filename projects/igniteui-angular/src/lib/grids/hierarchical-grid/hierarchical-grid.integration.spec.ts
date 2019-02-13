@@ -157,6 +157,17 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(hierarchicalGrid.transactions.getTransactionLog().length).toEqual(0);
             expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(2);
         }));
+
+        it('should remove expand indicator for uncommitted added rows', (async () => {
+            hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
+            fixture.detectChanges();
+            hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const lastRow = rows[rows.length - 1];
+            expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
+            hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+            expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+        }));
     });
 
     describe('Sorting', () => {
