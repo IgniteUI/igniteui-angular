@@ -13,7 +13,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 
-describe('IgxGrid - search API', () => {
+fdescribe('IgxGrid - search API', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid: IgxGridComponent, fixNativeElement;
@@ -1210,7 +1210,7 @@ describe('IgxGrid - search API', () => {
             fix.detectChanges();
 
             (grid as any).scrollTo(9, 0);
-            await wait();
+            await wait(16);
             fix.detectChanges();
 
             const row = grid.getRowByIndex(9);
