@@ -2249,8 +2249,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _wheelListener = null;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
-    private _filteredData = null;
-    private _filteredSortedData = null;
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
