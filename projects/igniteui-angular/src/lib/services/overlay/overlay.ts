@@ -125,7 +125,7 @@ export class IgxOverlayService implements OnDestroy {
             info = this.getOverlayById(compOrId);
             if (!info) {
                 console.warn('igxOverlay.show was called with wrong id: ' + compOrId);
-                return;
+                return null;
             }
         } else {
             id = (this._componentId++).toString();
@@ -142,7 +142,7 @@ export class IgxOverlayService implements OnDestroy {
         settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
 
-        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
+        const eventArgs: OverlayCancelableEventArgs = { id, componentRef: info.componentRef, cancel: false };
         this.onOpening.emit(eventArgs);
         if (eventArgs.cancel) {
             if (info.componentRef) {
@@ -212,6 +212,7 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
+        //  TODO: synchronize where these are added/attached and where removed/detached
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
         this.removeResizeHandler(info.id);
@@ -422,14 +423,24 @@ export class IgxOverlayService implements OnDestroy {
             info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
             info.openAnimationPlayer.onDone(() => {
                 this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-                info.openAnimationPlayer.reset();
-                info.openAnimationPlayer = null;
+                if (info.openAnimationPlayer) {
+                    info.openAnimationPlayer.reset();
+                    info.openAnimationPlayer = null;
+                }
+
                 if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
                     info.closeAnimationPlayer.reset();
                 }
             });
         }
 
+        //  if there is opening animation already started do nothing
+        if (info.openAnimationPlayer.hasStarted()) {
+            return;
+        }
+
+        //  if there is closing animation already started start open animation from where close one has reached
+        //  and remove close animation
         if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
@@ -437,6 +448,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.closeAnimationInnerPlayer.getPosition();
             info.closeAnimationPlayer.reset();
+            info.closeAnimationPlayer = null;
             info.openAnimationPlayer.init();
             info.openAnimationPlayer.setPosition(position);
         }
@@ -458,8 +470,11 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
 
             info.closeAnimationPlayer.onDone(() => {
-                info.closeAnimationPlayer.reset();
-                info.closeAnimationPlayer = null;
+                if (info.closeAnimationPlayer) {
+                    info.closeAnimationPlayer.reset();
+                    info.closeAnimationPlayer = null;
+                }
+
                 if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
                     info.openAnimationPlayer.reset();
                 }
@@ -467,6 +482,13 @@ export class IgxOverlayService implements OnDestroy {
             });
         }
 
+        //  if there is closing animation already started do nothing
+        if (info.closeAnimationPlayer.hasStarted()) {
+            return;
+        }
+
+        //  if there is opening animation already started start close animation from where open one has reached
+        //  and remove open animation
         if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
@@ -474,6 +496,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
+            info.openAnimationPlayer = null;
             info.closeAnimationPlayer.init();
             info.closeAnimationPlayer.setPosition(position);
         }
@@ -503,12 +526,17 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayById(id: string): OverlayInfo {
+    /** @hidden */
+    public getOverlayById(id: string): OverlayInfo {
+        if (!id) {
+            return null;
+        }
+
         const overlay = this._overlayInfos.find(e => e.id === id);
         return overlay;
     }
 
-    private documentClicked = (ev: Event) => {
+    private documentClicked = (ev: MouseEvent) => {
         //  if we get to modal overlay just return - we should not close anything under it
         //  if we get to non-modal overlay do the next:
         //   1. Check it has close on outside click. If not go on to next overlay;
@@ -521,9 +549,19 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
+                //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
-                    this.hide(info.id);
+                    // if we should exclude position target check if the click is over it. If so do not close overlay
+                    const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
+                    const clickOnPositionTarget = positionTarget ? (positionTarget as any).contains(ev.target) : false;
+                    if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
+                        //  if the click is outside click, but close animation has started do nothing
+                        if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
+                            this.hide(info.id);
+                        }
+                    }
                 } else {
+                    //  TODO: should we return here, or continue with next overlays
                     return;
                 }
             }
