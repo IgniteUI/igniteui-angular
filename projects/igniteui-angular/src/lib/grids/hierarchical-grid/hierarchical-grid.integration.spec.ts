@@ -23,7 +23,8 @@ describe('IgxHierarchicalGrid Integration', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridTestBaseComponent
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridTestCustomToolbarComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
@@ -671,6 +672,19 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childHeaders[1].children[0].nativeElement.innerText.trim()).toEqual('ProductName');
             expect(childHeaders[2].children[0].nativeElement.innerText.trim()).toEqual('ID');
         });
+
+        it('should read from custom templates per level', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestCustomToolbarComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+
+            const toolbars = fixture.debugElement.queryAll(By.css('igx-grid-toolbar'));
+            expect(toolbars.length).toEqual(3);
+            expect(toolbars[0].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Parent Button');
+            expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 1 Button');
+            expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 2 Button');
+        });
     });
 
     describe('Moving', () => {
@@ -768,6 +782,51 @@ export class IgxHierarchicalGridTestBaseComponent {
            prods.push({
             ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
             'Col2': i, 'Col3': i, childData: children, childData2: children });
+        }
+        return prods;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 1 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 2 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <ng-template igxToolbarCustomContent>
+            <button igxButton="raised">Parent Button</button>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridTestCustomToolbarComponent {
+    public data;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+
+    constructor() {
+        this.data = this.generateData(10, 2);
+    }
+    generateData(count: number, level: number, parendID?) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+           if (level > 0 ) {
+                children = this.generateData(count / 2 , currLevel - 1, rowID);
+           }
+           prods.push({
+            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+            'Col2': i, 'Col3': i, childData1: children, childData2: children });
         }
         return prods;
     }
