@@ -18,8 +18,8 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayCancelableEventArgs, OverlayAnimationEventArgs } from '../../services/overlay/utilities';
-import { CancelableEventArgs } from '../../core/utils';
+import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
