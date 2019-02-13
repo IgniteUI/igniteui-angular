@@ -2,9 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
-
 - **New component** `IgxHierarchicalGrid`:
     - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
+
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
+    ```html
+    <input igxInput type="text" [igxAutocomplete]="townsPanel" />
+    <igx-drop-down #townsPanel>
+        <igx-drop-down-item *ngFor="let town of towns" [value]="town">
+            {{town}}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    ```
 
 - `igxGrid` now has `isLoading` input property. When enabled will show loading indicator, until the data is available. It can be best utilized for remote scenarios. Another input property `loadingGridTemplate` allows customizing the loading indicator.
 

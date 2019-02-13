@@ -25,7 +25,7 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
         }
 
         if (settings && fs.existsSync(settings.theme)) {
-            const normalizedPath = path.normalize(`${settings.theme}\\${fileName}`);
+            const normalizedPath = path.join(settings.theme, fileName);
             config = JSON.parse(fs.readFileSync(normalizedPath, 'utf8'));
         }
         if (config && settings.localize && process.env.NODE_ENV) {

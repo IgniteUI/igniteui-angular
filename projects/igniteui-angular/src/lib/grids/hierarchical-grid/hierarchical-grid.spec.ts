@@ -304,6 +304,53 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         expect(childRows[0].componentInstance.layout).toBe(ri1);
         expect(childRows[1].componentInstance.layout).toBe(ri2);
     });
+
+    it('should display correct data for sibling row islands', () => {
+        const uniqueData = [
+            {
+                ID: 1,
+                ProductName : 'Parent Name',
+                childData: [
+                    {
+                        ID: 11,
+                        ProductName : 'Child1 Name'
+                    }
+                ],
+                childData2: [
+                    {
+                        ID: 12,
+                        Col1: 'Child2 Col1',
+                        Col2: 'Child2 Col2',
+                        Col3: 'Child2 Col3'
+                    }
+                ]
+            }
+        ];
+
+        fixture.componentInstance.data = uniqueData;
+        fixture.detectChanges();
+
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
+
+        // check if data for each is correct
+        const child1 = childGrids[0];
+        const child2 = childGrids[1];
+
+        expect(child1.data).toBe(fixture.componentInstance.data[0].childData);
+        expect(child2.data).toBe(fixture.componentInstance.data[0].childData2);
+
+        expect(child1.getCellByColumn(0, 'ID').value).toBe(11);
+        expect(child1.getCellByColumn(0, 'ProductName').value).toBe('Child1 Name');
+
+        expect(child2.getCellByColumn(0, 'Col1').value).toBe('Child2 Col1');
+        expect(child2.getCellByColumn(0, 'Col2').value).toBe('Child2 Col2');
+        expect(child2.getCellByColumn(0, 'Col3').value).toBe('Child2 Col3');
+
+    });
+
     it('should apply the set options on the row island to all of its related child grids.', () => {
         fixture.componentInstance.height = '200px';
         fixture.detectChanges();

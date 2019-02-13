@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,
@@ -39,6 +40,7 @@ import {
 } from 'igniteui-angular';
 
 const igniteModules = [
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,
