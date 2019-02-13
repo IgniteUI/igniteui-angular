@@ -1,6 +1,6 @@
 <div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
-    <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
-    <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
+    <igx-icon *ngIf="!expanded" [isActive]='!added' fontSet="material">expand_more</igx-icon>
+    <igx-icon *ngIf="expanded" [isActive]='!added' fontSet="material">expand_less</igx-icon>
 </div>
 
 <ng-container *ngIf="rowSelectable">
