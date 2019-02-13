@@ -30,6 +30,7 @@
 /// @param {Color} $row-hover-background [null] - The hover row background color.
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
+/// @param {Color} $row-highlight [null] - The grid row highlight indication color.
 /// @param {String} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
 /// @param {Color} $pinned-border-color [null] - The color of the pinned border.
@@ -160,8 +161,9 @@
     $root-summaries-background: null,
     $root-summaries-text-color: null,
 
+    $row-highlight: null,
     $grid-shadow: null,
-    $drag-shadow: null,
+    $drag-shadow: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -409,6 +411,7 @@
         root-summaries-text-color: $root-summaries-text-color,
         row-selected-cell-background: $row-selected-cell-background,
 
+        row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
     ));
@@ -482,6 +485,14 @@
         cosy: 0 rem(16px),
         compact: 0 rem(12px)
     );
+
+    $hierarchical-grid-indent: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $hierarchical-action-icon: 24px;
 
     $grouparea-padding: (
         comfortable: rem(8px) rem(24px),
@@ -559,7 +570,7 @@
             }
         }
 
-        %grid__cbx-selection {
+        %grid__cbx-selection--push {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'comfortable') - rem(20px)) / 2;
         }
@@ -575,14 +586,14 @@
     }
 
     %grid-thead--cosy {
-        %grid__cbx-selection {
+        %grid__cbx-selection--push--cosy {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'cosy') - rem(20px)) / 2;
         }
     }
 
     %grid-thead--compact {
-        %grid__cbx-selection {
+        %grid__cbx-selection--push--compact {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'compact') - rem(20px)) / 2;
         }
@@ -758,6 +769,10 @@
                 color: --var($theme, 'row-selected-text-color');
             }
         }
+    }
+
+    %igx-grid__tr--expanded {
+        border-bottom: none;
     }
 
     %igx-grid__tr--edit {
@@ -1461,7 +1476,8 @@
         align-items: center;
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
-        padding-right: $grouping-padding-right;
+        padding-right: map-get($grid-grouping-indicator-padding, 'comfortable');
+        border-right: 1px solid transparent;
 
         &::after {
             content: '';
@@ -1489,10 +1505,12 @@
 
     %igx-grid__row-indentation--cosy {
         padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+        padding-right: map-get($grid-grouping-indicator-padding, 'cosy')
     }
 
     %igx-grid__row-indentation--compact {
         padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+        padding-right: map-get($grid-grouping-indicator-padding, 'compact')
     }
 
     %igx-grid__grouparea {
@@ -1586,6 +1604,8 @@
         user-select: none;
         justify-content: center;
         align-items: center;
+        background: inherit;
+        z-index: 1;
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: $grouping-padding-right;
@@ -1865,6 +1885,144 @@
             width: 10px;
             height: 100%;
             background: linear-gradient(to left, white, transparent);
+        }
+    }
+
+    %igx-grid__tr--highlighted {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: --var($theme, 'row-highlight');
+            z-index: 3;
+        }
+
+        %igx-grid__tr--edited {
+            &::before {
+                left: 4px;
+            }
+        }
+
+        &::before {
+            left: 4px;
+        }
+    }
+
+    %igx-grid__tr-container {
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+    }
+
+    %igx-grid__hierarchical-expander {
+        user-select: none;
+        background: inherit;
+        padding-left: map-get($hierarchical-grid-indent, 'comfortable');
+        padding-right: map-get($hierarchical-grid-indent, 'comfortable');
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        color: --var($theme, 'expand-icon-color');
+        border-right: 1px solid transparent;
+
+        &:focus {
+            outline: none;
+
+            igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
+        }
+
+        &:hover {
+            igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
+        }
+
+        igx-icon {
+            color: --var($theme, 'expand-icon-color');
+            max-width: $hierarchical-action-icon;
+            min-width: $hierarchical-action-icon;
+        }
+    }
+
+    %igx-grid__hierarchical-expander--cosy {
+        padding-left: map-get($hierarchical-grid-indent, 'cosy');
+        padding-right: map-get($hierarchical-grid-indent, 'cosy');
+    }
+
+    %igx-grid__hierarchical-expander--compact {
+        padding-left: map-get($hierarchical-grid-indent, 'compact');
+        padding-right: map-get($hierarchical-grid-indent, 'compact');
+    }
+
+    %igx-grid__hierarchical-expander--header {
+        background: inherit;
+        border-right: 1px solid --var($theme, 'header-border-color');
+        z-index: 3;
+
+        igx-icon {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    %igx-grid__hierarchical-expander--push {
+        align-items: flex-start;
+
+        igx-icon {
+            min-height: map-get($grid-header-height, 'comfortable');
+            max-height: map-get($grid-header-height, 'comfortable');
+        }
+    }
+
+    %igx-grid__hierarchical-expander--push--cosy {
+        igx-icon {
+            min-height: map-get($grid-header-height, 'cosy');
+        }
+    }
+
+    %igx-grid__hierarchical-expander--push--compact {
+        igx-icon {
+            min-height: map-get($grid-header-height, 'compact');
+        }
+    }
+
+    %igx-grid__hierarchical-indent {
+        margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon});
+        margin-top: map-get($hierarchical-grid-indent, 'comfortable');
+        margin-right: map-get($hierarchical-grid-indent, 'comfortable');
+        margin-bottom: map-get($hierarchical-grid-indent, 'comfortable');
+
+        &--scroll {
+            margin-right: calc(#{map-get($hierarchical-grid-indent, 'comfortable')} + 18px);
+        }
+    }
+
+    %igx-grid__hierarchical-indent--cosy {
+        margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'cosy')} + #{$hierarchical-action-icon});
+        margin-top: map-get($hierarchical-grid-indent, 'cosy');
+        margin-right: map-get($hierarchical-grid-indent, 'cosy');
+        margin-bottom: map-get($hierarchical-grid-indent, 'cosy');
+
+        &--scroll {
+            margin-right: calc(#{map-get($hierarchical-grid-indent, 'cosy')} + 18px);
+        }
+    }
+
+    %igx-grid__hierarchical-indent--compact {
+        margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'compact')} + #{$hierarchical-action-icon});
+        margin-top: map-get($hierarchical-grid-indent, 'compact');
+        margin-right: map-get($hierarchical-grid-indent, 'compact');
+        margin-bottom: map-get($hierarchical-grid-indent, 'compact');
+
+        &--scroll {
+            margin-right: calc(#{map-get($hierarchical-grid-indent, 'compact')} + 18px);
         }
     }
 

@@ -8,7 +8,6 @@
 /// @requires {mixin} bem-mod
 /// @requires {mixin} _excel-filtering-partial
 ////
-
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -146,12 +145,21 @@
         @extend %igx-grid__tr--deleted !optional;
     }
 
+
+    @include e(tr, $m: highlighted) {
+        @extend %igx-grid__tr--highlighted !optional;
+    }
+
     @include e(tr, $m: edit) {
         @extend %igx-grid__tr--edit !optional;
     }
 
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
+    }
+
+    @include e(tr-container) {
+        @extend %igx-grid__tr-container !optional;
     }
 
     @include e(th) {
@@ -231,6 +239,10 @@
         @extend %igx-grid-row--filtered !optional;
     }
 
+    @include e(tr, $m: expanded) {
+        @extend %igx-grid__tr--expanded !optional;
+    }
+
     @include e(tree-grouping-indicator) {
         @extend %igx-grid__tree-grouping-indicator !optional;
     }
@@ -274,6 +286,10 @@
 
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
+    }
+
+    @include e(cbx-selection, $m: push) {
+        @extend %grid__cbx-selection--push !optional;
     }
 
     @include e(group-row) {
@@ -393,6 +409,26 @@
         @extend %igx-grid__filtering-scroll-end !optional;
     }
 
+    @include e(hierarchical-indent) {
+        @extend %igx-grid__hierarchical-indent !optional;
+    }
+
+    @include e(hierarchical-expander) {
+        @extend %igx-grid__hierarchical-expander !optional;
+    }
+
+    @include e(hierarchical-expander, $m: header) {
+        @extend %igx-grid__hierarchical-expander--header !optional;
+    }
+
+    @include e(hierarchical-expander, $m: push) {
+        @extend %igx-grid__hierarchical-expander--push !optional;
+    }
+
+    @include e(hierarchical-indent, $m: scroll) {
+        @extend %igx-grid__hierarchical-indent--scroll !optional;
+    }
+
     @for $i from 1 through 10 {
         @include e(row-indentation, $m: level-#{$i}) {
             @extend %igx-grid__row-indentation--level-#{$i} !optional;
@@ -410,6 +446,10 @@
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
+        }
+
+        @include e(cbx-selection, $m: push) {
+            @extend %grid__cbx-selection--push--cosy !optional;
         }
 
         @include e(drag-ghost-image) {
@@ -464,6 +504,22 @@
             @extend %igx-grid__group-row--cosy !optional;
         }
 
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--cosy !optional;
+        }
+
+        @include e(hierarchical-indent, $m: scroll) {
+            @extend %igx-grid__hierarchical-indent--cosy--scroll !optional;
+        }
+
+        @include e(hierarchical-expander) {
+            @extend %igx-grid__hierarchical-expander--cosy !optional;
+        }
+
+        @include e(hierarchical-expander, $m: push) {
+            @extend %igx-grid__hierarchical-expander--push--cosy !optional;
+        }
+
         @for $i from 1 through 10 {
             @include e(row-indentation, $m: level-#{$i}) {
                 @extend %igx-grid__row-indentation-cosy--level-#{$i} !optional;
@@ -482,6 +538,10 @@
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
+        }
+
+        @include e(cbx-selection, $m: push) {
+            @extend %grid__cbx-selection--push--compact !optional;
         }
 
         @include e(drag-ghost-image) {
@@ -534,6 +594,22 @@
 
         @include e(group-row) {
             @extend %igx-grid__group-row--compact !optional;
+        }
+
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--compact !optional;
+        }
+
+        @include e(hierarchical-indent, $m: scroll) {
+            @extend %igx-grid__hierarchical-indent--compact--scroll !optional;
+        }
+
+        @include e(hierarchical-expander) {
+            @extend %igx-grid__hierarchical-expander--compact !optional;
+        }
+
+        @include e(hierarchical-expander, $m: push) {
+            @extend %igx-grid__hierarchical-expander--push--compact !optional;
         }
 
         @for $i from 1 through 10 {

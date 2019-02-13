@@ -16,6 +16,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridComponent, IGridDataBindable } from './grid';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 
 /**
@@ -107,7 +108,7 @@ export class IgxGridHeaderComponent implements DoCheck {
     protected sortDirection = SortingDirection.None;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,

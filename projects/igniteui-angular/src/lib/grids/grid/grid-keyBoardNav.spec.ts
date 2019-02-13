@@ -860,6 +860,27 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(gRow.expanded).toBe(true);
         }));
 
+        it('should toggle expand/collapse state of group row with ArrowUp/ArrowDown key.', async(() => {
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            fix.detectChanges();
+            const gRow = grid.groupsRowList.toArray()[0];
+            expect(gRow.expanded).toBe(true);
+            const evtArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true });
+
+            const evtArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true });
+            gRow.element.nativeElement.dispatchEvent(evtArrowUp);
+            fix.detectChanges();
+
+            expect(gRow.expanded).toBe(false);
+
+            gRow.element.nativeElement.dispatchEvent(evtArrowDown);
+            fix.detectChanges();
+            expect(gRow.expanded).toBe(true);
+        }));
+
         it(`focus should stays over the group row when expand/collapse
         with ArrowRight/ArrowLeft keys and grid is scrolled to bottom`, (async () => {
                 grid.groupBy({

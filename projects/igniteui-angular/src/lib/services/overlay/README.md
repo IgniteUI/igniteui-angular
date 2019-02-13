@@ -81,6 +81,7 @@ this.overlay.show(component, overlaySettings);
 |verticalStartPoint  | VerticalAlignment                       | Target's starting point                             |
 |openAnimation       | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay opens               |
 |closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
+|minSize             | Size        | The size up to which element may shrink when shown in elastic position strategy |
 
 
 ##### Methods
@@ -89,7 +90,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
-|show             | Shows the provided component on the overlay                                     |component, id?, overlaySettings?|
+|show             | Shows the provided component on the overlay                 |component, id?, overlaySettings?|
 |hide             | Remove the provided native element of for the component with provided id        |id          |
 |hideAll          | Remove the all native elements and hides the overlay                            |-           |
 |reposition       | Repositions the native element of the component with provided id                |id          |
@@ -104,7 +105,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
-|initialize       | Initialize the strategy. Should be called once                                  |document, overlayService, id|
+|initialize       | Initialize the strategy. Should be called once                  |document, overlayService, id|
 |attach           | Attaches the strategy                                                           |-           |
 |detach           | Detaches the strategy                                                           |-           |
 
