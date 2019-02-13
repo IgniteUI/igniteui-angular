@@ -593,16 +593,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         const childGrids = this.getChildGrids(false);
         const prevActiveMatchIndex = this.lastSearchInfo.activeMatchIndex;
         super._applyHightlights(text, increment, caseSensitive, exactMatch);
+        // sort child grids by parent index
+        childGrids.sort((grid1, grid2) => {
+            const parentIndex1 = grid1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(grid1));
+            const parentIndex2 = grid1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(grid2));
+            return parentIndex1  > parentIndex2 ? -1 : 1;
+        });
         childGrids.forEach((grid) => {
             grid.find(text, increment, caseSensitive, exactMatch, scroll);
             const matchCache = grid.lastSearchInfo.matchInfoCache;
             const parentRec = this.hgridAPI.getParentRowId(grid);
-            // last index that belongs to the parent row
-            const insertIndex = this.lastSearchInfo.matchInfoCache.findIndex((info, index) => {
-                return info.row === parentRec &&
-                (this.lastSearchInfo.matchInfoCache.length - 1 === index ||
-                    this.lastSearchInfo.matchInfoCache[index + 1].row !== parentRec);
-            });
+            const parentIndex = grid.parent.verticalScrollContainer.igxForOf.indexOf(parentRec);
+            const insertIndex = this.lastSearchInfo.matchInfoCache.length > 0 ?
+            this._getInsertionIndex(parentIndex, this.lastSearchInfo.matchInfoCache) :
+            0;
             const itemsToAdd = [];
             matchCache.forEach((matchCacheItem) => {
                 if (this.lastSearchInfo.matchInfoCache.indexOf(matchCacheItem) === -1) {
@@ -610,7 +614,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 }
             });
             itemsToAdd.reverse().forEach(item => {
-                this.lastSearchInfo.matchInfoCache.splice(insertIndex + 1, 0, item);
+                this.lastSearchInfo.matchInfoCache.splice(insertIndex, 0, item);
             });
         });
         if (this.parent === null && this.lastSearchInfo.matchInfoCache.length > 0 &&
@@ -632,6 +636,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 }
         }
         return this.lastSearchInfo.matchInfoCache.length;
+    }
+
+   private _getInsertionIndex(pIndex, cache) {
+       // find closest parent row data index that exists in match results
+       // so that child results can be inserted there
+        const res = cache.map((item, index) => {
+                const dataIndex = item.grid.filteredSortedData.indexOf(item.row);
+                const origIndex = index;
+                return {dataIndex: dataIndex, origIndex: origIndex};
+            }).reduce(function (prev, curr) {
+            return (Math.abs(curr.dataIndex - pIndex) < Math.abs(prev.dataIndex - pIndex) ? curr : prev);
+          });
+          if (res.dataIndex <= pIndex) {
+              // insert after
+              return res.origIndex + 1;
+          } else {
+              // insert before
+            return res.origIndex;
+          }
     }
 
     protected scrollTo(row: any, column: any | number): void {
