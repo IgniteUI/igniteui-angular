@@ -5,21 +5,17 @@ let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-select-item',
-    templateUrl: 'select-item.component.html'
+    template: '<ng-content></ng-content>'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('attr.aria-disabled')
     public get ariaDisabled() {
         return this.disabled;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('attr.role')
     public get ariaRole() {
         return 'option';
@@ -39,9 +35,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
     @Input()
     public id = `igx-drop-down-item-${NEXT_ID++}`;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get itemText() {
         return this.elementRef.nativeElement.innerText.trim();
     }

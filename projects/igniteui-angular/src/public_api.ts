@@ -81,6 +81,7 @@ export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/select.component';
+export * from './lib/select/select-item.component';
 
 
 /**

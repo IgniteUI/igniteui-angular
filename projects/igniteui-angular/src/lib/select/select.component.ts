@@ -22,10 +22,9 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.c
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxSelectBase } from './select.common';
 
-/**
- * @hidden
- */
+    /** @hidden @internal */
 @Directive({
     selector: '[igxSelectToggleIcon]'
 })
@@ -40,7 +39,7 @@ const noop = () => { };
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
+export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit {
 
     // /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
@@ -90,32 +89,22 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('style.maxHeight')
     public maxHeight = '256px';
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get ariaExpanded(): boolean {
         return !this.collapsed;
     }
 
-    /**
-     * @hidden
-     */
-    public get ariaHasPopUp() {
-        return 'listbox';
-    }
-
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get ariaOwns() {
         return this.listId;
     }
+
+    /** @hidden @internal */
+    public width: string;
 
     /**
      * An @Input property that sets how the select will be styled.
@@ -126,6 +115,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
      */
     @Input()
     public type = 'line';
+
+    /**
+     * An @Input property that sets what display density to be used for the input group.
+     * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
+     * ```html
+     *<igx-select [displayDensity]="'compact'">
+     * ```
+     */
+    @Input()
+    public displayDensity = 'comfortable';
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -148,55 +147,39 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get listId() {
         return this.id + '-list';
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get selectionValue() {
         const selectedItem = this.selectedItem;
         return selectedItem ? selectedItem.itemText : '';
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public writeValue = (value: any) => {
         this.value = value;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public registerOnTouched(fn: any): void { }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
         if (newSelection === null || newSelection.disabled) {
@@ -220,9 +203,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public getFirstItemElement(): HTMLElement {
         return this.children.first.element.nativeElement;
     }
