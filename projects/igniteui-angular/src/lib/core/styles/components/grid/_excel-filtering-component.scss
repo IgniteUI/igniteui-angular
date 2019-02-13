@@ -49,12 +49,10 @@
 
         @include e(actions-pin) {
             @extend %grid-excel-actions__action !optional;
-            @extend %grid-excel-actions__pin !optional;
         }
 
         @include e(actions-unpin) {
             @extend %grid-excel-actions__action !optional;
-            @extend %grid-excel-actions__unpin !optional;
         }
 
         @include e(actions-hide) {

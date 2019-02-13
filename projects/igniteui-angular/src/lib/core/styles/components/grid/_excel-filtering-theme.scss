@@ -130,18 +130,6 @@
         }
     }
 
-    %grid-excel-actions__pin {
-        igx-icon {
-            color: igx-color($palette, 'grays', 400);
-        }
-    }
-
-    %grid-excel-actions__unpin {
-        igx-icon {
-            color: igx-color($palette, 'grays', 700)
-        }
-    }
-
     %grid-excel-main {
         padding: 0 rem(16px);
 
