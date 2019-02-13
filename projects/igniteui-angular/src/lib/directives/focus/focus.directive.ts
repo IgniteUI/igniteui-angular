@@ -67,8 +67,9 @@ export class IgxFocusDirective {
         }
     }
 }
+
 /**
- * The IgxFocusModule provides the {@link IgxFocusDirective} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxFocusDirective],

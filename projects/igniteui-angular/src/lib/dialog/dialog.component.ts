@@ -480,9 +480,8 @@ export interface IDialogEventArgs {
 }
 
 /**
- * The IgxDialogComponent provides {@link IgxDialogComponent} inside your application.
+ * @hidden
  */
-
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],

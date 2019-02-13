@@ -11,6 +11,9 @@ import {
     IgxCalendarYearDirective
 } from './calendar.directives';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxCalendarComponent,

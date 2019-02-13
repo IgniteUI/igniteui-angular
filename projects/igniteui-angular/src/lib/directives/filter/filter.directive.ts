@@ -159,7 +159,9 @@ export class IgxFilterPipe implements PipeTransform {
     }
 }
 
-
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxFilterDirective, IgxFilterPipe],
     exports: [IgxFilterDirective, IgxFilterPipe],

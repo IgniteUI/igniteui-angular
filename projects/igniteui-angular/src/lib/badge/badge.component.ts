@@ -182,9 +182,8 @@ export class IgxBadgeComponent {
 }
 
 /**
- * The IgxBadgeComponent provides the {@link IgxBadgeComponent} inside your application.
+ * @hidden
  */
-
 @NgModule({
     declarations: [IgxBadgeComponent],
     exports: [IgxBadgeComponent],

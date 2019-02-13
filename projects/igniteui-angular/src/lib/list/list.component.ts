@@ -355,7 +355,7 @@ export class IgxListComponent implements IgxListBase {
 }
 
 /**
- * The IgxListModule provides the {@link IgxListComponent} and the {@link IgxListItemComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxListComponent, IgxListItemComponent,

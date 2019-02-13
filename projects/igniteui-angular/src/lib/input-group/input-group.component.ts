@@ -357,7 +357,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 }
 
 /**
- * The IgxInputGroupModule provides the {@link IgxInputGroupComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],

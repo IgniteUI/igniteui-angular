@@ -943,7 +943,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
 
 /**
- * The IgxDragDropModule provides the {@link IgxDragDirective}, {@link IgxDropDirective} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxDragDirective, IgxDropDirective],

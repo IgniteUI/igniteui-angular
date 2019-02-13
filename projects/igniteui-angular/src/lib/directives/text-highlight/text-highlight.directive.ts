@@ -494,6 +494,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTextHighlightDirective],
     exports: [IgxTextHighlightDirective]

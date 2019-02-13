@@ -403,8 +403,9 @@ export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
     providers: [IGX_CHECKBOX_REQUIRED_VALIDATOR]
 })
 export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator { }
+
 /**
- *The IgxCheckboxModule provides the {@link IgxCheckboxComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],

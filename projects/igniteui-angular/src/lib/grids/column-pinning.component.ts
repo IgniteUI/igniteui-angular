@@ -69,7 +69,7 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
 }
 
 /**
- * The IgxColumnPinningModule provides the {@link IgxColumnPinningComponent}, {@link IgxColumnPinningItemDirective} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxColumnPinningComponent, IgxColumnPinningItemDirective],

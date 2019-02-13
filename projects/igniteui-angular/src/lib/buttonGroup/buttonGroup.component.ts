@@ -412,7 +412,7 @@ export interface IButtonGroupEventArgs {
 }
 
 /**
- * The IgxButtonGroupModule provides the {@link IgxButtonGroupComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxButtonGroupComponent],

@@ -15,7 +15,9 @@ export * from './drop-down.base';
 export * from './drop-down-item.base';
 export * from './drop-down-group.component';
 
-
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
     exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],

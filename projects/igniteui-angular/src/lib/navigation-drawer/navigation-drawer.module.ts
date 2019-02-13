@@ -7,6 +7,9 @@ import {
     IgxNavDrawerTemplateDirective
 } from './navigation-drawer.directives';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxNavigationDrawerComponent,

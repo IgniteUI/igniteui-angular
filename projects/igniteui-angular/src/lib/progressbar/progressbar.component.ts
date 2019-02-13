@@ -752,8 +752,7 @@ export function convertInPercentage(value: number, max: number) {
 }
 
 /**
- * The IgxProgressBarModule provides the {@link IgxLinearProgressBarComponent},
- * {@link IgxCircularProgressBarComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],

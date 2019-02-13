@@ -330,8 +330,9 @@ export enum IgxToastPosition {
     Middle,
     Top
 }
+
 /**
- * The IgxToastModule provides the {@link IgxToastComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxToastComponent],

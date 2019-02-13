@@ -63,6 +63,9 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxGridCellComponent,

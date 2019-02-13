@@ -89,8 +89,9 @@ export class IgxCardComponent {
     @Input()
     public id = `igx-card-${NEXT_ID++}`;
 }
+
 /**
- * The `IgxCardModule` provides the {@link IgxCardComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxCardComponent, IgxCardHeaderDirective,

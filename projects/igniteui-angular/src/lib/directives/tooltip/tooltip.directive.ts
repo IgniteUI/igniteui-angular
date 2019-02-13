@@ -534,6 +534,9 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTooltipDirective, IgxTooltipTargetDirective],
     exports: [IgxTooltipDirective, IgxTooltipTargetDirective],

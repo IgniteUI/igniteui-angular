@@ -367,6 +367,10 @@ export interface IMaskEventArgs {
     rawValue: string;
     formattedValue: string;
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxMaskDirective],
     exports: [IgxMaskDirective],

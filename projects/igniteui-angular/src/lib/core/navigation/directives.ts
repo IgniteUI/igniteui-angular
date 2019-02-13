@@ -51,6 +51,9 @@ export class IgxNavigationCloseDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
     exports: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
