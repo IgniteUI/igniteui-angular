@@ -1,6 +1,7 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { IgxCalendarComponent } from '../calendar';
 import { DatePickerInteractionMode } from 'igniteui-angular';
+import { KEYS } from '../core/utils';
 
 @Component({
     selector: 'igx-calendar-container',
@@ -43,6 +44,7 @@ export class IgxCalendarContainerComponent {
     }
 
     @HostListener('keydown.esc', ['$event'])
+    @HostListener('keydown.alt.arrowup', ['$event'])
     public onSpaceClick(event) {
         event.preventDefault();
         this.onClose.emit();

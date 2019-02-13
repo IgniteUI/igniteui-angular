@@ -922,7 +922,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.calculateDate(this.getEditElement().value, event.type);
                     this.openCalendar(event);
                 } else {
                     this.spinValue(event);

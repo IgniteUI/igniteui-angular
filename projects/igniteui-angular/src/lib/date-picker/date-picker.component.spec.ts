@@ -414,7 +414,90 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
         });
 
-        fit('should be able to apply display format (editable mode)', (() => {
+        it('Editable Datepicker open/close event', async () => {
+            const dom = fixture.debugElement;
+            const iconDate = dom.query(By.css('.igx-icon'));
+            expect(iconDate).toBeDefined();
+
+            spyOn(datePicker.onOpen, 'emit');
+            spyOn(datePicker.onClose, 'emit');
+
+            UIInteractions.clickElement(iconDate);
+            fixture.detectChanges();
+            await wait();
+
+            expect(datePicker.onOpen.emit).toHaveBeenCalled();
+            expect(datePicker.onOpen.emit).toHaveBeenCalledWith(datePicker);
+
+            const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
+            expect(dropDown).toBeDefined();
+
+            dom.nativeElement.dispatchEvent(new Event('click'));
+
+            fixture.detectChanges();
+            await wait();
+
+            expect(datePicker.onClose.emit).toHaveBeenCalled();
+            expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
+        });
+
+        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
+            const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            fixture.detectChanges();
+
+            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.classList.contains('igx-overlay__wrapper--modal')).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', overlayDiv, true);
+            flush();
+            fixture.detectChanges();
+
+            const overlays = document.getElementsByClassName('igx-overlay__wrapper--modal');
+            expect(overlays.length).toEqual(0);
+        }));
+
+        it('should open the dropdown when click on the date icon', (() => {
+            const dom = fixture.debugElement;
+            fixture.detectChanges();
+
+            const iconDate = dom.query(By.css('.igx-icon'));
+            expect(iconDate).toBeDefined();
+
+            UIInteractions.clickElement(iconDate);
+            fixture.detectChanges();
+
+            const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
+            expect(dropDown).toBeDefined();
+        }));
+
+        it('should have correctly selected date', (() => {
+            const dom = fixture.debugElement;
+            fixture.detectChanges();
+
+            const iconDate = dom.query(By.css('.igx-icon'));
+            expect(iconDate).toBeDefined();
+
+            UIInteractions.clickElement(iconDate);
+            fixture.detectChanges();
+
+            const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
+            expect(dropDown).toBeDefined();
+
+            const selectedSpans = dom.nativeElement.getElementsByClassName('igx-calendar__date--selected');
+            expect(selectedSpans.length).toBe(1);
+            expect(selectedSpans[0].innerHTML.trim()).toBe('20');
+
+            const dateHeader = dom.nativeElement.getElementsByClassName('igx-calendar-picker__date');
+            expect(dateHeader.length).toBe(2);
+            const month = dateHeader[0].innerHTML.trim();
+            const year = dateHeader[1].innerHTML.trim();
+            expect(month).toBe('Oct');
+            expect(year).toBe('2011');
+        }));
+
+        it('should be able to apply display format (editable mode)', (() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input.nativeElement.value).toBe('20.10.2011');
 
@@ -424,14 +507,8 @@ describe('IgxDatePicker', () => {
             input.nativeElement.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
 
+            // Check for formatted input on blur
             expect(input.nativeElement.value).toBe('20.10.2011');
-
-            datePicker.value = null;
-            fixture.detectChanges();
-
-            input.nativeElement.dispatchEvent(new Event('blur'));
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toBe('dd.MM.y');
         }));
 
         it('should be able to apply editor mask (editable mode)', (() => {
@@ -440,6 +517,18 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('20-10-11');
+
+            // Check for formatted empty value on blur - placeholder is displayed
+            datePicker.deselectDate();
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            expect(input.nativeNode.placeholder).toBe('dd-MM-yy');
         }));
     });
 
