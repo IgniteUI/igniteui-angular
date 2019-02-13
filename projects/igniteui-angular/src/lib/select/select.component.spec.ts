@@ -1,15 +1,13 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent } from './select.component';
-import { IgxSelectModule } from './select.component';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { FormsModule } from '@angular/forms';
-import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxSelectComponent, IgxSelectModule } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
+import { ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -87,13 +85,12 @@ describe('igxSelect', () => {
             fixture.detectChanges();
         }));
         it('Should initialize the select component properly', fakeAsync(() => {
-            select.items[0].selected = true;
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(fixture.componentInstance).toBeDefined();
             expect(select).toBeDefined();
             expect(inputGroup).toBeTruthy();
             expect(select.placeholder).toBeDefined();
-            expect(select.value).toEqual(select.items[0].value);
+            expect(select.value).toBeUndefined();
             expect(select.disabled).toBeFalsy();
             expect(select.overlaySettings).toBeUndefined();
             expect(select.collapsed).toBeDefined();
@@ -283,14 +280,13 @@ describe('igxSelect', () => {
             verifyOpenCloseEvents(1, 1, 2);
         }));
         it('Should emit closing events on click outside of the component', fakeAsync(() => {
-            select.items[0].selected = true;
-
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
             expect(select).toBeDefined();
             select.toggle();
             tick();
+            fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
             document.documentElement.dispatchEvent(new Event('click'));
@@ -326,7 +322,6 @@ describe('igxSelect', () => {
             expect(dropdownListElement.getAttribute('aria-hidden')).toEqual('true');
         }));
         it('Should render aria attributes on dropdown items properly', () => {
-            select.items[0].selected = true;
             const selectItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
             selectItems.forEach(item => {
                 expect(item.nativeElement.getAttribute('role')).toEqual('option');
@@ -666,7 +661,6 @@ describe('igxSelect', () => {
             // TODO
         });
         it('Should not change selection when setting value to non-existing item', fakeAsync(() => {
-            select.items[0].selected = true;
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const selectedItemEl = selectList.children[2];
@@ -734,7 +728,6 @@ describe('igxSelect', () => {
         }));
         it('Should properly emit onSelection event on item selected property setting', () => {
             let selectedItem = select.items[3];
-
             spyOn(select.onSelection, 'emit');
             spyOn(select, 'selectItem').and.callThrough();
             const args: ISelectionEventArgs = {
@@ -829,7 +822,6 @@ describe('igxSelect', () => {
         }));
         it('Should properly emit onSelection event using selectItem method', () => {
             let selectedItem = select.items[4];
-
             spyOn(select.onSelection, 'emit');
             const args: ISelectionEventArgs = {
                 oldSelection: undefined,
@@ -1056,7 +1048,6 @@ describe('igxSelect', () => {
             verifyFocusedItem(focusedItemIndex);
         }));
         it('Should navigate and select items skipping the disabled ones when dropdown is closed', fakeAsync(() => {
-            //select.items[0].selected = true;
             let selectedItemIndex = 1;
 
             select.items[0].disabled = true;
@@ -1162,8 +1153,6 @@ describe('igxSelect', () => {
             verifySelectedItem(selectedItemIndex);
         }));
         it('Should navigate through items using Up/Down keys until there are items when dropdown is opened', fakeAsync(() => {
-            select.items[0].selected = true;
-
             select.toggle();
             tick();
             fixture.detectChanges();
@@ -1195,8 +1184,6 @@ describe('igxSelect', () => {
             verifyFocusedItem(0);
         }));
         it('Should navigate through items using Up/Down keys until there are items when dropdown is closed', fakeAsync(() => {
-            select.items[0].selected = true;
-
             for (let itemIndex = 1; itemIndex < select.items.length; itemIndex++) {
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 tick();
@@ -1225,7 +1212,6 @@ describe('igxSelect', () => {
         }));
         it('Should filter and navigate through items on character key navigation when dropdown is opened',
             fakeAsync(() => {
-                select.items[0].selected = true;
                 select.open();
                 tick();
                 fixture.detectChanges();
@@ -1244,7 +1230,6 @@ describe('igxSelect', () => {
                 }
             }));
         it('Character key navigation when dropdown is opened should be case insensitive', fakeAsync(() => {
-            select.items[0].selected = true;
             select.open();
             tick();
             fixture.detectChanges();
@@ -1266,7 +1251,6 @@ describe('igxSelect', () => {
         }));
         it('Character key navigation when dropdown is opened should wrap selection',
             fakeAsync(() => {
-                select.items[0].selected = true;
                 select.open();
                 tick();
                 fixture.detectChanges();
@@ -1302,7 +1286,6 @@ describe('igxSelect', () => {
                 'Karlsruhe',
                 'Östringen'];
             fixture.detectChanges();
-            select.items[0].selected = true;
             select.open();
             tick();
             fixture.detectChanges();
@@ -1330,7 +1313,6 @@ describe('igxSelect', () => {
             }
         }));
         it('Should not change focus when pressing non-matching character and dropdown is opened', fakeAsync(() => {
-            select.items[0].selected = true;
             select.open();
             tick();
             fixture.detectChanges();
@@ -1353,7 +1335,6 @@ describe('igxSelect', () => {
         }));
         it('Should filter and select items on character key navigation when dropdown is closed',
             fakeAsync(() => {
-                select.items[0].selected = true;
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
                     inputElement.triggerEventHandler('keyup', { key: 'p' });
@@ -1368,7 +1349,6 @@ describe('igxSelect', () => {
                 }
             }));
         it('Character key navigation when dropdown is closed should be case insensitive', fakeAsync(() => {
-            select.items[0].selected = true;
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keyup', { key: 'l' });
             tick();
@@ -1386,7 +1366,6 @@ describe('igxSelect', () => {
         }));
         it('Character key navigation when dropdown is closed should wrap selection',
             fakeAsync(() => {
-                select.items[0].selected = true;
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
                     inputElement.triggerEventHandler('keyup', { key: 'l' });
@@ -1418,7 +1397,6 @@ describe('igxSelect', () => {
                 'Karlsruhe',
                 'Östringen'];
             fixture.detectChanges();
-            select.items[0].selected = true;
 
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
@@ -1443,7 +1421,6 @@ describe('igxSelect', () => {
             }
         }));
         it('Should not change selection when pressing non-matching character and dropdown is closed', fakeAsync(() => {
-            select.items[0].selected = true;
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keyup', { key: 'l' });
             tick();
@@ -1469,7 +1446,7 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
-        it('Should display selected item over input when there is ample space to open', fakeAsync(() => {
+        it('Should display selected item over input when there is ample space to open', async(() => {
             // TODO
         }));
         it('Should display selected item over input when there is some space above to open and first item is selected', fakeAsync(() => {
@@ -1503,7 +1480,7 @@ describe('igxSelect', () => {
 
 @Component({
     template: `
-    <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value" >
+    <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
     <igx-select-item *ngFor="let item of items" [value]="item">
         {{ item }}
     </igx-select-item>
@@ -1546,7 +1523,8 @@ class IgxSelectSimpleComponent {
         {{ item }}
     </igx-select-item>
     </igx-select>
-`
+`,
+styles : [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })
 class IgxSelectDeafaultEmptyComponent {
     @ViewChild('select', { read: IgxSelectComponent })
