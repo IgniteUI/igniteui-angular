@@ -1,9 +1,9 @@
-<app-page-header title="Ripple">
-    Description for select
+<app-page-header title="Select">
+    Several select components with a variety of setups and API interaction.
 </app-page-header>
 
 <div class="sampleWrapper">
-    <igx-select #select [width]="'260px'"
+    <igx-select #select1
                 [placeholder]="'Pick One'"
                 [(ngModel)]="value"
                 (onOpening)="testOnOpening($event)"
@@ -11,19 +11,17 @@
                 (onClosing)="testOnClosing($event)"
                 (onClosed)="testOnClosed()"
                 (onSelection)="testOnSelection($event)"
-                [disabled]="false"
-                [overlaySettings]="customOverlaySettings">
+                [disabled]="false">
         <label igxLabel>Sample Label</label>
-        <igx-prefix igxPrefix>
+        <!-- <igx-prefix igxPrefix>
             <igx-icon fontSet="material">alarm</igx-icon>
-        </igx-prefix>
-        <!-- <igx-select-item>None</igx-select-item> -->
+        </igx-prefix> -->
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
             {{ item.field }}
         </igx-select-item>
     </igx-select>
 
-    <igx-select #select1 [width]="'260px'"
+    <igx-select #select2
                 [placeholder]="'Pick One'"
                 [value]="value"
                 (onOpening)="testOnOpening($event)"
@@ -41,12 +39,13 @@
             <igx-icon fontSet="material">alarm</igx-icon>
         </igx-suffix>
         <igx-select-item>None</igx-select-item>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field" isFocused="inx === 1">
-            {{ item.field }}
-        </igx-select-item>
+        <igx-select-item [value]="1">Sofia</igx-select-item>
+        <igx-select-item [value]="2">London</igx-select-item>
+        <igx-select-item [value]="3">Paris</igx-select-item>
+        <igx-select-item [value]="4">New York</igx-select-item>
     </igx-select>
 
-    <igx-select #select2 [width]="'260px'"
+    <igx-select #select3
                 [placeholder]="'Pick One'"
                 (onOpening)="testOnOpening($event)"
                 (onOpened)="testOnOpened()"
@@ -55,13 +54,13 @@
                 (onSelection)="testOnSelection($event)"
                 [disabled]="false"
                 [type]="'border'">
-        <igx-select-item>None</igx-select-item>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
-            {{ item.field }}
-        </igx-select-item>
+        <igx-select-item [value] = "'Apple'" [disabled]="true">Apple</igx-select-item>
+        <igx-select-item [value] = "'Orange'">Orange</igx-select-item>
+        <igx-select-item [value] = "'Grapes'">Grapes</igx-select-item>
+        <igx-select-item [value] = "'Banana'">Banana</igx-select-item>
     </igx-select>
 
-    <igx-select #select3 [width]="'260px'"
+    <igx-select #select4
                 [placeholder]="'Pick One'"
                 [value]="value"
                 (onOpening)="testOnOpening($event)"
@@ -74,11 +73,11 @@
         <igx-prefix igxPrefix>
             <igx-icon fontSet="material">alarm</igx-icon>
         </igx-prefix>
-        <igx-select-item>OutsideGroup</igx-select-item>
+        <igx-select-item value="1">OutsideGroup</igx-select-item>
         <igx-select-item-group label="Group">
-            <igx-select-item [disabled]="true" [(value)]="disabledItemValue">InsideGroup1</igx-select-item>
-            <igx-select-item value="InsideGroup2">InsideGroup2</igx-select-item>
-            <igx-select-item value="InsideGroup3">InsideGroup3</igx-select-item>
+            <igx-select-item [disabled]="true" value="2">InsideGroup1</igx-select-item>
+            <igx-select-item value="3">InsideGroup2</igx-select-item>
+            <igx-select-item value="4">InsideGroup3</igx-select-item>
         </igx-select-item-group>
     </igx-select>
 
@@ -91,53 +90,3 @@
     </div>
 </div>
 
-
-    <!-- <span>IgxSelect - value:
-        <span class="spanValue">{{value}}</span>
-    </span>
-    <br/>
-  <span>selectedItem - value:
-        <span class="spanValue">{{select.selectedItem.value}}</span>
-    </span>
-    <br/>
-     <span>IgxSelect - collapsed:
-        <span class="spanValue">{{select.collapsed}}</span>
-    </span>
-    <br/>
-    <span>IgxSelect - overlaySettings:
-<span>IgxSelect - value:
-    <span class="spanValue">{{value}}</span>
-</span>
-<br/>
-<span>selectedItem - value:
-    <span class="spanValue">{{select.selectedItem.value}}</span>
-</span>
-<br/>
- <span>IgxSelect - collapsed:
-    <span class="spanValue">{{select.collapsed}}</span>
-</span>
-<br/>
-<span>IgxSelect - overlaySettings:
-
-</span>
-<br/>
-<span>IgxSelect - disabled:
-    <span class="spanValue">{{select.disabled}}</span>
-</span>
-<br/>
-<span>IgxSelectItemComponent - 2nd item is focused:
-
-    <span class="spanValue">{{select.items[1].isFocused}}</span>
-</span>
-<br/>
-<span>IgxSelectItemComponent - 2nd item is selected :
-
-        <span class="spanValue">{{select.items[1].isSelected}}</span>
-    </span>
-    <br/>
-    <span>IgxSelectItemComponent - 5th item is disabled:
-        <span class="spanValue">{{select.items[3].disabled}}</span>
-    </span>
-    <br/> -->
-
-<div class="testDiv"></div>

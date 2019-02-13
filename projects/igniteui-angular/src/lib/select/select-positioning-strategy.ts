@@ -1,15 +1,16 @@
-// tslint:disable:max-line-length
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from './../utilities';
-import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { IPositionStrategy } from '.';
-import { fadeOut, fadeIn } from '../../../animations/main';
-import { IgxSelectComponent } from '../../../select/select.component';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from '../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
+import { IPositionStrategy } from '../services/overlay/position';
+import { fadeOut, fadeIn } from '../animations/main';
+import { IgxSelectComponent } from './select.component';
 
 enum Direction {
     Top = -1,
     Bottom = 1,
     None = 0
 }
+
+/** @hidden @internal */
 export class SelectPositioningStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
 
     private _selectDefaultSettings = {
@@ -28,7 +29,6 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    /** Min distance/padding between the visible window TOP/BOTTOM and the IgxSelect list items container */
     private defaultWindowToListOffset = 5;
     private viewPort = this.getViewPort(document);
     private deltaY: number;
@@ -39,20 +39,23 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
         contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
-        this.deltaY = this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
+        this.deltaY = this.viewPort.bottom - listBoundRect.height -
+            this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string) {
         transformString += `translateY(${CURRENT_POSITION_Y - this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
-        this.deltaY = CURRENT_POSITION_Y - this.adjustItemTextPadding() - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
+        this.deltaY = CURRENT_POSITION_Y - this.adjustItemTextPadding() -
+            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
         transformString += `translateY(${this.viewPort.top + this.defaultWindowToListOffset}px)`;
         contentElement.style.transform = transformString.trim();
         contentElement.firstElementChild.scrollTop += outBoundsAmount + this.adjustItemTextPadding() + this.defaultWindowToListOffset;
-        this.deltaY = this.viewPort.top + this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
+        this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
+            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
@@ -118,19 +121,16 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             returnVals.Direction = Direction.Bottom;
             returnVals.Amount = container.BOTTOM - documentElement.BOTTOM;
         } else {
-            // there is enough space to fit the drop-down container on the window
             return null;
         }
         return returnVals;
     }
 
     private adjustItemTextPadding(): number {
-        return 8; // current styling item text padding
+        return 8;
     }
 
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        // avoid flickering when scrolling
-        // use the extended connected-positioning-strategy to position the items container when there is scroll (viewport is less then the browser window.
         if (!initialCall) {
             const point = new Point(this.deltaX, (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top + this.deltaY);
             this.settings.target = point;
@@ -146,7 +146,6 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
         const LIST_HEIGHT = (contentElement.getBoundingClientRect() as DOMRect).height;
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        // use the selectedItem or the first one to position the items list container.
         const itemElement = this.select.selectedItem ? this.select.selectedItem.element.nativeElement : this.select.getFirstItemElement();
         const inputHeight = (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).height;
         const itemBoundRect = itemElement.getBoundingClientRect() as DOMRect;
@@ -163,12 +162,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         if (OUT_OF_BOUNDS) {
             if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                 CURRENT_POSITION_Y = START.Y;
-
-
             } else {
-                /* if OUT_OF_BOUNDS on BOTTOM, move the container DOWN by one item height minus half the input and
-                item height difference (48px-32px)/2, thus position the container down so the last item LBP match input LBP.
-                --> <mat-select> like */
                 CURRENT_POSITION_Y = -1 * (LIST_HEIGHT - (itemHeight - (itemHeight - inputHeight) / 2));
                 CURRENT_POSITION_Y += START.Y;
             }
@@ -180,33 +174,27 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10) || 0;
 
         transformString += `translateX(${START.X - numericPadding - numericTextIndent}px)`;
+        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
         this.deltaX = START.X - numericPadding - numericTextIndent;
 
-        // Handle scenarios where there the list container has no scroll &&
-        // when there is scroll and the list container is always in the visible port.
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
             this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
             this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
         }
 
-        // Handle scenarios where there the list container has scroll
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 ||
             this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0) {
-            // If the first couple of items are selected and there is space, do not scroll
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && !OUT_OF_BOUNDS) {
                 this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
             }
-            // If Out of boundaries and there is available scrolling down -  do scroll
+
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
-                // the following works if there is enough scrolling available
-                // handle options opt2, opt3, opt4, opt5
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
                         this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount, transformString);
                         return;
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
-                        // it is one of the edge items so there is no more scrolling in that same Direction
                         if (this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                             return;
@@ -216,16 +204,12 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                         }
                     }
                 }
-                // If one of the last items is selected and there is no more scroll remaining to scroll the selected item
-                // handle options  opt6
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] < itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
                         this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
 
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
-                        // handle lst options opt6
-                        // position the container with default window offset
                         this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
                     }
                 }
@@ -233,18 +217,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
                 this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0
             ) {
-                // handle lst options opt7, opt8, opt9
                 if (OUT_OF_BOUNDS) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
                         this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
-                        // handle lst options opt7
-                        // position the container with default window offset
                         this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
                     }
                 }
-                // handle lst options opt8, opt9 --> these are OK.
                 if (!OUT_OF_BOUNDS) {
                     this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
                 }

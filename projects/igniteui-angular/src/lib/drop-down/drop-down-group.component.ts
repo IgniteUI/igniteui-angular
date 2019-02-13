@@ -6,10 +6,10 @@ let NEXT_ID = 0;
  * a `<igx-drop-down>` container.
  */
 @Component({
-    selector: 'igx-drop-down-item-group, igx-select-item-group, igx-autocomplete-item-group',
+    selector: 'igx-drop-down-item-group, igx-select-item-group',
     template: `
         <label id="{{labelId}}">{{ label }}</label>
-        <ng-content select="igx-drop-down-item, igx-select-item, igx-autocomplete-item"></ng-content>
+        <ng-content select="igx-drop-down-item, igx-select-item"></ng-content>
     `
 })
 export class IgxDropDownGroupComponent {

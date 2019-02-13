@@ -1,13 +1,15 @@
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
-import { Directive, Input, HostListener } from '@angular/core';
+import { Directive, Input, HostListener, OnDestroy } from '@angular/core';
 import { IgxSelectComponent } from './select.component';
 import { Subscription, timer } from 'rxjs';
 import { IgxSelectItemComponent } from './select-item.component';
 
+/** @hidden @internal */
 @Directive({
     selector: '[igxSelectItemNavigation]'
 })
-export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective {
+export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
+
     @Input('igxSelectItemNavigation')
     public target: IgxSelectComponent;
 
@@ -19,24 +21,14 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         }
         const key = event.key.toLowerCase();
 
-        if (event.altKey) {
-            switch (key) {
-                case 'arrowdown':
-                    this.target.toggle();
-                    return;
-                case 'arrowup':
-                    this.target.toggle();
-                    return;
-                default:
-                    break;
-            }
+        if (event.altKey && (key === 'arrowdown' || key === 'arrowup')) {
+            this.target.toggle();
+            return;
         }
 
         if (this.target.collapsed) {
             switch (key) {
                 case 'enter':
-                    this.target.open();
-                    return;
                 case 'space':
                 case 'spacebar':
                 case ' ':
@@ -44,31 +36,15 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                     return;
                 case 'arrowdown':
                     if (this.target.collapsed) {
-                        const selectedItemIndex = this.target.selectedItem.index;
-                        let nextItem = this.target.items[selectedItemIndex + 1] ?
-                            this.target.items[selectedItemIndex + 1] : this.target.items[selectedItemIndex];
-                        if (nextItem.disabled) {
-                            nextItem = this.target.items[nextItem.index + 1];
-                        }
-                        if (nextItem) {
-                            this.target.selectItem(nextItem);
-                            this.target.navigateItem(nextItem.index);
-                        }
+                        this.target.navigateNext();
+                        this.target.selectItem(this.target.focusedItem);
                     }
                     event.preventDefault();
                     return;
                 case 'arrowup':
                     if (this.target.collapsed) {
-                        const selectedItemIndex = this.target.selectedItem.index;
-                        let previousItem = this.target.items[selectedItemIndex - 1] ?
-                            this.target.items[selectedItemIndex - 1] : this.target.items[selectedItemIndex - 0];
-                        if (previousItem.disabled) {
-                            previousItem = this.target.items[previousItem.index - 1];
-                        }
-                        if (previousItem) {
-                            this.target.selectItem(previousItem);
-                            this.target.navigateItem(previousItem.index);
-                        }
+                        this.target.navigatePrev();
+                        this.target.selectItem(this.target.focusedItem);
                     }
                     event.preventDefault();
                     return;
@@ -86,29 +62,30 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
     // tslint:disable:member-ordering
     private inputStream = '';
-    private cancelSub$: Subscription;
+    private clearStream$ = Subscription.EMPTY;
 
-    // Key listeners go here //TODO DO NOT BLOCK OTHER KEY INTERACTIONS (handleKeyDown)
+    /** Handle continuous letter typing navigation */
     @HostListener('keyup', ['$event'])
     public captureKey(event: KeyboardEvent) {
-        if (!event) {
+        // relying only on key, available on all major browsers:
+        // https://caniuse.com/#feat=keyboardevent-key (IE/Edge quirk doesn't affect letter typing)
+        if (!event || !event.key || event.key.length > 1) {
+            // ignore longer keys ('Alt', 'ArrowDown', etc)
             return;
         }
+
+        this.clearStream$.unsubscribe();
+        this.clearStream$ = timer(500).subscribe(() => {
+            this.inputStream = '';
+        });
         this.inputStream += event.key;
         const focusedItem = this.target.focusedItem as IgxSelectItemComponent;
+
         // select the item
         if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.toLowerCase().startsWith(this.inputStream.toLowerCase())) {
             return;
         }
         this.activateItemByText(this.inputStream);
-        console.log(this.inputStream);
-        if (this.cancelSub$) {
-            this.cancelSub$.unsubscribe();
-        }
-        this.cancelSub$ = timer(500).subscribe(() => {
-            console.log('---');
-            this.inputStream = '';
-        });
     }
 
     public activateItemByText(text: string) {
@@ -125,11 +102,13 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             return;
         }
 
-        if (!this.target.collapsed) {
-            this.target.navigateItem(items.indexOf(nextItem));
-        } else {
+        if (this.target.collapsed) {
             this.target.selectItem(nextItem);
-            this.target.navigateItem(items.indexOf(nextItem));
         }
+        this.target.navigateItem(items.indexOf(nextItem));
+    }
+
+    ngOnDestroy(): void {
+        this.clearStream$.unsubscribe();
     }
 }

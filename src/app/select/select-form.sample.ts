@@ -102,7 +102,6 @@ export class SelectFormSampleComponent {
     }
 
     onSubmit() {
-        console.log('onSubmit');
         console.table(this.mySelectForm.value);
     }
 }

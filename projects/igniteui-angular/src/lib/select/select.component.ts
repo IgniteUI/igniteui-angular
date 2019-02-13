@@ -1,9 +1,7 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
-    NgModule, Component, ContentChildren,
-    forwardRef, QueryList, ViewChild,
-    Input, ContentChild, AfterContentInit,
-    HostBinding, Directive, TemplateRef, EventEmitter
+    NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
+    AfterContentInit, HostBinding, Directive, TemplateRef
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,7 +15,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/inpu
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
+import { SelectPositioningStrategy } from './select-positioning-strategy';
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
@@ -44,15 +42,8 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
-    // /** @hidden @internal do not use the drop-down container class? */
+    // /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
-
-    /**
-     * @hidden
-     */
-    // Currently there is no need to add a css class to wrap the component
-    // @HostBinding('class.igx-select')
-    // public selectCssClass = true;
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
@@ -70,13 +61,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         return this._value;
     }
     public set value(v: any) {
-        this._value = v;
-        if (v && this.items.find(x => x.value === v)) {
-            this.selection.set(this.id, new Set([this.value]));
-        } else {
-            this.selection.clear(this.id); // 0 , ''
+        if (this._value === v) {
+            return;
         }
-        // update input group value
+        this._value = v;
+        this.setSelection(this.items.find(x => x.value === this.value));
         this.cdr.detectChanges();
     }
     /**
@@ -92,6 +81,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
      */
     @Input() public disabled = false;
 
+    /**
+     * An @Input property that sets custom OverlaySettings `IgxSelectComponent`.
+     * ```html
+     * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
+     * ```
+     */
     @Input()
     overlaySettings: OverlaySettings;
 
@@ -153,39 +148,58 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
+    /**
+     * @hidden
+     */
     public get listId() {
         return this.id + '-list';
     }
 
+    /**
+     * @hidden
+     */
     public get selectionValue() {
         const selectedItem = this.selectedItem;
         return selectedItem ? selectedItem.itemText : '';
     }
 
+    /**
+     * @hidden
+     */
     public get selectedItem(): IgxSelectItemComponent {
-        const selectedValue = this.selection.first_item(this.id);
-        return this.items.find(x => x.value === selectedValue) as IgxSelectItemComponent;
+        return this.selection.first_item(this.id);
     }
 
-    //#region IMPLEMENT ControlValueAccessor METHODS
+    /**
+     * @hidden
+     */
     private _onChangeCallback: (_: any) => void = noop;
 
+    /**
+     * @hidden
+     */
     public writeValue = (value: any) => {
-        // 1. Set the input value
-        // 2. Select the new item from the drop down
         this.value = value;
     }
 
+    /**
+     * @hidden
+     */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
+    /**
+     * @hidden
+     */
     public registerOnTouched(fn: any): void { }
-    //#endregion
 
+    /**
+     * @hidden
+     */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
-        if (newSelection.disabled || newSelection === null) {
+        if (newSelection === null || newSelection.disabled) {
             return;
         }
 
@@ -196,34 +210,43 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             return;
         }
 
-        this.selection.set(this.id, new Set([newSelection.value]));
+        this.setSelection(newSelection);
+        this._value = newSelection.value;
+        this.cdr.detectChanges();
+        this._onChangeCallback(this.value);
+
         if (event) {
             this.toggleDirective.close();
         }
-
-        if (this.selectedItem) {
-            this.value = this.selectedItem.value;
-            this._onChangeCallback(this.value);
-        }
     }
 
+    /**
+     * @hidden
+     */
     public getFirstItemElement(): HTMLElement {
         return this.children.first.element.nativeElement;
     }
+
+    /**
+     * Opens the select
+     *
+     * ```typescript
+     * this.select.open();
+     * ```
+     */
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled || this.items.length === 0) {
             return;
         }
-
-        // open with the overlaySettings passed to the open method (if such)
+        if (!this.selectedItem) {
+            this.navigateFirst();
+        }
         if (overlaySettings) {
             super.open(overlaySettings);
             return;
         }
-        // open with the overlaySettings passed as input ([overlaySettings]="customOverlaySettings")
         if (this.overlaySettings) {
             super.open(this.overlaySettings);
-            // default overlay settings, positionStrategy and scrollStrategy
         } else {
             super.open({
                 modal: false,
@@ -234,23 +257,31 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
-    // Initially the items are still not existing, so handle ngAfterContentInit
+    /** @hidden @internal */
     ngAfterContentInit() {
         this.children.changes.subscribe(() => {
-            if (this.items.find(x => x.value === this.value)) {
-                this.selection.set(this.id, new Set([this.value]));
-                this.cdr.detectChanges();
-            }
+            this.setSelection(this.items.find(x => x.value === this.value));
+            this.cdr.detectChanges();
         });
         Promise.resolve().then(() => this.children.notifyOnChanges());
     }
 
+    /** @hidden @internal */
     public onToggleOpening(event: CancelableEventArgs) {
         this.onOpening.emit(event);
         if (event.cancel) {
             return;
         }
         this.scrollToItem(this.selectedItem);
+    }
+
+    /** @hidden @internal */
+    private setSelection(item: IgxDropDownItemBase) {
+        if (item && item.value !== undefined && item.value !== null) {
+            this.selection.set(this.id, new Set([item]));
+        } else {
+            this.selection.clear(this.id);
+        }
     }
 }
 @NgModule({

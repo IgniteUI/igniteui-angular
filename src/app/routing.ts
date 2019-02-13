@@ -64,12 +64,17 @@ import { BannerSampleComponent } from './banner/banner.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { SelectFormSampleComponent } from './select/select-form.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'autocomplete',
+        component: AutocompleteSampleComponent
     },
     {
         path: 'avatar',

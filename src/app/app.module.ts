@@ -86,11 +86,14 @@ import { SelectSampleComponent } from './select/select.sample';
 import { SelectFormSampleComponent } from './select/select-form.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent, IgxAutocompletePipeStartsWith } from './autocomplete/autocomplete.sample';
 
 
 
 const components = [
     AppComponent,
+    IgxAutocompletePipeStartsWith,
+    AutocompleteSampleComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,
