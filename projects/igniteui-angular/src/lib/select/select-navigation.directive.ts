@@ -15,6 +15,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
     constructor() { super(null); }
 
+    /** Captures keydown events and calls the appropriate handlers on the target component */
     handleKeyDown(event: KeyboardEvent) {
         if (!event || event.shiftKey) {
             return;
@@ -35,17 +36,13 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                     this.target.open();
                     return;
                 case 'arrowdown':
-                    if (this.target.collapsed) {
-                        this.target.navigateNext();
-                        this.target.selectItem(this.target.focusedItem);
-                    }
+                    this.target.navigateNext();
+                    this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
                     return;
                 case 'arrowup':
-                    if (this.target.collapsed) {
-                        this.target.navigatePrev();
-                        this.target.selectItem(this.target.focusedItem);
-                    }
+                    this.target.navigatePrev();
+                    this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
                     return;
                 default:

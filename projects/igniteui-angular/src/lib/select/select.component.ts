@@ -23,9 +23,7 @@ import { IgxSelectItemNavigationDirective } from './select-navigation.directive'
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 
-/**
- * @hidden
- */
+    /** @hidden @internal */
 @Directive({
     selector: '[igxSelectToggleIcon]'
 })
@@ -90,32 +88,22 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('style.maxHeight')
     public maxHeight = '256px';
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get ariaExpanded(): boolean {
         return !this.collapsed;
     }
 
-    /**
-     * @hidden
-     */
-    public get ariaHasPopUp() {
-        return 'listbox';
-    }
-
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get ariaOwns() {
         return this.listId;
     }
+
+    /** @hidden @internal */
+    public width: string;
 
     /**
      * An @Input property that sets how the select will be styled.
@@ -148,55 +136,39 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get listId() {
         return this.id + '-list';
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get selectionValue() {
         const selectedItem = this.selectedItem;
         return selectedItem ? selectedItem.itemText : '';
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public writeValue = (value: any) => {
         this.value = value;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public registerOnTouched(fn: any): void { }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
         if (newSelection === null || newSelection.disabled) {
@@ -220,9 +192,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public getFirstItemElement(): HTMLElement {
         return this.children.first.element.nativeElement;
     }
