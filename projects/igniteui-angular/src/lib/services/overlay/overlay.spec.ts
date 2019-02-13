@@ -31,7 +31,7 @@ import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
@@ -2785,8 +2785,8 @@ describe('igxOverlay', () => {
             currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
             currentElement.ButtonPositioningSettings.target = buttonElement;
             buttonElement.click();
-            fix.detectChanges();
             tick();
+            fix.detectChanges();
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
