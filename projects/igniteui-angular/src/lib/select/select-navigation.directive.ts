@@ -1,13 +1,15 @@
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
-import { Directive, Input, HostListener } from '@angular/core';
+import { Directive, Input, HostListener, OnDestroy } from '@angular/core';
 import { IgxSelectComponent } from './select.component';
 import { Subscription, timer } from 'rxjs';
 import { IgxSelectItemComponent } from './select-item.component';
 
+/** @hidden @internal */
 @Directive({
     selector: '[igxSelectItemNavigation]'
 })
-export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective {
+export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
+
     @Input('igxSelectItemNavigation')
     public target: IgxSelectComponent;
 
@@ -70,29 +72,30 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
     // tslint:disable:member-ordering
     private inputStream = '';
-    private cancelSub$: Subscription;
+    private clearStream$ = Subscription.EMPTY;
 
-    // Key listeners go here //TODO DO NOT BLOCK OTHER KEY INTERACTIONS (handleKeyDown)
+    /** Handle continuous letter typing navigation */
     @HostListener('keyup', ['$event'])
     public captureKey(event: KeyboardEvent) {
-        if (!event) {
+        // relying only on key, available on all major browsers:
+        // https://caniuse.com/#feat=keyboardevent-key (IE/Edge quirk doesn't affect letter typing)
+        if (!event || !event.key || event.key.length > 1) {
+            // ignore longer keys ('Alt', 'ArrowDown', etc)
             return;
         }
+
+        this.clearStream$.unsubscribe();
+        this.clearStream$ = timer(500).subscribe(() => {
+            this.inputStream = '';
+        });
         this.inputStream += event.key;
         const focusedItem = this.target.focusedItem as IgxSelectItemComponent;
+
         // select the item
         if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.toLowerCase().startsWith(this.inputStream.toLowerCase())) {
             return;
         }
         this.activateItemByText(this.inputStream);
-        console.log(this.inputStream);
-        if (this.cancelSub$) {
-            this.cancelSub$.unsubscribe();
-        }
-        this.cancelSub$ = timer(500).subscribe(() => {
-            console.log('---');
-            this.inputStream = '';
-        });
     }
 
     public activateItemByText(text: string) {
@@ -115,5 +118,9 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             this.target.selectItem(nextItem);
             this.target.navigateItem(items.indexOf(nextItem));
         }
+    }
+
+    ngOnDestroy(): void {
+        this.clearStream$.unsubscribe();
     }
 }
