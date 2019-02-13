@@ -27,8 +27,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
-import { ElasticPositionStrategy } from './position';
-import { DeprecateMethod } from '../core/deprecateDecorators';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
