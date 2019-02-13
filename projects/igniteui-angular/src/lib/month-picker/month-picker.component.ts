@@ -146,6 +146,33 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     }
 
     /**
+     * Selects a date.
+     *```typescript
+     * this.monPicker.selectDate(new Date(`2018-06-12`));
+     *```
+     */
+    public selectDate(value: Date) {
+        if (!value) {
+            return new Date();
+        }
+
+        // TO DO: to be refactored after discussion on the desired behavior
+        super.selectDate(value);
+        this.viewDate.setMonth(value.getMonth());
+    }
+
+    /**
+     * @hidden
+     */
+    public writeValue(value: Date) {
+
+        // TO DO: to be refactored after discussion on the desired behavior
+        if (value) {
+            this.viewDate.setMonth(value.getMonth());
+        }
+    }
+
+    /**
      * @hidden
      */
     @HostListener('keydown.pageup', ['$event'])
