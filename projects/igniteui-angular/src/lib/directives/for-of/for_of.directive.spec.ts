@@ -1148,10 +1148,6 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         super.onHScroll(event);
     }
 
-    public testApplyChanges(changes: IterableChanges<T>) {
-        super._applyChanges(changes);
-    }
-
     public testCalculateChunkSize(): number {
         return super._calculateChunkSize();
     }
