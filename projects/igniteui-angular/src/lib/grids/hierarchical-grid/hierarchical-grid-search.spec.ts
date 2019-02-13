@@ -78,6 +78,8 @@ describe('IgxHierarchicalGrid Search - ', () => {
         checkHightLights(2, 0);
     });
     it('should honor the visible rows order when moving active highlight.', async () => {
+        hierarchicalGrid.height = '500px';
+        fixture.detectChanges();
         // expand parent row
         (hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
         await wait(30);
@@ -210,6 +212,53 @@ describe('IgxHierarchicalGrid Search - ', () => {
         // check if cell is fully in view
         expect(cell.nativeElement.getBoundingClientRect().bottom)
         .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
+    });
+
+    it('should order matchInfoCache correctly when there are results in child and in parent.', async () => {
+        // expand parent row
+        (hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        fixture.detectChanges();
+
+        let count = hierarchicalGrid.findNext('A0');
+        await wait(30);
+        fixture.detectChanges();
+
+        expect(count).toBe(2);
+
+        const childData = fixture.componentInstance.data[1].childData;
+        const parentData = fixture.componentInstance.data;
+
+        // first result is 1st parent rec
+        expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[0].row.ID).toEqual(parentData[0].ID);
+        // second 1st child rec
+        expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row.ID).toEqual(childData[0].ID);
+
+        count = hierarchicalGrid.findNext('A1');
+        await wait(30);
+        fixture.detectChanges();
+        expect(count).toBe(16);
+        const childGridInfo = hierarchicalGrid.hgridAPI.getChildGrids(false)[0].lastSearchInfo.matchInfoCache;
+
+        // first result is 2nd parent rec
+        expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[0].row.ID).toEqual(parentData[1].ID);
+         // next results should be from child grid
+         expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row.ID).toEqual(childData[1].ID);
+         for (let i = 0; i < childGridInfo.length; i++) {
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1 + i].row.ID).toEqual(childGridInfo[i].row.ID);
+         }
+         // next should be again from parent grid
+         expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[6].row.ID).toEqual(parentData[10].ID);
+
+        count = hierarchicalGrid.findNext('A2');
+        await wait(30);
+        fixture.detectChanges();
+        expect(count).toBe(2);
+
+        // first result is 3rd child rec
+        expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[0].row.ID).toEqual(childData[2].ID);
+        // next should be from parent
+        expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row.ID).toEqual(parentData[2].ID);
     });
 
     // Integration - Paging
