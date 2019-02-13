@@ -1,0 +1,12 @@
+<header class="igx-typography__overline">Sorting</header>
+<igx-buttongroup #sortButtonGroup [multiSelection]="false">
+    <span igxButton type="button" [attr.data-togglable]="true" (click)="onSortButtonClicked(1)">
+        <igx-icon>arrow_upwards</igx-icon>
+        <span>Ascending</span>
+    </span>
+
+    <span igxButton type="button" [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
+        <igx-icon>arrow_downwards</igx-icon>
+        <span>Descending</span>
+    </span>
+</igx-buttongroup>

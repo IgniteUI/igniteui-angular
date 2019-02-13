@@ -1,0 +1,37 @@
+<igx-input-group
+            type="box"
+            [displayDensity]="'compact'"
+            [supressInputAutofocus]="true">
+            <igx-icon igxPrefix>search</igx-icon>
+            <input
+                #input
+                igxInput
+                tabindex="0"
+                [(ngModel)]="searchValue"
+                placeholder="Search"
+                autocomplete="off"/>
+            <igx-icon
+                igxSuffix
+                *ngIf="searchValue || searchValue === 0"
+                (click)="clearInput()"
+                tabindex="0">
+                clear
+            </igx-icon>
+        </igx-input-group>
+
+        <igx-list [style.height.px]="250">
+            <div [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item tabindex="0"
+                    *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
+                    <igx-checkbox
+                    [value]="item"
+                    [checked]="item.isSelected"
+                    [disableRipple]="true"
+                    [indeterminate]="item.indeterminate"
+                    [disableTransitions]="true"
+                    (change)="onCheckboxChange($event)">
+                        {{item.value}}
+                    </igx-checkbox>
+                </igx-list-item>
+            </div>
+        </igx-list>

@@ -1,0 +1,89 @@
+<igx-drop-down
+    #dropdownConditions
+    [height]="'200px'"
+    [width]="getInputWidth(inputGroupConditions)"
+    (onSelection)="onConditionsChanged($event, inputValues)">
+    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition)">
+        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <span>{{ translateCondition(condition) }}</span>
+    </igx-drop-down-item>
+</igx-drop-down>
+
+<igx-input-group
+    #inputGroupConditions
+    (click)="toggleCustomDialogDropDown(inputGroupConditions, dropdownConditions)"
+    type="box"
+    [displayDensity]="'compact'"
+    [supressInputAutofocus]="true">
+
+    <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
+        <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
+        <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
+    </igx-prefix>
+
+    <input
+        igxInput
+        tabindex="0"
+        placeholder="placeholder"
+        autocomplete="off"
+        [value]="getConditionName(expressionUI.expression.condition)"
+        [readonly]="true"
+    />
+</igx-input-group>
+
+<igx-drop-down 
+    #dropdownValues 
+    [height]="'200px'"
+    [width]="getInputWidth(inputGroupValues)"
+    (onSelection)="onValuesChanged($event, inputValues)"
+    (onOpening)="onDropdownValuesOpening(dropdownValues, inputValues)">
+    <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem)">
+        <span>{{ filterItem.value }}</span>
+    </igx-drop-down-item>
+</igx-drop-down>
+
+<igx-date-picker tabindex="0" [(ngModel)]="expressionUI.expression.searchVal" [locale]="filteringService.grid.locale">
+        <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
+            <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+                <igx-icon igxPreffix>calendar</igx-icon>
+                <input #input
+                       igxInput
+                       tabindex="0"
+                       (click)="openDatePicker(openDialog)"
+                       placeholder="Select value..."
+                       autocomplete="off"
+                       [value]="displayData | date"
+                       [readonly]="true"
+                       [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
+                <igx-icon igxSuffix tabindex="0"
+                       (click)="toggleCustomDialogDropDown(inputGroupDateValues, dropdownValues)"
+                       [igxDropDownItemNavigation]="dropdownValues">
+                       arrow_drop_down
+                </igx-icon>
+            </igx-input-group>
+        </ng-template>
+    </igx-date-picker>
+
+<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="expressionsList.length > 1">
+    <igx-icon>cancel</igx-icon>
+</button>
+
+<igx-buttongroup #logicOperatorButtonGroup
+    *ngIf="!isLast"
+    [multiSelection]="false">
+    <span igxButton
+        #andButton
+        [selected]="expressionUI.afterOperator === 0"
+        type="button"
+        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0)">
+        And
+    </span>
+
+    <span igxButton
+        #orButton
+        [selected]="expressionUI.afterOperator === 1"
+        type="button"
+        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1)">
+        Or
+    </span>
+</igx-buttongroup>

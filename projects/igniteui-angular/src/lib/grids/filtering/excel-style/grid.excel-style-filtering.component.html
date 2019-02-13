@@ -1,0 +1,83 @@
+<igx-icon
+    class="igx-excel-filter__icon"
+    [attr.draggable]="false"
+    (click)="onIconClick($event)">
+    filter_list
+</igx-icon>
+
+<article #dropdown igxToggle
+    class="igx-excel-filter__menu"
+    (onClosing)="onDropDownClosing()"
+    (onOpening)="onDropDownOpening()"
+    (mouseenter)="onMenuMouseEnter($event)"
+    >
+    <header class="igx-excel-filter__menu-header">
+        <h4 class="igx-typography__h6">{{ column.field }}</h4>
+    </header>
+
+    <section class="igx-excel-filter__sort">
+        <igx-excel-style-sorting [column]="column"></igx-excel-style-sorting>
+    </section>
+
+    <section class="igx-excel-filter__actions">
+
+        <article class="igx-excel-filter__move">
+            <section class="igx-excel-filter__move-buttons">
+                <igx-excel-style-column-moving [column]="column"></igx-excel-style-column-moving>
+            </section>
+        </article>
+
+        <div class="igx-excel-filter__actions-pin"
+            (click)="onPin()"
+            *ngIf="!column.pinned">
+            <span>Pin column</span>
+            <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-unpin"
+            (click)="onPin()"
+            *ngIf="column.pinned">
+            <span>Unpin column</span>
+            <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-hide"
+            (click)="onHide()">
+            <span>Hide column</span>
+            <igx-icon>visibility_off</igx-icon>
+        </div>
+
+        <div class="igx-excel-filter__actions-filter"
+            (mouseenter)="onMouseEnter($event)"
+            (mouseleave)="onMouseLeave()">
+            <span>Text filter</span>
+            <igx-icon>keyboard_arrow_right</igx-icon>
+        </div>
+    </section>
+
+    <section class="igx-excel-filter__menu-main">
+        <igx-excel-style-search #excelStyleSearch [column]="column" [data]="columnData"></igx-excel-style-search>
+    </section>
+
+    <footer class="igx-excel-filter__menu-footer">
+        <button igxButton (click)="closeDialog()">Cancel</button>
+        <button igxButton="raised" (click)="applyFilter()">Apply</button>
+    </footer>
+</article>
+
+<igx-drop-down #subMenu (onClosed)="onSubMenuClosed()" (onSelection)="onSubMenuSelection($event)">
+    <div style="width: 200px" (mouseover)="onSubMenuMouseEnter()" (mouseout)="onSubMenuMouseLeave()" >
+        <igx-drop-down-item
+            *ngFor="let condition of conditions"
+            [value]="condition">
+            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
+        </igx-drop-down-item>
+        <igx-drop-down-item>
+            <igx-icon>filter_list</igx-icon>
+            <span style="margin-left: 16px">Custom Filter...</span>
+        </igx-drop-down-item>
+    </div>
+</igx-drop-down>
+
+<igx-excel-style-custom-dialog #customDialog [column]="column" [columnData]="columnData"></igx-excel-style-custom-dialog>

@@ -23,7 +23,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxGridExcelStyleFilteringComponent } from './filtering/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -65,6 +65,12 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxListComponent, IgxListModule } from '../list';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxComboModule } from '../combo';
+import { IgxExcelStyleSortingComponent } from './filtering/excel-style/excel-style-sorting.component';
+import { IgxExcelStyleColumnMovingComponent } from './filtering/excel-style/excel-style-column-moving.component';
+import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-style-search.component';
+import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/excel-style-custom-dialog.component';
+import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
+import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
 
 @NgModule({
     declarations: [
@@ -96,7 +102,13 @@ import { IgxComboModule } from '../combo';
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleSearchComponent,
+        IgxExcelStyleCustomDialogComponent,
+        IgxExcelStyleDefaultExpressionComponent,
+        IgxExcelStyleDateExpressionComponent
     ],
     entryComponents: [
         IgxColumnComponent,

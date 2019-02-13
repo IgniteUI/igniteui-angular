@@ -1,0 +1,52 @@
+
+<article #toggle igxToggle
+    class="igx-excel-filter__secondary"
+    (onOpening)="onCustomDialogOpening()">
+    <header class="igx-excel-filter__secondary-header">
+        <h4 class="igx-typography__h6">
+            Custom auto-filter on column: {{ column.field }}
+        </h4>
+    </header>
+
+    <article class="igx-excel-filter__secondary-main">
+        <section  class="igx-excel-filter__condition">
+
+            <ng-container *ngIf="column.dataType === 'date'">
+                <igx-excel-style-date-expression *ngFor="let expression of expressionsList; let last = last;"
+                    [expressionUI]="expression"
+                    [isLast]=last
+                    [column]="column"
+                    [expressionsList]="expressionsList"
+                    [columnData]="columnData" >
+                </igx-excel-style-date-expression>
+            </ng-container>
+
+            <ng-container *ngIf="column.dataType != 'date'">
+                <igx-excel-style-default-expression *ngFor="let expression of expressionsList; let last = last;"
+                    [expressionUI]="expression"
+                    [isLast]=last
+                    [column]="column"
+                    [expressionsList]="expressionsList"
+                    [columnData]="columnData" >
+                </igx-excel-style-default-expression>
+            </ng-container>
+
+        </section>
+
+        <button igxButton
+            class="igx-excel-filter__add-filter"
+            (click)="onAddButtonClick()">
+            <igx-icon>add</igx-icon>
+            <span>Add Filter</span>
+        </button>
+    </article>
+
+    <footer class="igx-excel-filter__secondary-footer">
+        <button igxButton (click)="onClearButtonClick()">Clear filter</button>
+
+        <div>
+            <button igxButton (click)="onCancelButtonClick()">Cancel</button>
+            <button igxButton="raised" (click)="onApplyButtonClick()">Apply</button>
+        </div>
+    </footer>
+</article>
