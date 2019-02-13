@@ -30,10 +30,14 @@ export class DatePickerDisplayValuePipe implements PipeTransform {
 export class DatePickerInputValuePipe implements PipeTransform {
     constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
     transform(value: any, args?: any): any {
-        if (this._datePicker.value === null || this._datePicker.value === undefined) {
-            return maskToPromptChars(this._datePicker.inputMask);
+        if (this._datePicker.invalidDate !== '') {
+            return this._datePicker.invalidDate;
         } else {
-            return addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
+            if (this._datePicker.value === null || this._datePicker.value === undefined) {
+                return maskToPromptChars(this._datePicker.inputMask);
+            } else {
+                return addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
+            }
         }
     }
 }

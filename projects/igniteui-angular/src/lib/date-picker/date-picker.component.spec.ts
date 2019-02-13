@@ -22,7 +22,8 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerWithPassedDateComponent,
                 IgxDatePickerWIthLocaleComponent,
                 IgxDatePickerNgModelComponent,
-                IgxDatePickerRetemplatedComponent
+                IgxDatePickerRetemplatedComponent,
+                IgxDatePickerEditableComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule]
         })
@@ -402,6 +403,46 @@ describe('IgxDatePicker', () => {
         expect(month.innerText.trim()).toBe(expectedResult.trim());
     }));
 
+    describe('Editable mode', () => {
+        configureTestSuite();
+        let fixture: ComponentFixture<IgxDatePickerEditableComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxDatePickerEditableComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+        });
+
+        fit('should be able to apply display format (editable mode)', (() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            expect(input.nativeElement.value).toBe('20.10.2011');
+
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('20.10.2011');
+
+            datePicker.value = null;
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('dd.MM.y');
+        }));
+
+        it('should be able to apply editor mask (editable mode)', (() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('20-10-11');
+        }));
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
@@ -499,3 +540,15 @@ export class IgxDatePickerNgModelComponent {
     `
 })
 export class IgxDatePickerRetemplatedComponent { }
+
+@Component({
+    template: `
+        <igx-date-picker [value]="date" mode="editable" format="dd.MM.y" mask="dd-MM-yy"></igx-date-picker>
+    `
+})
+export class IgxDatePickerEditableComponent {
+    public date: Date = new Date(2011, 9, 20);
+    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+}
+
+

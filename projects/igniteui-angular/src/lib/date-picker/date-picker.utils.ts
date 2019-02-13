@@ -321,13 +321,14 @@ export function getMask(dateStruct: any[]): string {
 /**
  *@hidden
  */
-export function createDate(dateFormatParts: any[], prevDateValue: Date, inputValue: string): Date {
+export function parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any[] {
     const dayStr = getDayValueFromInput(dateFormatParts, inputValue);
     const monthStr = getMonthValueFromInput(dateFormatParts, inputValue);
     const yearStr = getYearValueFromInput(dateFormatParts, inputValue);
     const yearFormat = getDateFormatPart(dateFormatParts, DATE_PARTS.YEAR).formatType;
     const day = (dayStr !== '') ? Number(dayStr) : 1;
     const month = (monthStr !== '') ? Number(monthStr) - 1 : 0;
+
     let year;
     if (yearStr === '') {
         year = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? '00' : '2000';
@@ -344,12 +345,21 @@ export function createDate(dateFormatParts: any[], prevDateValue: Date, inputVal
         yearPrefix = '20';
     }
     const fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
+
+    if ((month < 0) || (month > 11)) {
+        return ['invalid', inputValue];
+    }
+
+    if ((day < 1) || (day > daysInMonth(fullYear, month))) {
+        return ['invalid', inputValue];
+    }
+
     const date = new Date();
     date.setDate(day);
     date.setMonth(month);
     date.setFullYear(fullYear);
 
-    return date;
+    return ['valid', date];
 }
 
 /**

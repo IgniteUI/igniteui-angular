@@ -8,4 +8,5 @@ export interface IgxDatePickerBase {
     inputMask: string;
     rawDateString: string;
     dateFormatParts: any[];
+    invalidDate: string;
 }
