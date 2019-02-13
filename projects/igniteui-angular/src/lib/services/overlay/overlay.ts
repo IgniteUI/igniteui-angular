@@ -28,6 +28,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 import { ElasticPositionStrategy } from './position';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -108,6 +109,26 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
+     * Generates Id. Provide this Id when call `show(id, settings?)` method
+     * @param component ElementRef or Component Type to show in overlay
+     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     */
+    register(component: ElementRef | Type<{}>): string {
+        let info: OverlayInfo;
+        const id = (this._componentId++).toString();
+        info = this.getOverlayInfo(component);
+
+        //  if there is no info most probably wrong type component was provided and we just go out
+        if (!info) {
+            return null;
+        }
+
+        info.id = id;
+        this._overlayInfos.push(info);
+        return id;
+    }
+
+    /**
      * Shows the overlay for provided id.
      * @param id Id to show overlay for
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
@@ -124,6 +145,8 @@ export class IgxOverlayService implements OnDestroy {
      */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
+    // tslint:disable-next-line:max-line-length
+    @DeprecateMethod('`show(component, settings?)` overload is deprecated. Use `register(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.')
     show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
@@ -149,10 +172,7 @@ export class IgxOverlayService implements OnDestroy {
         settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
 
-        //  show overlay in set time out. This allow us to return the id before overlay appears
-        setTimeout(() => {
-            this._show(info);
-        }, 0);
+        this._show(info);
         return id;
     }
 
@@ -227,7 +247,9 @@ export class IgxOverlayService implements OnDestroy {
                 info.componentRef.changeDetectorRef.detectChanges();
             }
             this.updateSize(info);
-            this._overlayInfos.push(info);
+            if (this._overlayInfos.indexOf(info) === -1) {
+                this._overlayInfos.push(info);
+            }
 
             info.settings.positionStrategy.position(
                 info.elementRef.nativeElement.parentElement,

@@ -173,6 +173,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
+        this._overlayId = this.overlayService.register(this.elementRef);
         this._collapsed = false;
         this.cdr.detectChanges();
 
@@ -184,11 +185,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        if (this._overlayId) {
-            this.overlayService.show(this._overlayId, overlaySettings);
-        } else {
-            this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
-        }
+        this.overlayService.show(this._overlayId, overlaySettings);
 
         this.unsubscribe();
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
