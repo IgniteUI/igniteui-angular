@@ -59,6 +59,14 @@ export const enum DATE_PARTS {
 /**
  *@hidden
  */
+export const enum DATE_STATE {
+    VALID = 'valid',
+    INVALID = 'invalid',
+}
+
+/**
+ *@hidden
+ */
 export const SEPARATOR = 'literal';
 /**
  *@hidden
@@ -321,7 +329,7 @@ export function getMask(dateStruct: any[]): string {
 /**
  *@hidden
  */
-export function parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any[] {
+export function parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any {
     const dayStr = getDayValueFromInput(dateFormatParts, inputValue);
     const monthStr = getMonthValueFromInput(dateFormatParts, inputValue);
     const yearStr = getYearValueFromInput(dateFormatParts, inputValue);
@@ -347,19 +355,14 @@ export function parseDateArray(dateFormatParts: any[], prevDateValue: Date, inpu
     const fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
 
     if ((month < 0) || (month > 11)) {
-        return ['invalid', inputValue];
+        return { state: DATE_STATE.INVALID, value: inputValue };
     }
 
     if ((day < 1) || (day > daysInMonth(fullYear, month + 1))) {
-        return ['invalid', inputValue];
+        return { state: DATE_STATE.INVALID, value: inputValue };
     }
 
-    const date = new Date();
-    date.setDate(day);
-    date.setMonth(month);
-    date.setFullYear(fullYear);
-
-    return ['valid', date];
+    return { state: DATE_STATE.VALID, date: new Date(fullYear, month, day) };
 }
 
 /**

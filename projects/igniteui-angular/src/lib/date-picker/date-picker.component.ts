@@ -57,7 +57,8 @@ import {
     checkForCompleteDateInput,
     getInputMask,
     getMask,
-    parseDateArray
+    parseDateArray,
+    DATE_STATE
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -847,8 +848,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             const inputValue = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
             const newDateArray = parseDateArray(this.dateFormatParts, prevDateValue, inputValue);
 
-            if (newDateArray[0] === 'valid') {
-                const newValue = newDateArray[1] as Date;
+            if (newDateArray.state === DATE_STATE.VALID) {
+                const newValue = newDateArray.date;
                 // Restore the time part if any
                 if (prevDateValue !== null && prevDateValue !== undefined) {
                     newValue.setHours(prevDateValue.getHours());
