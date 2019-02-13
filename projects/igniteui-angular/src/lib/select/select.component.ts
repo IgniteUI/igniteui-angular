@@ -22,6 +22,7 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.c
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxSelectBase } from './select.common';
 
     /** @hidden @internal */
 @Directive({
@@ -38,7 +39,7 @@ const noop = () => { };
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
+export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit {
 
     // /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;

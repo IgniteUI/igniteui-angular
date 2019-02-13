@@ -1,8 +1,8 @@
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { Directive, Input, HostListener, OnDestroy } from '@angular/core';
-import { IgxSelectComponent } from './select.component';
 import { Subscription, timer } from 'rxjs';
 import { IgxSelectItemComponent } from './select-item.component';
+import { IgxSelectBase } from './select.common';
 
 /** @hidden @internal */
 @Directive({
@@ -11,7 +11,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
 
     @Input('igxSelectItemNavigation')
-    public target: IgxSelectComponent;
+    public target: IgxSelectBase;
 
     constructor() { super(null); }
 
