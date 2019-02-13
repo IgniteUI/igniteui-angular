@@ -70,7 +70,7 @@ When the **igxCalendar** component is focused:
 - `Tab` will navigate through the subheader buttons;
 
 When `prev` or `next` month buttons (in the subheader) are focused:
-- `Space` will scroll into view the next or previous month.
+- `Space` or `Enter` will scroll into view the next or previous month.
 
 When `months` button (in the subheader) is focused:
 - `Space` or `Enter` will open the months view.

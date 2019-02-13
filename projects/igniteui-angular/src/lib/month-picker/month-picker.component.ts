@@ -1,7 +1,9 @@
 import {
     Component,
     NgModule,
-    HostListener
+    HostListener,
+    ElementRef,
+    ViewChild
 } from '@angular/core';
 import { IgxCalendarModule, CalendarView, IgxCalendarComponent } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
@@ -9,6 +11,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
+import { KEYS } from '../core/utils';
 
 @Component({
     providers: [
@@ -54,6 +57,12 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     /**
      * @hidden
      */
+    @ViewChild('yearsBtn')
+    public yearsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
     public animationDone() {
         this.yearAction = '';
     }
@@ -69,9 +78,33 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     /**
      * @hidden
      */
+    public nextYearKB(event) {
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.nextYear();
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public previousYear() {
         this.yearAction = 'prev';
         super.previousYear();
+    }
+
+    /**
+     * @hidden
+     */
+    public previousYearKB(event) {
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.previousYear();
+        }
     }
 
     /**
@@ -90,6 +123,10 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     public selectYear(event: Date) {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
+
+        requestAnimationFrame(() => {
+            this.yearsBtn.nativeElement.focus();
+        });
     }
 
     /**
