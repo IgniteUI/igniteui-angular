@@ -41,24 +41,10 @@ export class MyClass {
 }
 ```
 
-`igx-select` supports both prefixes and suffixes. You can read more about them [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input_group.html).
+`igx-select` supports prefixes, suffixes, label and placeholder. You can read more about them [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input_group.html) AND [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label_input.html).
 - The items' list default exapansion panel arrow uses `IgxSuffix` and it can be changed by the user.
 - If more than one `IgxSuffix` is used, the expansion arrow will be displayed always last.
 
-```ts
-const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-myComponent.select.toggleIconTemplate = myCustomTemplate;
-```
-
-```html
-<!-- Set in markup -->
- <igx-select #select>
-     ...
-     <ng-template igxSelectToggleIcon let-collapsed>
-         <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
-     </ng-template>
- </igx-select>
-```
 
 ## Features
 
@@ -170,8 +156,13 @@ Sets the select placeholder, to be displayed if no selection/value is set.
 ```
 
 #### Defining toggle icon template:
+```ts
+const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+myComponent.select.toggleIconTemplate = myCustomTemplate;
+```
 
 ```html
+<!-- Set in markup -->
  <igx-select #select>
      ...
      <ng-template igxSelectToggleIcon let-collapsed>
