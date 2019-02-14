@@ -60,7 +60,7 @@ export interface HierarchicalStateRecord {
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-            implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
+    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -102,20 +102,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this._data;
     }
 
-     /**
-     * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
-     * ```typescript
-     * this.gridState = [{ rowID: 1 }, { rowID: 4}];
-     * ```
-     * ```html
-     * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [hierarchicalState]="hgridState">
-     *      <igx-column field="ID"  [dataType]='number'></igx-column>
-     *      <igx-column field="Product"  [dataType]='string'></igx-column>
-     *      <igx-column field="Description"  [dataType]='string'></igx-column>
-     * </igx-hierarchical-grid>
-     * ```
-     * @memberof IgxHierarchicalGridComponent
-     */
+    /**
+    * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
+    * ```typescript
+    * this.gridState = [{ rowID: 1 }, { rowID: 4}];
+    * ```
+    * ```html
+    * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [hierarchicalState]="hgridState">
+    *      <igx-column field="ID"  [dataType]='number'></igx-column>
+    *      <igx-column field="Product"  [dataType]='string'></igx-column>
+    *      <igx-column field="Description"  [dataType]='string'></igx-column>
+    * </igx-hierarchical-grid>
+    * ```
+    * @memberof IgxHierarchicalGridComponent
+    */
     @Input()
     public hierarchicalState: HierarchicalStateRecord[] = [];
 
@@ -178,6 +178,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     get expandChildren(): boolean {
         return this._expandChildren;
+    }
+
+    /**
+     * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
+     * parent grid is set or an object reference of the parent record otherwise.
+     * ```typescript
+     * const foreignKey = this.grid.foreignKey;
+     * ```
+     * @memberof IgxHierarchicalGridComponent
+     */
+    public get foreignKey() {
+        if (!this.parent) {
+            return null;
+        }
+        return this.parent.hgridAPI.getParentRowId(this);
     }
 
     /**
@@ -339,6 +354,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 });
             });
         }
+
+        this.toolbarCustomContentTemplates = this.parentIsland ?
+            this.parentIsland.toolbarCustomContentTemplates :
+            this.toolbarCustomContentTemplates;
     }
 
     /**
@@ -362,7 +381,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
     * @hidden
     */
-   public get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
@@ -407,14 +426,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
-        return record.childGridData !== undefined;
+        return record.childGridsData !== undefined;
     }
 
     /**
      * @hidden
      */
     public trackChanges(index, rec) {
-        if (rec.childGridData !== undefined) {
+        if (rec.childGridsData !== undefined) {
             // if is child rec
             return rec.rowID;
         }
@@ -470,12 +489,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * Gets the visible content height that includes header + tbody + footer.
      * For hierarchical child grid it may be scrolled and not fully visible.
      */
-    public  getVisibleContentHeight() {
+    public getVisibleContentHeight() {
         let height = super.getVisibleContentHeight();
         if (this.parent) {
             const rootHeight = this.rootGrid.getVisibleContentHeight();
             const topDiff = this.nativeElement.getBoundingClientRect().top - this.rootGrid.nativeElement.getBoundingClientRect().top;
-            height = rootHeight - topDiff > height ? height : rootHeight - topDiff ;
+            height = rootHeight - topDiff > height ? height : rootHeight - topDiff;
         }
         return height;
     }
@@ -483,7 +502,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
-   public collapseAllRows() {
+    public collapseAllRows() {
         this.hierarchicalState = [];
     }
 
@@ -492,7 +511,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isExpanded(record: any): boolean {
         let inState;
-        if (record.childGridData !== undefined) {
+        if (record.childGridsData !== undefined) {
             inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
         } else {
             inState = !!this.hierarchicalState.find(v => {

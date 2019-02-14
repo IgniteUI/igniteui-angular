@@ -1472,8 +1472,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * @memberof IgxGridBaseComponent
      */
-    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
-    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+    public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
+        return this.toolbarCustomContentTemplates.first;
+    }
+
+    @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
+    public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
 
     /**
      * @hidden

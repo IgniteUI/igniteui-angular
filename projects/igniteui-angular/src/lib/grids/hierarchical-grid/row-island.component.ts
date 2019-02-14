@@ -5,7 +5,6 @@ import {
     ContentChildren,
     Input,
     QueryList,
-    forwardRef,
     OnInit,
     Inject,
     ElementRef,
@@ -21,9 +20,9 @@ import {
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridComponent, GridBaseAPIService, IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid';
+import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
+import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';

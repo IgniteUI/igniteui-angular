@@ -13,6 +13,7 @@ export * from './lib/animations/main';
  * Directives
  */
 export * from './lib/core/navigation';
+export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
 export * from './lib/directives/dragdrop/dragdrop.directive';
 export * from './lib/directives/filter/filter.directive';
@@ -86,7 +87,7 @@ export * from './lib/toast/toast.component';
 export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
-export { CancelableEventArgs } from './lib/core/utils';
+export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';

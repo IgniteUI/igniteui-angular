@@ -16,6 +16,11 @@
         @extend %igx-button--flat !optional;
     }
 
+    @include m(outlined) {
+        @extend %igx-button-display !optional;
+        @extend %igx-button--outlined !optional;
+    }
+
     @include m(raised) {
         @extend %igx-button-display !optional;
         @extend %igx-button--raised !optional;
