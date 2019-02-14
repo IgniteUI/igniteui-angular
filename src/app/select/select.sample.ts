@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
     ISelectionEventArgs, CancelableEventArgs, OverlaySettings,
@@ -7,7 +7,6 @@ import {
     AbsoluteScrollStrategy,
     IgxSelectComponent
 } from 'igniteui-angular';
-import { SelectPositioningStrategy } from 'projects/igniteui-angular/src/lib/select/select-positioning-strategy';
 
 let counter = 0;
 class Person {
@@ -26,8 +25,7 @@ class Person {
     templateUrl: './select.sample.html'
 })
 export class SelectSampleComponent implements OnInit {
-
-    @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
+    @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
 
     mySelectForm: FormGroup;
     newUser: Person;
@@ -59,25 +57,6 @@ export class SelectSampleComponent implements OnInit {
             const item = { field: 'opt' + i };
             this.items.push(item);
         }
-        const positionSettings = {
-            target: this.igxSelect.inputGroup.element.nativeElement,
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: scaleInTop,
-            closeAnimation: scaleOutBottom
-        };
-
-        const customOverlaySettings = {
-            modal: true,
-            closeOnOutsideClick: false,
-            positionStrategy: new ConnectedPositioningStrategy(
-                positionSettings
-            ),
-            scrollStrategy: new AbsoluteScrollStrategy()
-        };
-        this.customOverlaySettings = customOverlaySettings;
     }
 
     public testOnSelection(evt: ISelectionEventArgs) {
@@ -102,35 +81,35 @@ export class SelectSampleComponent implements OnInit {
 
     public handleToggle() {
         // console.log('handleToggle.....................: ');
-        this.igxSelect.toggle();
+        this.selectComponents.first.toggle();
     }
 
     public handleOpen() {
-        if (this.igxSelect.collapsed) {
+        if (this.selectComponents.first.collapsed) {
             const customCloseOnOutsideClick = {
                 closeOnOutsideClick: false
             };
             console.log('onOpen.....................:');
-            this.igxSelect.open(customCloseOnOutsideClick);
+            this.selectComponents.first.open(customCloseOnOutsideClick);
         }
     }
 
     public handleClose() {
-        if (!this.igxSelect.collapsed) {
+        if (!this.selectComponents.first.collapsed) {
             // console.log('onClose.....................: ');
-            this.igxSelect.close();
+            this.selectComponents.first.close();
         }
     }
 
     public toggleDisabled() {
-        this.igxSelect.disabled = !this.igxSelect.disabled;
+        this.selectComponents.first.disabled = !this.selectComponents.first.disabled;
         // console.log('toggleDisabled.....................: ');
     }
 
     public openCustomOverlaySettings() {
-        if (this.igxSelect.collapsed) {
+        if (this.selectComponents.first.collapsed) {
             const positionSettings = {
-                target: this.igxSelect.inputGroup.element.nativeElement,
+                target: this.selectComponents.first.inputGroup.element.nativeElement,
                 horizontalDirection: HorizontalAlignment.Right,
                 verticalDirection: VerticalAlignment.Bottom,
                 horizontalStartPoint: HorizontalAlignment.Left,
@@ -148,7 +127,7 @@ export class SelectSampleComponent implements OnInit {
                 scrollStrategy: new AbsoluteScrollStrategy()
             };
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
-            this.igxSelect.open(customOverlaySettings);
+            this.selectComponents.first.open(customOverlaySettings);
         }
     }
 
