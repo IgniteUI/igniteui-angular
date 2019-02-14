@@ -1,0 +1,35 @@
+<igx-input-group #inputGroup class="input-group" [disabled]="disabled" (click)="toggle()" [type]="type" [displayDensity]="displayDensity">
+    <ng-container ngProjectAs="[igxLabel]">
+        <ng-content select="[igxLabel]"></ng-content>
+    </ng-container>
+    <ng-container ngProjectAs="igx-prefix">
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+    </ng-container>
+        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
+            readonly="true"
+            [placeholder]="this.placeholder"
+            [value]="this.selectionValue"
+            role="combobox"
+            aria-haspopup="listbox"
+            [attr.aria-labelledby]="this.label ? this.label.id : ''"
+            [attr.aria-expanded]="ariaExpanded"
+            [attr.aria-owns]="ariaOwns"
+            [attr.aria-activedescendant]="this.selectedItem?.id"
+            />
+        <ng-container ngProjectAs="igx-suffix">
+                <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+            </ng-container>
+        <igx-suffix>
+            <ng-container *ngIf="toggleIconTemplate">
+                <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
+                </ng-container>
+            <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+    <div class="igx-drop-down__list--select" igxToggle [style.maxHeight]="maxHeight"
+        (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
+        (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
+        [attr.id]="this.listId" role="listbox">
+        <ng-content select="igx-select-item, igx-select-item-group">
+        </ng-content>
+    </div>
