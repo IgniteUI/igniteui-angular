@@ -29,10 +29,12 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
         if (this.target.collapsed) {
             switch (key) {
-                case 'enter':
                 case 'space':
                 case 'spacebar':
                 case ' ':
+                    event.preventDefault();
+                /* falls through */
+                case 'enter':
                     this.target.open();
                     return;
                 case 'arrowdown':
@@ -52,7 +54,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             }
         }
 
-        if (!this.target.collapsed && (key === 'tab' || key === ' ')) {
+        if (!this.target.collapsed && (key === 'tab')) {
             this.target.close();
             return;
         }
