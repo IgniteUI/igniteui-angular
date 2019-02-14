@@ -338,6 +338,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private highlightFirstItem = () => {
+        if (this.target.focusedItem) {
+            this.target.focusedItem.focused = false;
+            this.target.focusedItem = null;
+        }
         this.target.navigateFirst();
         this.cdr.detectChanges();
         this.reposition();
