@@ -51,7 +51,6 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { BannerSampleComponent } from './banner/banner.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
-import { SelectFormSampleComponent } from './select/select-form.sample';
 
 const appRoutes = [
     {
@@ -78,10 +77,6 @@ const appRoutes = [
     {
         path: 'select',
         component: SelectSampleComponent
-    },
-    {
-        path: 'select-form',
-        component: SelectFormSampleComponent
     },
     {
         path: 'buttons',
