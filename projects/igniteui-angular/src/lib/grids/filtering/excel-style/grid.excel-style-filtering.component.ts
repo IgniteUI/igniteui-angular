@@ -61,7 +61,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     private isMouseOverMoreFilters = false;
     private isSubMenuOpened = false;
     private isMainMenuOpened = false;
-    private columnData = [];
+    public columnData = [];
     private originalColumnData = [];
 
     private _mainMenuPositionSettings = {
@@ -134,6 +134,16 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
      */
     public translateCondition(value: string): string {
         return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+    }
+
+    public onPin() {
+        this.column.pinned = !this.column.pinned;
+        this.mainDropdown.close();
+    }
+
+    public onHide() {
+        this.column.hidden = true;
+        this.mainDropdown.close();
     }
 
     public onIconClick(eventArgs) {

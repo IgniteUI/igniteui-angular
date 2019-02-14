@@ -20,7 +20,7 @@ import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 })
 export class IgxExcelStyleSearchComponent {
 
-    public searchValue: string;
+    public searchValue: any;
 
     @Input()
     public data: any[];

@@ -47,7 +47,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
     public isLast: Boolean;
 
-    constructor(private filteringService: IgxFilteringService) {}
+    constructor(public filteringService: IgxFilteringService) {}
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -83,7 +83,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return condition ? condition.name : null;
     }
 
-    public getInputWidth(input: IgxInputGroupComponent) {
+    public getInputWidth(input) {
         return input ? input.element.nativeElement.offsetWidth + 'px': null;
     }
 

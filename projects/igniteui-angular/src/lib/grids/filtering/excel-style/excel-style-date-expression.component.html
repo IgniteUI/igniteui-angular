@@ -2,7 +2,7 @@
     #dropdownConditions
     [height]="'200px'"
     [width]="getInputWidth(inputGroupConditions)"
-    (onSelection)="onConditionsChanged($event, inputValues)">
+    (onSelection)="onConditionsChanged($event, datePicker)">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ translateCondition(condition) }}</span>
@@ -34,15 +34,15 @@
 <igx-drop-down 
     #dropdownValues 
     [height]="'200px'"
-    [width]="getInputWidth(inputGroupValues)"
-    (onSelection)="onValuesChanged($event, inputValues)"
-    (onOpening)="onDropdownValuesOpening(dropdownValues, inputValues)">
+    [width]="getInputWidth(datePicker)"
+    (onSelection)="onValuesChanged($event, datePicker)"
+    (onOpening)="onDropdownValuesOpening(dropdownValues, datePicker)">
     <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem)">
         <span>{{ filterItem.value }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
-<igx-date-picker tabindex="0" [(ngModel)]="expressionUI.expression.searchVal" [locale]="filteringService.grid.locale">
+<igx-date-picker #datePicker tabindex="0" [outlet]="filteringService.grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="filteringService.grid.locale">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-icon igxPreffix>calendar</igx-icon>

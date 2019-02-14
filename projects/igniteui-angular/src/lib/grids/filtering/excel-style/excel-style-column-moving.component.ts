@@ -22,7 +22,7 @@ export class IgxExcelStyleColumnMovingComponent {
         return !this.column.movable || this.column.visibleIndex === 0;
     }
 
-    get canMoveRigth() {
+    get canMoveRight() {
         return !this.column.movable || this.column.visibleIndex === this.filteringService.grid.columns.length - 1;
     }
 
