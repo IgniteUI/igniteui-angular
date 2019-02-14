@@ -12,15 +12,9 @@ import { DatePipe, formatDate } from '@angular/common';
     templateUrl: 'date-picker.sample.html'
 })
 
-export class DatePickerSampleComponent implements OnInit {
-    // @ViewChild('datePicker') datePicker: IgxDatePickerComponent;
-    // @ViewChild('editableDatePicker') editableDatePicker: IgxDatePickerComponent;
-    // date = new Date('10/3/2018');
+export class DatePickerSampleComponent {
+    date = new Date('10/3/2018');
 
-    // public labelVisibility = true;
-    // public testDate = new Date(2030, 1, 1, 15, 16, 17, 18);
-
-    // public date99: Date = new Date(2017, 7, 7);
     public formatOptions = {
         day: 'numeric',
         month: 'long',
@@ -33,6 +27,7 @@ export class DatePickerSampleComponent implements OnInit {
     public date2;
     public date3;
     public date4;
+    public testDate = new Date(2000, 3, 5);
 
     public date5 = new Date('10/5/2020');
 
@@ -45,24 +40,8 @@ export class DatePickerSampleComponent implements OnInit {
         return _.toLocaleString('en');
     }
 
-    // public deselect(event) {
-    //     event.sender.deselectDate();
-    // }
-    public ngOnInit() {
-
-        // this.editableDatePicker.disabledDates = [{ type: DateRangeType.Specific, dateRange: this.range }];
-        // this.testdatePicker.value = this.testDate;
-
-        // const test = formatDate(this.date1, 'shortDate', 'ja');
-        // console.log('test ' + test);
-    }
-
-    // public test(event) {
-    //     console.log('open');
-    // }
-
-    public onClose(event) {
-        console.log('activeElement ' + document.activeElement);
+    public deselect(datePicker) {
+        datePicker.deselectDate();
     }
 
     constructor() {
@@ -87,17 +66,5 @@ export class DatePickerSampleComponent implements OnInit {
         this.date2 = date2;
         this.date3 = date3;
         this.date4 = date3;
-
-        // this.date1.setDate(10);
-        // this.date1.setMonth(10);
-        // this.date1.setFullYear(2018);
-    }
-}
-@Pipe({
-    name: 'format'
-})
-export class DateFormatPipe extends DatePipe implements PipeTransform {
-    transform(value: any, args?: any): any {
-        return super.transform(value, args);
     }
 }

@@ -417,7 +417,7 @@ describe('IgxDatePicker', () => {
         it('Editable Datepicker open/close event', async () => {
             const dom = fixture.debugElement;
             const iconDate = dom.query(By.css('.igx-icon'));
-            expect(iconDate).toBeDefined();
+            expect(iconDate).not.toBeNull();
 
             spyOn(datePicker.onOpen, 'emit');
             spyOn(datePicker.onClose, 'emit');
@@ -429,8 +429,9 @@ describe('IgxDatePicker', () => {
             expect(datePicker.onOpen.emit).toHaveBeenCalled();
             expect(datePicker.onOpen.emit).toHaveBeenCalledWith(datePicker);
 
-            const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
-            expect(dropDown).toBeDefined();
+            const dropDown = document.getElementsByClassName('igx-date-picker--dropdown');
+            expect(dropDown.length).toBe(1);
+            expect(dropDown[0]).not.toBeNull();
 
             dom.nativeElement.dispatchEvent(new Event('click'));
 
@@ -441,26 +442,24 @@ describe('IgxDatePicker', () => {
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
         });
 
-        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', () => {
+        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', async () => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
+            expect(input).not.toBeNull();
 
-            // UIInteractions.triggerKeyDownEvtUponElem('space', input, false);
+            // UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, false);
             // fixture.detectChanges();
+            // await wait(100);
 
-            // const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
-            // expect(dropDown).toBeDefined();
+            // const dropDown = document.getElementsByClassName('igx-date-picker--dropdown');
+            // expect(dropDown.length).toBe(1);
+            // expect(dropDown[0]).not.toBeNull();
 
-            // const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
-            // expect(overlayDiv).toBeDefined();
-            // expect(overlayDiv.classList.contains('igx-overlay__wrapper--modal')).toBeTruthy();
-
-            // UIInteractions.triggerKeyDownEvtUponElem('Escape', overlayDiv, true);
+            // UIInteractions.triggerKeyDownEvtUponElem('Escape', input.nativeElement, true);
             // flush();
             // fixture.detectChanges();
 
-            // const overlays = document.getElementsByClassName('igx-overlay__wrapper--modal');
-            // expect(overlays.length).toEqual(0);
+            // expect(dom.query(By.css('.igx-date-picker--dropdown'))).not.toBeNull();
         });
 
         it('should open the dropdown when click on the date icon', (() => {

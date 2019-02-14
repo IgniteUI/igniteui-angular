@@ -25,7 +25,7 @@ import {
     WEEKDAYS
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -342,6 +342,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     public get transformedDate(): string {
         if (this._value) {
+            if (this._isInEditMode) {
+                this._transformedDate = this._getEditorDate(this._value);
+            } else {
+                this._transformedDate = this._getDisplayDate(this._value);
+            }
+
             this.isEmpty = false;
         }
         return this._transformedDate;
@@ -397,12 +403,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public set value(date: Date) {
         this._value = date;
         this._onChangeCallback(date);
-
-        if (this._value
-            && !this._isInEditMode
-            && this.mode === DatePickerInteractionMode.EDITABLE) {
-            this._transformedDate = this._getDisplayDate(this._value);
-        }
         if (this._value === null) {
             this._transformedDate = '';
         }
@@ -585,6 +585,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     @ViewChild('readonlyInput', { read: ElementRef })
     protected readonlyInput: ElementRef;
 
+    @ViewChild(IgxInputDirective)
+    protected input: IgxInputDirective;
+
     /**
      * @hidden
      */
@@ -687,7 +690,14 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     /** @hidden */
     public getEditElement() {
-        return ((this.mode === DatePickerInteractionMode.READONLY) ? this.readonlyInput : this.editableInput).nativeElement;
+        let inputElement;
+        if (this.mode === DatePickerInteractionMode.EDITABLE) {
+            inputElement = (this.editableInput) ? this.editableInput : this.input;
+        } else {
+            inputElement = (this.readonlyInput) ? this.readonlyInput : this.input;
+        }
+
+        return (inputElement) ? inputElement.nativeElement : null;
     }
 
     /**
@@ -910,6 +920,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     public onFocus(event): void {
+        this._isInEditMode = true;
         if (this.value && this.invalidDate === '') {
             this._transformedDate = this._getEditorDate(this.value);
         }
