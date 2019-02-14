@@ -64,7 +64,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private settings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy({ target: this.parentElement })
+        positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
+        excludePositionTarget: true
     };
 
     protected id: string;

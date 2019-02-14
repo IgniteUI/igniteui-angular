@@ -389,10 +389,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *```
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
-        if (this.isOpen) {
-            return;
-        }
-
         this.toggleRef.open(overlaySettings);
         this.onOpen.emit({ dialog: this, event: null });
     }
@@ -406,9 +402,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *```
      */
     public close() {
-        if (!this.isOpen) {
-            return;
-        }
         // `onClose` will emit from `toggleRef.onClosing` subscription
         this.toggleRef.close();
     }
