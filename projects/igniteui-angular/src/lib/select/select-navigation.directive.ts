@@ -22,25 +22,29 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         }
         const key = event.key.toLowerCase();
 
-        if (event.altKey && (key === 'arrowdown' || key === 'arrowup')) {
+        if (event.altKey && (key === 'arrowdown' || key === 'arrowup' || key === 'down' || key === 'up')) {
             this.target.toggle();
             return;
         }
 
         if (this.target.collapsed) {
             switch (key) {
-                case 'enter':
                 case 'space':
                 case 'spacebar':
                 case ' ':
+                    event.preventDefault();
+                /* falls through */
+                case 'enter':
                     this.target.open();
                     return;
                 case 'arrowdown':
+                case 'down':
                     this.target.navigateNext();
                     this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
                     return;
                 case 'arrowup':
+                case 'up':
                     this.target.navigatePrev();
                     this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
@@ -50,7 +54,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             }
         }
 
-        if (!this.target.collapsed && (key === 'tab' || key === ' ')) {
+        if (!this.target.collapsed && (key === 'tab')) {
             this.target.close();
             return;
         }
