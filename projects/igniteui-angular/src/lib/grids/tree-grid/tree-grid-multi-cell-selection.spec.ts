@@ -527,7 +527,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         });
     });
 
-    xdescribe('ChildDataKeyGrid with transactions enabled', () => {
+    describe('ChildDataKeyGrid with transactions enabled', () => {
         let fix;
         let treeGrid;
 

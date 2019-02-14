@@ -574,7 +574,7 @@ export class IgxTreeGridSelectionComponent {
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
-    `, providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+    `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
 })
 export class IgxTreeGridSelectionWithTransactionComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;

@@ -278,7 +278,8 @@ export class HelperUtils {
         })
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
-            UIInteractions.simulateClickAndSelectCellEvent(startCell, shift, ctrl);
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
