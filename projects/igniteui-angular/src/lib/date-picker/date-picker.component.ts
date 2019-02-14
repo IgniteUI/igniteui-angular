@@ -382,7 +382,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         return {
             value: this.value,
             displayData: this.displayData,
-            openCalendar: (event) => { this.openCalendar(event); }
+            openDialog: (event) => { this.openDialog(event); }
         };
     }
 
@@ -668,7 +668,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
-        this.openCalendar(event);
+        this.openDialog(event);
         event.preventDefault();
     }
 
@@ -827,11 +827,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     /**
-     * Open the dialog and update the calendar.
+     * Open the calendar.
      *
      * @hidden
      */
-    public openCalendar(event): void {
+    public openDialog(event): void {
         event.stopPropagation();
         switch (this.mode) {
             case DatePickerInteractionMode.READONLY: {
@@ -853,54 +853,25 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
     }
 
+    /**
+     * Close the calendar.
+     *
+     * @hidden
+     */
     public closeCalendar(): void {
         this._overlayService.hide(this._componentID);
     }
 
+    /**
+     * Clear the input field, date picker value and calendar selection.
+     *
+     * @hidden
+     */
     public clear(): void {
         this.isEmpty = true;
         this.invalidDate = '';
         this.deselectDate();
         this._setCursorPosition(0);
-    }
-
-    public calculateDate(dateString: string, invokedByEvent: string): void {
-        if (dateString !== '') {
-            const prevDateValue = this.value;
-            const inputValue = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
-            const newDateArray = parseDateArray(this.dateFormatParts, prevDateValue, inputValue);
-
-            if (newDateArray.state === DATE_STATE.VALID) {
-                const newValue = newDateArray.date;
-                // Restore the time part if any
-                if (prevDateValue !== null && prevDateValue !== undefined) {
-                    newValue.setHours(prevDateValue.getHours());
-                    newValue.setMinutes(prevDateValue.getMinutes());
-                    newValue.setSeconds(prevDateValue.getSeconds());
-                    newValue.setMilliseconds(prevDateValue.getMilliseconds());
-                }
-
-                if (this.disabledDates === null
-                    || (this.disabledDates !== null && !isDateInRanges(newValue, this.disabledDates))) {
-                    this.value = newValue;
-                    this.invalidDate = '';
-                    this._onChangeCallback(newValue);
-                } else {
-                    const args: IgxDatePickerDisabledDateEventArgs = {
-                        datePicker: this,
-                        currentValue: newValue,
-                    };
-                    this.onDisabledDate.emit(args);
-                }
-            } else {
-                const args: IgxDatePickerValidationFailedEventArgs = {
-                    datePicker: this,
-                    prevValue: prevDateValue
-                };
-                this.invalidDate = dateString;
-                this.onValidationFailed.emit(args);
-            }
-        }
     }
 
     /**
@@ -971,7 +942,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.openCalendar(event);
+                    this.openDialog(event);
                 } else {
                     this.spinValue(event);
                 }
@@ -1031,6 +1002,45 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             this._transformedDate = targetValue;
             this.calculateDate(targetValue, event.type);
             this._setCursorPosition(cursorPosition);
+        }
+    }
+
+    private calculateDate(dateString: string, invokedByEvent: string): void {
+        if (dateString !== '') {
+            const prevDateValue = this.value;
+            const inputValue = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
+            const newDateArray = parseDateArray(this.dateFormatParts, prevDateValue, inputValue);
+
+            if (newDateArray.state === DATE_STATE.VALID) {
+                const newValue = newDateArray.date;
+                // Restore the time part if any
+                if (prevDateValue !== null && prevDateValue !== undefined) {
+                    newValue.setHours(prevDateValue.getHours());
+                    newValue.setMinutes(prevDateValue.getMinutes());
+                    newValue.setSeconds(prevDateValue.getSeconds());
+                    newValue.setMilliseconds(prevDateValue.getMilliseconds());
+                }
+
+                if (this.disabledDates === null
+                    || (this.disabledDates !== null && !isDateInRanges(newValue, this.disabledDates))) {
+                    this.value = newValue;
+                    this.invalidDate = '';
+                    this._onChangeCallback(newValue);
+                } else {
+                    const args: IgxDatePickerDisabledDateEventArgs = {
+                        datePicker: this,
+                        currentValue: newValue,
+                    };
+                    this.onDisabledDate.emit(args);
+                }
+            } else {
+                const args: IgxDatePickerValidationFailedEventArgs = {
+                    datePicker: this,
+                    prevValue: prevDateValue
+                };
+                this.invalidDate = dateString;
+                this.onValidationFailed.emit(args);
+            }
         }
     }
 

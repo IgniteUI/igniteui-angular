@@ -1,5 +1,5 @@
 <ng-template #readOnlyDatePickerTemplate>
-    <igx-input-group (click)="openCalendar($event)">
+    <igx-input-group (click)="openDialog($event)">
         <igx-prefix>
             <igx-icon>today</igx-icon>
         </igx-prefix>
@@ -11,7 +11,7 @@
 
 <ng-template #editableDatePickerTemplate>
     <igx-input-group #editableInputGroup>
-        <igx-prefix (click)="openCalendar($event)">
+        <igx-prefix (click)="openDialog($event)">
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>

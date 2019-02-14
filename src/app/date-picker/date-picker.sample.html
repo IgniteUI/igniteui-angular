@@ -29,9 +29,9 @@
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
                 <igx-date-picker [value]="date" [formatter]="formatter">
-                    <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
                         let-displayData="displayData">
-                        <igx-input-group (click)="openCalendar($event)">
+                        <igx-input-group (click)="openDialog($event)">
                             <label igxLabel>Date</label>
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>
@@ -40,7 +40,6 @@
             </div>
         </article>
 
-        <!-- TO TEST -->
         <article class="datepicker-column">
             <h4 class="sample-title">Editable Date Picker</h4>
             <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>

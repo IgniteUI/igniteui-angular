@@ -81,6 +81,13 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
 
+- `igx-date-picker`
+    - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:
+    ```html
+      <igx-date-picker #editableDatePicker1 mode="editable" [value]="date" format="dd.MM.y" mask="M/d/y">
+      </igx-date-picker>
+     ```
+
 ## 7.1.5
 ### Features
 - `igxGrid`
