@@ -562,7 +562,7 @@ export class IgxOverlayService implements OnDestroy {
                     if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
                         //  if the click is outside click, but close animation has started do nothing
                         if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
-                            this.hide(info.id);
+                            this._hide(info.id, ev);
                         }
                     }
                 } else {
