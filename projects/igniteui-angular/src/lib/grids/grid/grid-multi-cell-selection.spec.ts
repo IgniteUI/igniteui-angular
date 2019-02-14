@@ -27,11 +27,13 @@ describe('IgxGrid - Multi Cell selection', () => {
     describe('Base', () => {
         let fix;
         let grid;
+        let detect;
 
         beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            detect = () => grid.cdr.detectChanges();
         });
 
         it('Should be able to select a range with mouse dragging', () => {
@@ -48,38 +50,37 @@ describe('IgxGrid - Multi Cell selection', () => {
             for (let i = 3; i < 5; i++) {
               const cell = grid.getCellByColumn(i, grid.columns[i - 1].field);
               UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
-              fix.detectChanges();
+              detect();
               HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
             }
 
             for (let i = 3; i >= 0; i--) {
                 const cell = grid.getCellByColumn(i, 'HireDate');
                 UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
-                fix.detectChanges();
+                detect();
                 HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, 3);
             }
 
             for (let i = 2; i >= 0; i--) {
                 const cell = grid.getCellByColumn(0, grid.columns[i].field);
                 UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
-                fix.detectChanges();
+                detect();
                 HelperUtils.verifyCellsRegionSelected(grid, 2, 0, 1, i);
             }
 
             for (let i = 1; i < 4; i++) {
                 const cell = grid.getCellByColumn(i, 'ID');
                 UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
-                fix.detectChanges();
+                detect();
                 HelperUtils.verifyCellsRegionSelected(grid, 2, i, 1, 0);
             }
 
             UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
-            fix.detectChanges();
+            detect();
 
             expect(startCell.focused).toBe(true);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 1, 0);
-            HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1, 0, 2);
-            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 1, 2);
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
@@ -91,6 +92,8 @@ describe('IgxGrid - Multi Cell selection', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            detect();
+
             let range = { rowStart: 1, rowEnd: 2, columnStart: 1, columnEnd: 2 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
@@ -100,6 +103,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             firstCell = grid.getCellByColumn(2, 'ParentID');
             secondCell = grid.getCellByColumn(3, 'ID');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell, true);
+            detect();
 
             expect(grid.selectedCells.length).toBe(7);
             range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
@@ -156,6 +160,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
 
             UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
             fix.detectChanges();
@@ -165,7 +170,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             range = { rowStart: 0, rowEnd: 3, columnStart: 2, columnEnd: 3 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
-            expect(grid.getSelectedRanges()).toEqual([range]);
+            HelperUtils.verifySelectedRange(grid, 0, 3, 2, 3);
         });
 
         it('Should be able to select range with Shift key when first cell is not visible', (async () => {
@@ -692,11 +697,13 @@ describe('IgxGrid - Multi Cell selection', () => {
     describe('Keyboard navigation', () => {
         let fix;
         let grid;
+        let detect;
 
         beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            detect = () => grid.cdr.detectChanges();
         });
 
         it('Should be able to select a with arrow keys and holding Shift', (async () => {
@@ -878,9 +885,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
             await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
+            detect();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 0, 2);
-            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 2, 1, 2);
+            HelperUtils.verifySelectedRange(grid, 1, 4, 1, 2);
             expect(firstCell.focused);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
@@ -890,6 +897,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellSelected(thirdCell);
             HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1);
+            expect(grid.getSelectedData()).toEqual({ParentID: 147});
         }));
 
         it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', (async () => {
@@ -901,7 +909,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             await HelperUtils.selectCellsRangeWithShiftKey(fix, firstCell, secondCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-             HelperUtils.verifySelectedRange(grid, 0, 2, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 0, 2, 0, 2);
             expect(secondCell.focused);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true, false, true);
@@ -1315,11 +1323,13 @@ describe('IgxGrid - Multi Cell selection', () => {
     describe('Features integration', () => {
         let fix;
         let grid;
+        let detect;
 
         beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            detect = () => grid.cdr.detectChanges();
         });
 
 
@@ -1328,7 +1338,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             column.sortable = true;
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             HelperUtils.selectCellsRangeNoWait(fix, grid.getCellByColumn(1, 'ParentID'), grid.getCellByColumn(4, 'HireDate'));
-            fix.detectChanges();
+            detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
@@ -1350,7 +1360,6 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
             ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            const rowID = grid.selectedCells[0].cellID.rowID;
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
             expect(grid.getSelectedData()).not.toEqual(selectedData);
@@ -1410,7 +1419,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(0, 'ParentID');
             const secondCell = grid.getCellByColumn(3, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [ { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
                 { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
@@ -1730,7 +1739,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'OnPTO');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             grid.dataRowList.first.virtDirRow.scrollTo(0);
             await wait(100);
@@ -1769,7 +1778,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             await HelperUtils.selectCellsRange(fix, grid.getCellByColumn(2, 'Age'),  grid.getCellByColumn(4, 'Name'));
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', Age: 31},
@@ -1785,7 +1794,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
@@ -1845,7 +1854,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
@@ -1869,7 +1878,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
@@ -1898,7 +1907,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
@@ -1925,7 +1934,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
@@ -1951,7 +1960,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
@@ -1996,7 +2005,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(1, 'ParentID');
             const secondCell = grid.getCellByColumn(5, 'HireDate');
             await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
@@ -2032,7 +2041,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(1, 'ParentID');
             const secondCell = grid.getCellByColumn(5, 'HireDate');
             await HelperUtils.selectCellsRange(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
@@ -2067,7 +2076,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ParentID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
@@ -2339,7 +2348,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const firstCell = grid.getCellByColumn(2, 'ID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
-            fix.detectChanges();
+            detect();
 
             const selectedData = [
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},

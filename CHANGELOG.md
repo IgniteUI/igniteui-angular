@@ -5,7 +5,20 @@ All notable changes for each version of this project will be documented in this 
 - **New component** `IgxHierarchicalGrid`:
     - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
 
-- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
+- **New component** The `igxSelect` provides an input with dropdown list allowing selection of a single item.
+    ```html
+    <igx-select #select1 [placeholder]="'Pick One'">
+        <label igxLabel>Sample Label</label>
+        <igx-select-item *ngFor="let item of items" [value]="item.field">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+    ```
+
+[documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/select/README.md)
+
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/autcomomplete/README.md).
+
     ```html
     <input igxInput type="text" [igxAutocomplete]="townsPanel" />
     <igx-drop-down #townsPanel>
