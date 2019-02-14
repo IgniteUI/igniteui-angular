@@ -1052,7 +1052,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (event.key === 'ArrowUp' || event.key === 'Up') {
             event.preventDefault();
             event.stopPropagation();
-            this.toggle();
+            if (!this.dropdown.collapsed) {
+                this.toggle();
+            }
         }
     }
 
@@ -1343,7 +1345,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {}
 
     /**
      * @hidden

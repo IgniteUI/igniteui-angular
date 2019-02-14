@@ -80,6 +80,9 @@ All notable changes for each version of this project will be documented in this 
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
+- `igxOverlay`:
+    - `igxOverlay.register(component, settings?)` method added. Use this method to obtain Id for the component you need to show in overlay. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
+    - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.register(component, settings?)` method to obtain Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
 
 ## 7.1.5
 ### Features
