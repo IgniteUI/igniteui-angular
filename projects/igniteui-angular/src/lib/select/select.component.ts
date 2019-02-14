@@ -24,7 +24,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 
-    /** @hidden @internal */
+/** @hidden @internal */
 @Directive({
     selector: '[igxSelectToggleIcon]'
 })
@@ -32,6 +32,23 @@ export class IgxSelectToggleIconDirective {
 }
 
 const noop = () => { };
+
+/**
+ * **Ignite UI for Angular Select** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html)
+ *
+ * The `igxSelect` provides an input with dropdown list allowing selection of a single item.
+ *
+ * Example:
+ * ```html
+ * <igx-select #select1 [placeholder]="'Pick One'">
+ *   <label igxLabel>Select Label</label>
+ *   <igx-select-item *ngFor="let item of items" [value]="item.field">
+ *     {{ item.field }}
+ *   </igx-select-item>
+ * </igx-select>
+ * ```
+ */
 @Component({
     selector: 'igx-select',
     templateUrl: './select.component.html',
@@ -41,14 +58,24 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit {
 
-    // /** @hidden @internal do not use the drop-down container class */
+    /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
 
+    /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
+
+    /** @hidden @internal */
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
+
+    /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
+
+    /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective)) label: IgxLabelDirective;
+
+    /** @hidden @internal */
+    public allowItemsFocus = false;
 
     private _value: any;
     /**
@@ -265,6 +292,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
     }
 }
+
+/** @hidden */
 @NgModule({
     declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
     exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
