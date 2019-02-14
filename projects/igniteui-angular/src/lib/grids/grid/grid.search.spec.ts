@@ -1194,7 +1194,7 @@ describe('IgxGrid - search API', () => {
             expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
         });
 
-        fit('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+        it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
             grid.height = '500px';
             await wait();
             fix.detectChanges();
