@@ -52,42 +52,6 @@ export class HelperUtils {
     }
 
     public static navigateVerticallyToIndex = (
-        grid: IgxGridComponent,
-        rowStartIndex: number,
-        rowEndIndex: number,
-        colIndex?: number,
-        shift = false) => new Promise(async (resolve, reject) => {
-            const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
-            const row = grid.getRowByIndex(rowStartIndex);
-            const cIndx = colIndex || 0;
-            const colKey = grid.columnList.toArray()[cIndx].field;
-            let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-            const elem = row instanceof IgxGridGroupByRowComponent ?
-                row : grid.getCellByColumn(row.index, colKey);
-            if (rowStartIndex === rowEndIndex) {
-                resolve();
-                return;
-            }
-
-            UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, shift);
-
-            if (nextRow) {
-                await wait(20);
-                HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex, shift)
-                    .then(() => { resolve(); });
-            } else {
-                // else wait for chunk to load.
-                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                    next: async () => {
-                        nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                        HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex, shift)
-                            .then(() => { resolve(); });
-                    }
-                });
-            }
-        })
-
-        public static navigateVerticallyToIndexWithSummaries = (
             grid: IgxGridComponent,
             rowStartIndex: number,
             rowEndIndex: number,
@@ -123,14 +87,14 @@ export class HelperUtils {
 
                 if (nextRow) {
                     await wait(40);
-                    HelperUtils.navigateVerticallyToIndexWithSummaries(grid, nextIndex, rowEndIndex, colIndex, shift)
+                    HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
                         .then(() => { resolve(); });
                 } else {
                     // else wait for chunk to load.
                     grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                         next: async () => {
                             // nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                            HelperUtils.navigateVerticallyToIndexWithSummaries(grid, nextIndex, rowEndIndex, colIndex, shift)
+                            HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
                                 .then(() => { resolve(); });
                         }
                     });
@@ -140,36 +104,38 @@ export class HelperUtils {
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
         cell: IgxGridCellComponent,
-        index: number) => new Promise(async (resolve) => {
+        index: number,
+        shift = false) => new Promise(async (resolve) => {
             // grid - the grid in which to navigate.
             // cell - current cell from which the navigation will start.
             // index - the index to which to navigate
+            // shift - if the Shift key should be pressed on keydown event
 
             const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
             const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
             const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
             const nextCol = visibleColumns[nextIndex];
-            let nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+            let nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
 
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
             if (nextCell) {
                 await wait(10);
                 grid.cdr.detectChanges();
-                HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+                HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
                 grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe({
                     next: () => {
                         grid.cdr.detectChanges();
-                        nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
-                        HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+                        nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
+                        HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
                     }
                 });
             }
@@ -310,7 +276,6 @@ export class HelperUtils {
             fix.detectChanges();
             resolve();
         })
-
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
             UIInteractions.simulateClickAndSelectCellEvent(startCell, shift, ctrl);
