@@ -9,6 +9,7 @@ import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -18,6 +19,11 @@ const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
+const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
+const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
+const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
+const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
+const CSS_CLASS_INPUT_GROUP_COMPACT = 'igx-input-group--compact';
 
 const arrowDownKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 const arrowUpKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
@@ -110,6 +116,9 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeUndefined();
+            expect(select.type).toEqual('line');
+            expect(select.displayDensity).toEqual('comfortable');
+            expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
             select.width = '500px';
@@ -122,12 +131,35 @@ describe('igxSelect', () => {
             expect(select.placeholder).toEqual('Your home town');
             select.value = 'Hamburg';
             expect(select.value).toEqual('Hamburg');
+            select.type = 'box';
+            expect(select.type).toEqual('box');
+            select.displayDensity = 'compact';
+            expect(select.displayDensity).toEqual('compact');
             select.items[3].disabled = true;
             expect(select.items[3].disabled).toBeTruthy();
             select.items[10].selected = true;
             expect(select.items[10].selected).toBeTruthy();
             select.items[11].value = 'Milano';
             expect(select.items[11].value).toEqual('Milano');
+
+            const positionSettings = {
+                target: select.inputGroup.element.nativeElement,
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom
+            };
+            const customOverlaySettings = {
+                modal: true,
+                closeOnOutsideClick: false,
+                positionStrategy: new ConnectedPositioningStrategy(
+                    positionSettings
+                ),
+                scrollStrategy: new AbsoluteScrollStrategy()
+            };
+            select.overlaySettings = customOverlaySettings;
+            expect(select.overlaySettings).toBe(customOverlaySettings);
+
             expect(select.collapsed).toBeTruthy();
             select.toggle();
             tick();
@@ -207,6 +239,17 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
+        }));
+        it('Should not display dropdown list when no select items', fakeAsync(() => {
+            fixture.componentInstance.items = [];
+            fixture.detectChanges();
+
+            const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            inputGroup.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+            expect(selectList.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
         }));
         it('Should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
@@ -334,6 +377,31 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(selectItems[selectedItem.index].nativeElement.getAttribute('aria-selected')).toEqual('true');
             expect(selectItems[disabledItem.index].nativeElement.getAttribute('aria-disabled')).toEqual('true');
+        });
+        it('Should render input type properly', () => {
+            const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            // Default type is 'line'
+            expect(select.type).toEqual('line');
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
+            select.type = 'box';
+            fixture.detectChanges();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
+            select.type = 'border';
+            fixture.detectChanges();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeTruthy();
+        });
+        it('Should render display density properly', () => {
+            const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            // Default display density is 'comfortable'
+            expect(select.displayDensity).toEqual('comfortable');
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMFORTABLE)).toBeTruthy();
+            select.displayDensity = 'cosy';
+            fixture.detectChanges();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COSY)).toBeTruthy();
+            select.displayDensity = 'compact';
+            fixture.detectChanges();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
     });
     describe('Selection tests: ', () => {
