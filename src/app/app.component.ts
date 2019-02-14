@@ -109,11 +109,6 @@ export class AppComponent implements OnInit {
             name: 'Select'
         },
         {
-            link: '/select-form',
-            icon: 'arrow_drop_down_circle',
-            name: 'Select in Form'
-        },
-        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
