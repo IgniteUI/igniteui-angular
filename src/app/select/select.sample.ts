@@ -108,12 +108,7 @@ export class SelectSampleComponent implements OnInit {
     public handleOpen() {
         if (this.igxSelect.collapsed) {
             const customCloseOnOutsideClick = {
-                modal: false,
-                closeOnOutsideClick: false,
-                positionStrategy: new SelectPositioningStrategy(
-                    this.igxSelect
-                ),
-                scrollStrategy: new AbsoluteScrollStrategy()
+                closeOnOutsideClick: false
             };
             console.log('onOpen.....................:');
             this.igxSelect.open(customCloseOnOutsideClick);
