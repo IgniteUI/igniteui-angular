@@ -81,6 +81,32 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
 
+ **Components roundness**
+- Ignite UI for Angular now allows you to change the shape of components by changing their border-radius.
+
+- Here is the list of all components that have roundness functionality:
+* _igx-badge_
+* _igx-buttongroup_
+* _igx-calendar_
+* _igx-card_
+* _igx-carousel_
+* _igx-chip_
+* _igx-dialog_
+* _igx-drop-down_
+* _igx-expansion-panel_
+* _igx-input-group_
+* _igx-list_ 
+  * _igx-list-item_
+* *igx-navdrawe*r
+* _igx-snackbar_
+* _igx-toast_
+* _igxTooltip_
+
+- **Breaking Change** 
+- The `$button-roundness` propertie on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
+- The`$roundness` propertie on the `igx-chip-theme` have been replaced with `$border-radius`.
+- The`$roundness` propertie on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
+
 ## 7.1.5
 ### Features
 - `igxGrid`
