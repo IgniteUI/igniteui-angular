@@ -17,7 +17,8 @@ All notable changes for each version of this project will be documented in this 
 
 [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/select/README.md)
 
-- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/autcomomplete/README.md).
+
     ```html
     <input igxInput type="text" [igxAutocomplete]="townsPanel" />
     <igx-drop-down #townsPanel>
