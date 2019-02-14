@@ -62,6 +62,7 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
+import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 
@@ -86,6 +87,10 @@ const appRoutes = [
     {
         path: 'banner',
         component: BannerSampleComponent
+    },
+    {
+        path: 'select',
+        component: SelectSampleComponent
     },
     {
         path: 'buttons',
