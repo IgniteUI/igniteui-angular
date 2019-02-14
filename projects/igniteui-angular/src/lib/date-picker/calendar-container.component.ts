@@ -1,6 +1,9 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { DatePickerInteractionMode, IgxCalendarComponent } from 'igniteui-angular';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
@@ -48,10 +51,25 @@ export class IgxCalendarContainerComponent {
         this.onClose.emit();
     }
 
+    /**
+     * Returns whether the date-picker is in readonly mode.
+     *
+     * @hidden
+    */
+    public get isReadonly() {
+        return this.mode === DatePickerInteractionMode.READONLY;
+    }
+
+    /**
+     * Emits close event for the calendar.
+     */
     public closeCalendar() {
         this.onClose.emit();
     }
 
+    /**
+    * Emits today selection event for the calendar.
+    */
     public triggerTodaySelection() {
         this.onTodaySelection.emit();
     }

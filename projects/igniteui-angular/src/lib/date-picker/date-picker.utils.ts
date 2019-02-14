@@ -88,12 +88,18 @@ export const NUMBER_OF_MONTHS = 12;
  */
 export const PROMPT_CHAR = '_';
 
+/**
+ * This interface is used to configure calendar format view options.
+ */
 export interface IFormatViews {
     day?: boolean;
     month?: boolean;
     year?: boolean;
 }
 
+/**
+ * This interface is used to configure calendar format options.
+ */
 export interface IFormatOptions {
     day?: string;
     month?: string;
@@ -648,6 +654,9 @@ export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boole
     return false;
 }
 
+/**
+ *@hidden
+ */
 export function checkForCompleteDateInput(dateFormatParts: any[], input: string): string {
     const dayValue = getDayValueFromInput(dateFormatParts, input);
     const monthValue = getMonthValueFromInput(dateFormatParts, input);

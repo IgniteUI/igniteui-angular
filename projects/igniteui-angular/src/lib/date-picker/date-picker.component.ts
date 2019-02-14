@@ -483,7 +483,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public mode = DatePickerInteractionMode.READONLY;
 
     /**
-     *An @Input property that sets whether `IgxDatePickerComponent` date parts would spin continuously.
+     *An @Input property that sets whether the `IgxDatePickerComponent` date parts would spin continuously or stop when min/max is reached.
      *```html
      *<igx-date-picker [isSpinLoop]="false"></igx-date-picker>
      *```
@@ -539,7 +539,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public onSelection = new EventEmitter<Date>();
 
     /**
-    *An @Output property that is fired when the user enters disabled date in the date-picker editor.
+    *An @Output property that fires when the user types/spins to a disabled date in the date-picker editor.
     *```typescript
     *public onDisabledDate(event){
     *    alert("This date is disabled!");
@@ -552,6 +552,17 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     @Output()
     public onDisabledDate = new EventEmitter<IgxDatePickerDisabledDateEventArgs>();
 
+    /**
+    *An @Output property that fires when the user types/spins invalid date in the date-picker editor.
+    *```typescript
+    *public onValidationFailed(event){
+        *    alert("This date is not valid!");
+        *}
+        *```
+        *```html
+        *<igx-date-picker (onValidationFailed)="onValidationFailed($event)"></igx-date-picker>
+        *```
+        */
     @Output()
     public onValidationFailed = new EventEmitter<IgxDatePickerValidationFailedEventArgs>();
 
@@ -585,6 +596,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     @ViewChild('readonlyInput', { read: ElementRef })
     protected readonlyInput: ElementRef;
 
+    /*
+    * @hidden
+    */
     @ViewChild(IgxInputDirective)
     protected input: IgxInputDirective;
 
@@ -615,13 +629,13 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public calendar: IgxCalendarComponent;
     public hasHeader = true;
     public collapsed = true;
-
     public displayValuePipe = new DatePickerDisplayValuePipe(this);
     public inputValuePipe = new DatePickerInputValuePipe(this);
     public dateFormatParts = [];
     public rawDateString: string;
     public inputMask: string;
     public isEmpty = true;
+    public invalidDate = '';
 
     private _formatOptions = {
         day: 'numeric',
@@ -650,8 +664,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
-    public invalidDate = '';
-
 
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
@@ -914,11 +926,27 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.onSelection.emit(date);
     }
 
+    /**
+    * Evaluates when the input blur event was fired
+    * and re-calculate the date picker value.
+    *
+    * @param event
+    *
+    * @hidden
+    */
     public onBlur(event): void {
         this._isInEditMode = false;
         this.calculateDate(event.target.value, event.type);
     }
 
+    /**
+    * Evaluates when the input focus event was fired
+    * and re-calculate the editor text.
+    *
+    * @param event
+    *
+    * @hidden
+    */
     public onFocus(event): void {
         this._isInEditMode = true;
         if (this.value && this.invalidDate === '') {
@@ -926,6 +954,14 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
     }
 
+    /**
+    * Evaluates when the keydown event was fired for up/down keys
+    * to provide spinning of date parts.
+    *
+    * @param event
+    *
+    * @hidden
+    */
     public onKeyDown(event) {
         switch (event.key) {
             case KEYS.UP_ARROW:
@@ -945,11 +981,26 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
     }
 
+    /**
+    * Evaluates when the mouse wheel event was fired
+    * to provide spinning of date parts.
+    *
+    * @param event
+    *
+    * @hidden
+    */
     public onWheel(event) {
         this.spinValue(event);
 
     }
 
+    /**
+    * Evaluates when input event was fired in editor.
+    *
+    * @param event
+    *
+    * @hidden
+    */
     public onInput(event) {
         const targetValue = event.target.value;
         const cursorPosition = this._getCursorPosition();

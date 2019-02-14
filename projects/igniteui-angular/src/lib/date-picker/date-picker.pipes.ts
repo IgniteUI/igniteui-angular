@@ -7,6 +7,9 @@ import {
 
 } from './date-picker.utils';
 
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'displayValue'
 })
@@ -24,6 +27,9 @@ export class DatePickerDisplayValuePipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'inputValue'
 })

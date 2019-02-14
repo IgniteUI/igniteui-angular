@@ -1,5 +1,5 @@
 <igx-calendar #calendar></igx-calendar>
-<div class="igx-date-picker__buttons" *ngIf="mode==='readonly' &&
+<div class="igx-date-picker__buttons" *ngIf="isReadonly &&
     (cancelButtonLabel || todayButtonLabel)">
     <button #closeButton *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="closeCalendar()">
         {{ cancelButtonLabel }}
