@@ -2258,7 +2258,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Row Selection', () => {
+        it('Row Selection: the selection range should not change when select row', () => {
             grid.rowSelectable = true;
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
@@ -2280,9 +2280,56 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
+        });
 
-            grid.getCellByColumn(3, 'ParentID');
+        it('Row Selection: selected range should be preserved when select row with space', () => {
+            grid.rowSelectable = true;
+            const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
+            grid.selectRange(range);
+            fix.detectChanges();
 
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const cell = grid.getCellByColumn(2, 'ID');
+
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false);
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('Row Selection: selected range with mouse interaction should be preserved when select row with space', () => {
+            grid.rowSelectable = true;
+            const firstCell = grid.getCellByColumn(2, 'ID');
+            const secondCell = grid.getCellByColumn(4, 'HireDate');
+            HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
+            fix.detectChanges();
+
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            ];
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
+            const cell = grid.getCellByColumn(2, 'ID');
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false);
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
+            expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
     });
