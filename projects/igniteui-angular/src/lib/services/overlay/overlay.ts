@@ -115,7 +115,6 @@ export class IgxOverlayService implements OnDestroy {
      */
     register(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
-        const id = (this._componentId++).toString();
         info = this.getOverlayInfo(component);
 
         //  if there is no info most probably wrong type component was provided and we just go out
@@ -123,14 +122,11 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        info.id = id;
-
+        info.id = (this._componentId++).toString();
         settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
-
         this._overlayInfos.push(info);
-
-        return id;
+        return info.id;
     }
 
     /**
