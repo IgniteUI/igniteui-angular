@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDetectionStrategy, NgZone, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDetectionStrategy, NgZone, OnInit, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -28,6 +28,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
         super(selectionService, crudService, gridAPI, selection, cdr, element, zone);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    expanded = false;
 
     @ViewChild('indicator', { read: ElementRef })
     public indicator: ElementRef;
@@ -62,10 +68,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     /**
      * @hidden
      */
-    get expanded(): boolean {
-        return this.row.expanded;
-    }
-
     ngOnInit() {
         super.ngOnInit();
     }

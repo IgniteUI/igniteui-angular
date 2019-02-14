@@ -94,6 +94,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
 
         requestAnimationFrame(() => {
+            // TODO: Refocus active cell
             const cellID = grid.selection.first_item(`${id}-cell`);
             if (cellID) {
                 const cell = this.get_cell_by_index(id, cellID.rowIndex, cellID.columnID);

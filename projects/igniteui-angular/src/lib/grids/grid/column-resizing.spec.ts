@@ -37,7 +37,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
                 FormsModule,
                 IgxAvatarModule,
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         })
             .compileComponents();

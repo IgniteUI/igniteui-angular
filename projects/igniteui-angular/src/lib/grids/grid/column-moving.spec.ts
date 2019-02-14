@@ -6,7 +6,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
 import { IgxColumnGroupComponent } from '../column.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import {
     MovableColumnsComponent,
@@ -18,7 +17,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Column Moving', () => {
     configureTestSuite();
@@ -39,7 +38,7 @@ describe('IgxGrid - Column Moving', () => {
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         }).compileComponents();
     }));
@@ -687,6 +686,10 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 
+            const range = grid.getSelectedRanges()[0];
+            HelperUtils.verifySelectedRange(grid, range.rowStart,
+                range.rowEnd, range.columnStart, range.columnEnd);
+
             // step 2 - reorder that column among columns that are currently out of view
             // and verify selection is preserved
             const header = headers[0].nativeElement;
@@ -704,7 +707,9 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'ID').selected).toEqual(false);
+            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
+                range.columnStart, range.columnEnd);
         }));
 
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
@@ -723,6 +728,10 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 
+            const range = grid.getSelectedRanges()[0];
+            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
+                range.columnStart, range.columnEnd);
+
             // step 3 - scroll up vertically so that the selected cell becomes out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
             await wait(50);
@@ -737,6 +746,8 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
             await wait(1500);
             fixture.detectChanges();
+
+            // TODO: What is exactly is the logic below
 
             grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
 
@@ -1230,8 +1241,12 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
             cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait();
             fixture.detectChanges();
+            await wait();
+
+            const range = grid.getSelectedRanges()[0];
+            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
+                range.columnStart, range.columnEnd);
 
             // step 2 - reorder the parent column and verify selection is preserved
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
@@ -1245,7 +1260,9 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
+            // TODO: With the new selection we no longer transfer the active element
+            // on column "drop". Fix once the behavior is cleared up !!
+            expect(grid.getCellByColumn(0, 'ContactName').selected).toEqual(false);
 
             // step 3 - navigate right and verify cell selection is updated
             const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];

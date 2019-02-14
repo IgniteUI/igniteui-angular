@@ -25,7 +25,7 @@ describe('IgxGrid - Column properties', () => {
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule]
         })
             .compileComponents();
     }));

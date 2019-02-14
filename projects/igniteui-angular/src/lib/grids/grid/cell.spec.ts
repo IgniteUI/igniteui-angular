@@ -173,7 +173,7 @@ describe('IgxGrid - Cell component', () => {
                 grid = fixture.componentInstance.grid;
             });
 
-            it('should be able to enter edit mode on dblclick, enter and f2', (async () => {
+            it('should be able to enter edit mode on dblclick, enter and f2', () => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
                 const cell = grid.getCellByColumn(0, 'fullName');
 
@@ -182,36 +182,30 @@ describe('IgxGrid - Cell component', () => {
 
                 rv.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
                 fixture.detectChanges();
-                await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
                 fixture.detectChanges();
-                await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
                 fixture.detectChanges();
-                await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
                 fixture.detectChanges();
-                await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
                 fixture.detectChanges();
-                await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
-            }));
+            });
 
-            it('should be able to edit cell which is a Primary Key', (async () => {
+            it('should be able to edit cell which is a Primary Key', () => {
                 grid.primaryKey = 'personNumber';
                 fixture.detectChanges();
 
@@ -221,47 +215,41 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
                 cellDomPK.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, 87);
-                await wait();
 
                 fixture.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
-                await wait(DEBOUNCETIME);
 
                 fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(87);
-            }));
+            });
 
-            it('edit template should be accourding column data type -- number', (async () => {
+            it('edit template should be accourding column data type -- number', () => {
                 const cell = grid.getCellByColumn(0, 'age');
                 const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
                 expect(cell.inEditMode).toBe(true);
                 const editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, 0.3698);
-                await wait();
                 fixture.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(0.3698);
                 expect(editTemplate.nativeElement.type).toBe('number');
-            }));
+            });
 
-            it('should validate input data when edit numeric column', (async () => {
+            it('should validate input data when edit numeric column', () => {
                 const cell = grid.getCellByColumn(0, 'age');
                 const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
                 const expectedValue = 0;
@@ -269,42 +257,36 @@ describe('IgxGrid - Cell component', () => {
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
 
                 const editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
+
                 UIInteractions.sendInput(editTemplate, editValue);
                 fixture.detectChanges();
-                await wait();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
-
                 fixture.detectChanges();
+
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
                 editValue = '';
                 UIInteractions.sendInput(editTemplate, editValue);
                 fixture.detectChanges();
-                await wait();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
-            }));
+            });
 
-            it('edit template should be accourding column data type -- boolean', (async () => {
+            it('edit template should be accourding column data type -- boolean', () => {
                 const cell = grid.getCellByColumn(0, 'isActive');
                 const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
                 cellDomBoolean.triggerEventHandler('dblclick', {});
-                await wait();
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(true);
@@ -314,57 +296,50 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe(true);
 
                 editTemplate.nativeElement.click();
-                await wait();
                 fixture.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomBoolean.nativeElement, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(false);
-            }));
+            });
 
-            it('edit template should be accourding column data type -- date', (async () => {
+            it('edit template should be accourding column data type -- date', () => {
                 const cell = grid.getCellByColumn(0, 'birthday');
                 const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
                 const selectedDate = new Date('04/12/2017');
 
                 cellDomDate.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
                 expect(cell.inEditMode).toBe(true);
                 const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
                 expect(datePicker).toBeDefined();
 
                 datePicker.selectDate(selectedDate);
-                await wait();
                 fixture.detectChanges();
 
                 expect(datePicker.value).toBe(selectedDate);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
-            }));
+            });
 
-            it('should exit edit mode on filtering', (async () => {
+            it('should exit edit mode on filtering', () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 const cellValue = cell.value;
 
                 cellDom.triggerEventHandler('dblclick', {});
-                await wait();
                 fixture.detectChanges();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
-                await wait();
                 fixture.detectChanges();
 
                 grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
@@ -374,9 +349,9 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
-            }));
+            });
 
-            it('should not throw errors when update cell to value, which does not match filter criteria', (async () => {
+            it('should not throw errors when update cell to value, which does not match filter criteria', () => {
                 grid.filter('personNumber', 1, IgxStringFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
 
@@ -386,38 +361,34 @@ describe('IgxGrid - Cell component', () => {
 
                 cellDomPK.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, 9);
-                await wait();
                 fixture.detectChanges();
 
                 expect (() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
-            }));
+            });
 
-            it('should exit edit mode on sorting', (async () => {
+            it('should exit edit mode on sorting', () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 cellDom.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
-                await wait();
                 fixture.detectChanges();
 
                 grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
-            }));
+            });
 
-            it('should update correct cell when sorting is applied', (async () => {
+            it('should update correct cell when sorting is applied', () => {
                 grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false});
                 fixture.detectChanges();
 
@@ -425,23 +396,20 @@ describe('IgxGrid - Cell component', () => {
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 cellDom.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
-                await wait();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
                 expect(cell.editValue).toBe('Tom Riddle');
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
-                await wait();
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode().editValue).toBe('Rick Gilmore');
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom.nativeElement, true);
-                await wait(DEBOUNCETIME);
 
                 fixture.detectChanges();
                 expect(cell.value).toBe('Rick Gilmore');
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
-            }));
+            });
         });
 
         describe('EditMode - on scroll, pin, blur', () => {
@@ -456,41 +424,36 @@ describe('IgxGrid - Cell component', () => {
                 grid = fixture.componentInstance.grid;
             });
 
-            it('edit mode - leaves edit mode on blur', (async () => {
+            it('edit mode - leaves edit mode on blur', () => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
                 const cell = grid.getCellByColumn(0, 'firstName');
                 const button = fixture.debugElement.query(By.css('.btnTest'));
 
                 cell.column.editable = true;
                 rv.nativeElement.dispatchEvent(new Event('focus'));
-                await wait();
                 fixture.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(true);
 
                 button.nativeElement.dispatchEvent(new Event('click'));
-                await wait();
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(true);
-            }));
+            });
 
-            it('edit mode - exit edit mode and submit when pin/unpin unpin column', (async () => {
+            it('edit mode - exit edit mode and submit when pin/unpin unpin column', () => {
                 let cell = grid.getCellByColumn(0, 'firstName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 cellDom.triggerEventHandler('dblclick', {});
-                await wait();
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
                 const editTemplate = cellDom.query(By.css('input'));
                 UIInteractions.sendInput(editTemplate, 'Gary Martin');
-                await wait();
                 fixture.detectChanges();
 
                 grid.pinColumn('firstName');
@@ -501,7 +464,6 @@ describe('IgxGrid - Cell component', () => {
                 cell = grid.getCellByColumn(1, 'firstName');
                 const cellValue = cell.value;
                 cell.inEditMode = true;
-                await wait();
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
@@ -510,7 +472,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeNull();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
-            }));
+            });
 
 
             it('edit mode - leaves cell in edit mode on scroll', (async () => {
@@ -539,30 +501,30 @@ describe('IgxGrid - Cell component', () => {
                 expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
             }));
 
-            it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', (async () => {
+            it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
                 const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
                 const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
                 cellElem.dispatchEvent(new Event('focus'));
                 cellElem.dispatchEvent(new MouseEvent('dblclick'));
-                await wait(50);
                 fixture.detectChanges();
+                await wait(50);
 
                 let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
                 let elem = UIInteractions.findCellByInputElem(cellElem, inputElem);
                 expect(cellElem).toBe(elem);
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', inputElem, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 inputElem = document.activeElement as HTMLInputElement;
                 elem = UIInteractions.findCellByInputElem(cellElem, inputElem);
                 expect(cellElem).toBe(elem);
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
                 expect(verticalScroll.scrollTop).toBe(0);
-            }));
+            });
 
             it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
                 const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
@@ -577,8 +539,8 @@ describe('IgxGrid - Cell component', () => {
 
                 cellElem.dispatchEvent(new Event('focus'));
                 cellElem.dispatchEvent(new MouseEvent('dblclick'));
-                await wait(50);
                 fixture.detectChanges();
+                await wait(50);
 
                 let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
                 let elem = UIInteractions.findCellByInputElem(cellElem, inputElem);
@@ -587,8 +549,8 @@ describe('IgxGrid - Cell component', () => {
                 expectedScroll = verticalScroll.scrollTop;
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 inputElem = document.activeElement as HTMLInputElement;
                 elem = UIInteractions.findCellByInputElem(cellElem, inputElem);
@@ -604,8 +566,8 @@ describe('IgxGrid - Cell component', () => {
 
                 cellElem.dispatchEvent(new Event('focus'));
                 cellElem.dispatchEvent(new MouseEvent('dblclick'));
-                await wait(50);
                 fixture.detectChanges();
+                await wait(50);
 
                 const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
                 let elem = UIInteractions.findCellByInputElem(cellElem, inputElem);
@@ -613,8 +575,8 @@ describe('IgxGrid - Cell component', () => {
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('arrowright', inputElem, true);
-                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 const displayContainer = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
                 elem = UIInteractions.findCellByInputElem(cellElem, document.activeElement);
@@ -637,8 +599,8 @@ describe('IgxGrid - Cell component', () => {
 
                 cellElem.dispatchEvent(new Event('focus'));
                 cellElem.dispatchEvent(new MouseEvent('dblclick'));
-                await wait(50);
                 fixture.detectChanges();
+                await wait(50);
 
                 let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
                 let elem = UIInteractions.findCellByInputElem(cellElem, inputElem);

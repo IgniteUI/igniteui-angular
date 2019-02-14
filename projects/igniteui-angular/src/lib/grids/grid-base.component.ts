@@ -4348,9 +4348,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     getSelectedRanges() {
-        const r = this.selectionService.ranges;
-        console.log(r);
-        return r;
+        return this.selectionService.ranges;
     }
 
     extractDataFromSelection(source: any[]) {

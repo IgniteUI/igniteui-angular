@@ -24,6 +24,8 @@ import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../
 
 const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
                                 'home', 'end', 'space', 'spacebar', ' ']);
+const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
+const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);
 
 /**
@@ -578,6 +580,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
+    // TODO: Refactor
     public update(val: any) {
         // const rowSelector = this.cellID.rowID;
         // const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
@@ -740,8 +743,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
 
     protected handleAlt(key: string) {
         if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
-            const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
+            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
             if (collapse) {
                 (this.gridAPI as any).trigger_row_expansion_toggle(
                     this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
@@ -1000,7 +1003,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
 
         const classList = {
             'igx-grid__td--active': this.focused,
-            'igx-grid__td--number':  this.column.dataType === DataType.Number,
+            'igx-grid__td--number':  this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
             'igx-grid__td--pinned': this.column.pinned,
             'igx-grid__td--pinned-last': this.isLastPinned,
@@ -1026,6 +1029,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key.toLowerCase()) !== -1;
+        return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
     }
 }

@@ -173,17 +173,6 @@ export class IgxColumnMovingService {
     public cancelDrop: boolean;
     public isColumnMoving: boolean;
 
-    public selection: {
-        column: IgxColumnComponent,
-        rowID: any
-    };
-
-    public activeElement: {
-        tag: string,
-        column: IgxColumnComponent,
-        rowIndex: number
-    };
-
     get column(): IgxColumnComponent {
         return this._column;
     }
@@ -274,28 +263,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
-
-        const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
-        if (currSelection) {
-            this.cms.selection = {
-                column: this.column.grid.columnList.toArray()[currSelection.columnID],
-                rowID: currSelection.rowID
-            };
-        }
-        // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.column.grid.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS) {
-            if (parseInt(document.activeElement.getAttribute('data-visibleIndex'), 10) !== this.column.visibleIndex) {
-                (document.activeElement as HTMLElement).blur();
-                return;
-            }
-            this.cms.activeElement = {
-                tag: document.activeElement.tagName.toLowerCase() === 'igx-grid-summary-cell' ?
-                        document.activeElement.tagName.toLowerCase() : '',
-                column: this.column,
-                rowIndex: parseInt(document.activeElement.getAttribute('data-rowindex'), 10)
-            };
-            (document.activeElement as HTMLElement).blur();
-        }
 
         const args = {
             source: this.column
@@ -492,9 +459,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if (this.horizontalScroll) {
                 this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
-                interval(60).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
-                    event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 30 :
-                        this.horizontalScroll.getHorizontalScroll().scrollLeft -= 30;
+                interval(100).pipe(takeUntil(this._dragLeave)).subscribe(() => {
+                    this.cms.column.grid.wheelHandler();
+                    event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
+                        this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
                 });
             }
     }
@@ -523,7 +491,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             return;
         }
 
-        if (this.cms.column.grid.id !== this.column.grid.id) {
+        if (this.column && (this.cms.column.grid.id !== this.column.grid.id)) {
             return;
         }
 
@@ -552,20 +520,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
-
-            if (this.cms.selection && this.cms.selection.column) {
-                this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
-                    rowID: this.cms.selection.rowID,
-                    columnID: this.column.grid.columnList.toArray().indexOf(this.cms.selection.column)
-                }]));
-            }
-            if (this.cms.activeElement) {
-                const gridEl = this.column.grid.nativeElement;
-                const activeEl = gridEl.querySelector(`${this.cms.activeElement.tag}[data-rowindex="${this.cms.activeElement.rowIndex}"]` +
-                    `[data-visibleIndex="${this.cms.activeElement.column.visibleIndex}"]`);
-                if (activeEl) { activeEl.focus(); }
-                this.cms.activeElement = null;
-            }
 
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();

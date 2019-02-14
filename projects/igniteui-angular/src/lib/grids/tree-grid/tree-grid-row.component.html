@@ -9,7 +9,7 @@
             <igx-grid-cell [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-grid-cell>
             </ng-template>
         <ng-template #treeCellTemplate>
-            <igx-tree-grid-cell [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-tree-grid-cell>
+            <igx-tree-grid-cell [expanded]="treeRow.expanded" [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-tree-grid-cell>
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
@@ -19,7 +19,7 @@
         <igx-grid-cell [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-grid-cell>
     </ng-template>
     <ng-template #treeCellTemplate>
-        <igx-tree-grid-cell [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-tree-grid-cell>
+        <igx-tree-grid-cell [expanded]="treeRow.expanded" [inEditMode]="col.editable && crudService.isInEditMode(index, col.index)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate" #treeCell></igx-tree-grid-cell>
     </ng-template>
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
 </ng-template>

@@ -42,7 +42,7 @@ describe('IgxGrid - multi-column headers', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         }).compileComponents();
     }));
