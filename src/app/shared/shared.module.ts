@@ -36,8 +36,10 @@ import {
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
-    IgxTooltipModule
+    IgxTooltipModule,
+    IgxSelectModule
 } from 'igniteui-angular';
+
 
 const igniteModules = [
     IgxAutocompleteModule,
@@ -76,7 +78,8 @@ const igniteModules = [
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
-    IgxTooltipModule
+    IgxTooltipModule,
+    IgxSelectModule
 ];
 
 @NgModule({
