@@ -81,6 +81,7 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
+import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
@@ -162,8 +163,7 @@ const components = [
     DisplayFormatPipe,
     InputFormatPipe,
     GridColumnPercentageWidthsSampleComponent,
-    DisplayFormatPipe,
-    InputFormatPipe,
+    CalendarViewsSampleComponent,
     GridSearchBoxComponent,
     GridSearchComponent
 ];
