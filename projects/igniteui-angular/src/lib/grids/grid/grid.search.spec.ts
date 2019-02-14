@@ -13,7 +13,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 
-fdescribe('IgxGrid - search API', () => {
+describe('IgxGrid - search API', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid: IgxGridComponent, fixNativeElement;
