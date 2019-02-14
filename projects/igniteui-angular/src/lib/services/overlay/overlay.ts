@@ -110,9 +110,10 @@ export class IgxOverlayService implements OnDestroy {
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      * @param component ElementRef or Component Type to show in overlay
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    register(component: ElementRef | Type<{}>): string {
+    register(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         const id = (this._componentId++).toString();
         info = this.getOverlayInfo(component);
@@ -123,7 +124,12 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         info.id = id;
+
+        settings = Object.assign({}, this._defaultSettings, settings);
+        info.settings = settings;
+
         this._overlayInfos.push(info);
+
         return id;
     }
 
@@ -145,7 +151,7 @@ export class IgxOverlayService implements OnDestroy {
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
     // tslint:disable-next-line:max-line-length
-    @DeprecateMethod('`show(component, settings?)` overload is deprecated. Use `register(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.')
+    // @DeprecateMethod('`show(component, settings?)` overload is deprecated. Use `register(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.')
     show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
@@ -168,7 +174,7 @@ export class IgxOverlayService implements OnDestroy {
             info.id = id;
         }
 
-        settings = Object.assign({}, this._defaultSettings, settings);
+        settings = Object.assign({}, this._defaultSettings, info.settings, settings);
         info.settings = settings;
 
         this._show(info);
@@ -206,7 +212,7 @@ export class IgxOverlayService implements OnDestroy {
      */
     reposition(id: string) {
         const overlayInfo = this.getOverlayById(id);
-        if (!overlayInfo) {
+        if (!overlayInfo || !overlayInfo.settings) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
             return;
         }
@@ -231,6 +237,8 @@ export class IgxOverlayService implements OnDestroy {
                 this._appRef.detachView(info.componentRef.hostView);
                 info.componentRef.destroy();
             }
+
+            return;
         }
 
         //  if there is no close animation player, or there is one but it is not started yet we are in clear

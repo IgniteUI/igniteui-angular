@@ -88,13 +88,13 @@ this.overlay.show(component, overlaySettings);
 
 ###### IgxOverlayService
 
-| Name            | Description                                                                     | Parameters |
-|-----------------|---------------------------------------------------------------------------------|------------|
-|register         | Generates Id. Provide this Id when call `show(id, settings?)` method            |component   |
-|show             | Shows the provided component on the overlay                             |id, overlaySettings?|
-|hide             | Remove the provided native element of for the component with provided id        |id          |
-|hideAll          | Remove the all native elements and hides the overlay                            |-           |
-|reposition       | Repositions the native element of the component with provided id                |id          |
+| Name            | Description                                                                     | Parameters      |
+|-----------------|---------------------------------------------------------------------------------|-----------------|
+|register         | Generates Id. Provide this Id when call `show(id, settings?)` method |component, overlaySettings? |
+|show             | Shows the provided component on the overlay                                  |id, overlaySettings?|
+|hide             | Remove the provided native element of for the component with provided id        |id               |
+|hideAll          | Remove the all native elements and hides the overlay                            |-                |
+|reposition       | Repositions the native element of the component with provided id                |id               |
 
 ###### IPositionStrategy
 
