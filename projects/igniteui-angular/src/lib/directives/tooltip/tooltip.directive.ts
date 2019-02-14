@@ -1,15 +1,16 @@
 import {
-    Directive, ElementRef, HostListener, Input, NgModule, Renderer2, ChangeDetectorRef, OnInit,
+    Directive, ElementRef, HostListener, Input, NgModule, ChangeDetectorRef, OnInit,
     Output, EventEmitter, Optional, HostBinding, OnDestroy, Inject
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
 import { fadeOut } from '../../animations/fade/index';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { HorizontalAlignment, AutoPositionStrategy, PositionSettings } from '../../services';
+import { HorizontalAlignment, AutoPositionStrategy, PositionSettings, OverlaySettings } from '../../services';
 import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
+import { Subscription } from 'rxjs';
 
 export interface ITooltipShowEventArgs {
     target: IgxTooltipTargetDirective;
@@ -227,10 +228,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             if (hidingArgs.cancel) {
                 return true;
-            } else {
-                this.target.close();
-                this.target.toBeHidden = false;
             }
+
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
         }
 
         return false;
@@ -242,7 +244,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         // If tooltip is about to be opened
         if (this.target.toBeShown) {
-            clearTimeout(this.target.timeoutId);
             this.target.toBeShown = false;
             this.target.toBeHidden = false;
             return true;
@@ -255,7 +256,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @HostListener('document:keydown.escape', ['$event'])
-    public onKeydownEscape(event: KeyboardEvent) {
+    public onKeydownEscape() {
         const hidingArgs = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipHide.emit(hidingArgs);
 
@@ -379,10 +380,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
             if (hidingArgs.cancel) {
                 return;
-            } else {
-                this.target.close();
-                this.target.toBeHidden = false;
             }
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
         }
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
@@ -450,6 +451,7 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]'
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
+
     /**
      * @hidden
      */
@@ -457,11 +459,13 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 
     /**
      * @hidden
+     * Returns whether close time out has started
      */
     public toBeHidden = false;
 
     /**
      * @hidden
+     * Returns whether open time out has started
      */
     public toBeShown = false;
 
@@ -529,8 +533,49 @@ export class IgxTooltipDirective extends IgxToggleDirective {
         cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
         @Optional() navigationService: IgxNavigationService) {
-            // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-            super(elementRef, cdr, overlayService, navigationService);
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(elementRef, cdr, overlayService, navigationService);
+    }
+
+    /**
+     * If there is open animation in progress this method will finish is.
+     * If there is no open animation in progress this method will open the toggle with no animation.
+     * @param overlaySettings setting to use for opening the toggle
+     */
+    protected forceOpen(overlaySettings?: OverlaySettings) {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+        const hasOpenAnimation = info ? info.openAnimationPlayer : false;
+        if (hasOpenAnimation) {
+            info.openAnimationPlayer.finish();
+            info.openAnimationPlayer.reset();
+            info.openAnimationPlayer = null;
+        } else if (this.collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.openAnimation;
+            overlaySettings.positionStrategy.settings.openAnimation = null;
+            this.open(overlaySettings);
+            overlaySettings.positionStrategy.settings.openAnimation = animation;
+        }
+    }
+
+    /**
+     * If there is close animation in progress this method will finish is.
+     * If there is no close animation in progress this method will close the toggle with no animation.
+     * @param overlaySettings settings to use for closing the toggle
+     */
+    protected forceClose(overlaySettings?: OverlaySettings) {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+
+        if (hasCloseAnimation) {
+            info.closeAnimationPlayer.finish();
+            info.closeAnimationPlayer.reset();
+            info.closeAnimationPlayer = null;
+        } else if (!this.collapsed) {
+            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
+            overlaySettings.positionStrategy.settings.closeAnimation = null;
+            this.close();
+            overlaySettings.positionStrategy.settings.closeAnimation = animation;
+        }
     }
 }
 
