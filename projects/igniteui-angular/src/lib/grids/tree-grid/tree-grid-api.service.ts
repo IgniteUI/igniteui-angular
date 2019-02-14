@@ -4,20 +4,18 @@ import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../column.component';
-import { first } from 'rxjs/operators';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
-    public get_all_data(id: string, transactions?: boolean): any[] {
-        const grid = this.get(id);
-        let data = grid.flatData ? grid.flatData : [];
-        data = transactions ? grid.dataWithAddedInTransactionRows : data;
-        return data;
+    public get_all_data(transactions?: boolean): any[] {
+        const grid = this.grid;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
+        return data ? data : [];
     }
 
-    public get_summary_data(id) {
-        const grid = this.get(id);
+    public get_summary_data() {
+        const grid = this.grid;
         const data = grid.processedRootRecords.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);
         if (grid.transactions.enabled) {
@@ -34,7 +32,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public expand_row(id: string, rowID: any) {
-        const grid = this.get(id);
+        const grid = this.grid;
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, true);
         grid.expansionStates = expandedStates;
@@ -44,7 +42,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public collapse_row(id: string, rowID: any) {
-        const grid = this.get(id);
+        const grid = this.grid;
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, false);
         grid.expansionStates = expandedStates;
@@ -54,7 +52,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public toggle_row_expansion(id: string, rowID: any) {
-        const grid = this.get(id);
+        const grid = this.grid;
         const expandedStates = grid.expansionStates;
         const treeRecord = grid.records.get(rowID);
 
@@ -69,7 +67,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
-        const grid = this.get(id);
+        const grid = this.grid;
 
         if (!row.children || row.children.length <= 0 && row.expanded === expanded) {
             return;
@@ -107,7 +105,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public expand_path_to_record(id: string, record: ITreeGridRecord) {
-        const grid = this.get(id);
+        const grid = this.grid;
         const expandedStates = grid.expansionStates;
 
         while (record.parent) {
@@ -126,7 +124,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public get_row_expansion_state(id: string, record: ITreeGridRecord): boolean {
-        const grid = this.get(id);
+        const grid = this.grid;
         const states = grid.expansionStates;
         const expanded = states.get(record.rowID);
 
@@ -138,7 +136,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
-        const grid = this.get(id);
+        const grid = this.grid;
         if (grid.primaryKey && grid.foreignKey) {
             super.update_row_in_array(id, value, rowID, index);
         } else {
@@ -155,7 +153,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public deleteRowById(gridID: string, rowID: any) {
-        const treeGrid = this.get(gridID);
+        const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
         treeGrid.primaryKey &&
         treeGrid.foreignKey &&
@@ -174,7 +172,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public deleteRowFromData(gridID: string, rowID: any, index: number) {
-        const treeGrid = this.get(gridID);
+        const treeGrid = this.grid;
         if (treeGrid.primaryKey && treeGrid.foreignKey) {
             super.deleteRowFromData(gridID, rowID, index);
 
@@ -245,7 +243,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public get_selected_children(id: string, record: ITreeGridRecord, selectedRowIDs: any[]) {
-        const grid = this.get(id);
+        const grid = this.grid;
         if (!record.children || record.children.length === 0) {
             return;
         }
@@ -262,7 +260,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     private row_deleted_parent(id: string, rowID: any): boolean {
-        const grid = this.get(id);
+        const grid = this.grid;
         if (!grid) {
             return false;
         }

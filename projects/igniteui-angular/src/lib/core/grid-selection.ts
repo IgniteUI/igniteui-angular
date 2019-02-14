@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { IGridEditEventArgs } from '../grids/grid-base.component';
 
 
 export interface GridSelectionRange {
@@ -25,6 +27,167 @@ interface ISelectionPointerState extends ISelectionKeyboardState {
 
 type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
 
+
+// TODO: Refactor - export in a separate file
+
+export class IgxRow {
+
+    constructor(public id: any, public index: number, public data: any) {}
+}
+
+export class IgxCell {
+
+    primaryKey: any;
+
+    constructor(
+        public id,
+        public rowIndex: number,
+        public column,
+        public value: any,
+        public editValue: any,
+        public rowData: any) {}
+
+    castToNumber(): void {
+        if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
+            const v = parseFloat(this.editValue);
+            this.editValue = !isNaN(v) && isFinite(v) ? v : 0;
+        }
+    }
+
+    clone(): IgxCell {
+        return new IgxCell(this.id, this.rowIndex, this.column, this.value, this.editValue, this.rowData);
+    }
+
+    createEditEventArgs(): IGridEditEventArgs {
+        return {
+            rowID: this.id.rowID,
+            cellID: this.id,
+            oldValue: this.value,
+            newValue: this.editValue,
+            cancel: false
+        };
+    }
+}
+
+@Injectable()
+export class IgxGridCRUDService {
+
+    grid;
+    cell: IgxCell | null = null;
+    row: IgxRow | null = null;
+    cellEditDone = new Subject<IgxCell>();
+    rowEditDone = new Subject<IgxRow>();
+    rowState;
+
+    inEditMode = false;
+
+    createEditEventArgs(): IGridEditEventArgs {
+        return {
+            rowID: this.cell.id.rowID,
+            cellID: this.cell.id,
+            oldValue: this.cell.value,
+            cancel: false
+        };
+    }
+
+    createCell(cell): IgxCell {
+        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
+    }
+
+    createRow(cell: IgxCell): IgxRow {
+        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData);
+    }
+
+    sameRow(rowID): boolean {
+        return this.row.id === rowID;
+    }
+
+    get rowEditing(): boolean {
+        return this.grid.rowEditable;
+    }
+
+    get primaryKey(): any {
+        return this.grid.primaryKey;
+    }
+
+    beginRowEdit() {
+        // emit onRowEditEnter
+        this.row = this.createRow(this.cell);
+        const args = {
+            rowID: this.row.id,
+            oldValue: this.row.data,
+            cancel: false
+        };
+        this.grid.onRowEditEnter.emit(args);
+        if (args.cancel) {
+            this.endRowEdit();
+            return;
+        }
+        this.rowState = this.grid.transactions.getAggregatedValue(this.row.id, true);
+        this.grid.transactions.startPending();
+        this.grid.openRowOverlay(this.row.id);
+    }
+
+    commitRowEdit() {
+        this.grid.endRowTransaction(true, this.row.id);
+        this.endRowEdit();
+    }
+
+    endRowEdit() {
+        this.row = null;
+    }
+
+    begin(cell): void {
+        this.cell = this.createCell(cell);
+        this.cell.primaryKey = this.primaryKey;
+        const args = this.createEditEventArgs();
+
+        this.grid.onCellEditEnter.emit(args);
+
+        if (args.cancel) {
+            this.end();
+            return;
+        }
+
+        this.inEditMode = true;
+
+        if (this.rowEditing) {
+            if (!this.row) {
+                this.beginRowEdit();
+                return;
+            }
+
+            if (this.row && !this.sameRow(this.cell.id.rowID)) {
+                this.commitRowEdit();
+                this.beginRowEdit();
+                return;
+            }
+        }
+    }
+
+    commit() {
+        if (!this.inEditMode) {
+            return;
+        }
+        this.cell.castToNumber();
+        this.grid.gridAPI.update_cell(this.cell);
+    }
+
+    end(): void {
+        this.cell = null;
+        this.inEditMode = false;
+    }
+
+
+    isInEditMode(rowIndex: number, columnIndex: number): boolean {
+        if (!this.cell) {
+            return false;
+        }
+        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+    }
+}
+
+
 @Injectable()
 export class IgxGridSelectionService {
 
@@ -32,12 +195,6 @@ export class IgxGridSelectionService {
     keyboardState = {} as ISelectionKeyboardState;
     pointerState = {} as ISelectionPointerState;
 
-
-    // startNode;
-    // ctrlEnabled = false;
-    // shiftEnabled = false;
-    // kbShiftEnabled = false;
-    // kbNode = null;
 
     selection = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();

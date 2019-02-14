@@ -11,19 +11,20 @@ import {
     Optional,
     Input
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxSummaryOperand, IGridDataBindable } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -72,7 +73,8 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     protected _expandChildren = false;
 
     constructor(
-        public gridSelection: IgxGridSelectionService,
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -88,7 +90,8 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
-            gridSelection,
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,

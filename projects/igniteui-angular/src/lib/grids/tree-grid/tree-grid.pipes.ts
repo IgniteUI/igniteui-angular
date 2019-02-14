@@ -24,7 +24,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
-        const grid = this.gridAPI.get(id);
+        const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
 
@@ -137,7 +137,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     public transform(collection: ITreeGridRecord[], id: string,
         expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
+        const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const data: ITreeGridRecord[] = [];
 
         grid.processedRootRecords = collection;
@@ -156,7 +156,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         if (!collection || !collection.length) {
             return;
         }
-        const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
+        const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         for (let i = 0; i < collection.length; i++) {
             const hierarchicalRecord = collection[i];
@@ -200,7 +200,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         id: string,
         pipeTrigger: number): ITreeGridRecord[] {
-        const grid = this.gridAPI.get(id);
+        const grid = this.gridAPI.grid;
 
         let result: ITreeGridRecord[];
         if (!expressions.length) {
@@ -238,7 +238,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     }
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
-        const grid = this.gridAPI.get(id);
+        const grid = this.gridAPI.grid;
         if (!grid.paging) {
             return collection;
         }
@@ -272,7 +272,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
+        const grid: IgxTreeGridComponent = this.gridAPI.grid;
         if (collection && grid.transactions.enabled) {
             const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
             if (aggregatedChanges.length > 0) {

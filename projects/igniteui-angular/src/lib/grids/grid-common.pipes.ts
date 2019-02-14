@@ -28,7 +28,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
-        const grid: IgxGridBaseComponent = this.gridAPI.get(id);
+        const grid: IgxGridBaseComponent = this.gridAPI.grid;
 
         if (collection && grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(

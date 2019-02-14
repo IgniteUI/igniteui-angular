@@ -1,10 +1,11 @@
-import { IgxGridCellComponent, GridBaseAPIService } from '../grid';
+import { IgxGridCellComponent } from '../cell.component';
+import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
-     OnInit, AfterViewInit, forwardRef, HostListener } from '@angular/core';
+     OnInit, AfterViewInit, forwardRef, HostListener, NgZone } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -16,12 +17,15 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     protected hSelection;
     protected _rootGrid;
     constructor(
-        protected gridSelection: IgxGridSelectionService,
+        protected selectionService: IgxGridSelectionService,
+        protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
         public selection: IgxHierarchicalSelectionAPIService,
         public cdr: ChangeDetectorRef,
-        private helement: ElementRef) {
-            super(gridSelection, gridAPI, selection, cdr, helement);
+        private helement: ElementRef,
+        protected zone: NgZone,
+        ) {
+            super(selectionService, crudService, gridAPI, selection, cdr, helement, zone);
             this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 
@@ -37,7 +41,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         return currGrid;
     }
     protected _saveCellSelection(newSelection?: Set<any>) {
-        super._saveCellSelection(newSelection);
         if (!newSelection) {
             this.hSelection.add_sub_item(this._rootGrid.id, this.grid.id, this);
 
@@ -66,29 +69,29 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         return  super.isCellSelected() && isSelected;
     }
 
+    // TODO: Refactor
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        if (event.altKey) {
-            const grid = this.gridAPI.get(this.grid.id);
-            const state = this.gridAPI.get(this.grid.id).hierarchicalState;
-            const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
-            const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
-            if (collapse) {
-                grid.hierarchicalState = state.filter(v => {
-                    return v.rowID !== this.row.rowID;
-                });
-            } else if (expand) {
-                state.push({ rowID: this.row.rowID });
-                grid.hierarchicalState = [...state];
-            }
-            return;
-        }
+        // const key = event.key.toLowerCase();
+        // if (event.altKey) {
+        //     const grid = this.gridAPI.get(this.grid.id);
+        //     const state = this.gridAPI.get(this.grid.id).hierarchicalState;
+        //     const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+        //     const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
+        //     if (collapse) {
+        //         grid.hierarchicalState = state.filter(v => {
+        //             return v.rowID !== this.row.rowID;
+        //         });
+        //     } else if (expand) {
+        //         state.push({ rowID: this.row.rowID });
+        //         grid.hierarchicalState = [...state];
+        //     }
+        //     return;
+        // }
         super.dispatchEvent(event);
     }
 
     protected _clearCellSelection() {
-        super._clearCellSelection();
         const sel = this.hSelection.get_sub_item(this._rootGrid.id);
         if (sel) {
             let selectedGrid = sel.cell.grid;

@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
@@ -12,6 +11,8 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
+// import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
+// import { TitleCasePipe } from '@angular/common';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
 
@@ -39,8 +40,8 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private filterPipe = new IgxGridFilterConditionPipe();
-    private titlecasePipe = new TitleCasePipe();
+    // private filterPipe = new IgxGridFilterConditionPipe();
+    // private titlecasePipe = new TitleCasePipe();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
@@ -52,7 +53,9 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
+    grid: IgxGridBaseComponent;
+
+    constructor(private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -73,10 +76,6 @@ export class IgxFilteringService implements OnDestroy {
 
     public get unpinnedColumns() {
         return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
-    }
-
-    public get grid(): IgxGridBaseComponent & IGridDataBindable {
-        return this.gridAPI.get(this.gridId);
     }
 
     public get datePipe(): IgxDatePipeComponent {
@@ -331,7 +330,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public get sortedData() {
-        const sortData = new IgxGridSortingPipe(this.gridAPI)
+        const sortData = new IgxGridSortingPipe((this.grid as any).gridAPI)
             .transform(this.grid.data, this.grid.sortingExpressions, this.gridId, 0);
         return sortData;
     }

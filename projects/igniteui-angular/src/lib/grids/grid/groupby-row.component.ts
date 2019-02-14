@@ -170,12 +170,10 @@ export class IgxGridGroupByRowComponent {
         const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
         if (isVirtualized) {
-            this.grid.verticalScrollContainer.onChunkLoad
-            .pipe(first())
-            .subscribe(() => {
-                const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
-                if (groupRow) { groupRow.focus(); }
-            });
+            const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
+            if (groupRow) {
+                groupRow.focus();
+            }
         }
     }
 
@@ -241,7 +239,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**

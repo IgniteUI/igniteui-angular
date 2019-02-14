@@ -110,8 +110,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
+    // TODO: Refactor
     get parentGrid(): IgxHierarchicalGridComponent {
-        return this.gridAPI.get(this.parentGridID);
+        return this.gridAPI.grid; // get(this.parentGridID);
     }
 
     @HostBinding('attr.data-level')
@@ -143,7 +144,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     ngOnInit() {
         // setting child data only once on init
         // due to context change issues when moving cached views containing hierarchical child grids
-        this.hGrid.data = this.rowData.childGridData;
+        this.hGrid.data = this.rowData.childGridsData[this.layout.key];
         this.layout.onLayoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });

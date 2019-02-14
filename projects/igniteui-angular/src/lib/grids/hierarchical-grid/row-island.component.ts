@@ -5,7 +5,6 @@ import {
     ContentChildren,
     Input,
     QueryList,
-    forwardRef,
     OnInit,
     Inject,
     ElementRef,
@@ -21,9 +20,9 @@ import {
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridComponent, GridBaseAPIService, IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid';
+import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
+import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -33,7 +32,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
@@ -171,11 +170,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
      * @hidden
      */
     public rootGrid = null;
+    readonly data: any[];
+    readonly filteredData: any[];
     private layout_id = `igx-row-island-`;
     private isInit = false;
 
     constructor(
-        public gridSelection: IgxGridSelectionService,
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -191,7 +193,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
-            gridSelection,
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -256,7 +259,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
-        this.hgridAPI.unset(this.id);
+        // this.hgridAPI.unset(this.id);
     }
 
     /**

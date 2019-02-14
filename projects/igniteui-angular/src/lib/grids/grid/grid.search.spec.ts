@@ -760,13 +760,13 @@ describe('IgxGrid - search API', () => {
                 const cell = grid.getCellByColumn(ind, 'HireDate');
                 const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
                 const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-                const cellChildren = cell.nativeElement.children;
+                const cellChildren = cell.nativeElement.children as HTMLCollection;
 
                 // Check whether search does not change the cell's value
                 expect(cellChildren.length).toBe(2);
                 expect(cell.nativeElement.innerText.trim()).toBe(cell.value);
-                expect(cellChildren[0].hidden).toBeTruthy();
-                expect(cellChildren[1].hidden).toBeFalsy();
+                expect((cellChildren[0] as HTMLElement).hidden).toBeTruthy();
+                expect((cellChildren[1] as HTMLElement).hidden).toBeFalsy();
 
                 expect(highlights.length).toBe(1);
                 if (ind === 1) {
@@ -774,7 +774,7 @@ describe('IgxGrid - search API', () => {
                 } else {
                     expect(activeHighlight).toBeNull();
                 }
-                expect(highlights[0].innerText).toEqual('12');
+                expect((highlights[0] as HTMLElement).innerText).toEqual('12');
             });
         });
     });
@@ -1261,7 +1261,7 @@ describe('IgxGrid - search API', () => {
 
             let cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
             expect(cell.children.length).toBe(1);
-            let image = cell.querySelector('.cell__inner, .avatar-cell');
+            let image = cell.querySelector('.cell__inner, .avatar-cell') as HTMLElement;
             expect(image.hidden).toBeFalsy();
 
             grid.columns[1].pinned = false;

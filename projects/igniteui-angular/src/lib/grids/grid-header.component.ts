@@ -138,11 +138,11 @@ export class IgxGridHeaderComponent implements DoCheck {
     }
 
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     protected getSortDirection() {
-        const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
+        const expr = this.gridAPI.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
     }
 

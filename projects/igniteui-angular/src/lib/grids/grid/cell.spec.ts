@@ -181,26 +181,32 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
 
                 rv.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                fixture.detectChanges();
                 await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+                fixture.detectChanges();
                 await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                fixture.detectChanges();
                 await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+                fixture.detectChanges();
                 await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+                fixture.detectChanges();
                 await wait(DEBOUNCETIME);
                 expect(cell.inEditMode).toBe(false);
             }));
@@ -214,6 +220,7 @@ describe('IgxGrid - Cell component', () => {
 
                 fixture.detectChanges();
                 cellDomPK.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
                 expect(cell.inEditMode).toBe(true);
 
@@ -235,6 +242,7 @@ describe('IgxGrid - Cell component', () => {
                 const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
                 expect(cell.inEditMode).toBe(true);
@@ -243,10 +251,11 @@ describe('IgxGrid - Cell component', () => {
 
                 UIInteractions.sendInput(editTemplate, 0.3698);
                 await wait();
+                fixture.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
-
                 fixture.detectChanges();
+
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(0.3698);
                 expect(editTemplate.nativeElement.type).toBe('number');
@@ -259,11 +268,13 @@ describe('IgxGrid - Cell component', () => {
                 let editValue = 'some696';
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
 
                 const editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, editValue);
+                fixture.detectChanges();
                 await wait();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -273,15 +284,17 @@ describe('IgxGrid - Cell component', () => {
                 expect(parseFloat(cell.value)).toBe(expectedValue);
 
                 cellDomNumber.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
                 editValue = '';
                 UIInteractions.sendInput(editTemplate, editValue);
+                fixture.detectChanges();
                 await wait();
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
-
                 fixture.detectChanges();
+
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
             }));
@@ -292,6 +305,7 @@ describe('IgxGrid - Cell component', () => {
 
                 cellDomBoolean.triggerEventHandler('dblclick', {});
                 await wait();
+                fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(true);
 
@@ -301,11 +315,12 @@ describe('IgxGrid - Cell component', () => {
 
                 editTemplate.nativeElement.click();
                 await wait();
+                fixture.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomBoolean.nativeElement, true);
                 await wait(DEBOUNCETIME);
-
                 fixture.detectChanges();
+
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(false);
             }));
@@ -316,6 +331,7 @@ describe('IgxGrid - Cell component', () => {
                 const selectedDate = new Date('04/12/2017');
 
                 cellDomDate.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
                 expect(cell.inEditMode).toBe(true);
@@ -324,12 +340,13 @@ describe('IgxGrid - Cell component', () => {
 
                 datePicker.selectDate(selectedDate);
                 await wait();
+                fixture.detectChanges();
 
                 expect(datePicker.value).toBe(selectedDate);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
                 await wait(DEBOUNCETIME);
-
                 fixture.detectChanges();
+
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
@@ -341,16 +358,18 @@ describe('IgxGrid - Cell component', () => {
 
                 cellDom.triggerEventHandler('dblclick', {});
                 await wait();
+                fixture.detectChanges();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
+                fixture.detectChanges();
 
                 grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
-                cell.gridAPI.clear_filter(cell.gridID, 'fullName');
+                cell.gridAPI.clear_filter('fullName');
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(false);
@@ -366,12 +385,14 @@ describe('IgxGrid - Cell component', () => {
                 const previousCell = grid.getCellByColumn(0, 'birthday');
 
                 cellDomPK.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, 9);
                 await wait();
+                fixture.detectChanges();
 
                 expect (() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
             }));
@@ -381,17 +402,19 @@ describe('IgxGrid - Cell component', () => {
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 cellDom.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
+                fixture.detectChanges();
 
                 grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
-                expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
             }));
 
             it('should update correct cell when sorting is applied', (async () => {
@@ -401,6 +424,7 @@ describe('IgxGrid - Cell component', () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 cellDom.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
                 await wait();
 
                 const editTemplate = cellDom.query(By.css('input'));
@@ -408,14 +432,15 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.editValue).toBe('Tom Riddle');
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
+                fixture.detectChanges();
 
-                expect(cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue).toBe('Rick Gilmore');
+                expect(cell.gridAPI.get_cell_inEditMode().editValue).toBe('Rick Gilmore');
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
                 fixture.detectChanges();
                 expect(cell.value).toBe('Rick Gilmore');
-                expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
             }));
         });
 
@@ -496,7 +521,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait();
                 fixture.detectChanges();
 
-                let editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+                let editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).id;
                 expect(editableCellId.columnID).toBe(editCellID.columnID);
                 expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                 expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -508,7 +533,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait(100);
                 fixture.detectChanges();
 
-                editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+                editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).id;
                 expect(editableCellId.columnID).toBe(editCellID.columnID);
                 expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                 expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
