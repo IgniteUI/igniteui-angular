@@ -52,6 +52,11 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
+    /**
+     * @internal @hidden
+     * Exclude the position strategy target for outside clicks
+     */
+    excludePositionTarget?: boolean;
 }
 
 export interface OverlayEventArgs {
