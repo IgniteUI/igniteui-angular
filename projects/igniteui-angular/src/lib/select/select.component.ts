@@ -77,6 +77,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public allowItemsFocus = false;
 
+    private _overlayDefaults: OverlaySettings;
+
     private _value: any;
     /**
      * An @Input property that sets the input value.
@@ -249,24 +251,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (!this.selectedItem) {
             this.navigateFirst();
         }
-        if (overlaySettings) {
-            super.open(overlaySettings);
-            return;
-        }
-        if (this.overlaySettings) {
-            super.open(this.overlaySettings);
-        } else {
-            super.open({
-                modal: false,
-                closeOnOutsideClick: true,
-                positionStrategy: new SelectPositioningStrategy(this),
-                scrollStrategy: new AbsoluteScrollStrategy(),
-            });
-        }
+
+        super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
     }
 
     /** @hidden @internal */
     ngAfterContentInit() {
+        this._overlayDefaults = {
+            modal: false,
+            closeOnOutsideClick: true,
+            positionStrategy: new SelectPositioningStrategy(this, { target: this.inputGroup.element.nativeElement }),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            excludePositionTarget: true
+        };
         this.children.changes.subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
