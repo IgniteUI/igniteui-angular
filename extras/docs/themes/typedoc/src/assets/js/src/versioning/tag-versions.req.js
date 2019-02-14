@@ -1,5 +1,5 @@
 (function () {
-    const baseUrl = $('body').data('base-url');
+    let baseUrl = $('body').data('base-url');
     const versionsJson = $('body').data('api-versions-json');
 
     $.ajax({
@@ -9,29 +9,30 @@
         xhrFields: {
             withCredentials: false
         }
-    }).done((data) =>  {
+    }).done(function (data) {
         let folders = data.folders;
-        const select = $('#versions')
-        const lastVersion = folders.slice(-1)[0];
+        const select = $('#versions');
 
         folders = folders.reverse();
-        folders.forEach(f => {
+
+        baseUrl += "/products/ignite-ui-angular/docs/";
+        folders.forEach(function (f) {
             select.append($('<option>', {
-                value: `${baseUrl}/angular-docs/${f}/typescript`,
+                value: baseUrl + f + "/typescript",
                 text: f
             }));
         });
 
-        select.val(`${baseUrl}/angular-docs/${lastVersion}/typescript`);
-
-        if (sessionStorage.apiVersion) {
-            select.val(sessionStorage.apiVersion);
+        const version = folders.filter(function(v){ return window.location.href.indexOf(v) >= 0;})[0];
+        if (version) {
+            select.val(baseUrl + version + "/typescript");
+        } else {
+            select.val(baseUrl + folders[0] + "/typescript");
         }
     });
 
-    $('#versions').on('change', (...rest) => {
+    $('#versions').on('change', function () {
         const val = $('#versions').val();
-        sessionStorage.apiVersion = val;
         window.location.assign(val);
     });
 })();

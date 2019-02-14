@@ -10,6 +10,7 @@ import {
 import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
 
 describe('IgxToggle', () => {
     configureTestSuite();
@@ -62,20 +63,22 @@ describe('IgxToggle', () => {
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
     });
 
-    it('should emit \'onOpened\' event', fakeAsync(() => {
+    it('should emit \'onOpening\' and \'onOpened\' events', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
         const toggle = fixture.componentInstance.toggle;
+        spyOn(toggle.onOpening, 'emit');
         spyOn(toggle.onOpened, 'emit');
         toggle.open();
         tick();
         fixture.detectChanges();
 
+        expect(toggle.onOpening.emit).toHaveBeenCalled();
         expect(toggle.onOpened.emit).toHaveBeenCalled();
     }));
 
-    it('should emit \'onClosed\' event', fakeAsync(() => {
+    it('should emit \'onClosing\' and \'onClosed\' events', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
@@ -84,11 +87,13 @@ describe('IgxToggle', () => {
         tick();
         fixture.detectChanges();
 
+        spyOn(toggle.onClosing, 'emit');
         spyOn(toggle.onClosed, 'emit');
         toggle.close();
         tick();
         fixture.detectChanges();
 
+        expect(toggle.onClosing.emit).toHaveBeenCalled();
         expect(toggle.onClosed.emit).toHaveBeenCalled();
     }));
 
@@ -165,20 +170,24 @@ describe('IgxToggle', () => {
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         const toggle = fixture.componentInstance.toggle;
         const p = fixture.debugElement.query(By.css('p'));
+        spyOn(toggle.onOpening, 'emit');
         spyOn(toggle.onOpened, 'emit');
 
         fixture.componentInstance.toggleAction.onClick();
         tick();
+        expect(toggle.onOpening.emit).toHaveBeenCalled();
         expect(toggle.onOpened.emit).toHaveBeenCalled();
 
         expect(fixture.componentInstance.toggle.collapsed).toBe(false);
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBe(true);
+        spyOn(toggle.onClosing, 'emit');
         spyOn(toggle.onClosed, 'emit');
 
         p.nativeElement.click();
         tick();
         fixture.detectChanges();
 
+        expect(toggle.onClosing.emit).toHaveBeenCalled();
         expect(toggle.onClosed.emit).toHaveBeenCalled();
     }));
 
@@ -230,7 +239,7 @@ describe('IgxToggle', () => {
         spyOn(toggle.onClosing, 'emit').and.callThrough();
         spyOn(toggle.onClosed, 'emit').and.callThrough();
 
-        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+        toggle.onClosing.pipe(first()).subscribe((e: CancelableEventArgs) => e.cancel = true);
 
         toggle.open();
         fixture.detectChanges();
@@ -245,6 +254,10 @@ describe('IgxToggle', () => {
 
         expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+
+        toggle.close();
+        fixture.detectChanges();
+        tick();
 
         toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
         toggle.open();
@@ -266,8 +279,8 @@ describe('IgxToggle', () => {
 
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         button = fixture.componentInstance.button2.nativeElement;
         button.click();
@@ -275,8 +288,8 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         button = fixture.componentInstance.button3.nativeElement;
         button.click();
@@ -285,8 +298,8 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
     }));
 
     it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
@@ -305,20 +318,20 @@ describe('IgxToggle', () => {
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         document.documentElement.scrollTop += 100;
         document.dispatchEvent(new Event('scroll'));
@@ -327,20 +340,73 @@ describe('IgxToggle', () => {
         toggle = fixture.debugElement.query(By.css('#toggle1'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
-        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+    }));
+
+    it('fix for #3810 - Should not open toggle when already opened', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        spyOn(toggle.onOpening, 'emit');
+        spyOn(toggle.onOpened, 'emit');
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+    }));
+
+    it('fix for #3810 - Should not close toggle when not open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        spyOn(toggle.onOpening, 'emit');
+        spyOn(toggle.onOpened, 'emit');
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+        spyOn(toggle.onClosing, 'emit');
+        spyOn(toggle.onClosed, 'emit');
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
     describe('overlay settings', () => {
@@ -354,7 +420,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
 
             fixture.componentInstance.toggleAction.onClick();
@@ -376,7 +443,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
 
             // defaults
@@ -410,7 +478,8 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                excludePositionTarget: true
             };
             fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
             fixture.detectChanges();
@@ -467,7 +536,8 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
-                outlet: jasmine.any(IgxOverlayOutletDirective)
+                outlet: jasmine.any(IgxOverlayOutletDirective),
+                excludePositionTarget: true
             };
 
             fixture.componentInstance.toggleAction.onClick();
