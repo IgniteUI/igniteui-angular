@@ -226,7 +226,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private _show(info: OverlayInfo) {
-        const eventArgs: OverlayCancelableEventArgs = { id, componentRef: info.componentRef, cancel: false };
+        const eventArgs: OverlayCancelableEventArgs = { id: info.id, componentRef: info.componentRef, cancel: false };
         this.onOpening.emit(eventArgs);
         if (eventArgs.cancel) {
             if (info.componentRef) {
