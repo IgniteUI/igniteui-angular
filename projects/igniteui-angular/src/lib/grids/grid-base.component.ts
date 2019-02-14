@@ -28,8 +28,8 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isEdge, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
-import { DataType, DataUtil } from '../data-operations/data-util';
+import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects } from '../core/utils';
+import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -69,7 +69,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
-import { IgxGridSelectionService, GridSelectionRange } from '../core/grid-selection';
+import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -405,7 +405,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this._perPage = val;
         this.page = 0;
-        this.endEdit(true);
+        this.crudService.commit();
+        // this.endEdit(true);
     }
 
     /**
@@ -442,7 +443,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set columnHiding(value) {
         if (this._columnHiding !== value) {
             this._columnHiding = value;
-            if (this.gridAPI.get(this.id)) {
+            if (this.gridAPI.grid) {
                 this.markForCheck();
                 if (this._ngAfterViewInitPaassed) {
                     this.calculateGridSizes();
@@ -474,7 +475,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
-        if (this.gridAPI.get(this.id)) {
+        if (this.gridAPI.grid) {
 
             // should selection persist?
             this.allRowsSelected = false;
@@ -505,7 +506,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     */
     set rowEditable(val: boolean) {
         this._rowEditable = val;
-        if (this.gridAPI.get(this.id)) {
+        if (this.gridAPI.grid) {
             this.refreshGridState();
         }
     }
@@ -686,7 +687,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Input()
     set isLoading(value: boolean) {
         this._isLoading = value;
-        if (this.gridAPI.get(this.id)) {
+        if (this.gridAPI.grid) {
             this.markForCheck();
         }
     }
@@ -763,7 +764,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set columnPinning(value) {
         if (this._columnPinning !== value) {
             this._columnPinning = value;
-            if (this.gridAPI.get(this.id)) {
+            if (this.gridAPI.grid) {
                 this.markForCheck();
                 if (this._ngAfterViewInitPaassed) {
                     this.calculateGridSizes();
@@ -818,7 +819,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.filteringService.filteredColumn = null;
 
             this.filteringService.registerSVGIcons();
-            if (this.gridAPI.get(this.id)) {
+            if (this.gridAPI.grid) {
                 this.markForCheck();
             }
         }
@@ -846,7 +847,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set summaryPosition(value) {
         this._summaryPosition = value;
-        if (this.gridAPI.get(this.id)) {
+        if (this.gridAPI.grid) {
             this.markForCheck();
         }
     }
@@ -873,7 +874,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
-        if (this.gridAPI.get(this.id)) {
+        if (this.gridAPI.grid) {
             this.summaryService.resetSummaryHeight();
             this.endEdit(true);
             this.calculateGridHeight();
@@ -1579,8 +1580,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
-        const editRowState = this.gridAPI.get_edit_row_state(this.id);
-        return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.rowID) : null;
+        const editRowState = this.crudService.row;
+        return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
     }
 
     /**
@@ -2096,11 +2097,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public calcRowCheckboxWidth: number;
+    public calcRowCheckboxWidth = 0;
     /**
      * @hidden
      */
-    public calcHeight: number;
+    public calcHeight = 0;
     /**
      * @hidden
      */
@@ -2118,11 +2119,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public draggedColumn: IgxColumnComponent;
-
-    /**
-     * @hidden
-     */
-    public eventBus = new Subject<boolean>();
 
     /**
      * @hidden
@@ -2145,10 +2141,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         matchInfoCache: []
     };
 
+    abstract data: any[];
+    abstract filteredData: any[];
+    // abstract dataLength;
+
     /**
      * @hidden
      */
-    protected destroy$ = new Subject<boolean>();
+    protected destroy$ = new Subject<any>();
 
     /**
      * @hidden
@@ -2297,7 +2297,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     constructor(
-        public gridSelection: IgxGridSelectionService,
+        public selectionService: IgxGridSelectionService,
+        public crudService: IgxGridCRUDService,
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
@@ -2319,30 +2320,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         };
     }
 
-    /**
-     * @hidden
-     */
-    public ngOnInit() {
+    _setupServices() {
+        this.crudService.grid = this;
         this.navigation.grid = this;
-        this.filteringService.gridId = this.id;
+        this.filteringService.grid = this;
         this.summaryService.grid = this;
-        this.columnListDiffer = this.differs.find([]).create(null);
-        this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
-        this.calcHeight = 0;
-        this.calcRowCheckboxWidth = 0;
+    }
 
-        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+    _setupListeners() {
+        const destructor = takeUntil(this.destroy$);
+
+        this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
+        this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
-        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.endEdit(true);
-        });
-        this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => { this.endEdit(true); this.gridSelection.clear(); });
-        this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
@@ -2354,6 +2346,54 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
         });
+
+        this.onFilteringDone.pipe(destructor).subscribe(() => this.endEdit(true));
+        this.onPagingDone.pipe(destructor).subscribe(() => { this.endEdit(true); this.selectionService.clear(); });
+        this.onSortingDone.pipe(destructor).subscribe(() => this.endEdit(true));
+
+        this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
+        this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
+    }
+
+    // TODO: Refactor
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        // this.gridAPI.grid = this;
+
+        // this.crudService.grid = this;
+        this._setupServices();
+        this._setupListeners();
+        // this.navigation.grid = this;
+        // this.filteringService.gridId = this.id;
+        // this.summaryService.grid = this;
+        this.columnListDiffer = this.differs.find([]).create(null);
+        this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
+
+        // this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
+        // this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+        //     this.summaryService.deleteOperation = true;
+        //     this.summaryService.clearSummaryCache(args);
+        // });
+        // this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        // this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        //     this.endEdit(true);
+        // });
+        // this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        // this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => { this.endEdit(true); this.selectionService.clear(); });
+        // this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        // this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        //     this.summaryService.clearSummaryCache();
+        //     this._pipeTrigger++;
+        //     this.markForCheck();
+        //     if (this.transactions.getAggregatedChanges(false).length === 0) {
+        //         // Needs better check, calling 'transactions.clear()' will also trigger this
+        //         if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+        //             this.page--;
+        //         }
+        //     }
+        // });
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
     }
@@ -2390,10 +2430,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.calculateGridSizes();
 
                         // Clear Filtering
-                        this.gridAPI.clear_filter(this.id, record.item.field);
+                        this.gridAPI.clear_filter(record.item.field);
 
                         // Clear Sorting
-                        this.gridAPI.clear_sort(this.id, record.item.field);
+                        this.gridAPI.clear_sort(record.item.field);
                     });
                 });
             }
@@ -2405,6 +2445,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngAfterContentInit() {
+        this.gridAPI.grid = this;
         this.setupColumns();
     }
 
@@ -2496,7 +2537,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
         this.destroy$.next(true);
         this.destroy$.complete();
-        this.gridAPI.unset(this.id);
     }
 
     /**
@@ -2940,7 +2980,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
 
-        this.gridAPI.submit_value(this.id);
+        this.gridAPI.submit_value();
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget, position);
         }
@@ -3031,13 +3071,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public markForCheck() {
-        if (this.rowList) {
-            this.rowList.forEach((row) => row.cdr.markForCheck());
-        }
+        // if (this.rowList) {
+        //     this.rowList.forEach((row) => row.cdr.markForCheck());
+        // }
 
-        if (this.filterCellList) {
-            this.filterCellList.forEach((c) => c.cdr.markForCheck());
-        }
+        // if (this.filterCellList) {
+        //     this.filterCellList.forEach((c) => c.cdr.markForCheck());
+        // }
 
         this.cdr.detectChanges();
     }
@@ -3054,7 +3094,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param data
      * @memberof IgxGridBaseComponent
      */
-    public addRow(data: any, parentID?: any): void {
+    public addRow(data: any): void {
         this.gridAPI.addRowToData(this.id, data);
 
         this.onRowAdded.emit({ data });
@@ -3080,7 +3120,67 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any) {
-       this.gridAPI.deleteRowById(this.id, rowId);
+        let index: number;
+        if (this.crudService.inEditMode) {
+            this.crudService.commit();
+        }
+        const data = this.gridAPI.get_all_data();
+        if (this.primaryKey) {
+            index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
+        } else {
+            index = data.indexOf(rowId);
+        }
+        const state: State = this.transactions.getState(rowId);
+        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
+
+        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
+        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
+        //  Otherwise just exit - there is nothing to delete
+        if (index !== -1 || hasRowInNonDeletedState) {
+            // Always exit edit when row is deleted
+            this.endEdit(true);
+        } else {
+            return;
+        }
+
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+        this.onRowDeleted.emit({ data: data[index] });
+
+        //  first deselect row then delete it
+        if (this.rowSelectable && this.selection.is_item_selected(this.id, rowId)) {
+            this.deselectRows([rowId]);
+        } else {
+            this.checkHeaderCheckboxStatus();
+        }
+
+        this.deleteRowFromData(rowId, index);
+        this._pipeTrigger++;
+        this.cdr.markForCheck();
+        // Data needs to be recalculated if transactions are in place
+        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
+        const dataAfterDelete = this.transactions.enabled ? this.dataWithAddedInTransactionRows : data;
+        if (dataAfterDelete.length % this.perPage === 0 && dataAfterDelete.length / this.perPage - 1 < this.page && this.page !== 0) {
+            this.page--;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        if (index !== -1) {
+            if (this.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                this.transactions.add(transaction, this.data[index]);
+            } else {
+                this.data.splice(index, 1);
+            }
+        } else {
+            const state: State = this.transactions.getState(rowID);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+        }
     }
 
     /**
@@ -3095,19 +3195,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public updateCell(value: any, rowSelector: any, column: string): void {
-        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+        if (this.isDefined(this.primaryKey)) {
             const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
             if (columnEdit.length > 0) {
-                const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                const gridEditState = this.gridAPI.create_grid_edit_args(this.id, rowSelector, columnId, value);
-                this.gridAPI.update_cell(this.id, rowSelector, columnId, value, gridEditState);
-                if (editableCell && editableCell.cellID.rowID === rowSelector &&
-                    editableCell.cellID.columnID === columnId) {
-                    if (gridEditState.args.cancel) {
+                const col = columnEdit[0];
+                const editableCell = new IgxCell({ rowID: rowSelector, columnID: col.index }, -1, col, value, value, {});
+
+                // const gridEditState = this.gridAPI.create_grid_edit_args(this.id, rowSelector, columnId, value);
+                const state = this.gridAPI.update_cell(editableCell);
+                if (editableCell && editableCell.id.rowID === rowSelector &&
+                    editableCell.id.columnID === col.index) {
+                    if (state.args.cancel) {
                         return;
                     }
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                    this.gridAPI.escape_editMode();
                 }
                 this.cdr.markForCheck();
             }
@@ -3129,11 +3230,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+            // const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+            const editableCell = this.crudService.cell;
+            if (editableCell && editableCell.id.rowID === rowSelector) {
+                this.gridAPI.escape_editMode();
             }
-            this.gridAPI.update_row(value, this.id, rowSelector);
+            // TODO
+            this.gridAPI.update_row(value, new IgxRow(rowSelector, -1, {}));
             this.cdr.markForCheck();
         }
     }
@@ -3171,7 +3274,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
+        const col = this.gridAPI.get_column_by_name(name);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         if (conditionOrExpressionTree) {
@@ -3255,13 +3358,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public clearFilter(name?: string) {
         if (name) {
-            const column = this.gridAPI.get_column_by_name(this.id, name);
+            const column = this.gridAPI.get_column_by_name(name);
             if (!column) {
                 return;
             }
         }
 
-        this.gridAPI.clear_filter(this.id, name);
+        this.gridAPI.clear_filter(name);
     }
 
     /**
@@ -3278,10 +3381,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.sortingExpressions = [];
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+        if (!this.gridAPI.get_column_by_name(name)) {
             return;
         }
-        this.gridAPI.clear_sort(this.id, name);
+        this.gridAPI.clear_sort(name);
     }
 
     /**
@@ -3847,7 +3950,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
-        const column = this.gridAPI.get_column_by_name(this.id, fieldName);
+        const column = this.gridAPI.get_column_by_name(fieldName);
         if (column) {
             column.hasSummary = hasSummary;
             if (summaryOperand) {
@@ -3908,7 +4011,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected autogenerateColumns() {
-        const data = this.gridAPI.get_all_data(this.id);
+        const data = this.gridAPI.get_all_data();
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];
@@ -3984,7 +4087,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             event.checked ?
                 filteredData ?
                     this.selection.add_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.gridAPI.get_all_data(this.id, true), this.primaryKey) :
+                    this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey) :
                 filteredData ?
                     this.selection.delete_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
                     this.selection.get_empty();
@@ -4145,7 +4248,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.gridAPI.get_all_data(this.id, true), this.primaryKey));
+        this.triggerRowSelectionChange(this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey));
     }
 
     /**
@@ -4160,41 +4263,43 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     clearCellSelection() {
-        this.gridSelection.clear();
+        this.selectionService.clear();
         this.cdr.markForCheck();
     }
 
     dragScroll(dir: DragScrollDirection): void {
         this.wheelHandler();
-        const scrollDelta = 32;
+        const scrollDelta = 48;
+        const horizontal = this.parentVirtDir.getHorizontalScroll();
+        const vertical = this.verticalScrollContainer.getVerticalScroll();
         switch (dir) {
             case DragScrollDirection.LEFT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
+                horizontal.scrollLeft -= scrollDelta;
                 break;
             case DragScrollDirection.RIGHT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
+                horizontal.scrollLeft += scrollDelta;
                 break;
             case DragScrollDirection.TOP:
-                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                vertical.scrollTop -= scrollDelta;
                 break;
             case DragScrollDirection.BOTTOM:
-                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                vertical.scrollTop += scrollDelta;
                 break;
             case DragScrollDirection.BOTTOMLEFT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
-                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                horizontal.scrollLeft -= scrollDelta;
+                vertical.scrollTop += scrollDelta;
                 break;
             case DragScrollDirection.BOTTOMRIGHT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
-                this.verticalScrollContainer.getVerticalScroll().scrollTop += scrollDelta;
+                horizontal.scrollLeft += scrollDelta;
+                vertical.scrollTop += scrollDelta;
                 break;
             case DragScrollDirection.TOPLEFT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft -= scrollDelta;
-                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                horizontal.scrollLeft -= scrollDelta;
+                vertical.scrollTop -= scrollDelta;
                 break;
             case DragScrollDirection.TOPRIGHT:
-                this.parentVirtDir.getHorizontalScroll().scrollLeft += scrollDelta;
-                this.verticalScrollContainer.getVerticalScroll().scrollTop -= scrollDelta;
+                horizontal.scrollLeft += scrollDelta;
+                vertical.scrollTop -= scrollDelta;
                 break;
             default:
                 return;
@@ -4207,7 +4312,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined) {
         if (!this.isDefined(arg)) {
-            this.gridSelection.clear();
+            this.selectionService.clear();
             this.cdr.markForCheck();
             return;
         }
@@ -4232,14 +4337,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const startNode =  { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
         const endNode =  { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
 
-        this.gridSelection.pointerState.node = startNode;
-        this.gridSelection.dragSelect(endNode, this.gridSelection.pointerState);
-        this.gridSelection.addRangeMeta(endNode, this.gridSelection.pointerState);
-        this.gridSelection.initPointerState();
+        this.selectionService.pointerState.node = startNode;
+        this.selectionService.dragSelect(endNode, this.selectionService.pointerState);
+        this.selectionService.addRangeMeta(endNode, this.selectionService.pointerState);
+        this.selectionService.initPointerState();
     }
 
     getSelectedRanges() {
-        return this.gridSelection.ranges;
+        const r = this.selectionService.ranges;
+        console.log(r);
+        return r;
     }
 
     extractDataFromSelection(source: any[]) {
@@ -4247,7 +4354,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let record = {};
 
         const selectedData = [];
-        const selectionMap = Array.from(this.gridSelection.selection)
+        const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
         const visibleColumns = this.visibleColumns.sort((a, b) => a.visibleIndex - b.visibleIndex);
 
@@ -4329,9 +4436,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return 0;
         }
 
-        const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
+        // const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
+        const editModeCell = this.crudService.cell;
         if (editModeCell) {
-            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.cellID.rowIndex, editModeCell.cellID.columnID);
+            const editCell = this.gridAPI.get_cell_by_index(this.id, editModeCell.id.rowIndex, editModeCell.id.columnID);
             if (editCell) {
                 editCell.inEditMode = false;
             } else {
@@ -4586,25 +4694,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
-    private checkIfGridIsAdded(node): boolean {
-        if (node === this.nativeElement) {
-            return true;
-        }
-
-
-        if (!node.childNodes) {
-            return false;
-        }
-
-        for (const childNode of node.childNodes) {
-            const added = this.checkIfGridIsAdded(childNode);
-            if (added) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @hidden
      */
@@ -4639,25 +4728,34 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
  * @hidden
  */
-    public startRowEdit(cell: {
-        rowID: any,
-        columnID: any,
-        rowIndex: any
-    }) {
-        const args: IGridEditEventArgs = {
-            rowID: cell.rowID,
-            oldValue: this.gridAPI.get_row_by_key(this.id, cell.rowID).rowData,
-            cancel: false
-        };
-        this.onRowEditEnter.emit(args);
-        if (args.cancel) {
-            return;
-        }
-        const rowState = { rowID: cell.rowID, rowIndex: cell.rowIndex };
-        this.gridAPI.set_edit_row_state(this.id, rowState);
-        this._currentRowState = this.transactions.getAggregatedValue(args.rowID, true);
-        this.transactions.startPending();
-        this.configureRowEditingOverlay(cell.rowID);
+// TODO
+    // public startRowEdit(cell: {
+    //     rowID: any,
+    //     columnID: any,
+    //     rowIndex: any
+    // }) {
+    //     const args: IGridEditEventArgs = {
+    //         rowID: cell.rowID,
+    //         oldValue: this.gridAPI.get_row_by_key(this.id, cell.rowID).rowData,
+    //         cancel: false
+    //     };
+    //     this.onRowEditEnter.emit(args);
+    //     if (args.cancel) {
+    //         return;
+    //     }
+    //     const rowState = { rowID: cell.rowID, rowIndex: cell.rowIndex };
+    //     this.gridAPI.set_edit_row_state(this.id, rowState);
+    //     this._currentRowState = this.transactions.getAggregatedValue(args.rowID, true);
+    //     this.transactions.startPending();
+        // this.configureRowEditingOverlay(cell.rowID);
+        // this.rowEditingOverlay.open(this.rowEditSettings);
+        // this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
+        // this._wheelListener = this.rowEditingWheelHandler.bind(this);
+        // this.rowEditingOverlay.element.addEventListener('wheel', this._wheelListener);
+    // }
+
+    openRowOverlay(id) {
+        this.configureRowEditingOverlay(id);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this._wheelListener = this.rowEditingWheelHandler.bind(this);
@@ -4668,7 +4766,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public closeRowEditingOverlay() {
-        this.gridAPI.set_edit_row_state(this.id, null);
+        // this.gridAPI.set_edit_row_state(this.id, null);
         this.rowEditingOverlay.element.removeEventListener('wheel', this._wheelListener);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
@@ -4719,15 +4817,40 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get rowChangesCount() {
-        if (!this.rowInEditMode) {
+        if (!this.crudService.row) {
             return 0;
         }
-        const rowChanges = this.transactions.getAggregatedValue(this.rowInEditMode.rowID, false);
+        const rowChanges = this.transactions.getAggregatedValue(this.crudService.row.id, false);
         return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
     protected writeToData(rowIndex: number, value: any) {
-        mergeObjects(this.gridAPI.get_all_data(this.id)[rowIndex], value);
+        mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
+    }
+
+    endRowTransaction(commit: boolean, row: IgxRow) {
+        const transactionValue = this.transactions.getAggregatedValue(row.id, true);
+        const data = this.gridAPI.get_all_data();
+        const rowIndex = this.gridAPI.get_row_index_in_data(row.id);
+        const newValue = transactionValue ? transactionValue : this.gridAPI.get_all_data()[rowIndex];
+        const oldValue = { ...this.gridAPI.get_all_data()[rowIndex], ...this.crudService.rowState };
+        const state = this.gridAPI.build_edit_args(this.crudService.cell);
+        Object.assign(state.args, {
+            newValue,
+            oldValue,
+            rowID: row.id
+        });
+        if (!commit) {
+            this.onRowEditCancel.emit(state.args);
+            this.transactions.endPending(commit);
+        } else {
+            this.gridAPI.update_row(state.args.newValue, row);
+        }
+        if (state.args.cancel) {
+            this.transactions.startPending();
+            return;
+        }
+        this.closeRowEditingOverlay();
     }
 
     /**
@@ -4735,42 +4858,46 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
 
-    private endRowTransaction(commit: boolean, rowID: any, rowObject: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
-        const valueInTransactions = this.transactions.getAggregatedValue(rowID, true);
-        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowID);  // Get actual index in data
-        const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data(this.id)[rowIndex];
-        const oldValue = Object.assign(
-            {},
-            this.gridAPI.get_all_data(this.id)[rowIndex],
-            this._currentRowState
-        );
-        // if (this.transactions.enabled) {
-        // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-        //     const lastCommitedValue = // Last commited value (w/o pending)
-        //         this.transactions.getState(rowID) ? Object.assign({}, this.transactions.getState(rowID).value) : null;
-        //     oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
-        // }
-        const currentGridState = this.gridAPI.create_grid_edit_args(this.id, rowID,
-            null,
-            newValue);
-        const emitArgs = currentGridState.args;
-        Object.assign(emitArgs, {
-            oldValue,
-            rowID,
-        });
-        if (!commit) {
-            this.onRowEditCancel.emit(emitArgs);
-            this.transactions.endPending(commit);
-        } else {
-            this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
-        }
-        if (emitArgs.cancel) {
-            this.transactions.startPending();
-            return;
-        }
-        this.closeRowEditingOverlay();
-    }
+    // private endRowTransaction(commit: boolean, rowID: any, rowObject: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    //     const valueInTransactions = this.transactions.getAggregatedValue(rowID, true);
+    //     const rowIndex = this.gridAPI.get_row_index_in_data(rowID);  // Get actual index in data
+    //     const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data()[rowIndex];
+    //     const oldValue = Object.assign(
+    //         {},
+    //         this.gridAPI.get_all_data()[rowIndex],
+    //         this.crudService.rowState
+    //         // this._currentRowState
+    //     );
+    //     // if (this.transactions.enabled) {
+    //     // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
+    //     //     const lastCommitedValue = // Last commited value (w/o pending)
+    //     //         this.transactions.getState(rowID) ? Object.assign({}, this.transactions.getState(rowID).value) : null;
+    //     //     oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
+    //     // }
+    //     // const currentGridState = this.gridAPI.create_grid_edit_args(this.id, rowID,
+    //     //     null,
+    //     //     newValue);
+    //     const currentGridState = this.gridAPI.build_edit_args(this.crudService.cell);
+    //     const emitArgs = currentGridState.args;
+    //     Object.assign(emitArgs, {
+    //         newValue,
+    //         oldValue,
+    //         rowID,
+    //     });
+    //     if (!commit) {
+    //         this.onRowEditCancel.emit(emitArgs);
+    //         this.transactions.endPending(commit);
+    //     } else {
+    //         this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
+    //     }
+    //     if (emitArgs.cancel) {
+    //         this.transactions.startPending();
+    //         return;
+    //     }
+    //     this.closeRowEditingOverlay();
+    // }
 
+    // TODO: Refactor
     /**
      * Finishes the row transactions on the current row.
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
@@ -4782,23 +4909,39 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param commit
      */
     public endEdit(commit = true, event?: Event) {
-        const row = this.gridAPI.get_edit_row_state(this.id);
-        const cell = this.gridAPI.get_cell_inEditMode(this.id);
-        const rowObj = row ? this.getRowByKey(row.rowID) : null;
+        //
+        // commit ? this.crudService.commit() : this.crudService.end();
+        const row = this.crudService.row;
+        const cell = this.crudService.cell;
+        if (!cell) {
+            return;
+        }
+        // const rowObj = row ? this.getRowByKey(row.id) : null;
+
+        // const row = this.gridAPI.get_edit_row_state(this.id);
+
+
 
         if (commit) {
-            this.gridAPI.submit_value(this.id);
+            // this.crudService.commit();
+            cell.castToNumber();
+            this.gridAPI.submit_value();
         } else {
-            this.gridAPI.escape_editMode(this.id);
+            this.gridAPI.escape_editMode();
         }
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
             return;
         }
-        this.endRowTransaction(commit, row.rowID, rowObj);
-        const currentCell = (row && cell) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cell.cellID.columnID) : null;
+        this.crudService.cell = cell;
+        this.endRowTransaction(commit, row);
+
+        const currentCell = (row && cell) ? this.gridAPI.get_cell_by_index(this.id, row.index, cell.id.columnID) : null;
         if (currentCell && event) {
             currentCell.nativeElement.focus();
         }
+
+        this.crudService.cell = null;
+        this.crudService.row = null;
     }
     /**
      * @hidden
@@ -4815,7 +4958,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get dataWithAddedInTransactionRows() {
-        const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
+        const result = <any>cloneArray(this.gridAPI.get_all_data());
         if (this.transactions.enabled) {
             result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
@@ -4825,8 +4968,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return result;
     }
 
-    protected get dataLength() {
-        return this.gridAPI.get_all_data(this.id, this.transactions.enabled).length;
+    public get dataLength() {
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data().length;
     }
 
     /**

@@ -24,16 +24,16 @@ import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService, HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
+import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { mergeObjects } from '../../core/utils';
 
 let NEXT_ID = 0;
 
@@ -58,7 +58,9 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxGridSelectionService, IgxTreeGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [
+        IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
+        { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
@@ -78,11 +80,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         return this._id;
     }
     public set id(value: string) {
-        if (this._id !== value) {
-            const oldId = this._id;
-            this._id = value;
-            this._gridAPI.reset(oldId, this._id);
-        }
+        this._id = value;
     }
 
     /**
@@ -299,7 +297,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     private _filteredData = null;
 
     constructor(
-        gridSelection: IgxGridSelectionService,
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
@@ -314,13 +313,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         filteringService: IgxFilteringService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(gridSelection, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+            super(selectionService, crudService, gridAPI, selection,
+                _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
     public ngOnInit() {
-        this._gridAPI.register(this);
         super.ngOnInit();
     }
 

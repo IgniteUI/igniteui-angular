@@ -191,12 +191,12 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.grid) {
                 this.grid.endEdit(true);
             }
-            const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (cellInEditMode) {
-                if (cellInEditMode.cell.column.field === this.field) {
-                    this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
-                }
-            }
+            // const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
+            // if (cellInEditMode) {
+            //     if (cellInEditMode.cell.column.field === this.field) {
+            //         this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
+            //     }
+            // }
             this.check();
             if (this.grid) {
                 this.grid.refreshSearch(true);
@@ -572,7 +572,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get grid(): IgxGridBaseComponent {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
     /**
      * Returns a reference to the `bodyTemplate`.

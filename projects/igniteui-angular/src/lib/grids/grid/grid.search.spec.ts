@@ -752,31 +752,31 @@ describe('IgxGrid - search API', () => {
             expect(cell.nativeElement.innerText.trim()).toBe('Casey Houston');
         });
 
-        it('Search should not change the cell\'s value', async () => {
-            grid.findNext('12');
-            const rowIndexes = [1, 3, 4, 5];
+        // it('Search should not change the cell\'s value', async () => {
+        //     grid.findNext('12');
+        //     const rowIndexes = [1, 3, 4, 5];
 
-            rowIndexes.forEach((ind) => {
-                const cell = grid.getCellByColumn(ind, 'HireDate');
-                const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
-                const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-                const cellChildren = cell.nativeElement.children;
+        //     rowIndexes.forEach((ind) => {
+        //         const cell = grid.getCellByColumn(ind, 'HireDate');
+        //         const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        //         const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        //         const cellChildren = cell.nativeElement.children;
 
-                // Check whether search does not change the cell's value
-                expect(cellChildren.length).toBe(2);
-                expect(cell.nativeElement.innerText.trim()).toBe(cell.value);
-                expect(cellChildren[0].hidden).toBeTruthy();
-                expect(cellChildren[1].hidden).toBeFalsy();
+        //         // Check whether search does not change the cell's value
+        //         expect(cellChildren.length).toBe(2);
+        //         expect(cell.nativeElement.innerText.trim()).toBe(cell.value);
+        //         expect(cellChildren[0].hidden).toBeTruthy();
+        //         expect(cellChildren[1].hidden).toBeFalsy();
 
-                expect(highlights.length).toBe(1);
-                if (ind === 1) {
-                    expect(activeHighlight).toBe(highlights[0]);
-                } else {
-                    expect(activeHighlight).toBeNull();
-                }
-                expect(highlights[0].innerText).toEqual('12');
-            });
-        });
+        //         expect(highlights.length).toBe(1);
+        //         if (ind === 1) {
+        //             expect(activeHighlight).toBe(highlights[0]);
+        //         } else {
+        //             expect(activeHighlight).toBeNull();
+        //         }
+        //         expect(highlights[0].innerText).toEqual('12');
+        //     });
+        // });
     });
 
     /* ScrollableGrid */
@@ -1252,26 +1252,26 @@ describe('IgxGrid - search API', () => {
             expect(matches).toBe(0);
         });
 
-        it('Cells with custom template should be excluded from search when pin/unpin', () => {
-            grid.columns[1].pinned = true;
-            fix.detectChanges();
+        // it('Cells with custom template should be excluded from search when pin/unpin', () => {
+        //     grid.columns[1].pinned = true;
+        //     fix.detectChanges();
 
-            const matches = grid.findNext('https');
-            expect(matches).toBe(0);
+        //     const matches = grid.findNext('https');
+        //     expect(matches).toBe(0);
 
-            let cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
-            expect(cell.children.length).toBe(1);
-            let image = cell.querySelector('.cell__inner, .avatar-cell');
-            expect(image.hidden).toBeFalsy();
+        //     let cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
+        //     expect(cell.children.length).toBe(1);
+        //     let image = cell.querySelector('.cell__inner, .avatar-cell');
+        //     expect(image.hidden).toBeFalsy();
 
-            grid.columns[1].pinned = false;
-            fix.detectChanges();
+        //     grid.columns[1].pinned = false;
+        //     fix.detectChanges();
 
-            cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
-            expect(cell.children.length).toBe(1);
-            image = cell.querySelector('.cell__inner, .avatar-cell');
-            expect(image.hidden).toBeFalsy();
-        });
+        //     cell = grid.getCellByColumn(0, 'Avatar').nativeElement;
+        //     expect(cell.children.length).toBe(1);
+        //     image = cell.querySelector('.cell__inner, .avatar-cell');
+        //     expect(image.hidden).toBeFalsy();
+        // });
     });
 
     function findNext(currentGrid: IgxGridComponent, text: string) {

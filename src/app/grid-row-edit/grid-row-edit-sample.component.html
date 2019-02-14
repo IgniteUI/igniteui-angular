@@ -18,7 +18,7 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                        <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue"
                             style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
@@ -109,7 +109,7 @@
                         [hidden]="hideFlag" [dataType]="'string'" editable="true"></igx-column>
                     <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                            <input name="units" [(ngModel)]="cell.editValue"
                                 style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
@@ -128,7 +128,7 @@
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
                         [hasSummary]="summaryFlag" editable="true" [sortable]="true">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                            <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue"
                                 style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
@@ -183,7 +183,7 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                        <input name="units" [(ngModel)]="cell.editValue"
                             style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
@@ -196,7 +196,7 @@
                     editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                        <input name="units" [(ngModel)]="cell.editValue"
                             style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>

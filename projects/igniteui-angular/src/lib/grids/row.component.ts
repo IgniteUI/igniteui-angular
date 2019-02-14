@@ -19,6 +19,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -163,10 +164,11 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
     }
 
+    // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.gridAPI.get_edit_row_state(this.gridID);
-            return (editRowState && editRowState.rowID === this.rowID) || false;
+            const editRowState = this.crudService.row; // this.gridAPI.get_edit_row_state(this.gridID);
+            return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
         }
@@ -190,7 +192,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * ```
      */
     get grid(): T {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -232,6 +234,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     protected _rowSelection = false;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
+        public crudService: IgxGridCRUDService,
+        public selectionService: IgxGridSelectionService,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
@@ -258,11 +262,16 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * ```
      */
     public update(value: any) {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell && editableCell.cellID.rowID === this.rowID) {
-            this.grid.endEdit(false);
+        const crudService = this.crudService;
+        if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
+            crudService.end();
         }
-        this.gridAPI.update_row(value, this.gridID, this.rowID);
+        // const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        // if (editableCell && editableCell.cellID.rowID === this.rowID) {
+        //     this.grid.endEdit(false);
+        // }
+        const model = new IgxRow(this.rowID, this.index, this.rowData);
+        this.gridAPI.update_row(value, model);
         this.cdr.markForCheck();
     }
 

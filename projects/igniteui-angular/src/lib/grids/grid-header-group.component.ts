@@ -116,7 +116,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**

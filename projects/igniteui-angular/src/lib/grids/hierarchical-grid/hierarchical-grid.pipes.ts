@@ -26,7 +26,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         if (childKeys.length === 0) {
             return collection;
         }
-        const grid: IgxHierarchicalGridComponent = this.gridAPI.get(id);
+        const grid: IgxHierarchicalGridComponent = this.gridAPI.grid;
         const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys);
 
         return result;
@@ -61,7 +61,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
     public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
 
-        if (!this.gridAPI.get(id).paging) {
+        if (!this.gridAPI.grid.paging) {
             return collection;
         }
 
@@ -71,7 +71,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
         };
 
         const result: any[] = DataUtil.page(cloneArray(collection), state);
-        this.gridAPI.get(id).pagingState = state;
+        this.gridAPI.grid.pagingState = state;
         return result;
     }
 }

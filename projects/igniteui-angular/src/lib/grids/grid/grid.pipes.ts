@@ -26,7 +26,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], id: string, pipeTrigger: number): any[] {
-        const grid = this.gridAPI.get(id);
+        const grid = this.gridAPI.grid;
         let result: any[];
 
         if (!expressions.length) {
@@ -59,7 +59,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
         id: string, pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
-        const grid: IgxGridComponent = this.gridAPI.get(id);
+        const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
 
         if (!state.expressions.length) {
@@ -95,7 +95,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
         id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
-        const grid: IgxGridComponent = this.gridAPI.get(id);
+        const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
 
         if (!state.expressions.length) {
@@ -125,7 +125,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
-        if (!this.gridAPI.get(id).paging) {
+        if (!this.gridAPI.grid.paging) {
             return collection;
         }
 
@@ -138,7 +138,7 @@ export class IgxGridPagingPipe implements PipeTransform {
             data: DataUtil.page(cloneArray(collection.data), state),
             metadata: DataUtil.page(cloneArray(collection.metadata), state)
         };
-        this.gridAPI.get(id).pagingState = state;
+        this.gridAPI.grid.pagingState = state;
         return result;
     }
 }
@@ -156,7 +156,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number) {
-        const grid = this.gridAPI.get(id);
+        const grid = this.gridAPI.grid;
         const state = { expressionsTree: expressionsTree };
 
         if (!state.expressionsTree ||

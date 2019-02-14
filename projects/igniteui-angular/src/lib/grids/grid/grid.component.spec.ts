@@ -2488,7 +2488,7 @@ describe('IgxGrid Component Tests', () => {
                 grid.recalculateSummaries();
 
                 // get the summaries for a particular column
-                const summaries = targetCell.gridAPI.get_summary_data(targetCell.gridID);
+                const summaries = targetCell.gridAPI.get_summary_data();
                 // const earliestDate = summaries.get('OrderDate')[1].summaryResult.toLocaleDateString();
 
                 // expect(earliestDate).toEqual(newDate);
@@ -2620,7 +2620,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
                 tick();
                 fix.detectChanges();
-                expect(gridAPI.get_cell_inEditMode(grid.id)).toBeTruthy(); // check if there is cell in edit mode
+                expect(gridAPI.get_cell_inEditMode()).toBeTruthy(); // check if there is cell in edit mode
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
                 targetCell.column.hidden = true;

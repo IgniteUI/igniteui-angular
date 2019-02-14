@@ -9,68 +9,68 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy(id: string, expression: IGroupingExpression): void {
-        const groupingState = cloneArray(this.get(id).groupingExpressions);
-        const sortingState = cloneArray(this.get(id).sortingExpressions);
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
         this.prepare_sorting_expression([sortingState, groupingState], expression);
-        this.get(id).groupingExpressions = groupingState;
-        this.arrange_sorting_expressions(id);
+        this.grid.groupingExpressions = groupingState;
+        this.arrange_sorting_expressions();
     }
 
     public groupBy_multiple(id: string, expressions: IGroupingExpression[]): void {
-        const groupingState = cloneArray(this.get(id).groupingExpressions);
-        const sortingState = cloneArray(this.get(id).sortingExpressions);
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
 
         for (const each of expressions) {
             this.prepare_sorting_expression([sortingState, groupingState], each);
         }
 
-        this.get(id).groupingExpressions = groupingState;
-        this.arrange_sorting_expressions(id);
+        this.grid.groupingExpressions = groupingState;
+        this.arrange_sorting_expressions();
     }
 
     public clear_groupby(id: string, name?: string | Array<string>) {
-        const groupingState = cloneArray(this.get(id).groupingExpressions);
-        const sortingState = cloneArray(this.get(id).sortingExpressions);
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
 
         if (name) {
             const names = typeof name === 'string' ? [ name ] : name;
             const groupedCols = groupingState.filter((state) => names.indexOf(state.fieldName) < 0);
             const newSortingExpr = sortingState.filter((state) => names.indexOf(state.fieldName) < 0);
-            this.get(id).groupingExpressions = groupedCols;
-            this.get(id).sortingExpressions = newSortingExpr;
+            this.grid.groupingExpressions = groupedCols;
+            this.grid.sortingExpressions = newSortingExpr;
             names.forEach((colName) => {
                 const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
-                const grpExpandState = this.get(id).groupingExpansionState;
+                const grpExpandState = this.grid.groupingExpansionState;
                 /* remove expansion states related to the cleared group
                 and all with deeper hierarchy than the cleared group */
-                this.get(id).groupingExpansionState = grpExpandState
+                this.grid.groupingExpansionState = grpExpandState
                     .filter((val) => {
                         return val.hierarchy && val.hierarchy.length <= grExprIndex;
                     });
             });
         } else {
             // clear all
-            this.get(id).groupingExpressions = [];
-            this.get(id).groupingExpansionState = [];
+            this.grid.groupingExpressions = [];
+            this.grid.groupingExpansionState = [];
             for (const grExpr of groupingState) {
                 const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
                 if (sortExprIndex > -1) {
                     sortingState.splice(sortExprIndex, 1);
                 }
             }
-            this.get(id).sortingExpressions = sortingState;
+            this.grid.sortingExpressions = sortingState;
         }
     }
 
-    public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
-        const grState = this.get(id).groupingExpansionState;
+    public groupBy_get_expanded_for_group(groupRow: IGroupByRecord): IGroupByExpandState {
+        const grState = this.grid.groupingExpansionState;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
             DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
     }
 
-    public groupBy_is_row_in_group(id: string, groupRow: IGroupByRecord, rowID): boolean {
-        const grid = this.get(id);
+    public groupBy_is_row_in_group(groupRow: IGroupByRecord, rowID): boolean {
+        const grid = this.grid;
         let rowInGroup = false;
         groupRow.records.forEach(row => {
             if (grid.primaryKey ? row[grid.primaryKey] === rowID : row === rowID) {
@@ -81,7 +81,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
     }
 
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
-        const grid = this.get(id);
+        const grid = this.grid;
         const expansionState = grid.groupingExpansionState;
         let toggleRowEditingOverlay: boolean;
         let isEditRowInGroup = false;
@@ -89,9 +89,9 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             const rowState = this.get_edit_row_state(id);
 
             // Toggle only row editing overlays that are inside current expanded/collapsed group.
-            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(id, groupRow, this.get_edit_row_state(id).rowID) : false;
+            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(groupRow, this.get_edit_row_state(id).rowID) : false;
         }
-        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
         if (state) {
             state.expanded = !state.expanded;
             if (isEditRowInGroup) {
@@ -106,23 +106,23 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
                 toggleRowEditingOverlay = false;
             }
         }
-        this.get(id).groupingExpansionState = expansionState;
+        this.grid.groupingExpansionState = expansionState;
         if (grid.rowEditable) {
             grid.repositionRowEditingOverlay(grid.rowInEditMode);
         }
     }
 
-    protected remove_grouping_expression(id, fieldName) {
-        const groupingExpressions = this.get(id).groupingExpressions;
+    protected remove_grouping_expression(fieldName) {
+        const groupingExpressions = this.grid.groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
         if (index !== -1) {
             groupingExpressions.splice(index, 1);
         }
     }
 
-    public arrange_sorting_expressions(id) {
-        const groupingState = this.get(id).groupingExpressions;
-        this.get(id).sortingExpressions.sort((a, b) => {
+    public arrange_sorting_expressions() {
+        const groupingState = this.grid.groupingExpressions;
+        this.grid.sortingExpressions.sort((a, b) => {
             const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
             const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
             if (groupExprA && groupExprB) {

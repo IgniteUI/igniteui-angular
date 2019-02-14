@@ -110,8 +110,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
+    // TODO: Refactor
     get parentGrid(): IgxHierarchicalGridComponent {
-        return this.gridAPI.get(this.parentGridID);
+        return this.gridAPI.grid; // get(this.parentGridID);
     }
 
     @HostBinding('attr.data-level')

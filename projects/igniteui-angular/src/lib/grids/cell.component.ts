@@ -1,5 +1,4 @@
 ﻿import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -7,20 +6,21 @@
     HostBinding,
     HostListener,
     Input,
-    OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    NgZone,
+    OnInit,
+    OnDestroy
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { getNodeSizeViaRange, KEYS } from '../core/utils';
+import { getNodeSizeViaRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
-import { first } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridSelectionService, ISelectionNode } from '../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 
 const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
                                 'home', 'end', 'space', 'spacebar', ' ']);
@@ -40,12 +40,11 @@ const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 
  * ```
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
-    preserveWhitespaces: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit {
+export class IgxGridCellComponent implements OnInit, OnDestroy {
 
     /**
      * Gets the column of the cell.
@@ -192,7 +191,7 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -230,16 +229,16 @@ export class IgxGridCellComponent implements OnInit {
         return this.column.visibleIndex;
     }
 
-    /**
-     * Gets the `index` of the unpinned column in which the cell is stored.
-     * ```typescript
-     * let unpinnedColumnIndex = this.cell.ununpinnedColumnIndex;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get unpinnedColumnIndex(): number {
-        return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
-    }
+    // /**
+    //  * Gets the `index` of the unpinned column in which the cell is stored.
+    //  * ```typescript
+    //  * let unpinnedColumnIndex = this.cell.ununpinnedColumnIndex;
+    //  * ```
+    //  * @memberof IgxGridCellComponent
+    //  */
+    // get unpinnedColumnIndex(): number {
+    //     return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
+    // }
 
     /**
      * Gets the ID of the cell.
@@ -272,33 +271,9 @@ export class IgxGridCellComponent implements OnInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get inEditMode(): boolean {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        return editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
-                              this.cellID.columnID === editableCell.cellID.columnID : false;
-    }
 
-    /**
-     * Enables/disables the edit mode of the cell
-     * ```typescript
-     * this.cell.inEditMode = true;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    set inEditMode(value: boolean) {
-        if (this.row.deleted) {
-            return;
-        }
-        if (this.column.editable && value) {
-            this.focused = true;
-            this.gridAPI.set_cell_inEditMode(this.gridID, this);
-            this.editValue = this.value;
-        } else {
-            this.gridAPI.escape_editMode(this.gridID, this.cellID);
-        }
-        this.cdr.detectChanges();
-        this.grid.cdr.markForCheck();
-    }
+    @Input()
+    inEditMode = false;
 
     /**
      * Sets/get the `tabindex` property of the cell.
@@ -386,16 +361,16 @@ export class IgxGridCellComponent implements OnInit {
         return this.column.getCellWidth();
     }
 
-    /**
-     * Gets whether the cell is stored in a pinned column.
-     * ```typescript
-     * let isPinned = this.cell.isPinned;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get isPinned() {
-        return this.column.pinned;
-    }
+    // /**
+    //  * Gets whether the cell is stored in a pinned column.
+    //  * ```typescript
+    //  * let isPinned = this.cell.isPinned;
+    //  * ```
+    //  * @memberof IgxGridCellComponent
+    //  */
+    // get isPinned() {
+    //     return this.column.pinned;
+    // }
 
     /**
      * Gets whether the cell is stored in the last column in the pinned area.
@@ -409,17 +384,17 @@ export class IgxGridCellComponent implements OnInit {
         return pinnedCols[pinnedCols.length - 1] === this.column;
     }
 
-    /**
-     * Gets whether the cell is stored in the last column in the unpinned area.
-     * ```typescript
-     * let isLastUnpinned = this.cell.isLastUnpinned;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
-        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    }
+    // /**
+    //  * Gets whether the cell is stored in the last column in the unpinned area.
+    //  * ```typescript
+    //  * let isLastUnpinned = this.cell.isLastUnpinned;
+    //  * ```
+    //  * @memberof IgxGridCellComponent
+    //  */
+    // get isLastUnpinned() {
+    //     const unpinnedColumns = this.grid.unpinnedColumns;
+    //     return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
+    // }
 
     /**
      * Gets whether the cell is selected.
@@ -494,8 +469,8 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     public set editValue(value) {
-        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
-            this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue = value;
+        if (this.crudService.inEditMode) {
+            this.crudService.cell.editValue = value;
         }
     }
 
@@ -508,122 +483,80 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     public get editValue() {
-        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
-            return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
+        if (this.crudService.inEditMode) {
+            return this.crudService.cell.editValue;
         }
+    }
+
+    get editable(): boolean {
+        return this.column.editable;
     }
 
     public isInCompositionMode = false;
     public focused = false;
     protected isSelected = false;
-    private cellSelectionID: string;
-    private prevCellSelectionID: string;
-    private previousCellEditMode = false;
 
     constructor(
-        protected gridSelection: IgxGridSelectionService,
+        protected selectionService: IgxGridSelectionService,
+        protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
-        private element: ElementRef) { }
+        private element: ElementRef,
+        protected zone: NgZone) { }
+
+
+    ngOnInit() {
+        this.zone.runOutsideAngular(() => {
+            this.nativeElement.addEventListener('pointerdown', this.pointerdown);
+            this.nativeElement.addEventListener('pointerenter', this.pointerenter);
+            this.nativeElement.addEventListener('pointerup', this.pointerup);
+        });
+    }
+
+    ngOnDestroy() {
+        this.zone.runOutsideAngular(() => {
+            this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
+            this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
+            this.nativeElement.removeEventListener('pointerup', this.pointerup);
+        });
+    }
+
+    _updateCRUDStatus() {
+        if (this.editable && this.crudService.inEditMode) {
+            this.crudService.commit();
+            this.crudService.begin(this);
+        } else if (this.crudService.inEditMode) {
+            this.grid.endEdit(true);
+        }
+    }
 
     /**
      * @hidden
      * @internal
      */
-    public _updateCellSelectionStatus(fireFocus = true, event) {
-        const selection = this.gridSelection;
-        const pointerState = this.gridSelection.pointerState;
+    public _updateCellSelectionStatus() {
+        const selection = this.selectionService;
+        const pointerState = this.selectionService.pointerState;
         const keyboardState = selection.keyboardState;
         const node = this.selectionNode;
 
-        // TODO: Refactor this. We won't need the `_clear/saveCellSelection` methods in their current form.
-        if (fireFocus) {
-            this.nativeElement.focus();
-        }
-        if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
-            // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
-            this.grid.endEdit(true);
+        if (this.inEditMode) {
+            return;
         }
 
+        this._updateCRUDStatus();
         keyboardState.lastPassedNode = node;
+
         if (keyboardState.shift) {
             selection.dragSelect(node, keyboardState);
             this.grid.onSelection.emit({ cell: this, event });
-            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, keyboardState));
+            this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, keyboardState));
             return;
         }
         if (!pointerState.ctrl && !pointerState.shift && !selection.dragMode) {
             selection.clear();
             selection.add(node);
-        }
-
-        this._clearCellSelection();
-        // // this._saveCellSelection();
-        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
-        if (hasFilteredResults) {
-            if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
-                this.inEditMode = true;
-            }
-            if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
-                // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
-                this.grid.endEdit(true);
-            }
-        //     this.selected = true;
-        //     if (fireFocus) {
-        //         this.nativeElement.focus();
-        //     } else {
-        //         if (!this.focused) {
-        //             this.focused = this.nativeElement === document.activeElement;
-        //         }
-        //     }
-            this.grid.onSelection.emit({ cell: this, event });
-        }
-    }
-
-    // TODO: Refactor this.
-    protected _clearCellSelection() {
-        const cell = this._getLastSelectedCell();
-        if (cell) {
-            cell.selected = false;
-            cell.focused = false;
-        }
-        const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editCell) {
-            if (editCell.cell.column.field === this.grid.primaryKey) {
-                if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
-                    this.previousCellEditMode = false;
-                } else {
-                    this.previousCellEditMode = true;
-                    this.gridAPI.submit_value(this.gridID);
-                }
-            } else {
-                this.previousCellEditMode = true;
-                this.gridAPI.submit_value(this.gridID);
-            }
-        } else {
-            this.previousCellEditMode = false;
-        }
-        this._saveCellSelection(this.selection.get_empty());
-    }
-
-    // TODO: Refactor. Probably up for deletion
-    protected _saveCellSelection(newSelection?: Set<any>) {
-        const sel = this.selection.get(this.cellSelectionID);
-        if (sel && sel.size > 0) {
-            this.selection.set(this.prevCellSelectionID, sel);
-        }
-        if (!newSelection) {
-            newSelection = this.selection.add_item(this.cellSelectionID, this.cellID);
-        }
-        this.selection.set(this.cellSelectionID, newSelection);
-    }
-
-    // TODO: Refactor
-    protected _getLastSelectedCell() {
-        const cellID = this.selection.first_item(this.cellSelectionID);
-        if (cellID) {
-            return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
     }
 
@@ -635,16 +568,7 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     public isCellSelected() {
-        return this.gridSelection.selected(this.selectionNode);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngOnInit() {
-        this.cellSelectionID = `${this.gridID}-cell`;
-        this.prevCellSelectionID = `${this.gridID}-prev-cell`;
+        return this.selectionService.selected(this.selectionNode);
     }
 
     /**
@@ -655,17 +579,23 @@ export class IgxGridCellComponent implements OnInit {
      * @memberof IgxGridCellComponent
      */
     public update(val: any) {
-        const rowSelector = this.cellID.rowID;
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        const gridEditState = this.gridAPI.create_grid_edit_args(this.gridID, rowSelector, this.cellID.columnID, val);
-        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val, gridEditState);
-        if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
-            && editableCell.cellID.columnID === this.cellID.columnID) {
-            if (gridEditState.args.cancel) {
-                return;
-            }
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+        // const rowSelector = this.cellID.rowID;
+        // const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        // const gridEditState = this.gridAPI.create_grid_edit_args(this.gridID, rowSelector, this.cellID.columnID, val);
+        // this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val, gridEditState);
+        // if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
+        //     && editableCell.cellID.columnID === this.cellID.columnID) {
+        //     if (gridEditState.args.cancel) {
+        //         return;
+        //     }
+        //     this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+        // }
+        if (this.crudService.inEditMode) {
+            this.crudService.end();
         }
+        this.crudService.begin(this);
+        this.crudService.cell.editValue = val;
+        this.crudService.commit();
         this.cdr.markForCheck();
     }
 
@@ -674,17 +604,16 @@ export class IgxGridCellComponent implements OnInit {
      * @hidden
      * @internal
      */
-    @HostListener('pointerdown', ['$event.ctrlKey', '$event.shiftKey'])
-    pointerdown(ctrlKey: boolean, shiftKey: boolean) {
-        const selectionService = this.gridSelection;
+    pointerdown = (event: PointerEvent) => {
+        const selectionService = this.selectionService;
         const pointerState = selectionService.pointerState;
         const node = this.selectionNode;
 
-        pointerState.ctrl = ctrlKey;
-        pointerState.shift = shiftKey;
+        pointerState.ctrl = event.ctrlKey;
+        pointerState.shift = event.shiftKey;
         selectionService.initKeyboardState();
 
-        if (shiftKey) {
+        if (event.shiftKey) {
             if (!pointerState.node) {
                 pointerState.node = node;
             }
@@ -701,11 +630,10 @@ export class IgxGridCellComponent implements OnInit {
      * @hidden
      * @internal
      */
-    @HostListener('pointerenter', ['$event.buttons'])
-    pointerenter(buttons: number) {
-        const selection = this.gridSelection;
+    pointerenter = (event: PointerEvent) => {
+        const selection = this.selectionService;
 
-        selection.dragMode = buttons === 1 ? true : false;
+        selection.dragMode = event.buttons === 1 ? true : false;
         if (!selection.dragMode) {
             return;
         }
@@ -717,25 +645,24 @@ export class IgxGridCellComponent implements OnInit {
      * @hidden
      * @internal
      */
-    @HostListener('pointerup')
-    pointerup() {
+    pointerup = () => {
         const node = this.selectionNode;
-        if (this.gridSelection.dragMode) {
-            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, this.gridSelection.pointerState));
-            this.gridSelection.addRangeMeta(node, this.gridSelection.pointerState);
-            this.gridSelection.dragMode = false;
+        if (this.selectionService.dragMode) {
+            this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, this.selectionService.pointerState));
+            this.selectionService.addRangeMeta(node, this.selectionService.pointerState);
+            this.selectionService.dragMode = false;
             return;
         }
-        if (this.gridSelection.pointerState.shift) {
+        if (this.selectionService.pointerState.shift) {
             this.clearTextSelection();
-            this.grid.onRangeSelection.emit(this.gridSelection.generateRange(node, this.gridSelection.pointerState));
-            this.gridSelection.addRangeMeta(node, this.gridSelection.pointerState);
+            this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, this.selectionService.pointerState));
+            this.selectionService.addRangeMeta(node, this.selectionService.pointerState);
             return;
         }
-        if (!this.gridSelection.pointerState.ctrl) {
-            this.gridSelection.clear();
+        if (!this.selectionService.pointerState.ctrl) {
+            this.selectionService.clear();
         }
-        this.gridSelection.add(node);
+        this.selectionService.add(node);
     }
 
     /**
@@ -755,8 +682,8 @@ export class IgxGridCellComponent implements OnInit {
      */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event: MouseEvent) {
-        if (this.column.editable) {
-            this.inEditMode = true;
+        if (this.editable && !this.inEditMode) {
+            this.crudService.begin(this);
         }
 
         this.grid.onDoubleClick.emit({
@@ -797,7 +724,8 @@ export class IgxGridCellComponent implements OnInit {
     public onFocus(event: FocusEvent) {
         this.focused = true;
         this.row.focused = true;
-        this._updateCellSelectionStatus(false, event);
+        this._updateCellSelectionStatus();
+        this.grid.onSelection.emit({ cell: this, event });
     }
 
     /**
@@ -850,6 +778,7 @@ export class IgxGridCellComponent implements OnInit {
         }
     }
 
+    // TODO: Refactor
     /**
      *
      * @hidden
@@ -866,11 +795,11 @@ export class IgxGridCellComponent implements OnInit {
             return;
         }
 
-        this.gridSelection.keyboardDownShiftKey(node, shift, shift && key === 'tab');
-        if (!this.gridSelection.keyboardState.lastPassedNode) {
-            this.gridSelection.clear();
-        }
-        this.gridSelection.keyboardState.lastPassedNode = node;
+        this.selectionService.keyboardDownShiftKey(node, shift, shift && key === 'tab');
+        // if (!this.selectionService.keyboardState.lastPassedNode) {
+        //     this.selectionService.clear();
+        // }
+        // this.selectionService.keyboardState.lastPassedNode = node;
 
 
         if (key === 'tab') {
@@ -878,21 +807,31 @@ export class IgxGridCellComponent implements OnInit {
             event.stopPropagation();
         }
 
-        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+        if (this.inEditMode) {
             event.stopPropagation();
-        }
-
-        if (this.inEditMode && NAVIGATION_KEYS.has(key)) {
-            const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
-
-            if (column.inlineEditorTemplate === undefined && (
-                (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
-                || column.dataType === DataType.Date)) {
-                event.preventDefault();
+            if (NAVIGATION_KEYS.has(key)) {
+                if (this.column.inlineEditorTemplate) { return; }
+                if (['date', 'boolean'].includes(this.column.dataType)) { return; }
+                // event.preventDefault();
+                return;
             }
-            return;
         }
+
+        // if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+        //     event.stopPropagation();
+        // }
+
+        // if (this.inEditMode && NAVIGATION_KEYS.has(key)) {
+        //     const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        //     const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
+
+        //     if (column.inlineEditorTemplate === undefined && (
+        //         (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+        //         || column.dataType === DataType.Date)) {
+        //         event.preventDefault();
+        //     }
+        //     return;
+        // }
 
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
@@ -989,10 +928,9 @@ export class IgxGridCellComponent implements OnInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
-                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
-                this.inEditMode = true;
+                this.crudService.begin(this);
             }
         }
     }
@@ -1002,21 +940,20 @@ export class IgxGridCellComponent implements OnInit {
      * @internal
      */
     public onKeydownExitEditMode() {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (this.column.editable && editableCell) {
-            const args: IGridEditEventArgs = {
-                cellID: editableCell.cellID,
-                rowID: editableCell.cellID.rowID,
-                oldValue: editableCell.cell.value,
-                newValue: editableCell.cell.editValue,
+        if (this.inEditMode) {
+            const v = this.crudService.cell;
+            const args = {
+                cellID: v.id,
+                rowID: v.id.rowID,
+                oldValue: v.value,
+                newValue: v.editValue,
                 cancel: false
-            };
+            } as IGridEditEventArgs;
             this.grid.onCellEditCancel.emit(args);
             if (args.cancel) {
                 return;
             }
             this.grid.endEdit(false);
-            this.inEditMode = false;
             this.nativeElement.focus();
         }
     }

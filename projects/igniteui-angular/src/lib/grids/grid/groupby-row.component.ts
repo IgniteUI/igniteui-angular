@@ -241,7 +241,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**

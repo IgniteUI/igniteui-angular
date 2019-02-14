@@ -73,8 +73,6 @@ export class IgxRowEditTabStopDirective {
             horizontalScroll.scrollLeft =
             this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(targetIndex));
         } else {
-            targetCell._updateCellSelectionStatus(true, event);
-            targetCell.inEditMode = true;
             targetCell.nativeElement.focus();
         }
     }

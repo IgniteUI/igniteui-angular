@@ -4,7 +4,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, GridSummaryPosition, GridSummaryCalculationMode, IGridDataBindable } from '../grid-base.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxSummaryResult, ISummaryRecord } from '../summaries/grid-summary';
+import { ISummaryRecord } from '../summaries/grid-summary';
 
 /** @hidden */
 @Pipe({
@@ -23,7 +23,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
         id: string, pipeTrigger: number, summaryPipeTrigger: number): any[] {
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
+        const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;

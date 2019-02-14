@@ -36,7 +36,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 let NEXT_ID = 0;
 
@@ -50,6 +50,8 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
@@ -254,7 +256,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollLeft = 0;
 
     constructor(
-        public gridSelection: IgxGridSelectionService,
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -270,7 +273,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
-            gridSelection,
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -292,7 +296,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     ngOnInit() {
-        this.hgridAPI.register(this);
+        // this.hgridAPI.register(this);
         super.ngOnInit();
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
     }

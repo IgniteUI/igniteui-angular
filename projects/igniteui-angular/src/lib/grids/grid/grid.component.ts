@@ -7,7 +7,6 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray } from '../../core/utils';
-import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -19,14 +18,13 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 let NEXT_ID = 0;
 
@@ -58,7 +56,7 @@ export interface IGroupingDoneEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService,
+    providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService, IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService, IgxColumnResizingService
@@ -105,11 +103,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         return this._id;
     }
     public set id(value: string) {
-        if (this._id !== value) {
-            const oldId = this._id;
-            this._id = value;
-            this._gridAPI.reset(oldId, this._id);
-        }
+        this._id = value;
     }
 
     /**
@@ -166,7 +160,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _filteredData = null;
 
     constructor(
-        gridSelection: IgxGridSelectionService,
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
@@ -181,7 +176,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         filteringService: IgxFilteringService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(gridSelection, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+            super(selectionService,
+                  crudService, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                   filteringService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
@@ -218,8 +214,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
-        if (this._gridAPI.get(this.id)) {
-            this._gridAPI.arrange_sorting_expressions(this.id);
+        if (this._gridAPI.grid) {
+            this._gridAPI.arrange_sorting_expressions();
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
@@ -516,7 +512,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.endEdit(true);
-        this._gridAPI.submit_value(this.id);
+        this._gridAPI.submit_value();
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(this.id, expression);
         } else {
@@ -621,7 +617,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
-        return this._gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
+        return this._gridAPI.groupBy_get_expanded_for_group(groupRow);
     }
 
     /**
@@ -821,7 +817,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     public ngOnInit() {
-        this._gridAPI.register(this);
         super.ngOnInit();
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
             this.endEdit(true);
