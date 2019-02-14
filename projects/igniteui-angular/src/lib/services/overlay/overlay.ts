@@ -531,7 +531,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    /** @hidden */
+    /** @hidden @internal */
     public getOverlayById(id: string): OverlayInfo {
         if (!id) {
             return null;
