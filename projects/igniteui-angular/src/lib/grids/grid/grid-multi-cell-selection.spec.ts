@@ -171,6 +171,24 @@ describe('IgxGrid - Multi Cell selection', () => {
         it('Should be able to select range with Shift key when first cell is not visible', (async () => {
             const firstCell = grid.getCellByColumn(1, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const expectedData1 = [
+                { ID: 957, ParentID: 147 },
+                { ID: 317, ParentID: 147 },
+                { ID: 225, ParentID: 847 },
+                { ID: 663, ParentID: 847 },
+                { ID: 15, ParentID: 19 },
+                { ID: 12, ParentID: 17 },
+                { ID: 101, ParentID: 17 }
+            ];
+
+            const expectedData2 = [
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy' },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes' },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson' },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards' },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno' },
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso' }
+            ];
 
             UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             await wait();
@@ -187,15 +205,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             await wait();
             fix.detectChanges();
 
-            const expectedData1 = [
-                { ID: 957, ParentID: 147 },
-                { ID: 317, ParentID: 147 },
-                { ID: 225, ParentID: 847 },
-                { ID: 663, ParentID: 847 },
-                { ID: 15, ParentID: 19 },
-                { ID: 12, ParentID: 17 },
-                { ID: 101, ParentID: 17 }
-            ];
             let range = { rowStart: 1, rowEnd: 7, columnStart: 0, columnEnd: 1 };
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedData()).toEqual(expectedData1);
@@ -209,14 +218,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 2 };
-            const expectedData2 = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy' },
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes' },
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson' },
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards' },
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno' },
-                { ID: 12, ParentID: 17, Name: 'Pedro Afonso' }
-            ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(grid.getSelectedRanges()).toEqual([range]);
@@ -598,7 +599,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(expectedData);
         });
 
-        it('Should add range when columnStart index does not exist', () => {
+        it('Should add range when columnStart and columnEnd indexes do not exist', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 1, rowEnd: 2, columnStart: 5, columnEnd: 10 };
             const expectedData = [
@@ -662,6 +663,20 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedRanges().length).toEqual(0);
             expect(grid.getSelectedData()).toEqual([]);
             HelperUtils.verifyCellSelected(cell, false);
+        });
+
+        it('Should be able to clear the selection when add as parameter empty array', () => {
+            const range = { rowStart: 3, rowEnd: 0, columnStart: 2, columnEnd: 0 };
+            grid.selectRange(range);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 2);
+
+            grid.selectRange([]);
+            fix.detectChanges();
+            expect(grid.getSelectedRanges().length).toEqual(0);
+            expect(grid.getSelectedData()).toEqual([]);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 0, 2, false);
         });
 
         it('Should be able to clear the selection when there are no selected cells', () => {
@@ -950,6 +965,12 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifySelectedRange(grid, 2, 7, 2, 2);
             HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 2, 2);
+
+            const lastCell = grid.getCellByColumn(7, 'Name');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', lastCell.nativeElement, true);
+            await wait(150);
+            fix.detectChanges();
+            HelperUtils.verifyCellSelected(lastCell);
         }));
 
         it('Should handle Shift + Ctrl + Arrow Up keys combination', (async () => {
@@ -1030,6 +1051,12 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifySelectedRange(grid, 0, 3, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 0, 3);
+
+            const lastCell = grid.getCellByColumn(0, 'ID');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', lastCell.nativeElement, true);
+            await wait(150);
+            fix.detectChanges();
+            HelperUtils.verifyCellSelected(lastCell);
         }));
 
         it('Should handle  Shift + Ctrl + End  keys combination', (async () => {
@@ -1197,7 +1224,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifyCellSelected(cell);
 
-            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 2, 10, 1, true);
+            await HelperUtils.navigateVerticallyToIndex(grid, 2, 10, 1, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1215,7 +1242,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 2, 10, 1, 2);
             expect(grid.selectedCells.length).toBe(10);
 
-            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 10, 3, 2, true);
+            await HelperUtils.navigateVerticallyToIndex(grid, 10, 3, 2, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1258,7 +1285,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifyCellSelected(cell);
 
-            await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 2, 8, 0, true);
+            await HelperUtils.navigateVerticallyToIndex(grid, 2, 8, 0, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1277,7 +1304,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 7, 0, 5);
 
-            // await HelperUtils.navigateVerticallyToIndexWithSummaries(grid, 7, 3, 0, true);
+            // await HelperUtils.navigateVerticallyToIndex(grid, 7, 3, 0, true);
             // await wait(50);
             // fix.detectChanges();
 
