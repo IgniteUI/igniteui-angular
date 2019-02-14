@@ -206,7 +206,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.toggle(overlaySettings);
+        if (this.collapsed || this.toggleDirective.isClosing) {
+            this.open(overlaySettings);
+        } else {
+            this.close();
+        }
     }
 
     /**
@@ -248,14 +252,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @hidden
      */
     public onToggleOpened() {
-        this._focusedItem = this.selectedItem;
-        if (this._focusedItem) {
+        if (this.selectedItem) {
+            this._focusedItem = this.selectedItem;
             this._focusedItem.isFocused = true;
         } else if (this.allowItemsFocus) {
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
-            if (firstItemIndex !== -1) {
-                this.navigateItem(firstItemIndex);
-            }
+            this.navigateFirst();
         }
         this.onOpened.emit();
     }
