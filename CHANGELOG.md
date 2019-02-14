@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
     ```html
     <igx-select #select1 [placeholder]="'Pick One'">
         <label igxLabel>Sample Label</label>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+        <igx-select-item *ngFor="let item of items" [value]="item.field">
             {{ item.field }}
         </igx-select-item>
     </igx-select>
