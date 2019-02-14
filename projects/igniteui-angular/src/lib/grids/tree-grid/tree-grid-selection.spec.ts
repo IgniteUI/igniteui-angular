@@ -468,9 +468,9 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells[0].value).toBe(957);
         });
 
-        it('should persist selection after paging', () => {
-            const rows = TreeGridFunctions.getAllRows(fix);
-            const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+        it('should not persist selection after paging', () => {
+            let rows = TreeGridFunctions.getAllRows(fix);
+            let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
@@ -482,6 +482,13 @@ describe('IgxTreeGrid - Selection', () => {
             navigateToFirstPage(fix);
             fix.detectChanges();
 
+            expect(treeGrid.selectedCells.length).toBe(0);
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            fix.detectChanges();
+
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
@@ -490,15 +497,14 @@ describe('IgxTreeGrid - Selection', () => {
             navigateToFirstPage(fix);
             fix.detectChanges();
 
-            expect(treeGrid.selectedCells.length).toBe(1);
-            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
-            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+            expect(treeGrid.selectedCells.length).toBe(0);
         });
 
         it('should persist selection after filtering', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            fix.detectChanges();
 
             treeGrid.filter('ID', '14', IgxStringFilteringOperand.instance().condition('startsWith'), true);
             fix.detectChanges();
@@ -512,7 +518,9 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.filter('ID', '8', IgxStringFilteringOperand.instance().condition('startsWith'), true);
             fix.detectChanges();
 
-            expect(treeGrid.selectedCells.length).toBe(0);
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
         });
 
         it('should persist selection after scrolling', async () => {
@@ -557,7 +565,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
-            expect(treeGrid.selectedCells[0].value).toBe(147);
+            expect(treeGrid.selectedCells[0].value).toBe(847);
         });
 
         it('should persist selection after row delete', () => {
@@ -580,7 +588,9 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.deleteRow(147);
             fix.detectChanges();
 
-            expect(treeGrid.selectedCells.length).toBe(0);
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(19);
         });
 
     });
