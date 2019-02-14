@@ -22,7 +22,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         }
         const key = event.key.toLowerCase();
 
-        if (event.altKey && (key === 'arrowdown' || key === 'arrowup')) {
+        if (event.altKey && (key === 'arrowdown' || key === 'arrowup' || key === 'down' || key === 'up')) {
             this.target.toggle();
             return;
         }
@@ -36,11 +36,13 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                     this.target.open();
                     return;
                 case 'arrowdown':
+                case 'down':
                     this.target.navigateNext();
                     this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
                     return;
                 case 'arrowup':
+                case 'up':
                     this.target.navigatePrev();
                     this.target.selectItem(this.target.focusedItem);
                     event.preventDefault();
