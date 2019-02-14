@@ -1,8 +1,17 @@
 <div class="sample-wrapper">
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
-        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle
-            dropdown</button>
+        <div>
+            <button igxButton="raised" igxRipple (click)="open()" style="display: block">
+                Open dropdown
+            </button>
+            <button igxButton="raised" igxRipple (click)="close()" style="display: block">
+                Close dropdown
+            </button>
+            <button #button igxButton="raised" igxRipple (click)="toggleDropDown()"
+                [igxDropDownItemNavigation]="dropdown1" style="display: block">Toggle
+                dropdown</button>
+        </div>
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
                 [selected]="item.selected">
@@ -40,7 +49,8 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button igxButton="raised" igxRipple [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
+        <button igxButton="raised" igxRipple [igxToggleAction]="group"
+            [igxDropDownItemNavigation]="group">Group</button>
         <igx-drop-down #group (onSelection)="onSelection($event)" height='400px'>
             <igx-drop-down-item-group *ngFor="let foodGroup of foods" [label]="foodGroup.name">
                 <igx-drop-down-item *ngFor="let food of foodGroup.entries" [value]='food.refNo'>

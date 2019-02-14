@@ -214,6 +214,7 @@ describe('IgxTooltip', () => {
 
             tooltipTarget.overlaySettings = /*<OverlaySettings>*/ {
                 closeOnOutsideClick: true,
+                excludePositionTarget: false
             };
             fix.detectChanges();
 
