@@ -82,11 +82,17 @@ import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-col
 import { DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
+import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent, IgxAutocompletePipeStartsWith } from './autocomplete/autocomplete.sample';
+
+
 
 const components = [
     AppComponent,
+    IgxAutocompletePipeStartsWith,
+    AutocompleteSampleComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,
@@ -117,6 +123,7 @@ const components = [
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
+    SelectSampleComponent,
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,

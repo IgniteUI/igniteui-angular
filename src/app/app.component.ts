@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
 
     componentLinks = [
         {
+            link: '/autocomplete',
+            icon: 'view_list',
+            name: 'Autocomplete'
+        },
+        {
             link: '/avatar',
             icon: 'account_circle',
             name: 'Avatar'
@@ -40,7 +45,7 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/banner',
-            icon: 'banner',
+            icon: 'keyboard_arrow_down',
             name: 'Banner'
         },
         {
@@ -97,6 +102,11 @@ export class AppComponent implements OnInit {
             link: '/dropDown',
             icon: 'view_list',
             name: 'DropDown'
+        },
+        {
+            link: '/select',
+            icon: 'arrow_drop_down_circle',
+            name: 'Select'
         },
         {
             link: '/expansionPanel',
@@ -240,7 +250,7 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/radio',
-            icon: 'pol',
+            icon: 'radio_button_checked',
             name: 'Radio Group'
         },
         {
