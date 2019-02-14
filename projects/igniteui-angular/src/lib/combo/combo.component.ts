@@ -892,9 +892,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     onArrowDown(event: Event) {
         event.preventDefault();
         event.stopPropagation();
-        if (this.dropdown.collapsed) {
-            this.toggle();
-        }
+        this.open();
     }
 
     /**
@@ -1052,9 +1050,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (event.key === 'ArrowUp' || event.key === 'Up') {
             event.preventDefault();
             event.stopPropagation();
-            if (!this.dropdown.collapsed) {
-                this.toggle();
-            }
+            this.close();
         }
     }
 
