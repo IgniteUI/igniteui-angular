@@ -83,7 +83,7 @@ export class HelperUtils {
                     return;
                 }
 
-                UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, shift);
+                UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, false, shift);
 
                 if (nextRow) {
                     await wait(40);
@@ -121,7 +121,7 @@ export class HelperUtils {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, shift);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -248,7 +248,7 @@ export class HelperUtils {
         (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, shift, ctrl);
+            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
