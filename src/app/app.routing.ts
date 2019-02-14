@@ -50,6 +50,7 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
+import { SelectSampleComponent } from './select/select.sample';
 
 const appRoutes = [
     {
@@ -72,6 +73,10 @@ const appRoutes = [
     {
         path: 'banner',
         component: BannerSampleComponent
+    },
+    {
+        path: 'select',
+        component: SelectSampleComponent
     },
     {
         path: 'buttons',

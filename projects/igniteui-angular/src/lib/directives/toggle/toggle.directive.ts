@@ -252,9 +252,17 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public toggle(overlaySettings?: OverlaySettings) {
         //  if toggle is collapsed call open
         //  if there is close animation call open
+        if (this.collapsed || this.isClosing) {
+            this.open(overlaySettings);
+        } else {
+            this.close();
+        }
+    }
+
+    /** @hidden @internal */
+    public get isClosing() {
         const info = this.overlayService.getOverlayById(this._overlayId);
-        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
-        (this.collapsed || hasCloseAnimation) ? this.open(overlaySettings) : this.close();
+        return info ? info.closeAnimationPlayer : false;
     }
 
     /**
