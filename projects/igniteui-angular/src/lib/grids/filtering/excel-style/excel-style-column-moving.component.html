@@ -1,15 +1,17 @@
 <header class="igx-typography__overline">Column moving</header>
-<button
-    igxButton
-    [disabled]="canMoveLeft"
-    (click)="onMoveButtonClicked(-1)">
-    <igx-icon>arrow_back</igx-icon>
-    <span>left</span>
-</button>
-<button
-    igxButton
-    [disabled]="canMoveRight"
-    (click)="onMoveButtonClicked(1)">
-    <span>right</span>
-    <igx-icon>arrow_forwards</igx-icon>
-</button>
+<section class="igx-excel-filter__move-buttons">
+    <button
+        igxButton
+        [disabled]="canMoveLeft"
+        (click)="onMoveButtonClicked(-1)">
+        <igx-icon>arrow_back</igx-icon>
+        <span>left</span>
+    </button>
+    <button
+        igxButton
+        [disabled]="canMoveRight"
+        (click)="onMoveButtonClicked(1)">
+        <span>right</span>
+        <igx-icon>arrow_forwards</igx-icon>
+    </button>
+</section>
