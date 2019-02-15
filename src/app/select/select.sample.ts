@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
@@ -50,7 +49,6 @@ export class SelectSampleComponent implements OnInit {
 
     public value: 'opt1';
     public disabledItemValue: 'InsideGroup1';
-    public customOverlaySettings: OverlaySettings;
 
     public ngOnInit() {
         for (let i = 1; i < 10; i ++) {
