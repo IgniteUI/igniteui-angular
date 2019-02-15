@@ -26,6 +26,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
@@ -38,6 +39,8 @@ describe('IgxGrid Component Tests', () => {
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
     const BANNER = 'igx-banner';
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
+    const TBODY_CLASS = '.igx-grid__tbody';
+    const THEAD_CLASS = '.igx-grid__thead';
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite();
@@ -144,8 +147,8 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
-            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
             const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             let gridBodyHeight;
@@ -219,8 +222,8 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
-            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
 
             expect(window.getComputedStyle(gridBody.children[0].nativeElement).width).toEqual(
                 window.getComputedStyle(gridHeader.children[0].nativeElement).width
@@ -234,8 +237,8 @@ describe('IgxGrid Component Tests', () => {
             fixture.detectChanges();
 
             const grid = fixture.componentInstance.grid;
-            const headerHight = fixture.debugElement.query(By.css('.igx-grid__thead')).query(By.css('.igx-grid__tr')).nativeElement;
-            const rowHeight = fixture.debugElement.query(By.css('.igx-grid__tbody')).query(By.css('.igx-grid__tr')).nativeElement;
+            const headerHight = fixture.debugElement.query(By.css(THEAD_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
+            const rowHeight = fixture.debugElement.query(By.css(TBODY_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
             const summaryItemHeigh = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
                 .query(By.css('.igx-grid-summary__item')).nativeElement;
 
@@ -267,7 +270,7 @@ describe('IgxGrid Component Tests', () => {
             fixture.detectChanges();
 
             const grid = fixture.componentInstance.grid;
-            const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
 
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
@@ -304,6 +307,7 @@ describe('IgxGrid Component Tests', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
+                    IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent
                 ],
@@ -633,7 +637,7 @@ describe('IgxGrid Component Tests', () => {
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
-            const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
@@ -645,7 +649,7 @@ describe('IgxGrid Component Tests', () => {
             fix.componentInstance.grid.height = '700px';
             tick();
             fix.detectChanges();
-            const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
@@ -659,7 +663,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
                 tick();
                 fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).not.toBeNull();
                 expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
@@ -674,11 +678,10 @@ describe('IgxGrid Component Tests', () => {
                 fix.componentInstance.density = DisplayDensity.compact;
                 tick();
                 fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
-                expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThan(330);
+                expect(defaultHeightNum).toBe(320);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(fix.componentInstance.grid.rowList.length).toEqual(11);
             }));
@@ -750,6 +753,121 @@ describe('IgxGrid Component Tests', () => {
                     expect(earliestValue).toBe('May 17, 1990');
                 }
             });
+        });
+
+        it('Should calculate default column width when a column has width in %', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[1].width).toEqual('150');
+            expect(grid.columns[2].width).toEqual('150');
+
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            grid.columns[0].width = '70%';
+            fix.detectChanges();
+            await wait(16);
+            // check UI
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+
+            expect(header0.nativeElement.offsetWidth).toEqual(350);
+            expect(header1.nativeElement.offsetWidth).toEqual(136);
+            expect(header2.nativeElement.offsetWidth).toEqual(136);
+            expect(hScroll.nativeElement.hidden).toBe(false);
+
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(350);
+            expect(virtDir.getSizeAt(1)).toEqual(136);
+            expect(virtDir.getSizeAt(2)).toEqual(136);
+        });
+        it('Should re-calculate column width when a column has width in % and grid width changes.', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            expect(hScroll.nativeElement.hidden).toBe(true);
+            grid.columns[0].width = '70%';
+            fix.detectChanges();
+            await wait(16);
+            grid.width = '1000px';
+            fix.detectChanges();
+            await wait(16);
+
+            // check UI
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+            expect(header0.nativeElement.offsetWidth).toEqual(700);
+            expect(header1.nativeElement.offsetWidth).toEqual(150);
+            expect(header2.nativeElement.offsetWidth).toEqual(150);
+
+            expect(hScroll.nativeElement.hidden).toBe(true);
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(700);
+            expect(virtDir.getSizeAt(1)).toEqual(150);
+            expect(virtDir.getSizeAt(2)).toEqual(150);
+        });
+       it('Should calculate column width when a column has width in % and row selectors are enabled.', async() => {
+        const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+        fix.componentInstance.initColumnsRows(5, 3);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+        grid.rowSelectable = true;
+        fix.detectChanges();
+        grid.columns[0].width = '70%';
+
+        fix.detectChanges();
+        await wait(16);
+        // check UI
+        const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+        const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+        const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+        expect(header0.nativeElement.offsetWidth).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(header1.nativeElement.offsetWidth).toEqual(136);
+        expect(header2.nativeElement.offsetWidth).toEqual(136);
+        expect(hScroll.nativeElement.hidden).toBe(false);
+
+        // check virtualization cache is valid
+        const virtDir = grid.getRowByIndex(0).virtDirRow;
+        expect(virtDir.getSizeAt(0)).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(virtDir.getSizeAt(1)).toEqual(136);
+        expect(virtDir.getSizeAt(2)).toEqual(136);
+
+       });
+       it('Should render correct column widths when having mixed width setting - px, %, null', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            const grid = fix.componentInstance.grid;
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            fix.detectChanges();
+            grid.columns[0].width = '50%';
+            grid.columns[1].width = '100px';
+            fix.detectChanges();
+            await wait(16);
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+
+            expect(header0.nativeElement.offsetWidth).toEqual(250);
+            expect(header1.nativeElement.offsetWidth).toEqual(100);
+            expect(header2.nativeElement.offsetWidth).toEqual(150);
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(250);
+            expect(virtDir.getSizeAt(1)).toEqual(100);
+            expect(virtDir.getSizeAt(2)).toEqual(150);
+
         });
     });
 
@@ -1793,11 +1911,12 @@ describe('IgxGrid Component Tests', () => {
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.onFocus({});
-                tick();
+                tick(100);
                 fixture.detectChanges();
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
                 expect(targetCell.focused).toBeTruthy();
-                expect(firstCell.focused).toBeFalsy();
+                expect(targetCell.selected).toBeTruthy();
+                expect(firstCell.selected).toBeFalsy();
             }));
         });
 
@@ -2863,6 +2982,89 @@ describe('IgxGrid Component Tests', () => {
                 expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
                 expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
             }));
+
+            it('Should change pages when the only item on the last page is a pending added row that gets deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.addRow({
+                    ProductID: 123,
+                    ProductName: 'DummyItem',
+                    InStock: true,
+                    UnitsInStock: 1,
+                    OrderDate: new Date()
+                });
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(3);
+                grid.page = 2;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(2);
+                grid.deleteRowById(123);
+                tick();
+                fixture.detectChanges();
+                // This is behaving incorrectly - if there is only 1 transaction and it is an ADD transaction on the last page
+                // Deleting the ADD transaction on the last page will trigger grid.page-- TWICE
+                expect(grid.page).toEqual(1); // Should be 1
+                expect(grid.totalPages).toEqual(2);
+            }));
+
+            it('Should change pages when commiting deletes on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                for (let i = 0; i < grid.data.length / 2; i++) {
+                    grid.deleteRowById(grid.data.reverse()[i].ProductID);
+                }
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                grid.transactions.commit(grid.data);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(0);
+                expect(grid.totalPages).toEqual(1);
+            }));
+
+            it('Should NOT change pages when deleting a row on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                expect(grid.data.length).toEqual(10);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                grid.deleteRowById(grid.data[grid.data.length - 1].ProductID);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                expect(grid.totalPages).toEqual(2);
+            }));
         });
 
         describe('Row Editing - Grouping',  () => {
@@ -2982,6 +3184,96 @@ describe('IgxGrid Component Tests', () => {
             }));
         });
     });
+
+    describe('IgxGrid - Integration with other Igx Controls', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridInsideIgxTabsComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
+            }).compileComponents();
+        }));
+
+        it('IgxTabs: should initialize a grid with correct width/height', async() => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid3;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[2].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(600);
+            expect(headers.length).toBe(4);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(600);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
+        });
+
+        it('IgxTabs: should initialize a grid with correct width/height when there is no column width set', async () => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid2;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            expect(headers.length).toBe(4);
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
+        });
+
+        it('IgxTabs: should initialize a grid with correct height when paging and summaries are enabled', async () => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid4;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[3].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const paging = fix.debugElement.query(By.css('.igx-paginator'));
+            const summaries = fix.debugElement.queryAll(By.css('.igx-grid-summary'));
+            expect(headers.length).toBe(4);
+            expect(summaries.length).toBe(4);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(133);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
+        });
+
+        it('IgxTabs: should initialize a grid with correct height when height = 100%', async () => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid5;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[4].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const paging = fix.debugElement.query(By.css('.igx-paginator'));
+            expect(headers.length).toBe(4);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
+        });
+    });
 });
 
 @Component({
@@ -3031,7 +3323,7 @@ export class IgxGridTestComponent {
 
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (scrollbar) {
+        if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
         return false;
@@ -3112,6 +3404,20 @@ export class IgxGridDefaultRenderingComponent {
                     }
                     break;
             }
+        }
+    }
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" [width]="'500px'" (onColumnInit)="initColumns($event)">
+        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
+    public initColumns(column) {
+        if (column.index === 0) {
+            column.width = '40%';
         }
     }
 }
@@ -3503,5 +3809,94 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
+    }
+}
+
+@Component({
+    template: `
+    <div style="width: 600px; height: 400px;">
+    <igx-tabs #tabs>
+      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+      <igx-tabs-group label="Tab 2">
+        <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
+        <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+        >
+        </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+      <igx-tabs-group label="Tab 3">
+        <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
+        <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+            [width]="column.width"
+        >
+        </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+      <igx-tabs-group label="Tab 4">
+        <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
+            [paging]="true" [perPage]="3">
+        <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+            [hasSummary]="true"
+        >
+        </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+      <igx-tabs-group label="Tab 5">
+        <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+            [paging]="true" [perPage]="4">
+        <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+        >
+        </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+    </igx-tabs>
+  </div>
+    `
+})
+export class IgxGridInsideIgxTabsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid2: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid3: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid4: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid5: IgxGridComponent;
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
+    public tabs: IgxTabsComponent;
+
+    public columns = [
+        { field: 'id', width: 100},
+        { field: '1', width: 100},
+        { field: '2', width: 100},
+        { field: '3', width: 100}
+    ];
+
+    public data = [];
+
+    constructor() {
+        const data = [];
+        for (let j = 1; j <= 10; j++) {
+          const item = {};
+          item['id'] = j;
+          for (let k = 2, len = this.columns.length; k <= len; k++) {
+            const field = this.columns[k - 1].field;
+            item[field] = `item${j}-${k}`;
+          }
+          data.push(item);
+        }
+        this.data = data;
     }
 }

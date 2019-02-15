@@ -189,10 +189,9 @@ export class IgxGridGroupByRowComponent {
 
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
 
-        if (this.isToggleKey(key)) {
-            if (!alt) { return; }
-            if ((this.expanded && (key === 'left' || key === 'arrowleft')) ||
-            (!this.expanded && (key === 'right' || key === 'arrowright'))) {
+        if (alt && this.isToggleKey(key)) {
+            if ((this.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup')) ||
+            (!this.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown'))) {
                 this.toggle();
             }
             return;
@@ -259,7 +258,7 @@ export class IgxGridGroupByRowComponent {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key) !== -1;
     }
 
 }

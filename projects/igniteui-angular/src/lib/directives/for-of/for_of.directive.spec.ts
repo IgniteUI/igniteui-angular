@@ -703,7 +703,7 @@ describe('IgxForOf directive -', () => {
             await wait(1500);
             fix.detectChanges();
             const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
-            expect(scrStepArray.length).toEqual(61);
+            expect(scrStepArray.length).toBeGreaterThan(55);
 
             // check if inertia first accelerates then decelerate
             const first = scrStepArray[0];
@@ -792,6 +792,22 @@ describe('IgxForOf directive -', () => {
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[9 + i][1].toString());
             }
+        });
+
+        it('should not wrap around with scrollNext and scrollPrev', async () => {
+            const forOf = fix.componentInstance.parentVirtDir;
+            forOf.scrollPrev();
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(0);
+            forOf.scrollTo(forOf.igxForOf.length - 1);
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
+            forOf.scrollNext();
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
 
         it('should prevent scrollTo() when called with numbers outside the scope of the data records.', () => {
@@ -989,6 +1005,32 @@ describe('IgxForOf directive -', () => {
                 expect(rowsRendered[i].textContent.trim())
                     .toBe(data[i].toString());
             }
+        });
+    });
+
+    describe('no width and height component', () => {
+        configureTestSuite();
+        let fix: ComponentFixture<NoWidthAndHeightComponent>;
+
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    NoWidthAndHeightComponent
+                ],
+                imports: [IgxForOfModule]
+            }).compileComponents();
+        }));
+
+        it('should use itemSize when no width or height are provided', () => {
+            fix = TestBed.createComponent(NoWidthAndHeightComponent);
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+            const children = fix.componentInstance.childVirtDirs;
+            const instance = fix.componentInstance;
+            const expectedElementsLength = (parseInt(instance.width, 10) / instance.itemSize) + 2;
+            expect(children.length).toEqual(expectedElementsLength);
         });
     });
 });
@@ -1436,5 +1478,48 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: `
+    <div class="container">
+        <ng-template igxForTest
+            let-item [igxForOf]="items"
+            [igxForScrollOrientation]="'horizontal'"
+            [igxForScrollContainer]="parentVirtDir"
+            [igxForContainerSize]='width'
+            [igxForItemSize]='itemSize'>
+                <div class="forOfElement" #child>{{item.text}}</div>
+        </ng-template>
+    </div>
+    `,
+    styles: [`.container {
+        display: flex;
+        flex-flow: column;
+        position: relative;
+        width: 300px;
+        height: 300px;
+        overflow: hidden;
+        border: 1px solid #000;
+    }`, `.forOfElement {
+        flex: 0 0 60px;
+        border-right: 1px solid #888;
+    }`]
+})
+
+export class NoWidthAndHeightComponent {
+    public items = [];
+    public width = '300px';
+    public itemSize = 60;
+    public height = '300px';
+
+    @ViewChildren('child')
+    public childVirtDirs: QueryList<any>;
+
+    constructor() {
+        for (let i = 0; i < 100; i++) {
+            this.items.push({text: i + ''});
+        }
     }
 }

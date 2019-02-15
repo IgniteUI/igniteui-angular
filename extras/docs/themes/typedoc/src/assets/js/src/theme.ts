@@ -11,10 +11,10 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
 
     constructor(renderer: Renderer, basePath) {
         super(renderer, basePath);
-        Handlebars.registerHelper('envUrl', this.retrieveEnvUrl);
+        Handlebars.registerHelper('getConfigData', this.getConfigData);
     }
 
-    private retrieveEnvUrl() {
+    private getConfigData(prop) {
         const fileName = 'config.json';
         let settings;
         let config;
@@ -25,13 +25,13 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
         }
 
         if (settings && fs.existsSync(settings.theme)) {
-            const normalizedPath = path.normalize(`${settings.theme}\\${fileName}`);
+            const normalizedPath = path.join(settings.theme, fileName);
             config = JSON.parse(fs.readFileSync(normalizedPath, 'utf8'));
         }
         if (config && settings.localize && process.env.NODE_ENV) {
             data = config[settings.localize][process.env.NODE_ENV.trim()];
         }
 
-        return data ? data.url : '';
+        return data ? data[prop] : '';
     }
 }

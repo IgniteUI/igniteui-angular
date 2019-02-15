@@ -288,6 +288,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         if (this.column.editable && value) {
+            this.focused = true;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
@@ -507,6 +508,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public get editValue() {
         return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
     }
+
+    public isInCompositionMode = false;
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
@@ -730,8 +733,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
         if (event.altKey) {
             if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
-                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                const collapse = (this.row as any).expanded &&
+                                (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+                const expand = !(this.row as any).expanded &&
+                                (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
                 if (collapse) {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
@@ -819,6 +824,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownEnterEditMode(event) {
+        if (this.isInCompositionMode) {
+            return;
+        }
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
@@ -831,13 +839,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownExitEditMode(event) {
-        if (this.column.editable) {
-            const editableCell = this;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (this.column.editable && editableCell) {
             const args: IGridEditEventArgs = {
                 cellID: editableCell.cellID,
                 rowID: editableCell.cellID.rowID,
-                oldValue: editableCell.value,
-                newValue: editableCell.editValue,
+                oldValue: editableCell.cell.value,
+                newValue: editableCell.cell.editValue,
                 cancel: false
             };
             this.grid.onCellEditCancel.emit(args);
@@ -875,7 +883,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
     private isKeySupportedInCell(key) {
         return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
-
     }
 
     /**
@@ -920,6 +927,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key.toLowerCase()) !== -1;
     }
 }

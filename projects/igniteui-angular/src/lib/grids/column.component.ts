@@ -269,6 +269,20 @@ export class IgxColumnComponent implements AfterContentInit {
             this._width = value;
         }
     }
+
+    public get calcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+        } else if (!colWidth) {
+            // no width
+            return this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            return this.width;
+        }
+    }
+
     /**
      * Sets/gets the maximum `width` of the column.
      * ```typescript
@@ -925,12 +939,17 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
+     * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
+     * Column cannot be pinned if:
+     * - Is already pinned
+     * - index argument is out of range
+     * - The pinned area exceeds 80% of the grid width
      * ```typescript
-     * this.column.pin();
+     * let success = this.column.pin();
      * ```
      * @memberof IgxColumnComponent
      */
-    public pin(index?) {
+    public pin(index?: number): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         if (this.grid) {
@@ -989,12 +1008,16 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
+     * Returns `true` if the column is successfully unpinned. Returns `false` if the column cannot be unpinned.
+     * Column cannot be unpinned if:
+     * - Is already unpinned
+     * - index argument is out of range
      * ```typescript
-     * this.column.unpin();
+     * let success = this.column.unpin();
      * ```
      * @memberof IgxColumnComponent
      */
-    public unpin(index?) {
+    public unpin(index?: number): boolean {
         if (this.grid) {
             this.grid.endEdit(true);
         }

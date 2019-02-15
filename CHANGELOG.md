@@ -2,23 +2,75 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.0.2
+## 6.2.9
 ### Features
-- `igxNavbar`:
-    - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
-    (If `igx-action-icon` is provided, the default action icon will not be used.)
+- `igxGrid`
+    - `Group By`
+        - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related group row and when it points down clicking on it would expand the group row.
+        - The collapse/expand all icons have also been updated to reflect the new group row icons better.
+        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Down to reflect the new icons.
+- `igxTreeGrid`
+    - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
+    - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
 
-## 7.0.1
-### Bug fixes
-- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+## 6.2.5
 
-## 7.0.0
-- Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
-- Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
+### Bug Fixes
+- Setting required IgxInput's value not via typing does not clear the invalid style ([3550](https://github.com/IgniteUI/igniteui-angular/issues/3550))
+- igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([3047](https://github.com/IgniteUI/igniteui-angular/issues/3047)) 
+- igxGrid minimal body height when no total height is set or inferred ([1693](https://github.com/IgniteUI/igniteui-angular/issues/1693))
+- Horizontal scrollbar is not shown when column's width is set to a percentage value ([3513](https://github.com/IgniteUI/igniteui-angular/issues/3513))
+- Visible @hidden tag due to comment structure ([3523](https://github.com/IgniteUI/igniteui-angular/issues/3523))
+- Faulty link in Typedoc ([3531](https://github.com/IgniteUI/igniteui-angular/issues/3531))
+- Several warnings on app launch 6.2.0 RC1 and now 7.0.2 ([2915](https://github.com/IgniteUI/igniteui-angular/issues/2915))
+- For_of directive doesn't scroll to next elements in some cases ([3482](https://github.com/IgniteUI/igniteui-angular/issues/3482))
+- Not setting width in percentage on one or more columns results in columns going out of view ([1245](https://github.com/IgniteUI/igniteui-angular/issues/1245))
+- Calendar test is failing because of wrong selector ([3508](https://github.com/IgniteUI/igniteui-angular/issues/3508))
+- When transactions are enabled and delete a row page is changed to first page ([3425](https://github.com/IgniteUI/igniteui-angular/issues/3425))
+- When a column is sorted and change value in a cell after commit and press enter on selected cell the focus is not in the input ([2801](https://github.com/IgniteUI/igniteui-angular/issues/2801))
+- igxFor with scrollOrientation: horizontal - Almost all the items are not rendered when they don't have width property ([3087](https://github.com/IgniteUI/igniteui-angular/issues/3087))  
+- Pressing ESC on a cell in an editable column throws an error ([3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
+
+## 6.2.4
+
+### Bug Fixes
+* onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
+* igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+* Preventing wrap-around for scrollNext and scrollPrev([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
+* IgxTreeGrid does not respect its parent container height ([#3467](https://github.com/IgniteUI/igniteui-angular/issues/3423))
+* The header link in the api docs page should be to the product page ([#3423](https://github.com/IgniteUI/igniteui-angular/issues/3423))
+* fix(dialog): dialog gets focus when is opened ([#3276](https://github.com/IgniteUI/igniteui-angular/issues/3276))
+* IgxTreeGrid - Add row editing + transactions to tree grid ([#2908](https://github.com/IgniteUI/igniteui-angular/issues/2908))
+* Regular highlight makes the highlighted text unreadable when the row is selected. ([#1852](https://github.com/IgniteUI/igniteui-angular/issues/1852))
+* Use value instead of ngModel to update editValue for checkbox and calendar in igxCell ([#3224](https://github.com/IgniteUI/igniteui-angular/issues/3224))
+* Disable combo checkbox animations on scroll ([#3300](https://github.com/IgniteUI/igniteui-angular/issues/3300))
+* "Select/Unselect All" checkbox is checked after deleting all rows ([#3068](https://github.com/IgniteUI/igniteui-angular/issues/3068))
+* Fixing column chooser column updating ([#3234](https://github.com/IgniteUI/igniteui-angular/issues/3234))
+* Fix - Combo - Hide Search input when !filterable && !allowCustomValues ([#3315](https://github.com/IgniteUI/igniteui-angular/issues/3315))
+* Add @inheritdoc ([#2943](https://github.com/IgniteUI/igniteui-angular/issues/2943))
+* refactor(displayDensity): Code cleanup in display density base class #3280
+* Calculating updated grid height when rebinding columns ([#3285](https://github.com/IgniteUI/igniteui-angular/issues/3285))
+* Fix - Combo, Drop Down - Fix TAB key navigation ([#3206](https://github.com/IgniteUI/igniteui-angular/issues/3206))
+* Added validation if last column collides with grid's scroll ([#3142](https://github.com/IgniteUI/igniteui-angular/issues/3142))
+* When in the tree grid are pinned columns and scroll horizontal the cells text is over the pinned text ([#3163](https://github.com/IgniteUI/igniteui-angular/issues/3163))
+* refactor(themes): don't include contrast colors in the palettes ([#3166](https://github.com/IgniteUI/igniteui-angular/issues/3166))
+
+### Code enhancements
+* Fix the logic calculating test results ([#3461](https://github.com/IgniteUI/igniteui-angular/issues/3461))
+* Update typedoc version and localize some shell strings ([#3237](https://github.com/IgniteUI/igniteui-angular/issues/3237))
+* fix(toolbar): including custom content in the show toolbar check ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+* docs(toolbar): adding more API docs ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+
+### Other
+* update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+* Update contributing document with localization ([#3313](https://github.com/IgniteUI/igniteui-angular/issues/3313))
+* docs(*): add 6.2.3 missing changes and bug fixes to changelog ([#3251](https://github.com/IgniteUI/igniteui-angular/issues/3251))
+* Docs - Expansion Panel - Add comments and README([#3245](https://github.com/IgniteUI/igniteui-angular/issues/3245))
+* Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
 
 ## 6.2.3
 - `igxGrid`
-    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set,
     the changes will be applied to the particular instance of the component:
     ```typescript
         this.grid.resourceStrings = {
@@ -38,7 +90,7 @@ All notable changes for each version of this project will be documented in this 
     - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
 - `ISortingEpression`:
     - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
-  
+
 ### Bug fixes
 
 - `igxGrid`
@@ -61,7 +113,7 @@ All notable changes for each version of this project will be documented in this 
     - Quick filter auto close ([#2979](https://github.com/IgniteUI/igniteui-angular/issues/2979))
     - Group By: Added title to chip in Group By area ([#3035](https://github.com/IgniteUI/igniteui-angular/issues/3035))
     - Improve UX for boolean and date columns, ([#3092](https://github.com/IgniteUI/igniteui-angular/issues/3092))
-    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set,
     the changes will be applied to the particular instance of the component:
     ```typescript
         this.grid.resourceStrings = {
@@ -84,7 +136,7 @@ All notable changes for each version of this project will be documented in this 
     - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
     in the application.
     - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
-- Themes 
+- Themes
     - Introducing schemas for easier bootstrapping of component themes.
     - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
 
@@ -109,7 +161,7 @@ All notable changes for each version of this project will be documented in this 
     - Cell is not editable on iOS ([#2538](https://github.com/IgniteUI/igniteui-angular/issues/2538))
 - `IgxTreeGrid`
     - Cell selection wrong behavior when collapsing rows ([#2935](https://github.com/IgniteUI/igniteui-angular/issues/2935))
-- `igxCombo` 
+- `igxCombo`
     - Keyboard doesn't scroll virtualized items ([#2999](https://github.com/IgniteUI/igniteui-angular/issues/2999))
 - `igxDatePicker`
     - Error emitting when  value property is initialized with empty string. ([#3021](https://github.com/IgniteUI/igniteui-angular/issues/3021))
@@ -127,7 +179,7 @@ All notable changes for each version of this project will be documented in this 
   - **Breaking change:** Applications using Ignite UI for Angular now require the `igx-typography` class to be applied on wrapping element, like the body element for instance.
 
 - Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
-    
+
     Setting display density on a component level:
     ```typescript
     @Component({
@@ -141,7 +193,7 @@ All notable changes for each version of this project will be documented in this 
     <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
     ```
 - `igx-drop-down`:
-    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
+    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated.
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
@@ -290,9 +342,9 @@ When you focus a specific cell and press one of the following key combinations, 
 ### General
 
 - `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `DefaultSortingStrategy` class and override all or some of its public/protected members.
-- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.  
+- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.
 - `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
-    
+
 ## 6.1.8
 
 ### Bug fixes
@@ -342,7 +394,7 @@ When you focus a specific cell and press one of the following key combinations, 
     - `igxGrid`
         - Adding inertia scrolling for touch devices.
     - `igxCombo`
-        - Adding inertia scrolling for touch devices. 
+        - Adding inertia scrolling for touch devices.
     - `IgxCalendar` - `deselectDate` method added that deselects date(s) (based on the selection type)
     - `IgxDatePicker` - `deselectDate` method added that deselects the calendar date.
 
@@ -483,10 +535,10 @@ When you focus a specific cell and press one of the following key combinations, 
 - Regular highlight makes the highlighted text unreadable when the row is selected. #1852
 - DatePicker focus is wrong on select date value #1965
 - add sass docs, grid document updates and input-group theme-related fixes #1993
-- DatePicker focus handler and AoT build #1994 
-- Change displayDensity runtime #1974 
-- Change IgxGrid display density runtime #1998 
-- Error is thrown when using igx-grid theme without $content-background #1996 
+- DatePicker focus handler and AoT build #1994
+- Change displayDensity runtime #1974
+- Change IgxGrid display density runtime #1998
+- Error is thrown when using igx-grid theme without $content-background #1996
 - Update npm deploy token #2002
 
 ## 6.1.0

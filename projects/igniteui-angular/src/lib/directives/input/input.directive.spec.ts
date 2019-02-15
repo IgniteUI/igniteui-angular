@@ -193,6 +193,40 @@ describe('IgxInput', () => {
         testRequiredValidation(inputElement, fixture);
     });
 
+    it('Should update style when required input\'s value is set.', () => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.value = 'test';
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+
+
+        fixture.componentInstance.value = '';
+        fixture.detectChanges();
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    });
+
     it('Should style required input with two-way databinding correctly.', () => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
@@ -355,11 +389,12 @@ class DisabledInputComponent {
 
 @Component({ template: `<igx-input-group #igxInputGroup>
                             <label for="test" igxLabel>Test</label>
-                            <input name="test" #igxInput type="text" igxInput required="required" />
+                            <input name="test" #igxInput type="text" igxInput [value]="value" required="required" />
                         </igx-input-group>` })
 class RequiredInputComponent {
     @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
     @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    value = '';
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
