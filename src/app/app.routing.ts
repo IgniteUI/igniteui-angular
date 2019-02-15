@@ -49,7 +49,9 @@ import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remot
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
+import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
+import { SelectSampleComponent } from './select/select.sample';
 
 const appRoutes = [
     {
@@ -74,12 +76,20 @@ const appRoutes = [
         component: BannerSampleComponent
     },
     {
+        path: 'select',
+        component: SelectSampleComponent
+    },
+    {
         path: 'buttons',
         component: ButtonSampleComponent
     },
     {
         path: 'calendar',
         component: CalendarSampleComponent
+    },
+    {
+        path: 'calendar-views',
+        component: CalendarViewsSampleComponent
     },
     {
         path: 'card',

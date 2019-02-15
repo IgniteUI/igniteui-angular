@@ -22,7 +22,8 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarModule,
     IgxCalendarSubheaderTemplateDirective,
-    WEEKDAYS
+    WEEKDAYS,
+    isDateInRanges
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
@@ -52,7 +53,6 @@ import {
     SPIN_DELTA,
     addPromptCharsEditMode,
     getModifiedDateInput,
-    isDateInRanges,
     maskToPromptChars,
     checkForCompleteDateInput,
     getInputMask,
@@ -1126,7 +1126,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     // Focus a date, after the calendar appearance into DOM.
     private _focusCalendarDate(): void {
         requestAnimationFrame(() => {
-            this.calendar.focusActiveDate();
+            this.calendar.daysView.focusActiveDate();
         });
     }
 

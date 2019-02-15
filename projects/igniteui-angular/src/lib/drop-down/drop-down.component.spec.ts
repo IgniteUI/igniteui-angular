@@ -1242,6 +1242,29 @@ describe('IgxDropDown ', () => {
             expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(0);
         }));
+
+        it('#3810 - Calling open on opened dropdown should do nothing', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            fixture.detectChanges();
+
+            spyOn(dropdown.onOpening, 'emit').and.callThrough();
+            spyOn(dropdown.onOpened, 'emit').and.callThrough();
+
+            dropdown.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            dropdown.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+        }));
     });
 
     describe('DropDownGroup Tests', () => {

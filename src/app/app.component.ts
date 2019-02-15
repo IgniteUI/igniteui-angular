@@ -64,6 +64,11 @@ export class AppComponent implements OnInit {
             name: 'Calendar'
         },
         {
+            link: '/calendar-views',
+            icon: 'event',
+            name: 'Calendar Views'
+        },
+        {
             link: '/card',
             icon: 'home',
             name: 'Card'
@@ -102,6 +107,11 @@ export class AppComponent implements OnInit {
             link: '/dropDown',
             icon: 'view_list',
             name: 'DropDown'
+        },
+        {
+            link: '/select',
+            icon: 'arrow_drop_down_circle',
+            name: 'Select'
         },
         {
             link: '/expansionPanel',

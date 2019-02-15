@@ -594,69 +594,6 @@ export function getDatePartOnPosition(dateFormatParts: any[], position: number) 
 /**
  *@hidden
  */
-export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    const dateInMs = date.getTime();
-
-    for (const descriptor of ranges) {
-        const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
-            r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
-        switch (descriptor.type) {
-            case (DateRangeType.After):
-                if (dateInMs > dRanges[0].getTime()) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Before):
-                if (dateInMs < dRanges[0].getTime()) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Between):
-                const dRange = dRanges.map(d => d.getTime());
-                const min = Math.min(dRange[0], dRange[1]);
-                const max = Math.max(dRange[0], dRange[1]);
-                if (dateInMs >= min && dateInMs <= max) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Specific):
-                const datesInMs = dRanges.map(d => d.getTime());
-                for (const specificDateInMs of datesInMs) {
-                    if (dateInMs === specificDateInMs) {
-                        return true;
-                    }
-                }
-
-                break;
-            case (DateRangeType.Weekdays):
-                const day = date.getDay();
-                if (day % 6 !== 0) {
-                    return true;
-                }
-
-                break;
-            case (DateRangeType.Weekends):
-                const weekday = date.getDay();
-                if (weekday % 6 === 0) {
-                    return true;
-                }
-
-                break;
-            default:
-                return false;
-        }
-    }
-
-    return false;
-}
-
-/**
- *@hidden
- */
 export function checkForCompleteDateInput(dateFormatParts: any[], input: string): string {
     const dayValue = getDayValueFromInput(dateFormatParts, input);
     const monthValue = getMonthValueFromInput(dateFormatParts, input);

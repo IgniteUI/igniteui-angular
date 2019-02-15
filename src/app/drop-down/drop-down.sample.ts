@@ -130,6 +130,23 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.toggle(overlaySettings);
     }
 
+    public open() {
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new ConnectedPositioningStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            closeOnOutsideClick: false,
+            modal: false,
+            outlet: this.igxOverlayOutlet
+        };
+
+        overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        this.igxDropDown.open(overlaySettings);
+    }
+
+    public close() {
+        this.igxDropDown.close();
+    }
+
     onSelection(event) {
         console.log(event);
         const old = event.oldSelection;
