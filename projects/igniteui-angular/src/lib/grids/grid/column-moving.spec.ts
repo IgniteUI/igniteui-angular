@@ -655,7 +655,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[0].field).toEqual('CompanyName');
             expect(columnsList[1].field).toEqual('ContactName');
             expect(columnsList[2].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID')).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'CompanyName').selected).toBeTruthy();
 
             // step 3 - move another column and verify selection is preserved
             headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -674,7 +674,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[0].field).toEqual('ContactName');
             expect(columnsList[1].field).toEqual('CompanyName');
             expect(columnsList[2].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID')).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
         }));
 
         it('Should preserve cell selection after columns are reordered - horizontal scrolling.', (async() => {
@@ -724,13 +724,13 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             const cell = grid.columnList.toArray()[9].cells[4];
+            const selectedData = [{ Phone: '40.32.21.21'}];
             cell.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
-            expect(cell.selected).toBeTruthy();
 
-            const range = grid.getSelectedRanges()[0];
-            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
-                range.columnStart, range.columnEnd);
+            expect(cell.selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            expect(grid.getSelectedData()).toEqual(selectedData);
 
             // step 3 - scroll up vertically so that the selected cell becomes out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
@@ -763,7 +763,8 @@ describe('IgxGrid - Column Moving', () => {
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
             await wait(50);
             fixture.detectChanges();
-            expect(grid.columnList.toArray()[4].cells[4].selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            expect(grid.getSelectedData()).toEqual(selectedData);
         }));
 
         it('Should affect all pages when columns are reordered and paging is enabled.', (async() => {
