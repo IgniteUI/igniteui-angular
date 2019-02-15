@@ -229,6 +229,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
+     * @hidden
+     */
+    public monthTracker(index, item): string {
+        return `${item.getMonth()}}`;
+    }
+
+
+    /**
      *@hidden
      */
     private initMonthFormatter() {
