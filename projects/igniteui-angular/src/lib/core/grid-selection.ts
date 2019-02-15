@@ -192,6 +192,7 @@ export class IgxGridCRUDService {
 export class IgxGridSelectionService {
 
     dragMode = false;
+    activeElement: ISelectionNode | null;
     keyboardState = {} as ISelectionKeyboardState;
     pointerState = {} as ISelectionPointerState;
 

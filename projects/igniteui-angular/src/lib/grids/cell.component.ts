@@ -19,7 +19,6 @@ import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
-import { DataType } from '../data-operations/data-util';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 
 const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
@@ -729,6 +728,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
         this.row.focused = true;
         this._updateCellSelectionStatus();
         this.grid.onSelection.emit({ cell: this, event });
+        this.selectionService.activeElement = this.selectionNode;
     }
 
     /**
@@ -739,6 +739,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
     public onBlur() {
         this.focused = false;
         this.row.focused = false;
+        this.selectionService.activeElement = null;
     }
 
     protected handleAlt(key: string) {
