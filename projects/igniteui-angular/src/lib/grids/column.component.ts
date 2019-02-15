@@ -34,6 +34,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -436,6 +437,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
+     * @deprecated
      * Gets/Sets the `id` of the `igx-grid`.
      * ```typescript
      * let columnGridId = this.column.gridID;
@@ -445,6 +447,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @DeprecateProperty(`The property is deprecated. Please, use \`column.grid.id\` instead.`)
     public gridID: string;
     /**
      * Gets the column `summaries`.
@@ -565,15 +568,13 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._defaultMinWidth;
     }
     /**
-     * Returns reference to the `igx-grid`.
+     * The reference to the `igx-grid` owner.
      * ```typescript
      * let gridComponent = this.column.grid;
      * ```
      * @memberof IgxColumnComponent
      */
-    get grid(): IgxGridBaseComponent {
-        return this.gridAPI.grid;
-    }
+    public grid: IgxGridBaseComponent;
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript

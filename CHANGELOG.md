@@ -50,6 +50,8 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
+- `IgxColumnComponent`
+    - **Breaking Change** the `gridID` property is now **deprecated**. Please, use `column.grid.id` instead.
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
     - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix`,`igx-hint` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
