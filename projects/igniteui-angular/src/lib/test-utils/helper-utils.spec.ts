@@ -248,7 +248,7 @@ export class HelperUtils {
         (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, false, shift, ctrl);
+            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
