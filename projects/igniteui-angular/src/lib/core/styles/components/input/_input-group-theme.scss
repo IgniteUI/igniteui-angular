@@ -41,6 +41,10 @@
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
+/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
+/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
+/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -48,6 +52,7 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -57,6 +62,10 @@
     $palette: $default-palette,
     $schema: $light-schema,
     $elevations: $elevations,
+
+    $box-border-radius: null,
+    $border-border-radius: null,
+    $search-border-radius: null,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -97,6 +106,16 @@
     $input-group-schema: map-get($schema, $name);
     $theme: apply-palette($input-group-schema, $palette);
 
+    $box-border-radius: round-borders(
+        if($box-border-radius, $box-border-radius, map-get($input-group-schema, 'box-border-radius')), 0, 20px
+    );
+    $border-border-radius: round-borders(
+        if($border-border-radius, $border-border-radius, map-get($input-group-schema, 'border-border-radius')), 0, 20px
+    );
+    $search-border-radius: round-borders(
+        if($search-border-radius, $search-border-radius, map-get($input-group-schema, 'search-border-radius')), 0, 20px
+    );
+
     $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map-get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map-get($input-group-schema, 'search-disabled-elevation');
@@ -129,6 +148,10 @@
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
+
+        box-border-radius: $box-border-radius,
+        border-border-radius: $border-border-radius,
+        search-border-radius: $search-border-radius,
 
         idle-secondary-color: $idle-secondary-color,
         filled-secondary-color: $filled-secondary-color,
@@ -178,9 +201,6 @@
 
     $required-symbol: '*';
     $required-symbol-margin: 2px;
-
-    // This should become configurable by the user.
-    $group-bundle-border-radius: 4px;
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -300,7 +320,7 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'box-border-radius');
         overflow: hidden;
     }
 
@@ -385,7 +405,7 @@
     %form-group-bundle--border {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
@@ -424,7 +444,7 @@
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'search-border-radius');
         border-bottom: none;
         background: --var($theme, 'search-background');
         box-shadow: --var($theme, 'search-resting-shadow');
