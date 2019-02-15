@@ -25,9 +25,11 @@ import {
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
-import { take, filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { showMessage } from '../../core/deprecateDecorators';
+
+let warningShown = false;
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -113,7 +115,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    register(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
+    attach(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         info = this.getOverlayInfo(component);
 
@@ -143,11 +145,10 @@ export class IgxOverlayService implements OnDestroy {
      * ```typescript
      * this.overlay.show(element, settings);
      * ```
+     * @deprecated Use `attach(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.
      */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
-    // tslint:disable-next-line:max-line-length
-    // @DeprecateMethod('`show(component, settings?)` overload is deprecated. Use `register(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.')
     show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
@@ -159,6 +160,10 @@ export class IgxOverlayService implements OnDestroy {
                 return null;
             }
         } else {
+            warningShown = showMessage(
+                '`show(component, settings?)` overload is deprecated. Use `attach(component)` to obtain an Id.' +
+                'Then `show(id, settings?)` with provided Id.',
+                warningShown);
             id = (this._componentId++).toString();
             info = this.getOverlayInfo(compOrId);
 
