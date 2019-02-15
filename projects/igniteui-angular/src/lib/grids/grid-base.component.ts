@@ -2246,9 +2246,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
-        horizontalDirection: HorizontalAlignment.Left,
+        horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
-        horizontalStartPoint: HorizontalAlignment.Right,
+        horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Bottom,
         closeAnimation: null
     });
