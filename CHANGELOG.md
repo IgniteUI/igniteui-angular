@@ -123,9 +123,9 @@ All notable changes for each version of this project will be documented in this 
 * _igxTooltip_
 
 - **Breaking Change** 
-- The `$button-roundness` propertie on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
-- The`$roundness` propertie on the `igx-chip-theme` have been replaced with `$border-radius`.
-- The`$roundness` propertie on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
+- The `$button-roundness` property on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
+- The`$roundness` property on the `igx-chip-theme` have been replaced with `$border-radius`.
+- The`$roundness` property on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
 
 ## 7.1.5
 ### Features
