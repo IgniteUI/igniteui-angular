@@ -4703,12 +4703,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         return result;
     }
+
     public cachedViewLoaded(args: IViewChangeEventArgs) {
-        const index = args.context.index;
-        const row = this.getRowByIndex(index);
-        if (row instanceof IgxRowComponent) {
-            this._restoreVirtState(row);
-        }
+       if (this.hasHorizontalScroll()) {
+            const index = args.context.index;
+            args.view.detectChanges();
+            const row = this.getRowByIndex(index);
+            if (row instanceof IgxRowComponent) {
+                this._restoreVirtState(row);
+            }
+       }
+    }
+
+    public hasHorizontalScroll() {
+        return this.totalWidth - this.unpinnedWidth > 0;
     }
 
     protected _restoreVirtState(row) {

@@ -1398,6 +1398,59 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     }));
 
+    it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        // group and collapse all groups
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+        grid.toggleAllGroupRows();
+        await wait(100);
+        fix.detectChanges();
+
+        // scroll left
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        fix.detectChanges();
+
+        const gridScrLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+        await wait(100);
+        fix.detectChanges();
+
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        // verify rows are scrolled to the right
+        let dataRows = grid.dataRowList.toArray();
+        dataRows.forEach(dr => {
+            const virtualization = dr.virtDirRow;
+            // should be at last chunk
+            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+            // should have correct left offset
+            const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+        });
+
+        // scroll down
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        await wait(100);
+        fix.detectChanges();
+
+         // verify rows are scrolled to the right
+         dataRows = grid.dataRowList.toArray();
+         dataRows.forEach(dr => {
+             const virtualization = dr.virtDirRow;
+             // should be at last chunk
+             const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+             expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+             // should have correct left offset
+             const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+             expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+         });
+    });
+
     // GroupBy chip
     it('should apply the chip correctly when there are grouping expressions applied and reordered', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
