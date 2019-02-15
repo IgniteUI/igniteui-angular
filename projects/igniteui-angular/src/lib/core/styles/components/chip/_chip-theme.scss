@@ -6,7 +6,7 @@
 
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $roundness [null] - The chip roundness.
+/// @param {Color} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
 /// @param {Color} $background [null] - The chip background color.
@@ -42,7 +42,7 @@
 @function igx-chip-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-    $roundness: null,
+    $border-radius: null,
 
     $text-color: null,
     $background: null,
@@ -70,7 +70,12 @@
     $focus-selected-border-color: null
 ) {
     $name: 'igx-chip';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $chip-schema: map-get($schema, $name);
+    $theme: apply-palette($chip-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($chip-schema, 'border-radius')), 0, 16px
+    );
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -163,7 +168,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        roundness: $roundness,
+        border-radius: $border-radius,
 
         text-color: $text-color,
         background: $background,
@@ -425,7 +430,7 @@
         border-width: 1px;
         border-style: solid;
         border-color: --var($theme, 'border-color');
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'border-radius');
         user-select: none;
         overflow: hidden;
         cursor: pointer;

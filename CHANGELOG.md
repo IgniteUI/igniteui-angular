@@ -104,6 +104,32 @@ All notable changes for each version of this project will be documented in this 
     - `igxOverlay.register(component, settings?)` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
     - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.register(component, settings?)` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
 
+ **Components roundness**
+- Ignite UI for Angular now allows you to change the shape of components by changing their border-radius.
+
+- Here is the list of all components that have roundness functionality:
+* _igx-badge_
+* _igx-buttongroup_
+* _igx-calendar_
+* _igx-card_
+* _igx-carousel_
+* _igx-chip_
+* _igx-dialog_
+* _igx-drop-down_
+* _igx-expansion-panel_
+* _igx-input-group_
+* _igx-list_ 
+  * _igx-list-item_
+* *igx-navdrawe*r
+* _igx-snackbar_
+* _igx-toast_
+* _igxTooltip_
+
+- **Breaking Change** 
+- The `$button-roundness` property on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
+- The`$roundness` property on the `igx-chip-theme` have been replaced with `$border-radius`.
+- The`$roundness` property on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
+
 ## 7.1.5
 ### Features
 - `igxGrid`
