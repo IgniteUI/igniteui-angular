@@ -3267,7 +3267,7 @@ describe('igxOverlay', () => {
             overlay.show(IgxCalendarComponent);
             // EXPECT
             fixture.detectChanges();
-            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(1);
+            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(2);
             overlay.hideAll();
             tick();
             fixture.detectChanges();

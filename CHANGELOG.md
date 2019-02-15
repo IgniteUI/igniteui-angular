@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
+- `igxCalendar`
+    - `igxCalendar` has been refactored to provide the ability to instantiate each view as a separate component.
+    - **Feature** advanced keyboard navigation support has been added. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/calendar/README.md)
+
+- **New component** `IgxMonthPicker`:
+    - Provides the ability to pick a specific month. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/month-picker/README.md)
+
 - **New component** `IgxHierarchicalGrid`:
     - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
 
@@ -93,6 +100,32 @@ All notable changes for each version of this project will be documented in this 
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
+
+ **Components roundness**
+- Ignite UI for Angular now allows you to change the shape of components by changing their border-radius.
+
+- Here is the list of all components that have roundness functionality:
+* _igx-badge_
+* _igx-buttongroup_
+* _igx-calendar_
+* _igx-card_
+* _igx-carousel_
+* _igx-chip_
+* _igx-dialog_
+* _igx-drop-down_
+* _igx-expansion-panel_
+* _igx-input-group_
+* _igx-list_ 
+  * _igx-list-item_
+* *igx-navdrawe*r
+* _igx-snackbar_
+* _igx-toast_
+* _igxTooltip_
+
+- **Breaking Change** 
+- The `$button-roundness` property on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
+- The`$roundness` property on the `igx-chip-theme` have been replaced with `$border-radius`.
+- The`$roundness` property on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
 
 ## 7.1.5
 ### Features

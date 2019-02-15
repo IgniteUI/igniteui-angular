@@ -674,7 +674,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     // Focus a date, after the celendar appearence into DOM.
     private _focusCalendarDate() {
         requestAnimationFrame(() => {
-            this.calendar.focusActiveDate();
+            this.calendar.daysView.focusActiveDate();
         });
     }
 
