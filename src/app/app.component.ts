@@ -64,6 +64,11 @@ export class AppComponent implements OnInit {
             name: 'Calendar'
         },
         {
+            link: '/calendar-views',
+            icon: 'event',
+            name: 'Calendar Views'
+        },
+        {
             link: '/card',
             icon: 'home',
             name: 'Card'

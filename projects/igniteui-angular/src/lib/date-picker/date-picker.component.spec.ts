@@ -321,7 +321,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
 
         const targetDate = 15;
-        const fromDate = datePicker.calendar.dates.filter(
+        const fromDate = datePicker.calendar.daysView.dates.filter(
             d => d.date.date.getDate() === targetDate)[0];
         fromDate.nativeElement.click();
         fixture.detectChanges();
@@ -347,7 +347,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
         await wait();
 
-        const todayDate = datePicker.calendar.dates.find(d => d.isToday);
+        const todayDate = datePicker.calendar.daysView.dates.find(d => d.isToday);
         expect(document.activeElement).toEqual(todayDate.nativeElement);
     });
 

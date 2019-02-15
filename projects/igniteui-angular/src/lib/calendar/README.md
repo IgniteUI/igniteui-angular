@@ -1,6 +1,6 @@
 # igxCalendar Component
 
-The **igxCalendar** provides a way for the user to select date(s).  
+The **igxCalendar** provides a way for the user to select date(s).
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
 
 ## Dependencies
@@ -67,16 +67,37 @@ When the **igxCalendar** component is focused:
 - `Shift + PageDown` will move to the next year.
 - `Home` will focus the first day of the current month that is into view.
 - `End` will focus the last day of the current month that is into view.
+- `Tab` will navigate through the subheader buttons;
+
+When `prev` or `next` month buttons (in the subheader) are focused:
+- `Space` or `Enter` will scroll into view the next or previous month.
+
+When `months` button (in the subheader) is focused:
+- `Space` or `Enter` will open the months view.
+
+When `year` button (in the subheader) is focused:
+- `Space` or `Enter` will open the decade view.
 
 When a day inside the current month is focused:
 - Arrow keys will navigate through the days.
+- Arrow keys will allow navigation to previous/next month as well.
 - `Enter` will select the currently focused day.
+
+When a month inside the months view is focused:
+- Arrow keys will navigate through the months.
+- `Home` will focus the first month inside the months view.
+- `End` will focus the last month inside the months view.
+- `Enter` will select the currently focused month and close the view.
+
+When an year inside the decade view is focused:
+- Arrow keys will navigate through the years.
+- `Enter` will select the currently focused year and close the view.
 
 ## API Summary
 
 ### Inputs
 
-- `id: string` 
+- `id: string`
 
 Unique identifier of the component. If not provided it will be automatically generated.
 
