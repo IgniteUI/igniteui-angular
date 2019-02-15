@@ -69,6 +69,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
+import { IViewChangeEventArgs } from '../directives/template-outlet/template_outlet.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -4701,6 +4702,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         return result;
+    }
+    public cachedViewLoaded(args: IViewChangeEventArgs) {
+        const index = args.context.index;
+        const row = this.getRowByIndex(index);
+        if (row instanceof IgxRowComponent) {
+            this._restoreVirtState(row);
+        }
+    }
+
+    protected _restoreVirtState(row) {
+         // check virtualization state of data record added from cache
+         // in case state is no longer valid - update it.
+         const rowForOf = row.virtDirRow;
+         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        if (gridScrLeft !== actualScrollLeft) {
+            rowForOf.onHScroll(gridScrLeft);
+        }
     }
 
     protected get dataLength() {

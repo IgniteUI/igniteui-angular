@@ -28,6 +28,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
     @Output()
     public onViewMoved = new EventEmitter<IViewChangeEventArgs>();
 
+    @Output()
+    public onCachedViewLoaded = new EventEmitter<IViewChangeEventArgs>();
+
 
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
@@ -95,6 +98,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         this._viewRef = cachedView;
         this._viewContainerRef.insert(this._viewRef, 0);
         this._updateExistingContext(this.igxTemplateOutletContext);
+        this.onCachedViewLoaded.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
     }
 
     private _shouldRecreateView(changes: SimpleChanges): boolean {
@@ -156,7 +160,7 @@ enum TemplateOutletAction {
 export interface IViewChangeEventArgs {
     owner: IgxTemplateOutletDirective;
     view: EmbeddedViewRef<any>;
-    context: Object;
+    context: any;
 }
 
 /**
