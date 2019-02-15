@@ -1,19 +1,16 @@
 import {
     Component,
-    NgModule,
     HostListener,
-    ElementRef,
     ViewChild,
     HostBinding,
     Input
 } from '@angular/core';
-import { IgxCalendarModule, CalendarView, IgxCalendarComponent, IgxMonthsViewComponent } from '../calendar/index';
-import { IgxIconModule } from '../icon/index';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { trigger, transition, useAnimation } from '@angular/animations';
-import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
-import { KEYS } from '../core/utils';
+import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
+import { KEYS } from '../../core/utils';
+import { IgxMonthsViewComponent } from '../months-view/months-view.component';
+import { IgxMonthPickerBase, CalendarView } from '../month-picker-base';
 
 let NEXT_ID = 0;
 @Component({
@@ -50,7 +47,7 @@ let NEXT_ID = 0;
     selector: 'igx-month-picker',
     templateUrl: 'month-picker.component.html'
 })
-export class IgxMonthPickerComponent extends IgxCalendarComponent {
+export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.
@@ -60,21 +57,23 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     public id = `igx-month-picker-${NEXT_ID++}`;
 
     /**
+     * The default css class applied to the component.
+     *
      * @hidden
      */
-    public yearAction = '';
-
-    /**
-     * @hidden
-     */
-    @ViewChild('yearsBtn')
-    public yearsBtn: ElementRef;
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
     /**
      * @hidden
      */
     @ViewChild('months', {read: IgxMonthsViewComponent})
     public monthsView: IgxMonthsViewComponent;
+
+    /**
+     * @hidden
+     */
+    public yearAction = '';
 
     /**
      * @hidden
@@ -177,7 +176,7 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
      */
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageUp(event: KeyboardEvent) {
-        super.onKeydownShiftPageUp(event);
+        this.keydownPageUpHandler(event);
     }
 
     /**
@@ -185,16 +184,7 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
      */
     @HostListener('keydown.pagedown', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
-        super.onKeydownShiftPageDown(event);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.shift.pageup', ['$event'])
-    @HostListener('keydown.shift.pagedown', ['$event'])
-    public onKeydownShiftPageDownUp(event: KeyboardEvent) {
-        event.stopPropagation();
+        this.keydownPageDownHandler(event);
     }
 
     /**
@@ -219,10 +209,3 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
         }
     }
 }
-
-@NgModule({
-    declarations: [IgxMonthPickerComponent],
-    exports: [IgxMonthPickerComponent],
-    imports: [CommonModule, IgxIconModule, IgxCalendarModule]
-})
-export class IgxMonthPickerModule { }

@@ -9,17 +9,16 @@ import {
     ViewChild,
     ElementRef
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter } from '../animations/main';
 import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
-import { IgxDaysViewComponent, CalendarView } from './days-view/days-view.component';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { KEYS } from '../core/utils';
 import { ICalendarDate } from './calendar';
+import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 
 let NEXT_ID = 0;
 
@@ -57,7 +56,7 @@ let NEXT_ID = 0;
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxDaysViewComponent {
+export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -72,29 +71,6 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
-
-    /**
-     * Gets whether the `day`, `month` and `year` should be rendered
-     * according to the locale and formatOptions, if any.
-     * ```typescript
-     * let formatViews = this.calendar.formatViews;
-     * ```
-     */
-    @Input()
-    public get formatViews(): object {
-        return this._formatViews;
-    }
-    /**
-     * Gets whether the `day`, `month` and `year` should be rendered
-     * according to the locale and formatOptions, if any.
-     * ```html
-     * <igx-calendar [formatViews] = "{ day: true, month: false, year: true }"></igx-calendar>
-     * ```
-     * @memberof IgxCalendarComponent
-     */
-    public set formatViews(formatViews: object) {
-        this._formatViews = Object.assign(this._formatViews, formatViews);
-    }
 
     /**
      * Sets/gets whether the calendar header will be in vertical position.
@@ -144,10 +120,12 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     }
 
     /**
+     * The default css class applied to the component.
+     *
      * @hidden
      */
-    @ViewChild('decade', {read: IgxYearsViewComponent})
-    public dacadeView: IgxYearsViewComponent;
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
     /**
      * @hidden
@@ -158,59 +136,14 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * @hidden
      */
-    @ViewChild('days', {read: IgxDaysViewComponent})
-    public daysView: IgxDaysViewComponent;
-
-    /**
-     * @hidden
-     */
     @ViewChild('monthsBtn')
     public monthsBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('yearsBtn')
-    public yearsBtn: ElementRef;
-
-    /**
-     * @hidden
-     */
-    get isDefaultView(): boolean {
-        return this._activeView === CalendarView.DEFAULT;
-    }
-
-    /**
-     * @hidden
-     */
     get isYearView(): boolean {
-        return this._activeView === CalendarView.YEAR;
-    }
-
-    /**
-     * @hidden
-     */
-    get isDecadeView(): boolean {
-        return this._activeView === CalendarView.DECADE;
-    }
-
-    /**
-     * Gets the current active view of the calendar.
-     * ```typescript
-     * let activeView =  this.calendar.activeView;
-     * ```
-     */
-    get activeView(): CalendarView {
-        return this._activeView;
-    }
-    /**
-     * Sets the current active view of the calendar.
-     * ```typescript
-     * this.calendar.activeView = activeView;
-     * ```
-     */
-    set activeView(val: CalendarView) {
-        this._activeView = val;
+        return this.activeView === CalendarView.YEAR;
     }
 
     /**
@@ -225,6 +158,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     set monthAction(val: string) {
         this._monthAction = val;
     }
+
     /**
      * Gets the header template.
      * ```typescript
@@ -238,6 +172,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         }
         return null;
     }
+
     /**
      * Sets the header template.
      * ```html
@@ -248,6 +183,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     set headerTemplate(directive: any) {
         this.headerTemplateDirective = directive;
     }
+
     /**
      * Gets the subheader template.
      * ```typescript
@@ -260,6 +196,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         }
         return null;
     }
+
     /**
      * Sets the subheader template.
      * ```html
@@ -317,26 +254,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      *@hidden
      */
-    private _activeView = CalendarView.DEFAULT;
-    /**
-     *@hidden
-     */
     private _monthAction = '';
-    /**
-     *@hidden
-     */
-    private _formatViews = {
-        day: false,
-        month: true,
-        year: false
-    };
-
-    /**
-     *@hidden
-     */
-    constructor(public elementRef: ElementRef) {
-        super();
-    }
 
     /**
      * Returns the locale representation of the month in the month view if enabled,
@@ -345,23 +263,10 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      * @hidden
      */
     public formattedMonth(value: Date): string {
-        if (this._formatViews.month) {
+        if (this.formatViews.month) {
             return this.formatterMonth.format(value);
         }
         return `${value.getMonth()}`;
-    }
-
-    /**
-     * Returns the locale representation of the year in the year view if enabled,
-     * otherwise returns the default `Date.getFullYear()` value.
-     *
-     * @hidden
-     */
-    public formattedYear(value: Date): string {
-        if (this._formatViews.year) {
-            return this.formatterYear.format(value);
-        }
-        return `${value.getFullYear()}`;
     }
 
     /**
@@ -415,20 +320,6 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * @hidden
      */
-    public previousYear() {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
-    }
-
-    /**
-     * @hidden
-     */
-    public nextYear() {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
-    }
-
-    /**
-     * @hidden
-     */
     public getFormattedDate(): { weekday: string, monthday: string } {
 
         const date = this.headerDate;
@@ -465,21 +356,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * @hidden
      */
-    public changeYear(event: Date) {
-        this.viewDate = new Date(event.getFullYear(), this.viewDate.getMonth());
-        this._activeView = CalendarView.DEFAULT;
-
-        requestAnimationFrame(() => {
-            this.yearsBtn.nativeElement.focus();
-        });
-    }
-
-    /**
-     * @hidden
-     */
     public changeMonth(event: Date) {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
-        this._activeView = CalendarView.DEFAULT;
+        this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
             this.monthsBtn.nativeElement.focus();
@@ -490,9 +369,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      * @hidden
      */
     public activeViewYear(): void {
-        this._activeView = CalendarView.YEAR;
+        this.activeView = CalendarView.YEAR;
         requestAnimationFrame(() => {
-            this.monthsView.el.nativeElement.focus();
+            this.monthsView.dates.find((date) => date.isCurrentMonth).nativeElement.focus();
         });
     }
 
@@ -503,26 +382,6 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
             this.activeViewYear();
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public activeViewDecade(): void {
-        this._activeView = CalendarView.DECADE;
-        requestAnimationFrame(() => {
-            this.dacadeView.el.nativeElement.focus();
-        });
-    }
-
-    /**
-     * @hidden
-     */
-    public activeViewDecadeKB(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            this.activeViewDecade();
         }
     }
 
@@ -570,12 +429,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      */
     @HostListener('keydown.shift.pageup', ['$event'])
     public onKeydownShiftPageUp(event: KeyboardEvent) {
-        event.preventDefault();
-        this.previousYear();
-
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
-        }
+        this.keydownPageUpHandler(event);
     }
 
     /**
@@ -583,12 +437,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
      */
     @HostListener('keydown.shift.pagedown', ['$event'])
     public onKeydownShiftPageDown(event: KeyboardEvent) {
-        event.preventDefault();
-        this.nextYear();
-
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
-        }
+        this.keydownPageDownHandler(event);
     }
 
     /**
@@ -620,7 +469,7 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
         const formatObject = {
             monthView: () => this.activeViewYear(),
             yearView: () => this.activeViewDecade(),
-            ...this.calendarModel.formatToParts(value, this.locale, this._formatOptions,
+            ...this.calendarModel.formatToParts(value, this.locale, this.formatOptions,
                 ['era', 'year', 'month', 'day', 'weekday'])
         };
         return { $implicit: formatObject };

@@ -4,7 +4,7 @@ import { DateRangeDescriptor } from '../../core/dates';
 
 /**
  *@hidden
-    */
+*/
 @Component({
     selector: 'igx-day-item',
     templateUrl: 'day-item.component.html'

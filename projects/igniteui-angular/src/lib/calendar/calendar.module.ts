@@ -13,7 +13,7 @@ import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { IgxDayItemComponent } from './days-view/day-item.component';
-
+import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
 
 @NgModule({
     declarations: [
@@ -25,13 +25,15 @@ import { IgxDayItemComponent } from './days-view/day-item.component';
         IgxCalendarYearDirective,
         IgxCalendarSubheaderTemplateDirective,
         IgxMonthsViewComponent,
-        IgxYearsViewComponent
+        IgxYearsViewComponent,
+        IgxMonthPickerComponent
     ],
     exports: [
         IgxCalendarComponent,
         IgxDaysViewComponent,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
+        IgxMonthPickerComponent,
         IgxCalendarHeaderTemplateDirective,
         IgxCalendarMonthDirective,
         IgxCalendarYearDirective,

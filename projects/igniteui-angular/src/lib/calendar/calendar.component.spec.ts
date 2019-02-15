@@ -403,7 +403,8 @@ describe('IgxCalendar', () => {
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
+
             const nextDay = new Date(2017, 5, 14);
 
             expect((calendar.value as Date).toDateString()).toMatch(
@@ -422,7 +423,7 @@ describe('IgxCalendar', () => {
                 nextDay.toDateString()
             );
             expect(
-                weekDays[3].parent.nativeElement.classList.contains(
+                weekDays[3].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -441,7 +442,7 @@ describe('IgxCalendar', () => {
             const parent = dom.query(
                 By.css('.igx-calendar__body-row:last-child')
             );
-            const target = parent.queryAll(By.css('span')).pop();
+            const target = parent.childNodes.pop();
 
             target.nativeElement.click();
             fixture.detectChanges();
@@ -459,7 +460,7 @@ describe('IgxCalendar', () => {
         it('Calendar selection - outside of current month - 2', () => {
             fixture.detectChanges();
             const parent = dom.queryAll(By.css('.igx-calendar__body-row'))[1];
-            const target = parent.queryAll(By.css('span')).shift();
+            const target = parent.queryAll(By.css('.igx-calendar__date--inactive'))[0];
 
             target.nativeElement.click();
             fixture.detectChanges();
@@ -479,7 +480,7 @@ describe('IgxCalendar', () => {
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
             const nextDay = new Date(2017, 5, 14);
 
             expect((calendar.value as Date).toDateString()).toMatch(
@@ -493,7 +494,7 @@ describe('IgxCalendar', () => {
                 nextDay.toDateString()
             );
             expect(
-                weekDays[3].parent.nativeElement.classList.contains(
+                weekDays[3].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -512,7 +513,7 @@ describe('IgxCalendar', () => {
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
 
             calendar.selection = 'multi';
             fixture.detectChanges();
@@ -537,7 +538,7 @@ describe('IgxCalendar', () => {
             );
             weekDays.forEach((el) => {
                 expect(
-                    el.parent.nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
@@ -563,7 +564,7 @@ describe('IgxCalendar', () => {
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
 
             calendar.selection = 'multi';
             fixture.detectChanges();
@@ -581,7 +582,7 @@ describe('IgxCalendar', () => {
                 lastDay.toDateString()
             );
             expect(
-                weekDays[weekDays.length - 1].parent.nativeElement.classList.contains(
+                weekDays[weekDays.length - 1].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -596,13 +597,13 @@ describe('IgxCalendar', () => {
             expect((calendar.value as Date[]).length).toEqual(3);
             // 11th June
             expect(
-                weekDays[0].parent.nativeElement.classList.contains(
+                weekDays[0].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
             // 12th June
             expect(
-                weekDays[1].parent.nativeElement.classList.contains(
+                weekDays[1].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -612,7 +613,7 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
 
             calendar.selection = 'range';
             fixture.detectChanges();
@@ -632,7 +633,7 @@ describe('IgxCalendar', () => {
                 (fixture.componentInstance.model as Date[])[0].toDateString()
             ).toMatch(firstDay.toDateString());
             expect(
-                weekDays[0].parent.nativeElement.classList.contains(
+                weekDays[0].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -646,7 +647,7 @@ describe('IgxCalendar', () => {
             );
             expect((calendar.value as Date[]).length).toEqual(0);
             expect(
-                weekDays[0].parent.nativeElement.classList.contains(
+                weekDays[0].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(false);
@@ -673,7 +674,7 @@ describe('IgxCalendar', () => {
             ).toMatch(lastDay.toDateString());
             weekDays.forEach((el) => {
                 expect(
-                    el.parent.nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
@@ -684,7 +685,7 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
-            const weekDays = weekDiv.queryAll(By.css('span'));
+            const weekDays = weekDiv.queryAll(By.css('.igx-calendar__date'));
 
             calendar.selection = 'range';
             fixture.detectChanges();
@@ -710,7 +711,7 @@ describe('IgxCalendar', () => {
             ).toMatch(lastDay.toDateString());
             weekDays.forEach((el) => {
                 expect(
-                    el.parent.nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
@@ -733,7 +734,7 @@ describe('IgxCalendar', () => {
             ).toMatch(midDay.toDateString());
             for (const i of [0, 1, 2, 3]) {
                 expect(
-                    weekDays[i].parent.nativeElement.classList.contains(
+                    weekDays[i].nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
@@ -746,7 +747,7 @@ describe('IgxCalendar', () => {
             expect((calendar.value as Date[]).length).toEqual(1);
             expect(calendar.value[0].toDateString()).toMatch(lastDay.toDateString());
             expect(
-                weekDays[6].parent.nativeElement.classList.contains(
+                weekDays[6].nativeElement.classList.contains(
                     'igx-calendar__date--selected'
                 )
             ).toBe(true);
@@ -769,7 +770,7 @@ describe('IgxCalendar', () => {
             ).toMatch(lastDay.toDateString());
             weekDays.forEach((el) => {
                 expect(
-                    el.parent.nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
@@ -865,7 +866,7 @@ describe('IgxCalendar', () => {
 
         it('Calendar date should persist the focus when select date in the (next/prev) month.', async () => {
             const component = dom.query(By.css('.igx-calendar'));
-            const calendarMonth = calendar.getCalendarMonth;
+            const calendarMonth = calendar.daysView.getCalendarMonth;
             let value = calendarMonth[0][4];
 
             UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement, true);
@@ -1703,7 +1704,7 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             const months = dom.queryAll(By.css('.igx-calendar__month'));
-            let currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+            const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
 
             expect(months.length).toEqual(11);
             expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
@@ -1711,30 +1712,25 @@ describe('IgxCalendar', () => {
             UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
             fixture.detectChanges();
 
-            currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-            expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jan');
+            expect(document.activeElement.textContent.trim()).toMatch('Jan');
 
-            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'End');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'End');
             fixture.detectChanges();
 
-            currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-            expect(currentMonth.nativeElement.textContent.trim()).toMatch('Dec');
+            expect(document.activeElement.textContent.trim()).toMatch('Dec');
 
-            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowLeft');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             fixture.detectChanges();
 
-            currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowUp');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
             fixture.detectChanges();
 
-            currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowRight');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             fixture.detectChanges();
 
-            currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-            expect(currentMonth.nativeElement.textContent.trim()).toMatch('Sep');
+            expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
-            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Enter');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(8);

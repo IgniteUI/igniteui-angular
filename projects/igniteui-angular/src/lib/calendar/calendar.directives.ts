@@ -69,6 +69,9 @@ export class IgxCalendarMonthDirective {
     @Output()
     public onMonthSelection = new EventEmitter<Date>();
 
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
+
     @HostBinding('class.igx-calendar__month')
     get defaultCSS(): boolean {
         return !this.isCurrentMonth;

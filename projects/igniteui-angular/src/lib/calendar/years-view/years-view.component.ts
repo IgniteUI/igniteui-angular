@@ -159,14 +159,17 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     private _formatterYear: any;
+
     /**
      *@hidden
      */
     private _locale = 'en';
+
     /**
      *@hidden
      */
     private _yearFormat = 'numeric';
+
     /**
      *@hidden
      */
@@ -199,9 +202,9 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     public selectYear(event) {
-        this.onSelection.emit(event);
-
         this.date = event;
+
+        this.onSelection.emit(this.date);
         this._onChangeCallback(this.date);
     }
 
@@ -245,6 +248,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         if (value) {
             this.date = value;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public yearTracker(index, item): string {
+        return `${item.getFullYear()}}`;
     }
 
     /**

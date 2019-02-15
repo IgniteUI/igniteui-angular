@@ -291,8 +291,10 @@
         display: inline-flex;
         color: --var($theme, 'picker-arrow-color');
         user-select: none;
+        outline: none;
         cursor: pointer;
 
+        &:focus,
         &:hover {
             color: --var($theme, 'picker-arrow-hover-color');
         }
@@ -305,6 +307,7 @@
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;
+        outline: none;
 
         &:hover,
         &:focus {
@@ -392,7 +395,8 @@
     }
 
     %cal-value--month-hover {
-        color: --var($theme, 'month-hover-text-color');
+        // color: --var($theme, 'month-hover-text-color');
+        background-color: --var($theme, 'date-hover-background');
     }
 
     %cal-value--month {
