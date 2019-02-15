@@ -2,7 +2,7 @@
     <app-page-header title="Autocomplete"></app-page-header>
     <section class="sample-content">
         <article class="sample-column">
-            <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit($event)">
+            <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit()">
                 <div class="box">
                     <igx-input-group class="group">
                         <igx-prefix><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
@@ -22,7 +22,7 @@
                         <input igxInput name="townsDetailed" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsDetailedPanel' [igxAutocompleteSettings]='settings' />
                         <label igxLabel for="townsDetailed">Towns Detailed</label>
-                        <igx-suffix><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+                        <igx-suffix><igx-icon fontSet="material" (click)="townSelected = ''">clear</igx-icon> </igx-suffix>
                     </igx-input-group>
                     <igx-drop-down #townsDetailedPanel>
                         <igx-drop-down-item *ngFor="let town of townsDetailed | startsWith:townSelected:'name'" [value]="town.name">
