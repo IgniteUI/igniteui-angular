@@ -11,10 +11,15 @@
 /// @property {map} text-color [igx-contrast-color: ('grays', 900)] - The text color used in the snackbar.
 /// @property {map} button-color [igx-color: ('secondary', 500)] - The button color used in the snackbar.
 /// @property {number} elevation [4] - The elevation level (shadow) used in the snackbar.
+/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for the snackbar component.
+
 ///
 /// @see $default-palette
 
 $_light-snackbar: (
+    border-radius: .17,
+
+
     background: (
         igx-color: ('grays', 900)
     ),
