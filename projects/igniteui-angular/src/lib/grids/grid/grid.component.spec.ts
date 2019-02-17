@@ -1386,16 +1386,21 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            it(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
+            fit(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.nativeElement.focus();
                 targetCell.onKeydownEnterEditMode({});
                 tick();
                 fixture.detectChanges();
 
                 // TO button
-                fixture.componentInstance.moveNext(true);
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: 'tab',
+                    code: 'tab',
+                    shiftKey: true
+                }));
                 tick();
                 fixture.detectChanges();
 
