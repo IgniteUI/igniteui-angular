@@ -1386,44 +1386,35 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            fit(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
+            fit(`Should jump from first editable columns to overlay buttons`, (async() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
-                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                const grid = fixture.componentInstance.grid;
+                const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
-                tick();
                 fixture.detectChanges();
-
                 targetCell.onKeydownEnterEditMode({});
-                tick();
                 fixture.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 // TO button
-                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
-                    key: 'tab',
-                    code: 'tab',
-                    shiftKey: true
-                }));
-                tick();
+                fixture.componentInstance.moveNext(true);
                 fixture.detectChanges();
-
                 const rowEditingBannerElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
                 const doneButtonElement = rowEditingBannerElement.lastElementChild;
                 expect(document.activeElement).toEqual(doneButtonElement);
 
-                // FROM button to first
+                // FROM button to last cell
                 document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
                     key: 'tab',
                     code: 'tab',
                     shiftKey: false
                 }));
-                tick();
                 fixture.detectChanges();
-
+                await wait(DEBOUNCETIME * 2);
                 expect(fixture.componentInstance.getCurrentEditCell().column.field).toEqual('Downloads');
                 //  active element could be the input too, so next expect is not always true
-                // const firstCellElement = targetCell.nativeElement;
-                // expect(document.activeElement).toEqual(firstCellElement);
+                // expect(document.activeElement).toEqual(lastCellElement);
             }));
 
             it(`Should jump from last editable columns to overlay buttons`, (async () => {
