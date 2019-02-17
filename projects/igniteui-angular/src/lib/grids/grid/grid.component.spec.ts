@@ -1386,7 +1386,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            fit(`Should jump from first editable columns to overlay buttons`, (async() => {
+            it(`Should jump from first editable columns to overlay buttons`, (async() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
