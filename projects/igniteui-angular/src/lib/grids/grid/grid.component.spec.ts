@@ -1391,6 +1391,9 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+
                 targetCell.onKeydownEnterEditMode({});
                 tick();
                 fixture.detectChanges();
