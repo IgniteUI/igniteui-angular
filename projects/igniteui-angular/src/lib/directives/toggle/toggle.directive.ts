@@ -181,6 +181,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (hasOpenAnimation || !(this._collapsed || hasCloseAnimation)) {
             return;
         }
+
+        this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
+
         this._collapsed = false;
         this.cdr.detectChanges();
 
@@ -192,11 +195,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        if (this._overlayId) {
-            this.overlayService.show(this._overlayId, overlaySettings);
-        } else {
-            this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
-        }
+        this.overlayService.show(this._overlayId, overlaySettings);
 
         this.unsubscribe();
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
