@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
+import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden

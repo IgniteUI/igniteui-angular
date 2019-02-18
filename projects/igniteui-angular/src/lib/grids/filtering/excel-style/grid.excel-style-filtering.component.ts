@@ -44,6 +44,7 @@ import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
  */
 export class FilterListItem {
     public value: string;
+    public label: string;
     public isSelected: boolean;
     public indeterminate: boolean;
 }
@@ -272,34 +273,38 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     public populateColumnData() {
         const data = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
         this.columnData = [];
+
+        let containsNullOrEmpty = false;
+
         data.forEach(element => {
-            const filterListItem =  new FilterListItem();
-            filterListItem.isSelected = true;
-            filterListItem.value = element;
-            filterListItem.indeterminate = false;
-            this.columnData.push(filterListItem);
+            if (element) {
+                const filterListItem =  new FilterListItem();
+                filterListItem.isSelected = true;
+                filterListItem.value = element;
+                filterListItem.label = element;
+                filterListItem.indeterminate = false;
+                this.columnData.push(filterListItem);
+            } else {
+                containsNullOrEmpty = true;
+            }
         });
 
-        // this.columnData = []
-        // if (!this.columnData.find(el => el.value === 'Select All')) {
-        //     this.columnData.push({
-        //         value: 'Select All',
-        //         isSelected: true,
-        //         indeterminate: false
-        //     });
-        // }
+        if (containsNullOrEmpty) {
+            const blanks =  new FilterListItem();
+            blanks.isSelected = true;
+            blanks.value = null;
+            blanks.label = '(Blanks)';
+            blanks.indeterminate = false;
+            this.columnData.unshift(blanks);
+        }
 
-        // //TODO
-        // // logic for 'BLANKS' item
-        // this.filteringService.grid.data.forEach(element => {
-        //     if (!this.columnData.find(el => el.value === element[this.column.field])) {
-        //         this.columnData.push({
-        //             value: element[this.column.field],
-        //             isSelected: true,
-        //             indeterminate: false
-        //         });
-        //     }
-        // });
+        const selectAll =  new FilterListItem();
+        selectAll.isSelected = true;
+        selectAll.value = 'Select All';
+        selectAll.label = 'Select All';
+        selectAll.indeterminate = false;
+        this.columnData.unshift(selectAll);
+
         this.cdr.detectChanges();
     }
 
