@@ -380,6 +380,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this._value) {
             this._transformedDate = (this._isInEditMode) ? this._getEditorDate(this._value) : this._getDisplayDate(this._value);
             this.isEmpty = false;
+        } else {
+            this._transformedDate = (this._isInEditMode) ? DatePickerUtil.maskToPromptChars(this.inputMask) : '';
         }
         return this._transformedDate;
     }
@@ -444,9 +446,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public set value(date: Date) {
         this._value = date;
         this._onChangeCallback(date);
-        if (this._value === null) {
-            this._transformedDate = '';
-        }
     }
 
     /**
@@ -1025,7 +1024,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, targetValue);
         this._isInEditMode = true;
 
-        if (targetValue !== DatePickerUtil.maskToPromptChars(this.mask)) {
+        if (targetValue !== DatePickerUtil.maskToPromptChars(this.inputMask)) {
             this.isEmpty = false;
         }
 
