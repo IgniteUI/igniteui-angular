@@ -46,7 +46,7 @@ export class IgxCalendarContainerComponent {
 
     @HostListener('keydown.esc', ['$event'])
     @HostListener('keydown.alt.arrowup', ['$event'])
-    public onSpaceClick(event) {
+    public onEscape(event) {
         event.preventDefault();
         this.onClose.emit();
     }
