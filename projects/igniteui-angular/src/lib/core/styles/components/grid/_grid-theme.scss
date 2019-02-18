@@ -167,7 +167,6 @@
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
-
     $theme: apply-palette($grid-schema, $palette);
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
@@ -431,7 +430,6 @@
     $palette: map-get($theme, 'palette');
     // @debug $theme;
 
-    $grid-br: 2px;
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $grid-caption-fs: rem(20px);
@@ -520,7 +518,7 @@
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 1fr;
-        border-radius: $grid-br;
+        overflow: hidden;
         box-shadow: $grid-shadow;
         outline-style: none;
         z-index: 0;

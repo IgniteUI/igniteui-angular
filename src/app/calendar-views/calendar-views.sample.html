@@ -1,0 +1,81 @@
+<div class="sample-wrapper">
+    <app-page-header title="Calendar">Calendar Views</app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <div class="calendar-sample" style="width: 600px">
+                <h4 class="sample-title">Default Calendar</h4>
+                <div class="calendar-sample-buttons">
+                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
+                    <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
+                </div>
+                <igx-card>
+                    <igx-calendar name="calendar" [(ngModel)]="dates" #calendar
+                                                  [viewDate]="viewDate"
+                                                  [weekStart]="'1'"
+                                                  [locale]="locale"
+                                                  [specialDates]="specialDates"
+                                                  [disabledDates]="disabledDates"
+                                                  [selection]="'multi'"
+                                                  (onSelection)="onSelection($event)">
+                    </igx-calendar>
+                </igx-card>
+            </div>
+            {{ dates }}
+        </article>
+        <article class="sample-column">
+                <div class="calendar-sample" style="width: 400px">
+                    <h4 class="sample-title">Month Picker</h4>
+                    <igx-card>
+                        <igx-month-picker [(ngModel)]="date1" #mp
+                                          [viewDate]="viewDate"
+                                          [formatOptions]="formatOptions"
+                                          [locale]="localeDe"
+                                          (onSelection)="onSelection($event)">
+                        </igx-month-picker>
+                    </igx-card>
+                </div>
+                {{ date1 }}
+            </article>
+    </section>
+    <div class="sample-content">
+        <section class="sample-content">
+            <article class="sample-column">
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-months-view [(ngModel)]="date"
+                                         [locale]="locale"
+                                         (onSelection)="onSelection($event)">
+                        </igx-months-view>
+                    </igx-card>
+                </div>
+            </article>
+            <article class="sample-column">
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-years-view [(ngModel)]="date"
+                                        [locale]="locale"
+                                        (onSelection)="onSelection($event)">
+                        </igx-years-view>
+                    </igx-card>
+                </div>
+            </article>
+            <article class="sample-column">
+                <div class="calendar-sample-buttons">
+                    <button igxButton="raised" igxRipple (click)="selectDV()">Select</button>
+                    <button igxButton="flat" igxRipple (click)="deselectDV()">Deselect</button>
+                </div>
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-days-view [(ngModel)]="date" #daysView
+                                       [viewDate]="date || selection"
+                                       [locale]="locale"
+                                       [selection]="'single'"
+                                       (onSelection)="onSelection($event)">
+                        </igx-days-view>
+                    </igx-card>
+                </div>
+            </article>
+        </section>
+        {{ date }}
+    </div>
+</div>

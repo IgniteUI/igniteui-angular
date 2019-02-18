@@ -13,9 +13,12 @@
 /// @prop {Map} actions-text-color [igx-color: ('grays', 600)] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for card date.
 /// @see $default-palette
 $_light-card: (
     background: #fff,
+
+    border-radius: .17,
 
     header-text-color: (
         igx-color: ('grays', 800)
