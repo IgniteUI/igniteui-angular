@@ -220,6 +220,7 @@ export class IgxMonthPickerComponent extends IgxCalendarComponent {
     }
 }
 
+/** @hidden */
 @NgModule({
     declarations: [IgxMonthPickerComponent],
     exports: [IgxMonthPickerComponent],
