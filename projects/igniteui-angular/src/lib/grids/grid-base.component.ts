@@ -2364,7 +2364,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngOnInit() {
-        // this.gridAPI.grid = this;
+        this.gridAPI.grid = this;
 
         // this.crudService.grid = this;
         this._setupServices();
@@ -2449,7 +2449,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngAfterContentInit() {
-        this.gridAPI.grid = this;
         this.setupColumns();
     }
 
@@ -4052,7 +4051,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
-            column.gridID = this.id;
+            column.grid = this;
             column.defaultWidth = this.columnWidth;
             this.setColumnEditState(column);
 
