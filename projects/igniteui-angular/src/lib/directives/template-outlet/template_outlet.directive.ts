@@ -29,7 +29,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
     public onViewMoved = new EventEmitter<IViewChangeEventArgs>();
 
     @Output()
-    public onCachedViewLoaded = new EventEmitter<IViewChangeEventArgs>();
+    public onCachedViewLoaded = new EventEmitter<ICachedViewLoadedEventArgs>();
 
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
@@ -95,9 +95,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
         // after that update its context.
         this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
         this._viewRef = cachedView;
+        const oldContext = this._cloneContext(cachedView.context);
         this._viewContainerRef.insert(this._viewRef, 0);
         this._updateExistingContext(this.igxTemplateOutletContext);
-        this.onCachedViewLoaded.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
+        this.onCachedViewLoaded.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext, oldContext });
     }
 
     private _shouldRecreateView(changes: SimpleChanges): boolean {
@@ -125,6 +126,14 @@ export class IgxTemplateOutletDirective implements OnChanges {
         for (const propName of Object.keys(ctx)) {
             (<any>this._viewRef.context)[propName] = (<any>this.igxTemplateOutletContext)[propName];
         }
+    }
+
+    private _cloneContext(ctx: any): any {
+        const clone = {};
+        for (const propName of Object.keys(ctx)) {
+            clone[propName] = ctx[propName];
+        }
+        return clone;
     }
 
     private _getActionType(changes: SimpleChanges) {
@@ -159,7 +168,11 @@ enum TemplateOutletAction {
 export interface IViewChangeEventArgs {
     owner: IgxTemplateOutletDirective;
     view: EmbeddedViewRef<any>;
-    context: Object;
+    context: any;
+}
+
+export interface ICachedViewLoadedEventArgs extends IViewChangeEventArgs {
+    oldContext: any;
 }
 
 /**

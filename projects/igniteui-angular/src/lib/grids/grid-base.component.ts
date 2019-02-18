@@ -70,7 +70,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
-import { IViewChangeEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import { IViewChangeEventArgs, ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -4724,13 +4724,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.document.body.contains(this.nativeElement);
     }
 
+
+
     /**
      * @hidden
      */
-    public cachedViewLoaded(args: IViewChangeEventArgs) {
-        const view: EmbeddedViewRef<any> = args.view;
-        if (view.rootNodes.length) {
-            const row = this.dataRowList.find(r => r.nativeElement === view.rootNodes[0]);
+    public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
+        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
+            args.view.detectChanges();
+            const row = this.getRowByIndex(args.context.index);
             if (row) {
                 row.cells.forEach((c) => {
                     c.highlightText(

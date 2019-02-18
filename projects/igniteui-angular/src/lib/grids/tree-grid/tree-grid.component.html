@@ -72,7 +72,7 @@
             </ng-template>
 
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
-                [igxTemplateOutletContext]='getContext(rowData)'
+                [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
                 (onCachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
         </ng-template>
