@@ -10,7 +10,9 @@
     ViewChild,
     NgZone,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -45,7 +47,7 @@ const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     /**
      * Gets the column of the cell.
@@ -570,6 +572,19 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
      */
     public isCellSelected() {
         return this.selectionService.selected(this.selectionNode);
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.value && !changes.value.firstChange) {
+            if (this.highlight) {
+                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
+                this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
+                this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+        }
     }
 
     /**

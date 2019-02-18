@@ -98,7 +98,10 @@
                 <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [indentation]="groupingExpressions.length" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
                 </igx-grid-summary-row>
             </ng-template>
-            <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
+            <ng-template [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template'
+                [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
+                (onCachedViewLoaded)='cachedViewLoaded($event)'>
+            </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>

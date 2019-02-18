@@ -637,9 +637,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
     * @hidden
     */
-   public getContext(rowData): any {
+   public getContext(rowData, rowIndex): any {
         return {
             $implicit: rowData,
+            index: rowIndex,
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
