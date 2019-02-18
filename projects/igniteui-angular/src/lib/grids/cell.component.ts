@@ -9,7 +9,9 @@
     Input,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -39,7 +41,7 @@ import { DataType } from '../data-operations/data-util';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit {
+export class IgxGridCellComponent implements OnInit, OnChanges {
 
     /**
      * Gets the column of the cell.
@@ -608,6 +610,19 @@ export class IgxGridCellComponent implements OnInit {
     public ngOnInit() {
         this.cellSelectionID = `${this.gridID}-cell`;
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.value && !changes.value.firstChange) {
+            if (this.highlight) {
+                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
+                this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
+                this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+        }
     }
 
     /**
