@@ -656,10 +656,9 @@ describe('IgxTreeGrid - Integration', () => {
             tick();
 
             //  ged DONE button and click it
-            const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
-            const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
-            const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Done');
-            doneButtonElement.nativeElement.click();
+            const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+            const doneButtonElement = rowEditingBannerElement.lastElementChild;
+            doneButtonElement.click();
             tick();
 
             // Verify the value is updated and the correct style is applied before committing
