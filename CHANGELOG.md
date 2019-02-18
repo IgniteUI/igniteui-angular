@@ -100,6 +100,9 @@ All notable changes for each version of this project will be documented in this 
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
+- `igxOverlay`:
+    - `igxOverlay.attach(component, settings?)` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
+    - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.attach(component, settings?)` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
 
  **Components roundness**
 - Ignite UI for Angular now allows you to change the shape of components by changing their border-radius.
