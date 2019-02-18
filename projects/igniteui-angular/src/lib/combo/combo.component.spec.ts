@@ -1252,9 +1252,6 @@ describe('igxCombo', () => {
             tick();
             expect(inputElement.value).toEqual('');
             expect(combo.selectedItems().length).toEqual(0);
-            // Drop down is closed after clicking on clear button, reopen and check boxes
-            combo.toggle();
-            tick();
             verifyItemIsUnselected(dropdownList, combo, 3);
             verifyItemIsUnselected(dropdownList, combo, 7);
             verifyItemIsUnselected(dropdownList, combo, 1);
@@ -2118,9 +2115,6 @@ describe('igxCombo', () => {
             expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
 
             setTimeout(() => {
-                combo.toggle();
-                fixture.detectChanges();
-
                 combo.dropdown.verticalScrollContainer.scrollTo(20);
                 fixture.detectChanges();
                 setTimeout(() => {

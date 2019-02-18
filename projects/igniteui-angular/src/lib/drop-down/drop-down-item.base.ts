@@ -4,6 +4,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
+let NEXT_ID = 0;
 let warningShown = false;
 
 /**
@@ -21,6 +22,20 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     protected _isSelected = false;
     protected _index = null;
     protected _disabled = false;
+
+    /**
+     * Sets/gets the `id` of the item.
+     * ```html
+     * <igx-select-item [id] = 'select-item-0'></igx-select-item>
+     * ```
+     * ```typescript
+     * let itemId =  this.item.id;
+     * ```
+     * @memberof IgxSelectItemComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-drop-down-item-${NEXT_ID++}`;
 
     /**
      * @hidden
@@ -90,6 +105,8 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * ```
      */
     @Input()
+    @HostBinding('attr.aria-selected')
+    @HostBinding('class.igx-drop-down__item--selected')
     get selected(): boolean {
         return this._isSelected;
     }
@@ -105,7 +122,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * @hidden
      */
     @Input()
-    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is depracated.\n` +
+    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is deprecated.\n` +
         `Use \`selected\` instead.`)
     get isSelected(): boolean {
         return this.selected;
@@ -116,15 +133,6 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     set isSelected(value: boolean) {
         this.selected = value;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-drop-down__item--selected')
-    get selectedStyle(): boolean {
-        return this.selected;
     }
 
     /**
@@ -155,7 +163,6 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-drop-down__item--focused')
     @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
         `Use \`focused\` instead.`)
     get isFocused(): boolean {
@@ -208,6 +215,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
      */
     @Input()
+    @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-drop-down__item--disabled')
     public get disabled(): boolean {
         return this.group ? this.group.disabled || this._disabled : this._disabled;
@@ -216,6 +224,17 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     public set disabled(value: boolean) {
         this._disabled = value;
     }
+
+    /**
+     * Gets/sets the `role` attribute of the item. Default is 'option'.
+     *
+     * ```html
+     *  <igx-drop-down-item [role]="customRole"></igx-drop-down-item>
+     * ```
+     */
+    @Input()
+    @HostBinding('attr.role')
+    public role = 'option';
 
     /**
      * Gets item index

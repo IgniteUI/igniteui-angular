@@ -47,10 +47,13 @@
 ///
 /// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for calendar.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
+/// @requires round-borders
 /// @requires extend
 ///
 /// @example scss Change the header and content background colors
@@ -66,6 +69,8 @@
 
     $content-background: null,
     $content-text-color: null,
+
+    $border-radius: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -97,7 +102,12 @@
     $date-disabled-text-color: null
 ) {
     $name: 'igx-calendar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $calendar-schema: map-get($schema, $name);
+    $theme: apply-palette($calendar-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($calendar-schema, 'border-radius')), 0, 20px
+    );
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
@@ -180,6 +190,7 @@
         header-background: $header-background,
         header-text-color: $header-text-color,
 
+        border-radius: $border-radius,
 
         picker-arrow-color: $picker-arrow-color,
         picker-arrow-hover-color: $picker-arrow-hover-color,
@@ -242,6 +253,7 @@
         background: --var($theme, 'content-background');
         overflow: hidden;
         outline: none;
+        border-radius: --var($theme, 'border-radius');
     }
 
     %cal-display--vertical {
