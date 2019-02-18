@@ -31,7 +31,7 @@
                 <igx-date-picker [value]="date" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
                         let-displayData="displayData">
-                        <igx-input-group (click)="openDialog($event)">
+                        <igx-input-group (click)="openDialog()">
                             <label igxLabel>Date</label>
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>

@@ -1,11 +1,6 @@
 import { PipeTransform, Pipe, Inject } from '@angular/core';
-import { IGX_DATE_PICKER_COMPONENT, IgxDatePickerBase } from './date-picker.common';
-import {
-    trimUnderlines,
-    maskToPromptChars,
-    addPromptCharsEditMode,
-
-} from './date-picker.utils';
+import { IGX_DATE_PICKER_COMPONENT, IDatePicker } from './date-picker.common';
+import { DatePickerUtil } from './date-picker.utils';
 
 /**
  * @hidden
@@ -14,14 +9,14 @@ import {
     name: 'displayValue'
 })
 export class DatePickerDisplayValuePipe implements PipeTransform {
-    constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
+    constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IDatePicker) { }
     transform(value: any, args?: any): any {
         if (value !== '') {
-            if (value === maskToPromptChars(this._datePicker.inputMask)) {
+            if (value === DatePickerUtil.maskToPromptChars(this._datePicker.inputMask)) {
                 return '';
             }
             this._datePicker.rawDateString = value;
-            return trimUnderlines(value);
+            return DatePickerUtil.trimUnderlines(value);
         }
         return '';
     }
@@ -34,15 +29,15 @@ export class DatePickerDisplayValuePipe implements PipeTransform {
     name: 'inputValue'
 })
 export class DatePickerInputValuePipe implements PipeTransform {
-    constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
+    constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IDatePicker) { }
     transform(value: any, args?: any): any {
         if (this._datePicker.invalidDate !== '') {
             return this._datePicker.invalidDate;
         } else {
             if (this._datePicker.value === null || this._datePicker.value === undefined) {
-                return maskToPromptChars(this._datePicker.inputMask);
+                return DatePickerUtil.maskToPromptChars(this._datePicker.inputMask);
             } else {
-                return addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
+                return DatePickerUtil.addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
             }
         }
     }

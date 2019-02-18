@@ -14,7 +14,7 @@ export class IgxCalendarContainerComponent {
     public calendar: IgxCalendarComponent;
 
     @Input()
-    public mode = DatePickerInteractionMode.READONLY;
+    public mode: DatePickerInteractionMode = DatePickerInteractionMode.READONLY;
 
     @Input()
     public vertical = false;

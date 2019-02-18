@@ -44,40 +44,76 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
 import {
-    PREDEFINED_FORMAT_OPTIONS,
-    parseDateFormat,
-    IFormatOptions,
-    IFormatViews,
-    DatePickerInteractionMode,
-    DEFAULT_LOCALE_DATE,
-    SPIN_DELTA,
-    addPromptCharsEditMode,
-    getModifiedDateInput,
-    maskToPromptChars,
-    checkForCompleteDateInput,
-    getInputMask,
-    getMask,
-    parseDateArray,
-    DATE_STATE
+    DatePickerUtil,
+    DateState
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
-import { IgxDatePickerBase } from './date-picker.common';
+import { IDatePicker } from './date-picker.common';
 import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 
 let NEXT_ID = 0;
+
 /**
  * This interface is used to provide information about date picker reference and its current value
  * when onDisabledDate event is fired.
  */
-export interface IgxDatePickerDisabledDateEventArgs {
+export interface IDatePickerDisabledDateEventArgs {
     datePicker: IgxDatePickerComponent;
     currentValue: Date;
 }
-export interface IgxDatePickerValidationFailedEventArgs {
+
+/**
+ * This interface is used to provide information about date picker reference and its previously valid value
+ * when onValidationFailed event is fired.
+ */
+export interface IDatePickerValidationFailedEventArgs {
     datePicker: IgxDatePickerComponent;
     prevValue: Date;
+}
+
+/**
+ * This interface is used to configure calendar format view options.
+ */
+export interface IFormatViews {
+    day?: boolean;
+    month?: boolean;
+    year?: boolean;
+}
+
+/**
+ * This interface is used to configure calendar format options.
+ */
+export interface IFormatOptions {
+    day?: string;
+    month?: string;
+    weekday?: string;
+    year?: string;
+}
+
+/**
+ * This enumeration is used to configure whether the date picker has an editable input
+ * or is readonly - the date is selected only through a popup calendar.
+ */
+export const enum DatePickerInteractionMode {
+    EDITABLE = 'editable',
+    READONLY = 'readonly'
+}
+
+/**
+ * This enumeration is used to configure the date picker to operate with pre-defined format option used in Angular DatePipe.
+ * 'https://angular.io/api/common/DatePipe'
+ * 'shortDate': equivalent to 'M/d/yy' (6/15/15).
+ * 'mediumDate': equivalent to 'MMM d, y' (Jun 15, 2015).
+ * 'longDate': equivalent to 'MMMM d, y' (June 15, 2015).
+ * 'fullDate': equivalent to 'EEEE, MMMM d, y' (Monday, June 15, 2015).
+ */
+export const enum PredefinedFormatOptions {
+    SHORT_DATE = 'shortDate',
+    MEDIUM_DATE = 'mediumDate',
+    LONG_DATE = 'longDate',
+    FULL_DATE = 'fullDate'
 }
 
 /**
@@ -102,7 +138,7 @@ export interface IgxDatePickerValidationFailedEventArgs {
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html'
 })
-export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -185,7 +221,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     @Input()
     public get format(): string {
-        return (this._format === undefined) ? this._defaultDateFormat : this._format;
+        return (this._format === undefined) ? PredefinedFormatOptions.SHORT_DATE : this._format;
     }
 
     /**
@@ -342,14 +378,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     public get transformedDate(): string {
         if (this._value) {
-            if (this._isInEditMode) {
-                this._transformedDate = this._getEditorDate(this._value);
-            } else {
-                this._transformedDate = this._getDisplayDate(this._value);
-            }
-
+            this._transformedDate = (this._isInEditMode) ? this._getEditorDate(this._value) : this._getDisplayDate(this._value);
             this.isEmpty = false;
         }
+
         return this._transformedDate;
     }
 
@@ -380,14 +412,24 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     get context() {
         return {
-            value: this.value,
+            disabled: this.disabledDates,
+            disabledDates: this.disabledDates,
             displayData: this.displayData,
-            openDialog: (event) => { this.openDialog(event); }
+            format: this.format,
+            isSpinLoop: this.isSpinLoop,
+            label: this.label,
+            labelVisibility: this.labelVisibility,
+            locale: this.locale,
+            mask: this.mask,
+            mode: this.mode,
+            specialDates: this.specialDates,
+            value: this.value,
+            openDialog: () => { this.openDialog(); }
         };
     }
 
     /**
-     *An @Input property that sets the selected date.
+     *An @Input property that gets/sets the selected date.
      *```typescript
      *public date: Date = new Date();
      *```
@@ -419,7 +461,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public id = `igx-date-picker-${NEXT_ID++}`;
 
     /**
-     *An @Input property that applies custom formatter on the selected or passed date.
+     *An @Input property that applies a custom formatter function on the selected or passed date.
      *```typescript
      *public date: Date = new Date();
      *private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
@@ -550,7 +592,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     *```
     */
     @Output()
-    public onDisabledDate = new EventEmitter<IgxDatePickerDisabledDateEventArgs>();
+    public onDisabledDate = new EventEmitter<IDatePickerDisabledDateEventArgs>();
 
     /**
     *An @Output property that fires when the user types/spins invalid date in the date-picker editor.
@@ -564,7 +606,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         *```
         */
     @Output()
-    public onValidationFailed = new EventEmitter<IgxDatePickerValidationFailedEventArgs>();
+    public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
     /*
      * @hidden
@@ -637,6 +679,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public isEmpty = true;
     public invalidDate = '';
 
+    private readonly SPIN_DELTA = 1;
+    private readonly DEFAULT_LOCALE = 'en';
+
     private _formatOptions = {
         day: 'numeric',
         month: 'short',
@@ -653,13 +698,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _format: string;
     private _value: Date;
     private _isInEditMode: boolean;
-    private _defaultDateFormat: string = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
-
     private _disabledDates: DateRangeDescriptor[] = null;
     private _specialDates: DateRangeDescriptor[] = null;
     private _modalOverlay: OverlaySettings;
     private _dropDownOverlay: OverlaySettings;
-
     private _positionSettings: PositionSettings;
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
@@ -668,7 +710,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
-        this.openDialog(event);
+        this.openDialog();
         event.preventDefault();
     }
 
@@ -755,11 +797,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             });
 
         if (this.mode === DatePickerInteractionMode.EDITABLE) {
-            this.dateFormatParts = parseDateFormat(this.mask, this.locale);
+            this.dateFormatParts = DatePickerUtil.parseDateFormat(this.mask, this.locale);
             if (this.mask === undefined) {
-                this.mask = getMask(this.dateFormatParts);
+                this.mask = DatePickerUtil.getMask(this.dateFormatParts);
             }
-            this.inputMask = getInputMask(this.dateFormatParts);
+            this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
         }
     }
 
@@ -831,8 +873,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *
      * @hidden
      */
-    public openDialog(event): void {
-        event.stopPropagation();
+    public openDialog(): void {
+        if (!this.collapsed) {
+            return;
+        }
         switch (this.mode) {
             case DatePickerInteractionMode.READONLY: {
                 this.hasHeader = true;
@@ -841,13 +885,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 break;
             }
             case DatePickerInteractionMode.EDITABLE: {
-                if (this.collapsed) {
-                    this.hasHeader = false;
-                    const dropDownOverlay =
-                        (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
-                    dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
-                    this._componentID = this._overlayService.show(IgxCalendarContainerComponent, dropDownOverlay);
-                }
+                this.hasHeader = false;
+                const dropDownOverlay =
+                    (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
+                dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
+                this._componentID = this._overlayService.show(IgxCalendarContainerComponent, dropDownOverlay);
                 break;
             }
         }
@@ -915,7 +957,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     * and re-calculate the editor text.
     *
     * @param event
-    *
     * @hidden
     */
     public onFocus(event): void {
@@ -942,7 +983,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.openDialog(event);
+                    this.openDialog();
                 } else {
                     this.spinValue(event);
                 }
@@ -962,7 +1003,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     */
     public onWheel(event) {
         this.spinValue(event);
-
     }
 
     /**
@@ -975,25 +1015,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public onInput(event) {
         const targetValue = event.target.value;
         const cursorPosition = this._getCursorPosition();
-        const checkInput = checkForCompleteDateInput(this.dateFormatParts, targetValue);
+        const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, targetValue);
 
-        if (targetValue !== maskToPromptChars(this.mask)) {
+        if (targetValue !== DatePickerUtil.maskToPromptChars(this.mask)) {
             this.isEmpty = false;
-        }
-
-        // While editing, if the input is deleted, total clean up
-        if (checkInput === 'empty') {
-            this.isEmpty = true;
-            this.deselectDate();
-        }
-
-        // While editing, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
-        if (checkInput === 'partial') {
-            this.deselectDate();
-            requestAnimationFrame(() => {
-                this.getEditElement().value = targetValue;
-                this._setCursorPosition(cursorPosition);
-            });
         }
 
         // If all date parts are completed, change the date-picker value, stay in edit mode
@@ -1002,6 +1027,17 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             this._transformedDate = targetValue;
             this.calculateDate(targetValue, event.type);
             this._setCursorPosition(cursorPosition);
+        } else if (checkInput === 'partial') {
+            // While editing, if one date part is deleted, date-picker value is set to null, the remaining input stays intact.
+            this.deselectDate();
+            requestAnimationFrame(() => {
+                this.getEditElement().value = targetValue;
+                this._setCursorPosition(cursorPosition);
+            });
+        } else if (checkInput === 'empty') {
+            // Total clean-up as input is deleted.
+            this.isEmpty = true;
+            this.deselectDate();
         }
     }
 
@@ -1009,12 +1045,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (dateString !== '') {
             const prevDateValue = this.value;
             const inputValue = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
-            const newDateArray = parseDateArray(this.dateFormatParts, prevDateValue, inputValue);
+            const newDateArray = DatePickerUtil.parseDateArray(this.dateFormatParts, prevDateValue, inputValue);
 
-            if (newDateArray.state === DATE_STATE.VALID) {
+            if (newDateArray.state === DateState.VALID) {
                 const newValue = newDateArray.date;
                 // Restore the time part if any
-                if (prevDateValue !== null && prevDateValue !== undefined) {
+                if (prevDateValue) {
                     newValue.setHours(prevDateValue.getHours());
                     newValue.setMinutes(prevDateValue.getMinutes());
                     newValue.setSeconds(prevDateValue.getSeconds());
@@ -1027,14 +1063,14 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                     this.invalidDate = '';
                     this._onChangeCallback(newValue);
                 } else {
-                    const args: IgxDatePickerDisabledDateEventArgs = {
+                    const args: IDatePickerDisabledDateEventArgs = {
                         datePicker: this,
                         currentValue: newValue,
                     };
                     this.onDisabledDate.emit(args);
                 }
             } else {
-                const args: IgxDatePickerValidationFailedEventArgs = {
+                const args: IDatePickerValidationFailedEventArgs = {
                     datePicker: this,
                     prevValue: prevDateValue
                 };
@@ -1053,18 +1089,17 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         let sign = 0;
         if (event.key) {
             sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
-        }
-        if (event.deltaY) {
+        } else if (event.deltaY) {
             sign = (event.deltaY > 0) ? -1 : 1;
         }
 
         const modifiedInputValue =
-            getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, SPIN_DELTA * sign, this.isSpinLoop);
+            DatePickerUtil.getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, this.SPIN_DELTA * sign, this.isSpinLoop);
 
         this.getEditElement().value = modifiedInputValue;
         this._setCursorPosition(cursorPosition);
 
-        const checkInput = checkForCompleteDateInput(this.dateFormatParts, modifiedInputValue);
+        const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, modifiedInputValue);
         if (checkInput === 'complete') {
             this._isInEditMode = true;
             this.calculateDate(modifiedInputValue, event.type);
@@ -1098,7 +1133,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _initializeCalendarContainer(event) {
         const containerComponent = event.componentRef.instance;
         this.calendar = containerComponent.calendar;
-        const isVertical = (this.vertical && this.mode !== DatePickerInteractionMode.EDITABLE) ? true : false;
+        const isVertical = (this.vertical && this.mode !== DatePickerInteractionMode.EDITABLE);
         this.calendar.hasHeader = this.hasHeader;
         this.calendar.formatOptions = this.formatOptions;
         this.calendar.formatViews = this.formatViews;
@@ -1160,8 +1195,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     * @returns formatted string
     */
     private _getDisplayDate(value: any): string {
-        if (this.format !== undefined && !this.formatter) {
-            const locale = (this.locale) ? this.locale : DEFAULT_LOCALE_DATE;
+        if (this.format && !this.formatter) {
+            const locale = this.locale || this.DEFAULT_LOCALE;
             return formatDate(value, this.format, locale);
         } else {
             return this._customFormatChecker(this.formatter, value);
@@ -1169,9 +1204,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     private _getEditorDate(value: any) {
-        const locale = (this.locale) ? this.locale : DEFAULT_LOCALE_DATE;
-        const changedValue = (value !== undefined && value !== null) ? formatDate(value, this.mask, locale) : '';
-        return addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
+        const locale = this.locale || this.DEFAULT_LOCALE;
+        const changedValue = (value) ? formatDate(value, this.mask, locale) : '';
+        return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
     private _onTouchedCallback: () => void = () => { };

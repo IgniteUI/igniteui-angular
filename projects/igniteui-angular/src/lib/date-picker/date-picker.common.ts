@@ -2,7 +2,7 @@
 export const IGX_DATE_PICKER_COMPONENT = 'IgxDatePickerComponentToken';
 
 /** @hidden */
-export interface IgxDatePickerBase {
+export interface IDatePicker {
     value: Date;
     mask: string;
     inputMask: string;

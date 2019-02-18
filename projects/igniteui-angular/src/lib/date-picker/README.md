@@ -108,8 +108,8 @@ The DatePicker input group could be retemplated.
 | `onSelection` | `Date` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
 | `onOpen`  | `datePicker` | Emitted when a datePicker calendar is being opened. |
 | `onClose`  | `datePicker` | Emitted when a datePicker calendar is being closed. |
-| `onDisabledDate`  | `IgxDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in editable mode. |
-| `onValidationFailed`  | `IgxDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in editable mode. |
+| `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in editable mode. |
+| `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in editable mode. |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |

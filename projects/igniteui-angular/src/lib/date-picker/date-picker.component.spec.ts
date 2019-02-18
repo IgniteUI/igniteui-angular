@@ -442,7 +442,7 @@ describe('IgxDatePicker', () => {
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
         });
 
-        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', async () => {
+        xit('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', async () => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
             expect(input).not.toBeNull();
@@ -491,7 +491,7 @@ describe('IgxDatePicker', () => {
 
             const selectedSpans = dom.nativeElement.getElementsByClassName('igx-calendar__date--selected');
             expect(selectedSpans.length).toBe(1);
-            expect(selectedSpans[0].innerHTML.trim()).toBe('20');
+            expect(selectedSpans[0].innerText.trim()).toBe('20');
 
             const dateHeader = dom.nativeElement.getElementsByClassName('igx-calendar-picker__date');
             expect(dateHeader.length).toBe(2);
