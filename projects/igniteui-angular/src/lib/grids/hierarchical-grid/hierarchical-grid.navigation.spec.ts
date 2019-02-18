@@ -659,12 +659,12 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
 
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
         child2Cell.nativeElement.focus();
-        await wait(100);
+        await wait(240);
         fixture.detectChanges();
 
         // Shift + Tab from 2nd child
         child2Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(100);
+        await wait(240);
         fixture.detectChanges();
 
         const child1Cell = child1.getCellByColumn(9, 'childData');
