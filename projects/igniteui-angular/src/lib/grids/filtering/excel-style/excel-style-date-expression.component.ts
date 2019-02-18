@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
+import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 
 /**
  * @hidden

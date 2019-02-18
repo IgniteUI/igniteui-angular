@@ -57,12 +57,13 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expressionUI.expression.searchVal = value;
 
-        inputValues.focus();
+        //TODO
+        inputValues.input.nativeElement.focus();
     }
 
     public onDropdownValuesOpening(targetDropdown: IgxDropDownComponent, inputValues: any) {
         targetDropdown.items.forEach(dropdownItem => {
-            if (dropdownItem.value === inputValues.value) {
+            if (dropdownItem.value === inputValues.input.nativeElement.value) {
                 dropdownItem.isSelected = true;
                 targetDropdown.setSelectedItem(dropdownItem.index);
             } else {
@@ -83,8 +84,12 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return condition ? condition.name : null;
     }
 
-    public getInputWidth(input) {
-        return input ? input.element.nativeElement.offsetWidth + 'px': null;
+    public getInputWidth(inputGroup: any) {
+        //TODO
+        requestAnimationFrame(()=>{
+            return inputGroup ? inputGroup.input.nativeElement.offsetWidth + 'px': null;
+        });
+        
     }
 
     //DUPLICATE
@@ -122,7 +127,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expressionUI.expression.condition = this.getCondition(value);
 
-        requestAnimationFrame(() => { inputValues.focus();});
+        //TODO
+        requestAnimationFrame(() => { inputValues.input.nativeElement.focus();});
     }
 
     public isValueSelected(value: string): boolean {

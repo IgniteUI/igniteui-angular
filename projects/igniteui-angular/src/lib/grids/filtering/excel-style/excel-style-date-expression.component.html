@@ -43,26 +43,26 @@
 </igx-drop-down>
 
 <igx-date-picker #datePicker tabindex="0" [outlet]="filteringService.grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="filteringService.grid.locale">
-        <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
-            <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
-                <igx-icon igxPreffix>calendar</igx-icon>
-                <input #input
-                       igxInput
-                       tabindex="0"
-                       (click)="openDatePicker(openDialog)"
-                       placeholder="Select value..."
-                       autocomplete="off"
-                       [value]="displayData | date"
-                       [readonly]="true"
-                       [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
-                <igx-icon igxSuffix tabindex="0"
-                       (click)="toggleCustomDialogDropDown(inputGroupDateValues, dropdownValues)"
-                       [igxDropDownItemNavigation]="dropdownValues">
-                       arrow_drop_down
-                </igx-icon>
-            </igx-input-group>
-        </ng-template>
-    </igx-date-picker>
+    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
+        <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+            <igx-icon igxPreffix>calendar</igx-icon>
+            <input #input
+                    igxInput
+                    tabindex="0"
+                    (click)="openDatePicker(openDialog)"
+                    placeholder="Select value..."
+                    autocomplete="off"
+                    [value]="displayData | date"
+                    [readonly]="true"
+                    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
+            <igx-icon igxSuffix tabindex="0"
+                    (click)="toggleCustomDialogDropDown(inputGroupDateValues, dropdownValues)"
+                    [igxDropDownItemNavigation]="dropdownValues">
+                    arrow_drop_down
+            </igx-icon>
+        </igx-input-group>
+    </ng-template>
+</igx-date-picker>
 
 <button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="expressionsList.length > 1">
     <igx-icon>cancel</igx-icon>

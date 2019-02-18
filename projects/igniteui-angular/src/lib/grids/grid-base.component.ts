@@ -69,6 +69,12 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
+import { 
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1357,6 +1363,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
+    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
+    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
+    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
+    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
      * @hidden

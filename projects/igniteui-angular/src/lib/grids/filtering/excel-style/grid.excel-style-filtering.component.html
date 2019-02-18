@@ -1,5 +1,5 @@
 <igx-icon
-    class="igx-excel-filter__icon"
+    [ngClass]="iconClassName"
     [attr.draggable]="false"
     (click)="onIconClick($event)">
     filter_list
@@ -7,49 +7,71 @@
 
 <article #dropdown igxToggle
     class="igx-excel-filter__menu"
-    (onClosing)="onDropDownClosing()"
+    (onClosed)="onDropDownClosed()"
     (onOpening)="onDropDownOpening()"
-    (mouseenter)="onMenuMouseEnter($event)"
     >
     <header class="igx-excel-filter__menu-header">
         <h4 class="igx-typography__h6">{{ column.field }}</h4>
     </header>
 
-    <igx-excel-style-sorting
-        class="igx-excel-filter__sort"
-        [column]="column">
-    </igx-excel-style-sorting>
+    <ng-template #defaultExcelStyleSortingTemplate>
+        <igx-excel-style-sorting
+            #excelStyleSorting
+            class="igx-excel-filter__sort"
+            [column]="column">
+        </igx-excel-style-sorting>
+    </ng-template>
+
+    <div *ngIf="column.sortable">
+        <ng-container *ngTemplateOutlet="sortingTemplate"></ng-container>
+    </div>
 
     <section class="igx-excel-filter__actions">
 
-        <igx-excel-style-column-moving
-            class="igx-excel-filter__move"
-            [column]="column">
-        </igx-excel-style-column-moving>
+        <ng-template #defaultExcelStyleMovingTemplate>
+            <igx-excel-style-column-moving
+                class="igx-excel-filter__move"
+                [column]="column">
+            </igx-excel-style-column-moving>
+        </ng-template>
 
-        <div class="igx-excel-filter__actions-pin"
-            (click)="onPin()"
-            *ngIf="!column.pinned">
-            <span>Pin column</span>
-            <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+        <div *ngIf="column.movable">
+            <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
         </div>
 
-        <div class="igx-excel-filter__actions-unpin"
-            (click)="onPin()"
-            *ngIf="column.pinned">
-            <span>Unpin column</span>
-            <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+        <ng-template #defaultExcelStylePinningTemplate>
+            <div class="igx-excel-filter__actions-pin"
+                (click)="onPin()"
+                *ngIf="!column.pinned">
+                <span>Pin column</span>
+                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+            </div>
+
+            <div class="igx-excel-filter__actions-unpin"
+                (click)="onPin()"
+                *ngIf="column.pinned">
+                <span>Unpin column</span>
+                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+            </div>
+        </ng-template>
+
+        <div *ngIf="!column.disablePinning">
+            <ng-container *ngTemplateOutlet="pinningTemplate"></ng-container>
         </div>
 
-        <div class="igx-excel-filter__actions-hide"
-            (click)="onHide()">
-            <span>Hide column</span>
-            <igx-icon>visibility_off</igx-icon>
+        <ng-template #defaultExcelStyleHidingTemplate>
+            <div class="igx-excel-filter__actions-hide"
+                (click)="onHide()">
+                <span>Hide column</span>
+                <igx-icon>visibility_off</igx-icon>
+            </div>
+        </ng-template>
+
+        <div *ngIf="!column.disableHiding">
+            <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
         </div>
 
-        <div class="igx-excel-filter__actions-filter"
-            (mouseenter)="onMouseEnter($event)"
-            (mouseleave)="onMouseLeave()">
+        <div class="igx-excel-filter__actions-filter" (click)="onTextFilterClick($event)" >
             <span>Text filter</span>
             <igx-icon>keyboard_arrow_right</igx-icon>
         </div>
@@ -68,8 +90,8 @@
     </footer>
 </article>
 
-<igx-drop-down #subMenu (onClosed)="onSubMenuClosed()" (onSelection)="onSubMenuSelection($event)">
-    <div style="width: 200px" (mouseover)="onSubMenuMouseEnter()" (mouseout)="onSubMenuMouseLeave()" >
+<igx-drop-down #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+    <div style="width: 200px">
         <igx-drop-down-item
             *ngFor="let condition of conditions"
             [value]="condition">
