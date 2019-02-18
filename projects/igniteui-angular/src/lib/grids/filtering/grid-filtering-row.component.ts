@@ -420,9 +420,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /*
     * Opens date-picker if condition is not unary
     */
-    public openDatePicker(openDialog: Function, eventArgs) {
+    public openDatePicker(openDialog: Function) {
         if (!this.expression.condition.isUnary) {
-            openDialog(eventArgs);
+            openDialog();
         }
     }
 
