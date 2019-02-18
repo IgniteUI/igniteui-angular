@@ -708,7 +708,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
-    public onSpaceClick(event) {
+    public onSpaceClick(event: KeyboardEvent) {
         this.openDialog();
         event.preventDefault();
     }
@@ -957,7 +957,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     * @param event
     * @hidden
     */
-    public onFocus(event): void {
+    public onFocus(): void {
         this._isInEditMode = true;
         if (this.value && this.invalidDate === '') {
             this._transformedDate = this._getEditorDate(this.value);
@@ -976,14 +976,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
-                this.spinValue(event);
+                event.preventDefault();
+                this.spinValue(event.target.value, 1, event.type);
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
                     this.openDialog();
                 } else {
-                    this.spinValue(event);
+                    event.preventDefault();
+                    this.spinValue(event.target.value, -1, event.type);
                 }
                 break;
             default:
@@ -1000,7 +1002,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     * @hidden
     */
     public onWheel(event) {
-        this.spinValue(event);
+        event.preventDefault();
+        const sign = (event.deltaY > 0) ? -1 : 1;
+        this.spinValue(event.target.value, sign, event.type);
     }
 
     /**
@@ -1078,18 +1082,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    private spinValue(event) {
-        event.preventDefault();
+    private spinValue(inputValue: string, sign: number, eventType: string): void {
         this._isInEditMode = true;
         this.isEmpty = false;
-        const inputValue = event.target.value;
         const cursorPosition = this._getCursorPosition();
-        let sign = 0;
-        if (event.key) {
-            sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
-        } else if (event.deltaY) {
-            sign = (event.deltaY > 0) ? -1 : 1;
-        }
 
         const modifiedInputValue =
             DatePickerUtil.getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, this.SPIN_DELTA * sign, this.isSpinLoop);
@@ -1100,7 +1096,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, modifiedInputValue);
         if (checkInput === 'complete') {
             this._isInEditMode = true;
-            this.calculateDate(modifiedInputValue, event.type);
+            this.calculateDate(modifiedInputValue, eventType);
             this._setCursorPosition(cursorPosition);
         }
     }
