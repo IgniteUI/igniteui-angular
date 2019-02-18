@@ -92,9 +92,10 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     private isMainMenuOpened = false;
     private shouldOpenSubMenu = true;
     private shouldOpenMainMenu = true;
-    private originalColumnData = [];
+    private originalColumnData = new Array<FilterListItem>();
 
-    public columnData = [];
+    public listData = new Array<FilterListItem>();
+    public uniqueValues = [];
 
     private _mainMenuPositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
@@ -258,7 +259,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public closeDialog() {
-        this.columnData = cloneArray(this.originalColumnData, true);
+        this.listData = cloneArray(this.originalColumnData, true);
         this.originalColumnData = [];
         this.mainDropdown.close();
     }
@@ -271,19 +272,19 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     }
 
     public populateColumnData() {
-        const data = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
-        this.columnData = [];
+        this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
+        this.listData = new Array<FilterListItem>();
 
         let containsNullOrEmpty = false;
 
-        data.forEach(element => {
+        this.uniqueValues.forEach(element => {
             if (element) {
                 const filterListItem =  new FilterListItem();
                 filterListItem.isSelected = true;
                 filterListItem.value = element;
                 filterListItem.label = element;
                 filterListItem.indeterminate = false;
-                this.columnData.push(filterListItem);
+                this.listData.push(filterListItem);
             } else {
                 containsNullOrEmpty = true;
             }
@@ -295,7 +296,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
             blanks.value = null;
             blanks.label = '(Blanks)';
             blanks.indeterminate = false;
-            this.columnData.unshift(blanks);
+            this.listData.unshift(blanks);
         }
 
         const selectAll =  new FilterListItem();
@@ -303,7 +304,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         selectAll.value = 'Select All';
         selectAll.label = 'Select All';
         selectAll.indeterminate = false;
-        this.columnData.unshift(selectAll);
+        this.listData.unshift(selectAll);
 
         this.cdr.detectChanges();
     }
@@ -311,7 +312,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     public onDropDownOpening() {
         this.isMainMenuOpened = true;
         this.populateColumnData();
-        this.originalColumnData = cloneArray(this.columnData, true);
+        this.originalColumnData = cloneArray(this.listData, true);
 
         const se = this.column.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
         if (se) {
@@ -363,8 +364,8 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
 
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.column.field);
-        const selectedItems = this.columnData.filter(el => el.value !== 'Select All' && el.isSelected === true);
-        const unselectedItems = this.columnData.find(el => el.value !== 'Select All' && el.isSelected === false);
+        const selectedItems = this.listData.filter(el => el.value !== 'Select All' && el.isSelected === true);
+        const unselectedItems = this.listData.find(el => el.value !== 'Select All' && el.isSelected === false);
 
         if (unselectedItems) {
             if (selectedItems.length === 0) {

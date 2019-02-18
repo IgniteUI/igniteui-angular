@@ -37,8 +37,8 @@
     [width]="getInputWidth(datePicker)"
     (onSelection)="onValuesChanged($event, datePicker)"
     (onOpening)="onDropdownValuesOpening(dropdownValues, datePicker)">
-    <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem.value" [isSelected]="isValueSelected(filterItem)">
-        <span>{{ filterItem.value }}</span>
+    <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
+        <span>{{ filterItem }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
