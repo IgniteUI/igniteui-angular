@@ -720,10 +720,10 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - scroll down vertically and select a cell that was initially out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            await wait(50);
+            await wait(100);
             fixture.detectChanges();
 
-            const cell = grid.columnList.toArray()[9].cells[4];
+            const cell = grid.getCellByColumn(25, 'Phone');
             const selectedData = [{ Phone: '40.32.21.21'}];
             cell.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
@@ -737,34 +737,30 @@ describe('IgxGrid - Column Moving', () => {
             await wait(50);
             fixture.detectChanges();
 
-            // step 4 - reorder that column among columns that are currently out of view
+            // step 4 - reorder that "Phone" column
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
-            await wait(50);
+            await wait(100);
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
-            await wait(1500);
+            await wait(100);
             fixture.detectChanges();
 
-            // TODO: What is exactly is the logic below
-
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 30);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 30);
-            await wait();
+            await wait(50);
             fixture.detectChanges();
 
             // step 5 - verify selection is preserved
-            expect(grid.columnList.toArray()[6].cells[4].selected).toBeFalsy();
-
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            await wait(50);
+            await wait(100);
             fixture.detectChanges();
+
+            const newSelectedData = [{Country: 'France'}];
             HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
-            expect(grid.getSelectedData()).toEqual(selectedData);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
         it('Should affect all pages when columns are reordered and paging is enabled.', (async() => {
