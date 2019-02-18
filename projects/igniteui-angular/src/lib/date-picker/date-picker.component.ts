@@ -381,7 +381,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this._transformedDate = (this._isInEditMode) ? this._getEditorDate(this._value) : this._getDisplayDate(this._value);
             this.isEmpty = false;
         }
-
         return this._transformedDate;
     }
 
@@ -412,7 +411,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     get context() {
         return {
-            disabled: this.disabledDates,
+            disabled: this.disabled,
             disabledDates: this.disabledDates,
             displayData: this.displayData,
             format: this.format,
@@ -641,7 +640,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
     * @hidden
     */
-    @ViewChild(IgxInputDirective)
+    @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
 
     /**
@@ -750,7 +749,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         } else {
             inputElement = (this.readonlyInput) ? this.readonlyInput : this.input;
         }
-
         return (inputElement) ? inputElement.nativeElement : null;
     }
 
@@ -1016,6 +1014,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const targetValue = event.target.value;
         const cursorPosition = this._getCursorPosition();
         const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, targetValue);
+        this._isInEditMode = true;
 
         if (targetValue !== DatePickerUtil.maskToPromptChars(this.mask)) {
             this.isEmpty = false;
@@ -1023,7 +1022,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         // If all date parts are completed, change the date-picker value, stay in edit mode
         if (checkInput === 'complete' && event.inputType !== 'deleteContentBackward') {
-            this._isInEditMode = true;
             this._transformedDate = targetValue;
             this.calculateDate(targetValue, event.type);
             this._setCursorPosition(cursorPosition);
@@ -1108,7 +1106,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _onOpening(event) {
-        this._initializeCalendarContainer(event);
+        this._initializeCalendarContainer(event.componentRef.instance);
         this.collapsed = false;
     }
 
@@ -1130,9 +1128,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    private _initializeCalendarContainer(event) {
-        const containerComponent = event.componentRef.instance;
-        this.calendar = containerComponent.calendar;
+    private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
+        this.calendar = componentInstance.calendar;
         const isVertical = (this.vertical && this.mode !== DatePickerInteractionMode.EDITABLE);
         this.calendar.hasHeader = this.hasHeader;
         this.calendar.formatOptions = this.formatOptions;
@@ -1149,13 +1146,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.calendar.viewDate = this.value;
         }
 
-        containerComponent.mode = this.mode;
-        containerComponent.vertical = isVertical;
-        containerComponent.cancelButtonLabel = this.cancelButtonLabel;
-        containerComponent.todayButtonLabel = this.todayButtonLabel;
+        componentInstance.mode = this.mode;
+        componentInstance.vertical = isVertical;
+        componentInstance.cancelButtonLabel = this.cancelButtonLabel;
+        componentInstance.todayButtonLabel = this.todayButtonLabel;
 
-        containerComponent.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
-        containerComponent.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
+        componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
+        componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
     }
 
     // Focus a date, after the calendar appearance into DOM.

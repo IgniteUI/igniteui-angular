@@ -212,7 +212,8 @@ export abstract class DatePickerUtil {
     }
 
     public static maskToPromptChars(mask: string): string {
-        return mask.replace(/0|L/g, DatePickerUtil.PROMPT_CHAR);
+        const result = mask.replace(/0|L/g, DatePickerUtil.PROMPT_CHAR);
+        return result;
     }
 
     /**
@@ -220,7 +221,8 @@ export abstract class DatePickerUtil {
      * @param value
      */
     public static trimUnderlines(value: string): string {
-        return value.replace(/_/g, '');
+        const result = value.replace(/_/g, '');
+        return result;
     }
 
     /**
@@ -485,7 +487,8 @@ export abstract class DatePickerUtil {
     }
 
     private static getDateFormatPart(dateFormatParts: any[], type: DateParts): any {
-        return dateFormatParts.filter((datePart) => (datePart.type === type))[0];
+        const result = dateFormatParts.filter((datePart) => (datePart.type === type))[0];
+        return result;
     }
 
     private static isFullInput(value: any, input: string): boolean {
@@ -507,8 +510,9 @@ export abstract class DatePickerUtil {
     }
 
     private static getDatePartOnPosition(dateFormatParts: any[], position: number) {
-        return dateFormatParts.filter((element) =>
+        const result = dateFormatParts.filter((element) =>
             element.position[0] <= position && position <= element.position[1] && element.type !== DatePickerUtil.SEPARATOR)[0];
+        return result;
     }
 
     private static getFullYearFromString(yearPart, inputValue): number {
