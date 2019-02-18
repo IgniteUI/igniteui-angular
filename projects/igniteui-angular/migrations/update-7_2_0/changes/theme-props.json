@@ -9,6 +9,21 @@
             "name": "$search-disabled-shadow-color",
             "replaceWith": "$search-disabled-shadow",
             "owner": "igx-input-group-theme"
+        },
+        {
+            "name": "$button-roundness",
+            "replaceWith": "$raised-border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$roundness",
+            "replaceWith": "$border-radius",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$roundness",
+            "replaceWith": "$border-radius",
+            "owner": "igx-tooltip-theme"
         }
     ]
 }

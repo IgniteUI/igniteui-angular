@@ -64,7 +64,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private settings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy({ target: this.parentElement })
+        positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
+        excludePositionTarget: true
     };
 
     protected id: string;
@@ -337,6 +338,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private highlightFirstItem = () => {
+        if (this.target.focusedItem) {
+            this.target.focusedItem.focused = false;
+            this.target.focusedItem = null;
+        }
         this.target.navigateFirst();
         this.cdr.detectChanges();
         this.reposition();

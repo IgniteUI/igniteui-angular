@@ -16,6 +16,8 @@
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
 /// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -23,6 +25,7 @@
 /// @requires igx-elevation
 /// @requires text-contrast
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: igx-carousel-theme(
@@ -34,6 +37,8 @@
 @function igx-carousel-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+
+    $border-radius: null,
 
     $button-background: null,
     $button-hover-background: null,
@@ -47,7 +52,13 @@
     $disable-button-shadow: true
 ){
     $name: 'igx-carousel';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $carousel-schema: map-get($schema, $name);
+    $theme: apply-palette($carousel-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($carousel-schema, 'border-radius')),0 ,36px
+    );
+
     $button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1));
 
     @if not($button-arrow-color) and $button-background {
@@ -61,6 +72,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        border-radius: $border-radius,
         button-background: $button-background,
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
@@ -113,6 +125,7 @@
         height: inherit;
         overflow: hidden;
         outline-style: none;
+        border-radius: --var($theme, 'border-radius');
 
         .active {
             display: block;
@@ -226,6 +239,6 @@
     %igx-carousel-slide img {
         width: inherit;
         height: inherit;
-        transform: scale(1.01);
+        transform: scale(1.1);
     }
 }

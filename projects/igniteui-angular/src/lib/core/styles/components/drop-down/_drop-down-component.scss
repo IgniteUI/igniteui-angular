@@ -15,6 +15,11 @@
         @extend %igx-drop-down__list !optional;
     }
 
+    @include e(list, $m: select) {
+        @extend %igx-drop-down__list !optional;
+        @extend %igx-drop-down__list--select !optional;
+    }
+
     @include e(item) {
         @extend %igx-drop-down__item !optional;
     }
