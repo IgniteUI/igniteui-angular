@@ -29,6 +29,7 @@ import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, Ver
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
+    @Input()
     public expressionsList = new Array<ExpressionUI>();
 
     private _customDialogPositionSettings: PositionSettings = {

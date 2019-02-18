@@ -309,6 +309,12 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
+    getExpressionsList() {
+        const expressionUIs = new Array<ExpressionUI>();
+        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.filteringService.grid.filteringLogic, expressionUIs);
+        return expressionUIs;
+    }
+
     public onDropDownOpening() {
         this.isMainMenuOpened = true;
         this.populateColumnData();

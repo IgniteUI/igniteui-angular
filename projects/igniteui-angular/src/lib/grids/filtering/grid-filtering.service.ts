@@ -405,7 +405,7 @@ export class IgxFilteringService implements OnDestroy {
         return count;
     }
 
-    private generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+    public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
                                     operator: FilteringLogic,
                                     expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
