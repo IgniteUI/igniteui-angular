@@ -38,6 +38,7 @@ import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IPositionStrategy } from './position/IPositionStrategy';
+import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -3281,7 +3282,7 @@ describe('igxOverlay', () => {
             tick();
             fixture.detectChanges();
             expect(document.querySelectorAll((IGX_AVATAR_CLASS)).length).toEqual(0);
-            overlay.show(IgxDatePickerComponent);
+            overlay.show(IgxCalendarContainerComponent);
             fixture.detectChanges();
             expect(document.querySelectorAll((IGX_DATEPICKER_CLASS)).length).toEqual(1);
             overlay.hideAll();
