@@ -205,6 +205,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return !this.target.collapsed && this.target.focusedItem ? this.target.focusedItem.id : null;
     }
 
+    /** @hidden  @internal */
+    @HostBinding('attr.aria-autocomplete')
+    public get ariaAutocomplete() {
+        return 'list';
+    }
+
     /**
      * @hidden
      * @internal
