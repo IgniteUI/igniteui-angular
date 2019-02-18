@@ -111,7 +111,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
         this.expressionsList[this.expressionsList.length - 1].afterOperator = FilteringLogic.And;
         exprUI.beforeOperator = this.expressionsList[this.expressionsList.length - 1].afterOperator;
-        exprUI.afterOperator = FilteringLogic.And;
 
         this.expressionsList.push(exprUI);
     }

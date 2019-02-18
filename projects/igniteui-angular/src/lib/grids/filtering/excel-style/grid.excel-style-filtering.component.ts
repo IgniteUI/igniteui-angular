@@ -93,6 +93,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     private shouldOpenSubMenu = true;
     private shouldOpenMainMenu = true;
     private originalColumnData = new Array<FilterListItem>();
+    private expressionsList = new Array<ExpressionUI>();
 
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
@@ -309,14 +310,10 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    getExpressionsList() {
-        const expressionUIs = new Array<ExpressionUI>();
-        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.filteringService.grid.filteringLogic, expressionUIs);
-        return expressionUIs;
-    }
-
     public onDropDownOpening() {
         this.isMainMenuOpened = true;
+        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.filteringService.grid.filteringLogic, this.expressionsList);
+        this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
         this.originalColumnData = cloneArray(this.listData, true);
 
