@@ -598,6 +598,40 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow instanceof IgxChildGridRowComponent).toBeTruthy();
             expect(lastRow.index).toBe(9);
         }));
+
+        it('should corerctly hide/show vertical scrollbar after page is changed.', (async() => {
+            hierarchicalGrid.paging = true;
+            hierarchicalGrid.perPage = 5;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+
+            // expand row
+            hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+
+            // change page
+            hierarchicalGrid.page = 1;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+
+            // change page
+            hierarchicalGrid.page = 0;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+        }));
     });
 
     describe('Toolbar', () => {
