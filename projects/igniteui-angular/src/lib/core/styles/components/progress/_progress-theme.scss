@@ -78,10 +78,11 @@
         display: flex;
         width: 100%;
         flex: 1 1 100%;
+        flex-direction: column;
     }
 
     %linear-bar {
-        position: absolute;
+        position: relative;
         width: inherit;
         height: $bar-height;
         background: --var($theme, 'track-color');
