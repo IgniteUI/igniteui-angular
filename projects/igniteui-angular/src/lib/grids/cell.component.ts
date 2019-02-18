@@ -712,8 +712,8 @@ export class IgxGridCellComponent implements OnInit {
             const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
             const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
 
-            if (column.inlineEditorTemplate === undefined && (
-                (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE)))) {
+            if (column.inlineEditorTemplate === undefined &&
+                column.dataType === DataType.Boolean && key !== KEYS.SPACE && key !== KEYS.SPACE_IE) {
                 event.preventDefault();
             }
             return;
