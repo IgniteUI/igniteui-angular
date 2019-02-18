@@ -647,7 +647,7 @@ describe('IgxAutocomplete', () => {
             expect(input.nativeElement.attributes['autocomplete'].value).toEqual('off');
             expect(input.nativeElement.attributes['role'].value).toEqual('combobox');
             expect(input.nativeElement.attributes['aria-haspopup'].value).toEqual('listbox');
-            expect(input.nativeElement.attributes['aria-owns'].value).toEqual(dropDown.id);
+            expect(input.nativeElement.attributes['aria-owns'].value).toEqual(dropDown.listId);
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
