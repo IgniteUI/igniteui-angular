@@ -1467,8 +1467,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * @memberof IgxGridBaseComponent
      */
-    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
-    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+    public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
+        return this.toolbarCustomContentTemplates.first;
+    }
+
+    @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
+    public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
 
     /**
      * @hidden
@@ -2234,9 +2238,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
-        horizontalDirection: HorizontalAlignment.Left,
+        horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
-        horizontalStartPoint: HorizontalAlignment.Right,
+        horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Bottom,
         closeAnimation: null
     });

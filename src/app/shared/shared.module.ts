@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,
@@ -35,10 +36,14 @@ import {
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
-    IgxTooltipModule
+    IgxTooltipModule,
+    IgxSelectModule
 } from 'igniteui-angular';
+import { IgxMonthPickerModule } from 'projects/igniteui-angular/src/lib/month-picker/month-picker.component';
+
 
 const igniteModules = [
+    IgxAutocompleteModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxBottomNavModule,
@@ -74,7 +79,9 @@ const igniteModules = [
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
-    IgxTooltipModule
+    IgxTooltipModule,
+    IgxMonthPickerModule,
+    IgxSelectModule
 ];
 
 @NgModule({
