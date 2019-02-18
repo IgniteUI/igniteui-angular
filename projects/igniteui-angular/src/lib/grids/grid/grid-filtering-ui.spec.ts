@@ -2788,10 +2788,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         tick();
         fix.detectChanges();
 
-        const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].children[0].innerText;
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-        expect(sundayLabel).toEqual('So');
+        const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+
+        expect(sundayLabel.trim()).toEqual('So');
     }));
 });
 
