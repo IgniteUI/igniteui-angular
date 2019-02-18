@@ -776,8 +776,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         };
 
         this._overlayService.onOpening.pipe(
-            // TODO
-            // filter((overlay) => overlay.id === this._componentID),
+            filter((overlay) => overlay.id === this._componentID),
             takeUntil(this._destroy$)).subscribe((eventArgs) => {
                 this._onOpening(eventArgs);
             });
@@ -879,7 +878,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case DatePickerInteractionMode.READONLY: {
                 this.hasHeader = true;
                 const modalOverlay = (this.modalOverlaySettings !== undefined) ? this._modalOverlay : this._modalOverlaySettings;
-                this._componentID = this._overlayService.show(IgxCalendarContainerComponent, modalOverlay);
+                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay);
+                this._overlayService.show(this._componentID, modalOverlay);
                 break;
             }
             case DatePickerInteractionMode.EDITABLE: {
@@ -887,7 +887,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 const dropDownOverlay =
                     (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
                 dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
-                this._componentID = this._overlayService.show(IgxCalendarContainerComponent, dropDownOverlay);
+                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay);
+                this._overlayService.show(this._componentID, dropDownOverlay);
                 break;
             }
         }
