@@ -151,7 +151,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     });
 
     it('should not lose scroll position after expanding/collapsing a row.', async() => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(20);
+        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 750;
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
@@ -178,6 +178,65 @@ describe('IgxHierarchicalGrid Virtualization', () => {
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
     });
+
+    it('should not lose scroll position after expanding a row when there are already expanded rows above.', async() => {
+        // Expand two rows at the top
+        hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+
+        hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+
+        // Scroll to bottom
+        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 5000;
+        await wait(100);
+        fixture.detectChanges();
+
+        // Expand two rows at the bottom
+        hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+
+        hierarchicalGrid.dataRowList.toArray()[4].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+
+        // Scroll to top to make sure top.
+        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        await wait(100);
+        fixture.detectChanges();
+
+        // Scroll to somewhere in the middle and make sure scroll position stays when expanding/collapsing.
+        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 1250;
+        await wait(100);
+        fixture.detectChanges();
+        const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
+        const topOffset = fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top;
+        const secondRow = hierarchicalGrid.rowList.toArray()[2];
+        // expand second row
+        secondRow.nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
+        expect(
+            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(topOffset, 10)
+        ).toBeLessThanOrEqual(1);
+
+        secondRow.nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+        // collapse second row
+        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
+        expect(
+            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(topOffset, 10)
+        ).toBeLessThanOrEqual(1);
+    });
+
     it('should be able to scroll last row in view after all rows get expanded.', async() => {
         // expand all
         hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
