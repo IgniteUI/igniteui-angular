@@ -978,6 +978,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
                 event.preventDefault();
+                event.stopPropagation();
                 this.spinValue(event.target.value, 1, event.type);
                 break;
             case KEYS.DOWN_ARROW:
@@ -986,6 +987,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     this.openDialog();
                 } else {
                     event.preventDefault();
+                    event.stopPropagation();
                     this.spinValue(event.target.value, -1, event.type);
                 }
                 break;
@@ -1004,8 +1006,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     */
     public onWheel(event) {
         event.preventDefault();
+        event.stopPropagation();
         const sign = (event.deltaY > 0) ? -1 : 1;
         this.spinValue(event.target.value, sign, event.type);
+
     }
 
     /**
