@@ -17,6 +17,8 @@
 /// @param {Color} $button-color [null] - The button color used in the snackbar.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the snackbar.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for the snackbar component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -24,6 +26,7 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: igx-snackbar-theme($background: white);
@@ -34,6 +37,7 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
+    $border-radius: null,
     $background: null,
     $text-color: null,
     $button-color: null,
@@ -42,6 +46,10 @@
     $name: 'igx-snackbar';
     $snackbar-schema: map-get($schema, $name);
     $theme: apply-palette($snackbar-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($snackbar-schema, 'border-radius')), 0, 24px
+    );
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -59,6 +67,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        border-radius: $border-radius,
         background: $background,
         text-color: $text-color,
         button-color: $button-color,
@@ -89,12 +98,12 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
-        border-radius: 4px;
         margin: 8px;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
         backface-visibility: hidden;
         box-shadow: --var($theme, 'shadow');
+        border-radius: --var($theme, 'border-radius')
     }
 
     %igx-snackbar-button {

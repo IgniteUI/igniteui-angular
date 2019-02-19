@@ -10,7 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxRowComponent } from '../grid';
+import { IgxRowComponent } from '../row.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
@@ -73,6 +73,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * ```
      */
     public toggle() {
+        if (this.added) {
+            return;
+        }
         const grid = this.gridAPI.get(this.grid.id);
         const state = this.gridAPI.get(this.grid.id).hierarchicalState;
         if (!this.expanded) {

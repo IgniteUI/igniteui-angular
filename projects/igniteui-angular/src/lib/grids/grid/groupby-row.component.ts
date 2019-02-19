@@ -168,12 +168,10 @@ export class IgxGridGroupByRowComponent {
         const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
         if (isVirtualized) {
-            this.grid.verticalScrollContainer.onChunkLoad
-            .pipe(first())
-            .subscribe(() => {
-                const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
-                if (groupRow) { groupRow.focus(); }
-            });
+            const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
+            if (groupRow) {
+                groupRow.focus();
+            }
         }
     }
 

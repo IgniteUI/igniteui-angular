@@ -159,6 +159,16 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     }
 
     /** @hidden */
+    public get added(): boolean {
+        const row: State = this.grid.transactions.getState(this.rowID);
+        if (row) {
+            return row.type === TransactionType.ADD;
+        }
+
+         return false;
+    }
+
+    /** @hidden */
     public get deleted(): boolean {
         return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
     }

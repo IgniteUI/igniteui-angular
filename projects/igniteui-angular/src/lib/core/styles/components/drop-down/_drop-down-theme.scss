@@ -33,6 +33,8 @@
 /// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the drop-down.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for drop-down component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -40,10 +42,13 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 @function igx-drop-down-theme(
     $palette: $default-palette,
     $schema: $light-schema,
     $elevations: $elevations,
+
+    $border-radius: null,
 
     $background-color: null,
     $header-text-color: null,
@@ -71,8 +76,11 @@
 ) {
     $name: 'igx-drop-down';
     $drop-down-schema: map-get($schema, 'igx-drop-down');
-
     $theme: apply-palette($drop-down-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($drop-down-schema, 'border-radius')), 0, 20px
+    );
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -135,6 +143,7 @@
         name: $name,
         palette: $palette,
         background-color: $background-color,
+        border-radius: $border-radius,
         header-text-color: $header-text-color,
         item-text-color: $item-text-color,
         hover-item-text-color: $hover-item-text-color,
@@ -163,8 +172,7 @@
     $desktop-item-height: 48px;
     $mobile-item-height: 32px;
 
-    $desktop-item-padding: 16px;
-    $mobile-item-padding: 8px;
+    $item-padding: 16px;
 
     $desktop-header-padding: 16px;
     $mobile-header-padding: 8px;
@@ -174,6 +182,8 @@
     %igx-drop-down {
         max-height: 100%;
         position: absolute;
+        border-radius: --var($theme, 'border-radius');
+        overflow: hidden;
     }
 
     %igx-drop-down__list {
@@ -185,6 +195,10 @@
         igx-input-group {
             margin-top: -16px !important;
         }
+    }
+
+    %igx-drop-down__list--select {
+        max-width: calc(100% + #{$item-padding} * 2);
     }
 
     %igx-drop-down__header,
@@ -200,7 +214,7 @@
         color: --var($theme, 'item-text-color');
         cursor: pointer;
         height: rem($desktop-item-height);
-        padding: 0 rem($desktop-item-padding);
+        padding: 0 rem($item-padding);
 
         &:focus {
             outline: 0;
@@ -287,11 +301,13 @@
     $type-scale,
     $categories: (
         header: 'overline',
-        item: 'body-2'
+        item: 'body-2',
+        select-item: 'subtitle-1'
     )
 ) {
     $header: map-get($categories, 'header');
     $item: map-get($categories, 'item');
+    $select-item: map-get($categories, 'select-item');
 
     @include igx-scope('.igx-typography') {
         %igx-drop-down__header,
@@ -304,6 +320,13 @@
         %igx-drop-down__item {
             @include igx-type-style($type-scale, $item) {
                 margin: 0;
+            }
+        }
+
+        %igx-drop-down__list--select {
+            %igx-drop-down__item {
+                @include igx-type-style($type-scale, $select-item);
+                @include ellipsis()
             }
         }
     }

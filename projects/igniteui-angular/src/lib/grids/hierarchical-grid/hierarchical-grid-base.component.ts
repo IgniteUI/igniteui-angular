@@ -11,13 +11,14 @@ import {
     Optional,
     Input
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxSummaryOperand, IGridDataBindable } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
