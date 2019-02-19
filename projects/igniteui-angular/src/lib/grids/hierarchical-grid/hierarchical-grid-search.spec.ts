@@ -288,6 +288,41 @@ describe('IgxHierarchicalGrid Search - ', () => {
 
     });
 
+    it('should order matchInfoCache correctly when there are results in children and in parents.', async () => {
+        hierarchicalGrid.data = fixture.componentInstance.generateDataUneven(5, 2);
+        hierarchicalGrid.cdr.detectChanges();
+        hierarchicalGrid.height = null;
+        hierarchicalGrid.cdr.detectChanges();
+
+        // all expanded
+        hierarchicalGrid.expandChildren = true;
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const count = hierarchicalGrid.findNext('A');
+        await wait(30);
+        fixture.detectChanges();
+        const childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
+        const childDataCount = childGrids.map((child) => child.data.length).reduce((acc, val) => acc + val);
+        // all recs should be in result
+        expect(count).toBe(childDataCount + hierarchicalGrid.data.length);
+
+        // order should be as they appear in DOM
+        const results = hierarchicalGrid.lastSearchInfo.matchInfoCache;
+        expect(results[0].row).toBe(hierarchicalGrid.data[0]);
+        expect(results[1].row).toBe(hierarchicalGrid.data[0].childData[0]);
+        expect(results[2].row).toBe(hierarchicalGrid.data[0].childData[1]);
+        expect(results[3].row).toBe(hierarchicalGrid.data[1]);
+        expect(results[4].row).toBe(hierarchicalGrid.data[1].childData[0]);
+        expect(results[5].row).toBe(hierarchicalGrid.data[1].childData[1]);
+        expect(results[6].row).toBe(hierarchicalGrid.data[1].childData[2]);
+        expect(results[7].row).toBe(hierarchicalGrid.data[1].childData[3]);
+        expect(results[8].row).toBe(hierarchicalGrid.data[2]);
+        expect(results[9].row).toBe(hierarchicalGrid.data[2].childData[0]);
+        expect(results[10].row).toBe(hierarchicalGrid.data[2].childData[1]);
+        expect(results[11].row).toBe(hierarchicalGrid.data[3]);
+    });
+
     // Integration - Paging
     it('should change page and scoll to the cell in with active highlight when there are expanded records.',  async () => {
         hierarchicalGrid.paging = true;

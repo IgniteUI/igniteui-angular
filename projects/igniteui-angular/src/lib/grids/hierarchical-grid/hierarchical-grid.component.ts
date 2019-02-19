@@ -612,29 +612,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         const childGrids = this.getChildGrids(false);
         const prevActiveMatchIndex = this.lastSearchInfo.activeMatchIndex;
         super._applyHightlights(text, increment, caseSensitive, exactMatch);
-        // sort child grids by parent index
-        childGrids.sort((grid1, grid2) => {
-            const parentIndex1 = grid1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(grid1));
-            const parentIndex2 = grid1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(grid2));
-            return parentIndex1  > parentIndex2 ? -1 : 1;
-        });
         childGrids.forEach((grid) => {
+            const itemsToAdd = [];
             grid.find(text, increment, caseSensitive, exactMatch, scroll);
             const matchCache = grid.lastSearchInfo.matchInfoCache;
-            const parentRec = this.hgridAPI.getParentRowId(grid);
-            const parentIndex = grid.parent.verticalScrollContainer.igxForOf.indexOf(parentRec);
-            const insertIndex = this.lastSearchInfo.matchInfoCache.length > 0 ?
-            this._getInsertionIndex(parentIndex, this.lastSearchInfo.matchInfoCache) :
-            0;
-            const itemsToAdd = [];
             matchCache.forEach((matchCacheItem) => {
-                if (this.lastSearchInfo.matchInfoCache.indexOf(matchCacheItem) === -1) {
-                    itemsToAdd.push(matchCacheItem);
-                }
+                    if (this.lastSearchInfo.matchInfoCache.indexOf(matchCacheItem) === -1) {
+                        itemsToAdd.push(matchCacheItem);
+                    }
             });
-            itemsToAdd.reverse().forEach(item => {
-                this.lastSearchInfo.matchInfoCache.splice(insertIndex, 0, item);
-            });
+            if (itemsToAdd.length > 0) {
+                const parentRec = this.hgridAPI.getParentRowId(grid);
+                const parentIndex = grid.parent.filteredSortedData.indexOf(parentRec);
+                const insertIndex = this.lastSearchInfo.matchInfoCache.length > 0 ?
+                this._getInsertionIndex(parentIndex, this.lastSearchInfo.matchInfoCache, grid) :
+                0;
+                itemsToAdd.reverse().forEach(item => {
+                    this.lastSearchInfo.matchInfoCache.splice(insertIndex, 0, item);
+                });
+            }
         });
         if (this.parent === null && this.lastSearchInfo.matchInfoCache.length > 0 &&
             this.lastSearchInfo.matchInfoCache.length >= this.lastSearchInfo.activeMatchIndex) {
@@ -657,18 +653,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
-   private _getInsertionIndex(pIndex, cache) {
+   private _getInsertionIndex(pIndex, cache, grid) {
        // find closest parent row data index that exists in match results
        // so that child results can be inserted there
        const data = cache.map((item, index) => {
         const dataIndex = item.grid.filteredSortedData.indexOf(item.row);
         const origIndex = index;
-        return {dataIndex: dataIndex, origIndex: origIndex};
+        return {dataIndex: dataIndex, origIndex: origIndex, grid: item.grid};
         });
         const res = data.reduce(function (prev, curr) {
             return (Math.abs(curr.dataIndex - pIndex) < Math.abs(prev.dataIndex - pIndex) ? curr : prev);
           });
-          const allResParent = data.filter((item) => item.dataIndex === res.dataIndex);
+          const allResParent = data.filter((item) => item.dataIndex === res.dataIndex && item.grid === grid.parent);
           if (res.dataIndex <= pIndex) {
             // insert after last result from parent
             return allResParent[allResParent.length - 1].origIndex + 1;
