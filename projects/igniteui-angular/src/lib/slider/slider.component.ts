@@ -928,10 +928,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 }
 
-   /**
-    *The IgxSliderModule provides the {@link IgxSliderComponent} inside your application.
-    */
-
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxSliderComponent],
     exports: [IgxSliderComponent],

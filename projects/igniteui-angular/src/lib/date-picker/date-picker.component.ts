@@ -368,9 +368,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *```
      */
     public get displayData(): string {
-        if (this._value) {
-            return this._customFormatChecker(this.formatter, this._value);
+        if (this.value) {
+            return this._customFormatChecker(this.formatter, this.value);
         }
+        return '';
     }
 
     /**
@@ -1212,7 +1213,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 }
 
 /**
- * The IgxDatePickerModule provides the {@link IgxDatePickerComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxCalendarContainerComponent,

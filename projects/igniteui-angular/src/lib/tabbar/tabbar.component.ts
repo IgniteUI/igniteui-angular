@@ -449,9 +449,9 @@ export class IgxTabComponent {
         this.relatedPanel.select();
     }
 }
+
 /**
- * The IgxBottomNavModule provides the {@link IgxBottomNavComponent},
- * the {@link IgxTabPanelComponent} and the {@link IgxTabComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxBottomNavComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],

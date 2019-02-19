@@ -11,7 +11,7 @@ import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('IgxDatePicker', () => {
+fdescribe('IgxDatePicker', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -47,7 +47,7 @@ describe('IgxDatePicker', () => {
 
         it('Initialize a datepicker component', () => {
             expect(fixture.componentInstance).toBeDefined();
-            expect(datePicker.displayData).toBeUndefined();
+            expect(datePicker.displayData).toBe('');
         });
 
         it('Initialize a datepicker component with id', () => {
