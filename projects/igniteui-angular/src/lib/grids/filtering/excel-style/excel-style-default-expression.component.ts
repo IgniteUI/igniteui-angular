@@ -14,6 +14,7 @@ import { IgxInputGroupComponent } from '../../../input-group';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
+import { KEYS } from '../../../core/utils';
 
 /**
  * @hidden
@@ -163,5 +164,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public onRemoveButtonClick() {
         this.onExpressionRemoved.emit(this.expressionUI);
+    }
+
+    public onInputValuesKeydown(event: KeyboardEvent, input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
+        if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
+            this.toggleCustomDialogDropDown(input, targetDropDown);
+        }
     }
 }
