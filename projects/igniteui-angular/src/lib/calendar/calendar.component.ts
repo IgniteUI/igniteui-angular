@@ -17,7 +17,7 @@ import {
 } from './calendar.directives';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { KEYS } from '../core/utils';
-import { ICalendarDate } from './calendar';
+import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 
 let NEXT_ID = 0;
@@ -404,11 +404,32 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
-        this.previousMonth();
 
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
+        const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
+        if (activeDate) {
+            this.daysView.nextDate = new Date(activeDate.date.date);
+
+            let year = this.daysView.nextDate.getFullYear();
+
+            let month = this.daysView.nextDate.getMonth() - 1;
+            if (month < 0) { month = 11; year -= 1; }
+
+            const range = monthRange(this.daysView.nextDate.getFullYear(), month);
+
+            let day = this.daysView.nextDate.getDate();
+            if (day > range[1]) { day = range[1]; }
+
+            this.daysView.nextDate.setDate(day);
+            this.daysView.nextDate.setMonth(month);
+            this.daysView.nextDate.setFullYear(year);
+
+            this.daysView.callback = (dates?, next?) => {
+                const dayItem = dates.find((d) => d.date.date.getTime() === next.getTime());
+                if (dayItem) { dayItem.nativeElement.focus(); }
+            };
         }
+
+        this.previousMonth(true);
     }
 
     /**
@@ -417,11 +438,32 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     @HostListener('keydown.pagedown', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
-        this.nextMonth();
 
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
+        const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
+        if (activeDate) {
+            this.daysView.nextDate = new Date(activeDate.date.date);
+
+            let year = this.daysView.nextDate.getFullYear();
+
+            let month = this.daysView.nextDate.getMonth() + 1;
+            if (month > 11) { month = 0; year += 1; }
+
+            const range = monthRange(this.daysView.nextDate.getFullYear(), month);
+
+            let day = this.daysView.nextDate.getDate();
+            if (day > range[1]) { day = range[1]; }
+
+            this.daysView.nextDate.setDate(day);
+            this.daysView.nextDate.setMonth(month);
+            this.daysView.nextDate.setFullYear(year);
+
+            this.daysView.callback = (dates?, next?) => {
+                const dayItem = dates.find((d) => d.date.date.getTime() === next.getTime());
+                if (dayItem) { dayItem.nativeElement.focus(); }
+            };
         }
+
+        this.nextMonth(true);
     }
 
     /**
@@ -430,6 +472,26 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     @HostListener('keydown.shift.pageup', ['$event'])
     public onKeydownShiftPageUp(event: KeyboardEvent) {
         this.keydownPageUpHandler(event);
+
+        const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
+        if (activeDate && this.daysView) {
+            this.daysView.nextDate = new Date(activeDate.date.date);
+
+            const year = this.daysView.nextDate.getFullYear() - 1;
+
+            const range = monthRange(year, this.daysView.nextDate.getMonth());
+
+            let day = this.daysView.nextDate.getDate();
+            if (day > range[1]) { day = range[1]; }
+
+            this.daysView.nextDate.setDate(day);
+            this.daysView.nextDate.setFullYear(year);
+
+            this.daysView.callback = (dates?, next?) => {
+                const dayItem = dates.find((d) => d.date.date.getTime() === next.getTime());
+                if (dayItem) { dayItem.nativeElement.focus(); }
+            };
+        }
     }
 
     /**
@@ -438,6 +500,26 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     @HostListener('keydown.shift.pagedown', ['$event'])
     public onKeydownShiftPageDown(event: KeyboardEvent) {
         this.keydownPageDownHandler(event);
+
+        const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
+        if (activeDate && this.daysView) {
+            this.daysView.nextDate = new Date(activeDate.date.date);
+
+            const year = this.daysView.nextDate.getFullYear() + 1;
+
+            const range = monthRange(year, this.daysView.nextDate.getMonth());
+
+            let day = this.daysView.nextDate.getDate();
+            if (day > range[1]) { day = range[1]; }
+
+            this.daysView.nextDate.setDate(day);
+            this.daysView.nextDate.setFullYear(year);
+
+            this.daysView.callback = (dates?, next?) => {
+                const dayItem = dates.find((d) => d.date.date.getTime() === next.getTime());
+                if (dayItem) { dayItem.nativeElement.focus(); }
+            };
+        }
     }
 
     /**

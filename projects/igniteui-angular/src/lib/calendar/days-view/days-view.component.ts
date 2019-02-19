@@ -92,12 +92,12 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     /**
      * @hidden
      */
-    private _nextDate: Date;
+    public nextDate: Date;
 
     /**
      * @hidden
      */
-    private callback: (dates?, next?) => void;
+    public callback: (dates?, next?) => void;
 
     /**
      * @hidden
@@ -225,7 +225,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                     date.nativeElement.focus();
                 }, parseInt(slideInRight.options.params.duration, 10));
             } else if (this.callback && (event.toState === 'next' || event.toState === 'prev')) {
-                this.callback(this.dates, this._nextDate);
+                this.callback(this.dates, this.nextDate);
             }
         }
     }
@@ -250,9 +250,9 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (this.changeDaysView && dates.indexOf(node) - 7 < 0) {
             const dayItem = dates[dates.indexOf(node)];
-            this._nextDate = new Date(dayItem.date.date);
+            this.nextDate = new Date(dayItem.date.date);
 
-            this._nextDate.setDate(this._nextDate.getDate() - 7);
+            this.nextDate.setDate(this.nextDate.getDate() - 7);
 
             this.isKeydownTrigger = true;
             this.animationAction = 'prev';
@@ -264,7 +264,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit(this._nextDate);
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -288,9 +288,9 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (this.changeDaysView && dates.indexOf(node) + 7 > this.dates.length - 1) {
             const dayItem = dates[dates.indexOf(node)];
-            this._nextDate = new Date(dayItem.date.date);
+            this.nextDate = new Date(dayItem.date.date);
 
-            this._nextDate.setDate(this._nextDate.getDate() + 7);
+            this.nextDate.setDate(this.nextDate.getDate() + 7);
 
             this.isKeydownTrigger = true;
             this.animationAction = 'next';
@@ -302,7 +302,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit(this._nextDate);
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -326,7 +326,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (this.changeDaysView && dates.indexOf(node) === 0) {
             const dayItem = dates[dates.indexOf(node)];
-            this._nextDate = new Date(dayItem.date.date);
+            this.nextDate = new Date(dayItem.date.date);
 
             this.isKeydownTrigger = true;
             this.animationAction = 'prev';
@@ -338,7 +338,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit(this._nextDate);
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -363,7 +363,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (this.changeDaysView && dates.indexOf(node) === this.dates.length - 1) {
             const dayItem = dates[dates.indexOf(node)];
-            this._nextDate = new Date(dayItem.date.date);
+            this.nextDate = new Date(dayItem.date.date);
 
             this.isKeydownTrigger = true;
             this.animationAction = 'next';
@@ -375,7 +375,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit(this._nextDate);
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 

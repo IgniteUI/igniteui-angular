@@ -135,15 +135,25 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * @hidden
      */
-    public previousYear() {
+    public previousYear(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+
+        if (this.daysView) {
+            this.daysView.animationAction = 'prev';
+            this.daysView.isKeydownTrigger = isKeydownTrigger;
+        }
     }
 
     /**
      * @hidden
      */
-    public nextYear() {
+    public nextYear(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+
+        if (this.daysView) {
+            this.daysView.animationAction = 'next';
+            this.daysView.isKeydownTrigger = isKeydownTrigger;
+        }
     }
 
     /**
@@ -164,11 +174,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
      */
     public keydownPageUpHandler(event: KeyboardEvent) {
         event.preventDefault();
-        this.previousYear();
-
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
-        }
+        this.previousYear(true);
     }
 
     /**
@@ -176,10 +182,6 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
      */
     public keydownPageDownHandler(event: KeyboardEvent) {
         event.preventDefault();
-        this.nextYear();
-
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = true;
-        }
+        this.nextYear(true);
     }
 }

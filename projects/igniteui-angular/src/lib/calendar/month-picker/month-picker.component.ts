@@ -85,9 +85,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public nextYear() {
+    public nextYear(kbTrigger = false) {
         this.yearAction = 'next';
-        super.nextYear();
+        super.nextYear(kbTrigger);
     }
 
     /**
@@ -98,16 +98,16 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
             event.preventDefault();
             event.stopPropagation();
 
-            this.nextYear();
+            this.nextYear(true);
         }
     }
 
     /**
      * @hidden
      */
-    public previousYear() {
+    public previousYear(kbTrigger = false) {
         this.yearAction = 'prev';
-        super.previousYear();
+        super.previousYear(kbTrigger);
     }
 
     /**
@@ -118,7 +118,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
             event.preventDefault();
             event.stopPropagation();
 
-            this.previousYear();
+            this.previousYear(true);
         }
     }
 
