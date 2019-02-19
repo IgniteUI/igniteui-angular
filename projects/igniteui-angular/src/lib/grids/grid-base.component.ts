@@ -23,7 +23,8 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    Optional
+    Optional,
+    EmbeddedViewRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
@@ -69,7 +70,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
-import { IViewChangeEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import { IViewChangeEventArgs, ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2469,7 +2470,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.reflow();
-            this.refreshSearch(true, true);
         });
     }
 
@@ -3383,7 +3383,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param updateActiveInfo
      * @memberof IgxGridBaseComponent
      */
-    public refreshSearch(updateActiveInfo?: boolean, updateUI?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -3394,18 +3394,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index) {
                         this.lastSearchInfo.activeMatchIndex = i;
-                    }
-                });
-            }
-            if (updateUI) {
-                this.rowList.forEach((r) => {
-                    if (r.cells) {
-                        r.cells.forEach((c) => {
-                            c.highlightText(
-                                this.lastSearchInfo.searchText,
-                                 this.lastSearchInfo.caseSensitive,
-                                 this.lastSearchInfo.exactMatch);
-                        });
                     }
                 });
             }
@@ -4704,21 +4692,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return result;
     }
 
-    public cachedViewLoaded(args: IViewChangeEventArgs) {
-       if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
-            const index = args.context.index;
-            args.view.detectChanges();
-            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
-            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
-            if (row && row instanceof IgxRowComponent) {
-                this._restoreVirtState(row);
-            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
-                this._restoreVirtState(summaryRow);
-            }
-       }
-    }
-
     public hasHorizontalScroll() {
         return this.totalWidth - this.unpinnedWidth > 0;
     }
@@ -4766,6 +4739,39 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected get isAttachedToDom(): boolean {
         return this.document.body.contains(this.nativeElement);
     }
+
+
+
+    /**
+     * @hidden
+     */
+    public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
+        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
+            args.view.detectChanges();
+            const row = this.getRowByIndex(args.context.index);
+            if (row) {
+                row.cells.forEach((c) => {
+                    c.highlightText(
+                        this.lastSearchInfo.searchText,
+                        this.lastSearchInfo.caseSensitive,
+                        this.lastSearchInfo.exactMatch);
+                });
+            }
+        }
+        if (this.hasHorizontalScroll()) {
+            const tmplId = args.context.templateID;
+            const index = args.context.index;
+            args.view.detectChanges();
+            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
+            if (row && row instanceof IgxRowComponent) {
+                this._restoreVirtState(row);
+            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
+                this._restoreVirtState(summaryRow);
+            }
+        }
+    }
+
 }
 
 
