@@ -697,7 +697,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 }
 
 /**
- * The IgxDatePickerModule provides the {@link IgxDatePickerComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
