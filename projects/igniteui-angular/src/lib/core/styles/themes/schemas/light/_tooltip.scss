@@ -9,11 +9,13 @@
 ///
 /// @property {map} background [igx-color: ('grays', 700), hexrgba: (), rgba: .9] - The background color of the tooltip.
 /// @property {map} text-color [igx-color: ('grays', 700), hexrgba: (), rgba: .9, text-contrast: ()] - The text color of the tooltip.
-/// @property {Number} roundness [rem(4px)] - The border roundness of the tooltip. Smaller values mean less roundness.
+/// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for the tooltip component.
 ///
 /// @see $default-palette
 
 $_light-tooltip: (
+    border-radius: .25,
+
     background: (
         igx-color: ('grays', 700),
         hexrgba: (),

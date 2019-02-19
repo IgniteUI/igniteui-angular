@@ -23,7 +23,8 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    Optional
+    Optional,
+    EmbeddedViewRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
@@ -69,6 +70,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
+import { IViewChangeEventArgs, ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2238,9 +2240,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
-        horizontalDirection: HorizontalAlignment.Left,
+        horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
-        horizontalStartPoint: HorizontalAlignment.Right,
+        horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Bottom,
         closeAnimation: null
     });
@@ -2468,7 +2470,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.reflow();
-            this.refreshSearch(true, true);
         });
     }
 
@@ -3382,7 +3383,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param updateActiveInfo
      * @memberof IgxGridBaseComponent
      */
-    public refreshSearch(updateActiveInfo?: boolean, updateUI?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -3393,18 +3394,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index) {
                         this.lastSearchInfo.activeMatchIndex = i;
-                    }
-                });
-            }
-            if (updateUI) {
-                this.rowList.forEach((r) => {
-                    if (r.cells) {
-                        r.cells.forEach((c) => {
-                            c.highlightText(
-                                this.lastSearchInfo.searchText,
-                                 this.lastSearchInfo.caseSensitive,
-                                 this.lastSearchInfo.exactMatch);
-                        });
                     }
                 });
             }
@@ -4734,6 +4723,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected get isAttachedToDom(): boolean {
         return this.document.body.contains(this.nativeElement);
     }
+
+
+
+    /**
+     * @hidden
+     */
+    public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
+        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
+            args.view.detectChanges();
+            const row = this.getRowByIndex(args.context.index);
+            if (row) {
+                row.cells.forEach((c) => {
+                    c.highlightText(
+                        this.lastSearchInfo.searchText,
+                        this.lastSearchInfo.caseSensitive,
+                        this.lastSearchInfo.exactMatch);
+                });
+            }
+        }
+    }
+
 }
 
 
