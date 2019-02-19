@@ -15,7 +15,8 @@
                 [isLast]=last
                 [column]="column"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData" >
+                [columnData]="columnData"
+                (onExpressionRemoved)="onExpressionRemoved($event)">
             </igx-excel-style-date-expression>
         </ng-container>
 
@@ -26,7 +27,8 @@
                 [isLast]=last
                 [column]="column"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData" >
+                [columnData]="columnData"
+                (onExpressionRemoved)="onExpressionRemoved($event)">
             </igx-excel-style-default-expression>
         </ng-container>
 

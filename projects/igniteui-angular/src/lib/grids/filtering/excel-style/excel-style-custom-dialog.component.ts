@@ -12,9 +12,6 @@ import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
-import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down';
-import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment } from '../../../services';
 
@@ -113,6 +110,22 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         exprUI.beforeOperator = this.expressionsList[this.expressionsList.length - 1].afterOperator;
 
         this.expressionsList.push(exprUI);
+    }
+
+    public onExpressionRemoved(event: ExpressionUI) {
+        const indexToRemove = this.expressionsList.indexOf(event);
+
+        if (indexToRemove === 0 && this.expressionsList.length > 1) {
+            this.expressionsList[1].beforeOperator = null;
+        } else if (indexToRemove === this.expressionsList.length - 1) {
+            this.expressionsList[indexToRemove - 1].afterOperator = null;
+        } else {
+            this.expressionsList[indexToRemove - 1].afterOperator = this.expressionsList[indexToRemove + 1].beforeOperator;
+            this.expressionsList[0].beforeOperator = null;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+        }
+
+        this.expressionsList = this.expressionsList.splice(indexToRemove, 1);
     }
 
     private createCondition(conditionName: string) {

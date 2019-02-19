@@ -2,8 +2,9 @@ import {
     Component,
     ChangeDetectionStrategy,
     AfterViewInit,
-    ViewChild,
-    Input
+    Input,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -46,6 +47,17 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     @Input()
     public isLast: Boolean;
+
+    @Output()
+    public onExpressionRemoved = new EventEmitter<ExpressionUI>();
+
+    get inputConditionsPlaceholder(): string {
+        return this.filteringService.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
+    }
+
+    get inputValuePlaceholder(): string {
+        return this.filteringService.grid.resourceStrings['igx_grid_filter_row_placeholder'];
+    }
 
     constructor(public filteringService: IgxFilteringService) {}
 
@@ -150,18 +162,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public onRemoveButtonClick() {
-        const indexToRemove = this.expressionsList.indexOf(this.expressionUI);
-
-        if (indexToRemove === 0 && this.expressionsList.length > 1) {
-            this.expressionsList[1].beforeOperator = null;
-        } else if (indexToRemove === this.expressionsList.length - 1) {
-            this.expressionsList[indexToRemove - 1].afterOperator = null;
-        } else {
-            this.expressionsList[indexToRemove - 1].afterOperator = this.expressionsList[indexToRemove + 1].beforeOperator;
-            this.expressionsList[0].beforeOperator = null;
-            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
-        }
-
-        this.expressionsList.splice(indexToRemove, 1);
+        this.onExpressionRemoved.emit(this.expressionUI);
     }
 }
