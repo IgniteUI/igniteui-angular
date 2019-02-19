@@ -75,7 +75,8 @@ describe('igxSelect', () => {
             declarations: [
                 IgxSelectSimpleComponent,
                 IgxSelectMiddleComponent,
-                IgxSelectUpperComponent
+                IgxSelectUpperComponent,
+                IgxSelectBottomComponent
             ],
             imports: [
                 FormsModule,
@@ -1511,16 +1512,21 @@ describe('igxSelect', () => {
         const defaultItemBottomPadding = 8;
         const defaultIconWidth = 24;
         const defaultScrollWidth = 17;
-        const verifySelectedItemPositioning = function (selectedItemIndex: number, hasScroll = true) {
+        const verifySelectedItemPositioning = function (selectedItemIndex: number, hasScroll = true, reversed = false) {
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const listRect = selectList.nativeElement.getBoundingClientRect();
             const inputRect = inputElement.nativeElement.getBoundingClientRect();
             const selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
 
-            // Selected item positioning - should be over input
+            // Verifies that the selected item is positioned over the input
             expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
-            expect(selectedItemRect.top).toEqual(inputRect.top - defaultItemTopPadding);
-            expect(selectedItemRect.bottom).toEqual(inputRect.bottom + defaultItemBottomPadding);
+            const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
+                                    selectedItemRect.height :
+                                    inputRect.top - defaultItemTopPadding;
+            expect(selectedItemRect.top).toEqual(expectedItemTop);
+            const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
+                                    inputRect.bottom + defaultItemBottomPadding;
+            expect(selectedItemRect.bottom).toEqual(expectedItemBottom);
             const expectedItemWidth = hasScroll ? listRect.width - defaultScrollWidth : listRect.width;
             expect(selectedItemRect.width).toEqual(expectedItemWidth);
         };
@@ -1547,11 +1553,11 @@ describe('igxSelect', () => {
 
                     // List positioning
                     const expectedListTop = selectedItemIndex === 1 ? selectedItemRect.top - selectedItemRect.height :
-                                            selectedItemIndex === 2 ? selectedItemRect.top - selectedItemRect.height * 2 :
-                                            selectedItemRect.top;
+                        selectedItemIndex === 2 ? selectedItemRect.top - selectedItemRect.height * 2 :
+                            selectedItemRect.top;
                     const expectedListBottom = selectedItemIndex === 0 ? selectedItemRect.bottom + selectedItemRect.height * 2 :
-                                            selectedItemIndex === 1 ? selectedItemRect.bottom + selectedItemRect.height :
-                                            selectedItemRect.bottom;
+                        selectedItemIndex === 1 ? selectedItemRect.bottom + selectedItemRect.height :
+                            selectedItemRect.bottom;
 
                     expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
                     expect(listRect.top).toEqual(expectedListTop);
@@ -1602,17 +1608,17 @@ describe('igxSelect', () => {
 
                     // List positioning
                     const expectedListTop = selectedItemIndex === 3 ?
-                                            selectedItemRect.top - selectedItemRect.height * 2 - defaultItemTopPadding :
-                                            selectedItemIndex === 6 ?
-                                            selectedItemRect.top - selectedItemRect.height * 4 -
-                                            defaultItemBottomPadding - defaultItemTopPadding :
-                                            selectedItemRect.top;
+                        selectedItemRect.top - selectedItemRect.height * 2 - defaultItemTopPadding :
+                        selectedItemIndex === 6 ?
+                            selectedItemRect.top - selectedItemRect.height * 4 -
+                            defaultItemBottomPadding - defaultItemTopPadding :
+                            selectedItemRect.top;
                     const expectedListBottom = selectedItemIndex === 0 ?
-                                            selectedItemRect.bottom + selectedItemRect.height * 4 +
-                                            defaultItemTopPadding + defaultItemBottomPadding :
-                                            selectedItemIndex === 3 ? selectedItemRect.bottom + selectedItemRect.height * 2 +
-                                            defaultItemBottomPadding :
-                                            selectedItemRect.bottom;
+                        selectedItemRect.bottom + selectedItemRect.height * 4 +
+                        defaultItemTopPadding + defaultItemBottomPadding :
+                        selectedItemIndex === 3 ? selectedItemRect.bottom + selectedItemRect.height * 2 +
+                            defaultItemBottomPadding :
+                            selectedItemRect.bottom;
 
                     expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
                     expect(listRect.top).toEqual(expectedListTop);
@@ -1667,17 +1673,17 @@ describe('igxSelect', () => {
                 const selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
 
                 const expectedListTop = selectedItemIndex === 1 ?
-                                        defaultWindowToListOffset :
-                                        selectedItemIndex === 6 ?
-                                        selectedItemRect.top - selectedItemRect.height * 4 -
-                                        defaultItemBottomPadding - defaultItemTopPadding :
-                                        selectedItemRect.top;
+                    document.body.getBoundingClientRect().top + defaultWindowToListOffset :
+                    selectedItemIndex === 6 ?
+                        selectedItemRect.top - selectedItemRect.height * 4 -
+                        defaultItemBottomPadding - defaultItemTopPadding :
+                        selectedItemRect.top;
                 const expectedListBottom = selectedItemIndex === 0 ?
-                                        selectedItemRect.bottom + selectedItemRect.height * 4 +
-                                        defaultItemTopPadding + defaultItemBottomPadding :
-                                        selectedItemIndex === 1 ? document.body.getBoundingClientRect().top + defaultWindowToListOffset +
-                                        listRect.height :
-                                        selectedItemRect.bottom;
+                    selectedItemRect.bottom + selectedItemRect.height * 4 +
+                    defaultItemTopPadding + defaultItemBottomPadding :
+                    selectedItemIndex === 1 ? document.body.getBoundingClientRect().top + defaultWindowToListOffset +
+                        listRect.height :
+                        selectedItemRect.bottom;
 
                 expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
                 expect(listRect.top).toEqual(expectedListTop);
@@ -1723,19 +1729,67 @@ describe('igxSelect', () => {
                     verifyListPositioning(6);
                 }));
         });
-        it('Should display selected item and all possible items above when there is some space below to open and first item is selected',
-            fakeAsync(() => {
-                // TODO
+        describe('Not enough space below to open positioning tests: ', () => {
+            const verifyListPositioning = function (selectedItemIndex: number) {
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                const listRect = selectList.nativeElement.getBoundingClientRect();
+                const inputRect = inputElement.nativeElement.getBoundingClientRect();
+                const selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
+
+                const expectedListTop = selectedItemIndex === 0 ?
+                                        inputRect.bottom - selectedItemRect.height * 5 -
+                                        defaultItemTopPadding - defaultItemBottomPadding :
+                                        selectedItemIndex === 3 ?
+                                        document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
+                                        selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding :
+                                        document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height;
+                const expectedListBottom = selectedItemIndex === 0 ? inputRect.bottom :
+                                        document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
+
+                expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
+                expect(listRect.top).toEqual(expectedListTop);
+                expect(listRect.bottom).toEqual(expectedListBottom);
+                expect(listRect.width).toEqual(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2);
+                expect(listRect.height).toEqual(selectedItemRect.height * 5 + defaultItemTopPadding + defaultItemBottomPadding);
+            };
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectBottomComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
-        // tslint:disable-next-line:max-line-length
-        it('Should display selected item over input and possible items above and below when there is some space below to open and item in the middle of the list is selected',
+            // tslint:disable-next-line:max-line-length
+            it('Should display selected item and all possible items above when there is some space below to open and first item is selected',
+                fakeAsync(() => {
+                    select.items[0].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    verifyListPositioning(0);
+                }));
+            // tslint:disable-next-line:max-line-length
+            it('Should display selected item over input and possible items above and below when there is some space below to open and item in the middle of the list is selected',
+                fakeAsync(() => {
+                    select.items[3].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    verifyListPositioning(3);
+                }));
+            it('Should display selected item over input when there is some space below to open and last item is selected',
             fakeAsync(() => {
-                // TODO
+                    select.items[6].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    verifySelectedItemPositioning(6, true, true);
+                    verifyListPositioning(6);
             }));
-        it('Should display selected item over input when there is some space below to open and last item is selected', fakeAsync(() => {
-            // TODO
-            // starts from the input bottom left point
-        }));
+        });
     });
 });
 
@@ -1795,10 +1849,6 @@ class IgxSelectMiddleComponent {
         'Option 1',
         'Option 2',
         'Option 3'];
-
-    public onSelection(eventArgs: ISelectionEventArgs) {
-        this.value = eventArgs.newSelection.value;
-    }
 }
 
 @Component({
@@ -1823,8 +1873,26 @@ class IgxSelectUpperComponent {
         'Option 5',
         'Option 6',
         'Option 7'];
-
-    public onSelection(eventArgs: ISelectionEventArgs) {
-        this.value = eventArgs.newSelection.value;
-    }
+}
+@Component({
+    template: `
+    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', bottom:'20px', left: '30px'}">
+    <igx-select-item *ngFor="let item of items" [value]="item">
+        {{ item }}
+    </igx-select-item>
+    </igx-select>
+`
+})
+class IgxSelectBottomComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public value: string;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'];
 }
