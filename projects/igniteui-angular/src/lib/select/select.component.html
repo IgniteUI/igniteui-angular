@@ -12,9 +12,9 @@
             role="combobox"
             aria-haspopup="listbox"
             [attr.aria-labelledby]="this.label ? this.label.id : ''"
-            [attr.aria-expanded]="ariaExpanded"
-            [attr.aria-owns]="ariaOwns"
-            [attr.aria-activedescendant]="this.selectedItem?.id"
+            [attr.aria-expanded]="!this.collapsed"
+            [attr.aria-owns]="this.listId"
+            [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
             />
         <ng-container ngProjectAs="igx-suffix">
                 <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
