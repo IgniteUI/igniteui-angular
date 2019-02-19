@@ -380,6 +380,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
+        return '';
     }
 
     /**
