@@ -3142,8 +3142,16 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
 
+                // Enter edit mode
+                cellDate.onKeydownEnterEditMode({ stopPropagation: () => { }, preventDefault: () => { } });
+                tick();
+                fixture.detectChanges();
                 const newValue = new Date('01/01/2000');
                 cellDate.update(newValue);
+                // Exit edit mode
+                grid.endEdit(true);
+                tick();
+                fixture.detectChanges();
 
                 const expectedTransaction: Transaction = {
                     id: 1,
