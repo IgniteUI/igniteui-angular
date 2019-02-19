@@ -11,7 +11,7 @@ import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-fdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -414,7 +414,7 @@ fdescribe('IgxDatePicker', () => {
             fixture.detectChanges();
         });
 
-        it('Editable Datepicker open/close event', async () => {
+        it('Editable Datepicker open/close event - edit mode', async () => {
             const dom = fixture.debugElement;
             const iconDate = dom.query(By.css('.igx-icon'));
             expect(iconDate).not.toBeNull();
@@ -442,7 +442,7 @@ fdescribe('IgxDatePicker', () => {
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
         });
 
-        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
+        it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons - edit mode', fakeAsync(() => {
             const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
             UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
             fixture.detectChanges();
@@ -463,7 +463,29 @@ fdescribe('IgxDatePicker', () => {
             expect(overlays.length).toEqual(0);
         }));
 
-        it('Datepicker onSelection event and selectDate method propagation', () => {
+        it('Open/close drop-down with `alt + down`(open) and `alt + up`(close) - edit mode', fakeAsync(() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            tick();
+            fixture.detectChanges();
+
+            const overlayDiv = document.getElementsByClassName('igx-overlay__content')[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.classList.contains('igx-overlay__content')).toBeTruthy();
+
+            const dropDown = document.getElementsByClassName('igx-date-picker--dropdown');
+            expect(dropDown.length).toBe(1);
+            expect(dropDown[0]).not.toBeNull();
+
+            dropDown[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+            flush();
+            fixture.detectChanges();
+
+            const overlays = document.getElementsByClassName('igx-overlay__content');
+            expect(overlays.length).toEqual(0);
+        }));
+
+        it('Datepicker onSelection event and selectDate method propagation - edit mode', () => {
             spyOn(datePicker.onSelection, 'emit');
             const newDate: Date = new Date(2016, 4, 6);
             datePicker.selectDate(newDate);
@@ -477,7 +499,7 @@ fdescribe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('06.05.2016');
         });
 
-        it('should open the dropdown when click on the date icon', (() => {
+        it('should open the dropdown when click on the date icon - edit mode', (() => {
             const dom = fixture.debugElement;
             fixture.detectChanges();
 
@@ -516,7 +538,7 @@ fdescribe('IgxDatePicker', () => {
             expect(year).toBe('2011');
         }));
 
-        it('should be able to apply display format (editable mode)', async () => {
+        it('should be able to apply display format - edit mode', async () => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
 
@@ -530,7 +552,7 @@ fdescribe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('20.10.2011');
         });
 
-        it('should be able to apply editor mask (editable mode)', (() => {
+        it('should be able to apply editor mask - editable mode', (() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             input.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
@@ -550,7 +572,7 @@ fdescribe('IgxDatePicker', () => {
             expect(input.nativeNode.placeholder).toBe('dd-MM-yy');
         }));
 
-        it('Should be able to deselect using the API.', () => {
+        it('Should be able to deselect using the API - edit mode', () => {
             const date = new Date(Date.now());
             datePicker.selectDate(date);
             fixture.detectChanges();
@@ -563,7 +585,7 @@ fdescribe('IgxDatePicker', () => {
             expect(datePicker.value).toBe(null);
         });
 
-        it('should increase date parts using arrows', fakeAsync(() => {
+        it('should increase date parts using arrows - edit mode', fakeAsync(() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
             input.nativeElement.dispatchEvent(new Event('focus'));
@@ -608,7 +630,7 @@ fdescribe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('21.11.2012');
         }));
 
-        it('should decrease date parts using arrows', fakeAsync(() => {
+        it('should decrease date parts using arrows - edit mode', fakeAsync(() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
             input.nativeElement.dispatchEvent(new Event('focus'));
@@ -660,7 +682,7 @@ fdescribe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('18.09.2010');
         }));
 
-        it('should increase/decrease date parts using mouse wheel', fakeAsync(() => {
+        it('should increase/decrease date parts using mouse wheel - edit mode', fakeAsync(() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             expect(input).toBeDefined();
             input.nativeElement.dispatchEvent(new Event('focus'));
@@ -706,6 +728,46 @@ fdescribe('IgxDatePicker', () => {
 
             // format dd.MM.y
             expect(input.nativeElement.value).toBe('21.09.2013');
+        }));
+
+        it('should reset value on clear button click - edit mode', () => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            const dom = fixture.debugElement;
+            const clear = dom.queryAll(By.css('.igx-icon'))[1];
+            UIInteractions.clickElement(clear);
+            fixture.detectChanges();
+
+            expect(datePicker.value).toEqual(null);
+            expect(input.nativeElement.innerText).toEqual('');
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            expect(input.nativeElement.placeholder).toBe('dd-MM-yy');
+        });
+
+        it('should emit onValidationFailed event when entered invalid date - edit mode', () => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            spyOn(datePicker.onValidationFailed, 'emit');
+
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('20-10-11');
+
+            UIInteractions.sendInput(input, '28-02-19');
+            fixture.detectChanges();
+
+            UIInteractions.sendInput(input, '29-02-19');
+            fixture.detectChanges();
+
+            // invalid date
+            expect(input.nativeElement.value).toBe('29-02-19');
+
+            expect(datePicker.onValidationFailed.emit).toHaveBeenCalledTimes(1);
+        });
+
+        xit('should emit onDisabledDate event when entered disabled date - edit mode', fakeAsync(() => {
+
         }));
     });
 
