@@ -336,24 +336,21 @@ describe('IgxDatePicker', () => {
         expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
     });
 
-    // TO DO
-    xit('Should focus the today date', async () => {
+    it('Should focus the today date', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         const datePicker = fixture.componentInstance.datePicker;
         fixture.detectChanges();
         const dom = fixture.debugElement;
 
         const target = dom.query(By.css('.igx-date-picker__input-date'));
-
         UIInteractions.clickElement(target);
         fixture.detectChanges();
-        await wait(100);
+        tick(200);
 
         const todayDate = datePicker.calendar.daysView.dates.find(d => d.isToday);
-        await wait(100);
 
         expect(document.activeElement).toEqual(todayDate.nativeElement);
-    });
+    }));
 
     it('#3595 - Should be able to change year', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
