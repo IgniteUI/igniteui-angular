@@ -343,7 +343,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public expandRow(rowID: any) {
-        this._gridAPI.expand_row(this.id, rowID);
+        this._gridAPI.expand_row(rowID);
     }
 
     /**
@@ -355,7 +355,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public collapseRow(rowID: any) {
-        this._gridAPI.collapse_row(this.id, rowID);
+        this._gridAPI.collapse_row(rowID);
     }
 
     /**
@@ -367,7 +367,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public toggleRow(rowID: any) {
-        this._gridAPI.toggle_row_expansion(this.id, rowID);
+        this._gridAPI.toggle_row_expansion(rowID);
     }
 
     /**
@@ -459,7 +459,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        this._gridAPI.deleteRowById(this.id, rowId);
+        this._gridAPI.deleteRowById(rowId);
 
     }
 
@@ -481,9 +481,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     protected scrollTo(row: any | number, column: any | number): void {
         const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
-        const rowID = this._gridAPI.get_row_id(this.id, rowData);
+        const rowID = this._gridAPI.get_row_id(rowData);
         const record = this.processedRecords.get(rowID);
-        this._gridAPI.expand_path_to_record(this.id, record);
+        this._gridAPI.expand_path_to_record(record);
         const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
 
         super.scrollTo(rowIndex, column);

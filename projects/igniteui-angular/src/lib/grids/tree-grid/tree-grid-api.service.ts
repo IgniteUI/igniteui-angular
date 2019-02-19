@@ -31,7 +31,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return data;
     }
 
-    public expand_row(id: string, rowID: any) {
+    public expand_row(rowID: any) {
         const grid = this.grid;
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, true);
@@ -41,7 +41,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public collapse_row(id: string, rowID: any) {
+    public collapse_row(rowID: any) {
         const grid = this.grid;
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, false);
@@ -51,13 +51,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public toggle_row_expansion(id: string, rowID: any) {
+    public toggle_row_expansion(rowID: any) {
         const grid = this.grid;
         const expandedStates = grid.expansionStates;
         const treeRecord = grid.records.get(rowID);
 
         if (treeRecord) {
-            const isExpanded = this.get_row_expansion_state(id, treeRecord);
+            const isExpanded = this.get_row_expansion_state(treeRecord);
             expandedStates.set(rowID, !isExpanded);
             grid.expansionStates = expandedStates;
         }
@@ -66,7 +66,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
+    public trigger_row_expansion_toggle(row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
         const grid = this.grid;
 
         if (!row.children || row.children.length <= 0 && row.expanded === expanded) {
@@ -96,7 +96,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         requestAnimationFrame(() => {
             const el = this.grid.selectionService.activeElement;
             if (el) {
-                const cell = this.get_cell_by_visible_index(this.grid.id, el.row, el.column);
+                const cell = this.get_cell_by_visible_index(el.row, el.column);
                 if (cell) {
                     cell.nativeElement.focus();
                 }
@@ -104,13 +104,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         });
     }
 
-    public expand_path_to_record(id: string, record: ITreeGridRecord) {
+    public expand_path_to_record(record: ITreeGridRecord) {
         const grid = this.grid;
         const expandedStates = grid.expansionStates;
 
         while (record.parent) {
             record = record.parent;
-            const expanded = this.get_row_expansion_state(id, record);
+            const expanded = this.get_row_expansion_state(record);
 
             if (!expanded) {
                 expandedStates.set(record.rowID, true);
@@ -123,7 +123,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public get_row_expansion_state(id: string, record: ITreeGridRecord): boolean {
+    public get_row_expansion_state(record: ITreeGridRecord): boolean {
         const grid = this.grid;
         const states = grid.expansionStates;
         const expanded = states.get(record.rowID);
@@ -135,10 +135,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+    protected update_row_in_array(value: any, rowID: any, index: number) {
         const grid = this.grid;
         if (grid.primaryKey && grid.foreignKey) {
-            super.update_row_in_array(id, value, rowID, index);
+            super.update_row_in_array(value, rowID, index);
         } else {
             const record = grid.records.get(rowID);
             const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
@@ -152,7 +152,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
-    public deleteRowById(gridID: string, rowID: any) {
+    public deleteRowById(rowID: any) {
         const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
         treeGrid.primaryKey &&
@@ -164,24 +164,24 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             treeGrid.transactions.startPending();
         }
 
-        super.deleteRowById(gridID, rowID);
+        super.deleteRowById(rowID);
 
         if (flatDataWithCascadeOnDeleteAndTransactions) {
             treeGrid.transactions.endPending(true);
         }
     }
 
-    public deleteRowFromData(gridID: string, rowID: any, index: number) {
+    public deleteRowFromData(rowID: any, index: number) {
         const treeGrid = this.grid;
         if (treeGrid.primaryKey && treeGrid.foreignKey) {
-            super.deleteRowFromData(gridID, rowID, index);
+            super.deleteRowFromData(rowID, index);
 
             if (treeGrid.cascadeOnDelete) {
                 const treeRecord = treeGrid.records.get(rowID);
                 if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
-                        super.deleteRowById(gridID, child.rowID);
+                        super.deleteRowById(child.rowID);
                     }
                 }
             }
@@ -255,11 +255,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public row_deleted_transaction(id: string, rowID: any): boolean {
-        return this.row_deleted_parent(id, rowID) || super.row_deleted_transaction(id, rowID);
+    public row_deleted_transaction(rowID: any): boolean {
+        return this.row_deleted_parent(rowID) || super.row_deleted_transaction(rowID);
     }
 
-    private row_deleted_parent(id: string, rowID: any): boolean {
+    private row_deleted_parent(rowID: any): boolean {
         const grid = this.grid;
         if (!grid) {
             return false;

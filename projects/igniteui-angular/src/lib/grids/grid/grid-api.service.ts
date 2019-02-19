@@ -8,7 +8,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 
 export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
-    public groupBy(id: string, expression: IGroupingExpression): void {
+    public groupBy(expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
         const sortingState = cloneArray(this.grid.sortingExpressions);
         this.prepare_sorting_expression([sortingState, groupingState], expression);
@@ -16,7 +16,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions();
     }
 
-    public groupBy_multiple(id: string, expressions: IGroupingExpression[]): void {
+    public groupBy_multiple(expressions: IGroupingExpression[]): void {
         const groupingState = cloneArray(this.grid.groupingExpressions);
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
@@ -28,7 +28,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions();
     }
 
-    public clear_groupby(id: string, name?: string | Array<string>) {
+    public clear_groupby(name?: string | Array<string>) {
         const groupingState = cloneArray(this.grid.groupingExpressions);
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
@@ -80,16 +80,16 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         return rowInGroup;
     }
 
-    public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
+    public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
         const expansionState = grid.groupingExpansionState;
         let toggleRowEditingOverlay: boolean;
         let isEditRowInGroup = false;
         if (grid.rowEditable) {
-            const rowState = this.get_edit_row_state(id);
+            const rowState = this.grid.crudService.row;
 
             // Toggle only row editing overlays that are inside current expanded/collapsed group.
-            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(groupRow, this.get_edit_row_state(id).rowID) : false;
+            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(groupRow, rowState.id) : false;
         }
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
         if (state) {

@@ -514,9 +514,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         this.endEdit(true);
         this._gridAPI.submit_value();
         if (expression instanceof Array) {
-            this._gridAPI.groupBy_multiple(this.id, expression);
+            this._gridAPI.groupBy_multiple(expression);
         } else {
-            this._gridAPI.groupBy(this.id, expression);
+            this._gridAPI.groupBy(expression);
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
@@ -533,7 +533,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *
      */
     public clearGrouping(name?: string | Array<string>): void {
-        this._gridAPI.clear_groupby(this.id, name);
+        this._gridAPI.clear_groupby(name);
         this.calculateGridSizes();
     }
 
@@ -624,14 +624,14 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     protected _toggleGroup(groupRow: IGroupByRecord) {
-        this._gridAPI.groupBy_toggle_group(this.id, groupRow);
+        this._gridAPI.groupBy_toggle_group(groupRow);
     }
 
     /**
      * @hidden
      */
     protected _applyGrouping() {
-        this._gridAPI.sort_multiple(this.id, this._groupingExpressions);
+        this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
     /**
@@ -847,6 +847,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             const source = [];
 
             const igxGridUnwind2019 = (group) => {
+                if (group.summaries) {
+                    source.push(null);
+                    return;
+                }
                 source.push(null);
                 if (group.groups.length) {
                     group.groups.forEach(igxGridUnwind2019);
@@ -855,7 +859,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 }
             };
             this.verticalScrollContainer.igxForOf
-                .filter((item) => item.expression && item.level === 0 && this.isExpandedGroup(item))
+                .filter((item) => (item.expression && item.level === 0 && this.isExpandedGroup(item)) || item.summaries)
                 .forEach(igxGridUnwind2019);
             return this.extractDataFromSelection(source);
         } else {

@@ -12,7 +12,6 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { first } from 'rxjs/operators';
 import { IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
@@ -186,7 +185,7 @@ export class IgxGridGroupByRowComponent {
         event.stopPropagation();
         const alt = event.altKey;
         const key = event.key.toLowerCase();
-        const kbState = this.gridSelection.keyboardState;
+        const selection = this.gridSelection;
 
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
 
@@ -203,7 +202,7 @@ export class IgxGridGroupByRowComponent {
             return;
         }
 
-        const visibleColumnIndex = kbState.lastPassedNode ? kbState.lastPassedNode.column : 0;
+        const visibleColumnIndex = selection.activeElement ? selection.activeElement.column : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':

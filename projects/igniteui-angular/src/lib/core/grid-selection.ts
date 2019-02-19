@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { IGridEditEventArgs } from '../grids/grid-base.component';
 
 
@@ -16,9 +15,10 @@ export interface ISelectionNode {
 }
 
 interface ISelectionKeyboardState {
-    lastPassedNode: null | ISelectionNode;
     node: null | ISelectionNode;
     shift: boolean;
+    range: GridSelectionRange;
+    active: boolean;
 }
 
 interface ISelectionPointerState extends ISelectionKeyboardState {
@@ -31,13 +31,45 @@ type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
 // TODO: Refactor - export in a separate file
 
 export class IgxRow {
+    transactionState: any;
+    state: any;
+    newData: any;
 
     constructor(public id: any, public index: number, public data: any) {}
+
+    update_state(grid) {
+        const data = grid.gridAPI.get_all_data(grid.transactions.enabled);
+        let rowIndex = grid.gridAPI.get_row_index_in_data(this.id);
+        if (rowIndex > -1) {
+            this.data = data[rowIndex];
+        }
+
+        if (rowIndex < 0 && grid.transactions.enabled) {
+            const transactionData = grid.dataWithAddedInTransactionRows;
+            rowIndex = grid.primaryKey ?
+                transactionData.map(record => record[grid.primaryKey]).indexOf(this.id) :
+                transactionData.indexOf(this.id);
+            if (rowIndex > -1) {
+                this.data = transactionData[rowIndex];
+            }
+        }
+        this.state = this.createEditEventArgs();
+    }
+
+    createEditEventArgs(): IGridEditEventArgs {
+        return {
+            rowID: this.id,
+            oldValue: this.data,
+            newValue: this.newData,
+            cancel: false
+        };
+    }
 }
 
 export class IgxCell {
 
     primaryKey: any;
+    state: any;
 
     constructor(
         public id,
@@ -58,6 +90,27 @@ export class IgxCell {
         return new IgxCell(this.id, this.rowIndex, this.column, this.value, this.editValue, this.rowData);
     }
 
+    update_state(grid) {
+        const data = grid.gridAPI.get_all_data(grid.transactions.enabled);
+        let rowIndex = grid.gridAPI.get_row_index_in_data(this.id.rowID);
+        if (rowIndex > -1) {
+            this.value = data[rowIndex][this.column.field];
+            this.rowData = data[rowIndex];
+        }
+
+        if (rowIndex < 0 && grid.transactions.enabled) {
+            const transactionData = grid.dataWithAddedInTransactionRows;
+            rowIndex = this.primaryKey ?
+                transactionData.map(record => record[this.primaryKey]).indexOf(this.id.rowID) :
+                transactionData.indexOf(this.id.rowID);
+            if (rowIndex > -1) {
+                this.value = transactionData[rowIndex][this.column.field];
+                this.rowData = transactionData[rowIndex];
+            }
+        }
+        this.state = this.createEditEventArgs();
+    }
+
     createEditEventArgs(): IGridEditEventArgs {
         return {
             rowID: this.id.rowID,
@@ -75,20 +128,6 @@ export class IgxGridCRUDService {
     grid;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
-    cellEditDone = new Subject<IgxCell>();
-    rowEditDone = new Subject<IgxRow>();
-    rowState;
-
-    inEditMode = false;
-
-    createEditEventArgs(): IGridEditEventArgs {
-        return {
-            rowID: this.cell.id.rowID,
-            cellID: this.cell.id,
-            oldValue: this.cell.value,
-            cancel: false
-        };
-    }
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
@@ -102,6 +141,15 @@ export class IgxGridCRUDService {
         return this.row.id === rowID;
     }
 
+    sameCell(cell: IgxCell): boolean {
+        return (this.cell.id.rowID === cell.id.rowID &&
+            this.cell.id.columnID === cell.id.columnID);
+    }
+
+    get inEditMode(): boolean {
+        return !!this.cell;
+    }
+
     get rowEditing(): boolean {
         return this.grid.rowEditable;
     }
@@ -111,7 +159,6 @@ export class IgxGridCRUDService {
     }
 
     beginRowEdit() {
-        // emit onRowEditEnter
         this.row = this.createRow(this.cell);
         const args = {
             rowID: this.row.id,
@@ -123,15 +170,11 @@ export class IgxGridCRUDService {
             this.endRowEdit();
             return;
         }
-        this.rowState = this.grid.transactions.getAggregatedValue(this.row.id, true);
+        this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
         this.grid.transactions.startPending();
         this.grid.openRowOverlay(this.row.id);
     }
 
-    commitRowEdit() {
-        this.grid.endRowTransaction(true, this.row.id);
-        this.endRowEdit();
-    }
 
     endRowEdit() {
         this.row = null;
@@ -140,7 +183,12 @@ export class IgxGridCRUDService {
     begin(cell): void {
         this.cell = this.createCell(cell);
         this.cell.primaryKey = this.primaryKey;
-        const args = this.createEditEventArgs();
+        const args = {
+            cellID: this.cell.id,
+            rowID: this.cell.id.rowID,
+            oldValue: this.cell.value,
+            cancel: false
+        };
 
         this.grid.onCellEditEnter.emit(args);
 
@@ -149,7 +197,6 @@ export class IgxGridCRUDService {
             return;
         }
 
-        this.inEditMode = true;
 
         if (this.rowEditing) {
             if (!this.row) {
@@ -158,24 +205,15 @@ export class IgxGridCRUDService {
             }
 
             if (this.row && !this.sameRow(this.cell.id.rowID)) {
-                this.commitRowEdit();
+                this.grid.endEdit(true);
                 this.beginRowEdit();
                 return;
             }
         }
     }
 
-    commit() {
-        if (!this.inEditMode) {
-            return;
-        }
-        this.cell.castToNumber();
-        this.grid.gridAPI.update_cell(this.cell);
-    }
-
     end(): void {
         this.cell = null;
-        this.inEditMode = false;
     }
 
 
@@ -202,6 +240,9 @@ export class IgxGridSelectionService {
 
 
     get ranges(): GridSelectionRange[] {
+        if (this.keyboardState.range) {
+            this._ranges.add(JSON.stringify(this.keyboardState.range));
+        }
         return Array.from(this._ranges).map(range => JSON.parse(range));
     }
 
@@ -211,21 +252,17 @@ export class IgxGridSelectionService {
     }
 
     initKeyboardState(): void {
-        this.keyboardState.lastPassedNode = null;
         this.keyboardState.node = null;
         this.keyboardState.shift = false;
+        this.keyboardState.range = null;
+        this.keyboardState.active = false;
     }
 
     initPointerState(): void {
         this.pointerState.node = null;
         this.pointerState.ctrl = false;
         this.pointerState.shift = false;
-    }
-
-    resetState(): void {
-        this.dragMode = false;
-        this.initPointerState();
-        this.initKeyboardState();
+        this.pointerState.range = null;
     }
 
     add(node: ISelectionNode): void {
@@ -240,31 +277,15 @@ export class IgxGridSelectionService {
         }));
     }
 
-    remove(node: ISelectionNode): void {
-
-        const { row, column } = node;
-        const item = this.selection.get(row);
-
-        if (!item) {
-            return;
-        }
-
-        this.selection.get(row).delete(column);
-        if (!this.selection.get(row).size) {
-            this.selection.delete(row);
-        }
-
-        this._ranges.delete(JSON.stringify({
-            rowStart: row,
-            rowEnd: row,
-            columnStart: column,
-            columnEnd: column
-        }));
-
+    selected(node: ISelectionNode): boolean {
+        return this.isActiveNode(node) || (this.selection.has(node.row) && this.selection.get(node.row).has(node.column));
     }
 
-    selected(node: ISelectionNode): boolean {
-        return (this.selection.has(node.row) && this.selection.get(node.row).has(node.column));
+    isActiveNode(node: ISelectionNode): boolean {
+        if (this.activeElement) {
+            return this.activeElement.column === node.column && this.activeElement.row === node.row;
+        }
+        return false;
     }
 
     addRangeMeta(node: ISelectionNode, state: SelectionState) {
@@ -289,38 +310,41 @@ export class IgxGridSelectionService {
     }
 
     keyboardDownShiftKey(node: ISelectionNode, shift: boolean, shiftTab: boolean) {
+        // Reset pointer state
         this.initPointerState();
-        if (!this.keyboardState.shift && shift) {
-            this.keyboardState.shift = !shiftTab;
-            this.keyboardState.node = node;
-        } else if (this.keyboardState.shift && !shift) {
-            this.initKeyboardState();
+
+        this.keyboardState.shift = shift && !shiftTab;
+
+        if (this.keyboardState.shift && !this.keyboardState.node) {
+            // Navigation with shift pressed. Clear the selection
+            // and initialize the start node. The cell _updateCellSelection method will
+            // handle the updates.
+            // TODO: Move the logic from the cell here.
             this.clear();
+            this.keyboardState.node = node;
         }
     }
 
     pointerDownShiftKey(node: ISelectionNode): void {
-        this.initKeyboardState();
         this.clear();
-        this.dragSelect(node, this.pointerState);
-        this.addRangeMeta(node, this.pointerState);
+        this.selectRange(node, this.pointerState);
     }
 
-
-    dragSelect(node: ISelectionNode, state: SelectionState): void {
-
+    selectRange(node: ISelectionNode, state: SelectionState) {
         const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
-
-        if (!this.pointerState.ctrl) {
-            this.selection.clear();
-        }
-
         for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = columnStart as number; j <= columnEnd; j++) {
                 this.selection.has(i) ? this.selection.get(i).add(j) :
                     this.selection.set(i, new Set<number>()).get(i).add(j);
             }
         }
+    }
+
+    dragSelect(node: ISelectionNode, state: SelectionState): void {
+        if (!this.pointerState.ctrl) {
+            this.selection.clear();
+        }
+        this.selectRange(node, state);
     }
 
     clear(): void {
