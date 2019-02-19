@@ -70,6 +70,7 @@
                 [igxTemplateOutletContext]='getContext(rowData)'
                 (onViewCreated)='viewCreatedHandler($event)'
                 (onViewMoved)='viewMovedHandler($event)'
+                (onCachedViewLoaded)='cachedViewLoaded($event)'
                 ></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>

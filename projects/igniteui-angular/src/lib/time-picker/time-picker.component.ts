@@ -1145,7 +1145,8 @@ export class IgxTimePickerComponent implements
             if (this.outlet) {
                 this._dialogOverlaySettings.outlet = this.outlet;
             }
-            this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
+            this._overlayId = this.overlayService.attach(this.container, this._dialogOverlaySettings);
+            this.overlayService.show(this._overlayId);
         }
 
         if (this.mode === TimePickerInteractionMode.dropdown) {
@@ -1155,7 +1156,8 @@ export class IgxTimePickerComponent implements
                     this._dropDownOverlaySettings.outlet = this.outlet;
                 }
                 this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-                this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
+                this._overlayId = this.overlayService.attach(this.container, this._dropDownOverlaySettings);
+                this.overlayService.show(this._overlayId);
             } else {
                 this._onDropDownClosed();
             }
