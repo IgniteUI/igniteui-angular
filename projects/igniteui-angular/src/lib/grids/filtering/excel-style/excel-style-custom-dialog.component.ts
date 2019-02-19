@@ -79,7 +79,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             //TODO
             // check fitlers and populate expressionsList
         }
+    }
 
+    public onCustomDialogOpened() {
         if (this.expressionComponents.first) {
             this.expressionComponents.first.focus();
         }

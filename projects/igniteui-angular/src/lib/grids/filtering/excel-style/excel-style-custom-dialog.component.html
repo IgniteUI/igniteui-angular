@@ -1,6 +1,7 @@
 <article #toggle igxToggle
     class="igx-excel-filter__secondary"
-    (onOpening)="onCustomDialogOpening()">
+    (onOpening)="onCustomDialogOpening()"
+    (onOpened)="onCustomDialogOpened()">
     <header class="igx-excel-filter__secondary-header">
         <h4 class="igx-typography__h6">
             Custom auto-filter on column: {{ column.field }}
