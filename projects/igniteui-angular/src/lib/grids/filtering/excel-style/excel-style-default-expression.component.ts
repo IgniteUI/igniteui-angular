@@ -4,7 +4,8 @@ import {
     AfterViewInit,
     Input,
     Output,
-    EventEmitter
+    EventEmitter,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -15,6 +16,15 @@ import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
 import { KEYS } from '../../../core/utils';
+import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
+
+/**
+ * @hidden
+ */
+export interface ILogicOperatorChangedArgs {
+    target: ExpressionUI;
+    newValue: FilteringLogic;
+}
 
 /**
  * @hidden
@@ -48,11 +58,19 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
     public expressionsList: Array<ExpressionUI>;
 
-    @Input()
-    public isLast: Boolean;
-
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();
+
+    @Output()
+    public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
+
+    get isLast(): boolean {
+        return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
+    }
+
+    get isSingle(): boolean {
+        return this.expressionsList.length === 1;
+    }
 
     get inputConditionsPlaceholder(): string {
         return this.filteringService.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
@@ -62,7 +80,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.filteringService.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
-    constructor(public filteringService: IgxFilteringService) {}
+    constructor(public filteringService: IgxFilteringService, public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -162,8 +180,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             eventArgs.stopPropagation();
             buttonGroup.selectButton(buttonIndex);
         } else {
-            this.expressionUI.afterOperator = buttonIndex;
-            this.expressionsList[this.expressionsList.indexOf(this.expressionUI) + 1].beforeOperator = this.expressionUI.afterOperator;
+            this.onLogicOperatorChanged.emit({
+                target: this.expressionUI,
+                newValue: buttonIndex as FilteringLogic
+            });
         }
     }
 

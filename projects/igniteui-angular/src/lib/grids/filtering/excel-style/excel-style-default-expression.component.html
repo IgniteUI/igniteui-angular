@@ -63,7 +63,7 @@
     </igx-icon>
 </igx-input-group>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="expressionsList.length > 1">
+<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="!isSingle">
     <igx-icon>cancel</igx-icon>
 </button>
 

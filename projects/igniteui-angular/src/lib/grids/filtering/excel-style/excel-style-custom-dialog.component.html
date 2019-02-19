@@ -9,26 +9,26 @@
 
     <article class="igx-excel-filter__secondary-main">
         <ng-container *ngIf="column.dataType === 'date'">
-            <igx-excel-style-date-expression *ngFor="let expression of expressionsList; let last = last;"
+            <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
-                [isLast]=last
                 [column]="column"
                 [expressionsList]="expressionsList"
                 [columnData]="columnData"
-                (onExpressionRemoved)="onExpressionRemoved($event)">
+                (onExpressionRemoved)="onExpressionRemoved($event)"
+                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-date-expression>
         </ng-container>
 
         <ng-container *ngIf="column.dataType != 'date'">
-            <igx-excel-style-default-expression *ngFor="let expression of expressionsList; let last = last;"
+            <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
-                [isLast]=last
                 [column]="column"
                 [expressionsList]="expressionsList"
                 [columnData]="columnData"
-                (onExpressionRemoved)="onExpressionRemoved($event)">
+                (onExpressionRemoved)="onExpressionRemoved($event)"
+                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-default-expression>
         </ng-container>
 

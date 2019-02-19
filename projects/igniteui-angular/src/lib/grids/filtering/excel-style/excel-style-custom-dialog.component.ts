@@ -5,7 +5,9 @@ import {
     ChangeDetectorRef,
     ViewChild,
     AfterViewInit,
-    TemplateRef
+    TemplateRef,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -14,6 +16,7 @@ import { DataType } from '../../../data-operations/data-util';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment } from '../../../services';
+import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 
 /**
  * @hidden
@@ -51,6 +54,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public columnData: any[];
+
+    @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
+    private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
 
     constructor(private cdr:ChangeDetectorRef, private filteringService: IgxFilteringService) {}
 
@@ -110,6 +116,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         exprUI.beforeOperator = this.expressionsList[this.expressionsList.length - 1].afterOperator;
 
         this.expressionsList.push(exprUI);
+
+        this.markChildrenForCheck();
     }
 
     public onExpressionRemoved(event: ExpressionUI) {
@@ -125,7 +133,17 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
         }
 
-        this.expressionsList = this.expressionsList.splice(indexToRemove, 1);
+        this.expressionsList.splice(indexToRemove, 1);
+
+        this.markChildrenForCheck();
+    }
+
+    public onLogicOperatorChanged(event: ILogicOperatorChangedArgs) {
+        const index = this.expressionsList.indexOf(event.target);
+        event.target.afterOperator = event.newValue;
+        if (index + 1 < this.expressionsList.length) {
+            this.expressionsList[index + 1].beforeOperator = event.newValue;
+        }
     }
 
     private createCondition(conditionName: string) {
@@ -139,6 +157,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
         }
+    }
+
+    private markChildrenForCheck() {
+        this.expressionComponents.forEach(x => x.cdr.markForCheck());
     }
 
     private createInitialExpressionUIElement() {
