@@ -79,6 +79,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             //TODO
             // check fitlers and populate expressionsList
         }
+
+        if (this.expressionComponents.first) {
+            this.expressionComponents.first.focus();
+        }
     }
 
     public open() {
@@ -148,14 +152,14 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private createCondition(conditionName: string) {
         switch (this.column.dataType) {
-            case DataType.String:
-                return IgxStringFilteringOperand.instance().condition(conditionName);
             case DataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
             case DataType.Number:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
+            default:
+                return IgxStringFilteringOperand.instance().condition(conditionName);
         }
     }
 

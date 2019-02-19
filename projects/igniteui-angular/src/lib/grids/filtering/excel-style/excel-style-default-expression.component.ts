@@ -5,13 +5,14 @@ import {
     Input,
     Output,
     EventEmitter,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownComponent, IgxDropDownItemComponent } from '../../../drop-down';
-import { IgxInputGroupComponent } from '../../../input-group';
+import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
@@ -64,6 +65,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
+    @ViewChild('inputValues', { read: IgxInputDirective })
+    private inputValuesDirective: IgxInputDirective;
+
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
     }
@@ -84,6 +88,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
+    }
+
+    public focus() {
+        this.inputValuesDirective.focus();
     }
 
     public onValuesChanged(eventArgs: any, inputValues) {
