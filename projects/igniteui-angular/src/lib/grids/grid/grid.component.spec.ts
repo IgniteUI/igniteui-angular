@@ -3125,9 +3125,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
 
                 const grid = fixture.componentInstance.grid;
-                const cellStock = grid.getCellByColumn(0, 'UnitsInStock');
                 const cellDate = grid.getCellByColumn(0, 'OrderDate');
-                const initialCellValue = cellDate.value;
                 const initialState = grid.transactions.getAggregatedChanges(false);
 
                 // Enter edit mode
@@ -3146,13 +3144,13 @@ describe('IgxGrid Component Tests', () => {
 
                 const newValue = new Date('01/01/2000');
                 cellDate.update(newValue);
-                tick(200);
-                fixture.detectChanges();
 
-                const updatedTransaction = grid.transactions.getAggregatedChanges(false)[0];
-                expect(updatedTransaction.id).toEqual(1);
-                expect(updatedTransaction.type).toEqual(TransactionType.UPDATE);
-                expect(updatedTransaction.newValue.OrderDate.getTime()).toEqual(newValue.getTime());
+                const expectedTransaction: Transaction = {
+                    id: 1,
+                    newValue: {OrderDate: newValue},
+                    type: TransactionType.UPDATE
+                };
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
             }));
 
             it('Should allow to change of a cell in added row in grid with transactions', fakeAsync(() => {
