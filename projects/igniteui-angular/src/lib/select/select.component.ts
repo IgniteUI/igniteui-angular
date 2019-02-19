@@ -123,16 +123,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public maxHeight = '256px';
 
     /** @hidden @internal */
-    public get ariaExpanded(): boolean {
-        return !this.collapsed;
-    }
-
-    /** @hidden @internal */
-    public get ariaOwns() {
-        return this.listId;
-    }
-
-    /** @hidden @internal */
     public width: string;
 
     /**
@@ -175,11 +165,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
-
-    /** @hidden @internal */
-    public get listId() {
-        return this.id + '-list';
-    }
 
     /** @hidden @internal */
     public get selectionValue() {
