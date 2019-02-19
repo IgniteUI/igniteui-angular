@@ -677,7 +677,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     protected scrollTo(row: any, column: any | number): void {
         let indexInView = this.verticalScrollContainer.igxForOf.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
-        if (indexInView === -1 && this.paging) {
+        if (indexInView === -1 && this.isHierarchicalRecord(row) && this.paging) {
             //  row is on another page, change page and check for visible index again
             const dataRowIndex = this.filteredSortedData.indexOf(row);
             this.page = Math.floor(dataRowIndex / this.perPage);
@@ -687,7 +687,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             indexInView = this.verticalScrollContainer.igxForOf.findIndex((item) => item.rowID === row.rowID);
         }
         // check if it is already in view
-        if (!this.verticalScrollContainer.isIndexInView(this.verticalScrollContainer.igxForOf.indexOf(row))) {
+        if (!this.verticalScrollContainer.isIndexInView(indexInView)) {
             this.scrollDirective(this.verticalScrollContainer, indexInView);
         }
 

@@ -323,6 +323,50 @@ describe('IgxHierarchicalGrid Search - ', () => {
         expect(results[11].row).toBe(hierarchicalGrid.data[3]);
     });
 
+    it('should scroll to active cell inside 3rd level nested child grid', async () => {
+        hierarchicalGrid.data = fixture.componentInstance.generateDataUneven(10, 3);
+        hierarchicalGrid.cdr.detectChanges();
+
+        // scroll to 7
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const row = hierarchicalGrid.getRowByIndex(7);
+        (row as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        (child.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        child.cdr.detectChanges();
+
+        const subChild = child.hgridAPI.getChildGrids(false)[0];
+        (subChild.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        subChild.cdr.detectChanges();
+
+        // scroll to top
+        hierarchicalGrid.verticalScrollContainer.scrollTo(0);
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const count = hierarchicalGrid.findNext('701');
+        await wait(30);
+        fixture.detectChanges();
+
+        expect(count).toBe(1);
+
+        // check if cell has active class
+        const cell = subChild.getCellByColumn(1, 'ID');
+        const cellHighlight = cell.nativeElement.querySelector('.' + ACTIVE_CLASS);
+        expect(cellHighlight).not.toBe(null);
+       // check if cell is fully in view
+       expect(cell.nativeElement.getBoundingClientRect().bottom)
+       .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
+    });
+
     // Integration - Paging
     it('should change page and scoll to the cell in with active highlight when there are expanded records.',  async () => {
         hierarchicalGrid.paging = true;
