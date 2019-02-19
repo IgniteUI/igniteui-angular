@@ -241,11 +241,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
-    get childLayoutKeys() {
-        const layoutsList = this.parentIsland ? this.parentIsland.children : this.childLayoutList;
-        const keys = layoutsList.map((item) => item.key);
-        return keys;
-    }
+    public childLayoutKeys = [];
 
     /**
      * @hidden
@@ -353,6 +349,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     }
                 });
             });
+            this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
+        } else {
+            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+            this.cdr.detectChanges();
         }
 
         this.toolbarCustomContentTemplates = this.parentIsland ?
@@ -587,7 +587,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     protected generateDataFields(data: any[]): string[] {
         return super.generateDataFields(data).filter((field) => {
-            return this.childLayoutKeys.indexOf(field) === -1;
+            const layoutsList = this.parentIsland ? this.parentIsland.children : this.childLayoutList;
+            const keys = layoutsList.map((item) => item.key);
+            return keys.indexOf(field) === -1;
         });
     }
 

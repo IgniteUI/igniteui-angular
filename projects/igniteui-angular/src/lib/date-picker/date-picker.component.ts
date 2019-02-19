@@ -380,6 +380,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
+        return '';
     }
 
     /**
@@ -696,7 +697,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 }
 
 /**
- * The IgxDatePickerModule provides the {@link IgxDatePickerComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],

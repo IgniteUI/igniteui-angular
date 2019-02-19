@@ -381,6 +381,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     imports: [IgxDropDownModule, CommonModule],
     declarations: [IgxAutocompleteDirective],

@@ -258,6 +258,10 @@ export class IgxBannerComponent implements IToggleView {
         this.onClosed.emit(this._bannerEvent);
     }
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxBannerComponent, IgxBannerActionsDirective],
     exports: [IgxBannerComponent, IgxBannerActionsDirective],

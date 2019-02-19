@@ -473,6 +473,9 @@ export class IgxOverlayOutletDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
