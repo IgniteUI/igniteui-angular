@@ -3125,31 +3125,27 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
 
                 const grid = fixture.componentInstance.grid;
-                const cellDate = grid.getCellByColumn(0, 'OrderDate');
+                let cellDate = grid.getCellByColumn(0, 'OrderDate');
                 const initialState = grid.transactions.getAggregatedChanges(false);
 
                 // Enter edit mode
                 cellDate.onKeydownEnterEditMode({ stopPropagation: () => { }, preventDefault: () => { } });
                 tick();
                 fixture.detectChanges();
-                // Perform Shift + Tab to UnitsInStock
-                cellDate.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true, code: 'tab' }));
+                // Exit edit mode without change
+                cellDate.onKeydownExitEditMode({ stopPropagation: () => { }, preventDefault: () => { } });
                 tick();
                 fixture.detectChanges();
-                // Exit edit mode
-                grid.endEdit(true);
-                tick();
-                fixture.detectChanges();
-                expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
-
-                // Enter edit mode
+                cellDate = grid.getCellByColumn(0, 'UnitsInStock');
                 cellDate.onKeydownEnterEditMode({ stopPropagation: () => { }, preventDefault: () => { } });
                 tick();
                 fixture.detectChanges();
+                expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
+                cellDate.onKeydownExitEditMode({ stopPropagation: () => { }, preventDefault: () => { } });
+
+                cellDate = grid.getCellByColumn(0, 'OrderDate');
                 const newValue = new Date('01/01/2000');
                 cellDate.update(newValue);
-                // Exit edit mode
-                grid.endEdit(true);
                 tick();
                 fixture.detectChanges();
 
