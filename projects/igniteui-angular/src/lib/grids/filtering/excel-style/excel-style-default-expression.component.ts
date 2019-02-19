@@ -34,6 +34,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         scrollStrategy: new CloseScrollStrategy()
     };
 
+    private _isDropdownValuesOpening = false;
+
     @Input()
     public column: IgxColumnComponent;
 
@@ -66,31 +68,34 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
     }
 
-    public onValuesChanged(eventArgs: any, inputValues: any) {
-        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-        this.expressionUI.expression.searchVal = value;
+    public onValuesChanged(eventArgs: any, inputValues) {
 
-        //TODO
-        inputValues.input.nativeElement.focus();
+        // TODO: BVK this method is invoked even when the user types into the input. 
+        // chech if this will be invoked when initializing the control and remove the following one
+
+        if (!this._isDropdownValuesOpening) {
+            const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+            this.expressionUI.expression.searchVal = value;
+
+            inputValues.focus();
+        }
     }
 
-    public onDropdownValuesOpening(targetDropdown: IgxDropDownComponent, inputValues: any) {
-        targetDropdown.items.forEach(dropdownItem => {
-            if (dropdownItem.value === inputValues.input.nativeElement.value) {
-                dropdownItem.isSelected = true;
-                targetDropdown.setSelectedItem(dropdownItem.index);
-            } else {
-                dropdownItem.isSelected = false;
-            }
-        });
+    public onDropdownValuesOpening(targetDropdown: IgxDropDownComponent) {
+        this._isDropdownValuesOpening = true;
+
+        const newSelection = targetDropdown.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
+        if (targetDropdown.selectedItem !== newSelection) {
+            targetDropdown.selectItem(newSelection);
+        }
+    }
+
+    public onDropdownValuesOpened() {
+        this._isDropdownValuesOpening = false;
     }
 
     public isConditionSelected(conditionName: string): boolean {
-        if (this.expressionUI.expression.condition) {
-            return this.expressionUI.expression.condition.name === conditionName;
-        } else {
-            return false;
-        }
+        return this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName;
     }
 
     public getConditionName(condition: IFilteringOperation) {

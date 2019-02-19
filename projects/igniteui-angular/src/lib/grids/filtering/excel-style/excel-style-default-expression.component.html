@@ -35,8 +35,9 @@
     #dropdownValues 
     [height]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
-    (onSelection)="onValuesChanged($event, inputGroupValues)"
-    (onOpening)="onDropdownValuesOpening(dropdownValues, inputGroupValues)">
+    (onSelection)="onValuesChanged($event, inputValues)"
+    (onOpening)="onDropdownValuesOpening(dropdownValues)"
+    (onOpened)="onDropdownValuesOpened()">
     <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
         <span>{{ filterItem }}</span>
     </igx-drop-down-item>
