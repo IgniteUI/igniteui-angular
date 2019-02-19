@@ -4706,11 +4706,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     public cachedViewLoaded(args: IViewChangeEventArgs) {
        if (this.hasHorizontalScroll()) {
+            const tmplId = args.context.templateID;
             const index = args.context.index;
             args.view.detectChanges();
-            const row = this.getRowByIndex(index);
-            if (row instanceof IgxRowComponent) {
+            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
+            if (row && row instanceof IgxRowComponent) {
                 this._restoreVirtState(row);
+            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
+                this._restoreVirtState(summaryRow);
             }
        }
     }
