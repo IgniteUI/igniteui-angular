@@ -54,62 +54,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     // TODO: Refactor
-    // public set_cell_inEditMode(gridId: string, cell: IgxGridCellComponent) {
-    //     const grid = this.grid;
-    //     const args: IGridEditEventArgs = {
-    //         rowID: cell.cellID.rowID,
-    //         cellID: cell.cellID,
-    //         oldValue: cell.value,
-    //         cancel: false
-    //     };
-    //     grid.onCellEditEnter.emit(args);
-    //     if (args.cancel) {
-    //         return;
-    //     }
-    //     if (grid.rowEditable) {
-    //         const currentEditRow = this.get_edit_row_state(gridId);
-    //         if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
-    //             grid.endEdit(true);
-    //             grid.startRowEdit(cell.cellID);
-    //         }
-    //         if (!currentEditRow) {
-    //             grid.startRowEdit(cell.cellID);
-    //         }
-    //     }
-
-    //     if (!this.get_cell_inEditMode(gridId)) {
-    //         const cellCopy = Object.assign({}, cell);
-    //         cellCopy.row = Object.assign({}, cell.row);
-    //     this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
-    //     }
-    // }
-
-    // TODO: Refactor
     public escape_editMode() {
         this.grid.crudService.end();
-        // const editableCell = this.get_cell_inEditMode(gridId);
-        // if (editableCell) {
-        //     if (cellId) {
-        //         if (cellId.rowID === editableCell.cellID.rowID &&
-        //             cellId.columnID === editableCell.cellID.columnID) {
-        //             this.editCellState.delete(gridId);
-        //         }
-        //     } else {
-        //         this.editCellState.delete(gridId);
-        //     }
-        // }
-
         this.grid.refreshSearch();
     }
 
     // TODO: Refactor
     public get_cell_inEditMode(): IgxCell {
-        // const editCellId = this.editCellState.get(gridId);
-        // if (editCellId) {
-        //     return editCellId;
-        // } else {
-        //     return null;
-        // }
         return this.grid.crudService.cell;
     }
 
@@ -122,7 +73,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_key(rowSelector: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -131,99 +82,40 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_index(rowIndex: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_edit_row_state(gridId): {
-        rowID: any,
-        rowIndex: number
-    } {
-        const editRow = this.editRowState.get(gridId);
-        return editRow ? editRow : null;
-
-    }
-
-    public set_edit_row_state(gridId, row: { rowID: any, rowIndex: number }) {
-        if (!row) {
-            this.editRowState.delete(gridId);
-        } else {
-            this.editRowState.set(gridId, row);
-        }
-    }
-
-
-    public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
-        const row = this.get_row_by_key(id, rowSelector);
+    public get_cell_by_key(rowSelector: any, field: string): IgxGridCellComponent {
+        const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
 
-    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
-        const row = this.get_row_by_index(id, rowIndex);
+    public get_cell_by_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
+        const row = this.get_row_by_index(rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
-        const row = this.get_row_by_index(id, rowIndex);
+    public get_cell_by_visible_index(rowIndex: number, columnIndex: number): IgxGridCellComponent {
+        const row = this.get_row_by_index(rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
     }
 
     public submit_value() {
-        const editableCell = this.get_cell_inEditMode();
-        if (editableCell) {
-            // const gridEditState = this.create_grid_edit_args(gridId, editableCell.id.rowID,
-            //     editableCell.id.columnID, editableCell.id.editValue);
-            // if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
-            //     if (!editableCell.cell.editValue) {
-            //         gridEditState.args.newValue = 0;
-            //         this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, 0, gridEditState);
-            //     } else {
-            //         const val = parseFloat(editableCell.cell.editValue);
-            //         if (!isNaN(val) || isFinite(val)) {
-            //             gridEditState.args.newValue = val;
-            //             this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, val, gridEditState);
-            //         }
-            //     }
-            // } else {
-            //     this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID,
-            //         editableCell.cell.editValue, gridEditState);
-            // }
-            const gridEditState = this.update_cell(editableCell);
-            if (gridEditState.args.cancel) {
+        const cell = this.grid.crudService.cell;
+        if (cell) {
+            this.update_cell(cell, cell.editValue);
+            if (cell.state.cancel) {
                 return;
             }
             this.escape_editMode();
         }
-    }
-
-    public build_edit_args(cell: IgxCell) {
-        const data = this.get_all_data(this.grid.transactions.enabled);
-        const isRowSelected = this.grid.selection.is_item_selected(this.grid.id, cell.id.rowID);
-        let rowIndex = this.get_row_index_in_data(cell.id.rowID);
-        let rowData;
-
-        if (rowIndex > -1) {
-            cell.value = data[rowIndex][cell.column.field];
-            rowData = data[rowIndex];
-        }
-
-        if (rowIndex < 0 && this.grid.transactions.enabled) {
-            const transData = this.grid.dataWithAddedInTransactionRows;
-            rowIndex = this.grid.primaryKey ?
-                transData.map(record => record[this.grid.primaryKey]).indexOf(cell.id.rowID) :
-                transData.indexOf(cell.id.rowID);
-            if (rowIndex > -1) {
-                cell.value = transData[rowIndex][cell.column.field];
-                rowData = transData[rowIndex];
-            }
-        }
-        return { args: cell.createEditEventArgs(), isRowSelected, rowData};
     }
 
     // TODO: Refactor
@@ -334,25 +226,27 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     //     }
     // }
 
-    update_cell(cell: IgxCell) {
+    update_cell(cell: IgxCell, value: any) {
         const index = this.get_row_index_in_data(cell.id.rowID);
-        const state = this.build_edit_args(cell);
+        cell.editValue = value;
+        cell.castToNumber();
+        cell.update_state(this.grid);
 
-        this.grid.onCellEdit.emit(state.args);
-        if (state.args.cancel) {
-            return state;
+        this.grid.onCellEdit.emit(cell.state);
+        if (cell.state.cancel) {
+            return;
         }
         const transactionValue = this.grid.transactions.getAggregatedValue(cell.id.rowID, true);
         if (transactionValue) {
-            state.args.oldValue = transactionValue[cell.column.field];
+            cell.state.oldValue = transactionValue[cell.column.field];
         }
-        if (isEqual(cell.value, cell.editValue)) { return state; }
+        if (isEqual(cell.state.oldValue, cell.state.newValue)) { return; }
         const rowValue = this.get_all_data(this.grid.transactions.enabled)[index];
-        this.updateData(this.grid, cell.id.rowID, rowValue, state.rowData, { [cell.column.field ]: state.args.newValue });
+        this.updateData(this.grid, cell.id.rowID, rowValue, cell.rowData, { [cell.column.field ]: cell.state.newValue });
         if (this.grid.primaryKey === cell.column.field) {
-            if (state.isRowSelected) {
+            if (this.grid.selection.is_item_selected(this.grid.id, cell.id.rowID)) {
                 this.grid.selection.deselect_item(this.grid.id, cell.id.rowID);
-                this.grid.selection.select_item(this.grid.id, state.args.newValue);
+                this.grid.selection.select_item(this.grid.id, cell.state.newValue);
             }
             if (this.grid.hasSummarizedColumns) {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
@@ -360,11 +254,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
         if (!this.grid.rowEditable || !this.grid.crudService.row ||
                 this.grid.crudService.row.id !== cell.id.rowID || !this.grid.transactions.enabled) {
-            this.grid.summaryService.clearSummaryCache(state.args);
+            this.grid.summaryService.clearSummaryCache(cell.state);
             (this.grid as any)._pipeTrigger++;
         }
-        return state;
-
     }
 
     /**
@@ -388,32 +280,50 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    update_row(value: any, row: IgxRow): void {
+    update_row(row: IgxRow, value: any) {
+        const grid = this.grid;
+        const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id);
-        if (index < 0) {
-            return;
-        }
-        const data = this.get_all_data(this.grid.transactions.enabled);
-        const rowInEditMode = this.grid.crudService.row;
-        const enabledSummaries = this.grid.hasSummarizedColumns;
-        let _value = Object.assign({}, data[index]);
+        const selected = grid.selection.is_item_selected(grid.id, row.id);
+        const rowInEditMode = grid.crudService.row;
+        const hasSummarized = grid.hasSummarizedColumns;
+        row.data = data[index];
+        row.newData = value;
 
-        if (this.grid.transactions.enabled) {
-            const lastValue = this.grid.transactions.getState(row.id)
-                ? Object.assign({}, this.grid.transactions.getState(row.id).value) : null;
-            _value = lastValue ? Object.assign(_value, lastValue) : _value;
-        } else if (rowInEditMode && rowInEditMode.id === row.id) {
-            _value = Object.assign(_value, rowInEditMode.data);
+        if (rowInEditMode && row.id === rowInEditMode.id && rowInEditMode.transactionState) {
+            row.data = rowInEditMode.transactionState;
+        } else if (this.grid.transactions.enabled) {
+            const lastCommitedValue = grid.transactions.getState(row.id) ?
+                grid.transactions.getState(row.id).value : null;
+            row.data = lastCommitedValue ? Object.assign(row.data, lastCommitedValue) : row.data;
+        }
+
+        row.update_state(grid);
+        if (index < 0) { return; }
+
+        grid.onRowEdit.emit(row.state);
+        if (row.state.cancel) {
+            return;
         }
 
         if (rowInEditMode) {
-            this.grid.transactions.endPending(false);
+            grid.transactions.endPending(false);
         }
-        if (enabledSummaries) {
-            this.grid.summaryService.removeSummaries(row.id);
+
+        if (hasSummarized) {
+            grid.summaryService.removeSummaries(row.state.rowID);
         }
-        this.updateData(this.grid, row.id, data[index], _value, value);
-        (this.grid as any)._pipeTrigger++;
+
+        this.updateData(grid, row.id, data[index], row.state.oldValue, row.state.newValue);
+        const newId = grid.primaryKey ? row.state.newValue[grid.primaryKey] : row.state.newValue;
+        if (selected) {
+            grid.selection.deselect_item(grid.id, row.id);
+            grid.selection.select_item(grid.id, newId);
+        }
+        if (hasSummarized) {
+            grid.summaryService.removeSummaries(newId);
+        }
+        (grid as any)._pipeTrigger++;
     }
 
     // TODO: Refactor
@@ -468,26 +378,26 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     //     }
     // }
 
-    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+    protected update_row_in_array(value: any, rowID: any, index: number) {
         const grid = this.grid;
         grid.data[index] = value;
     }
 
-    public sort(id: string, expression: ISortingExpression): void {
+    public sort(expression: ISortingExpression): void {
         if (expression.dir === SortingDirection.None) {
-            this.remove_grouping_expression(id, expression.fieldName);
+            this.remove_grouping_expression(expression.fieldName);
         }
         const sortingState = cloneArray(this.grid.sortingExpressions);
         this.prepare_sorting_expression([sortingState], expression);
         this.grid.sortingExpressions = sortingState;
     }
 
-    public sort_multiple(id: string, expressions: ISortingExpression[]): void {
+    public sort_multiple(expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
         for (const each of expressions) {
             if (each.dir === SortingDirection.None) {
-                this.remove_grouping_expression(id, each.fieldName);
+                this.remove_grouping_expression(each.fieldName);
             }
             this.prepare_sorting_expression([sortingState], each);
         }
@@ -495,7 +405,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         this.grid.sortingExpressions = sortingState;
     }
 
-    public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    public filter(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
@@ -514,7 +424,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         grid.filteringExpressionsTree = filteringTree;
     }
 
-    public filter_global(id, term, condition, ignoreCase) {
+    public filter_global(term, condition, ignoreCase) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         if (grid.paging) {
@@ -624,8 +534,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         });
     }
 
-    protected remove_grouping_expression(id, fieldName) {
-        }
+    protected remove_grouping_expression(fieldName) {
+    }
 
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number;
@@ -637,12 +547,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return data ? data : [];
     }
 
-    protected getSortStrategyPerColumn(id: string, fieldName: string) {
+    protected getSortStrategyPerColumn(fieldName: string) {
         return this.get_column_by_name(fieldName) ?
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
-    public addRowToData(gridID: string, rowData: any) {
+    public addRowToData(rowData: any) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
@@ -655,7 +565,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public deleteRowFromData(gridID: string, rowID: any, index: number) {
+    public deleteRowFromData(rowID: any, index: number) {
         //  if there is a row (index !== 0) delete it
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         const grid = this.grid;
@@ -672,7 +582,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public deleteRowById(gridID: string, rowId: any) {
+    public deleteRowById(rowId: any) {
         let index: number;
         const grid = this.grid;
         const data = this.get_all_data();
@@ -704,7 +614,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             grid.checkHeaderCheckboxStatus();
         }
 
-        this.deleteRowFromData(gridID, rowId, index);
+        this.deleteRowFromData(rowId, index);
         (grid as any)._pipeTrigger++;
         grid.cdr.markForCheck();
         // Data needs to be recalculated if transactions are in place
@@ -716,12 +626,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public get_row_id(id: string, rowData) {
+    public get_row_id(rowData) {
         const grid = this.grid;
         return grid.primaryKey ? rowData[grid.primaryKey] : rowData;
     }
 
-    public row_deleted_transaction(id: string, rowID: any): boolean {
+    public row_deleted_transaction(rowID: any): boolean {
         const grid = this.grid;
         if (!grid) {
             return false;
@@ -737,7 +647,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return false;
     }
 
-    public atInexistingPage(id: string): Boolean {
+    public atInexistingPage(): Boolean {
         const grid = this.grid;
         return grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0;
     }

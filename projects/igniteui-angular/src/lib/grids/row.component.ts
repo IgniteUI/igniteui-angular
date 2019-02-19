@@ -171,7 +171,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
+        return this.gridAPI.row_deleted_transaction(this.rowID);
     }
 
     // TODO: Refactor
@@ -280,8 +280,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         // if (editableCell && editableCell.cellID.rowID === this.rowID) {
         //     this.grid.endEdit(false);
         // }
-        const model = new IgxRow(this.rowID, this.index, this.rowData);
-        this.gridAPI.update_row(value, model);
+        const row = new IgxRow(this.rowID, this.index, this.rowData);
+        this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }
 

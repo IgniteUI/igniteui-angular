@@ -1194,6 +1194,31 @@ describe('IgxGrid - search API', () => {
             expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
         });
 
+        it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+            grid.height = '500px';
+            await wait();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'JobTitle',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            grid.findNext('a');
+            await wait();
+            fix.detectChanges();
+
+            (grid as any).scrollTo(9, 0);
+            await wait(16);
+            fix.detectChanges();
+
+            const row = grid.getRowByIndex(9);
+            const spans = row.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(5);
+        });
+
+
         xit('Should be able to properly handle navigating through collapsed rows with paging', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',

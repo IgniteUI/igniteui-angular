@@ -87,7 +87,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
             record.level = indentationLevel;
-            record.expanded = this.gridAPI.get_row_expansion_state(id, record);
+            record.expanded = this.gridAPI.get_row_expansion_state(record);
 
             if (record.children && record.children.length > 0) {
                 this.setIndentationLevels(id, record.children, indentationLevel + 1);
@@ -107,7 +107,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 parent: parent,
                 level: indentationLevel
             };
-            record.expanded = this.gridAPI.get_row_expansion_state(id, record);
+            record.expanded = this.gridAPI.get_row_expansion_state(record);
             flatData.push(item);
             map.set(record.rowID, record);
             record.children = item[childDataKey] ?
@@ -165,8 +165,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                 data.push(hierarchicalRecord);
             }
 
-            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
-                hierarchicalRecord);
+            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(hierarchicalRecord);
 
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 

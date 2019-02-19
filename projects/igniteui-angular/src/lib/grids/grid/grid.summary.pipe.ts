@@ -48,7 +48,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 groupByRecord = record as IGroupByRecord;
                 recordId = this.gridAPI.get_groupBy_record_id(groupByRecord);
             } else {
-                recordId = this.gridAPI.get_row_id(gridId, record);
+                recordId = this.gridAPI.get_row_id(record);
             }
 
             if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
@@ -88,7 +88,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
 
                 let lastChildId;
                 if (grid.isExpandedGroup(lastChild)) {
-                    lastChildId = this.gridAPI.get_row_id(gridId, lastChild.records[lastChild.records.length - 1]);
+                    lastChildId = this.gridAPI.get_row_id(lastChild.records[lastChild.records.length - 1]);
                 } else {
                     lastChildId = this.gridAPI.get_groupBy_record_id(lastChild);
                 }

@@ -65,6 +65,9 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxGridCellComponent,
