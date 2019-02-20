@@ -10,6 +10,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { DateRangeType } from 'igniteui-angular';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -762,12 +763,103 @@ describe('IgxDatePicker', () => {
 
             // invalid date
             expect(input.nativeElement.value).toBe('29-02-19');
-
             expect(datePicker.onValidationFailed.emit).toHaveBeenCalledTimes(1);
         });
 
-        xit('should emit onDisabledDate event when entered disabled date - edit mode', fakeAsync(() => {
+        it('should emit onDisabledDate event when entered disabled date - edit mode', fakeAsync(() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            spyOn(datePicker.onDisabledDate, 'emit');
 
+            datePicker.disabledDates = [{
+                type: DateRangeType.Between, dateRange: [
+                    new Date(2018, 8, 2),
+                    new Date(2018, 8, 8)
+                ]
+            }];
+
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('20-10-11');
+
+            UIInteractions.sendInput(input, '03-05-19');
+            fixture.detectChanges();
+
+            // disabled date
+            UIInteractions.sendInput(input, '03-09-18');
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('03-09-18');
+
+            UIInteractions.sendInput(input, '07-09-18');
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('07-09-18');
+
+            expect(datePicker.onDisabledDate.emit).toHaveBeenCalledTimes(2);
+        }));
+
+
+        it('should stop spinning on max/min when isSpinLoop is set to false - edit mode', fakeAsync(() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            expect(input).toBeDefined();
+            datePicker.isSpinLoop = false;
+
+            input.nativeElement.focus();
+            UIInteractions.sendInput(input, '31-03-19');
+            expect(input.nativeElement.value).toBe('31-03-19');
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(0, 0);
+
+            // check max day
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, -100);
+            tick(100);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('31-03-19');
+
+            input.nativeElement.focus();
+            UIInteractions.sendInput(input, '01-03-19');
+            expect(input.nativeElement.value).toBe('01-03-19');
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(0, 0);
+
+            // check min day
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, 100);
+            tick(100);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('01-03-19');
+
+            // check min month
+            input.nativeElement.focus();
+            UIInteractions.sendInput(input, '15-01-19');
+            expect(input.nativeElement.value).toBe('15-01-19');
+
+            input.nativeElement.setSelectionRange(3, 3);
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, 100);
+            tick(100);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('15-01-19');
+
+            // check max month
+            input.nativeElement.focus();
+            UIInteractions.sendInput(input, '31-12-19');
+            expect(input.nativeElement.value).toBe('31-12-19');
+
+            input.nativeElement.setSelectionRange(3, 3);
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, -100);
+            tick(100);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('31-12-19');
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            tick(100);
+
+            // format dd.MM.y
+            expect(input.nativeElement.value).toBe('31.12.2019');
         }));
     });
 
