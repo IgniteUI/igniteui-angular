@@ -259,6 +259,20 @@ describe('IgxMonthPicker', () => {
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
+
+        yearBtn.nativeElement.focus();
+
+        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowRight');
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2022);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
+
+        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowLeft');
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
     });
 
     it('should open years view, navigate through and select an year via KB.', () => {

@@ -85,9 +85,35 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
+    public activeViewDecadeKB(event) {
+        super.activeViewDecadeKB(event);
+
+        if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
+            event.preventDefault();
+            this.nextYear(true);
+
+            this._onChangeCallback(this.viewDate);
+            this.onSelection.emit(this.viewDate);
+        }
+
+        if (event.key === KEYS.LEFT_ARROW || event.key === KEYS.LEFT_ARROW_IE) {
+            event.preventDefault();
+            this.previousYear(true);
+
+            this._onChangeCallback(this.viewDate);
+            this.onSelection.emit(this.viewDate);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public nextYear(kbTrigger = false) {
         this.yearAction = 'next';
         super.nextYear(kbTrigger);
+
+        this._onChangeCallback(this.viewDate);
+        this.onSelection.emit(this.viewDate);
     }
 
     /**
@@ -108,6 +134,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     public previousYear(kbTrigger = false) {
         this.yearAction = 'prev';
         super.previousYear(kbTrigger);
+
+        this._onChangeCallback(this.viewDate);
+        this.onSelection.emit(this.viewDate);
     }
 
     /**
@@ -125,25 +154,28 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public selectMonth(event: Date) {
-        this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
-        this._onChangeCallback(this.viewDate);
-
-        this.onSelection.emit(this.viewDate);
-    }
-
-    /**
-     * @hidden
-     */
     public selectYear(event: Date) {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
+
+        this._onChangeCallback(this.viewDate);
+        this.onSelection.emit(this.viewDate);
 
         requestAnimationFrame(() => {
             this.yearsBtn.nativeElement.focus();
         });
     }
 
+    /**
+     * @hidden
+     */
+    public selectMonth(event: Date) {
+        this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
+        this._onChangeCallback(this.viewDate);
+
+        this.onSelection.emit(this.viewDate);
+    }
+    
     /**
      * Selects a date.
      *```typescript
