@@ -4,7 +4,7 @@
     [width]="getInputWidth(inputGroupConditions)"
     (onSelection)="onConditionsChanged($event)"
     (onClosed)="onDropdownClosed()">
-    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition)">
+    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ translateCondition(condition) }}</span>
     </igx-drop-down-item>
@@ -34,13 +34,13 @@
 
 <igx-drop-down 
     #dropdownValues 
-    [height]="'200px'"
+    [maxHeight]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
     (onSelection)="onValuesChanged($event)"
     (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
-    <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
+    <igx-drop-down-item *ngFor="let filterItem of valuesData" [value]="filterItem" [selected]="isValueSelected(filterItem)">
         <span>
             {{ column.formatter ? column.formatter(filterItem) : column.dataType === 'number' ? (filterItem | igxdecimal: column.grid.locale) : filterItem }}
         </span>

@@ -47,6 +47,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     private _isDropdownValuesOpening = false;
     private _isDropdownOpened = false;
+    private _valuesData: any[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -96,6 +97,14 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     get inputValuePlaceholder(): string {
         return this.filteringService.grid.resourceStrings['igx_grid_filter_row_placeholder'];
+    }
+
+    get valuesData(): any[] {
+        if (!this._valuesData) {
+            this._valuesData = this.columnData.filter(x => x !== null && x !== undefined && x !== '');
+        }
+
+        return this._valuesData;
     }
 
     constructor(public filteringService: IgxFilteringService, public cdr: ChangeDetectorRef) {}
