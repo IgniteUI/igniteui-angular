@@ -188,7 +188,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         const rowInEditMode = grid.crudService.row;
         row.newData = value ? value : grid.transactions.getAggregatedValue(row.id, true);
 
-        // API HACK Editing
+        // TODO: Workaround for updating a row in edit mode through the API
         if (rowInEditMode && row.id === rowInEditMode.id && rowInEditMode.transactionState) {
             row.data = rowInEditMode.transactionState;
         } else if (this.grid.transactions.enabled) {
@@ -241,57 +241,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return args;
     }
 
-    // TODO: Refactor
-    // public update_row(value: any, id: string, rowID: any, gridState?: {
-    //     args: IGridEditEventArgs,
-    //     isRowSelected: boolean,
-    //     rowData: any
-    // }): void {
-    //     const grid = this.grid;
-    //     // if (this.grid.crudService.inEditMode) {
-    //     //     this.grid.crudService.commit();
-    //     // }
-    //     const data = this.get_all_data(grid.transactions.enabled);
-    //     // const currentGridState = gridState ? gridState : this.create_grid_edit_args(id, rowID, null, value);
-    //     const currentGridState = this.build_edit_args(this.grid.crudService.cell);
-    //     const emitArgs = currentGridState.args;
-    //     const index = this.get_row_index_in_data(rowID);
-    //     const currentRowInEditMode = this.get_edit_row_state(id);
-    //     let oldValue = Object.assign({}, data[index]);
-    //     const hasSummarizedColumns = grid.hasSummarizedColumns;
-    //     if (grid.currentRowState && grid.currentRowState[grid.primaryKey] === rowID
-    //         || currentRowInEditMode && currentRowInEditMode.rowID === rowID) {
-    //         oldValue = Object.assign(oldValue, grid.currentRowState);
-    //     } else if (grid.transactions.enabled) {
-    //         // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-    //         const lastCommitedValue = // Last commited value (w/o pending)
-    //             grid.transactions.getState(rowID) ? Object.assign({}, grid.transactions.getState(rowID).value) : null;
-    //         oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
-    //     }
-    //     Object.assign(emitArgs, { oldValue, rowID});
-    //     if (index !== -1) {
-    //         grid.onRowEdit.emit(emitArgs);
-    //         if (emitArgs.cancel) {
-    //             return;
-    //         }
-    //         if (currentRowInEditMode) {
-    //             grid.transactions.endPending(false);
-    //         }
-    //         if (hasSummarizedColumns) {
-    //             grid.summaryService.removeSummaries(emitArgs.rowID);
-    //         }
-    //         this.updateData(grid, rowID, data[index], emitArgs.oldValue, emitArgs.newValue);
-    //         if (currentGridState.isRowSelected) {
-    //             grid.selection.deselect_item(id, rowID);
-    //             const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
-    //             grid.selection.select_item(id, newRowID);
-    //         }
-    //         if (hasSummarizedColumns) {
-    //             grid.summaryService.removeSummaries(rowID);
-    //         }
-    //         (grid as any)._pipeTrigger++;
-    //     }
-    // }
+
 
     protected update_row_in_array(value: any, rowID: any, index: number) {
         const grid = this.grid;
