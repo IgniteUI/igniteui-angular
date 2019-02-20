@@ -1511,14 +1511,13 @@ describe('igxSelect', () => {
         const defaultItemTopPadding = 8;
         const defaultItemBottomPadding = 8;
         const defaultIconWidth = 24;
-        const defaultScrollWidth = 17;
-        const verifySelectedItemPositioning = function (selectedItemIndex: number, hasScroll = true, reversed = false) {
+        // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
+        const verifySelectedItemPositioning = function (selectedItemIndex: number, reversed = false) {
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const listRect = selectList.nativeElement.getBoundingClientRect();
             const inputRect = inputElement.nativeElement.getBoundingClientRect();
             const selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
 
-            // Verifies that the selected item is positioned over the input
             expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                                     selectedItemRect.height :
@@ -1527,8 +1526,7 @@ describe('igxSelect', () => {
             const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
                                     inputRect.bottom + defaultItemBottomPadding;
             expect(selectedItemRect.bottom).toEqual(expectedItemBottom);
-            const expectedItemWidth = hasScroll ? listRect.width - defaultScrollWidth : listRect.width;
-            expect(selectedItemRect.width).toEqual(expectedItemWidth);
+            expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
         };
         describe('Ample space to open positioning tests: ', () => {
             beforeEach(async(() => {
@@ -1604,7 +1602,7 @@ describe('igxSelect', () => {
                     expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
                     expect(selectedItemRect.top).toEqual(inputRect.top - defaultItemTopPadding);
                     expect(selectedItemRect.bottom).toEqual(inputRect.bottom + defaultItemBottomPadding);
-                    expect(selectedItemRect.width).toEqual(listRect.width - defaultScrollWidth);
+                    expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
 
                     // List positioning
                     const expectedListTop = selectedItemIndex === 3 ?
@@ -1786,7 +1784,7 @@ describe('igxSelect', () => {
                     select.toggle();
                     tick();
                     fixture.detectChanges();
-                    verifySelectedItemPositioning(6, true, true);
+                    verifySelectedItemPositioning(6, true);
                     verifyListPositioning(6);
             }));
         });
