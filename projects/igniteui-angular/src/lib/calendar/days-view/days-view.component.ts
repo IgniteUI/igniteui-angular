@@ -212,6 +212,8 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public selectDay(event) {
         this.selectDateFromClient(event.date);
         this.onDateSelection.emit(event);
+
+        this.onSelection.emit(this.selectedDates);
     }
 
     /**
