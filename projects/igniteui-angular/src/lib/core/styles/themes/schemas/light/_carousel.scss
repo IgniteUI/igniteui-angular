@@ -13,8 +13,11 @@
 /// @prop {Color} indicator-dot-color [#fff] - The active indicator dot color.
 /// @prop {Color} indicator-border-color [#fff] - The idle indicator border color.
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
 /// @see $default-palette
 $_light-carousel: (
+    border-radius: 0,
+
     button-background: #fff,
     button-hover-background: #fff,
 

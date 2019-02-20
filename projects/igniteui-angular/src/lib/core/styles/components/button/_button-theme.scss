@@ -11,8 +11,13 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
-/// @param {String} $button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
-///
+
+/// @param {border-radius} $flat-border-radius [null] - The border radius used for flat button.
+/// @param {border-radius} $raised-border-radius [null] - The border radius used for raised button.
+/// @param {border-radius} $outlined-border-radius [null] - The border radius used for outlined button.
+/// @param {border-radius} $fab-border-radius [null] - The border radius used for fab button.
+/// @param {border-radius} $icon-border-radius [null] - The border radius used for icon button.
+
 /// @param {Color} $flat-background [null] - The background color of a flat button.
 /// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
 /// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
@@ -68,6 +73,7 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: igx-button-theme(
@@ -81,7 +87,11 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
-    $button-roundness: null,
+    $flat-border-radius: null,
+    $raised-border-radius: null,
+    $fab-border-radius: null,
+    $icon-border-radius: null,
+    $outlined-border-radius: null,
 
     $flat-text-color: null,
     $flat-background: null,
@@ -134,6 +144,26 @@
     $name: 'igx-button';
     $button-schema: map-get($schema, $name);
     $theme: apply-palette($button-schema, $palette);
+
+    $flat-border-radius: round-borders(
+        if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
+    );
+
+    $raised-border-radius: round-borders(
+        if($raised-border-radius, $raised-border-radius, map-get($button-schema, 'raised-border-radius')), 0, 20px
+    );
+
+    $fab-border-radius: round-borders(
+        if($fab-border-radius, $fab-border-radius, map-get($button-schema, 'fab-border-radius')), 12, 28px
+    );
+
+    $icon-border-radius: round-borders(
+        if($icon-border-radius, $icon-border-radius, map-get($button-schema, 'icon-border-radius')), 0, 20px
+    );
+
+    $outlined-border-radius: round-borders(
+        if($outlined-border-radius, $outlined-border-radius, map-get($button-schema, 'outlined-border-radius')), 0, 20px
+    );
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -268,7 +298,12 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        button-roundness: $button-roundness,
+
+        flat-border-radius: $flat-border-radius,
+        raised-border-radius: $raised-border-radius,
+        fab-border-radius: $fab-border-radius,
+        icon-border-radius: $icon-border-radius,
+        outlined-border-radius: $outlined-border-radius,
 
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
@@ -331,8 +366,7 @@
     $button-width: rem(88px);
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
-    $button-transition: background .15s ease-out, box-shadow .15s ease-out;
-    $button-round-radius: 50%;
+    $button-transition: all .15s $ease-in-out-cubic;
 
     $button-disabled-shadow: none;
 
@@ -353,7 +387,6 @@
         height: $button-height;
         padding: $button-padding;
         border: $button-border;
-        border-radius: --var($theme, 'button-roundness');
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -368,6 +401,7 @@
     %igx-button--flat {
         background: --var($theme, 'flat-background');
         color: --var($theme, 'flat-text-color');
+        border-radius: --var($theme, 'flat-border-radius');
 
         &:hover {
             background: --var($theme, 'flat-hover-background');
@@ -385,6 +419,7 @@
         border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
+        border-radius: --var($theme, 'outlined-border-radius');
 
         &:hover {
             background: --var($theme, 'outlined-hover-background');
@@ -402,6 +437,7 @@
         color: --var($theme, 'raised-text-color');
         background: --var($theme, 'raised-background');
         box-shadow: --var($theme, 'raised-resting-shadow');
+        border-radius: --var($theme, 'raised-border-radius');
 
         &:focus,
         &:hover {
@@ -424,7 +460,7 @@
         justify-content: center;
         align-items: center;
         border: $button-border;
-        border-radius: $button-round-radius;
+        border-radius: --var($theme, 'fab-border-radius');
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -441,6 +477,7 @@
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
         box-shadow: --var($theme, 'fab-resting-shadow');
+        border-radius: --var($theme, 'fab-border-radius');
 
         &:hover {
             color: --var($theme, 'fab-hover-text-color');
@@ -463,6 +500,7 @@
         padding: $button-icon-padding;
         color: --var($theme, 'icon-color');
         background: --var($theme, 'icon-background');
+        border-radius: --var($theme, 'icon-border-radius');
 
         &:hover {
             transition: $button-transition;

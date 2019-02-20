@@ -14,8 +14,11 @@
 /// @prop {Map} header-icon-color [igx-color: ('grays', 800)] - The panel header icon color.
 /// @prop {Map} body-color [igx-color: ('grays', 800)] - The panel body text color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for expansion-panel.
 /// @see $default-palette
 $_light-expansion-panel: (
+    border-radius: 0,
+
     header-background: #fff,
     body-background: #fff,
 
