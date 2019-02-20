@@ -365,8 +365,9 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
     providers: [IGX_SWITCH_REQUIRED_VALIDATOR]
 })
 export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
+
 /**
- * The IgxSwitchModule provides the {@link IgxSwitchComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],

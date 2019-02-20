@@ -73,6 +73,9 @@ import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/exce
 import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxGridCellComponent,
