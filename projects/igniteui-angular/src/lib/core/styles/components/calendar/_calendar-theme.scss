@@ -429,8 +429,10 @@
         &::after {
             position: absolute;
             content: '';
+            top: 50%;
             left: 0;
             right: 0;
+            transform: translateY(-50%);
             height: 48px;
             background-color: transparent;
             border-radius: rem(20px);
