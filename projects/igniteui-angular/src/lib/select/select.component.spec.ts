@@ -2,6 +2,8 @@ import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import {IgxIconModule} from '../icon/index';
+import {IgxInputGroupModule} from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent, IgxSelectModule } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -76,10 +78,13 @@ describe('igxSelect', () => {
                 IgxSelectSimpleComponent,
                 IgxSelectMiddleComponent,
                 IgxSelectTopComponent,
-                IgxSelectBottomComponent
+                IgxSelectBottomComponent,
+                IgxSelectAffixComponent
             ],
             imports: [
                 FormsModule,
+                IgxIconModule,
+                IgxInputGroupModule,
                 IgxSelectModule,
                 IgxToggleModule,
                 NoopAnimationsModule,
@@ -1511,6 +1516,7 @@ describe('igxSelect', () => {
         const defaultItemTopPadding = 8;
         const defaultItemBottomPadding = 8;
         const defaultIconWidth = 24;
+        const defaultTextIdent = 8;
         let visibleItems = 5;
         let hasScroll = true;
         let selectedItemIndex: number;
@@ -1761,6 +1767,40 @@ describe('igxSelect', () => {
                     verifyListPositioning();
             }));
         });
+        describe('Input with affixes positioning tests: ', () => {
+            const calculatePrefixesWidth = function() {
+                let prefixesWidth = 0;
+                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
+                Array.from(prefixes).forEach((prefix: DebugElement) => {
+                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
+                    prefixesWidth += prefixRect.width;
+                  });
+                return prefixesWidth;
+            };
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectAffixComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                visibleItems = 5;
+                hasScroll = true;
+            }));
+            it('should ident option text to the input text',
+                fakeAsync(() => {
+                    selectedItemIndex = 0;
+                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    expect(inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent).
+                    toEqual(selectedItemRect.left + defaultItemLeftPadding);
+                }));
+        });
     });
 });
 
@@ -1850,6 +1890,35 @@ class IgxSelectTopComponent {
 `
 })
 class IgxSelectBottomComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'];
+}
+@Component({
+    template: `
+    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+    <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">favorite</igx-icon>
+            <igx-icon fontSet="material">home</igx-icon>
+            <igx-icon fontSet="material">search</igx-icon>
+        </igx-prefix>
+        <igx-suffix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-suffix>
+    <igx-select-item *ngFor="let item of items" [value]="item">
+        {{ item }}
+    </igx-select-item>
+    </igx-select>
+`
+})
+class IgxSelectAffixComponent {
     @ViewChild('select', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
