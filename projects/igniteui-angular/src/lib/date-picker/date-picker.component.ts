@@ -392,7 +392,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private cdr: ChangeDetectorRef) { }
+        private cdr: ChangeDetectorRef, public element: ElementRef) { }
 
     /**
      * Gets the input group template.
