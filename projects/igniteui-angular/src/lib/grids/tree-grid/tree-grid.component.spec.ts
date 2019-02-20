@@ -100,8 +100,8 @@ describe('IgxTreeGrid Component Tests', () => {
             await wait(16);
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
-            expect(horizontalScroll.style.width).toBe('800px');
-            expect(horizontalScroll.children[0].style.width).toBe('1000px');
+            expect(horizontalScroll.style.width).toBe('785px');
+            expect(horizontalScroll.children[0].style.width).toBe('980px');
         });
     });
 
