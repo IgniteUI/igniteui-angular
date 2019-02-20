@@ -2989,7 +2989,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
 
-        this.gridAPI.submit_value();
+        this.endEdit(true);
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget, position);
         }

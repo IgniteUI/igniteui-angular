@@ -162,6 +162,7 @@ export class IgxGridCRUDService {
 
             if (this.row && !this.sameRow(this.cell.id.rowID)) {
                 this.grid.endEdit(true);
+                this.cell = this.createCell(cell);
                 this.beginRowEdit();
                 return;
             }
