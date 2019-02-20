@@ -65,8 +65,14 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
+    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
+    private inpugGroupConditions: IgxInputGroupComponent;
+
     @ViewChild('inputValues', { read: IgxInputDirective })
     private inputValuesDirective: IgxInputDirective;
+
+    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
+    private dropdownConditions: IgxDropDownComponent;
 
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
@@ -94,7 +100,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.inputValuesDirective.focus();
     }
 
-    public onValuesChanged(eventArgs: any, inputValues) {
+    public onValuesChanged(eventArgs: any) {
 
         // TODO: BVK this method is invoked even when the user types into the input. 
         // chech if this will be invoked when initializing the control and remove the following one
@@ -103,7 +109,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionUI.expression.searchVal = value;
 
-            inputValues.focus();
+            this.inputValuesDirective.focus();
         }
     }
 
@@ -167,12 +173,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.column.filters.condition(value);
     }
 
-    public onConditionsChanged(eventArgs: any, inputValues: any) {
+    public onConditionsChanged(eventArgs: any) {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expressionUI.expression.condition = this.getCondition(value);
 
-        //TODO
-        requestAnimationFrame(() => { inputValues.input.nativeElement.focus();});
+        this.focus();
     }
 
     public isValueSelected(value: string): boolean {
@@ -203,5 +208,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.toggleCustomDialogDropDown(input, targetDropDown);
         }
+
+        event.stopPropagation();
     }
 }
