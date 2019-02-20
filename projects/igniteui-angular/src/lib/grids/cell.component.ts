@@ -274,12 +274,23 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
+
+     // TODO: Deprecate
     get inEditMode(): boolean {
         return this.editMode;
     }
 
     set inEditMode(value: boolean) {
-        value ? this._updateCRUDStatus() : this.grid.endEdit(true);
+        if (this.row.deleted) {
+            return;
+        }
+        if (this.editable && value) {
+            this.gridAPI.submit_value();
+            this.crudService.begin(this);
+        } else {
+            this.gridAPI.escape_editMode();
+        }
+        this.grid.cdr.markForCheck();
     }
 
     /**

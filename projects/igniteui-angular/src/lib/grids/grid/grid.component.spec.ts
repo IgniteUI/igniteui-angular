@@ -32,7 +32,7 @@ import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid Component Tests', () => {
+fdescribe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
@@ -1523,16 +1523,16 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(navSpyR).toHaveBeenCalledTimes(1);
-                const newCell = (<any>grid).gridAPI.get_cell_inEditMode(grid.id);
-                expect(newCell.cellID.columnID).toEqual(targetCell.columnIndex + 3);
-                expect(newCell.cell.column.editable).toEqual(true);
+                const newCell = (<any>grid).gridAPI.get_cell_inEditMode();
+                expect(newCell.id.columnID).toEqual(targetCell.columnIndex + 3);
+                expect(newCell.column.editable).toEqual(true);
                 // Move backwards
                 fixture.componentInstance.moveNext(true);
                 tick();
                 fixture.detectChanges();
                 expect(navSpyL).toHaveBeenCalledTimes(1);
-                expect((<any>grid).gridAPI.get_cell_inEditMode(grid.id).cellID.columnID).toEqual(targetCell.columnIndex);
-                expect((<any>grid).gridAPI.get_cell_inEditMode(grid.id).cell.column.editable).toEqual(true);
+                expect((<any>grid).gridAPI.get_cell_inEditMode().id.columnID).toEqual(targetCell.columnIndex);
+                expect((<any>grid).gridAPI.get_cell_inEditMode().column.editable).toEqual(true);
 
             }));
 
@@ -1827,9 +1827,9 @@ describe('IgxGrid Component Tests', () => {
                 grid.endEdit(true);
                 tick();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1851,9 +1851,9 @@ describe('IgxGrid Component Tests', () => {
                 grid.addRow({ ProductID: 99, ProductName: 'ADDED', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') });
                 tick();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1876,9 +1876,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1918,9 +1918,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1948,7 +1948,7 @@ describe('IgxGrid Component Tests', () => {
                 // expect(gridAPI.submit_value).toHaveBeenCalled();
                 // expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1971,9 +1971,9 @@ describe('IgxGrid Component Tests', () => {
                 nonEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1996,9 +1996,9 @@ describe('IgxGrid Component Tests', () => {
                 nonEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2021,9 +2021,9 @@ describe('IgxGrid Component Tests', () => {
                 otherEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
                 expect(otherEditableCell.inEditMode).toBeTruthy();
             }));
@@ -2264,7 +2264,7 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 tick();
-                (<any>grid).gridAPI.get_cell_inEditMode(grid.id).cell.editValue = 'IG';
+                (<any>grid).gridAPI.get_cell_inEditMode().editValue = 'IG';
                 // cell.update('IG');
                 // Do not exit edit mode
                 fix.detectChanges();
@@ -2446,7 +2446,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe(110); // SORT does not submit
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 0, columnID: 0, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 0, columnID: 0, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2524,7 +2524,7 @@ describe('IgxGrid Component Tests', () => {
 
                 targetCell.inEditMode = true;
                 // Bind to cell editor template value
-                (<any>grid).gridAPI.get_cell_inEditMode(grid.id).cell.value = newDate;
+                (<any>grid).gridAPI.get_cell_inEditMode().value = newDate;
                 // targetCell.update(newDate);
                 fix.detectChanges();
                 grid.recalculateSummaries();
@@ -2565,9 +2565,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2590,9 +2590,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
 
                 // put cell in edit mode
@@ -2605,9 +2605,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 3, columnID: 2, rowIndex: 2 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 3, columnID: 2, rowIndex: 2 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2645,9 +2645,9 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 4, columnID: 2, rowIndex: 3 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 4, columnID: 2, rowIndex: 3 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -3965,8 +3965,8 @@ export class IgxGridWithEditingAndFeaturesComponent {
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.gridAPI.get_cell_inEditMode(this.grid.id);
-        return this.grid.getCellByColumn(currentCell.cellID.rowIndex, currentCell.cell.column.field);
+        const currentCell = grid.gridAPI.get_cell_inEditMode();
+        return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 
     public get gridAPI() {
@@ -3974,7 +3974,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
     }
 
     public get cellInEditMode() {
-        return this.gridAPI.get_cell_inEditMode(this.grid.id).cell;
+        return this.gridAPI.get_cell_inEditMode();
     }
 }
 
@@ -4009,13 +4009,13 @@ export class IgxGridCustomOverlayComponent {
     }
 
     public get cellInEditMode() {
-        return this.gridAPI.get_cell_inEditMode(this.grid.id).cell;
+        return this.gridAPI.get_cell_inEditMode();
     }
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.gridAPI.get_cell_inEditMode(this.grid.id);
-        return this.grid.getCellByColumn(currentCell.cellID.rowIndex, currentCell.cell.column.field);
+        const currentCell = grid.gridAPI.get_cell_inEditMode();
+        return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 
     public moveNext(shiftKey: boolean): void {
