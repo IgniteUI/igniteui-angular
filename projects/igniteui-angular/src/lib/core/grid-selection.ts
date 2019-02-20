@@ -37,25 +37,6 @@ export class IgxRow {
 
     constructor(public id: any, public index: number, public data: any) {}
 
-    update_state(grid) {
-        const data = grid.gridAPI.get_all_data(grid.transactions.enabled);
-        let rowIndex = grid.gridAPI.get_row_index_in_data(this.id);
-        if (rowIndex > -1) {
-            this.data = data[rowIndex];
-        }
-
-        if (rowIndex < 0 && grid.transactions.enabled) {
-            const transactionData = grid.dataWithAddedInTransactionRows;
-            rowIndex = grid.primaryKey ?
-                transactionData.map(record => record[grid.primaryKey]).indexOf(this.id) :
-                transactionData.indexOf(this.id);
-            if (rowIndex > -1) {
-                this.data = transactionData[rowIndex];
-            }
-        }
-        this.state = this.createEditEventArgs();
-    }
-
     createEditEventArgs(): IGridEditEventArgs {
         return {
             rowID: this.id,
@@ -84,31 +65,6 @@ export class IgxCell {
             const v = parseFloat(this.editValue);
             this.editValue = !isNaN(v) && isFinite(v) ? v : 0;
         }
-    }
-
-    clone(): IgxCell {
-        return new IgxCell(this.id, this.rowIndex, this.column, this.value, this.editValue, this.rowData);
-    }
-
-    update_state(grid) {
-        const data = grid.gridAPI.get_all_data(grid.transactions.enabled);
-        let rowIndex = grid.gridAPI.get_row_index_in_data(this.id.rowID);
-        if (rowIndex > -1) {
-            this.value = data[rowIndex][this.column.field];
-            this.rowData = data[rowIndex];
-        }
-
-        if (rowIndex < 0 && grid.transactions.enabled) {
-            const transactionData = grid.dataWithAddedInTransactionRows;
-            rowIndex = this.primaryKey ?
-                transactionData.map(record => record[this.primaryKey]).indexOf(this.id.rowID) :
-                transactionData.indexOf(this.id.rowID);
-            if (rowIndex > -1) {
-                this.value = transactionData[rowIndex][this.column.field];
-                this.rowData = transactionData[rowIndex];
-            }
-        }
-        this.state = this.createEditEventArgs();
     }
 
     createEditEventArgs(): IGridEditEventArgs {

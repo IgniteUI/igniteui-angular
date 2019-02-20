@@ -3195,7 +3195,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.gridAPI.escape_editMode();
             }
-            const row = new IgxRow(rowSelector, -1, {});
+            const row = new IgxRow(rowSelector, -1, this.getRowByKey(rowSelector).rowData);
             this.gridAPI.update_row(row, value);
             this.cdr.markForCheck();
         }
@@ -4642,19 +4642,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return arr.filter(c => !c.columnGroup);
     }
 
-    /*     @HostListener('keydown.pagedown', ['$event'])
-        public onKeydownPageDown(event) {
-            event.preventDefault();
-            this.nativeElement.focus();
-        }
-
-        @HostListener('keydown.pageup', ['$event'])
-        public onKeydownPageUp(event) {
-            event.preventDefault();
-            this.verticalScrollContainer.scrollPrevPage();
-            this.nativeElement.focus();
-        } */
-
     private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
             return;
@@ -4770,71 +4757,23 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     endRowTransaction(commit: boolean, row: IgxRow) {
-        const transactionValue = this.transactions.getAggregatedValue(row.id, true);
-        const data = this.gridAPI.get_all_data();
-        const rowIndex = this.gridAPI.get_row_index_in_data(row.id);
+        this.gridAPI._update_row(row);
 
-        row.newData = transactionValue ? transactionValue : data[rowIndex];
-        row.update_state(this);
-        row.data = { ...data[rowIndex], ...row.transactionState };
+        let args = row.createEditEventArgs();
 
         if (!commit) {
-            this.onRowEditCancel.emit(row.state);
-            this.transactions.endPending(commit);
+            this.onRowEditCancel.emit(args);
+            this.transactions.endPending(false);
         } else {
-            this.gridAPI.update_row(row, row.state.newValue);
+            args = this.gridAPI.update_row(row, row.newData);
         }
-        if (row.state.cancel) {
+        if (args.cancel) {
             this.transactions.startPending();
             return;
         }
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
     }
-
-    /**
-     * TODO: Refactor
-     * @hidden
-     */
-
-    // private endRowTransaction(commit: boolean, rowID: any, rowObject: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
-    //     const valueInTransactions = this.transactions.getAggregatedValue(rowID, true);
-    //     const rowIndex = this.gridAPI.get_row_index_in_data(rowID);  // Get actual index in data
-    //     const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data()[rowIndex];
-    //     const oldValue = Object.assign(
-    //         {},
-    //         this.gridAPI.get_all_data()[rowIndex],
-    //         this.crudService.rowState
-    //         // this._currentRowState
-    //     );
-    //     // if (this.transactions.enabled) {
-    //     // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-    //     //     const lastCommitedValue = // Last commited value (w/o pending)
-    //     //         this.transactions.getState(rowID) ? Object.assign({}, this.transactions.getState(rowID).value) : null;
-    //     //     oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
-    //     // }
-    //     // const currentGridState = this.gridAPI.create_grid_edit_args(this.id, rowID,
-    //     //     null,
-    //     //     newValue);
-    //     const currentGridState = this.gridAPI.build_edit_args(this.crudService.cell);
-    //     const emitArgs = currentGridState.args;
-    //     Object.assign(emitArgs, {
-    //         newValue,
-    //         oldValue,
-    //         rowID,
-    //     });
-    //     if (!commit) {
-    //         this.onRowEditCancel.emit(emitArgs);
-    //         this.transactions.endPending(commit);
-    //     } else {
-    //         this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
-    //     }
-    //     if (emitArgs.cancel) {
-    //         this.transactions.startPending();
-    //         return;
-    //     }
-    //     this.closeRowEditingOverlay();
-    // }
 
     // TODO: Refactor
     /**
