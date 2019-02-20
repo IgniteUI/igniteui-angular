@@ -126,7 +126,8 @@ export interface OverlayInfo {
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
 }
-/** @hidden */
+
+/** @hidden @internal*/
 export function getViewportRect(document: Document): ClientRect {
     const width = document.documentElement.clientWidth;
     const height = document.documentElement.clientHeight;
@@ -142,7 +143,7 @@ export function getViewportRect(document: Document): ClientRect {
     };
   }
 
-/** @hidden */
+/** @hidden @internal*/
 export function getViewportScrollPosition(): Point {
     const documentElement = document.documentElement;
     const documentRect = documentElement.getBoundingClientRect();
