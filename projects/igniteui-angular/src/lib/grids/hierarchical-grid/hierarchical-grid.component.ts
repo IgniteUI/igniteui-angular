@@ -755,19 +755,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
         grid.scrollTo(row, column);
         requestAnimationFrame(() => {
-            // check cell is in view, if it is not fully in view scroll more so that it is fully visible.
             const cell = grid.getCellByKey(row, column);
-            const diffBottom =  cell.nativeElement.getBoundingClientRect().bottom -
-            grid.hierarchicalNavigation._getMinBottom(grid);
-            const diffTop = cell.nativeElement.getBoundingClientRect().bottom -
-            cell.nativeElement.offsetHeight -  grid.hierarchicalNavigation._getMaxTop(grid);
-            if (diffBottom > 0) {
-                const closestScrollableDownGrid = this.hierarchicalNavigation.getNextScrollableDown(grid).grid;
-                closestScrollableDownGrid.verticalScrollContainer.addScrollTop(diffBottom);
-            } else if (diffTop < 0) {
-                const closestScrollableUpGrid = this.hierarchicalNavigation.getNextScrollable(grid).grid;
-                closestScrollableUpGrid.verticalScrollContainer.addScrollTop(diffTop);
-            }
+            gridsToScroll.forEach((grd) => {
+                if (grd.parent) {
+                    // ensure child cell is visible in parent viewport
+                    this._scrollInParentView(cell, grd.parent);
+                }
+            });
         });
+    }
+
+    private _scrollInParentView(cell, grid) {
+            const diffBottom =  cell.nativeElement.getBoundingClientRect().bottom -
+            grid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const diffTop = cell.nativeElement.getBoundingClientRect().bottom -
+            cell.nativeElement.offsetHeight -  grid.tbody.nativeElement.getBoundingClientRect().top;
+            if (diffBottom > 0) {
+                grid.verticalScrollContainer.addScrollTop(diffBottom);
+                grid.verticalScrollContainer.cdr.detectChanges();
+            } else if (diffTop < 0) {
+                grid.verticalScrollContainer.addScrollTop(diffTop);
+                grid.verticalScrollContainer.cdr.detectChanges();
+            }
     }
 }

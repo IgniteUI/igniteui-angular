@@ -201,7 +201,7 @@ describe('IgxHierarchicalGrid Search - ', () => {
          fixture.detectChanges();
 
          // parent should be expanded
-         expect((hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+         expect(hierarchicalGrid.isExpanded(hierarchicalGrid.data[3])).toBeTruthy();
          // child should be scrolled
          expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
          // check correct cell is active
@@ -360,6 +360,56 @@ describe('IgxHierarchicalGrid Search - ', () => {
 
         // check if cell has active class
         const cell = subChild.getCellByColumn(1, 'ID');
+        const cellHighlight = cell.nativeElement.querySelector('.' + ACTIVE_CLASS);
+        expect(cellHighlight).not.toBe(null);
+       // check if cell is fully in view
+       expect(cell.nativeElement.getBoundingClientRect().bottom)
+       .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
+    });
+
+    it('should scroll multiple grids when active hightlight cell is in nested child outside its parent grids viewports.', async () => {
+        // scroll to 7
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const row = hierarchicalGrid.getRowByIndex(7);
+        (row as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        (child.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        child.cdr.detectChanges();
+
+        const subChild = child.hgridAPI.getChildGrids(false)[0];
+        (subChild.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+        await wait(30);
+        subChild.cdr.detectChanges();
+
+        // scroll parent back to top
+        hierarchicalGrid.verticalScrollContainer.scrollTo(0);
+        await wait(30);
+        hierarchicalGrid.cdr.detectChanges();
+
+        // the 2 parent grids should scroll so that nested child grid cell is in view.
+        const count = hierarchicalGrid.findNext('704');
+        await wait(30);
+        fixture.detectChanges();
+
+        expect(count).toBe(1);
+
+        // check root grid scrolled down
+        let scrTop = hierarchicalGrid.verticalScrollContainer.getScrollForIndex(8);
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(scrTop);
+
+        // check child grid scrolled down
+        scrTop = child.verticalScrollContainer.getScrollForIndex(1);
+        expect(child.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(scrTop);
+
+        // check if cell has active class
+        const cell = subChild.getCellByColumn(4, 'ID');
         const cellHighlight = cell.nativeElement.querySelector('.' + ACTIVE_CLASS);
         expect(cellHighlight).not.toBe(null);
        // check if cell is fully in view
