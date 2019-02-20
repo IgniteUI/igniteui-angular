@@ -1,5 +1,13 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings, Size, getViewportRect } from './../utilities';
+import {
+  getPointFromPositionsSettings,
+  getViewportRect,
+  HorizontalAlignment,
+  PositionSettings,
+  Point,
+  Size,
+  VerticalAlignment
+} from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
