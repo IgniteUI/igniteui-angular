@@ -5,8 +5,9 @@
             <h4 class="sample-title">Default Date Picker.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
+                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today">
+                </igx-date-picker>
+                <button igxButton igxRipple type="raised" (click)="deselect(datePicker)">Deselect date</button>
             </div>
         </article>
         <article class="datepicker-column">
@@ -27,15 +28,38 @@
             <h4 class="sample-title">Date Picker with retemplated input group.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter">
-                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+                <igx-date-picker [value]="date" [formatter]="formatter">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                        let-displayData="displayData">
                         <igx-input-group (click)="openDialog()">
                             <label igxLabel>Date</label>
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>
-                        <label>{{value}}</label>
                     </ng-template>
-               </igx-date-picker>
+                </igx-date-picker>
+            </div>
+        </article>
+
+        <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker</h4>
+            <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
+            <label>Format: {{ editableDatePicker1.format }}</label>
+            <label>mask: {{ editableDatePicker1.mask }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker1 mode="editable" [value]="testDate" format="dd.MM.y" mask="M/d/y">
+                </igx-date-picker>
+            </div>
+        </article>
+
+        <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker bind with ngModel</h4>
+            <label>Date: {{ editableDatePicker.value }}</label>
+            <label>Format: {{ editableDatePicker.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker mode="editable" [weekStart]="1" [(ngModel)]="date1"
+                    [isSpinLoop]="false">
+                </igx-date-picker>
+                <button igxButton igxRipple type="raised" (click)="deselect($event)">Deselect date</button>
             </div>
         </article>
     </section>
