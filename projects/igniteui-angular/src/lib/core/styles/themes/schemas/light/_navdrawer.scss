@@ -20,11 +20,14 @@
 /// @prop {map} item-hover-icon-color [igx-color: ('primary', 500)] - The item's hover icon color.
 /// @prop {map} item-hover-icon-color [igx-color: ('primary', 500)] - The item's hover icon color.
 /// @prop {map} elevation [16] - The elevation level of the drawer, between 0 - 24.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for navdrawer component.
 ///
 /// @see $default-palette
 
 $_light-navdrawer: (
     background: #fff,
+
+    border-radius: 0,
 
     border-color: rgba(0, 0, 0, .14),
 

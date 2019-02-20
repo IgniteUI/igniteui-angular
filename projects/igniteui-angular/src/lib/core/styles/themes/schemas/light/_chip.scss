@@ -6,7 +6,7 @@
 
 /// Generates a light chip schema.
 /// @type {Map}
-/// @prop {Number} roundness [32px] - The chip roundness.
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for chip component.
 /// @prop {Map} text-color [igx-color: ('grays', 700)] - The chip text color.
 /// @prop {Map} background [igx-color: ('grays', 200)] - The chip background color.
 /// @prop {Color} border-color [transparent] - The chip border color.
@@ -25,7 +25,7 @@
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
 /// @see $default-palette
 $_light-chip: (
-    roundness: rem(32px),
+    border-radius: 1,
 
     text-color: (
         igx-color: ('grays', 700)

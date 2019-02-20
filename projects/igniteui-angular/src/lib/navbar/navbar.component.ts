@@ -137,9 +137,10 @@ export class IgxNavbarComponent {
         this.onAction.emit(this);
     }
 }
-    /**
-     *The IgxNavbarModule provides the {@link IgxNavbarComponent} inside your application.
-     */
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxNavbarComponent, IgxActionIconDirective],
     exports: [IgxNavbarComponent, IgxActionIconDirective],

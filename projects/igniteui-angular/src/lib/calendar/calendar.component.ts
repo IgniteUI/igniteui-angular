@@ -73,6 +73,9 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
 
+    @Input()
+    public hasHeader = true;
+
     /**
      * Gets whether the `day`, `month` and `year` should be rendered
      * according to the locale and formatOptions, if any.
@@ -146,19 +149,19 @@ export class IgxCalendarComponent extends IgxDaysViewComponent {
     /**
      * @hidden
      */
-    @ViewChild('decade', {read: IgxYearsViewComponent})
+    @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('months', {read: IgxMonthsViewComponent})
+    @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', {read: IgxDaysViewComponent})
+    @ViewChild('days', { read: IgxDaysViewComponent })
     public daysView: IgxDaysViewComponent;
 
     /**

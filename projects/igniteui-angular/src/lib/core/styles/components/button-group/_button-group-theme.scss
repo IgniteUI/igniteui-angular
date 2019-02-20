@@ -26,12 +26,15 @@
 /// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
 /// @param {Color} $item-selected-border-color [null] - The border color for a selected item from the button group.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
+/// @requires round-borders
 /// @requires $elevations
 ///
 /// @example scss Change the background, text, and border colors
@@ -51,6 +54,7 @@
     $item-text-color: null,
     $item-background: null,
     $item-border-color: null,
+    $border-radius: null,
 
     $item-hover-text-color: null,
     $item-hover-background: null,
@@ -67,6 +71,10 @@
     $theme: apply-palette($button-group-schema, $palette);
 
     $border: 1px solid map-get($theme, 'item-selected-border-color');
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($button-group-schema, 'border-radius')), 0, 20px
+    );
 
     @if not($item-text-color) and $item-background  {
         $item-text-color: text-contrast($item-background);
@@ -115,6 +123,7 @@
         item-text-color: $item-text-color,
         item-background: $item-background,
         item-border-color: $item-border-color,
+        border-radius: $border-radius,
 
         item-hover-text-color: $item-hover-text-color,
         item-hover-background: $item-hover-background,
@@ -138,8 +147,6 @@
 /// @requires --var
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
-
-    $group-radius: 4px;
     $group-item-min-width: 24px;
     $group-item-min-height: 36px;
     $group-item-border-thickness: 1px;
@@ -152,7 +159,7 @@
         flex-flow: row nowrap;
         justify-content: center;
         border: --var($theme, 'border');
-        border-radius: $group-radius;
+        border-radius: --var($theme, 'border-radius');
         box-shadow: --var($theme, 'shadow');
         transition: box-shadow .2s ease;
         overflow: hidden;

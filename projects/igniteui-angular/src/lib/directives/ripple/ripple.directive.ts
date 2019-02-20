@@ -160,8 +160,9 @@ export class IgxRippleDirective {
 
     }
 }
+
 /**
- * The IgxRippleModule provides the {@link IgxRippleDirective} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxRippleDirective],

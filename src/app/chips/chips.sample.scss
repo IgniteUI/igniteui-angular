@@ -9,7 +9,7 @@ $chip-border-theme: igx-chip-theme(
 );
 
 $dark-chip-theme: igx-chip-theme(
-    $roundness: 4px,
+    $border-radius: 4px,
     $background: #180505,
     $text-color: white
 );

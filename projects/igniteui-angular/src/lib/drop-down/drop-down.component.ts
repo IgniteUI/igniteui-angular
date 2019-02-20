@@ -92,6 +92,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this._id = value;
     }
 
+    /** Id of the internal listbox of the drop down */
+    public get listId() {
+        return this.id + '-list';
+    }
+
     /**
      * Emitted before the dropdown is opened
      *

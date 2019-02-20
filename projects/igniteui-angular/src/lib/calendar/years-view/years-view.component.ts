@@ -241,6 +241,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
+    public yearTracker(index, item): string {
+        return `${item.getFullYear()}}`;
+    }
+
+    /**
+     * @hidden
+     */
     public writeValue(value: Date) {
         if (value) {
             this.date = value;
