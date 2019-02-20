@@ -1458,10 +1458,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this._updateViews(prevChunkSize);
     }
 }
-/**
- * The IgxForOfModule provides the {@link IgxForOfDirective}, inside your application.
- */
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],

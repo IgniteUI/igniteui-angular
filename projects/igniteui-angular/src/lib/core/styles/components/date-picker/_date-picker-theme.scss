@@ -5,31 +5,116 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Date Picker
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
-/// @requires $default-palette
-/// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-@function igx-date-picker-theme(
-    $palette: $default-palette,
-    $schema: $light-schema
-) {
-    $name: 'igx-date-picker';
-    $theme: apply-palette(map-get($schema, $name), $palette);
-    @return extend($theme, (name: $name, palette: $palette));
-}
-
-/// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $theme - The calendar theme used to style the component.
+/// @requires $elevations
+/// @requires igx-elevation
+/// @requires rem
 @mixin igx-date-picker($theme) {
-    %date-picker-display {
-        width: 340px;
+    %date-picker {
+        min-width: 200px;
+        max-width: 340px;
+        box-shadow: igx-elevation($elevations, 24);
+        border-radius: rem(4px);
+        background: --var($theme, 'content-background');
+        overflow: hidden;
+
+        %cal-display {
+            background: --var($theme, 'content-background');
+        }
+
+        %cal-header-display {
+            background-color: --var($theme, 'header-background');
+            color: --var($theme, 'header-text-color');
+        }
+
+        %cal-picker-arrow {
+            color: --var($theme, 'picker-arrow-color');
+
+            &:hover {
+                color: --var($theme, 'picker-arrow-hover-color');
+            }
+        }
+
+        %cal-picker-date {
+            color: --var($theme, 'picker-text-color');
+
+            &:hover,
+            &:focus {
+                color: --var($theme, 'picker-text-hover-color');
+            }
+        }
+
+        %cal-value {
+            color: --var($theme, 'content-text-color');
+        }
+
+        %cal-value--label {
+            color: --var($theme, 'inactive-text-color');
+        }
+
+        %cal-value--weekend {
+            color: --var($theme, 'weekend-text-color');
+        }
+
+        %cal-value--special {
+            color: --var($theme, 'date-special-text-color');
+            background: --var($theme, 'date-special-background');
+        }
+
+        %cal-value--disabled {
+            color: --var($theme, 'date-disabled-text-color');
+        }
+
+        %cal-value--year-current {
+            color: --var($theme, 'year-current-text-color');
+        }
+
+        %cal-value--year-hover {
+            color: --var($theme, 'year-hover-text-color');
+        }
+
+        %cal-value--month-hover {
+            color: --var($theme, 'month-hover-text-color');
+        }
+
+        %cal-value--month-current {
+            color: --var($theme, 'month-current-text-color');
+        }
+
+        %cal-value--inactive {
+            color: --var($theme, 'inactive-text-color');
+        }
+
+        %cal-value--selected {
+            color: --var($theme, 'date-selected-text-color');
+            background-color: --var($theme, 'date-selected-background') !important;
+        }
+
+        %cal-value--current {
+            color: --var($theme, 'date-current-text-color');
+        }
+
+        %cal-value--hover {
+            background-color: --var($theme, 'date-hover-background');
+        }
     }
 
-    %date-picker-display--vertical {
-        width: 540px;
+    %date-picker--vertical {
+        min-width: 368px; /* 168px for header + 200px for the content */
+        max-width: 540px;
+    }
+
+    %date-picker--dropdown {
+        display: flex;
+        flex: 1 0 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        box-shadow: igx-elevation($elevations, 3);
+    }
+
+    %date-picker__buttons {
+        display: flex;
+        justify-content: flex-end;
+        padding: rem(8px);
     }
 }
-

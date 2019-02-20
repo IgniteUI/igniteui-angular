@@ -244,17 +244,17 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public writeValue(value: Date) {
-        if (value) {
-            this.date = value;
-        }
+    public yearTracker(index, item): string {
+        return `${item.getFullYear()}}`;
     }
 
     /**
      * @hidden
      */
-    public yearTracker(index, item): string {
-        return `${item.getFullYear()}}`;
+    public writeValue(value: Date) {
+        if (value) {
+            this.date = value;
+        }
     }
 
     /**

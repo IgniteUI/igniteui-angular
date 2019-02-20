@@ -1627,7 +1627,7 @@ export class IgxTimePickerComponent implements
 }
 
 /**
- * The IgxTimePickerModule provides the {@link IgxTimePickerComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [

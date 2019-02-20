@@ -11,6 +11,9 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 
+/**
+ * @hidden
+ */
 @NgModule({
   declarations: [
     IgxTreeGridComponent,

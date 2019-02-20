@@ -72,6 +72,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
 
+    @Input()
+    public hasHeader = true;
+
     /**
      * Sets/gets whether the calendar header will be in vertical position.
      * Default value is `false`.
@@ -130,7 +133,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    @ViewChild('months', {read: IgxMonthsViewComponent})
+    @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**

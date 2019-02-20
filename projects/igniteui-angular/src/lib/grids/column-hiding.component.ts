@@ -179,8 +179,9 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
         this.destroy$.complete();
     }
 }
+
 /**
- *The `IgxColumnHidingModule` provides the {@link IgxColumnHidingComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxColumnHidingComponent, IgxColumnHidingItemDirective],
