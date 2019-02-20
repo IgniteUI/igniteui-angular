@@ -66,14 +66,21 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
-    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
-    private inpugGroupConditions: IgxInputGroupComponent;
+    @ViewChild('inputGroupValues', { read: IgxInputGroupComponent })
+    private inputGroupValues: IgxInputGroupComponent;
 
     @ViewChild('inputValues', { read: IgxInputDirective })
     private inputValuesDirective: IgxInputDirective;
 
-    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
-    private dropdownConditions: IgxDropDownComponent;
+    @ViewChild('dropdownValues', { read: IgxDropDownComponent })
+    private dropdownValues: IgxDropDownComponent;
+
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
+    private logicOperatorButtonGroup: IgxButtonGroupComponent;
+
+    protected get inputValuesElement() {
+        return this.inputValuesDirective;
+    }
 
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
@@ -98,28 +105,26 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public focus() {
-        this.inputValuesDirective.focus();
+        // use requestAnimationFrame to focus the values input because when initializing the component
+        // datepicker's input group is not yet fully initialized
+        requestAnimationFrame(() => this.inputValuesElement.focus());
     }
 
     public onValuesChanged(eventArgs: any) {
-
-        // TODO: BVK this method is invoked even when the user types into the input. 
-        // chech if this will be invoked when initializing the control and remove the following one
-
         if (!this._isDropdownValuesOpening) {
             const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionUI.expression.searchVal = value;
 
-            this.inputValuesDirective.focus();
+            this.focus();
         }
     }
 
-    public onDropdownValuesOpening(targetDropdown: IgxDropDownComponent) {
+    public onDropdownValuesOpening() {
         this._isDropdownValuesOpening = true;
 
-        const newSelection = targetDropdown.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
-        if (targetDropdown.selectedItem !== newSelection) {
-            targetDropdown.selectItem(newSelection);
+        const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
+        if (this.dropdownValues.selectedItem !== newSelection) {
+            this.dropdownValues.selectItem(newSelection);
         }
     }
 
@@ -135,9 +140,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return condition ? condition.name : null;
     }
 
-    public getInputWidth(inputGroup: any) {
+    public getInputWidth(parent: any) {
         //TODO
-        return inputGroup ? inputGroup.element.nativeElement.offsetWidth + 'px': null;
+        return parent ? parent.element.nativeElement.offsetWidth + 'px': null;
     }
 
     //DUPLICATE
@@ -193,10 +198,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
-    public onLogicOperatorButtonClicked(eventArgs, buttonGroup: IgxButtonGroupComponent, buttonIndex: number) {
-        if (buttonGroup.selectedButtons.length === 0) {
+    public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
+        if (this.logicOperatorButtonGroup.selectedButtons.length === 0) {
             eventArgs.stopPropagation();
-            buttonGroup.selectButton(buttonIndex);
+            this.logicOperatorButtonGroup.selectButton(buttonIndex);
         } else {
             this.onLogicOperatorChanged.emit({
                 target: this.expressionUI,
@@ -209,9 +214,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.onExpressionRemoved.emit(this.expressionUI);
     }
 
-    public onInputValuesKeydown(event: KeyboardEvent, input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
+    public onInputValuesKeydown(event: KeyboardEvent) {
         if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.toggleCustomDialogDropDown(input, targetDropDown);
+            this.toggleCustomDialogDropDown(this.inputGroupValues, this.dropdownValues);
         }
 
         event.stopPropagation();

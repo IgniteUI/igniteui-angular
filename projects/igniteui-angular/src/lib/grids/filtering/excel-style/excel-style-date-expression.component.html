@@ -2,7 +2,7 @@
     #dropdownConditions
     [height]="'200px'"
     [width]="getInputWidth(inputGroupConditions)"
-    (onSelection)="onConditionsChanged($event, datePicker)"
+    (onSelection)="onConditionsChanged($event)"
     (onClosed)="onDropdownClosed()">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
@@ -36,8 +36,9 @@
     #dropdownValues 
     [height]="'200px'"
     [width]="getInputWidth(datePicker)"
-    (onSelection)="onValuesChanged($event, datePicker)"
-    (onOpening)="onDropdownValuesOpening(dropdownValues, datePicker)"
+    (onSelection)="onValuesChanged($event)"
+    (onOpening)="onDropdownValuesOpening()"
+    (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
     <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
         <span>{{ filterItem }}</span>
@@ -77,7 +78,7 @@
         #andButton
         [selected]="expressionUI.afterOperator === 0"
         type="button"
-        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0)">
+        (click)="onLogicOperatorButtonClicked($event, 0)">
         And
     </span>
 
@@ -85,7 +86,7 @@
         #orButton
         [selected]="expressionUI.afterOperator === 1"
         type="button"
-        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1)">
+        (click)="onLogicOperatorButtonClicked($event, 1)">
         Or
     </span>
 </igx-buttongroup>

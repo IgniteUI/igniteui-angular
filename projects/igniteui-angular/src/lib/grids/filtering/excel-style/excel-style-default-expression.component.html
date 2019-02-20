@@ -36,8 +36,8 @@
     #dropdownValues 
     [height]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
-    (onSelection)="onValuesChanged($event, inputValues)"
-    (onOpening)="onDropdownValuesOpening(dropdownValues)"
+    (onSelection)="onValuesChanged($event)"
+    (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
     <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
@@ -54,7 +54,7 @@
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
         autocomplete="off"
         [igxDropDownItemNavigation]="dropdownValues"
-        (keydown)="onInputValuesKeydown($event, inputGroupValues, dropdownValues)"
+        (keydown)="onInputValuesKeydown($event)"
         [(ngModel)]="expressionUI.expression.searchVal"
     />
 
@@ -76,7 +76,7 @@
         #andButton
         [selected]="expressionUI.afterOperator === 0"
         type="button"
-        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 0)">
+        (click)="onLogicOperatorButtonClicked($event, 0)">
         And
     </span>
 
@@ -84,7 +84,7 @@
         #orButton
         [selected]="expressionUI.afterOperator === 1"
         type="button"
-        (click)="onLogicOperatorButtonClicked($event, logicOperatorButtonGroup, 1)">
+        (click)="onLogicOperatorButtonClicked($event, 1)">
         Or
     </span>
 </igx-buttongroup>
