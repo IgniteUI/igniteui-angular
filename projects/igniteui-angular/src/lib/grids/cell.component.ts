@@ -165,7 +165,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.inEditMode) {
+        if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
         }
@@ -274,9 +274,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
+    get inEditMode(): boolean {
+        return this.editMode;
+    }
 
+    set inEditMode(value: boolean) {
+        value ? this._updateCRUDStatus() : this.grid.endEdit(true);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     @Input()
-    inEditMode = false;
+    editMode = false;
 
     /**
      * Sets/get the `tabindex` property of the cell.
@@ -529,7 +540,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editable && this.crudService.inEditMode && !this.row.deleted) {
             this.gridAPI.update_cell(this.crudService.cell, this.crudService.cell.editValue);
             this.crudService.end();
-            // this.grid.cdr.markForCheck();
+            this.grid.cdr.markForCheck();
             this.crudService.begin(this);
         } else if (this.crudService.inEditMode) {
             this.grid.endEdit(true);
@@ -545,7 +556,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const keyboardState = selection.keyboardState;
         const node = this.selectionNode;
 
-        if (this.inEditMode) {
+        if (this.editMode) {
             return;
         }
 
@@ -700,7 +711,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event: MouseEvent) {
-        if (this.editable && !this.inEditMode && !this.row.deleted) {
+        if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
         }
 
@@ -821,7 +832,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             event.stopPropagation();
         }
 
-        if (this.inEditMode) {
+        if (this.editMode) {
             event.stopPropagation();
             if (NAVIGATION_KEYS.has(key)) {
                 if (this.column.inlineEditorTemplate) { return; }
@@ -940,7 +951,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         if (this.column.editable && !this.row.deleted) {
-            if (this.inEditMode) {
+            if (this.editMode) {
                 this.grid.endEdit(true);
                 this.nativeElement.focus();
             } else {
@@ -954,7 +965,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public onKeydownExitEditMode() {
-        if (this.inEditMode) {
+        if (this.editMode) {
             const v = this.crudService.cell;
             const args = {
                 cellID: v.id,
@@ -1015,7 +1026,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const classList = {
             'igx-grid__td--active': this.focused,
             'igx-grid__td--number':  this.gridAPI.should_apply_number_style(this.column),
-            'igx-grid__td--editing': this.inEditMode,
+            'igx-grid__td--editing': this.editMode,
             'igx-grid__td--pinned': this.column.pinned,
             'igx-grid__td--pinned-last': this.isLastPinned,
             'igx-grid__td--selected': this.selected,
