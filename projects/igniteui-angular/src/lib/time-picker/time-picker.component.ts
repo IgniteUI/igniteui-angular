@@ -566,6 +566,7 @@ export class IgxTimePickerComponent implements
         if (this.value) {
             return this._formatTime(this.value, this.format);
         }
+        return '';
     }
 
     /**
@@ -1626,7 +1627,7 @@ export class IgxTimePickerComponent implements
 }
 
 /**
- * The IgxTimePickerModule provides the {@link IgxTimePickerComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [
