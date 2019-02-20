@@ -4298,11 +4298,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     extractDataFromSelection(source: any[]) {
         let column: IgxColumnComponent;
         let record = {};
-
         const selectedData = [];
+
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
-        const visibleColumns = this.visibleColumns.sort((a, b) => a.visibleIndex - b.visibleIndex);
+
+        const visibleColumns = this.visibleColumns
+            .filter(col => !col.columnGroup)
+            .sort((a, b) => a.visibleIndex - b.visibleIndex);
 
 
         for (const [row, set] of selectionMap) {
