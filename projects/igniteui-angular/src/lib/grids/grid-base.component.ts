@@ -409,6 +409,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._perPage = val;
         this.page = 0;
         this.endEdit(true);
+        this.cdr.markForCheck();
     }
 
     /**
@@ -2354,7 +2355,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.onFilteringDone.pipe(destructor).subscribe(() => this.endEdit(true));
-        this.onPagingDone.pipe(destructor).subscribe(() => { this.endEdit(true); this.selectionService.clear(); });
+        this.onPagingDone.pipe(destructor).subscribe(() => {
+            this.endEdit(true);
+            this.selectionService.clear();
+            this.selectionService.activeElement = null;
+        });
         this.onSortingDone.pipe(destructor).subscribe(() => this.endEdit(true));
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));

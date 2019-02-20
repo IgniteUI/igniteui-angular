@@ -18,9 +18,6 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { transpileModule } from 'typescript';
-import { TestabilityRegistry } from '@angular/core';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid - Selection', () => {
     configureTestSuite();
