@@ -248,13 +248,6 @@ export class IgxGridGroupByRowComponent {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
-    private _getSelectedColIndex() {
-        const cell = this.selection.first_item(this.gridID + '-cell');
-        if (cell) {
-            return cell.columnID;
-        }
-    }
-
     private isKeySupportedInGroupRow(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
             'tab'].indexOf(key) !== -1;

@@ -329,7 +329,7 @@ describe('IgxGrid - Cell component', () => {
             });
 
             it('should exit edit mode on filtering', () => {
-                const cell = grid.getCellByColumn(0, 'fullName');
+                let cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 const cellValue = cell.value;
 
@@ -347,6 +347,7 @@ describe('IgxGrid - Cell component', () => {
                 cell.gridAPI.clear_filter('fullName');
                 fixture.detectChanges();
 
+                cell = grid.getCellByColumn(0, 'fullName');
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
             });
@@ -451,13 +452,13 @@ describe('IgxGrid - Cell component', () => {
                 cellDom.triggerEventHandler('dblclick', {});
                 fixture.detectChanges();
 
-                expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
                 const editTemplate = cellDom.query(By.css('input'));
                 UIInteractions.sendInput(editTemplate, 'Gary Martin');
                 fixture.detectChanges();
 
                 grid.pinColumn('firstName');
-                expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeNull();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
                 expect(grid.pinnedColumns.length).toBe(1);
                 cell = grid.getCellByColumn(0, 'firstName');
                 expect(cell.value).toBe('Gary Martin');
@@ -466,10 +467,11 @@ describe('IgxGrid - Cell component', () => {
                 cell.inEditMode = true;
                 fixture.detectChanges();
 
-                expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
                 grid.unpinColumn('firstName');
+                cell = grid.getCellByColumn(1, 'firstName');
                 expect(grid.pinnedColumns.length).toBe(0);
-                expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeNull();
+                expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
             });
@@ -483,7 +485,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait();
                 fixture.detectChanges();
 
-                let editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).id;
+                let editCellID = cell.gridAPI.get_cell_inEditMode().id;
                 expect(editableCellId.columnID).toBe(editCellID.columnID);
                 expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                 expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -495,7 +497,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait(100);
                 fixture.detectChanges();
 
-                editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).id;
+                editCellID = cell.gridAPI.get_cell_inEditMode().id;
                 expect(editableCellId.columnID).toBe(editCellID.columnID);
                 expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                 expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));

@@ -274,12 +274,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     public update(value: any) {
         const crudService = this.crudService;
         if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
-            crudService.end();
+            this.grid.endEdit(false);
         }
-        // const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        // if (editableCell && editableCell.cellID.rowID === this.rowID) {
-        //     this.grid.endEdit(false);
-        // }
         const row = new IgxRow(this.rowID, this.index, this.rowData);
         this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();

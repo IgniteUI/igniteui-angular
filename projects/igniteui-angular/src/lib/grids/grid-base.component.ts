@@ -3161,11 +3161,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.isDefined(this.primaryKey)) {
             const col = this.columnList.toArray().find(c => c.field === column);
             if (col) {
-                const cell = new IgxCell({ rowID: rowSelector, columnID: col.index }, -1, col, null, null, {});
-                this.gridAPI.update_cell(cell, value);
+                // Simplify
+                const rowData = this.gridAPI.getRowData(rowSelector);
+                const index = this.gridAPI.get_row_index_in_data(rowSelector);
+                const id = {
+                    rowID: rowSelector,
+                    columnID: col.index,
+                    rowIndex: index
+                };
+
+                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData);
+                const args = this.gridAPI.update_cell(cell, value);
 
                 if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                    if (cell.state.cancel) {
+                    if (args.cancel) {
                         return;
                     }
                     this.gridAPI.escape_editMode();
@@ -3195,7 +3204,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.gridAPI.escape_editMode();
             }
-            const row = new IgxRow(rowSelector, -1, this.getRowByKey(rowSelector).rowData);
+            const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
             this.cdr.markForCheck();
         }

@@ -500,6 +500,26 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
     }
 
+    getSelectedData(): any[] {
+        const source = [];
+
+        const process = (record) => {
+            if (record.summaries) {
+                source.push(null);
+                return;
+            }
+            source.push(record.data);
+            if (record.children && record.children.length && record.expanded) {
+                record.children.forEach(process);
+            }
+        };
+
+        const c = this.verticalScrollContainer.igxForOf
+            .filter(item => item.level === 0 || item.summaries)
+            .forEach(process);
+        return this.extractDataFromSelection(source);
+    }
+
     /**
     * @hidden
     */

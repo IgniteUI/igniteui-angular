@@ -53,6 +53,16 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return data;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public getRowData(rowID: any) {
+        const data = this.get_all_data(this.grid.transactions.enabled);
+        const index = this.get_row_index_in_data(rowID);
+        return data[index];
+    }
+
     // TODO: Refactor
     public escape_editMode() {
         this.grid.crudService.end();
