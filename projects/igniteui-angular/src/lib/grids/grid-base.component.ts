@@ -4855,6 +4855,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data().length;
     }
 
+    public hasHorizontalScroll() {
+        return this.totalWidth - this.unpinnedWidth > 0;
+    }
+
+    protected _restoreVirtState(row) {
+         // check virtualization state of data record added from cache
+         // in case state is no longer valid - update it.
+         const rowForOf = row.virtDirRow;
+         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        if (gridScrLeft !== actualScrollLeft) {
+            rowForOf.onHScroll(gridScrLeft);
+        }
+    }
+
     /**
      * @hidden
      */
@@ -4899,6 +4915,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
+            }
+        }
+        if (this.hasHorizontalScroll()) {
+            const tmplId = args.context.templateID;
+            const index = args.context.index;
+            args.view.detectChanges();
+            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
+            if (row && row instanceof IgxRowComponent) {
+                this._restoreVirtState(row);
+            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
+                this._restoreVirtState(summaryRow);
             }
         }
     }
