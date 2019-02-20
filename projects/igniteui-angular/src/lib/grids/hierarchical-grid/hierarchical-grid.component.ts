@@ -612,6 +612,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         const childGrids = this.getChildGrids(false);
         const prevActiveMatchIndex = this.lastSearchInfo.activeMatchIndex;
         super._applyHightlights(text, increment, caseSensitive, exactMatch);
+        // sort by parent row index and layout order
+        const layoutKeys = this.childLayoutKeys;
+        childGrids.sort((child1, child2) => {
+            const parentIndex1 = child1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(child1));
+            const parentIndex2 = child2.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(child2));
+           if (parentIndex1  > parentIndex2) {
+               return -1;
+           } else if (parentIndex1 < parentIndex2) {
+               return 1;
+           } else {
+                return layoutKeys.indexOf(child1.parentIsland.key) > layoutKeys.indexOf(child2.parentIsland.key)  ? -1 : 1;
+           }
+        });
         childGrids.forEach((grid) => {
             const itemsToAdd = [];
             grid.find(text, increment, caseSensitive, exactMatch, scroll);
