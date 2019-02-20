@@ -133,7 +133,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         const index = this.get_row_index_in_data(cell.id.rowID);
 
         cell.editValue = value;
-        cell.castToNumber();
 
         const valueInTransactions = this.grid.transactions.getAggregatedValue(cell.id.rowID, true);
         if (valueInTransactions) {
@@ -148,6 +147,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (args.cancel) {
             return args;
         }
+
+        // Cast to number after emit
+        cell.castToNumber();
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
@@ -219,6 +221,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         this._update_row(row, value);
 
         const args = row.createEditEventArgs();
+
+        // If no valid row is found
+        if (index === -1) {
+            return args;
+        }
+
         grid.onRowEdit.emit(args);
 
         if (args.cancel) {

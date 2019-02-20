@@ -3169,6 +3169,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // Simplify
                 const rowData = this.gridAPI.getRowData(rowSelector);
                 const index = this.gridAPI.get_row_index_in_data(rowSelector);
+                // If row passed is invalid
+                if (index < 0) {
+                    return;
+                }
                 const id = {
                     rowID: rowSelector,
                     columnID: col.index,
