@@ -32,7 +32,7 @@ import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
