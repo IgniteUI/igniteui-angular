@@ -198,14 +198,15 @@ describe('IgxGrid - Grid Paging', () => {
         // Change page size to be 33
         grid.perPage = 33;
         fix.detectChanges();
-        expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
+        // onPagingDone should be emited only if we have a change in the page number
+        expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.children[0].style.height).toEqual('500px');
 
         // Change page size to be negative
         grid.perPage = -7;
         fix.detectChanges();
-        expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
+        expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.children[0].style.height).toEqual('500px');
     }));
