@@ -266,7 +266,9 @@ export class HelperUtils {
 
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulateClickAndSelectCellEvent(startCell, shift, ctrl);
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
             await wait();
             fix.detectChanges();
 

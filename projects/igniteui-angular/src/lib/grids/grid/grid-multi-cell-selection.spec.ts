@@ -42,8 +42,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             const endCell =  grid.getCellByColumn(3, 'ID');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
 
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
-            fix.detectChanges();
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            detect();
 
             expect(startCell.focused).toBe(true);
 
@@ -439,7 +440,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const expectedData = [
                 { ID: 475, ParentID: 147 },
                 { ParentID: 147, Name: 'Monica Reyes' },
-                { ParentID: 147, Name: 'Laurence Johnson' }
+                { ParentID: 847, Name: 'Laurence Johnson' }
             ];
 
             grid.selectRange([range1, range2]);
@@ -486,7 +487,8 @@ describe('IgxGrid - Multi Cell selection', () => {
             grid.selectRange([range1, range2]);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 1, 4, 0, 1);
+            HelperUtils.verifySelectedRange(grid, 1, 3, 0, 1, 0, 2);
+            HelperUtils.verifySelectedRange(grid, 2, 4, 0, 1, 1, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 1);
@@ -667,22 +669,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             expect(grid.getSelectedRanges().length).toEqual(0);
             expect(grid.getSelectedData()).toEqual([]);
-            HelperUtils.verifyCellSelected(cell, false);
+            HelperUtils.verifyCellSelected(cell, true);
         });
 
-        it('Should be able to clear the selection when add as parameter empty array', () => {
-            const range = { rowStart: 3, rowEnd: 0, columnStart: 2, columnEnd: 0 };
-            grid.selectRange(range);
-            fix.detectChanges();
-
-            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 2);
-
-            grid.selectRange([]);
-            fix.detectChanges();
-            expect(grid.getSelectedRanges().length).toEqual(0);
-            expect(grid.getSelectedData()).toEqual([]);
-            HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 0, 2, false);
-        });
 
         it('Should be able to clear the selection when there are no selected cells', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -2141,7 +2130,7 @@ describe('IgxGrid - Multi Cell selection', () => {
                 { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
                 { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false}
             ];
-            HelperUtils.verifySelectedRange(grid, 0, 3, 0, 5);
+            HelperUtils.verifySelectedRange(grid, 0, 4, 0, 5);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
             expect(grid.getSelectedData()).toEqual(data);
         });
