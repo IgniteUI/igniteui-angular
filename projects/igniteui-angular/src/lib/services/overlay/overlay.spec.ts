@@ -1346,7 +1346,7 @@ describe('igxOverlay', () => {
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(compElement);
             const wrapperElement  = document.createElement('div');
-            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
 
@@ -1397,7 +1397,7 @@ describe('igxOverlay', () => {
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(compElement);
             const wrapperElement  = document.createElement('div');
-            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
 
