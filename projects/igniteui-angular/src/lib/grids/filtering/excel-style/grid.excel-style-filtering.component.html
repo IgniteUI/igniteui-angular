@@ -86,7 +86,7 @@
 
     <footer class="igx-excel-filter__menu-footer">
         <button igxButton (click)="closeDialog()">Cancel</button>
-        <button igxButton="raised" (click)="applyFilter()">Apply</button>
+        <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">Apply</button>
     </footer>
 </article>
 

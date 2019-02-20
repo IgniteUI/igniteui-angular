@@ -41,7 +41,9 @@
     (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
     <igx-drop-down-item *ngFor="let filterItem of columnData" [value]="filterItem" [isSelected]="isValueSelected(filterItem)">
-        <span>{{ filterItem }}</span>
+        <span>
+            {{ column.formatter ? column.formatter(filterItem) : column.dataType === 'number' ? (filterItem | igxdecimal: column.grid.locale) : filterItem }}
+        </span>
     </igx-drop-down-item>
 </igx-drop-down>
 
