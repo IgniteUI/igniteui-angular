@@ -46,6 +46,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     };
 
     private _isDropdownValuesOpening = false;
+    private _isDropdownOpened = false;
 
     @Input()
     public column: IgxColumnComponent;
@@ -159,9 +160,16 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
+    public onDropdownClosed() {
+        this._isDropdownOpened = false;
+    }
+
     public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
-        this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
-        targetDropDown.toggle(this._dropDownOverlaySettings);
+        if (!this._isDropdownOpened) {
+            this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
+            targetDropDown.toggle(this._dropDownOverlaySettings);
+            this._isDropdownOpened = true;
+        }
     }
 
     //DUPLICATE
