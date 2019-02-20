@@ -5,22 +5,29 @@
         class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
         grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
 </ng-template>
-<ng-template #inlineEditor  let-cell="cell">
+<ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [value]="editValue" (input)="editValue = $event.target.value" (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false" [igxFocus]="focused"/>
+            <input igxInput [value]="editValue" (input)="editValue = $event.target.value"
+                (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false"
+                [igxFocus]="focused" />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [value]="editValue" (input)="editValue = $event.target.value" (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false" [igxFocus]="focused" type="number">
+            <input igxInput [value]="editValue" (input)="editValue = $event.target.value"
+                (compositionstart)="isInCompositionMode = true" (compositionend)="isInCompositionMode = false"
+                [igxFocus]="focused" type="number">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
-        <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue" [igxFocus]="focused" [disableRipple]="true"></igx-checkbox>
+        <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue"
+            [igxFocus]="focused" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-date-picker (onSelection)="editValue = $event" [locale]="grid.locale" [value]="editValue" [igxFocus]="focused" [labelVisibility]="false"></igx-date-picker>
+        <igx-date-picker [outlet]="grid.outletDirective" mode="editable" (onSelection)="editValue = $event"
+            [locale]="grid.locale" [(ngModel)]="editValue" [igxFocus]="focused" [labelVisibility]="false">
+        </igx-date-picker>
     </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">

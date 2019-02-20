@@ -49,7 +49,7 @@ describe('IgxTimePicker', () => {
         const domTimePicker = fixture.debugElement.query(By.css('igx-time-picker')).nativeElement;
 
         expect(fixture.componentInstance).toBeDefined();
-        expect(timePicker.displayTime).toBeUndefined();
+        expect(timePicker.displayTime).toBe('');
         expect(timePicker.id).toContain('igx-time-picker-');
         expect(domTimePicker.id).toContain('igx-time-picker-');
 

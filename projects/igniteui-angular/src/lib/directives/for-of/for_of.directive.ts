@@ -1347,20 +1347,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                const operations = [];
-                changes.forEachOperation((op) => operations.push(op));
-                if (operations.length > 0) {
-                    // only update if some operation was done - adding/removing/moving of items
-                    this._updateSizeCache(changes);
-                    this._applyChanges();
-                    this.cdr.markForCheck();
-                    this._updateScrollOffset();
-                    this.onDataChanged.emit();
-                } else {
-                    this._updateViews(this.state.chunkSize);
-                    this.cdr.markForCheck();
-                    this._updateScrollOffset();
-                }
+                this._updateSizeCache(changes);
+                this._applyChanges();
+                this.cdr.markForCheck();
+                this._updateScrollOffset();
+                this.onDataChanged.emit();
             }
         }
     }
@@ -1466,10 +1457,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this._updateViews(prevChunkSize);
     }
 }
-/**
- * The IgxForOfModule provides the {@link IgxForOfDirective}, inside your application.
- */
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
