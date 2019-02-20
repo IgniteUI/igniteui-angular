@@ -113,6 +113,9 @@ export class IgxTextSelectionDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTextSelectionDirective],
     exports: [IgxTextSelectionDirective]

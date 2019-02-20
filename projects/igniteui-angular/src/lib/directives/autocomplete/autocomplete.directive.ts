@@ -5,7 +5,7 @@ import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/index';
 import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
 import { IgxInputGroupComponent } from '../../input-group/index';
@@ -325,7 +325,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.target.width = this.parentElement.clientWidth + 'px';
         this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem);
-        this.target.onClosing.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.onDropDownClosing);
         this.target.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.highlightFirstItem);
     }
 
@@ -367,12 +366,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         setTimeout(() => { this.target.toggleDirective.reposition(); });
     }
 
-    private onDropDownClosing = (args: CancelableBrowserEventArgs) => {
-        if (args.event && this.parentElement.contains(args.event.target as Node)) {
-            args.cancel = true;
-        }
-    }
-
     /**
      * @hidden
      */
@@ -381,6 +374,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     imports: [IgxDropDownModule, CommonModule],
     declarations: [IgxAutocompleteDirective],
