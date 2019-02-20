@@ -345,7 +345,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
         });
     }
 
-    
     /**
      * @hidden
      */
@@ -479,6 +478,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
 
+        this.nextMonth(true);
+
         const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
         if (activeDate) {
             this.daysView.nextDate = new Date(activeDate.date.date);
@@ -503,7 +504,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
             };
         }
 
-        this.nextMonth(true);
+        // this.nextMonth(true);
     }
 
     /**
