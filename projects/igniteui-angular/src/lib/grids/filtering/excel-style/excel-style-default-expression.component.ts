@@ -136,10 +136,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public getInputWidth(inputGroup: any) {
         //TODO
-        requestAnimationFrame(()=>{
-            return inputGroup ? inputGroup.input.nativeElement.offsetWidth + 'px': null;
-        });
-        
+        return inputGroup ? inputGroup.element.nativeElement.offsetWidth + 'px': null;
     }
 
     //DUPLICATE
