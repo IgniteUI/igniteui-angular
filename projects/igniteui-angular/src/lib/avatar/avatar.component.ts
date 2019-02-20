@@ -356,8 +356,9 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         return `url(${this.src})`;
     }
 }
+
 /**
- * The `IgxAvatarModule` provides the {@link IgxAvatarComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxAvatarComponent],

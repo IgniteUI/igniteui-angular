@@ -5,6 +5,9 @@ import { IgxIconComponent } from './icon.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DeprecateMethod } from '../core/deprecateDecorators';
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxIconComponent],
     exports: [IgxIconComponent],
