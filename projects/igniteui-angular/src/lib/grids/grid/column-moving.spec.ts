@@ -453,12 +453,12 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
 
             // step 3 - navigate right and verify cell selection is updated
-            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
         }));
 
         it('Should not break KB after columns are reordered - selection does not belong to the moved column.', (async() => {
@@ -682,13 +682,11 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - select a visible cell from the 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 
-            const range = grid.getSelectedRanges()[0];
-            HelperUtils.verifySelectedRange(grid, range.rowStart,
-                range.rowEnd, range.columnStart, range.columnEnd);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
             // step 2 - reorder that column among columns that are currently out of view
             // and verify selection is preserved
@@ -707,9 +705,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ID').selected).toEqual(false);
-            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
-                range.columnStart, range.columnEnd);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
         }));
 
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
@@ -725,7 +721,7 @@ describe('IgxGrid - Column Moving', () => {
 
             const cell = grid.getCellByColumn(25, 'Phone');
             const selectedData = [{ Phone: '40.32.21.21'}];
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
             expect(cell.selected).toBeTruthy();
@@ -1237,13 +1233,10 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
-            await wait();
 
-            const range = grid.getSelectedRanges()[0];
-            HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd,
-                range.columnStart, range.columnEnd);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
 
             // step 2 - reorder the parent column and verify selection is preserved
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
@@ -1257,17 +1250,17 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            // TODO: With the new selection we no longer transfer the active element
-            // on column "drop". Fix once the behavior is cleared up !!
-            expect(grid.getCellByColumn(0, 'ContactName').selected).toEqual(false);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
+            expect(grid.getSelectedData()).toEqual([{CompanyName: 'Alfreds Futterkiste' }]);
 
             // step 3 - navigate right and verify cell selection is updated
-            const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+            const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ContactTitle').selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 0, 0, 3, 3);
+            expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
         }));
 
         it('MCH - should pin only top level columns.', (async() => {
