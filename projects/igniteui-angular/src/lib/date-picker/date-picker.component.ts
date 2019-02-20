@@ -37,7 +37,7 @@ import {
     HorizontalAlignment,
     PositionSettings,
     ConnectedPositioningStrategy
-} from '../services';
+} from '../services/index';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -806,7 +806,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *@hidden
      */
     public ngOnDestroy(): void {
-        this._overlayService.hideAll();
+        this._overlayService.hide(this._componentID);
         this._destroy$.next(true);
         this._destroy$.complete();
     }
