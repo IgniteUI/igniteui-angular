@@ -85,11 +85,11 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     public set selection(value: string) {
         switch (value) {
-            case 'single':
+            case CalendarSelection.SINGLE:
                 this.selectedDates = null;
                 break;
-            case 'multi':
-            case 'range':
+            case CalendarSelection.MULTI:
+            case CalendarSelection.RANGE:
                 this.selectedDates = [];
                 break;
             default:
@@ -227,7 +227,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
     /**
      *@hidden
      */
-    private _formatOptions = {
+    private _formatOptions: IFormattingOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',
@@ -507,13 +507,13 @@ export class IgxCalendarBase implements ControlValueAccessor {
         }
 
         switch (this.selection) {
-            case 'single':
+            case CalendarSelection.SINGLE:
                 this.selectSingle(value as Date);
                 break;
-            case 'multi':
+            case CalendarSelection.MULTI:
                 this.selectMultiple(value);
                 break;
-            case 'range':
+            case CalendarSelection.RANGE:
                 this.selectRange(value, true);
                 break;
         }
@@ -528,20 +528,20 @@ export class IgxCalendarBase implements ControlValueAccessor {
         }
 
         if (value === null || value === undefined) {
-            this.selectedDates = this.selection === 'single' ? null : [];
+            this.selectedDates = this.selection === CalendarSelection.SINGLE ? null : [];
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
             return;
         }
 
         switch (this.selection) {
-            case 'single':
+            case CalendarSelection.SINGLE:
                 this.deselectSingle(value as Date);
                 break;
-            case 'multi':
+            case CalendarSelection.MULTI:
                 this.deselectMultiple(value as Date[]);
                 break;
-            case 'range':
+            case CalendarSelection.RANGE:
                 this.deselectRange(value as Date[]);
                 break;
         }
@@ -552,14 +552,14 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     public selectDateFromClient(value: Date) {
         switch (this.selection) {
-            case 'single':
-            case 'multi':
+            case CalendarSelection.SINGLE:
+            case CalendarSelection.MULTI:
                 if (!this.isDateDisabled(value)) {
                     this.selectDate(value);
                 }
 
                 break;
-            case 'range':
+            case CalendarSelection.RANGE:
                 this.selectRange(value, true);
                 break;
         }

@@ -1907,6 +1907,50 @@ describe('IgxCalendar', () => {
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 6).getTime());
             expect(date.nativeElement).toBe(document.activeElement);
         });
+
+        it('AKB - should preserve the active date on (schift) pageup and pagedown.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageUp');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageDown');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageUp');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2016, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageDown');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
     });
 });
 

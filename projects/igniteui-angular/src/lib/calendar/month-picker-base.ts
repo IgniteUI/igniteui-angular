@@ -61,28 +61,28 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * Gets the current active view.
      */
-    get activeView(): CalendarView {
+    public get activeView(): CalendarView {
         return this._activeView;
     }
 
     /**
      * Sets the current active view.
      */
-    set activeView(val: CalendarView) {
+    public set activeView(val: CalendarView) {
         this._activeView = val;
     }
 
     /**
      * @hidden
      */
-    get isDefaultView(): boolean {
+    public get isDefaultView(): boolean {
         return this._activeView === CalendarView.DEFAULT;
     }
 
     /**
      * @hidden
      */
-    get isDecadeView(): boolean {
+    public get isDecadeView(): boolean {
         return this._activeView === CalendarView.DECADE;
     }
 
