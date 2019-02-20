@@ -40,7 +40,7 @@ export class IgxRow {
     createEditEventArgs(): IGridEditEventArgs {
         return {
             rowID: this.id,
-            oldValue: this.data,
+            oldValue: { ... this.data },
             newValue: this.newData,
             cancel: false
         };
