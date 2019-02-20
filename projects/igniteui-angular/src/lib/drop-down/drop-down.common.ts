@@ -1,4 +1,4 @@
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { OnInit, EventEmitter } from '@angular/core';
@@ -69,7 +69,7 @@ export interface IDropDownList {
 export interface IDropDownBase extends IDropDownList, IToggleView {
     onOpening: EventEmitter<CancelableEventArgs>;
     onOpened: EventEmitter<void>;
-    onClosing: EventEmitter<CancelableEventArgs>;
+    onClosing: EventEmitter<CancelableBrowserEventArgs>;
     onClosed: EventEmitter<void>;
 
     selectedItem: any;

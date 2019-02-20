@@ -9,7 +9,9 @@
     Input,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -17,7 +19,8 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
+import { first } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -38,7 +41,7 @@ import { DataType } from '../data-operations/data-util';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit {
+export class IgxGridCellComponent implements OnInit, OnChanges {
 
     /**
      * Gets the column of the cell.
@@ -268,7 +271,7 @@ export class IgxGridCellComponent implements OnInit {
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         return editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
-                              this.cellID.columnID === editableCell.cellID.columnID : false;
+            this.cellID.columnID === editableCell.cellID.columnID : false;
     }
 
     /**
@@ -510,7 +513,7 @@ export class IgxGridCellComponent implements OnInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
@@ -542,7 +545,7 @@ export class IgxGridCellComponent implements OnInit {
         }
     }
 
-    private _clearCellSelection() {
+    protected _clearCellSelection() {
         const cell = this._getLastSelectedCell();
         if (cell) {
             cell.selected = false;
@@ -567,7 +570,7 @@ export class IgxGridCellComponent implements OnInit {
         this._saveCellSelection(this.selection.get_empty());
     }
 
-    private _saveCellSelection(newSelection?: Set<any>) {
+    protected _saveCellSelection(newSelection?: Set<any>) {
         const sel = this.selection.get(this.cellSelectionID);
         if (sel && sel.size > 0) {
             this.selection.set(this.prevCellSelectionID, sel);
@@ -578,7 +581,7 @@ export class IgxGridCellComponent implements OnInit {
         this.selection.set(this.cellSelectionID, newSelection);
     }
 
-    private _getLastSelectedCell() {
+    protected _getLastSelectedCell() {
         const cellID = this.selection.first_item(this.cellSelectionID);
         if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
@@ -607,6 +610,19 @@ export class IgxGridCellComponent implements OnInit {
     public ngOnInit() {
         this.cellSelectionID = `${this.gridID}-cell`;
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.value && !changes.value.firstChange) {
+            if (this.highlight) {
+                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
+                this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
+                this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+        }
     }
 
     /**
@@ -711,9 +727,8 @@ export class IgxGridCellComponent implements OnInit {
             const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
             const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
 
-            if (column.inlineEditorTemplate === undefined && (
-                (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
-                || column.dataType === DataType.Date)) {
+            if (column.inlineEditorTemplate === undefined &&
+                column.dataType === DataType.Boolean && key !== KEYS.SPACE && key !== KEYS.SPACE_IE) {
                 event.preventDefault();
             }
             return;
@@ -726,8 +741,10 @@ export class IgxGridCellComponent implements OnInit {
 
         if (event.altKey) {
             if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
-                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                const collapse = (this.row as any).expanded &&
+                    (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+                const expand = !(this.row as any).expanded &&
+                    (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
                 if (collapse) {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
@@ -922,6 +939,6 @@ export class IgxGridCellComponent implements OnInit {
     }
 
     private isToggleKey(key) {
-        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
+        return ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key.toLowerCase()) !== -1;
     }
 }

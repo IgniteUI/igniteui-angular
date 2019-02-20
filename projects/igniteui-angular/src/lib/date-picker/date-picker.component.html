@@ -1,16 +1,29 @@
-<div [ngClass]="{'igx-date-picker': !vertical, 'igx-date-picker--vertical': vertical}">
-    <ng-template #defaultDatePickerTemplate>
-        <igx-input-group (click)="openDialog()">
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-            <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-            <input class="igx-date-picker__input-date" igxInput [value]="displayData || ''" [disabled]="disabled" readonly />
-        </igx-input-group>
-    </ng-template>
-    <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-    <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="alert.close()"
-        [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">
-        <ng-container #container></ng-container>
-    </igx-dialog>
-</div>
+<ng-template #readOnlyDatePickerTemplate>
+    <igx-input-group (click)="openDialog()">
+        <igx-prefix>
+            <igx-icon>today</igx-icon>
+        </igx-prefix>
+        <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
+        <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData || ''"
+            [disabled]="disabled" readonly />
+    </igx-input-group>
+</ng-template>
+
+<ng-template #editableDatePickerTemplate>
+    <igx-input-group #editableInputGroup>
+        <igx-prefix (click)="openDialog()">
+            <igx-icon>today</igx-icon>
+        </igx-prefix>
+        <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
+        <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
+            [igxMask]="inputMask" [placeholder]="mask" [displayValuePipe]="displayValuePipe"
+            [focusedValuePipe]="inputValuePipe" (blur)="onBlur($event)" (wheel)="onWheel($event)"
+            (input)="onInput($event)" (keydown)="onKeyDown($event)" (focus)=onFocus() />
+        <igx-suffix *ngIf="!isEmpty" (click)="clear()">
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+<div igxOverlayOutlet #datePickerOutlet></div>

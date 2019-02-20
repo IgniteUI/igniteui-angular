@@ -143,6 +143,25 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
+    it('Should blur selected cell when scrolling with mouse wheel', (async () => {
+        const fixture = TestBed.createComponent(GridColumnWidthsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        const cell = grid.getCellByColumn(3, '1');
+        cell.nativeElement.focus();
+        cell.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(document.activeElement).toEqual(cell.nativeElement);
+
+        const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        await UIInteractions.simulateWheelEvent(displayContainer, 0, 200);
+        fixture.detectChanges();
+
+        expect(document.activeElement).toEqual(document.body);
+    }));
+
     describe('Cell Editing', () => {
         configureTestSuite();
 
@@ -658,14 +677,12 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const cells = rows[1].querySelectorAll('igx-grid-cell');
         const lastCell = cells[cells.length - 1];
-        const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
-
         expect(lastCell.textContent.trim()).toEqual('990');
 
         // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
         expect(lastCell.getBoundingClientRect().left +
             lastCell.offsetWidth +
-            verticalScroll.offsetWidth).toEqual(grid.outerWidth);
+            grid.scrollWidth).toEqual(parseInt(grid.width, 10));
     }));
 
     it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {

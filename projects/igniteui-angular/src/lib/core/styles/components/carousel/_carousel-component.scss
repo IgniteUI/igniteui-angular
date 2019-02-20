@@ -5,10 +5,6 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-igx-carousel {
-    outline-style: none;
-}
-
 @include b(igx-carousel) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));

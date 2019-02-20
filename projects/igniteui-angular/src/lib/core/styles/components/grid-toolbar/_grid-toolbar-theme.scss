@@ -300,8 +300,10 @@
     }
 
     %igx-grid-toolbar__dd-list {
+        list-style: none;
         background: --var($theme, 'dropdown-background');
         margin: 0;
+        padding: 0;
     }
 
     %igx-grid-toolbar__dd-list-items {

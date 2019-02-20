@@ -1,0 +1,11 @@
+<div class="igx-calendar__body-row">
+    <span *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
+        {{ dayName | titlecase }}
+    </span>
+</div>
+
+<div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker" class="igx-calendar__body-row" [@animateChange]="animationAction" (@animateChange.done)="animationDone($event, isLast)">
+    <igx-day-item [date]="day" [selection]="selection" [value]="value" [disabledDates]="disabledDates" [specialDates]="specialDates" [outOfRangeDates]="outOfRangeDates" (onDateSelection)="selectDay($event)" *ngFor="let day of week; trackBy: dateTracker">
+        {{ formattedDate(day.date) }}
+    </igx-day-item>
+</div>

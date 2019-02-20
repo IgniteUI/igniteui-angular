@@ -141,14 +141,24 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
-            const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
-            const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
-                this.IgxScrollInertiaScrollContainer.offsetHeight;
-            if (0 < curScrollTop && curScrollTop < maxScrollTop) {
-                evt.preventDefault();
+            this.preventParentScroll(evt);
+        }
+    }
+
+    /**
+     * @hidden
+     * When there is still room to scroll up/down prevent the parent elements from scrolling too.
+     */
+    protected preventParentScroll(evt) {
+        const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
+        const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
+            this.IgxScrollInertiaScrollContainer.offsetHeight;
+        if (0 < curScrollTop && curScrollTop < maxScrollTop) {
+            evt.preventDefault();
+            if (evt.stopPropagation) {
+                evt.stopPropagation();
             }
         }
-
     }
 
     /**
@@ -184,6 +194,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         this._offsetDirection = 0;
 
         this._touchPrevented = false;
+        if (this.IgxScrollInertiaDirection === 'vertical') {
+            this.preventParentScroll(event);
+        }
     }
 
     /**
@@ -259,8 +272,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
-        if (!this._touchPrevented) {
-            event.preventDefault();
+        if (this.IgxScrollInertiaDirection === 'vertical') {
+            this.preventParentScroll(event);
         }
     }
 
@@ -283,6 +296,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if ((Math.abs(speedX) > 0.1 || Math.abs(speedY) > 0.1) &&
                         (Math.abs(this._lastMovedX) > 2 || Math.abs(this._lastMovedY) > 2)) {
                     this._inertiaInit(speedX, speedY);
+        }
+        if (this.IgxScrollInertiaDirection === 'vertical') {
+            this.preventParentScroll(event);
         }
     }
 

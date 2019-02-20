@@ -21,7 +21,6 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected _height;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
-    protected children: QueryList<IgxDropDownItemBase>;
 
     /**
      * Get dropdown's html element of it scroll container
@@ -29,6 +28,12 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected get scrollContainer() {
         return this.element;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public children: QueryList<IgxDropDownItemBase>;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -161,9 +166,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     /**
      * Gets if the dropdown is collapsed
      */
-    public get collapsed(): boolean {
-        return false;
-    }
+    public abstract collapsed: boolean;
 
     constructor(
         protected elementRef: ElementRef,

@@ -277,7 +277,10 @@
         }
 
         %time-picker__column {
-            @include igx-type-style($type-scale, $content);
+            @include igx-type-style($type-scale, $content) {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
         }
     }
 }

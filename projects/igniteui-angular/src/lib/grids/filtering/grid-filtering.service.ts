@@ -2,15 +2,18 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs } from '../grid-base.component';
+import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, DatePipe } from '@angular/common';
+import { cloneArray } from '../../core/utils';
+import { DataUtil } from '../../data-operations/data-util';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
+import { IgxGridSortingPipe } from '../grid/grid.pipes';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -49,7 +52,7 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -72,7 +75,7 @@ export class IgxFilteringService implements OnDestroy {
         return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
     }
 
-    public get grid(): IgxGridBaseComponent {
+    public get grid(): IgxGridBaseComponent & IGridDataBindable {
         return this.gridAPI.get(this.gridId);
     }
 
@@ -291,7 +294,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Genererate the label of a chip from a given filtering expression.
+     * Generate the label of a chip from a given filtering expression.
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
@@ -321,6 +324,16 @@ export class IgxFilteringService implements OnDestroy {
         if (filterCell) {
             filterCell.focusChip(focusFirst);
         }
+    }
+
+    public get filteredData() {
+        return this.grid.filteredData;
+    }
+
+    public get sortedData() {
+        const sortData = new IgxGridSortingPipe(this.gridAPI)
+            .transform(this.grid.data, this.grid.sortingExpressions, this.gridId, 0);
+        return sortData;
     }
 
     /**

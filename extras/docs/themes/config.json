@@ -30,7 +30,7 @@
         "production": {
             "url": "https://jp.infragistics.com",
             "gaID": "GTM-KVNSWJ",
-            "versions": "https://www.infragistics.com/angular-docs/angular-api-docs-versions-prod-jp.json"
+            "versions": "https://jp.infragistics.com/angular-docs/angular-api-docs-versions-prod-jp.json"
         }
     }
 }

@@ -214,7 +214,7 @@ When igxCombo is opened and search input is focused:
   > Note: Any other key stroke will be handled by the input.
 
 When igxCombo is opened and list item is focused:
-- `ArrowDown` will move to next list item. If the active item is the last one in hte list and custom values are enabled then focus will be moved to the Add item button.
+- `ArrowDown` will move to next list item. If the active item is the last one in the list and custom values are enabled then focus will be moved to the Add item button.
 
 - `ArrowUp` will move to previous list item. If the active item is the first one in the list then focus will be moved back to the search input.
 

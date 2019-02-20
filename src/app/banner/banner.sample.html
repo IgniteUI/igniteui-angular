@@ -1,11 +1,11 @@
 <div class="sample-wrapper">
     <igx-banner #bannerNoSafeConnection class="banner-border" [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
-            Your connections is not private! 
+            Your connections is not private!
         <igx-icon>lock</igx-icon>
     </igx-banner>
     <igx-banner #bannerCookies (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
         <igx-icon>settings</igx-icon>
-        <h5 style="text-align: center">YOUR COOKIES SETTINGS</h5>
+        <h5 class="igx-typography__subtitle-1">YOUR COOKIES SETTINGS</h5>
         <hr>
         <span>We asks you to accept cookies for performance, social media and advertising purpose. To get more
             information click on 'more information' button</span>

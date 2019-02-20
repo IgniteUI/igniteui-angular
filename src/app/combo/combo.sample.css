@@ -1,21 +1,3 @@
-.footer-class,
-.header-class {
-    background-color: #eee;
-}
-
-.header-class {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-}
-
-.header-class > * {
-    flex: 1 1 auto;
-    width: 50%;
-    text-align: left;
-}
-
 .btn-wrapper {
     display: flex;
     align-items: center;
@@ -37,10 +19,6 @@
     align-items: center;
     width: 100%;
     flex-wrap: wrap;
-}
-
-.igx-combo__clear-button {
-    position: relative;
 }
 
 .input-wrapper {
@@ -76,7 +54,7 @@
     width: 100%;
 }
 
-.state-card--simple > * {
+.state-card--simple>* {
     flex: 1 1 auto;
 }
 
@@ -103,10 +81,18 @@
     margin-bottom: 24px;
 }
 
-.input-container + .input-container {
+.input-container+.input-container {
     margin-left: 24px;
 }
 
 .sample-content {
     margin-top: -88px;
+}
+
+.custom-combo-header,
+.custom-combo-footer {
+    padding: 4px 8px;
+    background: #444;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
 }
