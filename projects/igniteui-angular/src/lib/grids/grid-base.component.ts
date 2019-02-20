@@ -65,6 +65,7 @@ import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IViewChangeEventArgs } from '../directives/template-outlet/template_outlet.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -4623,5 +4624,39 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected get isAttachedToDom(): boolean {
         return this.document.body.contains(this.nativeElement);
+    }
+
+    /**
+     * @hidden
+     */
+    public hasHorizontalScroll() {
+        return this.totalWidth - this.unpinnedWidth > 0;
+    }
+
+    protected _restoreVirtState(row) {
+         // check virtualization state of data record added from cache
+         // in case state is no longer valid - update it.
+         const rowForOf = row.virtDirRow;
+         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        if (gridScrLeft !== actualScrollLeft) {
+            rowForOf.onHScroll(gridScrLeft);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public cachedViewLoaded(args: IViewChangeEventArgs) {
+        if (this.hasHorizontalScroll()) {
+            const tmplId = args.context.templateID;
+            const index = args.context.index;
+            args.view.detectChanges();
+            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+            if (row && row instanceof IgxRowComponent) {
+                this._restoreVirtState(row);
+            }
+        }
     }
 }

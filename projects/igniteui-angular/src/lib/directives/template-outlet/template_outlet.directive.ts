@@ -20,6 +20,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
 
   @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
+  @Output()
+  public onCachedViewLoaded = new EventEmitter<IViewChangeEventArgs>();
+
 
   constructor(private _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
   }
@@ -46,6 +49,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
             this._viewRef = cachedView;
             this._viewContainerRef.insert(this._viewRef, 0);
             this._updateExistingContext(this.igxTemplateOutletContext);
+            this.onCachedViewLoaded.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
         }
     } else {
         // view should not be re-created. Check if it exists and if context exists and just update it.
@@ -104,6 +108,11 @@ export class IgxTemplateOutletDirective implements OnChanges {
       (<any>this._viewRef.context)[propName] = (<any>this.igxTemplateOutletContext)[propName];
       }
   }
+}
+export interface IViewChangeEventArgs {
+    owner: IgxTemplateOutletDirective;
+    view: EmbeddedViewRef<any>;
+    context: any;
 }
 
 /**
