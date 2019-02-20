@@ -23,6 +23,12 @@
         }
     }
 
+    %grid-excel-icon--filtered {
+        &.igx-icon {
+            color: igx-color($palette, 'secondary');
+        }
+    }
+
     %grid-excel-menu {
         width: inherit;
         min-width: 320px;

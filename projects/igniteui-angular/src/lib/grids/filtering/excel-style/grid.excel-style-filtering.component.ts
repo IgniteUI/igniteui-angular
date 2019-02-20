@@ -22,7 +22,7 @@ import {
 } from '../../../services';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import { 
+import {
     IFilteringOperation,
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
@@ -53,28 +53,28 @@ export class FilterListItem {
     selector: '[igxExcelStyleSortingTemplate]'
 })
 export class IgxExcelStyleSortingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
     selector: '[igxExcelStyleMovingTemplate]'
 })
 export class IgxExcelStyleMovingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
     selector: '[igxExcelStyleHidingTemplate]'
 })
 export class IgxExcelStyleHidingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
     selector: '[igxExcelStylePinningTemplate]'
 })
 export class IgxExcelStylePinningTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -134,7 +134,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
     className = 'igx-excel-filter';
 
     get iconClassName() {
-        return this._column.filteringExpressionsTree ? 'igx-excel-filter__icon__filtered' : 'igx-excel-filter__icon';
+        return this._column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
     @Input()
@@ -280,7 +280,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
 
         this.uniqueValues.forEach(element => {
             if (element) {
-                const filterListItem =  new FilterListItem();
+                const filterListItem = new FilterListItem();
                 filterListItem.isSelected = true;
                 filterListItem.value = element;
                 filterListItem.label = element;
@@ -292,7 +292,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
         });
 
         if (containsNullOrEmpty) {
-            const blanks =  new FilterListItem();
+            const blanks = new FilterListItem();
             blanks.isSelected = true;
             blanks.value = null;
             blanks.label = '(Blanks)';
@@ -300,7 +300,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit {
             this.listData.unshift(blanks);
         }
 
-        const selectAll =  new FilterListItem();
+        const selectAll = new FilterListItem();
         selectAll.isSelected = true;
         selectAll.value = 'Select All';
         selectAll.label = 'Select All';

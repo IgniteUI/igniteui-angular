@@ -19,6 +19,11 @@
             @extend %grid-excel-icon !optional;
         }
 
+        @include e(icon, $m: 'filtered') {
+            @extend %grid-excel-icon !optional;
+            @extend %grid-excel-icon--filtered !optional;
+        }
+
         @include e(menu-header) {
             @extend %grid-excel-menu__header !optional;
         }
