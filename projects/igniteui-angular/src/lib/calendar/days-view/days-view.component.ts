@@ -1014,10 +1014,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
                 setTimeout(() => {
                     date.nativeElement.focus();
                 }, parseInt(slideInRight.options.params.duration, 10));
-            } else if (this.callback) {
-                setTimeout(() => {
-                    this.callback(this.dates, this._nextDate);
-                }, parseInt(slideInRight.options.params.duration, 10));
+            } else if (this.callback && (event.toState === 'next' || event.toState === 'prev')) {
+                this.callback(this.dates, this._nextDate);
             }
         }
     }
@@ -1028,6 +1026,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
+
         this.focusPreviousUpDate(event.target);
     }
 
@@ -1037,6 +1037,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
+
         this.focusNextDownDate(event.target);
     }
 
@@ -1055,6 +1057,8 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
+
         this.focusNextDate(event.target);
     }
 
@@ -1064,6 +1068,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const dates = this.dates.filter(d => d.isCurrentMonth);
         for (let i = 0; i < dates.length; i++) {
@@ -1080,6 +1085,7 @@ export class IgxDaysViewComponent implements ControlValueAccessor, DoCheck {
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
+        event.stopPropagation();
 
         const dates = this.dates.filter(d => d.isCurrentMonth);
         for (let i = dates.length - 1; i >= 0; i--) {

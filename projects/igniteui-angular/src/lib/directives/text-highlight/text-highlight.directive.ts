@@ -182,6 +182,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
+    public get lastSearchInfo(): ISearchInfo {
+        return this._lastSearchInfo;
+    }
+
+    /**
+     * @hidden
+     */
     public parentElement: any;
 
     private _container: any;
@@ -494,6 +501,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTextHighlightDirective],
     exports: [IgxTextHighlightDirective]
