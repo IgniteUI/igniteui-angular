@@ -15,10 +15,12 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
-import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { KEYS } from '../core/utils';
 import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
+import { IgxMonthsViewComponent } from './months-view/months-view.component';
+import { IgxYearsViewComponent } from './years-view/years-view.component';
+import { IgxDaysViewComponent } from './days-view/days-view.component';
 
 let NEXT_ID = 0;
 
@@ -141,6 +143,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     @ViewChild('monthsBtn')
     public monthsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('decade', { read: IgxYearsViewComponent })
+    public dacadeView: IgxYearsViewComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('days', {read: IgxDaysViewComponent})
+    public daysView: IgxDaysViewComponent;
 
     /**
      * @hidden
@@ -323,6 +337,29 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
+    public activeViewDecade() {
+        super.activeViewDecade();
+
+        requestAnimationFrame(() => {
+            this.dacadeView.el.nativeElement.focus();
+        });
+    }
+
+    
+    /**
+     * @hidden
+     */
+    public activeViewDecadeKB(event) {
+        super.activeViewDecadeKB(event);
+
+        requestAnimationFrame(() => {
+            this.dacadeView.el.nativeElement.focus();
+        });
+    }
+
+    /**
+     * @hidden
+     */
     public getFormattedDate(): { weekday: string, monthday: string } {
 
         const date = this.headerDate;
@@ -474,10 +511,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     @HostListener('keydown.shift.pageup', ['$event'])
     public onKeydownShiftPageUp(event: KeyboardEvent) {
-        this.keydownPageUpHandler(event);
+        event.preventDefault();
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+
+        this.daysView.animationAction = 'prev';
+        this.daysView.isKeydownTrigger = true;
 
         const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
-        if (activeDate && this.daysView) {
+        if (activeDate) {
             this.daysView.nextDate = new Date(activeDate.date.date);
 
             const year = this.daysView.nextDate.getFullYear() - 1;
@@ -502,10 +543,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     @HostListener('keydown.shift.pagedown', ['$event'])
     public onKeydownShiftPageDown(event: KeyboardEvent) {
-        this.keydownPageDownHandler(event);
+        event.preventDefault();
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+
+        this.daysView.animationAction = 'next';
+        this.daysView.isKeydownTrigger = true;
 
         const activeDate = this.daysView.dates.find((date) => date.nativeElement === document.activeElement);
-        if (activeDate && this.daysView) {
+        if (activeDate) {
             this.daysView.nextDate = new Date(activeDate.date.date);
 
             const year = this.daysView.nextDate.getFullYear() + 1;

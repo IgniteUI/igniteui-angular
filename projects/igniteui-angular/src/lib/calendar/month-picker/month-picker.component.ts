@@ -11,6 +11,8 @@ import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animatio
 import { KEYS } from '../../core/utils';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBase, CalendarView } from '../month-picker-base';
+import { IgxYearsViewComponent } from '../years-view/years-view.component';
+import { IgxDaysViewComponent } from '../days-view/days-view.component';
 
 let NEXT_ID = 0;
 @Component({
@@ -73,6 +75,18 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
+    @ViewChild('decade', { read: IgxYearsViewComponent })
+    public dacadeView: IgxYearsViewComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('days', {read: IgxDaysViewComponent})
+    public daysView: IgxDaysViewComponent;
+
+    /**
+     * @hidden
+     */
     public yearAction = '';
 
     /**
@@ -90,21 +104,36 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
 
         if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
             event.preventDefault();
-            this.nextYear(true);
+            this.nextYear();
         }
 
         if (event.key === KEYS.LEFT_ARROW || event.key === KEYS.LEFT_ARROW_IE) {
             event.preventDefault();
-            this.previousYear(true);
+            this.previousYear();
         }
+
+        requestAnimationFrame(() => {
+            this.dacadeView.el.nativeElement.focus();
+        });
     }
 
     /**
      * @hidden
      */
-    public nextYear(kbTrigger = false) {
+    public activeViewDecade() {
+        super.activeViewDecade();
+
+        requestAnimationFrame(() => {
+            this.dacadeView.el.nativeElement.focus();
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    public nextYear() {
         this.yearAction = 'next';
-        super.nextYear(kbTrigger);
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
 
         this._onChangeCallback(this.viewDate);
         this.onSelection.emit(this.viewDate);
@@ -118,16 +147,16 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
             event.preventDefault();
             event.stopPropagation();
 
-            this.nextYear(true);
+            this.nextYear();
         }
     }
 
     /**
      * @hidden
      */
-    public previousYear(kbTrigger = false) {
+    public previousYear() {
         this.yearAction = 'prev';
-        super.previousYear(kbTrigger);
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
 
         this._onChangeCallback(this.viewDate);
         this.onSelection.emit(this.viewDate);
@@ -141,7 +170,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
             event.preventDefault();
             event.stopPropagation();
 
-            this.previousYear(true);
+            this.previousYear();
         }
     }
 
@@ -202,7 +231,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
      */
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageUp(event: KeyboardEvent) {
-        this.keydownPageUpHandler(event);
+        event.preventDefault();
+        this.yearAction = 'prev';
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
     }
 
     /**
@@ -210,7 +241,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
      */
     @HostListener('keydown.pagedown', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
-        this.keydownPageDownHandler(event);
+        event.preventDefault();
+        this.yearAction = 'next';
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
     }
 
     /**
