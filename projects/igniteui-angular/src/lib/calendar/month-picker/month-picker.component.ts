@@ -91,17 +91,11 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
             event.preventDefault();
             this.nextYear(true);
-
-            this._onChangeCallback(this.viewDate);
-            this.onSelection.emit(this.viewDate);
         }
 
         if (event.key === KEYS.LEFT_ARROW || event.key === KEYS.LEFT_ARROW_IE) {
             event.preventDefault();
             this.previousYear(true);
-
-            this._onChangeCallback(this.viewDate);
-            this.onSelection.emit(this.viewDate);
         }
     }
 
@@ -175,7 +169,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
 
         this.onSelection.emit(this.viewDate);
     }
-    
+
     /**
      * Selects a date.
      *```typescript
