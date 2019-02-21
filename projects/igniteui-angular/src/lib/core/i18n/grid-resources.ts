@@ -46,6 +46,26 @@ export interface IGridResourceStrings {
     igx_grid_summary_average?: string;
     igx_grid_summary_earliest?: string;
     igx_grid_summary_latest?: string;
+    igx_grid_excel_filter_moving_left?: string;
+    igx_grid_excel_filter_moving_right?: string;
+    igx_grid_excel_filter_moving_header?: string;
+    igx_grid_excel_filter_sorting_asc?: string;
+    igx_grid_excel_filter_sorting_desc?: string;
+    igx_grid_excel_filter_sorting_header?: string;
+    igx_grid_excel_custom_dialog_add?: string;
+    igx_grid_excel_custom_dialog_clear?: string;
+    igx_grid_excel_cancel?: string;
+    igx_grid_excel_apply?: string;
+    igx_grid_excel_search_placeholder?: string;
+    igx_grid_excel_select_all?: string;
+    igx_grid_excel_blanks?: string;
+    igx_grid_excel_hide?: string;
+    igx_grid_excel_pin?: string;
+    igx_grid_excel_text_filter?: string;
+    igx_grid_excel_number_filter?: string;
+    igx_grid_excel_date_filter?: string;
+    igx_grid_excel_boolean_filter?: string;
+    igx_grid_excel_custom_filter?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -96,4 +116,24 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_summary_average: 'Avg',
     igx_grid_summary_earliest: 'Earliest',
     igx_grid_summary_latest: 'Latest',
+    igx_grid_excel_filter_moving_left: 'left',
+    igx_grid_excel_filter_moving_right: 'right',
+    igx_grid_excel_filter_moving_header: 'column moving',
+    igx_grid_excel_filter_sorting_asc: 'ascending',
+    igx_grid_excel_filter_sorting_desc: 'descending',
+    igx_grid_excel_filter_sorting_header: 'sorting',
+    igx_grid_excel_custom_dialog_add: '+ add filter',
+    igx_grid_excel_custom_dialog_clear: 'clear filter',
+    igx_grid_excel_cancel: 'apply',
+    igx_grid_excel_apply: 'cancel',
+    igx_grid_excel_search_placeholder: 'Search',
+    igx_grid_excel_select_all: 'Select All',
+    igx_grid_excel_blanks: '(Blanks)',
+    igx_grid_excel_hide: 'Hide Column',
+    igx_grid_excel_pin: 'Pin Column',
+    igx_grid_excel_text_filter: 'Text filter',
+    igx_grid_excel_number_filter: 'Number filter',
+    igx_grid_excel_date_filter: 'Date filter',
+    igx_grid_excel_boolean_filter: 'Boolean filter',
+    igx_grid_excel_custom_filter: 'Custom filter...'
 };
