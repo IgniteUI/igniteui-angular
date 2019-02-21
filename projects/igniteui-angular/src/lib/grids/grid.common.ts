@@ -606,9 +606,8 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
         //  TODO: extract transform setting in util function
-        const translateY = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height;
-        const translateYString = `translateY(${translateY}px)`;
-        contentElement.style.transform = contentElement.style.transform.replace(/translateY\([.-\d]+px\)/g, translateYString);
+        const top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height;
+        contentElement.style.top = `${top}px`;
         contentElement.style.width = target.clientWidth + 'px';
     }
 }
