@@ -135,8 +135,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         this.yearAction = 'next';
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
 
-        this._onChangeCallback(this.viewDate);
-        this.onSelection.emit(this.viewDate);
+        this.selectDate(this.viewDate);
+        this.onSelection.emit(this.selectedDates);
     }
 
     /**
@@ -158,8 +158,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         this.yearAction = 'prev';
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
 
-        this._onChangeCallback(this.viewDate);
-        this.onSelection.emit(this.viewDate);
+        this.selectDate(this.viewDate);
+        this.onSelection.emit(this.selectedDates);
     }
 
     /**
@@ -181,8 +181,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
 
-        this._onChangeCallback(this.viewDate);
-        this.onSelection.emit(this.viewDate);
+        this.selectDate(event);
+        this.onSelection.emit(this.selectedDates);
 
         requestAnimationFrame(() => {
             this.yearsBtn.nativeElement.focus();
@@ -193,10 +193,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
      * @hidden
      */
     public selectMonth(event: Date) {
-        this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
-        this._onChangeCallback(this.viewDate);
-
-        this.onSelection.emit(this.viewDate);
+        this.selectDate(event);
+        this.onSelection.emit(this.selectedDates);
     }
 
     /**
@@ -212,7 +210,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
 
         // TO DO: to be refactored after discussion on the desired behavior
         super.selectDate(value);
-        this.viewDate.setMonth(value.getMonth());
+        this.viewDate = value;
     }
 
     /**
@@ -222,7 +220,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
 
         // TO DO: to be refactored after discussion on the desired behavior
         if (value) {
-            this.viewDate.setMonth(value.getMonth());
+            this.viewDate = this.selectedDates = value;
         }
     }
 

@@ -193,7 +193,7 @@ describe('IgxMonthPicker', () => {
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
 
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Apr');
-        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
     });
 
     it('should navigate to the previous/next year.', () => {
