@@ -695,11 +695,10 @@ describe('IgxGrid - Multi Cell selection', () => {
             detect = () => grid.cdr.detectChanges();
         });
 
-        it('Should be able to select a with arrow keys and holding Shift', (async () => {
+        it('Should be able to select a with arrow keys and holding Shift', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
             UIInteractions.simulateClickAndSelectCellEvent(cell);
-            await wait();
             fix.detectChanges();
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
@@ -707,7 +706,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
 
             fix.detectChanges();
-            await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
@@ -717,7 +715,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             cell = grid.getCellByColumn(2, 'ParentID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
@@ -727,7 +724,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             cell = grid.getCellByColumn(2, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 1, 2);
@@ -738,7 +734,6 @@ describe('IgxGrid - Multi Cell selection', () => {
             cell = grid.getCellByColumn(1, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
             HelperUtils.verifyCellSelected(cell, false);
@@ -748,13 +743,12 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            await wait(50);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
             // HelperUtils.verifySelectedRange(grid, 1, 1, 0, 1, 0, 2);
             // HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1, 1, 2);
-        }));
+        });
 
         it('Should be able to select and move scroll with arrow keys and holding Shift', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -886,7 +880,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             HelperUtils.verifyCellSelected(thirdCell);
             HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1);
-            expect(grid.getSelectedData()).toEqual({ParentID: 147});
+            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
         }));
 
         it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', (async () => {
@@ -990,7 +984,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 1, 1);
         }));
 
-        it('Should handle  Shift + Ctrl + Arrow Left keys combination', (async () => {
+        it('Should handle  Shift + Ctrl + Arrow Left keys combination',() => {
             const firstCell = grid.getCellByColumn(3, 'HireDate');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
@@ -1002,13 +996,12 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, false, true, true);
-            await wait(150);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            HelperUtils.verifySelectedRange(grid, 3, 3, 3, 3);
-            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 3, 3);
-        }));
+            HelperUtils.verifySelectedRange(grid, 3, 3, 0, 3);
+            HelperUtils.verifyCellsRegionSelected(grid, 3, 3, 0, 3);
+        });
 
         it('Should handle  Shift + Ctrl + Arrow Right keys combination', (async () => {
             const firstCell = grid.getCellByColumn(4, 'Name');

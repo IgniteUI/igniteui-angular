@@ -47,6 +47,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     _clearAllHighlights() {
         [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
             grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
             grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();

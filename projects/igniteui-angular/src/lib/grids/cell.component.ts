@@ -563,8 +563,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public _updateCellSelectionStatus() {
-        const selection = this.selectionService;
-        const keyboardState = selection.keyboardState;
         const node = this.selectionNode;
 
         if (this.editMode) {
@@ -572,21 +570,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this._updateCRUDStatus();
-
-        // Update selection triggered by keyboard navigation
-        if (keyboardState.active) {
-            if (keyboardState.shift) {
-                selection.dragSelect(node, keyboardState);
-                keyboardState.range = selection.generateRange(node, keyboardState);
-                this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, keyboardState));
-                return;
-            }
-
-            // KB navigation without shift key pressed. Reset the KB state and the selection.
-            selection.initKeyboardState();
-            selection.clear();
-            selection.add(node);
-        }
+        this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection);
     }
 
     /**
@@ -642,28 +626,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerdown = (event: PointerEvent) => {
-        const selectionService = this.selectionService;
-        const pointerState = selectionService.pointerState;
-        const node = this.selectionNode;
-
-        selectionService.initKeyboardState();
-        pointerState.ctrl = event.ctrlKey;
-        pointerState.shift = event.shiftKey;
-
-        if (!event.ctrlKey) {
-            selectionService.clear();
-        }
-
-        if (event.shiftKey) {
-            if (!pointerState.node) {
-                pointerState.node = node;
-            }
-            selectionService.pointerDownShiftKey(node);
-            this.clearTextSelection();
-            return;
-        }
-
-        pointerState.node = node;
+        this.selectionService.pointerDown(this.selectionNode,
+            event.shiftKey, event.ctrlKey);
     }
 
     /**
@@ -672,14 +636,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
-        const selection = this.selectionService;
-
-        selection.dragMode = event.buttons === 1 ? true : false;
-        if (!selection.dragMode) {
-            return;
-        }
-        this.clearTextSelection();
-        selection.dragSelect(this.selectionNode, selection.pointerState);
+        this.selectionService.pointerEnter(this.selectionNode,
+            event.buttons === 1);
     }
 
     /**
@@ -687,33 +645,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = () => {
-        const node = this.selectionNode;
-
-        if (this.selectionService.dragMode) {
-            this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, this.selectionService.pointerState));
-            this.selectionService.addRangeMeta(node, this.selectionService.pointerState);
-            this.selectionService.dragMode = false;
-            return;
-        }
-        if (this.selectionService.pointerState.shift) {
-            this.clearTextSelection();
-            this.grid.onRangeSelection.emit(this.selectionService.generateRange(node, this.selectionService.pointerState));
-            this.selectionService.addRangeMeta(node, this.selectionService.pointerState);
-            return;
-        }
-
-        this.selectionService.add(node);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    clearTextSelection() {
-        const selection = window.getSelection();
-        if (selection) {
-            selection.removeAllRanges();
-        }
+        this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection);
     }
 
     /**
@@ -834,8 +766,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        this.selectionService.keyboardState.active = true;
-        this.selectionService.keyboardDownShiftKey(node, shift, shift && key === 'tab');
+        this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
 
 
         if (key === 'tab') {

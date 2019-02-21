@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { IGridEditEventArgs } from '../grids/grid-base.component';
 
 
@@ -196,11 +196,25 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
 
 
+    /**
+     * Returns the current selected ranges in the grid from both
+     * keyboard and pointer interactions
+     */
     get ranges(): GridSelectionRange[] {
+
+        // The last action was keyboard + shift selection -> add it
         if (this.keyboardState.range) {
             this._ranges.add(JSON.stringify(this.keyboardState.range));
         }
-        return Array.from(this._ranges).map(range => JSON.parse(range));
+
+        const ranges = Array.from(this._ranges).map(range => JSON.parse(range));
+
+        // No ranges but we have a focused cell -> add it
+        if (!ranges.length && this.activeElement) {
+            ranges.push(this.generateRange(this.activeElement));
+        }
+
+        return ranges;
     }
 
     constructor() {
@@ -208,6 +222,9 @@ export class IgxGridSelectionService {
         this.initKeyboardState();
     }
 
+    /**
+     * Resets the keyboard state
+     */
     initKeyboardState(): void {
         this.keyboardState.node = null;
         this.keyboardState.shift = false;
@@ -215,6 +232,9 @@ export class IgxGridSelectionService {
         this.keyboardState.active = false;
     }
 
+    /**
+     * Resets the pointer state
+     */
     initPointerState(): void {
         this.pointerState.node = null;
         this.pointerState.ctrl = false;
@@ -222,6 +242,10 @@ export class IgxGridSelectionService {
         this.pointerState.range = null;
     }
 
+    /**
+     * Adds a single node.
+     * Single clicks | Ctrl + single clicks on cells is the usual case.
+     */
     add(node: ISelectionNode): void {
         this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
@@ -256,7 +280,20 @@ export class IgxGridSelectionService {
         }));
     }
 
-    generateRange(node: ISelectionNode, state: SelectionState): GridSelectionRange {
+    /**
+     * Generates a new selection range from the given `node`.
+     * If a `state` is passed instead it will generate it
+     */
+    generateRange(node: ISelectionNode, state?: SelectionState): GridSelectionRange {
+        if (!state) {
+            return {
+                rowStart: node.row,
+                rowEnd: node.row,
+                columnStart: node.column,
+                columnEnd: node.column
+            };
+        }
+
         const { row, column } = state.node;
         const rowStart = Math.min(node.row, row);
         const rowEnd = Math.max(node.row, row);
@@ -266,25 +303,93 @@ export class IgxGridSelectionService {
         return { rowStart, rowEnd, columnStart, columnEnd };
     }
 
-    keyboardDownShiftKey(node: ISelectionNode, shift: boolean, shiftTab: boolean) {
-        // Reset pointer state
+    /**
+     *
+     */
+    keyboardStateOnKeydown(node: ISelectionNode, shift: boolean, shiftTab: boolean) {
+        this.keyboardState.active = true;
         this.initPointerState();
-
         this.keyboardState.shift = shift && !shiftTab;
 
+        // Kb navigation with shift and no previous node.
+        // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
-            // Navigation with shift pressed. Clear the selection
-            // and initialize the start node. The cell _updateCellSelection method will
-            // handle the updates.
-            // TODO: Move the logic from the cell here.
             this.clear();
             this.keyboardState.node = node;
         }
     }
 
+    keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): void {
+        const kbState = this.keyboardState;
+
+        // Focus triggered by keyboard navigation
+        if (kbState.active) {
+            // Start generating a range if shift is hold
+            if (kbState.shift) {
+                this.dragSelect(node, kbState);
+                kbState.range = this.generateRange(node, kbState);
+                emitter.emit(this.generateRange(node, kbState));
+                return;
+            }
+
+            this.initKeyboardState();
+            this.clear();
+            this.add(node);
+        }
+    }
+
+    pointerDown(node: ISelectionNode, shift: boolean, ctrl: boolean): void {
+        this.initKeyboardState();
+        this.pointerState.ctrl = ctrl;
+        this.pointerState.shift = shift;
+
+        // No ctrl key pressed - no multiple selection
+        if (!ctrl) {
+            this.clear();
+        }
+
+        if (shift) {
+            if (!this.pointerState.node) {
+                this.pointerState.node = node;
+            }
+            this.pointerDownShiftKey(node);
+            this.clearTextSelection();
+            return;
+        }
+
+        this.pointerState.node = node;
+    }
+
     pointerDownShiftKey(node: ISelectionNode): void {
         this.clear();
         this.selectRange(node, this.pointerState);
+    }
+
+    pointerEnter(node: ISelectionNode, dragEnabled: boolean): void {
+        this.dragMode = dragEnabled;
+        if (!this.dragMode) {
+            return;
+        }
+        this.clearTextSelection();
+        this.dragSelect(node, this.pointerState);
+    }
+
+    pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): void {
+        if (this.dragMode) {
+            emitter.emit(this.generateRange(node, this.pointerState));
+            this.addRangeMeta(node, this.pointerState);
+            this.dragMode = false;
+            return;
+        }
+
+        if (this.pointerState.shift) {
+            this.clearTextSelection();
+            emitter.emit(this.generateRange(node, this.pointerState));
+            this.addRangeMeta(node, this.pointerState);
+            return;
+        }
+
+        this.add(node);
     }
 
     selectRange(node: ISelectionNode, state: SelectionState) {
@@ -307,5 +412,12 @@ export class IgxGridSelectionService {
     clear(): void {
         this.selection.clear();
         this._ranges.clear();
+    }
+
+    clearTextSelection() {
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+        }
     }
 }
