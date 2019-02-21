@@ -271,6 +271,7 @@ describe('IgxToggle', () => {
     it('fix for #3636 - ToggleAction should provide its element as target', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
         fixture.detectChanges();
+        fixture.debugElement.componentInstance.overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
 
         let button = fixture.componentInstance.button1.nativeElement;
         button.click();
@@ -279,8 +280,9 @@ describe('IgxToggle', () => {
 
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        let buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         button = fixture.componentInstance.button2.nativeElement;
         button.click();
@@ -288,8 +290,9 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         button = fixture.componentInstance.button3.nativeElement;
         button.click();
@@ -298,13 +301,15 @@ describe('IgxToggle', () => {
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
     }));
 
     it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
         fixture.detectChanges();
+        fixture.debugElement.componentInstance.overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
 
         let button = fixture.componentInstance.button1.nativeElement;
         button.click();
@@ -318,20 +323,23 @@ describe('IgxToggle', () => {
         let toggle = fixture.debugElement.query(By.css('#toggle1'));
         let toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        let buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         document.documentElement.scrollTop += 100;
         document.dispatchEvent(new Event('scroll'));
@@ -340,20 +348,23 @@ describe('IgxToggle', () => {
         toggle = fixture.debugElement.query(By.css('#toggle1'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button1.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle2'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button2.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
 
         toggle = fixture.debugElement.query(By.css('#toggle3'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();
         button = fixture.componentInstance.button3.nativeElement;
-        expect(Math.round(toggleRect.right)).toBe(Math.round(button.getBoundingClientRect().right));
-        expect(Math.round(toggleRect.top)).toBe(Math.round(button.getBoundingClientRect().bottom));
+        buttonRect = button.getBoundingClientRect();
+        expect(Math.round(toggleRect.left)).toBe(Math.round(buttonRect.right));
+        expect(Math.round(toggleRect.top)).toBe(Math.round(buttonRect.bottom));
     }));
 
     it('fix for #3810 - Should not open toggle when already opened', fakeAsync(() => {
