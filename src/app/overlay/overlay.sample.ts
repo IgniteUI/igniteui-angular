@@ -338,16 +338,18 @@ export class OverlaySampleComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.igxDrag.left1 = 300;
-        this.igxDrag.top1 = 300;
+        this.igxDrag.element.nativeElement.style.left = '300px';
+        this.igxDrag.element.nativeElement.style.top = '300px';
     }
 
     public onDragEnd(e) {
         const originalEvent: PointerEvent = e.originalEvent;
         const wrapperElement = document.getElementsByClassName('sample-wrapper')[0];
         const wrapperElementRect = wrapperElement.getBoundingClientRect();
-        this.igxDrag.left1 = originalEvent.clientX - wrapperElementRect.left - this.xAddition;
-        this.igxDrag.top1 = originalEvent.clientY - wrapperElementRect.top - this.yAddition;
+        const left = originalEvent.clientX - wrapperElementRect.left - this.xAddition;
+        const top = originalEvent.clientY - wrapperElementRect.top - this.yAddition;
+        this.igxDrag.element.nativeElement.style.left = `${Math.max(0, left)}px`;
+        this.igxDrag.element.nativeElement.style.top = `${Math.max(0, top)}px`;
     }
 
     public onDragStart(e) {
