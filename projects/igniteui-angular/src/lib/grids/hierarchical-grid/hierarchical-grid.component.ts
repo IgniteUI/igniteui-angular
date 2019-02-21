@@ -609,11 +609,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     protected find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
-        const childGrids = this.getChildGrids(false);
+        let childGrids = this.getChildGrids(false);
         const prevActiveMatchIndex = this.lastSearchInfo.activeMatchIndex;
         super._applyHightlights(text, increment, caseSensitive, exactMatch);
         // sort by parent row index and layout order
         const layoutKeys = this.childLayoutKeys;
+        childGrids = childGrids.filter((grid) => {
+            return grid.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(grid)) !== -1;
+        });
         childGrids.sort((child1, child2) => {
             const parentIndex1 = child1.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(child1));
             const parentIndex2 = child2.parent.filteredSortedData.indexOf(this.hgridAPI.getParentRowId(child2));
@@ -645,15 +648,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 });
             }
         });
+        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+            this.lastSearchInfo.activeMatchIndex = 0;
+        } else if (this.lastSearchInfo.activeMatchIndex < 0) {
+            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+        }
         if (this.parent === null && this.lastSearchInfo.matchInfoCache.length > 0 &&
             this.lastSearchInfo.matchInfoCache.length >= this.lastSearchInfo.activeMatchIndex) {
                 const prevMatchInfo = this.lastSearchInfo.matchInfoCache[prevActiveMatchIndex];
-                if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
-                    this.lastSearchInfo.activeMatchIndex = 0;
-                } else if (this.lastSearchInfo.activeMatchIndex < 0) {
-                    this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+                if (prevMatchInfo) {
+                    IgxTextHighlightDirective.clearActiveHighlight(prevMatchInfo.grid.id);
                 }
-                IgxTextHighlightDirective.clearActiveHighlight(prevMatchInfo.grid.id);
                 const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
                 IgxTextHighlightDirective.setActiveHighlight(matchInfo.grid.id, {
                     column: matchInfo.column,

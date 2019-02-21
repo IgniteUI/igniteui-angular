@@ -497,6 +497,50 @@ describe('IgxHierarchicalGrid ', () => {
             expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[0].row).toBe(fixture.componentInstance.data[1]);
             expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row).toBe(fixture.componentInstance.data[1].childData[1]);
         });
+
+        it('should update matchInfoCache and activeMatchIndex correctly when child grid has results but parent row is filtered out.',
+        async () => {
+            // expand parent row
+            (hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+            await wait(30);
+            fixture.detectChanges();
+
+            const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            (child.getRowByIndex(0) as IgxHierarchicalRowComponent).toggle();
+            await wait(30);
+            child.cdr.detectChanges();
+
+            const count = hierarchicalGrid.findNext('A0');
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(count).toBe(3);
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache.length).toBe(3);
+            expect(hierarchicalGrid.lastSearchInfo.activeMatchIndex).toBe(0);
+
+            checkHightLights(3, 0);
+            hierarchicalGrid.findNext('A0');
+            await wait(30);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.lastSearchInfo.activeMatchIndex).toBe(1);
+            checkHightLights(3, 1);
+
+            hierarchicalGrid.findNext('A0');
+            await wait(30);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.lastSearchInfo.activeMatchIndex).toBe(2);
+            checkHightLights(3, 2);
+
+            // filter child
+            child.filter('ID', '01', IgxStringFilteringOperand.instance().condition('equals'), true);
+
+            // check state
+            fixture.detectChanges();
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache.length).toBe(1);
+            expect(hierarchicalGrid.lastSearchInfo.activeMatchIndex).toBe(0);
+            checkHightLights(1, 0);
+        });
+
     });
     describe('Search with sibling row islands - ', () => {
         beforeEach(async(() => {
