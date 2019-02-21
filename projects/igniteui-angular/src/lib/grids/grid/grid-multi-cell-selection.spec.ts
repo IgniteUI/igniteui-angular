@@ -984,7 +984,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 0, 4, 1, 1);
         }));
 
-        it('Should handle  Shift + Ctrl + Arrow Left keys combination',() => {
+        it('Should handle  Shift + Ctrl + Arrow Left keys combination', () => {
             const firstCell = grid.getCellByColumn(3, 'HireDate');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
