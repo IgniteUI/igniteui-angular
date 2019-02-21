@@ -178,9 +178,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
             childGrid.updateRow({ ProductName: 'Changed' }, '00');
-            expect(childGrid.getCellByColumn(0, "ProductName").nativeElement.innerText).toEqual('Changed');
+            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Changed');
             childGrid.transactions.clear();
-            expect(childGrid.getCellByColumn(0, "ProductName").nativeElement.innerText).toEqual('Product: A0');
+            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
         }));
     });
 
