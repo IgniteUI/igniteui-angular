@@ -94,8 +94,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
     private filterValues = [];
-    private overlayService: IgxOverlayService;
-    private overlayComponentId: string;
 
     protected chunkLoaded = new Subscription();
     protected columnMoving = new Subscription();
@@ -104,6 +102,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     public filteringService: IgxFilteringService;
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
+    public overlayService: IgxOverlayService;
+    public overlayComponentId: string;
 
     private _subMenuPositionSettings = {
         verticalStartPoint: VerticalAlignment.Top
@@ -184,11 +184,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this._subMenuOverlaySettings.outlet = this.grid.outletDirective;
 
         this.chunkLoaded = this.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.mainDropdown.close();
+            this.closeDropdown();
         });
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.mainDropdown.close();
+            this.closeDropdown();
         });
     }
 
@@ -208,17 +208,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     public onPin() {
         this.column.pinned = !this.column.pinned;
-        this.mainDropdown.close();
+        this.closeDropdown();
     }
 
     public onHide() {
         this.column.hidden = true;
-        this.mainDropdown.close();
+        this.closeDropdown();
     }
 
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
-            this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.target;
+            this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.currentTarget;
 
             const gridRect = this.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.mainDropdown.element.getBoundingClientRect();
@@ -252,12 +252,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.mainDropdown.close();
         this.subMenu.close();
         this.customDialog.open();
-    }
-
-    public closeDialog() {
-        this.listData = cloneArray(this.originalColumnData, true);
-        this.originalColumnData = new Array<FilterListItem>();
-        this.mainDropdown.close();
     }
 
     private areExpressionsSelectable () {
@@ -409,13 +403,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.mainDropdown.open(overlaySettings);
     }
 
-    public onDropDownClosed() {
-        // if (this.overlayComponentId) {
-        //     this.overlayService.hide(this.overlayComponentId);
-        //     this.overlayComponentId = null;
-        // }
-    }
-
     public onDropDownOpening() {
         this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
@@ -492,7 +479,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         this.originalColumnData = new Array<FilterListItem>();
-        this.mainDropdown.close();
+        this.closeDropdown();
+    }
+
+    public closeDropdown() {
+        if (this.overlayComponentId) {
+            this.overlayService.hide(this.overlayComponentId);
+            this.overlayComponentId = null;
+        }
     }
 
     private createCondition(conditionName: string) {

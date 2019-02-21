@@ -1,6 +1,5 @@
 <article #dropdown igxToggle
     class="igx-excel-filter__menu"
-    (onClosed)="onDropDownClosed()"
     (onOpening)="onDropDownOpening()"
     >
 
@@ -81,7 +80,7 @@
     </igx-excel-style-search> 
 
     <footer class="igx-excel-filter__menu-footer">
-        <button igxButton (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
         <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
     </footer>
 </article>
@@ -105,5 +104,7 @@
     #customDialog
     [column]="column"
     [columnData]="uniqueValues"
-    [filteringService]="filteringService">
+    [filteringService]="filteringService"
+    [overlayComponentId]="overlayComponentId"
+    [overlayService]="overlayService">
 </igx-excel-style-custom-dialog>

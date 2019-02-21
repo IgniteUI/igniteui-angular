@@ -15,7 +15,7 @@ import { FilteringLogic } from '../../../data-operations/filtering-expression.in
 import { DataType } from '../../../data-operations/data-util';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment } from '../../../services';
+import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment, IgxOverlayService } from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 
 /**
@@ -58,13 +58,29 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public filteringService: IgxFilteringService;
 
+    @Input()
+    public overlayComponentId: string;
+
+    @Input()
+    public overlayService: IgxOverlayService;
+
+
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+
+    @ViewChild('toggle', { read: IgxToggleDirective })
+    public toggle: IgxToggleDirective;
+
+    @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
+    protected defaultExpressionTemplate: TemplateRef<any>;
+
+    @ViewChild('dateExpressionTemplate', { read: TemplateRef })
+    protected dateExpressionTemplate: TemplateRef<any>;
 
     constructor(private cdr:ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
-        this._customDialogOverlaySettings.outlet = this.column.grid.outletDirective;
+        this._customDialogOverlaySettings.outlet = this.grid.outletDirective;
     }
 
     get template(): TemplateRef<any> {
@@ -95,25 +111,27 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     public open() {
-        this._customDialogOverlaySettings.positionStrategy.settings.target = this.column.grid.nativeElement;
+        this._customDialogOverlaySettings.positionStrategy.settings.target = this.grid.nativeElement;
         this.toggle.open(this._customDialogOverlaySettings);
     }
 
     public onClearButtonClick() {
-        this.filteringService.grid.clearFilter(this.column.field);
+        this.filteringService.clearFilter(this.column.field);
         this.createInitialExpressionUIElement();
         this.cdr.detectChanges();
     }
 
-    public onCancelButtonClick() {
-        this.toggle.close();
+    public closeDialog() {
+        if (this.overlayComponentId) {
+            this.overlayService.hide(this.overlayComponentId);
+        }
     }
 
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
             element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
         this.filteringService.filter(this.column.field, this.expressionsList);
-        this.toggle.close();
+        this.closeDialog();
     }
 
     public onAddButtonClick() {
@@ -203,14 +221,4 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
         this.expressionsList.push(secondExprUI);
     }
-
-    @ViewChild('toggle', { read: IgxToggleDirective })
-    public toggle: IgxToggleDirective;
-
-    @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
-    protected defaultExpressionTemplate: TemplateRef<any>;
-
-    @ViewChild('dateExpressionTemplate', { read: TemplateRef })
-    protected dateExpressionTemplate: TemplateRef<any>;
-
 }
