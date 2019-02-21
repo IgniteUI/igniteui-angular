@@ -45,7 +45,7 @@ import { takeUntil } from 'rxjs/operators';
  */
 export class FilterListItem {
     public value: any;
-    public label: string;
+    public label: any;
     public isSelected: boolean;
     public indeterminate: boolean;
 }
@@ -100,6 +100,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     private containsNullOrEmpty = false;
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
+    private filterValues = [];
 
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
@@ -288,7 +289,8 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         }
 
         const selectableExpressionsCount = this.expressionsList.filter(exp => 
-            (exp.beforeOperator === 1 || exp.afterOperator === 1) && exp.expression.condition.name === 'equals').length;
+            (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
+            (exp.expression.condition.name === 'equals' || exp.expression.condition.name === 'empty')).length;
         if (selectableExpressionsCount === this.expressionsList.length) {
             return true;
         } else {
@@ -297,15 +299,15 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     }
 
     private areExpressionsValuesInTheList() {
-        const values = this.expressionsList.map(exp => exp.expression.searchVal); 
         let sameElements = 0;
-        for (let index = 0; index < values.length; index++) {
-            if (this.uniqueValues.indexOf(values[index]) !== -1) {
+
+        for (let index = 0; index < this.filterValues.length; index++) {
+            if (this.uniqueValues.indexOf(this.filterValues[index]) !== -1) {
                 sameElements ++;
             }
         }
 
-        if (sameElements === values.length) {
+        if (sameElements === this.filterValues.length) {
             return true;
         } else {
             return false;
@@ -313,18 +315,29 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     }
 
     public populateColumnData() {
-        this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
+        if (this.column.dataType === DataType.Date) {
+            this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record =>
+                record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
+            this.filterValues = this.expressionsList.map(exp =>
+                exp.expression.searchVal ? exp.expression.searchVal.toDateString() : exp.expression.searchVal);
+        } else {
+            this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
+            this.filterValues = this.expressionsList.map(exp => exp.expression.searchVal); 
+        }
         this.listData = new Array<FilterListItem>();
 
         let shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
-        const values = this.expressionsList.map(exp => exp.expression.searchVal); 
 
-        this.addItems(shouldUpdateSelection, values);
+        this.addItems(shouldUpdateSelection);
 
         this.listData.sort((a, b) => this.sortData(a, b));
 
+        if (this.column.dataType === DataType.Date) {
+            this.uniqueValues = this.uniqueValues.map(value => new Date(value));
+        }
+
         if (this.containsNullOrEmpty) {
-            this.addBlanksItem(shouldUpdateSelection, values);
+            this.addBlanksItem(shouldUpdateSelection);
         }
 
         this.addSelectAllItem();
@@ -332,7 +345,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         this.cdr.detectChanges();
     }
 
-    private addItems(shouldUpdateSelection: boolean, values: any[]) {
+    private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
         this.uniqueValues.forEach(element => {
@@ -340,7 +353,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
                 const filterListItem = new FilterListItem();
                 if(this.column.filteringExpressionsTree) {
                     if (shouldUpdateSelection) {
-                        if (values.indexOf(element) !== -1) {
+                        if (this.filterValues.indexOf(element) !== -1) {
                             filterListItem.isSelected = true;
                         } else {
                             filterListItem.isSelected = false;
@@ -353,8 +366,13 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
                 } else {
                     filterListItem.isSelected = true;
                 }
-                filterListItem.value = element;
-                filterListItem.label = element;
+                if (this.column.dataType === DataType.Date) {
+                    filterListItem.value = new Date(element);
+                    filterListItem.label = new Date(element);
+                } else {
+                    filterListItem.value = element;
+                    filterListItem.label = element;
+                }
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             } else {
@@ -372,11 +390,11 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         this.listData.unshift(selectAll);
     }
 
-    private addBlanksItem(shouldUpdateSelection, values: any[]) {
+    private addBlanksItem(shouldUpdateSelection) {
         const blanks =  new FilterListItem();
         if(this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {
-                if (values.indexOf(null) !== -1) {
+                if (this.filterValues.indexOf(null) !== -1) {
                     blanks.isSelected = true;
                 } else {
                     blanks.isSelected = false;
