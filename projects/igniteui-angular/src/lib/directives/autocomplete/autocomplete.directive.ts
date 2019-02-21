@@ -355,15 +355,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.target.navigateFirst();
         this.cdr.detectChanges();
-        this.reposition();
-    }
-
-    /**
-     * If we have a custom strategy that is showing drop down above the input and after filtering is applied in the drop down,
-     * then reposition of the drop down should be called in order to align the filtered drop down to the top of the input.
-     */
-    private reposition() {
-        setTimeout(() => { this.target.toggleDirective.reposition(); });
     }
 
     /**
