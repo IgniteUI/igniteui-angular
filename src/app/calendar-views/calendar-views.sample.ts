@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, DateRangeType, IgxMonthPickerComponent } from 'igniteui-angular';
-import { IgxDaysViewComponent } from 'projects/igniteui-angular/src/lib/calendar/days-view/days-view.component';
+import { 
+    IgxCalendarComponent, 
+    DateRangeType, 
+    IgxDaysViewComponent, 
+    IgxMonthPickerComponent
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-views-sample',
@@ -29,6 +33,12 @@ export class CalendarViewsSampleComponent implements OnInit {
         weekday: 'long',
         year: 'numeric'
     }
+
+    formatViews = {
+        day: true,
+        month: true,
+        year: true
+    };
 
     disabledDates = [{
         type: DateRangeType.Between,

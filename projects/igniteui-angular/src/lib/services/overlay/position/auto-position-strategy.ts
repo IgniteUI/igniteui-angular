@@ -34,9 +34,10 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy implements IPo
     }
 
     private positionElement(element: HTMLElement, settings: PositionSettings) {
-        const originalSettings = Object.assign({}, this.settings);
-        this.settings = settings;
+        //  TODO: check if we should clone the settings or not
+        // const originalSettings = Object.assign({}, this.settings);
+        // this.settings = settings;
         super.position(element, null);
-        this.settings = originalSettings;
+        // this.settings = originalSettings;
     }
 }

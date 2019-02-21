@@ -12,8 +12,6 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy implements 
                 if (extend > innerRect.width - this.settings.minSize.width) {
                     extend = innerRect.width - this.settings.minSize.width;
                 }
-                const translateX = `translateX(${Math.round(innerRect.left + extend)}px)`;
-                element.style.transform = element.style.transform.replace(/translateX\([.-\d]+px\)/g, translateX);
                 break;
             }
             case HorizontalAlignment.Right: {
@@ -36,8 +34,6 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy implements 
                 if (extend > innerRect.height - this.settings.minSize.height) {
                     extend = innerRect.height - this.settings.minSize.height;
                 }
-                const translateY = `translateY(${Math.round(innerRect.top + extend)}px)`;
-                element.style.transform = element.style.transform.replace(/translateY\([.-\d]+px\)/g, translateY);
                 break;
             }
             case VerticalAlignment.Bottom: {

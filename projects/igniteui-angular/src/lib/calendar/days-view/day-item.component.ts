@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
 import { ICalendarDate, isDateInRanges } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
+import { CalendarSelection } from '../calendar-base';
 
 /**
  *@hidden
-    */
+*/
 @Component({
     selector: 'igx-day-item',
     templateUrl: 'day-item.component.html'
@@ -31,14 +32,14 @@ export class IgxDayItemComponent {
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
 
-    get selected(): boolean {
+    public get selected(): boolean {
         const date = this.date.date;
 
         if (!this.value) {
             return;
         }
 
-        if (this.selection === 'single') {
+        if (this.selection === CalendarSelection.SINGLE) {
         this._selected = (this.value as Date).getTime() === date.getTime();
         } else {
         this._selected = (this.value as Date[])
@@ -48,31 +49,31 @@ export class IgxDayItemComponent {
         return this._selected;
     }
 
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         this._selected = value;
     }
 
-    get isCurrentMonth(): boolean {
+    public get isCurrentMonth(): boolean {
         return this.date.isCurrentMonth;
     }
 
-    get isPreviousMonth(): boolean {
+    public get isPreviousMonth(): boolean {
         return this.date.isPrevMonth;
     }
 
-    get isNextMonth(): boolean {
+    public get isNextMonth(): boolean {
         return this.date.isNextMonth;
     }
 
-    get nativeElement() {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 
-    get isInactive(): boolean {
+    public get isInactive(): boolean {
         return this.date.isNextMonth || this.date.isPrevMonth;
     }
 
-    get isToday(): boolean {
+    public get isToday(): boolean {
         const today = new Date(Date.now());
         const date = this.date.date;
         return (date.getFullYear() === today.getFullYear() &&
@@ -81,12 +82,12 @@ export class IgxDayItemComponent {
         );
     }
 
-    get isWeekend(): boolean {
+    public get isWeekend(): boolean {
         const day = this.date.date.getDay();
         return day === 0 || day === 6;
     }
 
-    get isDisabled(): boolean {
+    public get isDisabled(): boolean {
         if (this.disabledDates === null) {
             return false;
         }
@@ -94,7 +95,7 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.disabledDates);
     }
 
-    get isOutOfRange(): boolean {
+    public get isOutOfRange(): boolean {
         if (!this.outOfRangeDates) {
             return false;
         }
@@ -102,7 +103,7 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.outOfRangeDates);
     }
 
-    get isSpecial(): boolean {
+    public get isSpecial(): boolean {
         if (this.specialDates === null) {
             return false;
         }
@@ -114,37 +115,37 @@ export class IgxDayItemComponent {
     public tabindex = 0;
 
     @HostBinding('class.igx-calendar__date')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
     }
 
     @HostBinding('class.igx-calendar__date--inactive')
-    get isInactiveCSS(): boolean {
+    public get isInactiveCSS(): boolean {
         return this.isInactive;
     }
 
     @HostBinding('class.igx-calendar__date--current')
-    get isTodayCSS(): boolean {
+    public get isTodayCSS(): boolean {
         return this.isToday && !this.selected;
     }
 
     @HostBinding('class.igx-calendar__date--selected')
-    get isSelectedCSS(): boolean {
+    public get isSelectedCSS(): boolean {
         return this.selected;
     }
 
     @HostBinding('class.igx-calendar__date--weekend')
-    get isWeekendCSS(): boolean {
+    public get isWeekendCSS(): boolean {
         return this.isWeekend;
     }
 
     @HostBinding('class.igx-calendar__date--disabled')
-    get isDisabledCSS(): boolean {
+    public get isDisabledCSS(): boolean {
         return this.isDisabled || this.isOutOfRange;
     }
 
     @HostBinding('class.igx-calendar__date--special')
-    get isSpecialCSS(): boolean {
+    public get isSpecialCSS(): boolean {
         return this.isSpecial;
     }
 
