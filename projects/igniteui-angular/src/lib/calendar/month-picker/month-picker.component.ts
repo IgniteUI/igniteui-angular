@@ -113,7 +113,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         }
 
         requestAnimationFrame(() => {
-            this.dacadeView.el.nativeElement.focus();
+            if (this.dacadeView) { this.dacadeView.el.nativeElement.focus(); }
         });
     }
 
