@@ -5,10 +5,8 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
-import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -29,7 +27,7 @@ export class IgxExcelStyleSearchComponent {
     @Input()
     public column: IgxColumnComponent;
 
-    constructor(private cdr: ChangeDetectorRef, private filteringService: IgxFilteringService) {
+    constructor(private cdr: ChangeDetectorRef) {
     }
 
     get filterOptions() {

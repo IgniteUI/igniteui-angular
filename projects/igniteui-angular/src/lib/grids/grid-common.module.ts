@@ -121,6 +121,7 @@ import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/ex
     entryComponents: [
         IgxColumnComponent,
         IgxColumnGroupComponent,
+        IgxGridExcelStyleFilteringComponent
     ],
     exports: [
         IgxGridCellComponent,

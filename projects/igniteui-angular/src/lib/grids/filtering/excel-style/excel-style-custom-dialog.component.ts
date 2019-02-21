@@ -13,7 +13,7 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';
-import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IFilteringOperation } from '../../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment } from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
@@ -55,10 +55,13 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public columnData: any[];
 
+    @Input()
+    public filteringService: IgxFilteringService;
+
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
 
-    constructor(private cdr:ChangeDetectorRef, private filteringService: IgxFilteringService) {}
+    constructor(private cdr:ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -70,6 +73,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
 
         return this.defaultExpressionTemplate;
+    }
+
+    get grid() {
+        return this.filteringService.grid;
     }
 
     public onCustomDialogOpening() {

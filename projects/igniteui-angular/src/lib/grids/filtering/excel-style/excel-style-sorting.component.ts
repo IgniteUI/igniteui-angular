@@ -1,13 +1,12 @@
 import {
     Component,
     ChangeDetectionStrategy,
-    AfterViewInit,
     ViewChild,
     Input
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxFilteringService } from '../grid-filtering.service';
+import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -23,16 +22,19 @@ export class IgxExcelStyleSortingComponent {
     @Input()
     public column: IgxColumnComponent;
 
+    @Input()
+    public grid: IgxGridBaseComponent;
+
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
 
-    constructor(private filteringService: IgxFilteringService) {}
+    constructor() {}
 
     public onSortButtonClicked(sortDirection) {
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
-            this.filteringService.grid.clearSort(this.column.field);
+            this.grid.clearSort(this.column.field);
         } else {
-            this.filteringService.grid.sort({ fieldName: this.column.field, dir: sortDirection, ignoreCase: true });
+            this.grid.sort({ fieldName: this.column.field, dir: sortDirection, ignoreCase: true });
         }
     }
 

@@ -1,16 +1,13 @@
 import {
     ChangeDetectorRef,
     Component,
-    Input,
     ViewChild,
-    AfterViewInit,
     HostBinding,
     ChangeDetectionStrategy,
     TemplateRef,
     Directive,
     OnDestroy,
 } from '@angular/core';
-import { useAnimation } from '@angular/animations';
 import { IgxColumnComponent } from '../../grid';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down';
 import {
@@ -18,7 +15,8 @@ import {
     VerticalAlignment,
     ConnectedPositioningStrategy,
     CloseScrollStrategy,
-    OverlaySettings
+    OverlaySettings,
+    IgxOverlayService
 } from '../../../services';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
@@ -33,7 +31,6 @@ import { FilteringExpressionsTree } from '../../../data-operations/filtering-exp
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { cloneArray } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
-import { fadeIn, fadeOut } from '../../../animations/main';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { Subscription, Subject } from 'rxjs';
@@ -87,46 +84,28 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDestroy {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
-    private _column: IgxColumnComponent;
-    private isMainMenuOpened = false;
     private shouldOpenSubMenu = true;
-    private shouldOpenMainMenu = true;
     private originalColumnData = new Array<FilterListItem>();
     private expressionsList = new Array<ExpressionUI>();
     private destroy$ = new Subject<boolean>();
-
     private containsNullOrEmpty = false;
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
+    private overlayService: IgxOverlayService;
+    private overlayComponentId: string;
 
+    protected chunkLoaded = new Subscription();
+    protected columnMoving = new Subscription();
+
+    public column: IgxColumnComponent;
+    public filteringService: IgxFilteringService;
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
 
-    private _mainMenuPositionSettings = {
-        verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: useAnimation(fadeIn, {
-            params: {
-                duration: '250ms'
-            }
-        }),
-        closeAnimation: useAnimation(fadeOut, {
-            params: {
-                duration: '200ms'
-            }
-        })
-    };
-
     private _subMenuPositionSettings = {
         verticalStartPoint: VerticalAlignment.Top
-    };
-
-    private _mainMenuOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._mainMenuPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
     };
 
     private _subMenuOverlaySettings: OverlaySettings = {
@@ -139,46 +118,64 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
-    get iconClassName() {
-        return this._column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+    @ViewChild('dropdown', { read: IgxToggleDirective })
+    public mainDropdown: IgxToggleDirective;
+
+    @ViewChild('subMenu', { read: IgxDropDownComponent })
+    public subMenu: IgxDropDownComponent;
+
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
+    public customDialog: IgxExcelStyleCustomDialogComponent;
+
+    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
+    protected excelStyleSearch: IgxExcelStyleSearchComponent;
+
+    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
+    protected excelStyleSorting: IgxExcelStyleSortingComponent;
+
+    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef })
+    protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef })
+    protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef })
+    protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
+    protected defaultExcelStylePinningTemplate: TemplateRef<any>;
+
+    get grid() {
+        return this.filteringService.grid;
     }
 
-    @Input()
-    get column(): IgxColumnComponent {
-        return this._column;
+    get conditions() {
+        return this.column.filters.conditionList();
     }
 
-    set column(val) {
-        if (val && !this._column) {
-            this._column = val;
-        }
-    }
-
-    constructor(private cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {}
-
-    protected chunkLoaded = new Subscription();
-    protected columnMoving = new Subscription();
-
-    ngAfterViewInit(): void {
-        this._mainMenuOverlaySettings.outlet = this.column.grid.outletDirective;
-        this._subMenuOverlaySettings.outlet = this.column.grid.outletDirective;
-
-        this.chunkLoaded = this.filteringService.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.mainDropdown.close();
-        });
-
-        this.columnMoving = this.filteringService.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.mainDropdown.close();
-        });
-    }
+    constructor(private cdr: ChangeDetectorRef) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    get conditions() {
-        return this.column.filters.conditionList();
+    public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
+        overlayComponentId: string) {
+        this.column = column;
+        this.filteringService = filteringService;
+        this.overlayService = overlayService;
+        this.overlayComponentId = overlayComponentId;
+
+        this._subMenuOverlaySettings.outlet = this.grid.outletDirective;
+
+        this.chunkLoaded = this.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.mainDropdown.close();
+        });
+
+        this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.mainDropdown.close();
+        });
     }
 
     /**
@@ -192,7 +189,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
      * Returns the translated condition name for a given value.
      */
     public translateCondition(value: string): string {
-        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+        return this.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     public onPin() {
@@ -205,36 +202,11 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         this.mainDropdown.close();
     }
 
-    public onIconClick(eventArgs) {
-        if (this.shouldOpenMainMenu) {
-            const headerTarget = this.column.headerCell.elementRef.nativeElement;
-
-            const gridRect = this.filteringService.grid.nativeElement.getBoundingClientRect();
-            const headerRect = headerTarget.getBoundingClientRect();
-
-            let x = headerRect.left;
-            let x1 = gridRect.left + gridRect.width;
-            x += window.pageXOffset;
-            x1 += window.pageXOffset;
-            if (Math.abs(x - x1) < 300) {
-                this._mainMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
-                this._mainMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
-            } else {
-                this._mainMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
-                this._mainMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
-            }
-
-            this._mainMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
-            this.mainDropdown.open(this._mainMenuOverlaySettings);
-            this.shouldOpenMainMenu = false;
-        }
-    }
-
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
             this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.target;
 
-            const gridRect = this.filteringService.grid.nativeElement.getBoundingClientRect();
+            const gridRect = this.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.mainDropdown.element.getBoundingClientRect();
 
             let x = dropdownRect.left + dropdownRect.width;
@@ -274,13 +246,6 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         this.mainDropdown.close();
     }
 
-    public onDropDownClosed() {
-        this.excelStyleSearch.searchValue = null;
-        requestAnimationFrame(() => {
-            this.shouldOpenMainMenu = true;
-        });
-    }
-
     private areExpressionsSelectable () {
         if (this.expressionsList.length === 1 &&
             (this.expressionsList[0].expression.condition.name === 'equals' || this.expressionsList[0].expression.condition.name === 'empty')) {
@@ -313,7 +278,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     }
 
     public populateColumnData() {
-        this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
+        this.uniqueValues = Array.from(new Set(this.grid.data.map(record => record[this.column.field])));
         this.listData = new Array<FilterListItem>();
 
         let shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
@@ -407,47 +372,59 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
         }
     }
 
+    // TODO: sort members by access modifier
+
+    public toggleDropdown(overlaySettings: OverlaySettings) {
+        this.mainDropdown.open(overlaySettings);
+    }
+
+    public onDropDownClosed() {
+        // if (this.overlayComponentId) {
+        //     this.overlayService.hide(this.overlayComponentId);
+        //     this.overlayComponentId = null;
+        // }
+    }
+
     public onDropDownOpening() {
-        this.isMainMenuOpened = true;
         this.expressionsList = new Array<ExpressionUI>();
-        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.filteringService.grid.filteringLogic, this.expressionsList);
+        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
         this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
         this.originalColumnData = cloneArray(this.listData, true);
 
-        const se = this.column.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
+        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
         if (se) {
             this.excelStyleSorting.selectButton(se.dir);
         }
     }
 
     get sortingTemplate() {
-        if (this.filteringService.grid.excelStyleSortingTemplateDirective) {
-            return this.filteringService.grid.excelStyleSortingTemplateDirective.template;
+        if (this.grid.excelStyleSortingTemplateDirective) {
+            return this.grid.excelStyleSortingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleSortingTemplate;
         }
     }
 
     get movingTemplate() {
-        if (this.filteringService.grid.excelStyleMovingTemplateDirective) {
-            return this.filteringService.grid.excelStyleMovingTemplateDirective.template;
+        if (this.grid.excelStyleMovingTemplateDirective) {
+            return this.grid.excelStyleMovingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleMovingTemplate;
         }
     }
 
     get pinningTemplate() {
-        if (this.filteringService.grid.excelStylePinningTemplateDirective) {
-            return this.filteringService.grid.excelStylePinningTemplateDirective.template;
+        if (this.grid.excelStylePinningTemplateDirective) {
+            return this.grid.excelStylePinningTemplateDirective.template;
         } else {
             return this.defaultExcelStylePinningTemplate;
         }
     }
 
     get hidingTemplate() {
-        if (this.filteringService.grid.excelStyleHidingTemplateDirective) {
-            return this.filteringService.grid.excelStyleHidingTemplateDirective.template;
+        if (this.grid.excelStyleHidingTemplateDirective) {
+            return this.grid.excelStyleHidingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleHidingTemplate;
         }
@@ -455,16 +432,6 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
 
     get applyButtonDisabled() {
         return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
-    }
-
-    public getIconName(exp: ExpressionUI): string {
-        if (this.column.dataType === DataType.Boolean && exp.expression.condition === null) {
-            return this.getCondition(this.conditions[0]).iconName;
-        } else if (!exp.expression.condition) {
-            return 'filter_list';
-        } else {
-            return exp.expression.condition.iconName;
-        }
     }
 
     public applyFilter() {
@@ -488,9 +455,9 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
                 });
             });
             this.expressionsList = new Array<ExpressionUI>();
-            this.filteringService.grid.filter(this.column.field, null, filterTree);
+            this.grid.filter(this.column.field, null, filterTree);
         } else {
-            this.filteringService.grid.clearFilter(this.column.field);
+            this.grid.clearFilter(this.column.field);
         }
 
         this.originalColumnData = new Array<FilterListItem>();
@@ -499,41 +466,14 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
 
     private createCondition(conditionName: string) {
         switch (this.column.dataType) {
-            case DataType.String:
-                return IgxStringFilteringOperand.instance().condition(conditionName);
             case DataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
             case DataType.Number:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
+            default:
+                return IgxStringFilteringOperand.instance().condition(conditionName);
         }
     }
-
-    @ViewChild('dropdown', { read: IgxToggleDirective })
-    public mainDropdown: IgxToggleDirective;
-
-    @ViewChild('subMenu', { read: IgxDropDownComponent })
-    public subMenu: IgxDropDownComponent;
-
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
-    public customDialog: IgxExcelStyleCustomDialogComponent;
-
-    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
-    protected excelStyleSearch: IgxExcelStyleSearchComponent;
-
-    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
-    protected excelStyleSorting: IgxExcelStyleSortingComponent;
-
-    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef })
-    protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
-
-    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef })
-    protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
-
-    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef })
-    protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
-
-    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
-    protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 }

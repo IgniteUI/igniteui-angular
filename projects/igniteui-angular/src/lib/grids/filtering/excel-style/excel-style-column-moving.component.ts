@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService } from '../grid-filtering.service';
+import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -16,18 +17,21 @@ export class IgxExcelStyleColumnMovingComponent {
     @Input()
     public column: IgxColumnComponent;
 
-    constructor(private filteringService: IgxFilteringService) {}
+    @Input()
+    public grid: IgxGridBaseComponent;
+
+    constructor() {}
 
     get canMoveLeft() {
         return !this.column.movable || this.column.visibleIndex === 0;
     }
 
     get canMoveRight() {
-        return !this.column.movable || this.column.visibleIndex === this.filteringService.grid.columns.length - 1;
+        return !this.column.movable || this.column.visibleIndex === this.grid.columns.length - 1;
     }
 
     public onMoveButtonClicked(moveDirection) {
         const index = this.column.visibleIndex;
-        this.filteringService.grid.moveColumn(this.column, this.filteringService.grid.columns[index + moveDirection]);
+        this.grid.moveColumn(this.column, this.grid.columns[index + moveDirection]);
     }
 }

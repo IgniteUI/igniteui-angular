@@ -32,7 +32,7 @@
     }
 
     %grid-excel-menu {
-        width: inherit;
+        width: 320px;
         min-width: 320px;
         background: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 12);
@@ -151,6 +151,7 @@
     }
 
     %grid-excel-menu__secondary {
+        width: 520px;
         min-width: 520px;
         background: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 12);

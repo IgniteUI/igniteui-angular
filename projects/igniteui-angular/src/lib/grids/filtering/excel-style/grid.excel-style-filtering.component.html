@@ -1,15 +1,9 @@
-<igx-icon
-    [ngClass]="iconClassName"
-    [attr.draggable]="false"
-    (click)="onIconClick($event)">
-    filter_list
-</igx-icon>
-
 <article #dropdown igxToggle
     class="igx-excel-filter__menu"
     (onClosed)="onDropDownClosed()"
     (onOpening)="onDropDownOpening()"
     >
+
     <header class="igx-excel-filter__menu-header">
         <h4 class="igx-typography__h6">{{ column.field }}</h4>
     </header>
@@ -18,7 +12,8 @@
         <igx-excel-style-sorting
             #excelStyleSorting
             class="igx-excel-filter__sort"
-            [column]="column">
+            [column]="column"
+            [grid]="grid">
         </igx-excel-style-sorting>
     </ng-template>
 
@@ -31,7 +26,8 @@
         <ng-template #defaultExcelStyleMovingTemplate>
             <igx-excel-style-column-moving
                 class="igx-excel-filter__move"
-                [column]="column">
+                [column]="column"
+                [grid]="grid">
             </igx-excel-style-column-moving>
         </ng-template>
 
@@ -82,7 +78,7 @@
         #excelStyleSearch
         [column]="column"
         [data]="listData">
-    </igx-excel-style-search>
+    </igx-excel-style-search> 
 
     <footer class="igx-excel-filter__menu-footer">
         <button igxButton (click)="closeDialog()">Cancel</button>
@@ -108,5 +104,6 @@
 <igx-excel-style-custom-dialog
     #customDialog
     [column]="column"
-    [columnData]="uniqueValues">
+    [columnData]="uniqueValues"
+    [filteringService]="filteringService">
 </igx-excel-style-custom-dialog>

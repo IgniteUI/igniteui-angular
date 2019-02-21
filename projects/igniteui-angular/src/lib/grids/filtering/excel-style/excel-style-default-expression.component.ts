@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
+import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownComponent, IgxDropDownItemComponent } from '../../../drop-down';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
@@ -18,6 +18,7 @@ import { IFilteringOperation } from '../../../data-operations/filtering-conditio
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
+import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -61,6 +62,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
     public expressionsList: Array<ExpressionUI>;
 
+    @Input()
+    public grid: IgxGridBaseComponent;
+
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();
 
@@ -92,11 +96,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     get inputConditionsPlaceholder(): string {
-        return this.filteringService.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
+        return this.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
     }
 
     get inputValuePlaceholder(): string {
-        return this.filteringService.grid.resourceStrings['igx_grid_filter_row_placeholder'];
+        return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
     get valuesData(): any[] {
@@ -107,7 +111,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this._valuesData;
     }
 
-    constructor(public filteringService: IgxFilteringService, public cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -161,7 +165,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public translateCondition(value: string): string {
-        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+        return this.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     public getIconName(): string {
