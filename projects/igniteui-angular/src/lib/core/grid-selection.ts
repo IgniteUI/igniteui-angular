@@ -60,10 +60,10 @@ export class IgxCell {
         public editValue: any,
         public rowData: any) {}
 
-    castToNumber(): void {
+    castToNumber(value: any): number {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
-            const v = parseFloat(this.editValue);
-            this.editValue = !isNaN(v) && isFinite(v) ? v : 0;
+            const v = parseFloat(value);
+            return !isNaN(v) && isFinite(v) ? v : 0;
         }
     }
 

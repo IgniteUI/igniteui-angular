@@ -2372,39 +2372,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public ngOnInit() {
         this.gridAPI.grid = this;
-
-        // this.crudService.grid = this;
         this._setupServices();
         this._setupListeners();
-        // this.navigation.grid = this;
-        // this.filteringService.gridId = this.id;
-        // this.summaryService.grid = this;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
-
-        // this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
-        // this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-        //     this.summaryService.deleteOperation = true;
-        //     this.summaryService.clearSummaryCache(args);
-        // });
-        // this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        // this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        //     this.endEdit(true);
-        // });
-        // this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        // this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => { this.endEdit(true); this.selectionService.clear(); });
-        // this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        // this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        //     this.summaryService.clearSummaryCache();
-        //     this._pipeTrigger++;
-        //     this.markForCheck();
-        //     if (this.transactions.getAggregatedChanges(false).length === 0) {
-        //         // Needs better check, calling 'transactions.clear()' will also trigger this
-        //         if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-        //             this.page--;
-        //         }
-        //     }
-        // });
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
     }
@@ -4778,7 +4749,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     endRowTransaction(commit: boolean, row: IgxRow) {
-        this.gridAPI._update_row(row);
+        row.newData = this.transactions.getAggregatedValue(row.id, true);
 
         let args = row.createEditEventArgs();
 

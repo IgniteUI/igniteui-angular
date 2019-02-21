@@ -149,7 +149,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         // Cast to number after emit
-        cell.castToNumber();
+        // TODO: Clean up this
+        args.newValue = cell.castToNumber(args.newValue);
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
@@ -200,9 +201,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         const rowInEditMode = grid.crudService.row;
         row.newData = value ? value : grid.transactions.getAggregatedValue(row.id, true);
 
+
+        if (rowInEditMode && row.id === rowInEditMode.id) {
+            row.data = { ...row.data, ...rowInEditMode.transactionState };
         // TODO: Workaround for updating a row in edit mode through the API
-        if (rowInEditMode && row.id === rowInEditMode.id && rowInEditMode.transactionState) {
-            row.data = rowInEditMode.transactionState;
         } else if (this.grid.transactions.enabled) {
             const lastCommitedValue = grid.transactions.getState(row.id) ?
                 grid.transactions.getState(row.id).value : null;

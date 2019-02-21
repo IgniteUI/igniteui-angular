@@ -784,22 +784,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
         }
 
-        // if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
-        //     event.stopPropagation();
-        // }
-
-        // if (this.inEditMode && NAVIGATION_KEYS.has(key)) {
-        //     const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        //     const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
-
-        //     if (column.inlineEditorTemplate === undefined && (
-        //         (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
-        //         || column.dataType === DataType.Date)) {
-        //         event.preventDefault();
-        //     }
-        //     return;
-        // }
-
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             event.stopPropagation();
@@ -831,8 +815,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'arrowleft':
             case 'left':
                 if (ctrl) {
-                    // TODO: ???
-                    // this.nativeElement.blur();
                     this.grid.navigation.onKeydownHome(node.row);
                     break;
                 }
@@ -841,8 +823,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'arrowright':
             case 'right':
                 if (ctrl) {
-                    // TODO: ???
-                    // this.nativeElement.blur();
                     this.grid.navigation.onKeydownEnd(node.row);
                     break;
                 }
