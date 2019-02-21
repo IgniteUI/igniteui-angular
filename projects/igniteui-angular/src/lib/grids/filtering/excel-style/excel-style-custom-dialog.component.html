@@ -4,7 +4,7 @@
     (onOpened)="onCustomDialogOpened()">
     <header class="igx-excel-filter__secondary-header">
         <h4 class="igx-typography__h6">
-            Custom auto-filter on column: {{ column.field }}
+            {{ grid.resourceStrings.igx_grid_excel_custom_dialog_header }}{{ column.field }}
         </h4>
     </header>
 
@@ -39,16 +39,16 @@
             class="igx-excel-filter__add-filter"
             (click)="onAddButtonClick()">
             <igx-icon>add</igx-icon>
-            <span>Add Filter</span>
+            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_add }}</span>
         </button>
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton (click)="onClearButtonClick()">Clear filter</button>
+        <button igxButton (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
 
         <div>
-            <button igxButton (click)="onCancelButtonClick()">Cancel</button>
-            <button igxButton="raised" (click)="onApplyButtonClick()">Apply</button>
+            <button igxButton (click)="onCancelButtonClick()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+            <button igxButton="raised" (click)="onApplyButtonClick()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
         </div>
     </footer>
 </article>

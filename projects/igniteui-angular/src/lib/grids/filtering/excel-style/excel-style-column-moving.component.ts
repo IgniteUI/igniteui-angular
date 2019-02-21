@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxGridBaseComponent } from '../../grid';
 
 /**

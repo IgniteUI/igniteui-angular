@@ -1,8 +1,7 @@
 import {
     Component,
     ChangeDetectionStrategy,
-    Input,
-    ChangeDetectorRef
+    Input
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
@@ -27,8 +26,7 @@ export class IgxExcelStyleSearchComponent {
     @Input()
     public column: IgxColumnComponent;
 
-    constructor(private cdr: ChangeDetectorRef) {
-    }
+    constructor() {}
 
     get filterOptions() {
         const fo = new IgxFilterOptions();
@@ -42,17 +40,18 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        if (eventArgs.checkbox.value.value === 'Select All') {
+        const selectAll = this.column.grid.resourceStrings.igx_grid_excel_select_all;
+        if (eventArgs.checkbox.value.value === selectAll) {
             this.data.forEach(element => {
                 element.isSelected = eventArgs.checked;
                 this.data[0].indeterminate = false;
             });
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
-            if (!this.data.filter(el => el.value !== 'Select All').find(el => el.isSelected === false)) {
+            if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === false)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = true;
-            } else if (!this.data.filter(el => el.value !== 'Select All').find(el => el.isSelected === true)) {
+            } else if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === true)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = false;
             } else {

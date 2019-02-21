@@ -39,14 +39,14 @@
             <div class="igx-excel-filter__actions-pin"
                 (click)="onPin()"
                 *ngIf="!column.pinned">
-                <span>Pin column</span>
+                <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
                 <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
             </div>
 
             <div class="igx-excel-filter__actions-unpin"
                 (click)="onPin()"
                 *ngIf="column.pinned">
-                <span>Unpin column</span>
+                <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
                 <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
             </div>
         </ng-template>
@@ -58,7 +58,7 @@
         <ng-template #defaultExcelStyleHidingTemplate>
             <div class="igx-excel-filter__actions-hide"
                 (click)="onHide()">
-                <span>Hide column</span>
+                <span>{{ grid.resourceStrings.igx_grid_excel_hide }}</span>
                 <igx-icon>visibility_off</igx-icon>
             </div>
         </ng-template>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="igx-excel-filter__actions-filter" (click)="onTextFilterClick($event)" >
-            <span>Text filter</span>
+            <span>{{ subMenuText }}</span>
             <igx-icon>keyboard_arrow_right</igx-icon>
         </div>
     </section>
@@ -81,8 +81,8 @@
     </igx-excel-style-search> 
 
     <footer class="igx-excel-filter__menu-footer">
-        <button igxButton (click)="closeDialog()">Cancel</button>
-        <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">Apply</button>
+        <button igxButton (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
     </footer>
 </article>
 
@@ -96,7 +96,7 @@
         </igx-drop-down-item>
         <igx-drop-down-item>
             <igx-icon>filter_list</igx-icon>
-            <span style="margin-left: 16px">Custom Filter...</span>
+            <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
         </igx-drop-down-item>
     </div>
 </igx-drop-down>
