@@ -60,11 +60,12 @@ export class IgxCell {
         public editValue: any,
         public rowData: any) {}
 
-    castToNumber(value: any): number {
+    castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
             const v = parseFloat(value);
             return !isNaN(v) && isFinite(v) ? v : 0;
         }
+        return value;
     }
 
     createEditEventArgs(): IGridEditEventArgs {
