@@ -149,7 +149,7 @@ export class IgxGridExcelStyleFilteringComponent implements AfterViewInit, OnDes
     }
 
     set column(val) {
-        if (val) {
+        if (val && !this._column) {
             this._column = val;
         }
     }
