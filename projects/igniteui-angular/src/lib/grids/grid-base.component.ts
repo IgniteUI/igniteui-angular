@@ -4230,6 +4230,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     clearCellSelection() {
         this.selectionService.clear();
+        this.selectionService.activeElement = null;
         this.cdr.markForCheck();
     }
 
@@ -4278,8 +4279,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined) {
         if (!this.isDefined(arg)) {
-            this.selectionService.clear();
-            this.cdr.markForCheck();
+            this.clearCellSelection();
             return;
         }
         if (arg instanceof Array) {
