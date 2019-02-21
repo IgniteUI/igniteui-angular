@@ -1,9 +1,10 @@
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import {IgxIconModule} from '../icon/index';
-import {IgxInputGroupModule} from '../input-group/index';
+import { IgxDropDownModule } from '../drop-down/index';
+import { IgxIconModule } from '../icon/index';
+import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent, IgxSelectModule } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -76,6 +77,7 @@ describe('igxSelect', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxSelectSimpleComponent,
+                IgxSelectGroupsComponent,
                 IgxSelectMiddleComponent,
                 IgxSelectTopComponent,
                 IgxSelectBottomComponent,
@@ -83,6 +85,7 @@ describe('igxSelect', () => {
             ],
             imports: [
                 FormsModule,
+                IgxDropDownModule,
                 IgxIconModule,
                 IgxInputGroupModule,
                 IgxSelectModule,
@@ -909,6 +912,82 @@ describe('igxSelect', () => {
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
     });
+    describe('Grouped items tests: ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxSelectGroupsComponent);
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+        }));
+        it('should select group item and close dropdown with mouse click', fakeAsync(() => {
+            const groupIndex = 0;
+            const groupElement = selectList.children[groupIndex];
+            const selectedItemIndex = 2;
+            const selectedItemElement = groupElement.children[selectedItemIndex].nativeElement;
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            selectedItemElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual(select.items[selectedItemIndex - 1].value);
+            expect(select.value).toEqual(select.items[selectedItemIndex - 1].value);
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(1);
+            expect(selectedItemElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+            expect(select.selectedItem).toBe(select.items[selectedItemIndex - 1] as IgxSelectItemComponent);
+            expect(select.items[selectedItemIndex - 1].selected).toBeTruthy();
+            expect(select.collapsed).toBeTruthy();
+        }));
+        it('should select group item on setting value property', fakeAsync(() => {
+            const groupIndex = 1;
+            const groupElement = selectList.children[groupIndex];
+            const selectedItemIndex = 2;
+            const selectedItemElement = groupElement.children[selectedItemIndex].nativeElement;
+            const itemIndex = 4;
+
+            select.value = select.items[itemIndex].value.toString();
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual(select.items[itemIndex].value);
+            expect(select.value).toEqual(select.items[itemIndex].value);
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(1);
+            expect(selectedItemElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+            expect(select.selectedItem).toBe(select.items[itemIndex] as IgxSelectItemComponent);
+            expect(select.items[itemIndex].selected).toBeTruthy();
+        }));
+        it('should not select on setting value property to group header', fakeAsync(() => {
+            const groupIndex = 0;
+            const groupElement = selectList.children[groupIndex].nativeElement;
+
+            select.value = fixture.componentInstance.locations[groupIndex].continent;
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual('');
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(0);
+            expect(groupElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
+            expect(select.selectedItem).toBeUndefined();
+        }));
+        it('should not focus group header in dropdown if there is not selected item', fakeAsync(() => {
+            const groupElement = selectList.children[0];
+            const focusedItemIndex = 1;
+            const focusedItemElement = groupElement.children[focusedItemIndex].nativeElement;
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
+            expect(focusedItems.length).toEqual(1);
+            expect(focusedItemElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+            expect(select.focusedItem).toBe(select.items[0]);
+            expect(select.items[0].isFocused).toBeTruthy();
+            expect(groupElement.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeFalsy();
+        }));
+    });
     describe('Key navigation tests: ', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -1178,8 +1257,9 @@ describe('igxSelect', () => {
         xit('should start navigation from selected item when dropdown is closed', fakeAsync(() => {
             let selectedItemIndex = 4;
             select.items[selectedItemIndex].selected = true;
-            tick();
+            tick(1000);
             fixture.detectChanges();
+
 
             inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
             tick();
@@ -1526,7 +1606,7 @@ describe('igxSelect', () => {
         let listTop: number;
         let listBottom: number;
 
-        const getBoundingRectangles = function() {
+        const getBoundingRectangles = function () {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
@@ -1535,11 +1615,11 @@ describe('igxSelect', () => {
         const verifySelectedItemPositioning = function (reversed = false) {
             expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
-                                    selectedItemRect.height :
-                                    inputRect.top - defaultItemTopPadding;
+                selectedItemRect.height :
+                inputRect.top - defaultItemTopPadding;
             expect(selectedItemRect.top).toEqual(expectedItemTop);
             const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
-                                    inputRect.bottom + defaultItemBottomPadding;
+                inputRect.bottom + defaultItemBottomPadding;
             expect(selectedItemRect.bottom).toEqual(expectedItemBottom);
             expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
         };
@@ -1549,7 +1629,7 @@ describe('igxSelect', () => {
             expect(listRect.bottom).toEqual(listBottom);
             expect(listRect.width).toEqual(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2);
             const listHeight = hasScroll ? selectedItemRect.height * visibleItems + defaultItemTopPadding + defaultItemBottomPadding :
-                            selectedItemRect.height * visibleItems;
+                selectedItemRect.height * visibleItems;
             expect(listRect.height).toEqual(listHeight);
         };
 
@@ -1747,13 +1827,13 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
-                            selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding;
+                        selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding;
                     listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
                     verifyListPositioning();
                 }));
             // tslint:disable-next-line:max-line-length
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
-            fakeAsync(() => {
+                fakeAsync(() => {
                     selectedItemIndex = 6;
                     select.items[selectedItemIndex].selected = true;
                     fixture.detectChanges();
@@ -1765,16 +1845,16 @@ describe('igxSelect', () => {
                     listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height;
                     listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
                     verifyListPositioning();
-            }));
+                }));
         });
         describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = function() {
+            const calculatePrefixesWidth = function () {
                 let prefixesWidth = 0;
                 const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
                 Array.from(prefixes).forEach((prefix: DebugElement) => {
                     const prefixRect = prefix.nativeElement.getBoundingClientRect();
                     prefixesWidth += prefixRect.width;
-                  });
+                });
                 return prefixesWidth;
             };
             beforeEach(async(() => {
@@ -1798,7 +1878,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     expect(inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent).
-                    toEqual(selectedItemRect.left + defaultItemLeftPadding);
+                        toEqual(selectedItemRect.left + defaultItemLeftPadding);
                 }));
         });
     });
@@ -1840,6 +1920,35 @@ class IgxSelectSimpleComponent {
         return this.items.map((city, index) => city.toString().toLowerCase().startsWith(startsWith.toLowerCase()) ? index : undefined)
             .filter(x => x);
     }
+}
+@Component({
+    template: `
+    <igx-select #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
+    <igx-select-item-group *ngFor="let location of locations" [label]="location.continent"> {{location.continent}}
+            <igx-select-item *ngFor="let capital of location.capitals" [value]="capital">
+                {{ capital }}
+            </igx-select-item>
+    </igx-select-item-group>
+    </igx-select>
+`
+})
+class IgxSelectGroupsComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public locations: {
+        continent: string,
+        capitals: string[]
+    }[] = [
+            { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
+            { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
+            { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
+        ];
+
+    // // returns an array of the filtered items indexes
+    // public filterCities(startsWith: string) {
+    //     return this.items.map((city, index) => city.toString().toLowerCase().startsWith(startsWith.toLowerCase()) ? index : undefined)
+    //         .filter(x => x);
+    // }
 }
 @Component({
     template: `
