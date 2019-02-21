@@ -8,6 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ViewChild, Component } from '@angular/core';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
@@ -465,6 +466,36 @@ describe('IgxHierarchicalGrid ', () => {
         // check if cell is fully in view
         expect(childCell.nativeElement.getBoundingClientRect().bottom)
         .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
+        });
+
+        // Integration - Filtering
+        it('should update matchInfoCache correctly when parent or child grids are filtered.', async () => {
+
+            // expand parent row
+            (hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent).toggle();
+            await wait(30);
+            fixture.detectChanges();
+
+            const count = hierarchicalGrid.findNext('A1');
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(count).toBe(16);
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache.length).toBe(16);
+
+            // filter parent
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('equals'), true);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache.length).toBe(6);
+
+            const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+             // filter child
+            child.filter('ID', '11', IgxStringFilteringOperand.instance().condition('equals'), true);
+            fixture.detectChanges();
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache.length).toBe(2);
+
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[0].row).toBe(fixture.componentInstance.data[1]);
+            expect(hierarchicalGrid.lastSearchInfo.matchInfoCache[1].row).toBe(fixture.componentInstance.data[1].childData[1]);
         });
     });
     describe('Search with sibling row islands - ', () => {

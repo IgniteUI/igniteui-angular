@@ -121,7 +121,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     set hierarchicalState(value) {
         this._hierarchicalState = value;
         requestAnimationFrame(() => {
-            this.refreshSearch();
+            this.refreshSearch(true);
         });
     }
 
@@ -648,6 +648,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.parent === null && this.lastSearchInfo.matchInfoCache.length > 0 &&
             this.lastSearchInfo.matchInfoCache.length >= this.lastSearchInfo.activeMatchIndex) {
                 const prevMatchInfo = this.lastSearchInfo.matchInfoCache[prevActiveMatchIndex];
+                if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+                    this.lastSearchInfo.activeMatchIndex = 0;
+                } else if (this.lastSearchInfo.activeMatchIndex < 0) {
+                    this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+                }
                 IgxTextHighlightDirective.clearActiveHighlight(prevMatchInfo.grid.id);
                 const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
                 IgxTextHighlightDirective.setActiveHighlight(matchInfo.grid.id, {
@@ -725,14 +730,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
     }
 
-    public refreshSearch(updateActiveInfo?: boolean, updateUI?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
-            return this.rootGrid.find(
-                this.lastSearchInfo.searchText,
-                0,
-                this.lastSearchInfo.caseSensitive,
-                this.lastSearchInfo.exactMatch,
-                false);
+            const res = super.refreshSearch(updateActiveInfo);
+            // if is child must refresh root grid as well
+            if (this.parent) {
+                this.rootGrid.refreshSearch(updateActiveInfo);
+            }
+            return res;
         } else {
             return 0;
         }

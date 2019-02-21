@@ -4227,12 +4227,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             this.rebuildMatchCache();
         }
-
-        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
-            this.lastSearchInfo.activeMatchIndex = 0;
-        } else if (this.lastSearchInfo.activeMatchIndex < 0) {
-            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
-        }
     }
     protected find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
         if (!this.rowList) {
@@ -4250,6 +4244,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this._applyHightlights(text, increment, caseSensitive, exactMatch, scroll);
+
+        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+            this.lastSearchInfo.activeMatchIndex = 0;
+        } else if (this.lastSearchInfo.activeMatchIndex < 0) {
+            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+        }
 
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
