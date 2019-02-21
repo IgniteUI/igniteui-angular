@@ -3413,7 +3413,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets this._height
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom) {
+        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom || this.rowBasedHeight === 0) {
             return;
         }
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
