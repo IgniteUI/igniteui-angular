@@ -2322,6 +2322,22 @@ describe('IgxGrid - GroupBy', () => {
             expect(grid.getColumnByName('ProductName').hidden).toBe(true);
         }));
 
+    it(`should hide the grouped columns when hideGroupedColumns option is enabled,
+    there are initially set groupingExpressions and columns are autogenareted`,
+    fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        grid.groupingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+        const groupRows = grid.groupsRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+    }));
+
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
