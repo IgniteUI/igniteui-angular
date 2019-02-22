@@ -1,6 +1,6 @@
 # igxMonthPicker Component
 
-The **igxMonthPicker** provides a way for the user to select date(s).
+The **igxMonthPicker** provides a way for the user to select a month.
 
 
 ## Dependencies
@@ -29,7 +29,7 @@ import { IgxMonthPickerComponent } from "igniteui-angular";
 
 Instantiate a month picker component and pass a date object.
 ```html
-<igx-month-picker [value]="dateValue"></igx-month-picker>
+<igx-month-picker [value]="dateValue" [viewDate]="viewDate"></igx-month-picker>
 ```
 
 The **igxMonthPicker** implements the `ControlValueAccessor` interface, providing two-way data-binding
@@ -38,18 +38,16 @@ and the expected behavior when used both in Template-driven or Reactive Forms.
 <igx-month-picker [(ngModel)]="dateValue"></igx-month-picker>
 ```
 
-Customize the format and set the locale
+Customize the format, set the views to be formatted and the locale
 ```typescript
-    public formatOptions = {
-        month: 'long',
-        year: 'numeric'
-    };
+    public formatViews = { month: true, year: true };
+    public formatOptions = { month: 'long', year: 'numeric' };
 
     public localeDe = 'de';
 ```
 
 ```html
-<igx-month-picker [formatOptions]="formatOptions" [locale]="localeDe"></igx-month-picker>
+<igx-month-picker [formatOptions]="formatOptions" [formatViews]="formatViews" [locale]="localeDe"></igx-month-picker>
 ```
 
 ### Keyboard navigation
@@ -71,6 +69,7 @@ When a month inside the months view is focused:
 - `Home` will focus the first month inside the months view.
 - `End` will focus the last month inside the months view.
 - `Enter` will select the currently focused month and close the view.
+- `Tab` will navigate through the months;
 
 
 ## API Summary
@@ -103,7 +102,7 @@ for additional information on the available options.
 
 The defaul values are listed below.
 ```typescript
-{ day: 'numeric', month: 'short', weekday: 'short', year: 'numeric' }
+{ month: 'short', year: 'numeric' }
 ```
 
 - `formatViews: Object`
@@ -113,7 +112,7 @@ Controls whether the date parts in the different month picker views should be fo
 
 The default values are listed below.
 ```typescript
-{ day: false, month: true, year: false }
+{ month: true, year: false }
 ```
 
 ### Outputs
