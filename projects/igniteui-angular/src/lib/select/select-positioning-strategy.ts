@@ -3,6 +3,7 @@ import { ConnectedPositioningStrategy } from '../services/overlay/position/conne
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectComponent } from './select.component';
+import { isIE } from '../core/utils';
 
 enum Direction {
     Top = -1,
@@ -143,7 +144,16 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
         const LIST_HEIGHT = (contentElement.getBoundingClientRect() as DOMRect).height;
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const itemElement = this.select.selectedItem ? this.select.selectedItem.element.nativeElement : this.select.getFirstItemElement();
+        let itemElement;
+        if (this.select.selectedItem) {
+            itemElement = this.select.selectedItem.element.nativeElement;
+            // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
+            if (isIE()) {
+                contentElement.firstElementChild.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
+            }
+        } else {
+            itemElement = this.select.getFirstItemElement();
+        }
         const inputHeight = (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).height;
         const itemBoundRect = itemElement.getBoundingClientRect() as DOMRect;
         const itemTopListOffset = itemBoundRect.top - listBoundRect.top;
