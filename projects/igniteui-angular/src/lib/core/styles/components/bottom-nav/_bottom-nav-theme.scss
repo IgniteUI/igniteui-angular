@@ -35,7 +35,7 @@
     $background: null,
     $idle-item-color: null,
     $active-item-color: null,
-    $shadow: null
+    $shadow: null,
 ) {
     $name: 'igx-bottom-nav';
     $bottom-nav-schema: map-get($schema, $name);
