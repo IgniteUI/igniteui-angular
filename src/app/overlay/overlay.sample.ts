@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
 import {
     IgxDropDownComponent,
     OverlaySettings,
@@ -10,7 +10,8 @@ import {
     CloseScrollStrategy,
     NoOpScrollStrategy,
     IgxInputGroupModule,
-    ElasticPositionStrategy
+    ElasticPositionStrategy,
+    IgxDragDirective
 } from 'igniteui-angular';
 import { templateJitUrl } from '@angular/compiler';
 
@@ -21,6 +22,9 @@ import { templateJitUrl } from '@angular/compiler';
     templateUrl: './overlay.sample.html',
 })
 export class OverlaySampleComponent implements OnInit {
+    private xAddition = 0;
+    private yAddition = 0;
+
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new NoOpScrollStrategy(),
@@ -37,14 +41,11 @@ export class OverlaySampleComponent implements OnInit {
 
     items = [];
 
-    buttonLeft = 90;
-    buttonTop = 35;
-
     horizontalDirections = ['Left', 'Center', 'Right'];
-    horizontalDirection = 'Left';
+    horizontalDirection = 'Center';
 
     verticalDirections = ['Top', 'Middle', 'Bottom'];
-    verticalDirection = 'Top';
+    verticalDirection = 'Middle';
 
     horizontalStartPoints = ['Left', 'Center', 'Right'];
     horizontalStartPoint = 'Left';
@@ -53,10 +54,10 @@ export class OverlaySampleComponent implements OnInit {
     verticalStartPoint = 'Top';
 
     positionStrategies = ['Auto', 'Connected', 'Global', 'Elastic'];
-    positionStrategy = 'Auto';
+    positionStrategy = 'Global';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
-    scrollStrategy = 'Absolute';
+    scrollStrategy = 'NoOp';
 
     closeOnOutsideClick = true;
     modal = true;
@@ -64,6 +65,7 @@ export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
     @ViewChild('container') public container: ElementRef;
+    @ViewChild(IgxDragDirective) public igxDrag: IgxDragDirective;
 
     onChange(ev) {
         switch (ev.radio.name) {
@@ -336,6 +338,24 @@ export class OverlaySampleComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.igxDropDown.element.childElements[0].style.maxHeight = '100%';
+        this.igxDrag.element.nativeElement.style.left = '300px';
+        this.igxDrag.element.nativeElement.style.top = '300px';
+    }
+
+    public onDragEnd(e) {
+        const originalEvent: PointerEvent = e.originalEvent;
+        const wrapperElement = document.getElementsByClassName('sample-wrapper')[0];
+        const wrapperElementRect = wrapperElement.getBoundingClientRect();
+        const left = originalEvent.clientX - wrapperElementRect.left - this.xAddition;
+        const top = originalEvent.clientY - wrapperElementRect.top - this.yAddition;
+        this.igxDrag.element.nativeElement.style.left = `${Math.max(0, left)}px`;
+        this.igxDrag.element.nativeElement.style.top = `${Math.max(0, top)}px`;
+    }
+
+    public onDragStart(e) {
+        const originalEvent: PointerEvent = e.originalEvent;
+        const buttonRect = (<any>originalEvent.target).getBoundingClientRect();
+        this.xAddition = originalEvent.clientX - buttonRect.left;
+        this.yAddition = originalEvent.clientY - buttonRect.top;
     }
 }
