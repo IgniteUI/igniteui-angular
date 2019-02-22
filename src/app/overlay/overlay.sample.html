@@ -1,7 +1,7 @@
 <div #container class="sample-wrapper">
     <app-page-header title="Overlay" description="description for overlay"></app-page-header>
     <section class="sample-content">
-        <div>
+        <div class="column">
             <p>Directions</p>
             <div class="direction-container">
                 <div id="tld" class="direction" (click)="setDirection($event)"></div>
@@ -10,13 +10,13 @@
             </div>
             <div class="direction-container">
                 <div id="mld" class="direction" (click)="setDirection($event)"></div>
-                <div id="mcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="mcd" class="direction selected" (click)="setDirection($event)"></div>
                 <div id="mrd" class="direction" (click)="setDirection($event)"></div>
             </div>
             <div class="direction-container">
                 <div id="bld" class="direction" (click)="setDirection($event)"></div>
                 <div id="bcd" class="direction" (click)="setDirection($event)"></div>
-                <div id="brd" class="direction selected" (click)="setDirection($event)"></div>
+                <div id="brd" class="direction" (click)="setDirection($event)"></div>
             </div>
             <p>Starting Point</p>
             <div class="start-point-container">
@@ -26,43 +26,21 @@
             </div>
             <div class="start-point-container">
                 <div id="mlsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="mcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="mcsp" class="start-point selected" (click)="setStartPoint($event)"></div>
                 <div id="mrsp" class="start-point" (click)="setStartPoint($event)"></div>
             </div>
             <div class="start-point-container">
-                <div id="blsp" class="start-point selected" (click)="setStartPoint($event)"></div>
+                <div id="blsp" class="start-point" (click)="setStartPoint($event)"></div>
                 <div id="bcsp" class="start-point" (click)="setStartPoint($event)"></div>
                 <div id="brsp" class="start-point" (click)="setStartPoint($event)"></div>
             </div>
         </div>
-        <div>
-            <p>Button Position</p>
-            <div class="radio-group w80">
-                <igx-input-group>
-                    <label igxLabel>Top</label>
-                    <input igxInput type="number" [(ngModel)]="buttonTop">
-                    <igx-suffix>
-                        %
-                    </igx-suffix>
-                </igx-input-group>
-
-            </div>
-            <div class="radio-group w80">
-                <igx-input-group>
-                    <label igxLabel>Left</label>
-                    <input igxInput type="number" [(ngModel)]="buttonLeft">
-                    <igx-suffix>
-                        %
-                    </igx-suffix>
-                </igx-input-group>
-            </div>
-        </div>
-        <div>
+        <div class="column">
             <p>Strategies</p>
             <div class="radio-group">
                 <p>Position Strategies</p>
-                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps" [(ngModel)]="positionStrategy"
-                    (change)="onChange($event)">{{item}}</igx-radio>
+                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps"
+                    [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
             </div>
             <div class="radio-group">
                 <p>Scroll Strategies</p>
@@ -70,16 +48,20 @@
                     (change)="onChange($event)">{{item}}</igx-radio>
             </div>
         </div>
-        <div>
+        <div class="column">
             <p>Settings</p>
-            <igx-switch class="settings" labelPosition="after" [(ngModel)]="closeOnOutsideClick" name="close" [value]="closeOnOutsideClick"
-                (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
-            <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal"
-                (change)="onSwitchChange($event)">Modal</igx-switch>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="closeOnOutsideClick" name="close"
+                    [value]="closeOnOutsideClick" (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
+            </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="modal" name="modal" [value]="modal"
+                    (change)="onSwitchChange($event)">Modal</igx-switch>
+            </div>
         </div>
-        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'"
-            [style.top]="buttonTop + '%'" [style.left]="buttonLeft + '%'">Toggle</button>
-        <igx-drop-down width="200px">
+        <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
+            (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
+        <igx-drop-down width=" 200px">
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
                     {{ item }}
