@@ -205,18 +205,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('style.top.px')
-    public top1 = 0;
-
-    /**
-     * @hidden
-     */
-    @HostBinding('style.left.px')
-    public left1 = 0;
-
-    /**
-     * @hidden
-     */
     @HostBinding('style.visibility')
     public _visibility = 'visible';
 
