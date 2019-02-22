@@ -168,6 +168,20 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
         }));
+
+        it('should revert changes when transactions are cleared for child grids', (async () => {
+            let childGrid;
+            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(1)).subscribe((args) => {
+                childGrid = args.grid;
+            });
+            // expand 1st row
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+            childGrid.updateRow({ ProductName: 'Changed' }, '00');
+            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Changed');
+            childGrid.transactions.clear();
+            expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
+        }));
     });
 
     describe('Sorting', () => {
