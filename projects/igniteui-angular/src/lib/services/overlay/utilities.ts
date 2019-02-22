@@ -126,3 +126,30 @@ export interface OverlayInfo {
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
 }
+
+/** @hidden @internal*/
+export function getViewportRect(document: Document): ClientRect {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    const scrollPosition = getViewportScrollPosition();
+
+    return {
+      top:    scrollPosition.y,
+      left:   scrollPosition.x,
+      right:  scrollPosition.x + width,
+      bottom: scrollPosition.y + height,
+      width:  width,
+      height: height,
+    };
+  }
+
+/** @hidden @internal*/
+export function getViewportScrollPosition(): Point {
+    const documentElement = document.documentElement;
+    const documentRect = documentElement.getBoundingClientRect();
+
+    const horizontalScrollPosition = -documentRect.left || document.body.scrollLeft || window.scrollX || documentElement.scrollLeft || 0;
+    const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
+
+    return new Point(horizontalScrollPosition, verticalScrollPosition);
+  }
