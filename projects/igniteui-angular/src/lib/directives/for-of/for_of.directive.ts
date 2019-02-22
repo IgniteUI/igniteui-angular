@@ -334,7 +334,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const scrollOffset = this.hScroll.scrollLeft -
                 (this.sizesCache && this.sizesCache.length ? this.sizesCache[this.state.startIndex] : 0);
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
-            this.dc.instance._viewContainer.element.nativeElement.style.height = '100%';
         }
     }
 
