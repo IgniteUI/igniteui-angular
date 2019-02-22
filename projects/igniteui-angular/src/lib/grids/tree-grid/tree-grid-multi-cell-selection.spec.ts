@@ -54,24 +54,21 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         it('Should be able to select a range with holding Shift key', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = treeGrid.getCellByColumn(6, 'Age');
-
             UIInteractions.simulateClickAndSelectCellEvent(firstCell);
-            await wait();
             fix.detectChanges();
 
             HelperUtils.verifyCellSelected(firstCell);
 
             treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             treeGrid.dataRowList.first.virtDirRow.scrollTo(4);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             const secondCell = treeGrid.getCellByColumn(16, 'HireDate');
             UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
-            await wait();
             fix.detectChanges();
 
             let range = { rowStart: 6, rowEnd: 16, columnStart: 2, columnEnd: 4 };
@@ -81,16 +78,15 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(treeGrid, 6, 16, 2, 4);
 
             treeGrid.verticalScrollContainer.scrollTo(0);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             treeGrid.dataRowList.first.virtDirRow.scrollTo(0);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             const thirdCell = treeGrid.getCellByColumn(4, 'ID');
             UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
-            await wait();
             fix.detectChanges();
 
             range = { rowStart: 4, rowEnd: 6, columnStart: 0, columnEnd: 2 };
@@ -100,18 +96,17 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(treeGrid, 4, 6, 0, 2);
         }));
 
-        it('Should be able to select a range with keyboard', (async () => {
+        xit('Should be able to select a range with keyboard', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(9, 'Age');
 
             UIInteractions.simulateClickAndSelectCellEvent(cell);
-            await wait();
             fix.detectChanges();
 
             HelperUtils.verifyCellSelected(cell);
 
-            await HelperUtils.navigateVerticallyToIndex(treeGrid, 9, 17, 2, true);
-            await wait(50);
+            HelperUtils.navigateVerticallyToIndex(treeGrid, 9, 12, 2, true);
+            await wait(300);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
@@ -125,8 +120,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(9);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 17, 2, 3);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 3, 1, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 3, 1, 2);
 
             cell = treeGrid.getCellByColumn(17, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
@@ -135,8 +130,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(10);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 17, 2, 4);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 4, 1, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 4, 1, 2);
 
             await HelperUtils.navigateVerticallyToIndex(treeGrid, 17, 3, 4, true);
             await wait(50);
@@ -144,8 +139,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(24);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 3, 9, 2, 4, 1, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 2, 4, 1, 2);
 
             for (let i = 4; i > 2; i--) {
                 cell = treeGrid.getCellByColumn(3, treeGrid.columns[i].field);
@@ -155,8 +150,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             }
             expect(selectionChangeSpy).toHaveBeenCalledTimes(28);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 3, 9, 0, 2, 1, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 0, 2, 1, 2);
 
             await HelperUtils.navigateVerticallyToIndex(treeGrid, 3, 9, 2, true);
             await wait(50);
@@ -187,8 +182,9 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
-            fix.detectChanges();
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            detect();
 
             expect(startCell.focused).toBe(true);
 
@@ -216,8 +212,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
-            HelperUtils.verifySelectedRange(treeGrid, 0, 0, 0, 0, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2, 1, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(expectedData);
         });
 
@@ -635,7 +630,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
-            treeGrid.addRow({ ID: 1234, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
             fix.detectChanges();
 
             const newSelectedData = [
@@ -913,8 +908,9 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         treeGrid.toggleRow(treeGrid.getRowByIndex(4).rowID);
         fix.detectChanges();
 
-        UIInteractions.simulateClickAndSelectCellEvent(startCell);
-        fix.detectChanges();
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+        startCell.nativeElement.dispatchEvent(new Event('focus'));
+        detect();
 
         expect(startCell.focused).toBe(true);
 
