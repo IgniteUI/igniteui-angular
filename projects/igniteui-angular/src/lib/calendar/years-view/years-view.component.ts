@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable} from '@angular/core';
-import { range, Calendar } from '../../calendar';
+import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 
@@ -159,14 +159,17 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     private _formatterYear: any;
+
     /**
      *@hidden
      */
     private _locale = 'en';
+
     /**
      *@hidden
      */
     private _yearFormat = 'numeric';
+
     /**
      *@hidden
      */
@@ -199,9 +202,9 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     public selectYear(event) {
-        this.onSelection.emit(event);
-
         this.date = event;
+
+        this.onSelection.emit(this.date);
         this._onChangeCallback(this.date);
     }
 
