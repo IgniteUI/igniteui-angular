@@ -9,6 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
 
 ## 6.2.9
+
 ### Features
 - `igxGrid`
     - `Group By`
@@ -20,8 +21,24 @@ All notable changes for each version of this project will be documented in this 
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
 
 ### Bug Fixing
-
 - Add additional ways of expanding/collapsing in Tree Grid/Group By to reflect new icons #3841
+
+## 6.2.8
+
+### Bug Fixes
+- Tree Grid collapse icon is updated to material standards #3780
+- Change collapse/expand all icon on GroupBy #3298
+
+## 6.2.7
+
+### Bug Fixes
+- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525 
+
+## 6.2.6
+
+### Bug Fixes/Other
+- Add GA to API docs ([3596](https://github.com/IgniteUI/igniteui-angular/issues/3596))
+- Modify gulp api docs tasks in order to follow the build steps ([3681](https://github.com/IgniteUI/igniteui-angular/issues/3681))
 
 ## 6.2.5
 
