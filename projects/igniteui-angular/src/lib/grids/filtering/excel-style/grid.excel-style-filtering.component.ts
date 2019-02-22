@@ -321,7 +321,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
         this.uniqueValues.forEach(element => {
-            if (element) {
+            if (element !== undefined && element !== null && element !== '') {
                 const filterListItem = new FilterListItem();
                 if(this.column.filteringExpressionsTree) {
                     if (shouldUpdateSelection) {
