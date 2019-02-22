@@ -59,7 +59,7 @@
                     (change)="onSwitchChange($event)">Modal</igx-switch>
             </div>
         </div>
-        <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'fixed'"
+        <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
         <igx-drop-down width=" 200px">
             <igx-drop-down-item *ngFor="let item of items">
