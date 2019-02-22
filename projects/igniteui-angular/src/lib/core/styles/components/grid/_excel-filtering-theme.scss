@@ -133,8 +133,10 @@
         margin: 0 -#{rem(16px)};
         cursor: pointer;
         color: igx-color($palette, 'grays', 700);
+        outline-style: none;
 
-        &:hover {
+        &:hover,
+        &:focus {
             background: igx-color($palette, 'grays', 100);
         }
     }
@@ -163,7 +165,7 @@
     }
 
     %grid-excel-menu__secondary-main {
-        max-height: 232px;
+        height: 232px;
         overflow: auto;
     }
 
