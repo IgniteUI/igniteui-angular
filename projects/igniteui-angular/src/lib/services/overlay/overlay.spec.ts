@@ -1341,7 +1341,7 @@ describe('igxOverlay', () => {
 
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green;');
             const contentElement = document.createElement('div');
             contentElement.setAttribute('style', 'position: absolute; color:gray;');
             contentElement.classList.add('contentWrapper');
@@ -3354,7 +3354,7 @@ export class SimpleBigSizeComponent {
     template: `
             <div igxToggle>
                 <div class='scrollableDiv' *ngIf='visible' style =\'position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red\'>
+        overflow-y: scroll; background-color: red; \'>
             <p> AAAAA </p>
             <p> AAAAA </p>
             <p> AAAAA </p>
@@ -3507,14 +3507,14 @@ export class TwoButtonsComponent {
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
             Some Content
         </div>
-    <div>`,
+    </div>`,
     styles: [`button {
         position: absolute;
         top: 300px;
         left: 300px;
         width: 100px;
         height: 60px;
-        border: 0px;
+        border: 0;
     }`]
 })
 export class WidthTestOverlayComponent {
