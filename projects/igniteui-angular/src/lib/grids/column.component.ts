@@ -352,18 +352,30 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.columns.indexOf(this);
     }
     /**
-     * Sets/gets formatter for the column.
+     * Gets formatter for the column.
      * ```typescript
      * let columnFormatter = this.column.formatter;
-     * ```
-     * ```typescript
-     * this.column.formatter = (val: Date) => {
-     * return new Intl.DateTimeFormat("en-US").format(val);
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public formatter: (value: any) => any;
+    public get formatter(): any {
+        return this._formatter;
+    }
+    /**
+     * Sets formatter for the column.
+     * ```typescript
+     * this.column.formatter = (val: Date) => {
+     *  return new Intl.DateTimeFormat("en-US").format(val); }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set formatter(value: any) {
+        if (this._formatter !== value && this.grid) {
+            this._formatter = value;
+            this.grid.cdr.detectChanges();
+        }
+    }
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -827,6 +839,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _summaries = null;
+    /**
+     *@hidden
+     */
+    protected _formatter = null;
     /**
      *@hidden
      */
