@@ -181,6 +181,27 @@ export class ColumnPinningTestComponent extends GridWithSizeComponent implements
         this.cdr.detectChanges();
     }
 }
+@Component({
+    template: `
+    <igx-grid #grid [height]="height" [width]="width" [autoGenerate]="false" [data]='data'>
+    <igx-column field="ID" header="ID">
+    </igx-column>
+    <igx-column field="ReleaseDate" header="ReleaseDate">
+    </igx-column>
+    <igx-column field="Downloads" header="Downloads">
+    </igx-column>
+    <igx-column field="ProductName" [pinned]='true'>
+        <ng-template igxCell let-cell="cell" let-val let-row >
+            <div style="height:100px;">
+                {{val}}
+            </div>
+        </ng-template>
+    </igx-column>
+    </igx-grid>
+    `
+})
+export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestComponent {
+}
 
 @Component({
     template: `<div>
