@@ -17,13 +17,14 @@
     [displayDensity]="'compact'"
     [supressInputAutofocus]="true">
 
-    <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
+    <igx-prefix [igxDropDownItemNavigation]="dropdownConditions">
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
 
     <input
         igxInput
+        (keydown)="onInputKeyDown($event)"
         tabindex="0"
         [placeholder]="inputConditionsPlaceholder"
         autocomplete="off"
@@ -45,7 +46,7 @@
     </igx-drop-down-item>
 </igx-drop-down>
 
-<igx-date-picker #datePicker tabindex="0" [outlet]="grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
+<igx-date-picker #datePicker [outlet]="grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
         <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
             <igx-icon igxPreffix>calendar</igx-icon>
@@ -58,7 +59,7 @@
                     [value]="displayData | date"
                     [readonly]="true"
                     [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
-            <igx-icon igxSuffix tabindex="0"
+            <igx-icon igxSuffix
                     (click)="toggleCustomDialogDropDown(inputGroupDateValues, dropdownValues)"
                     [igxDropDownItemNavigation]="dropdownValues">
                     arrow_drop_down
@@ -76,6 +77,7 @@
     [multiSelection]="false">
     <span igxButton
         #andButton
+        tabindex="0"
         [selected]="expressionUI.afterOperator === 0"
         type="button"
         (click)="onLogicOperatorButtonClicked($event, 0)">
@@ -84,6 +86,7 @@
 
     <span igxButton
         #orButton
+        tabindex="0"
         [selected]="expressionUI.afterOperator === 1"
         type="button"
         (click)="onLogicOperatorButtonClicked($event, 1)">

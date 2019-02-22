@@ -30,6 +30,7 @@ import {
     IgxOverlayService
 } from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
+import { KEYS } from '../../../core/utils';
 
 /**
  * @hidden
@@ -184,6 +185,17 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         event.target.afterOperator = event.newValue;
         if (index + 1 < this.expressionsList.length) {
             this.expressionsList[index + 1].beforeOperator = event.newValue;
+        }
+    }
+
+    public onKeyDown(eventArgs) {
+        eventArgs.stopPropagation();
+    }
+
+    public onApplyButtonKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.TAB && !eventArgs.shiftKey) {
+            eventArgs.stopPropagation();
+            eventArgs.preventDefault();
         }
     }
 

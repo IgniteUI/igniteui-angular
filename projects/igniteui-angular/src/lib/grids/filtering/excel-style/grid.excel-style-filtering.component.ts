@@ -7,6 +7,7 @@ import {
     TemplateRef,
     Directive,
     OnDestroy,
+    ContentChild,
 } from '@angular/core';
 import { IgxColumnComponent } from '../../grid';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down';
@@ -29,13 +30,14 @@ import {
 } from '../../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { cloneArray } from '../../../core/utils';
+import { cloneArray, KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
+import { IgxInputDirective } from '../../../directives/input/input.directive';
 
 /**
  *@hidden
@@ -240,6 +242,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
     }
 
+    public onTextFilterKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.ENTER) {
+            this.onTextFilterClick(eventArgs);
+        }
+    }
+
     public onSubMenuClosed() {
         requestAnimationFrame(() => {
             this.shouldOpenSubMenu = true;
@@ -414,6 +422,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (se) {
             this.excelStyleSorting.selectButton(se.dir);
         }
+
+        requestAnimationFrame(() => {
+            this.excelStyleSearch.searchInput.nativeElement.focus();
+        });
     }
 
     get sortingTemplate() {
@@ -487,6 +499,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.overlayService.hide(this.overlayComponentId);
             this.overlayComponentId = null;
         }
+    }
+
+    public onKeyDown(eventArgs) {
+        eventArgs.stopPropagation();
     }
 
     private createCondition(conditionName: string) {

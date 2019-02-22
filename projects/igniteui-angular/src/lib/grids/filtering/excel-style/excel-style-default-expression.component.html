@@ -17,13 +17,14 @@
     [displayDensity]="'compact'"
     [supressInputAutofocus]="true">
 
-    <igx-prefix tabindex="0" [igxDropDownItemNavigation]="dropdownConditions">
+    <igx-prefix [igxDropDownItemNavigation]="dropdownConditions">
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
 
     <input
         igxInput
+        (keydown)="onInputKeyDown($event)"
         tabindex="0"
         [placeholder]="inputConditionsPlaceholder"
         autocomplete="off"
@@ -60,7 +61,7 @@
         [(ngModel)]="expressionUI.expression.searchVal"
     />
 
-    <igx-icon igxSuffix tabindex="0"
+    <igx-icon igxSuffix
         (click)="toggleCustomDialogDropDown(inputGroupValues, dropdownValues)"
         [igxDropDownItemNavigation]="dropdownValues">
         arrow_drop_down
@@ -75,6 +76,7 @@
     *ngIf="!isLast"
     [multiSelection]="false">
     <span igxButton
+        tabindex="0"
         #andButton
         [selected]="expressionUI.afterOperator === 0"
         type="button"
@@ -83,6 +85,7 @@
     </span>
 
     <span igxButton
+        tabindex="0"
         #orButton
         [selected]="expressionUI.afterOperator === 1"
         type="button"

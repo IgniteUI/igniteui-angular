@@ -21,7 +21,7 @@
 
         <igx-list [style.height.px]="250">
             <div [style.overflow]="'hidden'" [style.position]="'relative'">
-                <igx-list-item tabindex="0"
+                <igx-list-item
                     *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
                     <igx-checkbox
                     [value]="item"
