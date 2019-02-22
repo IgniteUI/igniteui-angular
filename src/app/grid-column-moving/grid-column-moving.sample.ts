@@ -30,7 +30,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'Fax', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'number' },
             { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'date' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: false, groupable: true, summary: true, type: 'boolean' }
+            { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
         this.data = [
             {
@@ -46,7 +46,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'Fax': '030-0076545',
                 'Employees': 68,
                 'DateCreated': new Date(2018, 8, 17),
-                'Contract': true
+                'Contract': null
             },
             {
                 'ID': 'ANATR',

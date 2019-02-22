@@ -19,6 +19,7 @@ import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } fr
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { IgxGridBaseComponent } from '../../grid';
+import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 
 /**
  * @hidden
@@ -83,6 +84,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     private logicOperatorButtonGroup: IgxButtonGroupComponent;
 
+    @ViewChild(IgxForOfDirective)
+    private valuesForOfDirective: IgxForOfDirective<IgxDropDownItemComponent>;
+
     protected get inputValuesElement() {
         return this.inputValuesDirective;
     }
@@ -115,6 +119,20 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
+
+var self = this;
+
+        this.valuesForOfDirective.onChunkLoad.subscribe((eventArgs) => {
+            console.log('chunk loaded');
+
+            //const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
+            // if (this.dropdownValues.selectedItem !== newSelection) {
+                //this.dropdownValues.selectItem(newSelection);
+
+                //this.dropdownValues.navigateItem(newSelection.itemIndex);
+            //     console.log('selection changed');
+            // }
+        });
     }
 
     public focus() {
@@ -135,10 +153,24 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onDropdownValuesOpening() {
         this._isDropdownValuesOpening = true;
 
-        const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
-        if (this.dropdownValues.selectedItem !== newSelection) {
-            this.dropdownValues.selectItem(newSelection);
+        if (this.expressionUI.expression.searchVal) {
+            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(this.expressionUI.expression.searchVal);
+            if (selectedItemIndex > -1) {
+                this.valuesForOfDirective.scrollTo(selectedItemIndex);
+
+                // const aa = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
+                // const sz = this.valuesForOfDirective.getSizeAt(selectedItemIndex);
+                // var vscr = this.valuesForOfDirective.getVerticalScroll();
+                // this.valuesForOfDirective.addScrollTop(aa + sz);
+    
+            }
         }
+
+        // const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
+        // if (this.dropdownValues.selectedItem !== newSelection) {
+        //     this.dropdownValues.selectItem(newSelection);
+        //     console.log('selection changed');
+        // }
     }
 
     public onDropdownValuesOpened() {
@@ -154,11 +186,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getInputWidth(parent: any) {
-        //TODO
         return parent ? parent.element.nativeElement.offsetWidth + 'px': null;
     }
-
-    //DUPLICATE
 
     get conditions() {
         return this.column.filters.conditionList();
@@ -189,8 +218,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             this._isDropdownOpened = true;
         }
     }
-
-    //DUPLICATE
 
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.condition(value);
