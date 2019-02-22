@@ -59,6 +59,14 @@
 @import '../components/time-picker/time-picker-component';
 
 /// Includes the base for each theme.
+[class*='igx-'] {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+}
+
 @mixin igx-core() {
     @include normalize();
     @include igx-typography();
