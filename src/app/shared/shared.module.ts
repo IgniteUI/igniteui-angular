@@ -39,7 +39,6 @@ import {
     IgxTooltipModule,
     IgxSelectModule
 } from 'igniteui-angular';
-import { IgxMonthPickerModule } from 'projects/igniteui-angular/src/lib/month-picker/month-picker.component';
 
 
 const igniteModules = [
@@ -80,7 +79,6 @@ const igniteModules = [
     IgxToastModule,
     IgxToggleModule,
     IgxTooltipModule,
-    IgxMonthPickerModule,
     IgxSelectModule
 ];
 
