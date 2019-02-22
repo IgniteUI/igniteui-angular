@@ -4781,18 +4781,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        if (!cell) {
-            return;
-        }
-
-        const columnindex = cell.column.index;
+        const columnindex = cell ? cell.column.index : -1;
         const ri = row ? row.index : -1;
 
-        if (commit) {
-            this.gridAPI.submit_value();
-        } else {
-            this.gridAPI.escape_editMode();
-        }
+        commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
             return;

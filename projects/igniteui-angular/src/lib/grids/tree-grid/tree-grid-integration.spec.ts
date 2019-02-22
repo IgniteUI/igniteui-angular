@@ -643,7 +643,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.canUndo).toBe(false);
         }));
 
-        it('Editing a cell is possible with Hierarchical DS', fakeAsync(() => {
+        it('Editing a cell is possible with Hierarchical DS', () => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -653,40 +653,37 @@ describe('IgxTreeGrid - Integration', () => {
             targetCell.inEditMode = true;
             targetCell.update('333');
             fix.detectChanges();
-            tick();
 
             //  ged DONE button and click it
             const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
             const doneButtonElement = rowEditingBannerElement.lastElementChild;
-            doneButtonElement.click();
-            tick();
+            doneButtonElement.dispatchEvent(new Event('click'));
+            fix.detectChanges();
 
             // Verify the value is updated and the correct style is applied before committing
             expect(targetCell.inEditMode).toBeFalsy();
-            expect(targetCell.value).toBe('333');
+            expect(targetCell.value).toBe(333);
             expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
 
             // Commit
             trans.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
-            tick();
 
             // Verify the correct value is set
-            expect(targetCell.value).toBe('333');
+            expect(targetCell.value).toBe(333);
 
             // Add new root lv row
             treeGrid.addRow({ ID: 11, ParentID: -1, Name: 'Dan Kolov', JobTitle: 'wrestler', Age: 32, OnPTO: true });
-            tick();
+            fix.detectChanges();
 
             // Edit a cell value and check it is correctly updated
             const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
             newTargetCell.inEditMode = true;
             newTargetCell.update('666');
             fix.detectChanges();
-            tick();
 
-            expect(newTargetCell.value).toBe('666');
+            expect(newTargetCell.value).toBe(666);
             expect(newTargetCell.nativeElement.classList).toContain('igx-grid__td--edited');
-        }));
+        });
 
         it('Undo/Redo keeps the correct number of steps with Hierarchical DS', () => {
             // TODO:

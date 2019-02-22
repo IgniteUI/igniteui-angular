@@ -846,7 +846,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.groupingExpressions.length) {
             const source = [];
 
-            // Simplify and refactor
+            // TODO: Simplify and refactor
 
             const top = (group) => {
                 if (group.summaries) { return; }
