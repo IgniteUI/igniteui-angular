@@ -59,7 +59,8 @@
 @import '../components/time-picker/time-picker-component';
 
 /// Includes the base for each theme.
-[class*='igx-'] {
+[class^='igx-'] {
+    &,
     *,
     *::before,
     *::after {
