@@ -42,6 +42,12 @@
 @mixin igx-overlay($theme) {
     @include igx-root-css-vars($theme);
 
+    %overlay-display {
+        width: 0;
+        height: 0;
+        box-sizing: content-box;
+    }
+
     %overlay-wrapper {
         position: fixed;
         display: flex;
@@ -53,6 +59,7 @@
         transition: background-color .25s $ease-in-out-quad;
         pointer-events: none;
         z-index: 10;
+        box-sizing: content-box;
     }
 
     %overlay-wrapper--modal {
@@ -63,6 +70,7 @@
     %overlay-content {
         position: relative;
         pointer-events: all;
+        box-sizing: content-box;
     }
 
     %overlay-content--modal {
