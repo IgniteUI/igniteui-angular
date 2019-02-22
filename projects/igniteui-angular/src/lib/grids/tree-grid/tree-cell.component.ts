@@ -35,6 +35,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @Input()
     expanded = false;
 
+    /**
+     * @hidden
+     */
+    @Input()
+    level = 0;
+
     @ViewChild('indicator', { read: ElementRef })
     public indicator: ElementRef;
 
@@ -51,12 +57,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
         return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
     }
 
-    /**
-     * @hidden
-     */
-    public get indentation() {
-        return this.row.treeRow.level;
-    }
 
     /**
      * @hidden

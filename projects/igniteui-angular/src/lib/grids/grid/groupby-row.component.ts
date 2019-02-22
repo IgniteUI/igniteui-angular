@@ -8,7 +8,6 @@ import {
     Input,
     ViewChild,
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
@@ -24,7 +23,6 @@ export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         private gridSelection: IgxGridSelectionService,
-        private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
@@ -41,6 +39,7 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    @Input()
     protected isFocused = false;
 
     /**

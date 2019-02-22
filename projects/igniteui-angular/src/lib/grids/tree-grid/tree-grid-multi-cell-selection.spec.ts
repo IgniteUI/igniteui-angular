@@ -253,7 +253,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            // Setting range through the API must NOT call the event emitter
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
             HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);

@@ -24,8 +24,8 @@
     </ng-container>
 </ng-template>
 <ng-container *ngIf="!inEditMode">
-    <ng-container *ngIf="indentation > 0">
-        <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
+    <ng-container *ngIf="level > 0">
+        <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{level}}"></div>
     </ng-container>
     <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
