@@ -128,6 +128,13 @@ export interface IFormattingOptions {
     year?: string;
 }
 
+
+export interface IFormattingViews {
+    day?: boolean;
+    month?: boolean;
+    year?: boolean;
+}
+
 export enum WEEKDAYS {
     SUNDAY = 0,
     MONDAY = 1,

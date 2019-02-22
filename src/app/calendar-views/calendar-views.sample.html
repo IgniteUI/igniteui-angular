@@ -28,6 +28,7 @@
                     <igx-card>
                         <igx-month-picker [(ngModel)]="date1" #mp
                                           [viewDate]="viewDate"
+                                          [formatViews]="formatViews"
                                           [formatOptions]="formatOptions"
                                           [locale]="localeDe"
                                           (onSelection)="onSelection($event)">

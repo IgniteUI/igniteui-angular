@@ -134,6 +134,11 @@
         @extend %cal-value !optional;
         @extend %cal-value--month !optional;
         @extend %cal-value--month-current !optional;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--month-hover !optional;
+        }
     }
 
     @include m(vertical) {

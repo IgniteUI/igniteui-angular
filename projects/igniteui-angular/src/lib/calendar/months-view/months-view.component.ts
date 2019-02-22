@@ -159,14 +159,17 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      *@hidden
      */
     private _formatterMonth: any;
+
     /**
      *@hidden
      */
     private _locale = 'en';
+
     /**
      *@hidden
      */
     private _monthFormat = 'short';
+
     /**
      *@hidden
      */
@@ -235,14 +238,12 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         return `${item.getMonth()}}`;
     }
 
-
     /**
      *@hidden
      */
     private initMonthFormatter() {
         this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
     }
-
 
     /**
      * @hidden
@@ -252,7 +253,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.isCurrentMonth);
+        const node = this.dates.find((date) => date.nativeElement === event.target);
         if (!node) {
             return;
         }
@@ -262,9 +263,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const month = months[months.indexOf(node) - 3];
 
             month.nativeElement.focus();
-
-            // TO DO: needs refactoring after styling!!!!
-            this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
          }
     }
 
@@ -276,7 +274,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.isCurrentMonth);
+        const node = this.dates.find((date) => date.nativeElement === event.target);
         if (!node) {
             return;
         }
@@ -286,9 +284,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const month = months[months.indexOf(node) + 3];
 
             month.nativeElement.focus();
-
-            // TO DO: needs refactoring after styling!!!!
-            this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
          }
     }
 
@@ -300,7 +295,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.isCurrentMonth);
+        const node = this.dates.find((date) => date.nativeElement === event.target);
         if (!node) { return; }
 
         const months = this.dates.toArray();
@@ -308,9 +303,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const month = months[months.indexOf(node) + 1];
 
             month.nativeElement.focus();
-
-            // TO DO: needs refactoring after styling!!!!
-            this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
         }
     }
 
@@ -322,7 +314,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.isCurrentMonth);
+        const node = this.dates.find((date) => date.nativeElement === event.target);
         if (!node) { return; }
 
         const months = this.dates.toArray();
@@ -330,9 +322,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const month = months[months.indexOf(node) - 1];
 
             month.nativeElement.focus();
-
-            // TO DO: needs refactoring after styling!!!!
-            this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
         }
     }
 
@@ -347,9 +336,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const month = this.dates.toArray()[0];
 
         month.nativeElement.focus();
-
-        // TO DO: needs refactoring after styling!!!!
-        this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
     }
 
     /**
@@ -364,16 +350,16 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const month = months[months.length - 1];
 
         month.nativeElement.focus();
-
-        // TO DO: needs refactoring after styling!!!!
-        this.date = new Date(month.value.getFullYear(), month.value.getMonth(), this.date.getDate());
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.enter')
-    public onKeydownEnter() {
+    @HostListener('keydown.enter', ['$event'])
+    public onKeydownEnter(event) {
+        const value = this.dates.find((date) => date.nativeElement === event.target).value;
+        this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
+
         this.onSelection.emit(this.date);
         this._onChangeCallback(this.date);
     }
