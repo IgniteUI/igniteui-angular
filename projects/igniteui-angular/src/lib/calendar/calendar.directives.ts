@@ -33,16 +33,16 @@ export class IgxCalendarYearDirective {
     public onYearSelection = new EventEmitter<Date>();
 
     @HostBinding('class.igx-calendar__year')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return !this.isCurrentYear;
     }
 
     @HostBinding('class.igx-calendar__year--current')
-    get currentCSS(): boolean {
+    public get currentCSS(): boolean {
         return this.isCurrentYear;
     }
 
-    get isCurrentYear(): boolean {
+    public get isCurrentYear(): boolean {
         return this.date.getFullYear() === this.value.getFullYear();
     }
 
@@ -69,21 +69,24 @@ export class IgxCalendarMonthDirective {
     @Output()
     public onMonthSelection = new EventEmitter<Date>();
 
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
+
     @HostBinding('class.igx-calendar__month')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return !this.isCurrentMonth;
     }
 
     @HostBinding('class.igx-calendar__month--current')
-    get currentCSS(): boolean {
+    public get currentCSS(): boolean {
         return this.isCurrentMonth;
     }
 
-    get isCurrentMonth(): boolean {
+    public get isCurrentMonth(): boolean {
         return this.date.getMonth() === this.value.getMonth();
     }
 
-    get nativeElement() {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 
