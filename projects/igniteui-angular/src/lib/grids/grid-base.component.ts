@@ -4784,6 +4784,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const columnindex = cell ? cell.column.index : -1;
         const ri = row ? row.index : -1;
 
+        // TODO: Merge the crudService with wht BaseAPI service
+        if (!row && !cell) { return; }
+
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
