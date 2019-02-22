@@ -9,7 +9,6 @@ import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '.
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { expectToExist } from 'material2/e2e/util';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();
