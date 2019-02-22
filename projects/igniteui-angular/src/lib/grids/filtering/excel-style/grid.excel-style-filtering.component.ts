@@ -37,7 +37,6 @@ import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
-import { IgxInputDirective } from '../../../directives/input/input.directive';
 
 /**
  *@hidden
@@ -264,13 +263,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private areExpressionsSelectable () {
         if (this.expressionsList.length === 1 &&
-            (this.expressionsList[0].expression.condition.name === 'equals' || this.expressionsList[0].expression.condition.name === 'empty')) {
+            (this.expressionsList[0].expression.condition.name === 'equals' ||
+             this.expressionsList[0].expression.condition.name === 'true' ||
+             this.expressionsList[0].expression.condition.name === 'false' ||
+             this.expressionsList[0].expression.condition.name === 'empty')) {
             return true;
         }
 
         const selectableExpressionsCount = this.expressionsList.filter(exp => 
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
-            (exp.expression.condition.name === 'equals' || exp.expression.condition.name === 'empty')).length;
+            (this.expressionsList[0].expression.condition.name === 'equals' ||
+             this.expressionsList[0].expression.condition.name === 'true' ||
+             this.expressionsList[0].expression.condition.name === 'false' ||
+             this.expressionsList[0].expression.condition.name === 'empty')).length;
         if (selectableExpressionsCount === this.expressionsList.length) {
             return true;
         } else {
@@ -279,6 +284,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private areExpressionsValuesInTheList() {
+        if (this.column.dataType === DataType.Boolean) {
+            return true;
+        }
         let sameElements = 0;
 
         for (let index = 0; index < this.filterValues.length; index++) {
@@ -308,7 +316,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         let shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
 
-        this.addItems(shouldUpdateSelection);
+        if (this.column.dataType === DataType.Boolean) {
+            this.addBooleanItems();
+        } else {
+            this.addItems(shouldUpdateSelection);
+        }
 
         this.listData.sort((a, b) => this.sortData(a, b));
 
@@ -323,6 +335,35 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.addSelectAllItem();
 
         this.cdr.detectChanges();
+    }
+
+    private addBooleanItems() {
+        this.selectAllSelected = true;
+        this.selectAllIndeterminate = false;
+        this.uniqueValues.forEach(element => {
+            const filterListItem = new FilterListItem();
+            if (element !== undefined && element !== null && element !== '') {
+                if(this.column.filteringExpressionsTree) {
+                    if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true' )) {
+                        filterListItem.isSelected = true;
+                        this.selectAllIndeterminate = true;
+                    } else if (element === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false' )) {
+                            filterListItem.isSelected = true;
+                            this.selectAllIndeterminate = true;
+                    } else {
+                        filterListItem.isSelected = false;
+                    }
+                } else {
+                    filterListItem.isSelected = true;
+                }
+                filterListItem.value = element;
+                filterListItem.label = element;
+                filterListItem.indeterminate = false;
+                this.listData.push(filterListItem);
+            } else {
+                this.containsNullOrEmpty = true;
+            }
+        });
     }
 
     private addItems(shouldUpdateSelection: boolean) {
@@ -472,8 +513,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (unselectedItem) {
             selectedItems.forEach(element => {
                 let condition = null;
-                if (element.value) {
-                    condition = this.createCondition('equals');
+                if (element.value !== null && element.value !== undefined) {
+                    if (this.column.dataType === DataType.Boolean) {
+                        condition = this.createCondition(element.value.toString());
+                    } else {
+                        condition = this.createCondition('equals');
+                    }
                 } else {
                     condition = this.createCondition('empty');
                 }
