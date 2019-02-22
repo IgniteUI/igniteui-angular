@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -271,7 +271,7 @@ describe('IgxGrid - Column properties', () => {
 
     });
 
-    it('should apply column\'s formatter programmatically', fakeAsync(() => {
+    it('should apply column\'s formatter programmatically', () => {
         const expectedVal = ['AD', 'BD', 'ACD', 'DD', 'MlDs', 'DC', 'OC'];
         const expectedValToLower = ['ad', 'bd', 'acd', 'dd', 'mlds', 'dc', 'oc'];
         const fix = TestBed.createComponent(ColumnFormatterComponent);
@@ -300,7 +300,7 @@ describe('IgxGrid - Column properties', () => {
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Region').value).toBe(expectedVal[i]);
         }
-    }));
+    });
 });
 
 @Component({
