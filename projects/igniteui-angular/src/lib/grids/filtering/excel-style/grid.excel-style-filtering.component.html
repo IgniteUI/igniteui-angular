@@ -86,7 +86,7 @@
 </article>
 
 <igx-drop-down #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
-    <div style="width: 200px">
+    <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
             [value]="condition">

@@ -13,9 +13,22 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';
-import { IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../data-operations/filtering-condition';
+import {
+    IgxStringFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxDateFilteringOperand
+} from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import { ConnectedPositioningStrategy, CloseScrollStrategy, OverlaySettings, VerticalAlignment, PositionSettings, HorizontalAlignment, IgxOverlayService } from '../../../services';
+import { 
+    ConnectedPositioningStrategy,
+    CloseScrollStrategy,
+    OverlaySettings,
+    VerticalAlignment,
+    PositionSettings,
+    HorizontalAlignment,
+    IgxOverlayService
+} from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 
 /**
@@ -98,9 +111,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public onCustomDialogOpening() {
         if (!this.column.filteringExpressionsTree) {
             this.createInitialExpressionUIElement();
-        } else {
-            //TODO
-            // check fitlers and populate expressionsList
         }
     }
 
@@ -217,7 +227,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         };
 
         secondExprUI.beforeOperator = FilteringLogic.And;
-        secondExprUI.afterOperator = FilteringLogic.And;
 
         this.expressionsList.push(secondExprUI);
     }
