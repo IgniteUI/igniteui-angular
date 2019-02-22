@@ -279,7 +279,7 @@ export class IgxOverlayService implements OnDestroy {
             this.playOpenAnimation(info);
         } else {
             //  to eliminate flickering show the element just before onOpened fire
-            info.elementRef.nativeElement.parentElement.visibility = '';
+            info.elementRef.nativeElement.parentElement.style.visibility = '';
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
         }
     }
@@ -589,8 +589,8 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        const overlay = this._overlayInfos.find(e => e.id === id);
-        return overlay;
+        const info = this._overlayInfos.find(e => e.id === id);
+        return info;
     }
 
     private documentClicked = (ev: MouseEvent) => {
