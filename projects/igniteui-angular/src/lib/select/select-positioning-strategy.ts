@@ -34,25 +34,22 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     private deltaY: number;
     private deltaX: number;
 
-    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
+    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        transformString += `translateY(${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px)`;
-        contentElement.style.transform = transformString.trim();
+        contentElement.style.top = `${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px`;
         contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
         this.deltaY = this.viewPort.bottom - listBoundRect.height -
             this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
-    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number, transformString: string) {
-        transformString += `translateY(${CURRENT_POSITION_Y - this.adjustItemTextPadding()}px)`;
-        contentElement.style.transform = transformString.trim();
+    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
+        contentElement.style.top = `${CURRENT_POSITION_Y - this.adjustItemTextPadding()}px`;
         this.deltaY = CURRENT_POSITION_Y - this.adjustItemTextPadding() -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
-    private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number, transformString: string) {
-        transformString += `translateY(${this.viewPort.top + this.defaultWindowToListOffset}px)`;
-        contentElement.style.transform = transformString.trim();
+    private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
+        contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
         contentElement.firstElementChild.scrollTop += outBoundsAmount + this.adjustItemTextPadding() + this.defaultWindowToListOffset;
         this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
@@ -167,50 +164,49 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
-        let transformString = '';
         const itemPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10) || 0;
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10) || 0;
 
-        transformString += `translateX(${START.X - numericPadding - numericTextIndent}px)`;
+        contentElement.style.left += `${START.X - numericPadding - numericTextIndent}px`;
         contentElement.style.width = inputRect.width + 24 + 32 + 'px';
         this.deltaX = START.X - numericPadding - numericTextIndent;
 
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
             this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
-            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+            this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
         }
 
         if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 ||
             this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0) {
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && !OUT_OF_BOUNDS) {
-                this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+                this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
             }
 
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount, transformString);
+                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount);
                         return;
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
                         if (this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
-                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
                         } else {
-                            this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
+                            this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                             return;
                         }
                     }
                 }
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] < itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
 
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
-                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
+                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                     }
                 }
             }
@@ -219,14 +215,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             ) {
                 if (OUT_OF_BOUNDS) {
                     if (OUT_OF_BOUNDS.Direction === -1) {
-                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                     }
                     if (OUT_OF_BOUNDS.Direction === 1) {
-                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount, transformString);
+                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                     }
                 }
                 if (!OUT_OF_BOUNDS) {
-                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y, transformString);
+                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                 }
             }
         }
