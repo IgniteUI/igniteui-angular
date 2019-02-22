@@ -563,7 +563,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
 
             treeGrid.transactions.redo();
             fix.detectChanges();
-            treeGrid.transactions.commit(fix.componentInstance.data);
+            treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
             const nesSelData = [
@@ -609,7 +609,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
 
             treeGrid.transactions.redo();
             fix.detectChanges();
-            treeGrid.transactions.commit(fix.componentInstance.data);
+            treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
             HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
@@ -641,8 +641,11 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
-            treeGrid.transactions.commit(fix.componentInstance.data);
+            treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
     });
