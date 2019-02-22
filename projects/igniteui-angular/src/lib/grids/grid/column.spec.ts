@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -9,6 +9,7 @@ import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '.
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { expectToExist } from 'material2/e2e/util';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();
@@ -24,7 +25,8 @@ describe('IgxGrid - Column properties', () => {
                 TemplatedInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent
+                ColumnHiddenFromMarkupComponent,
+                ColumnFormatterComponent
             ],
             imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
         })
@@ -227,7 +229,7 @@ describe('IgxGrid - Column properties', () => {
         }, 100);
     }));
 
-    it('column width should be adjusted after a column has been hidden', async() => {
+    it('column width should be adjusted after a column has been hidden', async () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
@@ -269,6 +271,37 @@ describe('IgxGrid - Column properties', () => {
         expect(cell.nativeElement.querySelector('.customEditorTemplate')).toBeDefined();
 
     });
+
+    it('should apply column\'s formatter programmatically', fakeAsync(() => {
+        const expectedVal = ['AD', 'BD', 'ACD', 'DD', 'MlDs', 'DC', 'OC'];
+        const expectedValToLower = ['ad', 'bd', 'acd', 'dd', 'mlds', 'dc', 'oc'];
+        const fix = TestBed.createComponent(ColumnFormatterComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const col = grid.columns[3];
+        expect(col.formatter).toBeNull();
+        const rowCount = grid.rowList.length;
+        for (let i = 0; i < rowCount; i++) {
+            // Check the display value
+            expect(grid.getCellByColumn(i, 'Region').nativeElement.textContent).toBe(expectedVal[i]);
+            // Check the cell's value is not changed
+            expect(grid.getCellByColumn(i, 'Region').value).toBe(expectedVal[i]);
+        }
+
+        // Apply formatter to the last column
+        col.formatter = (val: string) => {
+            return val.toLowerCase();
+        };
+        expect(col.formatter).toBeTruthy();
+        expect(col.formatter).toBeDefined();
+        for (let i = 0; i < rowCount; i++) {
+            // Check the cell's formatter value(display value)
+            expect(grid.getCellByColumn(i, 'Region').nativeElement.textContent).toBe(expectedValToLower[i]);
+            // Check the cell's value is not changed
+            expect(grid.getCellByColumn(i, 'Region').value).toBe(expectedVal[i]);
+        }
+    }));
 });
 
 @Component({
@@ -359,4 +392,24 @@ export class ColumnHaederClassesComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" >
+            <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class ColumnFormatterComponent {
+    public data = SampleTestData.personIDNameRegionData();
+    public cols = [
+        { field: 'ID' },
+        { field: 'Name' },
+        { field: 'LastName' },
+        { field: 'Region' }
+    ];
+    @ViewChild(IgxGridComponent)
+    public instance: IgxGridComponent;
 }
