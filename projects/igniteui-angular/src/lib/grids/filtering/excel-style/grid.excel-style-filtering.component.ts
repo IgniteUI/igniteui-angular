@@ -384,7 +384,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private sortData(a: FilterListItem, b: FilterListItem) {
         let valueA = a.value;
         let valueB = b.value;
-        if (this.column.dataType === DataType.String) {
+        if (typeof(a) === DataType.String) {
             valueA = a.value.toUpperCase();
             valueB = b.value.toUpperCase();
         }
