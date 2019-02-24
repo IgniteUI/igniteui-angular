@@ -469,6 +469,38 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
     });
+
+    it('should skip child grids that have no data when navigating up/down', (async () => {
+        // set first child to not have data
+        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        child1.data = [];
+        child1.cdr.detectChanges();
+
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentCell = parentRow.cells.toArray()[0];
+        parentCell.nativeElement.focus();
+        fixture.detectChanges();
+
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await wait(100);
+        fixture.detectChanges();
+
+        // second data row in parent should be focused
+        const parentRow2 = hierarchicalGrid.dataRowList.toArray()[1];
+        const parentCell2 = parentRow2.cells.toArray()[0];
+
+        expect(parentCell2.selected).toBeTruthy();
+        expect(parentCell2.focused).toBeTruthy();
+
+        parentCell2.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await wait(100);
+        fixture.detectChanges();
+
+        // first data row in parent should be focused
+        expect(parentCell.selected).toBeTruthy();
+        expect(parentCell.focused).toBeTruthy();
+
+    }));
 });
 
 
@@ -659,12 +691,12 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
 
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
         child2Cell.nativeElement.focus();
-        await wait(100);
+        await wait(240);
         fixture.detectChanges();
 
         // Shift + Tab from 2nd child
         child2Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(100);
+        await wait(240);
         fixture.detectChanges();
 
         const child1Cell = child1.getCellByColumn(9, 'childData');

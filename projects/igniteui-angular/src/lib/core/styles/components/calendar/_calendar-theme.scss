@@ -35,6 +35,7 @@
 ///
 /// @param {Color} $year-hover-text-color [null] - The year hover text color.
 /// @param {Color} $month-hover-text-color [null] - The month hover text color.
+/// @param {Color} $month-hover-background [null] - The month hover background color.
 ///
 /// @param {Color} $date-selected-background [null] - The background color for the selected date.
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
@@ -89,6 +90,7 @@
 
     $year-hover-text-color: null,
     $month-hover-text-color: null,
+    $month-hover-background: null,
 
     $date-selected-background: null,
     $date-selected-text-color: null,
@@ -169,8 +171,8 @@
         $year-hover-text-color: $header-background;
     }
 
-    @if not($month-hover-text-color) and $header-background {
-        $month-hover-text-color: $header-background;
+    @if not($month-hover-text-color) and $month-hover-background {
+        $month-hover-text-color: text-contrast($month-hover-background);
     }
 
     @if not($year-current-text-color) and $header-background {
@@ -206,6 +208,7 @@
 
         year-hover-text-color: $year-hover-text-color,
         month-hover-text-color: $month-hover-text-color,
+        month-hover-background: $month-hover-background,
 
         date-selected-background: $date-selected-background,
         date-selected-text-color: $date-selected-text-color,
@@ -303,8 +306,10 @@
         display: inline-flex;
         color: --var($theme, 'picker-arrow-color');
         user-select: none;
+        outline: none;
         cursor: pointer;
 
+        &:focus,
         &:hover {
             color: --var($theme, 'picker-arrow-hover-color');
         }
@@ -317,6 +322,7 @@
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;
+        outline: none;
 
         &:hover,
         &:focus {
@@ -405,19 +411,37 @@
 
     %cal-value--month-hover {
         color: --var($theme, 'month-hover-text-color');
+
+        &::after {
+            background-color: --var($theme, 'month-hover-background');
+        }
     }
 
     %cal-value--month {
+        position: relative;
         display: flex;
         margin: $cal-value-month-margin;
         flex: 1 0 25%;
         justify-content: center;
         align-items: center;
         height: $cal-value-month-height;
+
+        &::after {
+            position: absolute;
+            content: '';
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            height: 48px;
+            background-color: transparent;
+            border-radius: rem(20px);
+            transition: background-color .15s ease-out;
+        }
     }
 
     %cal-value--month-current {
-        color: --var($theme, 'month-current-text-color');
+        color: --var($theme, 'month-current-text-color') !important;
     }
 
     %cal-value--inactive {

@@ -240,8 +240,9 @@ export class IgxSnackbarComponent {
         }
     }
 }
+
 /**
- *The IgxSnackbarModule provides the {@link IgxSnackbarComponent} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxSnackbarComponent],

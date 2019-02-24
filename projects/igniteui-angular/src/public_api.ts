@@ -60,7 +60,6 @@ export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/index';
 export * from './lib/combo/index';
 export * from './lib/date-picker/date-picker.component';
-export * from './lib/month-picker/month-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/index';
 export * from './lib/grids/grid/index';
@@ -96,4 +95,5 @@ export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/c
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
+export * from './lib/date-picker/date-picker.utils';
 
