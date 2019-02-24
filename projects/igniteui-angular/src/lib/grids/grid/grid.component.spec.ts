@@ -52,7 +52,8 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridTestComponent,
                     IgxGridMarkupDeclarationComponent,
                     IgxGridRemoteVirtualizationComponent,
-                    IgxGridRemoteOnDemandComponent
+                    IgxGridRemoteOnDemandComponent,
+                    IgxGridEmptyMessage100PercentComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -482,6 +483,22 @@ describe('IgxGrid Component Tests', () => {
             const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
             expect(colHeaders.length).toBeGreaterThan(0);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
+        }));
+
+        it('should render empty message when grid height is 100%', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridEmptyMessage100PercentComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
+
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(0);
+            expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
     });
 
@@ -3739,6 +3756,21 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     ];
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `<div>
+        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name"></igx-column>
+        </igx-grid>
+        </div>
+    `
+})
+export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
+    public data = [];
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
 }
 
 @Injectable()
