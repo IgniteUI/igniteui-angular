@@ -3695,7 +3695,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
-            return this.defaultTargetBodyHeight;
+            const bodyHeight = this.defaultTargetBodyHeight;
+            return bodyHeight > 0 ? bodyHeight : null;
         }
 
         return height;
