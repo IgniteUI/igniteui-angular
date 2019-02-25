@@ -32,7 +32,7 @@
     />
 </igx-input-group>
 
-<igx-drop-down 
+<igx-excel-style-drop-down 
     #dropdownValues 
     [maxHeight]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
@@ -40,16 +40,11 @@
     (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
-    <!-- <igx-drop-down-item *ngFor="let filterItem of valuesData" [value]="filterItem" [selected]="isValueSelected(filterItem)">
-        <span>
-            {{ column.formatter ? column.formatter(filterItem) : column.dataType === 'number' ? (filterItem | igxdecimal: column.grid.locale) : filterItem }}
-        </span>
-    </igx-drop-down-item> -->
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="200"
         role="listbox">
         <ng-template igxFor let-item let-index="index" [igxForOf]="valuesData" [igxForScrollOrientation]="'vertical'"
             [igxForContainerSize]="200" [igxForItemSize]="32">
-            <igx-drop-down-item [value]="item" [selected]="isValueSelected(item)">
+            <igx-drop-down-item [value]="item" [index]="index" [selected]="isValueSelected(item)">
                 <span>
                     {{ column.formatter ? column.formatter(item) : column.dataType === 'number' ? (item | igxdecimal: column.grid.locale) : item }}
                 </span>
@@ -57,7 +52,7 @@
         </ng-template>
     </div>
 
-</igx-drop-down>
+</igx-excel-style-drop-down>
 
 <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
     <input

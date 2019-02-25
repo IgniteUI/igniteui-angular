@@ -6,12 +6,13 @@ import {
     Output,
     EventEmitter,
     ChangeDetectorRef,
-    ViewChild
+    ViewChild,
+    OnDestroy
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownComponent, IgxDropDownItemComponent } from '../../../drop-down';
+import { IgxDropDownItemComponent } from '../../../drop-down';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -20,6 +21,9 @@ import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { IgxGridBaseComponent } from '../../grid';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
+import { IgxExcelStyleDropDownComponent } from './excel-style-drop-down.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -38,7 +42,7 @@ export interface ILogicOperatorChangedArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
-export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, OnDestroy {
 
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -47,9 +51,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    private _isDropdownValuesOpening = false;
-    private _isDropdownOpened = false;
-    private _valuesData: any[];
+    protected _isDropdownValuesOpening = false;
+    protected _isDropdownOpened = false;
+    protected _valuesData: any[];
+    protected _scrollTop;
+    protected destroy$ = new Subject<boolean>();
 
     @Input()
     public column: IgxColumnComponent;
@@ -73,19 +79,19 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     @ViewChild('inputGroupValues', { read: IgxInputGroupComponent })
-    private inputGroupValues: IgxInputGroupComponent;
+    protected inputGroupValues: IgxInputGroupComponent;
 
     @ViewChild('inputValues', { read: IgxInputDirective })
-    private inputValuesDirective: IgxInputDirective;
+    protected inputValuesDirective: IgxInputDirective;
 
-    @ViewChild('dropdownValues', { read: IgxDropDownComponent })
-    private dropdownValues: IgxDropDownComponent;
+    @ViewChild('dropdownValues', { read: IgxExcelStyleDropDownComponent })
+    protected dropdownValues: IgxExcelStyleDropDownComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
-    private logicOperatorButtonGroup: IgxButtonGroupComponent;
+    protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
     @ViewChild(IgxForOfDirective)
-    private valuesForOfDirective: IgxForOfDirective<IgxDropDownItemComponent>;
+    protected valuesForOfDirective: IgxForOfDirective<IgxDropDownItemComponent>;
 
     protected get inputValuesElement() {
         return this.inputValuesDirective;
@@ -120,19 +126,28 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
 
-var self = this;
-
-        this.valuesForOfDirective.onChunkLoad.subscribe((eventArgs) => {
-            console.log('chunk loaded');
-
-            //const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
-            // if (this.dropdownValues.selectedItem !== newSelection) {
-                //this.dropdownValues.selectItem(newSelection);
-
-                //this.dropdownValues.navigateItem(newSelection.itemIndex);
-            //     console.log('selection changed');
-            // }
+        this.dropdownValues.onSelection.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (!this._isDropdownValuesOpening) {
+                this._scrollTop = this.valuesForOfDirective.getVerticalScroll().scrollTop;
+            }
         });
+
+        this.valuesForOfDirective.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this._isDropdownValuesOpening) {
+                const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
+                if (isSearchValNumber) {
+                    const searchVal = parseFloat(this.expressionUI.expression.searchVal);
+                    const selectedItemIndex = this.dropdownValues.items.findIndex(x => x.value === searchVal);
+
+                    this.dropdownValues.setSelectedItem(selectedItemIndex);
+                }
+            }
+        });
+    }
+
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     public focus() {
@@ -154,27 +169,31 @@ var self = this;
         this._isDropdownValuesOpening = true;
 
         if (this.expressionUI.expression.searchVal) {
-            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(this.expressionUI.expression.searchVal);
-            if (selectedItemIndex > -1) {
-                this.valuesForOfDirective.scrollTo(selectedItemIndex);
+            const isSearchValNumber = typeof(this.valuesForOfDirective.igxForOf[0]) === 'number';
+            const searchVal = isSearchValNumber ? parseFloat(this.expressionUI.expression.searchVal)
+                                                : this.expressionUI.expression.searchVal;
+            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(searchVal);
 
-                // const aa = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
-                // const sz = this.valuesForOfDirective.getSizeAt(selectedItemIndex);
-                // var vscr = this.valuesForOfDirective.getVerticalScroll();
-                // this.valuesForOfDirective.addScrollTop(aa + sz);
-    
+            if (selectedItemIndex > -1 && !(selectedItemIndex >= this.valuesForOfDirective.state.startIndex &&
+                selectedItemIndex < this.valuesForOfDirective.state.startIndex + this.valuesForOfDirective.state.chunkSize)) {
+
+                this.valuesForOfDirective.scrollTo(selectedItemIndex);
+                const currentScrollTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
+                this._scrollTop = currentScrollTop;
             }
         }
-
-        // const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
-        // if (this.dropdownValues.selectedItem !== newSelection) {
-        //     this.dropdownValues.selectItem(newSelection);
-        //     console.log('selection changed');
-        // }
     }
 
     public onDropdownValuesOpened() {
         this._isDropdownValuesOpening = false;
+
+        if (this.expressionUI.expression.searchVal) {
+            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(this.expressionUI.expression.searchVal);
+            if (selectedItemIndex > -1) {
+                const verticalScroll = this.valuesForOfDirective.getVerticalScroll();
+                verticalScroll.scrollTop = this._scrollTop;
+            }
+        }
     }
 
     public isConditionSelected(conditionName: string): boolean {
@@ -211,7 +230,7 @@ var self = this;
         this._isDropdownOpened = false;
     }
 
-    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
+    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxExcelStyleDropDownComponent) {
         if (!this._isDropdownOpened) {
             this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
             targetDropDown.toggle(this._dropDownOverlaySettings);

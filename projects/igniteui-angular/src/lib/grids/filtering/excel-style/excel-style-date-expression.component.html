@@ -32,7 +32,7 @@
     />
 </igx-input-group>
 
-<igx-drop-down 
+<igx-excel-style-drop-down 
     #dropdownValues 
     [maxHeight]="'200px'"
     [width]="getInputWidth(datePicker)"
@@ -40,10 +40,16 @@
     (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
     (onClosed)="onDropdownClosed()">
-    <igx-drop-down-item *ngFor="let filterItem of valuesData" [value]="filterItem" [selected]="isValueSelected(filterItem)">
-        <span>{{ column.formatter ? column.formatter(filterItem) : (filterItem | igxdate: column.grid.locale) }}</span>
-    </igx-drop-down-item>
-</igx-drop-down>
+    <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="200"
+        role="listbox">
+        <ng-template igxFor let-item let-index="index" [igxForOf]="valuesData" [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]="200" [igxForItemSize]="32">
+            <igx-drop-down-item [value]="item" [index]="index" [selected]="isValueSelected(item)">
+                <span>{{ column.formatter ? column.formatter(item) : (item | igxdate: column.grid.locale) }}</span>
+            </igx-drop-down-item>
+        </ng-template>
+    </div>
+</igx-excel-style-drop-down>
 
 <igx-date-picker #datePicker tabindex="0" [outlet]="grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
