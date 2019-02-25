@@ -304,7 +304,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
-    protected calculateScrollPosition(item: IgxDropDownItemBase): number {
+    /** @hidden @internal */
+    public calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
         }
