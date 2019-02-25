@@ -101,7 +101,7 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |position         | Positions provided element                                                      |element     |
-|clone            | Clones position strategy and its settings                                        |-           |
+|clone            | Clones position strategy and its settings                                       |-           |
 
 ###### IScrollStrategy
 

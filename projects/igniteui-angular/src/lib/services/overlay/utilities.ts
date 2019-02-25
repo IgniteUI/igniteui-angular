@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -154,6 +154,9 @@ export function getViewportScrollPosition(): Point {
     return new Point(horizontalScrollPosition, verticalScrollPosition);
   }
 
+  /** @hidden @internal*/
 export function cloneObject(object) {
-    return Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+    const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+    clonedObj.settings = cloneValue(clonedObj.settings);
+    return clonedObj;
 }
