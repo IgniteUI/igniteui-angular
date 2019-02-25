@@ -1,6 +1,6 @@
 <igx-drop-down
     #dropdownConditions
-    [height]="'200px'"
+    [maxHeight]="'200px'"
     [width]="getInputWidth(inputGroupConditions)"
     (onSelection)="onConditionsChanged($event)"
     (onClosed)="onDropdownClosed()">
@@ -17,7 +17,7 @@
     [displayDensity]="'compact'"
     [supressInputAutofocus]="true">
 
-    <igx-prefix [igxDropDownItemNavigation]="dropdownConditions">
+    <igx-prefix>
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
@@ -26,6 +26,7 @@
         igxInput
         (keydown)="onInputKeyDown($event)"
         tabindex="0"
+        [igxDropDownItemNavigation]="dropdownConditions"
         [placeholder]="inputConditionsPlaceholder"
         autocomplete="off"
         [value]="getConditionName(expressionUI.expression.condition)"
@@ -54,6 +55,8 @@
                     igxInput
                     tabindex="0"
                     (click)="openDatePicker(openDialog)"
+                    (keydown)="onInputValuesKeydown($event)"
+                    [igxDropDownItemNavigation]="dropdownValues"
                     placeholder="Select value..."
                     autocomplete="off"
                     [value]="displayData | date"
@@ -77,6 +80,7 @@
     [multiSelection]="false">
     <span igxButton
         #andButton
+        (keydown)="onLogicOperatorKeyDown($event, 0)"
         tabindex="0"
         [selected]="expressionUI.afterOperator === 0"
         type="button"
@@ -87,6 +91,7 @@
     <span igxButton
         #orButton
         tabindex="0"
+        (keydown)="onLogicOperatorKeyDown($event, 1)"
         [selected]="expressionUI.afterOperator === 1"
         type="button"
         (click)="onLogicOperatorButtonClicked($event, 1)">
