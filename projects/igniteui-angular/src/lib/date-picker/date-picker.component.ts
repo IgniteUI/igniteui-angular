@@ -14,7 +14,8 @@ import {
     TemplateRef,
     Inject,
     ChangeDetectorRef,
-    HostListener
+    HostListener,
+    NgModuleRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -392,7 +393,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private cdr: ChangeDetectorRef, public element: ElementRef) { }
+        private _cdr: ChangeDetectorRef, private _moduleRef: NgModuleRef<any>) { }
 
     /**
      * Gets the input group template.
@@ -728,7 +729,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     public writeValue(value: Date) {
         this.value = value;
-        this.cdr.markForCheck();
+        this._cdr.markForCheck();
     }
 
     /**
@@ -880,7 +881,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case DatePickerInteractionMode.READONLY: {
                 this.hasHeader = true;
                 const modalOverlay = (this.modalOverlaySettings !== undefined) ? this._modalOverlay : this._modalOverlaySettings;
-                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay);
+                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, modalOverlay);
                 break;
             }
@@ -889,7 +890,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 const dropDownOverlay =
                     (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
                 dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
-                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay);
+                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, dropDownOverlay);
                 break;
             }
