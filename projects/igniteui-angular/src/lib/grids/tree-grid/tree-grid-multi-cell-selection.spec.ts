@@ -96,7 +96,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(treeGrid, 4, 6, 0, 2);
         }));
 
-        xit('Should be able to select a range with keyboard', (async () => {
+        it('Should be able to select a range with keyboard', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(9, 'Age');
 
@@ -105,61 +105,52 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
 
             HelperUtils.verifyCellSelected(cell);
 
-            HelperUtils.navigateVerticallyToIndex(treeGrid, 9, 12, 2, true);
-            await wait(300);
+            for (let i = 9; i < 14; i++) {
+                cell = treeGrid.getCellByColumn(i, 'Age');
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+                await wait(30);
+                fix.detectChanges();
+            }
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 2);
+
+            cell = treeGrid.getCellByColumn(14, 'Age');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            await wait(30);
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 17, 2, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 2, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 3);
 
-            cell = treeGrid.getCellByColumn(17, 'Age');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
-            await wait(100);
-            fix.detectChanges();
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(9);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 17, 2, 3);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 3, 1, 2);
-
-            cell = treeGrid.getCellByColumn(17, 'OnPTO');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, true);
-            await wait(100);
+            cell = treeGrid.getCellByColumn(14, 'OnPTO');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            await wait(30);
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(10);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 17, 2, 4);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 19, 2, 4, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(7);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 4);
 
-            await HelperUtils.navigateVerticallyToIndex(treeGrid, 17, 3, 4, true);
-            await wait(50);
-            fix.detectChanges();
+            for (let i = 14; i > 3; i--) {
+                cell = treeGrid.getCellByColumn(i, 'HireDate');
+                UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+                await wait(30);
+                fix.detectChanges();
+            }
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(24);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(18);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 2, 4, 1, 2);
 
             for (let i = 4; i > 2; i--) {
                 cell = treeGrid.getCellByColumn(3, treeGrid.columns[i].field);
-                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, true);
-                await wait(100);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+                await wait(30);
                 fix.detectChanges();
             }
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(28);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(20);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 0, 2, 1, 2);
-
-            await HelperUtils.navigateVerticallyToIndex(treeGrid, 3, 9, 2, true);
-            await wait(50);
-            fix.detectChanges();
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(32);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 9, 2, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 9, 9, 2, 2);
+            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 2, 2);
         }));
 
         it('Summaries: should select correct data when summaries are enabled', () => {
@@ -271,41 +262,73 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix.detectChanges();
 
             HelperUtils.verifyCellSelected(cell);
-            HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 1);
 
-            await HelperUtils.navigateVerticallyToIndex(treeGrid, 8, 24, 1, true);
-            await wait(50);
-            fix.detectChanges();
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(11);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 23, 1, 1);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 1, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 23, 1, 1, 1, 2);
-
-            for (let i = 1; i < 4; i++) {
-                await HelperUtils.moveSummaryCell(fix, 24, i, 'ArrowRight');
+            for (let i = 8; i < 16; i++) {
+                let cellObj = treeGrid.getCellByColumn(i, 'Name');
+                if (!cellObj) {
+                    cellObj = treeGrid.summariesRowList.find(row => row.index === i)
+                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
+                }
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cellObj.nativeElement, true, false, true);
+                await wait(30);
+                fix.detectChanges();
             }
 
-            HelperUtils.verifySummaryCellActive(fix, 24, 4);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 23, 1, 1);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 1, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 23, 1, 1, 1, 2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
-            await HelperUtils.moveSummaryCell(fix, 24, 4, 'ArrowUp');
+            for (let i = 1; i < 3; i++) {
+                const cellObject = treeGrid.summariesRowList.find(row => row.index === 16)
+                        .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellObject.nativeElement, true, false, true);
+                await wait(30);
+                fix.detectChanges();
+            }
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(12);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 23, 1, 4);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 1, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 23, 1, 4, 1, 2);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
-            await HelperUtils.navigateVerticallyToIndex(treeGrid, 23, 7, 4, true);
-            await wait(50);
+            const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
+                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', summaryCell.nativeElement, true, false, true);
+            await wait(30);
+            fix.detectChanges();
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
+            HelperUtils.verifySelectedRange(treeGrid,  8, 15, 1, 3);
+        }));
+
+        it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
+            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            treeGrid.getColumnByName('Name').hasSummary = true;
+            treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(23);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 8, 1, 4);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 1, 0, 2);
-            // HelperUtils.verifySelectedRange(treeGrid, 8, 8, 1, 4, 1, 2);
+            const cell = treeGrid.getCellByColumn(8, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            HelperUtils.verifyCellSelected(cell);
+
+            for (let i = 8; i < 16; i++) {
+                let cellObj = treeGrid.getCellByColumn(i, 'Name');
+                if (!cellObj) {
+                    cellObj = treeGrid.summariesRowList.find(row => row.index === i)
+                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
+                }
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cellObj.nativeElement, true, false, true);
+                await wait(30);
+                fix.detectChanges();
+            }
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+
+            const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
+                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', summaryCell.nativeElement, true, false);
+            await wait(30);
+            fix.detectChanges();
+
+            HelperUtils.verifySelectedRange(treeGrid,  17, 17, 1, 1);
         }));
 
         it('Filtering: selection should not change when perform filtering', () => {
