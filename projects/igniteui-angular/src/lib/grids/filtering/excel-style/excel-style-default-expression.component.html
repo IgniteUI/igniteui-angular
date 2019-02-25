@@ -1,0 +1,106 @@
+<igx-drop-down
+    #dropdownConditions
+    [maxHeight]="'200px'"
+    [width]="getInputWidth(inputGroupConditions)"
+    (onSelection)="onConditionsChanged($event)"
+    (onClosed)="onDropdownClosed()">
+    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
+        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <span>{{ translateCondition(condition) }}</span>
+    </igx-drop-down-item>
+</igx-drop-down>
+
+<igx-input-group
+    #inputGroupConditions
+    (click)="toggleCustomDialogDropDown(inputGroupConditions, dropdownConditions)"
+    type="box"
+    [displayDensity]="'compact'"
+    [supressInputAutofocus]="true">
+
+    <igx-prefix>
+        <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
+        <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
+    </igx-prefix>
+
+    <input
+        igxInput
+        (keydown)="onInputKeyDown($event)"
+        [igxDropDownItemNavigation]="dropdownConditions"
+        tabindex="0"
+        [placeholder]="inputConditionsPlaceholder"
+        autocomplete="off"
+        [value]="getConditionName(expressionUI.expression.condition)"
+        [readonly]="true"
+    />
+</igx-input-group>
+
+<igx-excel-style-drop-down
+    #dropdownValues
+    [maxHeight]="'200px'"
+    [width]="getInputWidth(inputGroupValues)"
+    (onSelection)="onValuesChanged($event)"
+    (onOpening)="onDropdownValuesOpening()"
+    (onOpened)="onDropdownValuesOpened()"
+    (onClosed)="onDropdownClosed()"
+    (onClosing)="onDropdownClosing()">
+    <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="200"
+        role="listbox">
+        <ng-template igxFor let-item let-index="index" [igxForOf]="valuesData" [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]="200" [igxForItemSize]="32">
+            <igx-drop-down-item [value]="item" [index]="index" [selected]="isValueSelected(item)">
+                <span>
+                    {{ column.formatter ? column.formatter(item) : column.dataType === 'number' ? (item | igxdecimal: column.grid.locale) : item }}
+                </span>
+            </igx-drop-down-item>
+        </ng-template>
+    </div>
+
+</igx-excel-style-drop-down>
+
+<igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+    <input
+        #inputValues
+        igxInput
+        tabindex="0"
+        [placeholder]="inputValuePlaceholder"
+        [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
+        autocomplete="off"
+        [igxDropDownItemNavigation]="dropdownValues"
+        (keydown)="onInputValuesKeydown($event)"
+        [(ngModel)]="expressionUI.expression.searchVal"
+    />
+
+    <igx-icon igxSuffix
+        (click)="toggleCustomDialogDropDown(inputGroupValues, dropdownValues)"
+        [igxDropDownItemNavigation]="dropdownValues">
+        arrow_drop_down
+    </igx-icon>
+</igx-input-group>
+
+<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="!isSingle">
+    <igx-icon>cancel</igx-icon>
+</button>
+
+<igx-buttongroup #logicOperatorButtonGroup
+    *ngIf="!isLast"
+    [multiSelection]="false">
+    <span igxButton
+        tabindex="0"
+        #andButton
+        (keydown)="onLogicOperatorKeyDown($event, 0)"
+        [selected]="expressionUI.afterOperator === 0"
+        type="button"
+        (click)="onLogicOperatorButtonClicked($event, 0)">
+        {{ grid.resourceStrings.igx_grid_filter_operator_and }}
+    </span>
+
+    <span igxButton
+        tabindex="0"
+        #orButton
+        (keydown)="onLogicOperatorKeyDown($event, 1)"
+        [selected]="expressionUI.afterOperator === 1"
+        type="button"
+        (click)="onLogicOperatorButtonClicked($event, 1)">
+        {{ grid.resourceStrings.igx_grid_filter_operator_or }}
+    </span>
+</igx-buttongroup>

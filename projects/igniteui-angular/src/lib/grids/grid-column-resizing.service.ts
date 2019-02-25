@@ -59,7 +59,7 @@ export class IgxColumnResizingService {
         let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
         minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
 
-        return minWidth - this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        return this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width - minWidth;
     }
 
     /**
