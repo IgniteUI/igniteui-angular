@@ -6,12 +6,13 @@ import {
     Output,
     EventEmitter,
     ChangeDetectorRef,
-    ViewChild
+    ViewChild,
+    OnDestroy
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownComponent, IgxDropDownItemComponent } from '../../../drop-down';
+import { IgxDropDownItemComponent } from '../../../drop-down';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -19,6 +20,10 @@ import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } fr
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { IgxGridBaseComponent } from '../../grid';
+import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
+import { IgxExcelStyleDropDownComponent } from './excel-style-drop-down.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -37,7 +42,7 @@ export interface ILogicOperatorChangedArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
-export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, OnDestroy {
 
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -46,9 +51,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    private _isDropdownValuesOpening = false;
-    private _isDropdownOpened = false;
-    private _valuesData: any[];
+    protected _isDropdownValuesOpening = false;
+    protected _isDropdownOpened = false;
+    protected _valuesData: any[];
+    protected _scrollTop = 0;
+    protected destroy$ = new Subject<boolean>();
 
     @Input()
     public column: IgxColumnComponent;
@@ -72,22 +79,25 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     @ViewChild('inputGroupValues', { read: IgxInputGroupComponent })
-    private inputGroupValues: IgxInputGroupComponent;
+    protected inputGroupValues: IgxInputGroupComponent;
 
     @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
     private inputGroupConditions: IgxInputGroupComponent;
 
     @ViewChild('inputValues', { read: IgxInputDirective })
-    private inputValuesDirective: IgxInputDirective;
+    protected inputValuesDirective: IgxInputDirective;
 
-    @ViewChild('dropdownValues', { read: IgxDropDownComponent })
-    protected dropdownValues: IgxDropDownComponent;
+    @ViewChild('dropdownValues', { read: IgxExcelStyleDropDownComponent })
+    protected dropdownValues: IgxExcelStyleDropDownComponent;
 
-    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
-    private dropdownConditions: IgxDropDownComponent;
+	@ViewChild('dropdownConditions', { read: IgxDropDownComponent })
+    protected dropdownConditions: IgxDropDownComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
-    private logicOperatorButtonGroup: IgxButtonGroupComponent;
+    protected logicOperatorButtonGroup: IgxButtonGroupComponent;
+
+    @ViewChild(IgxForOfDirective)
+    protected valuesForOfDirective: IgxForOfDirective<IgxDropDownItemComponent>;
 
     protected get inputValuesElement() {
         return this.inputValuesDirective;
@@ -121,6 +131,23 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
+
+        this.valuesForOfDirective.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this._isDropdownValuesOpening) {
+                const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
+                if (isSearchValNumber) {
+                    const searchVal = parseFloat(this.expressionUI.expression.searchVal);
+                    const selectedItemIndex = this.dropdownValues.items.findIndex(x => x.value === searchVal);
+
+                    this.dropdownValues.setSelectedItem(selectedItemIndex);
+                }
+            }
+        });
+    }
+
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     public focus() {
@@ -141,10 +168,22 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onDropdownValuesOpening() {
         this._isDropdownValuesOpening = true;
 
-        const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
-        if (this.dropdownValues.selectedItem !== newSelection) {
-            this.dropdownValues.selectItem(newSelection);
+        if (this.expressionUI.expression.searchVal) {
+            const isSearchValNumber = typeof(this.valuesForOfDirective.igxForOf[0]) === 'number';
+            const searchVal = isSearchValNumber ? parseFloat(this.expressionUI.expression.searchVal)
+                                                : this.expressionUI.expression.searchVal;
+            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(searchVal);
+
+            if (selectedItemIndex > -1) {
+                this._scrollTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
+            }
         }
+
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = this._scrollTop;
+    }
+
+    public onDropdownClosing() {
+        this._scrollTop =  this.valuesForOfDirective.getVerticalScroll().scrollTop;
     }
 
     public onDropdownValuesOpened() {
@@ -183,9 +222,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public onDropdownClosed() {
         this._isDropdownOpened = false;
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = null;
     }
 
-    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
+    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxExcelStyleDropDownComponent) {
         if (!this._isDropdownOpened) {
             this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
             targetDropDown.toggle(this._dropDownOverlaySettings);
