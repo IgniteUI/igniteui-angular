@@ -12,7 +12,7 @@ import {
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent } from '../../../drop-down';
+import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -225,7 +225,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         (this.valuesForOfDirective as any).vh.instance.scrollTop = null;
     }
 
-    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxExcelStyleDropDownComponent) {
+    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
         if (!this._isDropdownOpened) {
             this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
             targetDropDown.toggle(this._dropDownOverlaySettings);
