@@ -689,7 +689,7 @@ describe('IgxAutocomplete', () => {
             expect(ddRect.left).toEqual(gRect.left);
         }));
 
-        fit('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
+        it('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
