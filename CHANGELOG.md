@@ -101,8 +101,10 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
 - `igxOverlay`:
-    - `igxOverlay.attach(component, settings?)` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
-    - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.attach(component, settings?)` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
+    - `igxOverlay.attach()` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay. The new `attach` method has two overloads:
+      - `attach(component: ElementRef, settings?: OverlaySettings): string` - this overload will create overlay where provided `component` will be shown.
+      - `attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string` - with this overload `IgxOverlay` will create `ComponentRef` according to provided `component`. Then `IgxOverlay` will create overlay where `ComponentRef` will be shown. If `moduleRef` is provided `IgxOverlay` will use `moduleRef's` `ComponentFactoryResolver` and `Injector` when creating the `ComponentRef`.
+    - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.attach()` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
 
 - `igx-date-picker`
     - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:
