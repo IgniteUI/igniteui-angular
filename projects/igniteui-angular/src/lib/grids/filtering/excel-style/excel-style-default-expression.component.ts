@@ -39,7 +39,7 @@ export interface ILogicOperatorChangedArgs {
     templateUrl: './excel-style-default-expression.component.html'
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
-
+    private _scrTop = 0;
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
@@ -156,16 +156,15 @@ var self = this;
         if (this.expressionUI.expression.searchVal) {
             const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(this.expressionUI.expression.searchVal);
             if (selectedItemIndex > -1) {
-                this.valuesForOfDirective.scrollTo(selectedItemIndex);
-
+                this._scrTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
                 // const aa = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
                 // const sz = this.valuesForOfDirective.getSizeAt(selectedItemIndex);
                 // var vscr = this.valuesForOfDirective.getVerticalScroll();
                 // this.valuesForOfDirective.addScrollTop(aa + sz);
-    
+
             }
         }
-
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = this._scrTop;
         // const newSelection = this.dropdownValues.items.find(value => value.value === this.expressionUI.expression.searchVal) || null;
         // if (this.dropdownValues.selectedItem !== newSelection) {
         //     this.dropdownValues.selectItem(newSelection);
@@ -175,6 +174,10 @@ var self = this;
 
     public onDropdownValuesOpened() {
         this._isDropdownValuesOpening = false;
+    }
+
+    public onDropdownClosing() {
+        this._scrTop =  this.valuesForOfDirective.getVerticalScroll().scrollTop;
     }
 
     public isConditionSelected(conditionName: string): boolean {
@@ -209,6 +212,7 @@ var self = this;
 
     public onDropdownClosed() {
         this._isDropdownOpened = false;
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = null;
     }
 
     public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {

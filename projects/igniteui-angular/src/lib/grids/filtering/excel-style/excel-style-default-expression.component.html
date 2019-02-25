@@ -32,14 +32,15 @@
     />
 </igx-input-group>
 
-<igx-drop-down 
-    #dropdownValues 
+<igx-drop-down
+    #dropdownValues
     [maxHeight]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
     (onSelection)="onValuesChanged($event)"
     (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
-    (onClosed)="onDropdownClosed()">
+    (onClosed)="onDropdownClosed()"
+    (onClosing)="onDropdownClosing()">
     <!-- <igx-drop-down-item *ngFor="let filterItem of valuesData" [value]="filterItem" [selected]="isValueSelected(filterItem)">
         <span>
             {{ column.formatter ? column.formatter(filterItem) : column.dataType === 'number' ? (filterItem | igxdecimal: column.grid.locale) : filterItem }}
