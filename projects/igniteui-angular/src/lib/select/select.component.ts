@@ -196,7 +196,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public registerOnTouched(fn: any): void { }
 
     /** @hidden @internal */
-    public getEditElement() {
+    public getEditElement(): HTMLElement {
         return this.input.nativeElement;
     }
 
