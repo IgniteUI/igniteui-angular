@@ -133,13 +133,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
 
         this.valuesForOfDirective.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this._isDropdownValuesOpening) {
-                const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
-                if (isSearchValNumber) {
-                    const searchVal = parseFloat(this.expressionUI.expression.searchVal);
-                    const selectedItemIndex = this.dropdownValues.items.findIndex(x => x.value === searchVal);
+            const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
+            if (isSearchValNumber) {
+                const searchVal = parseFloat(this.expressionUI.expression.searchVal);
+                const selectedItemIndex = this.dropdownValues.items.findIndex(x => x.value === searchVal);
 
+                if (selectedItemIndex !== -1) {
                     this.dropdownValues.setSelectedItem(selectedItemIndex);
+                } else if (this.dropdownValues.selectedItem) {
+                    this.dropdownValues.selectedItem.selected = false;
                 }
             }
         });
