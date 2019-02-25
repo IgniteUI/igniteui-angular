@@ -74,11 +74,17 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('inputGroupValues', { read: IgxInputGroupComponent })
     private inputGroupValues: IgxInputGroupComponent;
 
+    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
+    private inputGroupConditions: IgxInputGroupComponent;
+
     @ViewChild('inputValues', { read: IgxInputDirective })
     private inputValuesDirective: IgxInputDirective;
 
     @ViewChild('dropdownValues', { read: IgxDropDownComponent })
-    private dropdownValues: IgxDropDownComponent;
+    protected dropdownValues: IgxDropDownComponent;
+
+    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
+    private dropdownConditions: IgxDropDownComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     private logicOperatorButtonGroup: IgxButtonGroupComponent;
@@ -154,7 +160,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getInputWidth(parent: any) {
-        return parent ? parent.element.nativeElement.offsetWidth + 'px': null;
+        return parent ? parent.element.nativeElement.offsetWidth + 'px' : null;
     }
 
     get conditions() {
@@ -218,6 +224,16 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
+    public onLogicOperatorKeyDown(eventArgs, buttonIndex: number) {
+        if (eventArgs.key === KEYS.ENTER) {
+            this.logicOperatorButtonGroup.selectButton(buttonIndex);
+            this.onLogicOperatorChanged.emit({
+                target: this.expressionUI,
+                newValue: buttonIndex as FilteringLogic
+            });
+        }
+    }
+
     public onRemoveButtonClick() {
         this.onExpressionRemoved.emit(this.expressionUI);
     }
@@ -231,9 +247,14 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public onInputKeyDown(eventArgs) {
+        if (eventArgs.altKey && (eventArgs.key === KEYS.DOWN_ARROW || eventArgs.key === KEYS.DOWN_ARROW_IE)) {
+            this.toggleCustomDialogDropDown(this.inputGroupConditions, this.dropdownConditions);
+        }
+
         if (eventArgs.key === KEYS.TAB && eventArgs.shiftKey && this.expressionsList[0] === this.expressionUI) {
-            eventArgs.stopPropagation();
             eventArgs.preventDefault();
         }
+
+        event.stopPropagation();
     }
 }

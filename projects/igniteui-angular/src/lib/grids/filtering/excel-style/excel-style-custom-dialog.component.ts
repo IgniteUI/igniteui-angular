@@ -20,7 +20,7 @@ import {
     IgxDateFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import { 
+import {
     ConnectedPositioningStrategy,
     CloseScrollStrategy,
     OverlaySettings,
@@ -91,7 +91,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @ViewChild('dateExpressionTemplate', { read: TemplateRef })
     protected dateExpressionTemplate: TemplateRef<any>;
 
-    constructor(private cdr:ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outletDirective;
@@ -219,7 +219,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     private createInitialExpressionUIElement() {
         this.expressionsList = [];
         const firstExprUI = new ExpressionUI();
-        
+
         firstExprUI.expression = {
             condition: this.createCondition(this.selectedOperator),
             fieldName: this.column.field,

@@ -21,7 +21,7 @@ import {
 } from '../../../services';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
-import { 
+import {
     IFilteringOperation,
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
@@ -270,7 +270,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             return true;
         }
 
-        const selectableExpressionsCount = this.expressionsList.filter(exp => 
+        const selectableExpressionsCount = this.expressionsList.filter(exp =>
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
             (this.expressionsList[0].expression.condition.name === 'equals' ||
              this.expressionsList[0].expression.condition.name === 'true' ||
@@ -310,11 +310,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 exp.expression.searchVal ? exp.expression.searchVal.toDateString() : exp.expression.searchVal);
         } else {
             this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
-            this.filterValues = this.expressionsList.map(exp => exp.expression.searchVal); 
+            this.filterValues = this.expressionsList.map(exp => exp.expression.searchVal);
         }
         this.listData = new Array<FilterListItem>();
 
-        let shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
+        const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
 
         if (this.column.dataType === DataType.Boolean) {
             this.addBooleanItems();
@@ -343,7 +343,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.uniqueValues.forEach(element => {
             const filterListItem = new FilterListItem();
             if (element !== undefined && element !== null && element !== '') {
-                if(this.column.filteringExpressionsTree) {
+                if (this.column.filteringExpressionsTree) {
                     if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true' )) {
                         filterListItem.isSelected = true;
                         this.selectAllIndeterminate = true;
@@ -372,7 +372,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
                 const filterListItem = new FilterListItem();
-                if(this.column.filteringExpressionsTree) {
+                if (this.column.filteringExpressionsTree) {
                     if (shouldUpdateSelection) {
                         if (this.filterValues.indexOf(element) !== -1) {
                             filterListItem.isSelected = true;
@@ -413,7 +413,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private addBlanksItem(shouldUpdateSelection) {
         const blanks =  new FilterListItem();
-        if(this.column.filteringExpressionsTree) {
+        if (this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {
                 if (this.filterValues.indexOf(null) !== -1) {
                     blanks.isSelected = true;
@@ -507,8 +507,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.column.field);
-        const selectedItems = this.listData.filter(el => el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === true);
-        const unselectedItem = this.listData.find(el => el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
+        const selectedItems = this.listData.filter(el =>
+            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === true);
+        const unselectedItem = this.listData.find(el =>
+            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
 
         if (unselectedItem) {
             selectedItems.forEach(element => {

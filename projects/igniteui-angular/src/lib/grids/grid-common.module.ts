@@ -23,7 +23,13 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleSortingTemplateDirective, IgxExcelStyleHidingTemplateDirective, IgxExcelStyleMovingTemplateDirective, IgxExcelStylePinningTemplateDirective } from './filtering/excel-style/grid.excel-style-filtering.component';
+import {
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
