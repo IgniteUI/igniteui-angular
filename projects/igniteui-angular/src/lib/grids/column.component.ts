@@ -888,7 +888,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '64';
+    protected _defaultMinWidth = '80';
     /**
      *@hidden
      */
