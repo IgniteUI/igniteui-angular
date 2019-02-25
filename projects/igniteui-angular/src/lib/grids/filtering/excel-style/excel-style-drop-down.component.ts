@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
-import { IgxDropDownComponent, IgxDropDownItemBase } from "../../../drop-down";
-import { IGX_DROPDOWN_BASE } from "../../../drop-down/drop-down.common";
+import { Component } from '@angular/core';
+import { IgxDropDownComponent, IgxDropDownItemBase } from '../../../drop-down';
+import { IGX_DROPDOWN_BASE } from '../../../drop-down/drop-down.common';
 
 /**
  * @hidden
