@@ -268,6 +268,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     private setSelection(item: IgxDropDownItemBase) {
         if (item && item.value !== undefined && item.value !== null) {
+            this.navigateItem(item.index);
             this.selection.set(this.id, new Set([item]));
         } else {
             this.selection.clear(this.id);

@@ -1595,6 +1595,22 @@ describe('igxSelect', () => {
             tick(500);
             fixture.detectChanges();
         }));
+
+        it('Should navigate through items when dropdown is closed and initial value is passed', fakeAsync(() => {
+            select.close();
+            tick();
+            fixture.detectChanges();
+            spyOn(select, 'navigateNext').and.callThrough();
+            const choices = select.children.toArray();
+            select.value = choices[5].value;
+            tick();
+            fixture.detectChanges();
+            select.input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            tick();
+            fixture.detectChanges();
+            expect(select.navigateNext).toHaveBeenCalled();
+            expect(select.value).toEqual(choices[6].value);
+        }));
     });
     describe('Positioning tests: ', () => {
         const defaultWindowToListOffset = 5;
