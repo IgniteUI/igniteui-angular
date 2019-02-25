@@ -846,34 +846,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.groupingExpressions.length) {
             const source = [];
 
-            // TODO: Simplify and refactor
-
-            const top = (group) => {
-                if (group.summaries) { return; }
-                source.push(...[null, null]);
-                if (group.groups.length && this.isExpandedGroup(group)) {
-                    group.groups.forEach(top);
-                } else if (this.isExpandedGroup(group)) {
-                    source.push(...group.records);
-                }
-            };
-
-            const bottom = (group) => {
-                if (group.summaries) {
+            const process = (record) => {
+                if (record.expression || record.summaries) {
                     source.push(null);
                     return;
                 }
-                source.push(null);
-                if (group.groups.length && this.isExpandedGroup(group)) {
-                    group.groups.forEach(bottom);
-                } else if (this.isExpandedGroup(group)) {
-                    source.push(...group.records);
-                }
+                source.push(record);
+
             };
 
-            const data = this.verticalScrollContainer.igxForOf
-                .filter((item) => (item.expression && item.level === 0) || item.summaries);
-            this.summaryPosition === 'top' ? data.forEach(top) : data.forEach(bottom);
+            this.verticalScrollContainer.igxForOf.forEach(process);
             return this.extractDataFromSelection(source);
         } else {
             return super.getSelectedData();

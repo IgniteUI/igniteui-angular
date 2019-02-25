@@ -4797,7 +4797,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const currentCell = this.gridAPI.get_cell_by_index(ri, columnindex);
         if (currentCell && event) {
-            this.crudService.begin(currentCell);
             currentCell.nativeElement.focus();
         }
     }
