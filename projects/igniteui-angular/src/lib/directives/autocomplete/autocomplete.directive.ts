@@ -61,7 +61,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         super(null);
     }
 
-    private settings: OverlaySettings = {
+    private defaultSettings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
@@ -88,6 +88,19 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     get parentElement(): HTMLElement {
         return this.group ? this.group.element.nativeElement : this.nativeElement;
+    }
+
+    get settings(): OverlaySettings {
+        let settings = this.defaultSettings;
+        if (this.autocompleteSettings) {
+            settings = Object.assign({}, settings, this.autocompleteSettings);
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            if (!this.autocompleteSettings.positionStrategy.settings.target) {
+                positionStrategyClone.settings.target = this.parentElement;
+            }
+            settings.positionStrategy = positionStrategyClone;
+        }
+        return settings;
     }
 
     /**
@@ -317,11 +330,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!this.collapsed) {
             return;
         }
-        const settings = Object.assign({}, this.settings, this.autocompleteSettings);
-        if (!settings.positionStrategy.settings.target) {
-            settings.positionStrategy.settings.target = this.parentElement;
-        }
-        this.target.open(settings);
+        this.target.open(this.settings);
         this.target.width = this.parentElement.clientWidth + 'px';
         this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem);

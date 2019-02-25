@@ -103,6 +103,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxOverlay`:
     - `igxOverlay.attach(component, settings?)` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
     - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.attach(component, settings?)` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
+    - `IPositionStrategy` exposes new method `clone` that clones position strategy and its settings.
 
 - `igx-date-picker`
     - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:

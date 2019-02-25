@@ -153,3 +153,7 @@ export function getViewportScrollPosition(): Point {
 
     return new Point(horizontalScrollPosition, verticalScrollPosition);
   }
+
+export function cloneObject(object) {
+    return Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+}
