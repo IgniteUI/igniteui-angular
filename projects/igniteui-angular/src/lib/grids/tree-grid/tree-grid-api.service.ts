@@ -173,20 +173,23 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public deleteRowFromData(rowID: any, index: number) {
         const treeGrid = this.grid;
+        const record = treeGrid.records.get(rowID);
+
         if (treeGrid.primaryKey && treeGrid.foreignKey) {
+            index = treeGrid.primaryKey ?
+                treeGrid.data.map(c => c[treeGrid.primaryKey]).indexOf(rowID) :
+                treeGrid.data.indexOf(rowID);
             super.deleteRowFromData(rowID, index);
 
             if (treeGrid.cascadeOnDelete) {
-                const treeRecord = treeGrid.records.get(rowID);
-                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
-                    for (let i = 0; i < treeRecord.children.length; i++) {
-                        const child = treeRecord.children[i];
+                if (record && record.children && record.children.length > 0) {
+                    for (let i = 0; i < record.children.length; i++) {
+                        const child = record.children[i];
                         super.deleteRowById(child.rowID);
                     }
                 }
             }
         } else {
-            const record = treeGrid.records.get(rowID);
             const collection = record.parent ? record.parent.data[treeGrid.childDataKey] : treeGrid.data;
             index = treeGrid.primaryKey ?
                 collection.map(c => c[treeGrid.primaryKey]).indexOf(rowID) :

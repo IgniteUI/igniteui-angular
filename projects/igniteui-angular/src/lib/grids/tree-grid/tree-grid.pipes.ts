@@ -27,17 +27,16 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
+        const flatData: any[] = [];
 
         if (primaryKey && foreignKey) {
-            hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap);
-            grid.flatData = grid.data;
+            hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         } else if (childDataKey) {
-            const flatData: any[] = [];
             hierarchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
-            grid.flatData = flatData;
         }
 
+        grid.flatData = flatData;
         grid.records = treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
@@ -47,7 +46,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         return primaryKey ? rowData[primaryKey] : rowData;
     }
 
-    private hierarchizeFlatData(id: string, collection: any[], primaryKey: string, foreignKey: string, map: Map<any, ITreeGridRecord>):
+    private hierarchizeFlatData(id: string, collection: any[], primaryKey: string, foreignKey: string,
+        map: Map<any, ITreeGridRecord>, flatData: any[]):
         ITreeGridRecord[] {
         const result: ITreeGridRecord[] = [];
         const missingParentRecords: ITreeGridRecord[] = [];
@@ -78,19 +78,20 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             }
         });
 
-        this.setIndentationLevels(id, result, 0);
+        this.setIndentationLevels(id, result, 0, flatData);
 
         return result;
     }
 
-    private setIndentationLevels(id: string, collection: ITreeGridRecord[], indentationLevel: number) {
+    private setIndentationLevels(id: string, collection: ITreeGridRecord[], indentationLevel: number, flatData: any[]) {
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
             record.level = indentationLevel;
             record.expanded = this.gridAPI.get_row_expansion_state(record);
+            flatData.push(record.data);
 
             if (record.children && record.children.length > 0) {
-                this.setIndentationLevels(id, record.children, indentationLevel + 1);
+                this.setIndentationLevels(id, record.children, indentationLevel + 1, flatData);
             }
         }
     }
