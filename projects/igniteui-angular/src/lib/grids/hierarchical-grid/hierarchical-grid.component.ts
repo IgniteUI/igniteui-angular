@@ -301,8 +301,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     ngOnInit() {
         this.hgridAPI.register(this);
-        super.ngOnInit();
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
+        super.ngOnInit();
     }
 
     /**

@@ -5,9 +5,10 @@ import {
     NgModule,
     ViewChild,
     ComponentRef,
-    HostBinding
+    HostBinding,
+    ApplicationRef
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -737,6 +738,31 @@ describe('igxOverlay', () => {
 
             document.body.removeChild(wrapperElement);
         });
+
+        it('Fix for #3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            fixture.detectChanges();
+
+            spyOn(appRef, 'attachView');
+            const mockComponent = {
+                hostView: 'test',
+                location: { nativeElement: 'element'}
+            };
+            const factoryMock = jasmine.createSpyObj('factoryMock', {
+                create: mockComponent
+            });
+            const injector = 'testInjector';
+            const componentFactoryResolver = jasmine.createSpyObj('componentFactoryResolver', {
+                resolveComponentFactory: factoryMock
+            });
+
+            const id = overlay.attach(SimpleDynamicComponent, {}, {componentFactoryResolver, injector} as any);
+            expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
+            expect(factoryMock.create).toHaveBeenCalledWith(injector);
+            expect(appRef.attachView).toHaveBeenCalledWith('test');
+            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
