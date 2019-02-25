@@ -1904,6 +1904,17 @@ describe('igxSelect', () => {
                 }));
         });
     });
+    describe('EditorProvider', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+            fixture.detectChanges();
+        }));
+        it('Should return correct edit element', () => {
+            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
+            const selectInstance = fixture.componentInstance.select;
+            expect(selectInstance.getEditElement()).toEqual(inputElement);
+        });
+    });
 });
 
 @Component({
