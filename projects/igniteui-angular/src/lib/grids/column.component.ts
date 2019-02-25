@@ -371,9 +371,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public set formatter(value: any) {
-        if (this._formatter !== value && this.grid) {
+        if (this._formatter !== value) {
             this._formatter = value;
-            this.grid.cdr.detectChanges();
+            if (this.grid) {
+                this.grid.cdr.detectChanges();
+            }
         }
     }
     /**
@@ -543,13 +545,13 @@ export class IgxColumnComponent implements AfterContentInit {
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
-     /**
-     * Gets the function that compares values for grouping.
-     * ```typescript
-     * let groupingComparer = this.column.groupingComparer'
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Gets the function that compares values for grouping.
+    * ```typescript
+    * let groupingComparer = this.column.groupingComparer'
+    * ```
+    * @memberof IgxColumnComponent
+    */
     @Input()
     public get groupingComparer(): (a: any, b: any) => number {
         return this._groupingComparer;
@@ -1140,14 +1142,14 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
-     /**
-     * Returns a reference to the filter cell of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let filterell = column.filterell;
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Returns a reference to the filter cell of the column.
+    * ```typescript
+    * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+    * let filterell = column.filterell;
+    * ```
+    * @memberof IgxColumnComponent
+    */
     get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
@@ -1246,7 +1248,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
             let cellWidth = isLastUnpinned && hasVerticalScroll &&
-            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
+                (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
                 parseInt(colWidth, 10) - 18 + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
