@@ -160,7 +160,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getInputWidth(parent: any) {
-        return parent ? parent.element.nativeElement.offsetWidth + 'px': null;
+        return parent ? parent.element.nativeElement.offsetWidth + 'px' : null;
     }
 
     get conditions() {
