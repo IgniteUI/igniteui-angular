@@ -366,13 +366,14 @@ export class IgxGridSelectionService {
         this.selectRange(node, this.pointerState);
     }
 
-    pointerEnter(node: ISelectionNode, dragEnabled: boolean): void {
+    pointerEnter(node: ISelectionNode, dragEnabled: boolean): boolean {
         this.dragMode = dragEnabled;
         if (!this.dragMode) {
-            return;
+            return false;
         }
         this.clearTextSelection();
         this.dragSelect(node, this.pointerState);
+        return true;
     }
 
     pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): void {

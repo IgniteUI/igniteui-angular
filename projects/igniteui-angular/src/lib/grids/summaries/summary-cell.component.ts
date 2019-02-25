@@ -3,6 +3,7 @@ import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
 import { DisplayDensity } from '../../core/density';
 import { DataType } from '../../data-operations/data-util';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +28,7 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
-    constructor(private element: ElementRef) {
+    constructor(private element: ElementRef, private selectionService: IgxGridSelectionService) {
     }
 
     @HostBinding('class')
@@ -82,12 +83,14 @@ export class IgxSummaryCellComponent {
 
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
+        // TODO: Refactor
         const key = event.key.toLowerCase();
         if (!this.isKeySupportedInCell(key)) { return; }
         event.preventDefault();
         event.stopPropagation();
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        this.selectionService.keyboardState.shift = shift && !(key === 'tab');
 
         if (ctrl && (key === 'arrowup' || key === 'arrowdown' || key === 'up'
                         || key  === 'down'  || key === 'end' || key === 'home')) { return; }

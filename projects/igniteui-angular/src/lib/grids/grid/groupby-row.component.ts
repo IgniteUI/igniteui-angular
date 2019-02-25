@@ -180,11 +180,13 @@ export class IgxGridGroupByRowComponent {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
+        // TODO: Refactor
         event.preventDefault();
         event.stopPropagation();
         const alt = event.altKey;
         const key = event.key.toLowerCase();
         const selection = this.gridSelection;
+        selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
 

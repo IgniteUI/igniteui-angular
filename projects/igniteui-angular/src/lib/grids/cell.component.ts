@@ -636,8 +636,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
-        this.selectionService.pointerEnter(this.selectionNode,
-            event.buttons === 1);
+        const dragMode = this.selectionService.pointerEnter(this.selectionNode, event.buttons === 1);
+        if (dragMode) {
+            this.grid.cdr.detectChanges();
+        }
     }
 
     /**
