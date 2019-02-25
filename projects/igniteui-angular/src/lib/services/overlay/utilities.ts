@@ -155,7 +155,7 @@ export function getViewportScrollPosition(): Point {
   }
 
   /** @hidden @internal*/
-export function cloneObject(object) {
+export function cloneInstance(object) {
     const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
     clonedObj.settings = cloneValue(clonedObj.settings);
     return clonedObj;

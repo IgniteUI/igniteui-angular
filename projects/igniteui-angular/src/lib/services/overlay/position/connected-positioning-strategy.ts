@@ -7,7 +7,7 @@ import {
   Point,
   Size,
   VerticalAlignment,
-  cloneObject
+  cloneInstance
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
@@ -37,7 +37,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   clone(): IPositionStrategy {
-    return cloneObject(this);
+    return cloneInstance(this);
   }
 
   protected setStyle(contentElement: HTMLElement, startPont: Point, settings: PositionSettings) {

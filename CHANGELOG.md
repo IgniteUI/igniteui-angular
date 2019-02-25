@@ -105,7 +105,7 @@ All notable changes for each version of this project will be documented in this 
       - `attach(element: ElementRef, settings?: OverlaySettings): string` - This overload will create overlay where provided `element` will be shown.
       - `attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string` - Creates a `ComponentRef` from the provided `component` class to show in an overlay. If `moduleRef` is provided the service will use the module's `ComponentFactoryResolver` and `Injector` when creating the `ComponentRef` instead of the root ones.
     - `igxOverlay.show(component, settings)` is **deprecated**. Use `igxOverlay.attach()` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
-    - `IPositionStrategy` exposes new method `clone` that clones position strategy and its settings.
+    - `IPositionStrategy` exposes new method `clone` that clones the strategy instance with its settings.
 
 - `igx-date-picker`
     - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:

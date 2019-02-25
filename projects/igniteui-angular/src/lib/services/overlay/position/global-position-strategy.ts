@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, cloneObject } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, cloneInstance } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
 export class GlobalPositionStrategy implements IPositionStrategy {
@@ -52,7 +52,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     }
 
     clone(): IPositionStrategy {
-        return cloneObject(this);
+        return cloneInstance(this);
     }
 }
 
