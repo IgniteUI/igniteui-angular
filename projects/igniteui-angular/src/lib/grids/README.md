@@ -170,6 +170,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`page`| number | The current page index.|
 |`perPage`|number|Visible items per page, default is 15|
 |`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
+|`filterMode`| `FilterMode` | Determines the filter mode, default value is `quickFilter`.|
 |`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
 |`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
 |`emptyFilteredGridMessage`| string | The message displayed when there are no records and the grid is filtered.|
@@ -329,6 +330,8 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`pinned`|boolean|Set column to be pinned or not|
 |`searchable`|boolean|Determines whether the column is included in the search. If set to false, the cell values for this column will not be included in the results of the search API of the grid (defaults to true)|
 |`groupable`|boolean| Determines whether the column may be grouped via the UI.|
+|`disableHiding`|boolean| Enables/disables hiding for the column, default value is `false`.|
+|`disablePinning`|boolean| Enables/disables pinning for the column, default value is `false`.|
 
 
 ### Methods
