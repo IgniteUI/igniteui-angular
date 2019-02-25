@@ -669,7 +669,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             expect(grid.getSelectedRanges().length).toEqual(0);
             expect(grid.getSelectedData()).toEqual([]);
-            HelperUtils.verifyCellSelected(cell, true);
+            HelperUtils.verifyCellSelected(cell, false);
         });
 
 
