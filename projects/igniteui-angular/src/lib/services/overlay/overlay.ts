@@ -21,7 +21,8 @@ import {
     Injectable,
     Injector,
     Type,
-    OnDestroy
+    OnDestroy,
+    NgModuleRef
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
@@ -111,13 +112,22 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
-     * @param component ElementRef or Component Type to show in overlay
+     * @param component ElementRef to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    attach(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
+    attach(element: ElementRef , settings?: OverlaySettings): string;
+    /**
+     * Generates Id. Provide this Id when call `show(id, settings?)` method
+     * @param component Component Type to show in overlay
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     * @param moduleRef Optional reference to the NgModule that can resolve the component's factory
+     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     */
+    attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string;
+    attach(component: ElementRef | Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string {
         let info: OverlayInfo;
-        info = this.getOverlayInfo(component);
+        info = this.getOverlayInfo(component, moduleRef);
 
         //  if there is no info most probably wrong type component was provided and we just go out
         if (!info) {
@@ -148,8 +158,8 @@ export class IgxOverlayService implements OnDestroy {
      * @deprecated Use `attach(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.
      */
     // tslint:disable-next-line:unified-signatures
-    show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
-    show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
+    show(component: ElementRef | Type<any>, settings?: OverlaySettings): string;
+    show(compOrId: string | ElementRef | Type<any>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
         if (typeof compOrId === 'string') {
@@ -279,7 +289,7 @@ export class IgxOverlayService implements OnDestroy {
             this.playOpenAnimation(info);
         } else {
             //  to eliminate flickering show the element just before onOpened fire
-            info.elementRef.nativeElement.parentElement.style.visibility = null;
+            info.elementRef.nativeElement.parentElement.style.visibility = '';
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
         }
     }
@@ -318,20 +328,22 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayInfo(component: any): OverlayInfo {
+    private getOverlayInfo(component: any, moduleRef?: NgModuleRef<any>): OverlayInfo {
         const info: OverlayInfo = {};
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
         } else {
             let dynamicFactory: ComponentFactory<{}>;
+            const factoryResolver = moduleRef ? moduleRef.componentFactoryResolver : this._factoryResolver;
             try {
-                dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
+                dynamicFactory = factoryResolver.resolveComponentFactory(component);
             } catch (error) {
                 console.error(error);
                 return null;
             }
 
-            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(this._injector);
+            const injector = moduleRef ? moduleRef.injector : this._injector;
+            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(injector);
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
@@ -510,7 +522,7 @@ export class IgxOverlayService implements OnDestroy {
         this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
 
         //  to eliminate flickering show the element just before animation start
-        info.elementRef.nativeElement.parentElement.style.visibility = null;
+        info.elementRef.nativeElement.parentElement.style.visibility = '';
         info.openAnimationPlayer.play();
     }
 
@@ -589,8 +601,8 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        const overlay = this._overlayInfos.find(e => e.id === id);
-        return overlay;
+        const info = this._overlayInfos.find(e => e.id === id);
+        return info;
     }
 
     private documentClicked = (ev: MouseEvent) => {
