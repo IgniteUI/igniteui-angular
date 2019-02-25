@@ -116,7 +116,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    attach(component: ElementRef , settings?: OverlaySettings): string;
+    attach(element: ElementRef , settings?: OverlaySettings): string;
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      * @param component Component Type to show in overlay

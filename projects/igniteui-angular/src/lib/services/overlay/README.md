@@ -90,7 +90,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters      |
 |-----------------|---------------------------------------------------------------------------------|-----------------|
-|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |component, overlaySettings? |
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |element, overlaySettings? |
 |attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |component, overlaySettings?, moduleRef? |
 |show             | Shows the provided component on the overlay                                  |id, overlaySettings?|
 |hide             | Remove the provided native element of for the component with provided id        |id               |
