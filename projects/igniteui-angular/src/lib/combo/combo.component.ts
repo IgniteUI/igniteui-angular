@@ -39,6 +39,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
+import { take } from 'rxjs/operators';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -1069,12 +1070,27 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      */
     public handleInputChange(event?: string) {
+        let cdrFlag = false;
+        const vContainer = this.dropdown.verticalScrollContainer;
         if (event !== undefined) {
-            this.dropdown.verticalScrollContainer.scrollTo(0);
+            // Do not scroll if not scrollable
+            if (vContainer.isScrollable()) {
+                vContainer.scrollTo(0);
+            } else {
+                cdrFlag = true;
+            }
             this.onSearchInput.emit(event);
         }
         if (this.filterable) {
             this.filter();
+            // If there was no scroll before filtering, check if there is after and detect changes
+            if (cdrFlag) {
+                vContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    if (vContainer.isScrollable()) {
+                        this.cdr.detectChanges();
+                    }
+                });
+            }
         } else {
             this.checkMatch();
         }
@@ -1342,7 +1358,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public registerOnTouched(fn: any): void {}
+    public registerOnTouched(fn: any): void { }
 
     /**
      * @hidden
