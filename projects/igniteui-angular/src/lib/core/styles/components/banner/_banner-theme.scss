@@ -145,7 +145,8 @@
     @include igx-scope('.igx-typography') {
         %igx-banner__text {
             @include igx-type-style($type-scale, $message) {
-                margin: 0;
+                margin-top: 0;
+                margin-bottom: 0;
             }
         }
     }
