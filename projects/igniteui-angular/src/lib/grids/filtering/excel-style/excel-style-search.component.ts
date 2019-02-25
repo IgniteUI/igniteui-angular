@@ -1,11 +1,13 @@
 import {
     Component,
     ChangeDetectionStrategy,
-    Input
+    Input,
+    ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
+import { IgxInputDirective } from '../../../directives/input/input.directive';
 
 /**
  * @hidden
@@ -25,6 +27,9 @@ export class IgxExcelStyleSearchComponent {
 
     @Input()
     public column: IgxColumnComponent;
+
+    @ViewChild('input', { read: IgxInputDirective })
+    public searchInput: IgxInputDirective;
 
     constructor() {}
 

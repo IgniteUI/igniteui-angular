@@ -154,11 +154,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getInputWidth(parent: any) {
-        //TODO
         return parent ? parent.element.nativeElement.offsetWidth + 'px': null;
     }
-
-    //DUPLICATE
 
     get conditions() {
         return this.column.filters.conditionList();
@@ -189,8 +186,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             this._isDropdownOpened = true;
         }
     }
-
-    //DUPLICATE
 
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.condition(value);
@@ -233,5 +228,12 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
 
         event.stopPropagation();
+    }
+
+    public onInputKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.TAB && eventArgs.shiftKey && this.expressionsList[0] === this.expressionUI) {
+            eventArgs.stopPropagation();
+            eventArgs.preventDefault();
+        }
     }
 }

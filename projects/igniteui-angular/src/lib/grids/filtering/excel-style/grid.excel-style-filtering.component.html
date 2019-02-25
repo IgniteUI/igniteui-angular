@@ -1,7 +1,7 @@
 <article #dropdown igxToggle
     class="igx-excel-filter__menu"
-    (onOpening)="onDropDownOpening()"
-    >
+    (keydown)="onKeyDown($event)"
+    (onOpening)="onDropDownOpening()">
 
     <header class="igx-excel-filter__menu-header">
         <h4 class="igx-typography__h6">{{ column.field }}</h4>
@@ -37,6 +37,7 @@
         <ng-template #defaultExcelStylePinningTemplate>
             <div class="igx-excel-filter__actions-pin"
                 (click)="onPin()"
+                tabindex="0"
                 *ngIf="!column.pinned">
                 <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
                 <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
@@ -44,6 +45,7 @@
 
             <div class="igx-excel-filter__actions-unpin"
                 (click)="onPin()"
+                tabindex="0"
                 *ngIf="column.pinned">
                 <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
                 <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
@@ -56,6 +58,7 @@
 
         <ng-template #defaultExcelStyleHidingTemplate>
             <div class="igx-excel-filter__actions-hide"
+                tabindex="0"
                 (click)="onHide()">
                 <span>{{ grid.resourceStrings.igx_grid_excel_hide }}</span>
                 <igx-icon>visibility_off</igx-icon>
@@ -66,7 +69,12 @@
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
         </div>
 
-        <div class="igx-excel-filter__actions-filter" (click)="onTextFilterClick($event)" >
+        <div 
+            tabindex="0"
+            class="igx-excel-filter__actions-filter"
+            (keydown)="onTextFilterKeyDown($event)"
+            (click)="onTextFilterClick($event)"
+            [igxDropDownItemNavigation]="subMenu" >
             <span>{{ subMenuText }}</span>
             <igx-icon>keyboard_arrow_right</igx-icon>
         </div>
@@ -86,7 +94,7 @@
 </article>
 
 <igx-drop-down #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
-    <div style="width: 200px">
+    <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
             [value]="condition">
