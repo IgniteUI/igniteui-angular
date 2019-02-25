@@ -54,7 +54,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
     protected _isDropdownValuesOpening = false;
     protected _isDropdownOpened = false;
     protected _valuesData: any[];
-    protected _scrollTop;
+    protected _scrollTop = 0;
     protected destroy$ = new Subject<boolean>();
 
     @Input()
@@ -126,12 +126,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
 
-        this.dropdownValues.onSelection.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (!this._isDropdownValuesOpening) {
-                this._scrollTop = this.valuesForOfDirective.getVerticalScroll().scrollTop;
-            }
-        });
-
         this.valuesForOfDirective.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this._isDropdownValuesOpening) {
                 const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
@@ -174,26 +168,20 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
                                                 : this.expressionUI.expression.searchVal;
             const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(searchVal);
 
-            if (selectedItemIndex > -1 && !(selectedItemIndex >= this.valuesForOfDirective.state.startIndex &&
-                selectedItemIndex < this.valuesForOfDirective.state.startIndex + this.valuesForOfDirective.state.chunkSize)) {
-
-                this.valuesForOfDirective.scrollTo(selectedItemIndex);
-                const currentScrollTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
-                this._scrollTop = currentScrollTop;
+            if (selectedItemIndex > -1) {
+                this._scrollTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
             }
         }
+
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = this._scrollTop;
+    }
+
+    public onDropdownClosing() {
+        this._scrollTop =  this.valuesForOfDirective.getVerticalScroll().scrollTop;
     }
 
     public onDropdownValuesOpened() {
         this._isDropdownValuesOpening = false;
-
-        if (this.expressionUI.expression.searchVal) {
-            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(this.expressionUI.expression.searchVal);
-            if (selectedItemIndex > -1) {
-                const verticalScroll = this.valuesForOfDirective.getVerticalScroll();
-                verticalScroll.scrollTop = this._scrollTop;
-            }
-        }
     }
 
     public isConditionSelected(conditionName: string): boolean {
@@ -228,6 +216,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
 
     public onDropdownClosed() {
         this._isDropdownOpened = false;
+        (this.valuesForOfDirective as any).vh.instance.scrollTop = null;
     }
 
     public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxExcelStyleDropDownComponent) {

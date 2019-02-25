@@ -32,14 +32,15 @@
     />
 </igx-input-group>
 
-<igx-excel-style-drop-down 
-    #dropdownValues 
+<igx-excel-style-drop-down
+    #dropdownValues
     [maxHeight]="'200px'"
     [width]="getInputWidth(inputGroupValues)"
     (onSelection)="onValuesChanged($event)"
     (onOpening)="onDropdownValuesOpening()"
     (onOpened)="onDropdownValuesOpened()"
-    (onClosed)="onDropdownClosed()">
+    (onClosed)="onDropdownClosed()"
+    (onClosing)="onDropdownClosing()">
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="200"
         role="listbox">
         <ng-template igxFor let-item let-index="index" [igxForOf]="valuesData" [igxForScrollOrientation]="'vertical'"
