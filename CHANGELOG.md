@@ -101,8 +101,10 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
 - `igxOverlay`:
-    - `igxOverlay.attach(component, settings?)` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay.
-    - `igxOverlay.show(component, settings)` is **depricated**. Use `igxOverlay.attach(component, settings?)` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
+    - `igxOverlay.attach()` method added. Use this method to obtain an unique Id of the created overlay where the provided component will be shown. Then call `igxOverlay.show(id, settings?)` method to show the component in overlay. The new `attach` method has two overloads:
+      - `attach(element: ElementRef, settings?: OverlaySettings): string` - This overload will create overlay where provided `element` will be shown.
+      - `attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string` - Creates a `ComponentRef` from the provided `component` class to show in an overlay. If `moduleRef` is provided the service will use the module's `ComponentFactoryResolver` and `Injector` when creating the `ComponentRef` instead of the root ones.
+    - `igxOverlay.show(component, settings)` is **deprecated**. Use `igxOverlay.attach()` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
 
 - `igx-date-picker`
     - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:
