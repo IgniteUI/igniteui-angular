@@ -10,7 +10,8 @@ import {
     NgZone,
     OnInit,
     Inject,
-    OnDestroy
+    OnDestroy,
+    NgModuleRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -134,6 +135,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public elementRef: ElementRef,
         public zone: NgZone,
         private _filteringService: IgxFilteringService,
+        private _moduleRef: NgModuleRef<any>,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService
     ) { }
 
@@ -225,7 +227,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             this._filterMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
             this._filterMenuOverlaySettings.outlet = this.grid.outletDirective;
 
-            this._componentOverlayId = this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings);
+            this._componentOverlayId =
+                this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);
             this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
         }
     }
