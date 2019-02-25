@@ -9,7 +9,8 @@ import { IPinColumnEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../../test-utils/grid-base-components.spec';
+import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent,
+     ColumnPinningWithTemplateTestComponent } from '../../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -28,7 +29,8 @@ describe('Column Pinning UI', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
-                ColumnGroupsPinningTestComponent
+                ColumnGroupsPinningTestComponent,
+                ColumnPinningWithTemplateTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -210,6 +212,18 @@ describe('Column Pinning UI', () => {
             verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
             verifyColumnIsPinned(grid.columns[1], true, 1);
         }));
+
+        it('- should size cells correctly when there is a large pinned templated column', () => {
+            fix = TestBed.createComponent(ColumnPinningWithTemplateTestComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            // verify all cells have 100px height
+            const cells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
+            expect(cells.length).toBe(32);
+            cells.forEach((cell) => {
+                expect(cell.nativeElement.offsetHeight).toBe(100);
+            });
+        });
 
     });
 
