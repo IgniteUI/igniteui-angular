@@ -1,14 +1,16 @@
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { IgxDropDownModule } from '../drop-down/index';
+import { IgxIconModule } from '../icon/index';
+import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent, IgxSelectModule } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { wait } from '../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
@@ -74,10 +76,17 @@ describe('igxSelect', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxSelectSimpleComponent,
-                IgxSelectDeafaultEmptyComponent
+                IgxSelectGroupsComponent,
+                IgxSelectMiddleComponent,
+                IgxSelectTopComponent,
+                IgxSelectBottomComponent,
+                IgxSelectAffixComponent
             ],
             imports: [
                 FormsModule,
+                IgxDropDownModule,
+                IgxIconModule,
+                IgxInputGroupModule,
                 IgxSelectModule,
                 IgxToggleModule,
                 NoopAnimationsModule,
@@ -93,7 +102,7 @@ describe('igxSelect', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
-        it('Should initialize the select component properly', fakeAsync(() => {
+        it('should initialize the select component properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(fixture.componentInstance).toBeDefined();
             expect(select).toBeDefined();
@@ -109,7 +118,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
         }));
-        it('Should properly accept input properties', fakeAsync(() => {
+        it('should properly accept input properties', fakeAsync(() => {
             expect(select.width).toEqual('300px');
             expect(select.height).toEqual('200px');
             expect(select.maxHeight).toEqual('256px');
@@ -168,7 +177,7 @@ describe('igxSelect', () => {
             select.disabled = true;
             expect(select.disabled).toBeTruthy();
         }));
-        it('Should open dropdown on input click', fakeAsync(() => {
+        it('should open dropdown on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(select.collapsed).toBeTruthy();
 
@@ -177,7 +186,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
         }));
-        it('Should close dropdown on item click', fakeAsync(() => {
+        it('should close dropdown on item click', fakeAsync(() => {
             const selectedItemEl = selectList.children[2];
             expect(select.collapsed).toBeTruthy();
 
@@ -191,7 +200,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should toggle dropdown on toggle button click', fakeAsync(() => {
+        it('should toggle dropdown on toggle button click', fakeAsync(() => {
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(select.collapsed).toBeTruthy();
 
@@ -205,7 +214,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should toggle dropdown using API methods', fakeAsync(() => {
+        it('should toggle dropdown using API methods', fakeAsync(() => {
             select.items[0].selected = true;
             expect(select.collapsed).toBeTruthy();
 
@@ -229,7 +238,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should close on click outside of the component', fakeAsync(() => {
+        it('should close on click outside of the component', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
             select.toggle();
             tick();
@@ -240,7 +249,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should not display dropdown list when no select items', fakeAsync(() => {
+        it('should not display dropdown list when no select items', fakeAsync(() => {
             fixture.componentInstance.items = [];
             fixture.detectChanges();
 
@@ -251,7 +260,7 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
             expect(selectList.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
         }));
-        it('Should properly emit opening/closing events on input click', fakeAsync(() => {
+        it('should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(select).toBeTruthy();
 
@@ -284,7 +293,7 @@ describe('igxSelect', () => {
             expect(select.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(select.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
-        it('Should properly emit closing events on item click', fakeAsync(() => {
+        it('should properly emit closing events on item click', fakeAsync(() => {
             const selectedItemEl = selectList.children[2];
 
             select.toggle();
@@ -301,7 +310,7 @@ describe('igxSelect', () => {
             expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
-        it('Should properly emit opening/closing events on toggle button click', fakeAsync(() => {
+        it('should properly emit opening/closing events on toggle button click', fakeAsync(() => {
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(select).toBeTruthy();
 
@@ -323,7 +332,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('Should emit closing events on click outside of the component', fakeAsync(() => {
+        it('should emit closing events on click outside of the component', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -340,7 +349,7 @@ describe('igxSelect', () => {
             expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
-        it('Should render aria attributes properly', fakeAsync(() => {
+        it('should render aria attributes properly', fakeAsync(() => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(inputElement.nativeElement.getAttribute('role')).toEqual('combobox');
@@ -363,7 +372,7 @@ describe('igxSelect', () => {
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(dropdownListElement.nativeElement.getAttribute('aria-hidden')).toEqual('true');
         }));
-        it('Should render aria attributes on dropdown items properly', () => {
+        it('should render aria attributes on dropdown items properly', () => {
             const selectItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWN_LIST_ITEM));
             selectItems.forEach(item => {
                 expect(item.nativeElement.getAttribute('role')).toEqual('option');
@@ -378,7 +387,7 @@ describe('igxSelect', () => {
             expect(selectItems[selectedItem.index].nativeElement.getAttribute('aria-selected')).toEqual('true');
             expect(selectItems[disabledItem.index].nativeElement.getAttribute('aria-disabled')).toEqual('true');
         });
-        it('Should render input type properly', () => {
+        it('should render input type properly', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             // Default type is 'line'
             expect(select.type).toEqual('line');
@@ -391,7 +400,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeTruthy();
         });
-        it('Should render display density properly', () => {
+        it('should render display density properly', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             // Default display density is 'comfortable'
             expect(select.displayDensity).toEqual('comfortable');
@@ -412,7 +421,7 @@ describe('igxSelect', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
-        it('Should select item with mouse click', fakeAsync(() => {
+        it('should select item with mouse click', fakeAsync(() => {
             let selectedItemIndex = 5;
 
             select.toggle();
@@ -432,7 +441,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
         }));
-        it('Should select item with API selectItem() method', fakeAsync(() => {
+        it('should select item with API selectItem() method', fakeAsync(() => {
             let selectedItemIndex = 15;
             select.selectItem(select.items[selectedItemIndex]);
             tick();
@@ -445,7 +454,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
         }));
-        it('Should select item on setting value property', fakeAsync(() => {
+        it('should select item on setting value property', fakeAsync(() => {
             let selectedItemIndex = 7;
             select.value = select.items[selectedItemIndex].value.toString();
             fixture.detectChanges();
@@ -458,7 +467,7 @@ describe('igxSelect', () => {
             tick();
             verifySelectedItem(selectedItemIndex);
         }));
-        it('Should select item on setting item\'s selected property', () => {
+        it('should select item on setting item\'s selected property', () => {
             let selectedItemIndex = 9;
             select.items[selectedItemIndex].selected = true;
             fixture.detectChanges();
@@ -469,7 +478,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
         });
-        it('Should select item with ENTER/SPACE keys', fakeAsync(() => {
+        it('should select item with ENTER/SPACE keys', fakeAsync(() => {
             let selectedItemIndex = 2;
             select.toggle();
             tick();
@@ -492,7 +501,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
         }));
-        it('Should allow single selection only', fakeAsync(() => {
+        it('should allow single selection only', fakeAsync(() => {
             let selectedItemIndex = 5;
             select.toggle();
             tick();
@@ -514,7 +523,7 @@ describe('igxSelect', () => {
             tick();
             verifySelectedItem(selectedItemIndex);
         }));
-        it('Should clear selection when value property does not match any item', fakeAsync(() => {
+        it('should clear selection when value property does not match any item', fakeAsync(() => {
             const selectedItemIndex = 5;
             select.value = select.items[selectedItemIndex].value.toString();
             fixture.detectChanges();
@@ -529,7 +538,7 @@ describe('igxSelect', () => {
             expect(select.selectedItem).toBeUndefined();
             expect(select.input.value).toEqual('');
         }));
-        it('Should focus first item in dropdown if there is not selected item', fakeAsync(() => {
+        it('should focus first item in dropdown if there is not selected item', fakeAsync(() => {
             const focusedItemIndex = 0;
             const selectedItemIndex = 8;
             select.toggle();
@@ -552,7 +561,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(focusedItemIndex);
         }));
-        it('Should populate the input box with the selected item value', fakeAsync(() => {
+        it('should populate the input box with the selected item value', fakeAsync(() => {
             let selectedItemIndex = 5;
             let selectedItemValue = select.items[selectedItemIndex].value;
 
@@ -607,7 +616,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             checkInputValue();
         }));
-        it('Should not append any text to the input box when no item is selected and value is not set or does not match any item',
+        it('should not append any text to the input box when no item is selected and value is not set or does not match any item',
             fakeAsync(() => {
                 // There is not a selected item initially
                 expect(select.selectedItem).toBeUndefined();
@@ -627,7 +636,7 @@ describe('igxSelect', () => {
                 const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
                 expect(selectedItems.length).toEqual(0);
             }));
-        it('Should not append any text to the input box when an item is focused but not selected',
+        it('should not append any text to the input box when an item is focused but not selected',
             fakeAsync(() => {
                 let focusedItem = select.items[2];
                 const navigationStep = focusedItem.index;
@@ -678,7 +687,7 @@ describe('igxSelect', () => {
                 focusedItem = select.items[selectedItem.index - navigationStep * 2];
                 verifyFocusedItemIsNotSelected();
             }));
-        it('Should not select disabled item', () => {
+        it('should not select disabled item', () => {
             const disabledItem = select.items[2];
             disabledItem.disabled = true;
             fixture.detectChanges();
@@ -691,7 +700,7 @@ describe('igxSelect', () => {
             expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_DISABLED_ITEM)).toBeTruthy();
             expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
         });
-        it('Should remove selection if option has been removed', fakeAsync(() => {
+        it('should remove selection if option has been removed', fakeAsync(() => {
             const selectedItemIndex = 2;
             select.items[selectedItemIndex].selected = true;
             tick();
@@ -703,7 +712,7 @@ describe('igxSelect', () => {
             tick();
             expect(select.selectedItem).toBeUndefined();
         }));
-        it('Should select first match out of duplicated values', fakeAsync (() => {
+        it('should select first match out of duplicated values', fakeAsync(() => {
             fixture.componentInstance.items = ['Paris', 'London', 'Paris', 'Hamburg', 'London'];
             fixture.detectChanges();
 
@@ -725,7 +734,7 @@ describe('igxSelect', () => {
             verifySelectedItem(selectedItemIndex);
             expect(previousItem.focused).toBeFalsy();
         }));
-        it('Should not change selection when setting value to non-existing item', fakeAsync(() => {
+        it('should not change selection when setting value to non-existing item', fakeAsync(() => {
             const selectedItemEl = selectList.children[2];
             const selectedItem = select.items[2] as IgxSelectItemComponent;
 
@@ -752,7 +761,7 @@ describe('igxSelect', () => {
             const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
             expect(selectedItems.length).toEqual(1);
         }));
-        it('Should properly emit onSelection event on item click', fakeAsync(() => {
+        it('should properly emit onSelection event on item click', fakeAsync(() => {
             let selectedItemEl = selectList.children[5];
             let selectedItem = select.items[5];
             spyOn(select.onSelection, 'emit');
@@ -787,7 +796,7 @@ describe('igxSelect', () => {
             expect(select.selectItem).toHaveBeenCalledTimes(2);
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         }));
-        it('Should properly emit onSelection event on item selected property setting', () => {
+        it('should properly emit onSelection event on item selected property setting', () => {
             let selectedItem = select.items[3];
             spyOn(select.onSelection, 'emit');
             spyOn(select, 'selectItem').and.callThrough();
@@ -812,7 +821,7 @@ describe('igxSelect', () => {
             expect(select.selectItem).toHaveBeenCalledTimes(2);
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
-        it('Should properly emit onSelection/Close events on key interaction', fakeAsync(() => {
+        it('should properly emit onSelection/Close events on key interaction', fakeAsync(() => {
             let selectedItem = select.items[3];
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
@@ -856,7 +865,7 @@ describe('igxSelect', () => {
             expect(select.onClosed.emit).toHaveBeenCalledTimes(2);
             expect(select.close).toHaveBeenCalledTimes(2);
         }));
-        it('Should properly emit onSelection event on value setting', fakeAsync(() => {
+        it('should properly emit onSelection event on value setting', fakeAsync(() => {
             spyOn(select.onSelection, 'emit');
             spyOn(select, 'selectItem').and.callThrough();
 
@@ -879,7 +888,7 @@ describe('igxSelect', () => {
             // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             // expect(select.selectItem).toHaveBeenCalledTimes(2);
         }));
-        it('Should properly emit onSelection event using selectItem method', () => {
+        it('should properly emit onSelection event using selectItem method', () => {
             let selectedItem = select.items[4];
             spyOn(select.onSelection, 'emit');
             const args: ISelectionEventArgs = {
@@ -902,6 +911,82 @@ describe('igxSelect', () => {
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
     });
+    describe('Grouped items tests: ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxSelectGroupsComponent);
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+        }));
+        it('should select group item and close dropdown with mouse click', fakeAsync(() => {
+            const groupIndex = 0;
+            const groupElement = selectList.children[groupIndex];
+            const selectedItemIndex = 2;
+            const selectedItemElement = groupElement.children[selectedItemIndex].nativeElement;
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            selectedItemElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual(select.items[selectedItemIndex - 1].value);
+            expect(select.value).toEqual(select.items[selectedItemIndex - 1].value);
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(1);
+            expect(selectedItemElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+            expect(select.selectedItem).toBe(select.items[selectedItemIndex - 1] as IgxSelectItemComponent);
+            expect(select.items[selectedItemIndex - 1].selected).toBeTruthy();
+            expect(select.collapsed).toBeTruthy();
+        }));
+        it('should select group item on setting value property', fakeAsync(() => {
+            const groupIndex = 1;
+            const groupElement = selectList.children[groupIndex];
+            const selectedItemIndex = 2;
+            const selectedItemElement = groupElement.children[selectedItemIndex].nativeElement;
+            const itemIndex = 4;
+
+            select.value = select.items[itemIndex].value.toString();
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual(select.items[itemIndex].value);
+            expect(select.value).toEqual(select.items[itemIndex].value);
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(1);
+            expect(selectedItemElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+            expect(select.selectedItem).toBe(select.items[itemIndex] as IgxSelectItemComponent);
+            expect(select.items[itemIndex].selected).toBeTruthy();
+        }));
+        it('should not select on setting value property to group header', fakeAsync(() => {
+            const groupIndex = 0;
+            const groupElement = selectList.children[groupIndex].nativeElement;
+
+            select.value = fixture.componentInstance.locations[groupIndex].continent;
+            tick();
+            fixture.detectChanges();
+            expect(select.input.value).toEqual('');
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(0);
+            expect(groupElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
+            expect(select.selectedItem).toBeUndefined();
+        }));
+        it('should not focus group header in dropdown if there is not selected item', fakeAsync(() => {
+            const groupElement = selectList.children[0];
+            const focusedItemIndex = 1;
+            const focusedItemElement = groupElement.children[focusedItemIndex].nativeElement;
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
+            expect(focusedItems.length).toEqual(1);
+            expect(focusedItemElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+            expect(select.focusedItem).toBe(select.items[0]);
+            expect(select.items[0].isFocused).toBeTruthy();
+            expect(groupElement.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeFalsy();
+        }));
+    });
     describe('Key navigation tests: ', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -910,7 +995,7 @@ describe('igxSelect', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
-        it('Should toggle dropdown on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
+        it('should toggle dropdown on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
@@ -923,7 +1008,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should toggle dropdown on pressing ENTER key', fakeAsync(() => {
+        it('should toggle dropdown on pressing ENTER key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             inputElement.triggerEventHandler('keydown', enterKeyEvent);
@@ -936,7 +1021,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should toggle dropdown on pressing SPACE key', fakeAsync(() => {
+        it('should toggle dropdown on pressing SPACE key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             inputElement.triggerEventHandler('keydown', spaceKeyEvent);
@@ -949,7 +1034,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should close dropdown on pressing ESC key', fakeAsync(() => {
+        it('should close dropdown on pressing ESC key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -962,7 +1047,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('Should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
+        it('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
             spyOn(select.onOpened, 'emit');
             spyOn(select.onClosing, 'emit');
@@ -981,7 +1066,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('Should properly emit opening/closing events on ENTER/ESC key interaction', fakeAsync(() => {
+        it('should properly emit opening/closing events on ENTER/ESC key interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
             spyOn(select.onOpened, 'emit');
             spyOn(select.onClosing, 'emit');
@@ -1000,7 +1085,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 0);
         }));
-        it('Should properly emit opening/closing events on SPACE/ESC key interaction', fakeAsync(() => {
+        it('should properly emit opening/closing events on SPACE/ESC key interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
             spyOn(select.onOpened, 'emit');
             spyOn(select.onClosing, 'emit');
@@ -1019,7 +1104,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 0);
         }));
-        it('Should navigate through dropdown items using Up/Down/Home/End keys', fakeAsync(() => {
+        it('should navigate through dropdown items using Up/Down/Home/End keys', fakeAsync(() => {
             let currentItemIndex = 0;
             select.toggle();
             tick();
@@ -1061,7 +1146,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(currentItemIndex);
         }));
-        it('Should navigate through items skipping the disabled ones when dropdown is opened', fakeAsync(() => {
+        it('should navigate through items skipping the disabled ones when dropdown is opened', fakeAsync(() => {
             let focusedItemIndex = 1;
             select.items[0].disabled = true;
             select.items[2].disabled = true;
@@ -1101,40 +1186,44 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(focusedItemIndex);
         }));
-        it('Should navigate and select items skipping the disabled ones when dropdown is closed', fakeAsync(() => {
+        it('should navigate and select items skipping the disabled ones when dropdown is closed', (done) => {
             let selectedItemIndex = 1;
-
             select.items[0].disabled = true;
             select.items[2].disabled = true;
             select.items[3].disabled = true;
             select.items[select.items.length - 1].disabled = true;
             fixture.detectChanges();
-
             inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+            setTimeout(() => {
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            // Skip two disabled items
-            selectedItemIndex = 4;
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                // Skip two disabled items
+                selectedItemIndex = 4;
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    verifySelectedItem(selectedItemIndex);
 
-            // // Select item before the last one
-            // selectedItemIndex = select.items.length - 2;
-            // select.selectItem(select.items[selectedItemIndex]);
-            // fixture.detectChanges();
-            // tick();
-            // fixture.detectChanges();
-            // // The item before the last one should remain selected
-            // inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            // tick();
-            // fixture.detectChanges();
-            // verifySelectedItem(selectedItemIndex);
-        }));
-        it('Should start navigation from selected item when dropdown is opened', fakeAsync(() => {
+                    // Select item before the last one
+                    selectedItemIndex = select.items.length - 2;
+                    select.toggle();
+                    fixture.detectChanges();
+                    selectList.children[selectedItemIndex].nativeElement.click();
+                    setTimeout(() => {
+                        fixture.detectChanges();
+                        // The item before the last one should remain selected
+                        inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                        setTimeout(() => {
+                            fixture.detectChanges();
+                            verifySelectedItem(selectedItemIndex);
+                            done();
+                        }, 5);
+                    }, 5);
+                }, 5);
+            }, 5);
+        });
+        it('should start navigation from selected item when dropdown is opened', fakeAsync(() => {
             let selectedItem = select.items[4];
             let focusedItemIndex = selectedItem.index + 1;
 
@@ -1168,49 +1257,53 @@ describe('igxSelect', () => {
             focusedItemIndex = selectedItem.index - 1;
             verifyFocusedItem(focusedItemIndex);
         }));
-        xit('Should start navigation from selected item when dropdown is closed', fakeAsync(() => {
+        it('should start navigation from selected item when dropdown is closed', (done) => {
             let selectedItemIndex = 4;
-            select.items[selectedItemIndex].selected = true;
-            tick();
+            select.toggle();
             fixture.detectChanges();
-
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(++selectedItemIndex);
-
-            selectedItemIndex = 10;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(--selectedItemIndex);
-
-            // Arrow down stays on the last item if selected
-            selectedItemIndex = select.items.length - 1;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-
-            inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(--selectedItemIndex);
-
-            // Arrow up stays on the first item if selected
-            selectedItemIndex = 0;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('Should navigate through items using Up/Down keys until there are items when dropdown is opened', fakeAsync(() => {
+            selectList.children[selectedItemIndex].nativeElement.click();
+            setTimeout(() => {
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    verifySelectedItem(++selectedItemIndex);
+                    selectedItemIndex = select.items.length - 1;
+                    select.toggle();
+                    fixture.detectChanges();
+                    selectList.children[selectedItemIndex].nativeElement.click();
+                    setTimeout(() => {
+                        // Does not wrap selection - arrow down stays on the last item if selected
+                        fixture.detectChanges();
+                        inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                        setTimeout(() => {
+                            fixture.detectChanges();
+                            verifySelectedItem(selectedItemIndex);
+                            inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
+                            setTimeout(() => {
+                                fixture.detectChanges();
+                                verifySelectedItem(--selectedItemIndex);
+                                // Does not wrap selection - arrow up stays on the first item if selected
+                                selectedItemIndex = 0;
+                                select.toggle();
+                                fixture.detectChanges();
+                                selectList.children[selectedItemIndex].nativeElement.click();
+                                setTimeout(() => {
+                                    fixture.detectChanges();
+                                    inputElement.triggerEventHandler('keydown', arrowUpKeyEvent);
+                                    setTimeout(() => {
+                                        fixture.detectChanges();
+                                        verifySelectedItem(selectedItemIndex);
+                                        done();
+                                    }, 5);
+                                }, 5);
+                            }, 5);
+                        }, 5);
+                    }, 5);
+                }, 5);
+            }, 5);
+        });
+        it('should navigate through items using Up/Down keys until there are items when dropdown is opened', fakeAsync(() => {
             select.toggle();
             tick();
             fixture.detectChanges();
@@ -1241,7 +1334,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(0);
         }));
-        it('Should navigate through items using Up/Down keys until there are items when dropdown is closed', fakeAsync(() => {
+        it('should navigate through items using Up/Down keys until there are items when dropdown is closed', fakeAsync(() => {
             for (let itemIndex = 0; itemIndex < select.items.length; itemIndex++) {
                 inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                 tick();
@@ -1268,7 +1361,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(0);
         }));
-        it('Should filter and navigate through items on character key navigation when dropdown is opened',
+        it('should filter and navigate through items on character key navigation when dropdown is opened',
             fakeAsync(() => {
                 select.open();
                 tick();
@@ -1330,7 +1423,7 @@ describe('igxSelect', () => {
                 tick(500);
                 fixture.detectChanges();
             }));
-        it('Should filter and navigate items properly when pressing foreign character', fakeAsync(() => {
+        it('should filter and navigate items properly when pressing non-english character', fakeAsync(() => {
             fixture.componentInstance.items = [
                 'Berlin',
                 'Überherrn',
@@ -1359,7 +1452,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic letters
+            // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
                 inputElement.triggerEventHandler('keyup', { key: 'с' });
@@ -1370,7 +1463,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
         }));
-        it('Should not change focus when pressing non-matching character and dropdown is opened', fakeAsync(() => {
+        it('should not change focus when pressing non-matching character and dropdown is opened', fakeAsync(() => {
             select.open();
             tick();
             fixture.detectChanges();
@@ -1391,7 +1484,7 @@ describe('igxSelect', () => {
             tick(500);
             fixture.detectChanges();
         }));
-        it('Should filter and select items on character key navigation when dropdown is closed',
+        it('should filter and select items on character key navigation when dropdown is closed',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
@@ -1406,7 +1499,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 }
             }));
-        it('Character key navigation when dropdown is closed should be case insensitive', fakeAsync(() => {
+        it('character key navigation when dropdown is closed should be case insensitive', fakeAsync(() => {
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keyup', { key: 'l' });
             tick();
@@ -1422,7 +1515,7 @@ describe('igxSelect', () => {
             tick(500);
             fixture.detectChanges();
         }));
-        it('Character key navigation when dropdown is closed should wrap selection',
+        it('character key navigation when dropdown is closed should wrap selection',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
@@ -1441,7 +1534,7 @@ describe('igxSelect', () => {
                 tick(500);
                 fixture.detectChanges();
             }));
-        it('Should filter and select items properly when pressing foreign character', fakeAsync(() => {
+        it('should filter and select items properly when pressing non-english characters', fakeAsync(() => {
             fixture.componentInstance.items = [
                 'Berlin',
                 'Überherrn',
@@ -1467,7 +1560,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
 
-            // Ciryllic letters
+            // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
                 inputElement.triggerEventHandler('keyup', { key: 'с' });
@@ -1478,7 +1571,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
             }
         }));
-        it('Should not change selection when pressing non-matching character and dropdown is closed', fakeAsync(() => {
+        it('should not change selection when pressing non-matching character and dropdown is closed', fakeAsync(() => {
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keyup', { key: 'l' });
             tick();
@@ -1504,35 +1597,296 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
-        it('Should display selected item over input when there is ample space to open', async(() => {
-            // TODO
-        }));
-        it('Should display selected item over input when there is some space above to open and first item is selected', fakeAsync(() => {
-            // TODO
-            // starts from the input top left point
-        }));
-        // tslint:disable-next-line:max-line-length
-        it('Should display selected item over input and possible items above and below when there is some space above to open and item in the middle of the list is selected',
-            fakeAsync(() => {
-                // TODO
+        const defaultWindowToListOffset = 5;
+        const defaultItemLeftPadding = 16;
+        const defaultItemTopPadding = 8;
+        const defaultItemBottomPadding = 8;
+        const defaultIconWidth = 24;
+        const defaultTextIdent = 8;
+        let visibleItems = 5;
+        let hasScroll = true;
+        let selectedItemIndex: number;
+        let listRect: DOMRect;
+        let inputRect: DOMRect;
+        let selectedItemRect: DOMRect;
+        let listTop: number;
+        let listBottom: number;
+
+        const getBoundingRectangles = function () {
+            listRect = selectList.nativeElement.getBoundingClientRect();
+            inputRect = inputElement.nativeElement.getBoundingClientRect();
+            selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
+        };
+        // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
+        const verifySelectedItemPositioning = function (reversed = false) {
+            expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
+            const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
+                selectedItemRect.height :
+                inputRect.top - defaultItemTopPadding;
+            expect(selectedItemRect.top).toEqual(expectedItemTop);
+            const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
+                inputRect.bottom + defaultItemBottomPadding;
+            expect(selectedItemRect.bottom).toEqual(expectedItemBottom);
+            expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
+        };
+        const verifyListPositioning = function () {
+            expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
+            expect(listRect.top).toEqual(listTop);
+            expect(listRect.bottom).toEqual(listBottom);
+            expect(listRect.width).toEqual(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2);
+            const listHeight = hasScroll ? selectedItemRect.height * visibleItems + defaultItemTopPadding + defaultItemBottomPadding :
+                selectedItemRect.height * visibleItems;
+            expect(listRect.height).toEqual(listHeight);
+        };
+
+        describe('Ample space to open positioning tests: ', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectMiddleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
-        it('Should display selected item and all possible items above when there is some space above to open and last item is selected',
-            fakeAsync(() => {
-                // TODO
+            it('should display selected item over input and all other items without scroll', fakeAsync(() => {
+                hasScroll = false;
+                visibleItems = 3;
+                selectedItemIndex = 1;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height;
+                verifyListPositioning();
+
+                selectedItemIndex = 2;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height * 2;
+                listBottom = selectedItemRect.bottom;
+                verifyListPositioning();
+
+                selectedItemIndex = 0;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
+                verifyListPositioning();
             }));
-        it('Should display selected item and all possible items above when there is some space below to open and first item is selected',
-            fakeAsync(() => {
-                // TODO
+            it('should scroll and display selected item over input and all other possible items', fakeAsync(() => {
+                visibleItems = 5;
+                hasScroll = true;
+                fixture.componentInstance.items = [
+                    'Option 1',
+                    'Option 2',
+                    'Option 3',
+                    'Option 4',
+                    'Option 5',
+                    'Option 6',
+                    'Option 7'];
+                fixture.detectChanges();
+
+                selectedItemIndex = 3;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height * 2 - defaultItemTopPadding;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2 + defaultItemBottomPadding;
+                verifyListPositioning();
+
+                selectedItemIndex = 6;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
+                listBottom = selectedItemRect.bottom;
+                verifyListPositioning();
+
+                selectedItemIndex = 0;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
+                verifyListPositioning();
             }));
-        // tslint:disable-next-line:max-line-length
-        it('Should display selected item over input and possible items above and below when there is some space below to open and item in the middle of the list is selected',
-            fakeAsync(() => {
-                // TODO
+        });
+        describe('Not enough space above to open positioning tests: ', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectTopComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                visibleItems = 5;
+                hasScroll = true;
             }));
-        it('Should display selected item over input when there is some space below to open and last item is selected', fakeAsync(() => {
-            // TODO
-            // starts from the input bottom left point
-        }));
+            it('should display selected item over input when first item is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 0;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    verifySelectedItemPositioning();
+                    listTop = selectedItemRect.top;
+                    listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
+                    verifyListPositioning();
+                }));
+            it('should display selected item over input and possible items above and below when item in the middle of the list is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 1;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    verifySelectedItemPositioning();
+                    listTop = document.body.getBoundingClientRect().top + defaultWindowToListOffset;
+                    listBottom = document.body.getBoundingClientRect().top + defaultWindowToListOffset + listRect.height;
+                    verifyListPositioning();
+                }));
+            it('should display selected item and all possible items above when last item is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 6;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
+                    listBottom = selectedItemRect.bottom;
+                    verifyListPositioning();
+                }));
+        });
+        describe('Not enough space below to open positioning tests: ', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectBottomComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                visibleItems = 5;
+                hasScroll = true;
+            }));
+            it('should display list with selected item and all possible items after it when first item is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 0;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    listTop = inputRect.bottom - selectedItemRect.height * 5 - defaultItemTopPadding - defaultItemBottomPadding;
+                    listBottom = inputRect.bottom;
+                    verifyListPositioning();
+                }));
+            it('should display selected item and all possible items above and below when item in the middle of the list is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 3;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
+                        selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding;
+                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
+                    verifyListPositioning();
+                }));
+            // tslint:disable-next-line:max-line-length
+            it('should display list with selected item and all items before it and position selected item over input when last item is selected',
+                fakeAsync(() => {
+                    selectedItemIndex = 6;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    verifySelectedItemPositioning(true);
+                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height;
+                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
+                    verifyListPositioning();
+                }));
+        });
+        describe('Input with affixes positioning tests: ', () => {
+            const calculatePrefixesWidth = function () {
+                let prefixesWidth = 0;
+                const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
+                Array.from(prefixes).forEach((prefix: DebugElement) => {
+                    const prefixRect = prefix.nativeElement.getBoundingClientRect();
+                    prefixesWidth += prefixRect.width;
+                });
+                return prefixesWidth;
+            };
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectAffixComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                visibleItems = 5;
+                hasScroll = true;
+            }));
+            it('should ident option text to the input text',
+                fakeAsync(() => {
+                    selectedItemIndex = 0;
+                    const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+                    const inputGroupRect = inputGroup.nativeElement.getBoundingClientRect();
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    getBoundingRectangles();
+                    expect(inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent).
+                        toEqual(selectedItemRect.left + defaultItemLeftPadding);
+                }));
+        });
     });
 });
 
@@ -1573,7 +1927,29 @@ class IgxSelectSimpleComponent {
             .filter(x => x);
     }
 }
-
+@Component({
+    template: `
+    <igx-select #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
+    <igx-select-item-group *ngFor="let location of locations" [label]="location.continent"> {{location.continent}}
+            <igx-select-item *ngFor="let capital of location.capitals" [value]="capital">
+                {{ capital }}
+            </igx-select-item>
+    </igx-select-item-group>
+    </igx-select>
+`
+})
+class IgxSelectGroupsComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public locations: {
+        continent: string,
+        capitals: string[]
+    }[] = [
+            { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
+            { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
+            { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
+        ];
+}
 @Component({
     template: `
     <igx-select #select [(ngModel)]="value" >
@@ -1582,18 +1958,84 @@ class IgxSelectSimpleComponent {
     </igx-select-item>
     </igx-select>
 `,
-styles : [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
+    styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })
-class IgxSelectDeafaultEmptyComponent {
+class IgxSelectMiddleComponent {
     @ViewChild('select', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
-    public value: string;
     public items: string[] = [
         'Option 1',
         'Option 2',
         'Option 3'];
-
-    public onSelection(eventArgs: ISelectionEventArgs) {
-        this.value = eventArgs.newSelection.value;
-    }
+}
+@Component({
+    template: `
+    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+    <igx-select-item *ngFor="let item of items" [value]="item">
+        {{ item }}
+    </igx-select-item>
+    </igx-select>
+`
+})
+class IgxSelectTopComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'];
+}
+@Component({
+    template: `
+    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', bottom:'20px', left: '30px'}">
+    <igx-select-item *ngFor="let item of items" [value]="item">
+        {{ item }}
+    </igx-select-item>
+    </igx-select>
+`
+})
+class IgxSelectBottomComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'];
+}
+@Component({
+    template: `
+    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+    <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">favorite</igx-icon>
+            <igx-icon fontSet="material">home</igx-icon>
+            <igx-icon fontSet="material">search</igx-icon>
+        </igx-prefix>
+        <igx-suffix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-suffix>
+    <igx-select-item *ngFor="let item of items" [value]="item">
+        {{ item }}
+    </igx-select-item>
+    </igx-select>
+`
+})
+class IgxSelectAffixComponent {
+    @ViewChild('select', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'];
 }
