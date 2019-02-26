@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group';
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { IgxIconModule } from '../../icon';
-import { ConnectedPositioningStrategy, VerticalAlignment } from '../../services';
+import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
@@ -662,7 +662,7 @@ describe('IgxAutocomplete', () => {
         }));
     });
     describe('Positioning settings tests', () => {
-        it('Panel settings', fakeAsync(() => {
+        it('Panel settings - direction and startPoint: top', fakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -687,6 +687,34 @@ describe('IgxAutocomplete', () => {
             const gRect = group.element.nativeElement.getBoundingClientRect();
             expect(ddRect.bottom).toEqual(gRect.top);
             expect(ddRect.left).toEqual(gRect.left);
+        }));
+
+        it('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
+            fixture = TestBed.createComponent(AutocompleteComponent);
+            fixture.componentInstance.settings = {
+                positionStrategy: new ConnectedPositioningStrategy({
+                    closeAnimation: null,
+                    openAnimation: null,
+                    horizontalDirection: HorizontalAlignment.Left,
+                    horizontalStartPoint: HorizontalAlignment.Right
+                })
+            };
+            fixture.detectChanges();
+            autocomplete = fixture.componentInstance.autocomplete;
+            group = fixture.componentInstance.group;
+            input = fixture.componentInstance.input;
+            dropDown = fixture.componentInstance.dropDown;
+            input.nativeElement.click();
+
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            const ddRect = dropdownListElement.nativeElement.getBoundingClientRect();
+            const gRect = group.element.nativeElement.getBoundingClientRect();
+            expect(ddRect.left).toEqual(gRect.left);
+            expect(ddRect.right).toEqual(gRect.right);
+            expect(ddRect.width).toEqual(gRect.width);
         }));
     });
     describe('Other elements integration tests', () => {

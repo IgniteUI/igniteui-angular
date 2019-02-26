@@ -21,7 +21,7 @@
 <ng-container *ngIf="!column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <igx-grid-header [gridID]="column.gridID" [column]="column"></igx-grid-header>
-    <igx-grid-filtering-cell *ngIf="grid.allowFiltering" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup" class="igx-grid__th-resize-handle"
             [attr.draggable]="false"
             [style.cursor]="colResizingService.resizeCursor"
