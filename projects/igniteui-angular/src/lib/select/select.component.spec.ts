@@ -910,6 +910,19 @@ describe('igxSelect', () => {
             expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
+
+        it('should not emit onSelection when selection does not change', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+        });
     });
     describe('Grouped items tests: ', () => {
         beforeEach(async(() => {
