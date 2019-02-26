@@ -39,6 +39,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
+import { EditorProvider } from '../core/edit-provider';
 import { take } from 'rxjs/operators';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
@@ -110,7 +111,8 @@ const noop = () => { };
         multi: true
     }]
 })
-export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
+ OnDestroy, EditorProvider {
     /**
      * @hidden
      */

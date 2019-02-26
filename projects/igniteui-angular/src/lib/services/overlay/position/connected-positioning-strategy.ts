@@ -11,6 +11,10 @@ import {
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
+/**
+ * Positions the element based on the directions and start point passed in trough PositionSettings.
+ * It is possible to either pass a start point or an HTMLElement as a positioning base.
+ */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
     // default Point(0, 0) in getPointFromPositionsSettings
