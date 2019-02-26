@@ -1,6 +1,9 @@
 import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
+/**
+ * Shown component does not scroll with the window. The event is canceled. No scrolling happens.
+ */
 export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
     private _document: Document;
