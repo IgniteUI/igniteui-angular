@@ -47,7 +47,8 @@ describe('IgxGrid - CRUD operations', () => {
         expect(grid.rowList.length).toEqual(grid.data.length);
     });
 
-    it('should support adding rows by manipulating the `data` @Input of the grid', () => {
+    it('should support adding rows by manipulating the `data` @Input of the grid', fakeAsync(() => {
+        fix.componentInstance.instance.height = null;
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
@@ -56,6 +57,8 @@ describe('IgxGrid - CRUD operations', () => {
 
         grid.cdr.markForCheck();
         fix.detectChanges();
+
+        tick(1000);
 
         expect(grid.data.length).toEqual(fix.componentInstance.data.length);
         expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
@@ -71,7 +74,7 @@ describe('IgxGrid - CRUD operations', () => {
 
         expect(grid.data.length).toEqual(fix.componentInstance.data.length);
         expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
-    });
+    }));
 
     it('should support deleting rows through the grid API', () => {
         grid.deleteRow(1);
