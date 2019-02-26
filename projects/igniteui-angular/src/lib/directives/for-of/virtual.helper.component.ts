@@ -5,6 +5,9 @@ import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef,
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="height"></div>'
 })
 export class VirtualHelperComponent implements OnDestroy {
+    @HostBinding('scrollTop')
+    public scrollTop;
+
     @ViewChild('container', { read: ViewContainerRef }) public _vcr;
     @Input() public itemsLength: number;
     public height: number;

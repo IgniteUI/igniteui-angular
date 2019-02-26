@@ -282,8 +282,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!this.collapsed) {
             return;
         }
-        this.target.open(this.settings);
         this.target.width = this.parentElement.clientWidth + 'px';
+        this.target.open(this.settings);
         this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem);
         this.target.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.highlightFirstItem);
