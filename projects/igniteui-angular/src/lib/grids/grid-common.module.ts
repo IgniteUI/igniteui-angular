@@ -122,8 +122,7 @@ import { IgxListModule } from '../list/list.component';
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleDropDownComponent
+        IgxExcelStylePinningTemplateDirective
     ],
     entryComponents: [
         IgxColumnComponent,
