@@ -169,6 +169,16 @@ describe('igxCombo', () => {
             expect(combo.displayKey).toEqual('region');
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
         });
+
+        describe('EditorProvider', () => {
+            it('Should return correct edit element', () => {
+                const fixture = TestBed.createComponent(SimpleBindComboComponent);
+                fixture.detectChanges();
+                const comboElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']')).nativeElement;
+                const comboInstance = fixture.componentInstance.combo;
+                expect(comboInstance.getEditElement()).toEqual(comboElement);
+            });
+        });
     });
 
     describe('Template tests: ', () => {
