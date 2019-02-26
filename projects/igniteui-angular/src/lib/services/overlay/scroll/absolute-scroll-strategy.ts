@@ -2,7 +2,7 @@ import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
 /**
- * Upon scroll scrolls both content and shown component.
+ * On scroll reposition the overlay content.
  */
 export class AbsoluteScrollStrategy extends ScrollStrategy {
     private _initialized = false;
