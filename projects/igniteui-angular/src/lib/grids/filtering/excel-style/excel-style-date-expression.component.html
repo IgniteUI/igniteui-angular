@@ -41,7 +41,7 @@
                     igxInput
                     tabindex="0"
                     (click)="openDatePicker(openDialog)"
-                    placeholder="inputDatePlaceholder"
+                    [placeholder]="inputDatePlaceholder"
                     autocomplete="off"
                     [value]="displayData | date"
                     [readonly]="true"
