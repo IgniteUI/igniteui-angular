@@ -3,8 +3,9 @@ export default [
     {
         name: 'add_filter',
         value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-<path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-3zM5 10h10v2H5zM2 5h16v2H2zM8 15h4v2H8z"/>
-</svg>`},
+        <path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-3zM5 10h10v2H5zM2 5h16v2H2zM8 15h4v2H8z"/>
+      </svg>`
+    },
     {
         name: 'contains',
         value: `<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
@@ -203,6 +204,19 @@ export default [
         value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M10.68 15.38h6.13v-1.75h-6.13V11l-3.49 3.5 3.49 3.5v-2.62z"/>
         <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14z"/>
+      </svg>`
+    },
+    {
+        name: 'pin',
+        value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.18 2.25l7.07 7.07-2.83-.01-3.54 3.55.01 4.24-3.53-3.54-5.66 5.66H5.28V17.8l5.66-5.66L7.4 8.61l4.24.01 3.55-3.54-.01-2.83z"/>
+      </svg>`
+    },
+    {
+        name: 'unpin',
+        value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="none" d="M0 0h24v25H0V0z"/>
+        <path d="M11.84 14.08L6.7 19.22H5.28V17.8l5.14-5.14L2 4.26 3.29 3l18 18L20 22.21zm4-.49l-5-5h.73l3.55-3.54v-2.8l7.07 7.07h-2.77l-3.54 3.54z" />
       </svg>`
     }
 ];
