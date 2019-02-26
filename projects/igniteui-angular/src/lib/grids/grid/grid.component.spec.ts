@@ -687,7 +687,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(fix.componentInstance.grid.rowList.length).toEqual(11);
         }));
 
-        fit(`should render grid with correct height when parent container\'s height is set
+        it(`should render grid with correct height when parent container\'s height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
                 fix.componentInstance.grid.height = '100%';
