@@ -229,9 +229,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     get hasExpandableChildren() {
-        if (!this.data || this.data.length === 0) {
-            return false;
-        }
         return !!this.childLayoutKeys.length;
     }
 
