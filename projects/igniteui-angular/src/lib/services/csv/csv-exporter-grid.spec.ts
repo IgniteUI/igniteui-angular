@@ -17,6 +17,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CSV Grid Exporter', () => {
     configureTestSuite();
@@ -32,7 +33,7 @@ describe('CSV Grid Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent
             ],
-            imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
+            imports: [IgxGridModule.forRoot(), IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));

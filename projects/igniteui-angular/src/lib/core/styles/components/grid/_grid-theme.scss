@@ -1,3 +1,5 @@
+@import './excel-filtering-theme';
+
 ////
 /// @group themes
 /// @access public
@@ -417,6 +419,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires {mixin} ellipsis
+/// @requires {mixin} _excel-filtering
 /// @requires igx-color
 /// @requires igx-contrast-color
 /// @requires rem
@@ -2020,4 +2023,6 @@
             margin-right: calc(#{map-get($hierarchical-grid-indent, 'compact')} + 18px);
         }
     }
+
+    @include _excel-filtering($theme, $palette);
 }
