@@ -1008,11 +1008,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     * @hidden
     */
     public onWheel(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const sign = (event.deltaY > 0) ? -1 : 1;
-        this.spinValue(event.target.value, sign, event.type);
-
+        if (this._isInEditMode) {
+            event.preventDefault();
+            event.stopPropagation();
+            const sign = (event.deltaY > 0) ? -1 : 1;
+            this.spinValue(event.target.value, sign, event.type);
+        }
     }
 
     /**
