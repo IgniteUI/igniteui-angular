@@ -1,34 +1,26 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 import { IPositionStrategy } from './IPositionStrategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
     protected _initialSettings: PositionSettings;
     protected _initialSize: Size;
 
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
-        this._initialSize = size;
+    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         super.position(contentElement, size);
         if (!initialCall) {
             return;
         }
         this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
-        this.settings = this._initialSettings ? Object.assign({}, this.settings, this._initialSettings) : this.settings;
+        this.settings = Object.assign({}, this.settings, this._initialSettings);
         const elementRect: ClientRect = contentElement.getBoundingClientRect();
-        const viewPort: ClientRect = {
-            left: 0,
-            top: 0,
-            right: window.innerWidth,
-            bottom: window.innerHeight,
-            width: window.innerWidth,
-            height: window.innerHeight,
-        };
+        const viewPort: ClientRect = getViewportRect(document);
         if (this.shouldFitHorizontal(this.settings, elementRect, viewPort)) {
-            this.fitHorizontal(contentElement, this.settings, elementRect, viewPort, minSize);
+            this.fitHorizontal(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
 
         if (this.shouldFitVertical(this.settings, elementRect, viewPort)) {
-            this.fitVertical(contentElement, this.settings, elementRect, viewPort, minSize);
+            this.fitVertical(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
     }
 

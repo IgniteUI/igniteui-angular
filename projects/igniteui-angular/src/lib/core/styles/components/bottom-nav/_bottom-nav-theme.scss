@@ -192,7 +192,9 @@
 
     @include igx-scope('.igx-typography') {
         %igx-tab-label {
-            @include igx-type-style($type-scale, $label);
+            @include igx-type-style($type-scale, $label) {
+                margin: 0
+            }
         }
     }
 }

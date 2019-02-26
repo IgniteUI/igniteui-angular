@@ -1,5 +1,13 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings, Size } from './../utilities';
+import {
+  getPointFromPositionsSettings,
+  getViewportRect,
+  HorizontalAlignment,
+  PositionSettings,
+  Point,
+  Size,
+  VerticalAlignment
+} from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
@@ -22,14 +30,47 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
+  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
+    this.setStyle(contentElement, startPoint, this.settings);
+  }
 
-    //  TODO: extract transform setting in util function
-    let transformString = '';
-    transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
-    transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
-    contentElement.style.transform = transformString.trim();
+  protected setStyle(contentElement: HTMLElement, startPont: Point, settings: PositionSettings) {
+    const size = contentElement.getBoundingClientRect();
+    const viewPort: ClientRect = getViewportRect(document);
+    let wrapperRect: ClientRect;
+    if (contentElement.parentElement) {
+      wrapperRect = contentElement.parentElement.getBoundingClientRect();
+    }
+
+    //  clean up styles - if auto position strategy is chosen we may pass here several times
+    contentElement.style.right = '';
+    contentElement.style.left = '';
+    contentElement.style.bottom = '';
+    contentElement.style.top = '';
+
+    switch (settings.horizontalDirection) {
+      case HorizontalAlignment.Left:
+        contentElement.style.right = `${Math.round(viewPort.width - startPont.x - (wrapperRect ? wrapperRect.left : 0))}px`;
+        break;
+      case HorizontalAlignment.Center:
+        contentElement.style.left = `${Math.round(startPont.x - size.width / 2)}px`;
+        break;
+      case HorizontalAlignment.Right:
+        contentElement.style.left = `${Math.round(startPont.x)}px`;
+        break;
+    }
+
+    switch (settings.verticalDirection) {
+      case VerticalAlignment.Top:
+        contentElement.style.bottom = `${Math.round(viewPort.height - startPont.y - (wrapperRect ? wrapperRect.top : 0))}px`;
+        break;
+      case VerticalAlignment.Middle:
+        contentElement.style.top = `${Math.round(startPont.y - size.height / 2)}px`;
+        break;
+      case VerticalAlignment.Bottom:
+        contentElement.style.top = `${Math.round(startPont.y)}px`;
+        break;
+    }
   }
 }
-

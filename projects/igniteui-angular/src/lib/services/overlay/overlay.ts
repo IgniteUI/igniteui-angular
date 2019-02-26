@@ -1,7 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs, OverlayCancelableEventArgs } from './utilities';
+import {
+    OverlaySettings,
+    OverlayEventArgs,
+    OverlayInfo,
+    OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs
+} from './utilities';
 
 import {
     ApplicationRef,
@@ -14,13 +21,16 @@ import {
     Injectable,
     Injector,
     Type,
-    OnDestroy
+    OnDestroy,
+    NgModuleRef
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
-import { take, filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
-import { ElasticPositionStrategy } from './position';
+import { showMessage } from '../../core/deprecateDecorators';
+
+let warningShown = false;
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -69,7 +79,7 @@ export class IgxOverlayService implements OnDestroy {
      * }
      * ```
      */
-    public onClosing = new EventEmitter<OverlayCancelableEventArgs>();
+    public onClosing = new EventEmitter<OverlayClosingEventArgs>();
 
     /**
      * Emitted after the component is closed and all animations are finished.
@@ -101,6 +111,37 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
+     * Generates Id. Provide this Id when call `show(id, settings?)` method
+     * @param component ElementRef to show in overlay
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     */
+    attach(element: ElementRef , settings?: OverlaySettings): string;
+    /**
+     * Generates Id. Provide this Id when call `show(id, settings?)` method
+     * @param component Component Type to show in overlay
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     * @param moduleRef Optional reference to the NgModule that can resolve the component's factory
+     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     */
+    attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string;
+    attach(component: ElementRef | Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string {
+        let info: OverlayInfo;
+        info = this.getOverlayInfo(component, moduleRef);
+
+        //  if there is no info most probably wrong type component was provided and we just go out
+        if (!info) {
+            return null;
+        }
+
+        info.id = (this._componentId++).toString();
+        settings = Object.assign({}, this._defaultSettings, settings);
+        info.settings = settings;
+        this._overlayInfos.push(info);
+        return info.id;
+    }
+
+    /**
      * Shows the overlay for provided id.
      * @param id Id to show overlay for
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
@@ -114,10 +155,11 @@ export class IgxOverlayService implements OnDestroy {
      * ```typescript
      * this.overlay.show(element, settings);
      * ```
+     * @deprecated Use `attach(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.
      */
     // tslint:disable-next-line:unified-signatures
-    show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
-    show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
+    show(component: ElementRef | Type<any>, settings?: OverlaySettings): string;
+    show(compOrId: string | ElementRef | Type<any>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
         if (typeof compOrId === 'string') {
@@ -125,9 +167,13 @@ export class IgxOverlayService implements OnDestroy {
             info = this.getOverlayById(compOrId);
             if (!info) {
                 console.warn('igxOverlay.show was called with wrong id: ' + compOrId);
-                return;
+                return null;
             }
         } else {
+            warningShown = showMessage(
+                '`show(component, settings?)` overload is deprecated. Use `attach(component)` to obtain an Id.' +
+                'Then `show(id, settings?)` with provided Id.',
+                warningShown);
             id = (this._componentId++).toString();
             info = this.getOverlayInfo(compOrId);
 
@@ -139,61 +185,10 @@ export class IgxOverlayService implements OnDestroy {
             info.id = id;
         }
 
-        settings = Object.assign({}, this._defaultSettings, settings);
+        settings = Object.assign({}, this._defaultSettings, info.settings, settings);
         info.settings = settings;
 
-        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
-        this.onOpening.emit(eventArgs);
-        if (eventArgs.cancel) {
-            if (info.componentRef) {
-                this._appRef.detachView(info.componentRef.hostView);
-                info.componentRef.destroy();
-            }
-            return id;
-        }
-
-        //  if there is no close animation player, or there is one but it is not started yet we are in clear
-        //  opening. Otherwise, if there is close animation player playing animation now we should not setup
-        //  overlay this is already done
-        if (!info.closeAnimationPlayer || (info.closeAnimationPlayer && !info.closeAnimationPlayer.hasStarted())) {
-            const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
-            info.initialSize = { width: elementRect.width, height: elementRect.height };
-            info.hook = this.placeElementHook(info.elementRef.nativeElement);
-
-            this.moveElementToOverlay(info);
-            if (info.componentRef) {
-                info.componentRef.changeDetectorRef.detectChanges();
-            }
-            this.updateSize(info);
-            this._overlayInfos.push(info);
-
-            const elementStyle = info.elementRef.nativeElement.style;
-            if (settings.positionStrategy instanceof ElasticPositionStrategy) {
-                info.originalElementStyleSize = { width: elementStyle.width, height: elementStyle.height };
-            }
-            settings.positionStrategy.position(
-                info.elementRef.nativeElement.parentElement,
-                { width: info.initialSize.width, height: info.initialSize.height },
-                document,
-                true,
-                settings.positionStrategy.settings.minSize);
-            settings.scrollStrategy.initialize(this._document, this, id);
-            settings.scrollStrategy.attach();
-        }
-
-        this.addOutsideClickListener(info);
-        this.addResizeHandler(info.id);
-
-        if (info.settings.modal) {
-            this.setupModalWrapper(info);
-        }
-
-        if (info.settings.positionStrategy.settings.openAnimation) {
-            this.playOpenAnimation(info);
-        } else {
-            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-        }
-
+        this._show(info);
         return id;
     }
 
@@ -204,36 +199,7 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     hide(id: string) {
-        const info: OverlayInfo = this.getOverlayById(id);
-
-        if (!info) {
-            console.warn('igxOverlay.hide was called with wrong id: ' + id);
-            return;
-        }
-
-        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
-        this.onClosing.emit(eventArgs);
-        if (eventArgs.cancel) {
-            return;
-        }
-
-        info.settings.scrollStrategy.detach();
-        this.removeOutsideClickListener(info);
-        this.removeResizeHandler(info.id);
-
-        const child: HTMLElement = info.elementRef.nativeElement;
-        if (info.settings.modal) {
-            const parent = child.parentNode.parentNode as HTMLElement;
-            this.applyAnimationParams(parent, info.settings.positionStrategy.settings.closeAnimation);
-            parent.classList.remove('igx-overlay__wrapper--modal');
-            parent.classList.add('igx-overlay__wrapper');
-        }
-
-        if (info.settings.positionStrategy.settings.closeAnimation) {
-            this.playCloseAnimation(info);
-        } else {
-            this.onCloseDone(info);
-        }
+        this._hide(id);
     }
 
     /**
@@ -257,36 +223,127 @@ export class IgxOverlayService implements OnDestroy {
      */
     reposition(id: string) {
         const overlayInfo = this.getOverlayById(id);
-        if (!overlayInfo) {
+        if (!overlayInfo || !overlayInfo.settings) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
             return;
         }
 
+        const contentElement = overlayInfo.elementRef.nativeElement.parentElement;
+        const contentElementRect = contentElement.getBoundingClientRect();
         overlayInfo.settings.positionStrategy.position(
-            overlayInfo.elementRef.nativeElement.parentElement,
+            contentElement,
             {
-                width: overlayInfo.elementRef.nativeElement.parentElement.clientWidth,
-                height: overlayInfo.elementRef.nativeElement.parentElement.clientHeight
+                width: contentElementRect.width,
+                height: contentElementRect.height
             },
             this._document,
-            false,
-            overlayInfo.settings.positionStrategy.settings.minSize);
+            false);
     }
 
-    private getOverlayInfo(component: any): OverlayInfo {
+    private _show(info: OverlayInfo) {
+        const eventArgs: OverlayCancelableEventArgs = { id: info.id, componentRef: info.componentRef, cancel: false };
+        this.onOpening.emit(eventArgs);
+        if (eventArgs.cancel) {
+            if (info.componentRef) {
+                this._appRef.detachView(info.componentRef.hostView);
+                info.componentRef.destroy();
+            }
+
+            return;
+        }
+
+        //  if there is no close animation player, or there is one but it is not started yet we are in clear
+        //  opening. Otherwise, if there is close animation player playing animation now we should not setup
+        //  overlay this is already done
+        if (!info.closeAnimationPlayer || (info.closeAnimationPlayer && !info.closeAnimationPlayer.hasStarted())) {
+            const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+            info.initialSize = { width: elementRect.width, height: elementRect.height };
+            info.hook = this.placeElementHook(info.elementRef.nativeElement);
+
+            this.moveElementToOverlay(info);
+            if (info.componentRef) {
+                info.componentRef.changeDetectorRef.detectChanges();
+            }
+            this.updateSize(info);
+            if (this._overlayInfos.indexOf(info) === -1) {
+                this._overlayInfos.push(info);
+            }
+
+            info.settings.positionStrategy.position(
+                info.elementRef.nativeElement.parentElement,
+                { width: info.initialSize.width, height: info.initialSize.height },
+                document,
+                true);
+            info.settings.scrollStrategy.initialize(this._document, this, info.id);
+            info.settings.scrollStrategy.attach();
+        }
+
+        this.addOutsideClickListener(info);
+        this.addResizeHandler(info.id);
+
+        if (info.settings.modal) {
+            this.setupModalWrapper(info);
+        }
+
+        if (info.settings.positionStrategy.settings.openAnimation) {
+            this.playOpenAnimation(info);
+        } else {
+            //  to eliminate flickering show the element just before onOpened fire
+            info.elementRef.nativeElement.parentElement.style.visibility = '';
+            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+        }
+    }
+
+    private _hide(id: string, event?: Event) {
+        const info: OverlayInfo = this.getOverlayById(id);
+
+        if (!info) {
+            console.warn('igxOverlay.hide was called with wrong id: ' + id);
+            return;
+        }
+
+        const eventArgs = { id, componentRef: info.componentRef, cancel: false, event };
+        this.onClosing.emit(eventArgs);
+        if (eventArgs.cancel) {
+            return;
+        }
+
+        //  TODO: synchronize where these are added/attached and where removed/detached
+        info.settings.scrollStrategy.detach();
+        this.removeOutsideClickListener(info);
+        this.removeResizeHandler(info.id);
+
+        const child: HTMLElement = info.elementRef.nativeElement;
+        if (info.settings.modal) {
+            const parent = child.parentNode.parentNode as HTMLElement;
+            this.applyAnimationParams(parent, info.settings.positionStrategy.settings.closeAnimation);
+            parent.classList.remove('igx-overlay__wrapper--modal');
+            parent.classList.add('igx-overlay__wrapper');
+        }
+
+        if (info.settings.positionStrategy.settings.closeAnimation) {
+            this.playCloseAnimation(info);
+        } else {
+            this.onCloseDone(info);
+        }
+    }
+
+    private getOverlayInfo(component: any, moduleRef?: NgModuleRef<any>): OverlayInfo {
         const info: OverlayInfo = {};
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
         } else {
             let dynamicFactory: ComponentFactory<{}>;
+            const factoryResolver = moduleRef ? moduleRef.componentFactoryResolver : this._factoryResolver;
             try {
-                dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
+                dynamicFactory = factoryResolver.resolveComponentFactory(component);
             } catch (error) {
                 console.error(error);
                 return null;
             }
 
-            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(this._injector);
+            const injector = moduleRef ? moduleRef.injector : this._injector;
+            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(injector);
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
@@ -310,7 +367,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private moveElementToOverlay(info: OverlayInfo) {
         const wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(wrapperElement, info.settings);
+        const contentElement = this.getContentElement(wrapperElement, info.settings.modal);
         this.getOverlayElement(info).appendChild(wrapperElement);
         const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
@@ -326,9 +383,9 @@ export class IgxOverlayService implements OnDestroy {
         return wrapper;
     }
 
-    private getContentElement(wrapperElement: HTMLElement, settings: OverlaySettings): HTMLElement {
+    private getContentElement(wrapperElement: HTMLElement, modal: boolean): HTMLElement {
         const content: HTMLElement = this._document.createElement('div');
-        if (settings.modal) {
+        if (modal) {
             content.classList.add('igx-overlay__content--modal');
             content.addEventListener('click', (ev: Event) => {
                 ev.stopPropagation();
@@ -340,6 +397,9 @@ export class IgxOverlayService implements OnDestroy {
         content.addEventListener('scroll', (ev: Event) => {
             ev.stopPropagation();
         });
+
+        //  hide element to eliminate flickering. Show the element exactly before animation starts
+        content.style.visibility = 'hidden';
 
         wrapperElement.appendChild(content);
         return content;
@@ -365,10 +425,9 @@ export class IgxOverlayService implements OnDestroy {
             info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
         }
 
-        // set content div size only if element to show has size
-        if (info.initialSize.width !== 0 && info.initialSize.height !== 0) {
+        // set content div width only if element to show has width
+        if (info.initialSize.width !== 0) {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
-            info.elementRef.nativeElement.parentElement.style.height = info.initialSize.height + 'px';
         }
     }
 
@@ -384,6 +443,11 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private onCloseDone(info: OverlayInfo) {
+        this.cleanUp(info);
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+    }
+
+    private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
         const outlet = this.getOverlayElement(info);
         if (!outlet.contains(child)) {
@@ -410,14 +474,6 @@ export class IgxOverlayService implements OnDestroy {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
         }
-
-        //  restore the element's original width and height if any
-        if (info.originalElementStyleSize) {
-            info.elementRef.nativeElement.style.height = info.originalElementStyleSize.height;
-            info.elementRef.nativeElement.style.width = info.originalElementStyleSize.width;
-        }
-
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
     }
 
     private playOpenAnimation(info: OverlayInfo) {
@@ -433,14 +489,24 @@ export class IgxOverlayService implements OnDestroy {
             info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
             info.openAnimationPlayer.onDone(() => {
                 this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-                info.openAnimationPlayer.reset();
-                info.openAnimationPlayer = null;
+                if (info.openAnimationPlayer) {
+                    info.openAnimationPlayer.reset();
+                    info.openAnimationPlayer = null;
+                }
+
                 if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
                     info.closeAnimationPlayer.reset();
                 }
             });
         }
 
+        //  if there is opening animation already started do nothing
+        if (info.openAnimationPlayer.hasStarted()) {
+            return;
+        }
+
+        //  if there is closing animation already started start open animation from where close one has reached
+        //  and remove close animation
         if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
@@ -448,11 +514,15 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.closeAnimationInnerPlayer.getPosition();
             info.closeAnimationPlayer.reset();
+            info.closeAnimationPlayer = null;
             info.openAnimationPlayer.init();
             info.openAnimationPlayer.setPosition(position);
         }
 
         this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
+
+        //  to eliminate flickering show the element just before animation start
+        info.elementRef.nativeElement.parentElement.style.visibility = '';
         info.openAnimationPlayer.play();
     }
 
@@ -469,8 +539,11 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
 
             info.closeAnimationPlayer.onDone(() => {
-                info.closeAnimationPlayer.reset();
-                info.closeAnimationPlayer = null;
+                if (info.closeAnimationPlayer) {
+                    info.closeAnimationPlayer.reset();
+                    info.closeAnimationPlayer = null;
+                }
+
                 if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
                     info.openAnimationPlayer.reset();
                 }
@@ -478,6 +551,13 @@ export class IgxOverlayService implements OnDestroy {
             });
         }
 
+        //  if there is closing animation already started do nothing
+        if (info.closeAnimationPlayer.hasStarted()) {
+            return;
+        }
+
+        //  if there is opening animation already started start close animation from where open one has reached
+        //  and remove open animation
         if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
@@ -485,6 +565,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
+            info.openAnimationPlayer = null;
             info.closeAnimationPlayer.init();
             info.closeAnimationPlayer.setPosition(position);
         }
@@ -514,12 +595,17 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayById(id: string): OverlayInfo {
-        const overlay = this._overlayInfos.find(e => e.id === id);
-        return overlay;
+    /** @hidden @internal */
+    public getOverlayById(id: string): OverlayInfo {
+        if (!id) {
+            return null;
+        }
+
+        const info = this._overlayInfos.find(e => e.id === id);
+        return info;
     }
 
-    private documentClicked = (ev: Event) => {
+    private documentClicked = (ev: MouseEvent) => {
         //  if we get to modal overlay just return - we should not close anything under it
         //  if we get to non-modal overlay do the next:
         //   1. Check it has close on outside click. If not go on to next overlay;
@@ -532,9 +618,21 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
+                //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
-                    this.hide(info.id);
+                    // if we should exclude position target check if the click is over it. If so do not close overlay
+                    const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
+                    const clickOnPositionTarget = positionTarget && positionTarget.contains
+                        ? (positionTarget as any).contains(ev.target)
+                        : false;
+                    if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
+                        //  if the click is outside click, but close animation has started do nothing
+                        if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
+                            this._hide(info.id, ev);
+                        }
+                    }
                 } else {
+                    //  TODO: should we return here, or continue with next overlays
                     return;
                 }
             }

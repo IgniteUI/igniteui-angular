@@ -1,11 +1,11 @@
 # igxButton
 
-The **igxButton** directive is intended to be used on any button, span, div, or anchor element to turn it into a fully functional button.  
+The **igxButton** directive is intended to be used on any button, span, div, input, or anchor element to turn it into a fully functional button.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button.html)
 
 # Usage
 ```html
-<target-element igxButton [..options]>Click me</target-element>
+<target-element igxButton [...options]>Click me</target-element>
 ```
 
 # API Summary
@@ -18,16 +18,14 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # Button types
 | Name   | Description |
 |:----------|:-------------:|
-| `flat` | The default button type. Transparent background and primary theme color for text. |
-| `raised` | As the name implies, this button type uses subtle box-shadow. Primary theme color for background and white for text color. |
-| `gradient` | Same as the raised button type. Additionally you can specify a gradient value for background color. |
-| `fab` | Floating action button type. Circular with primary theme color for background and white text. |
+| `flat` | The default button type. Uses transparent background and the secondary theme color from the palette color for the text. |
+| `outlined` |  Very similar to the flat button type but with a thin outline around the edges of the button. |
+| `raised` | As the name implies, this button type features a subtle shadow. Uses the secondary theme color from the palette for background. |
+| `fab` | Floating action button type. Circular with secondary theme color for background. |
 | `icon` | This is the simplest of button types. Use it whenever you need to use an icon as button. |
-| `navbar` | Same as the icon button type, albeit optimized for use with the igx-navbar component. |
 
 # Examples
-
 Using `igxButton` to turn a span element into an for Angular styled button.
 ```html
-<span igxButton="raised" igxButtonColor="yellow" igxButtonBackground="#000">Click me<span>
+<span igxButton="outlined">Click me<span>
 ```

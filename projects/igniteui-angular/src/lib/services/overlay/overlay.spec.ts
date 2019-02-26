@@ -5,9 +5,10 @@ import {
     NgModule,
     ViewChild,
     ComponentRef,
-    HostBinding
+    HostBinding,
+    ApplicationRef
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -31,13 +32,14 @@ import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IPositionStrategy } from './position/IPositionStrategy';
+import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -342,7 +344,7 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false, event: undefined });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(2);
 
             tick();
@@ -362,7 +364,8 @@ describe('igxOverlay', () => {
             overlayInstance.hide(secondCallId);
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.onClosing.emit).
+                toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false, event: undefined });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(4);
 
             tick();
@@ -399,18 +402,23 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly set style on position method call - ConnectedPosition.', () => {
-            const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild']);
+            const mockElement = jasmine.createSpyObj('parentElement', [
+                'style',
+                'getBoundingClientRect',
+                'lastElementChild'
+            ]);
             const mockItem = document.createElement('div');
-            let width = 200;
-            let height = 0;
-            let right = 0;
-            let bottom = 0;
+            const width = 200;
+            const height = 200;
+            const right = 200;
+            const bottom = 200;
             spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
                 return {
                     width, height, right, bottom
                 };
             });
-            spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
+            spyOn<any>(mockItem, 'parentElement').and.returnValue(mockElement);
+            spyOn<any>(mockItem, 'firstElementChild').and.returnValue(mockElement);
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
                 verticalDirection: VerticalAlignment.Bottom,
@@ -419,160 +427,75 @@ describe('igxOverlay', () => {
                 verticalStartPoint: VerticalAlignment.Top
             };
             const connectedStrat1 = new ConnectedPositioningStrategy(mockPositioningSettings1);
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(-200px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('0px');
+            expect(mockItem.style.left).toEqual('0px');
 
             connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Center;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(-100px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('0px');
+            expect(mockItem.style.left).toEqual('100px');
 
             connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Right;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('0px');
+            expect(mockItem.style.left).toEqual('200px');
 
-            right = 0;
-            bottom = 0;
-            width = 0;
-            height = 200;
-            connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Top;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-200px)');
             connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Middle;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-100px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('100px');
+            expect(mockItem.style.left).toEqual('200px');
 
             connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Bottom;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
-
-            right = 0;
-            bottom = 0;
-            width = 0;
-            height = 0;
-            connectedStrat1.settings.verticalDirection = VerticalAlignment.Top;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-200px)');
-
-            connectedStrat1.settings.verticalDirection = VerticalAlignment.Middle;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-100px)');
-
-            connectedStrat1.settings.verticalDirection = VerticalAlignment.Bottom;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
-
-            right = 0;
-            bottom = 0;
-            width = 0;
-            height = 0;
-            connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Left;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(-200px) translateY(0px)');
-
-            connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Center;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(-100px) translateY(0px)');
-
-            connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Right;
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('200px');
+            expect(mockItem.style.left).toEqual('200px');
 
             // If target is Point
             connectedStrat1.settings.target = new Point(0, 0);
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('0px');
+            expect(mockItem.style.left).toEqual('0px');
 
             // If target is not point or html element, should fallback to new Point(0,0)
             connectedStrat1.settings.target = <any>'g';
-            connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
+            connectedStrat1.position(mockItem, { width, height });
+            expect(mockItem.style.top).toEqual('0px');
+            expect(mockItem.style.left).toEqual('0px');
         });
 
         it('Should properly call position method - AutoPosition.', () => {
-            const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild', 'getBoundingClientRect']);
-            const mockItem = { parentElement: mockParent, clientHeight: 0, clientWidth: 0 } as HTMLElement;
-            spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
-            const mockPositioningSettings1: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat1 = new AutoPositionStrategy(mockPositioningSettings1);
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
-            mockParent.getBoundingClientRect.and.returnValue(jasmine.createSpyObj('obj', ['left', 'top']));
-
-            autoStrat1.position(mockItem.parentElement, null, null, true, null);
+            const element = {} as HTMLElement;
+            const autoStrat1 = new AutoPositionStrategy();
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(mockItem.parentElement, null);
+            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
-            const mockPositioningSettings2: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Top,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat2 = new AutoPositionStrategy(mockPositioningSettings2);
-
-            autoStrat2.position(mockItem.parentElement, null, null, true, null);
+            const autoStrat2 = new AutoPositionStrategy();
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
-            const mockPositioningSettings3: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection: VerticalAlignment.Middle,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat3 = new AutoPositionStrategy(mockPositioningSettings3);
-
-            autoStrat3.position(mockItem.parentElement, null, null);
+            const autoStrat3 = new AutoPositionStrategy();
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
         it('Should properly call position method - ElasticPosition.', () => {
-            const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild', 'getBoundingClientRect']);
-            const mockItem = { parentElement: mockParent, clientHeight: 0, clientWidth: 0 } as HTMLElement;
-            spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
-            const mockPositioningSettings1: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat1 = new ElasticPositionStrategy(mockPositioningSettings1);
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
-            mockParent.getBoundingClientRect.and.returnValue(jasmine.createSpyObj('obj', ['left', 'top']));
+            const element = {} as HTMLElement;
+            const autoStrat1 = new ElasticPositionStrategy();
 
-            autoStrat1.position(mockItem.parentElement, null, null, true, null);
+            autoStrat1.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(mockItem.parentElement, null);
+            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
-            const mockPositioningSettings2: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Top,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat2 = new ElasticPositionStrategy(mockPositioningSettings2);
-
-            autoStrat2.position(mockItem.parentElement, null, null, true, null);
+            const autoStrat2 = new ElasticPositionStrategy();
+            autoStrat2.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
-            const mockPositioningSettings3: PositionSettings = {
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection: VerticalAlignment.Middle,
-                target: mockItem,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top
-            };
-            const autoStrat3 = new ElasticPositionStrategy(mockPositioningSettings3);
-
-            autoStrat3.position(mockItem.parentElement, null, null);
+            const autoStrat3 = new ElasticPositionStrategy();
+            autoStrat3.position(element, null, null, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
@@ -762,6 +685,83 @@ describe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.children.length).toEqual(1);
             expect(overlayDiv.children[0].localName).toEqual('div');
+        }));
+
+        it('fix for #3743 - Reposition correctly resized element.', () => {
+            const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+            fixture.detectChanges();
+
+            const compElement = document.createElement('div');
+            compElement.setAttribute('style', 'width:100px; height:100px; color:green; border: 1px solid blue;');
+            const contentElement = document.createElement('div');
+            contentElement.classList.add('contentWrapper');
+            contentElement.classList.add('no-height');
+            contentElement.setAttribute('style', 'width:100px; position: absolute;');
+            contentElement.appendChild(compElement);
+            const wrapperElement  = document.createElement('div');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0;');
+            wrapperElement.appendChild(contentElement);
+            document.body.appendChild(wrapperElement);
+
+            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+
+            fixture.detectChanges();
+            const positionSettings: PositionSettings = {
+                target: targetEl,
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Top,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Top
+            };
+            const strategy = new ConnectedPositioningStrategy(positionSettings);
+            strategy.position(contentElement, null);
+            fixture.detectChanges();
+
+            const targetRect = targetEl.getBoundingClientRect();
+            let contentElementRect = contentElement.getBoundingClientRect();
+            expect(targetRect.top).toBe(contentElementRect.bottom);
+            expect(targetRect.left).toBe(contentElementRect.right);
+
+            compElement.setAttribute('style', 'width:100px; height:50px; color:green; border: 1px solid blue;');
+            strategy.position(contentElement, null);
+            fixture.detectChanges();
+            contentElementRect = contentElement.getBoundingClientRect();
+            expect(targetRect.top).toBe(contentElementRect.bottom);
+            expect(targetRect.left).toBe(contentElementRect.right);
+
+            compElement.setAttribute('style', 'width:100px; height:500px; color:green; border: 1px solid blue;');
+            strategy.position(contentElement, null);
+            fixture.detectChanges();
+            contentElementRect = contentElement.getBoundingClientRect();
+            expect(targetRect.top).toBe(contentElementRect.bottom);
+            expect(targetRect.left).toBe(contentElementRect.right);
+
+            document.body.removeChild(wrapperElement);
+        });
+
+        it('Fix for #3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            fixture.detectChanges();
+
+            spyOn(appRef, 'attachView');
+            const mockComponent = {
+                hostView: 'test',
+                location: { nativeElement: 'element'}
+            };
+            const factoryMock = jasmine.createSpyObj('factoryMock', {
+                create: mockComponent
+            });
+            const injector = 'testInjector';
+            const componentFactoryResolver = jasmine.createSpyObj('componentFactoryResolver', {
+                resolveComponentFactory: factoryMock
+            });
+
+            const id = overlay.attach(SimpleDynamicComponent, {}, {componentFactoryResolver, injector} as any);
+            expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
+            expect(factoryMock.create).toHaveBeenCalledWith(injector);
+            expect(appRef.attachView).toHaveBeenCalledWith('test');
+            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
         }));
     });
 
@@ -1039,30 +1039,21 @@ describe('igxOverlay', () => {
             expect(componentRect_1.height).toEqual(componentRect_2.height);
         }));
 
-        it('Should show a component bigger than the visible window as centered and scrollbars should not appear.', fakeAsync(() => {
+        it('Should show a component bigger than the visible window as centered.', fakeAsync(() => {
 
             // overlay div is forced to has width and height equal to 0. This will prevent body
             // to show any scrollbars whatever the size of the component is.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
-            let hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
-            expect(hasScrollbar).toBeFalsy();
             fixture.componentInstance.overlay.show(SimpleBigSizeComponent);
             tick();
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             const overlayWrapper = overlayDiv.children[0];
             const componentEl = overlayWrapper.children[0].children[0].lastElementChild; // Wrapped in 'NG-COMPONENT'
-            const wrapperRect = overlayWrapper.getBoundingClientRect();
             const componentRect = componentEl.getBoundingClientRect();
 
-            // display:flex parent will keep the content container within the wrapper in width (x, left = 0, right = width)
-            expect(componentRect.left).toBe(0);
-            expect(wrapperRect.width).toEqual(wrapperRect.right);
-            expect(wrapperRect.height).toEqual(wrapperRect.bottom);
-            expect(componentRect.top).toBeLessThan(0);
-            expect(wrapperRect.height / 2).toEqual(componentRect.top + componentRect.height / 2);
-            hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
-            expect(hasScrollbar).toBeFalsy();
+            expect(componentRect.left).toBe((overlayWrapper.clientWidth - componentRect.width) / 2);
+            expect(componentRect.top).toBe((overlayWrapper.clientHeight - componentRect.height) / 2);
         }));
 
         // 1.1.1 Global Css
@@ -1314,7 +1305,6 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
-
             expect(document.documentElement.scrollTop).toEqual(0);
             let overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
             let overlayChildPosition: DOMRect = overlayElement.lastElementChild.getBoundingClientRect() as DOMRect;
@@ -1372,43 +1362,50 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             // for a Point(300,300);
-            const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
-            const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
+            const expectedTopForPoint: number[] = [240, 270, 300];  // top/middle/bottom/
+            const expectedLeftForPoint: number[] = [240, 270, 300]; // left/center/right/
 
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
             compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-            const contentWrapper = document.createElement('div');
-            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-            contentWrapper.classList.add('contentWrapper');
-            contentWrapper.appendChild(compElement);
-            document.body.appendChild(contentWrapper);
+            const contentElement = document.createElement('div');
+            contentElement.setAttribute('style', 'position: absolute; color:gray;');
+            contentElement.classList.add('contentWrapper');
+            contentElement.appendChild(compElement);
+            const wrapperElement  = document.createElement('div');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
+            wrapperElement.appendChild(contentElement);
+            document.body.appendChild(wrapperElement);
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
             fixture.detectChanges();
-            for (let i = 0; i < horAl.length; i++) {
-                for (let j = 0; j < verAl.length; j++) {
+            for (let horizontalDirection = 0; horizontalDirection < horAl.length; horizontalDirection++) {
+                for (let verticalDirection = 0; verticalDirection < verAl.length; verticalDirection++) {
 
                     // start Point is static Top/Left at 300/300
                     const positionSettings2 = {
                         target: new Point(300, 300),
-                        horizontalDirection: HorizontalAlignment[horAl[i]],
-                        verticalDirection: VerticalAlignment[verAl[j]],
+                        horizontalDirection: HorizontalAlignment[horAl[horizontalDirection]],
+                        verticalDirection: VerticalAlignment[verAl[verticalDirection]],
                         element: null,
                         horizontalStartPoint: HorizontalAlignment.Left,
                         verticalStartPoint: VerticalAlignment.Top
                     };
 
                     const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                    strategy.position(contentWrapper, size);
+                    strategy.position(contentElement, size);
                     fixture.detectChanges();
-                    const transform = `translateX(${expectedLeftForPoint[i]}) translateY(${expectedTopForPoint[j]})`;
-                    expect(contentWrapper.style.transform).toBe(transform);
+
+                    const left = expectedLeftForPoint[horizontalDirection];
+                    const top = expectedTopForPoint[verticalDirection];
+                    const contentElementRect = contentElement.getBoundingClientRect();
+                    expect(contentElementRect.left).toBe(left);
+                    expect(contentElementRect.top).toBe(top);
                 }
             }
-            document.body.removeChild(contentWrapper);
+            document.body.removeChild(wrapperElement);
         });
 
         it('Should position component based on element and start point when connected position strategy is used.', () => {
@@ -1422,11 +1419,14 @@ describe('igxOverlay', () => {
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
             compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-            const contentWrapper = document.createElement('div');
-            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-            contentWrapper.classList.add('contentWrapper');
-            contentWrapper.appendChild(compElement);
-            document.body.appendChild(contentWrapper);
+            const contentElement = document.createElement('div');
+            contentElement.setAttribute('style', 'color:gray; position: absolute;');
+            contentElement.classList.add('contentWrapper');
+            contentElement.appendChild(compElement);
+            const wrapperElement  = document.createElement('div');
+            wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
+            wrapperElement.appendChild(contentElement);
+            document.body.appendChild(wrapperElement);
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
@@ -1435,32 +1435,33 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             // loop trough and test all possible combinations (count 81) for StartPoint and Direction.
-            for (let lsp = 0; lsp < horAl.length; lsp++) {
-                for (let tsp = 0; tsp < verAl.length; tsp++) {
-                    for (let i = 0; i < horAl.length; i++) {
-                        for (let j = 0; j < verAl.length; j++) {
+            for (let horizontalStartPoint = 0; horizontalStartPoint < horAl.length; horizontalStartPoint++) {
+                for (let verticalStartPoint = 0; verticalStartPoint < verAl.length; verticalStartPoint++) {
+                    for (let horizontalDirection = 0; horizontalDirection < horAl.length; horizontalDirection++) {
+                        for (let verticalDirection = 0; verticalDirection < verAl.length; verticalDirection++) {
                             // TODO: add additional check for different start points
                             // start Point is static Top/Left at 300/300
-                            const positionSettings2 = {
+                            const positionSettings = {
                                 target: targetEl,
-                                horizontalDirection: HorizontalAlignment[horAl[i]],
-                                verticalDirection: VerticalAlignment[verAl[j]],
+                                horizontalDirection: HorizontalAlignment[horAl[horizontalDirection]],
+                                verticalDirection: VerticalAlignment[verAl[verticalDirection]],
                                 element: null,
-                                horizontalStartPoint: HorizontalAlignment[horAl[lsp]],
-                                verticalStartPoint: VerticalAlignment[verAl[tsp]],
+                                horizontalStartPoint: HorizontalAlignment[horAl[horizontalStartPoint]],
+                                verticalStartPoint: VerticalAlignment[verAl[verticalStartPoint]],
                             };
-                            const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                            strategy.position(contentWrapper, size);
+                            const strategy = new ConnectedPositioningStrategy(positionSettings);
+                            strategy.position(contentElement, size);
                             fixture.detectChanges();
-                            const translateY = (expectedTopForPoint[j] + 30 * tsp) + 'px';
-                            const translateX = (expectedLeftForPoint[i] + 50 * lsp) + 'px';
-                            const transform = `translateX(${translateX}) translateY(${translateY})`;
-                            expect(contentWrapper.style.transform).toBe(transform);
+                            const left = expectedLeftForPoint[horizontalDirection] + 50 * horizontalStartPoint;
+                            const top = expectedTopForPoint[verticalDirection] + 30 * verticalStartPoint;
+                            const contentElementRect = contentElement.getBoundingClientRect();
+                            expect(contentElementRect.left).toBe(left);
+                            expect(contentElementRect.top).toBe(top);
                         }
                     }
                 }
             }
-            document.body.removeChild(contentWrapper);
+            document.body.removeChild(wrapperElement);
         });
 
         // 1.3 AutoPosition (fit the shown component into the visible window.)
@@ -1540,7 +1541,7 @@ describe('igxOverlay', () => {
             const wrapperContent = wrappers[wrappers.length - 1].lastElementChild; // wrapped in NG-COMPONENT
             expect(wrapperContent.children.length).toEqual(1);
             expect(wrapperContent.lastElementChild.getAttribute('style'))
-                .toEqual('position: absolute; width:100px; height: 100px; background-color: red');
+                .toEqual('width:100px; height: 100px; background-color: red');
         }));
 
         it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
@@ -1563,7 +1564,7 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapped in NG-COMPONENT
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            const expectedStyle = 'width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
@@ -1614,7 +1615,8 @@ describe('igxOverlay', () => {
 
                                 const targetRect: ClientRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
                                 const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                const overlayWrapperRect: ClientRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                const overlayWrapperRect: ClientRect =
+                                    overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
                                 const screenRect: ClientRect = {
                                     left: 0,
                                     top: 0,
@@ -1685,7 +1687,8 @@ describe('igxOverlay', () => {
 
                                     const targetRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
                                     const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                    const overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                    const overlayWrapperRect =
+                                        overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
                                     const screenRect: ClientRect = {
                                         left: 0,
                                         top: 0,
@@ -1830,12 +1833,13 @@ describe('igxOverlay', () => {
                 const componentEl_2 = overlayWrapper_2.children[0].children[0];
                 const componentRect_1 = componentEl_1.getBoundingClientRect();
                 const componentRect_2 = componentEl_2.getBoundingClientRect();
-                expect(componentRect_1.left).toEqual(buttonRect.right); // Will be positioned on the right of the button
-                expect(componentRect_1.left).toEqual(componentRect_2.left); // Are on the same spot
+                // Will be positioned on the right of the button
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(buttonRect.right));
+                expect(Math.round(componentRect_1.left)).toEqual(Math.round(componentRect_2.left)); // Are on the same spot
                 // expect(componentRect_1.top).toEqual(buttonRect.top - componentEl_1.clientHeight); // Will be positioned on top of button
-                expect(componentRect_1.top).toEqual(componentRect_2.top); // Will have the same top
-                expect(componentRect_1.width).toEqual(componentRect_2.width); // Will have the same width
-                expect(componentRect_1.height).toEqual(componentRect_2.height); // Will have the same height
+                expect(Math.round(componentRect_1.top)).toEqual(Math.round(componentRect_2.top)); // Will have the same top
+                expect(Math.round(componentRect_1.width)).toEqual(Math.round(componentRect_2.width)); // Will have the same width
+                expect(Math.round(componentRect_1.height)).toEqual(Math.round(componentRect_2.height)); // Will have the same height
             }));
 
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
@@ -1982,7 +1986,7 @@ describe('igxOverlay', () => {
             const wrapperContent = wrappers[wrappers.length - 1].lastElementChild; // wrapped in NG-COMPONENT
             expect(wrapperContent.children.length).toEqual(1);
             expect(wrapperContent.lastElementChild.getAttribute('style'))
-                .toEqual('position: absolute; width:100px; height: 100px; background-color: red');
+                .toEqual('width:100px; height: 100px; background-color: red');
         }));
 
         it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
@@ -2004,14 +2008,13 @@ describe('igxOverlay', () => {
 
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapped in NG-COMPONENT
-            expect(wrapperContent.lastElementChild.clientWidth).toEqual(80);
-            expect(wrapperContent.lastElementChild.clientHeight).toEqual(80);
+            const rect = wrapperContent.getBoundingClientRect();
+            expect(rect.width).toEqual(80);
+            expect(rect.height).toEqual(80);
             const expectedLeft = buttonElement.offsetLeft + buttonElement.offsetWidth;
             const expectedTop = buttonElement.offsetTop + buttonElement.offsetHeight;
-            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
-            const wrapperTop = wrapperContent.getBoundingClientRect().top;
-            expect(wrapperTop).toEqual(expectedTop);
-            expect(wrapperLeft).toEqual(expectedLeft);
+            expect(rect.top).toEqual(expectedTop);
+            expect(rect.left).toEqual(expectedLeft);
         }));
 
         it('Should display each shown component based on the options specified if the component fits into the visible window.',
@@ -2055,7 +2058,8 @@ describe('igxOverlay', () => {
 
                                 const targetRect: ClientRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
                                 const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                const overlayWrapperRect: ClientRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                const overlayWrapperRect: ClientRect =
+                                    overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
                                 const screenRect: ClientRect = {
                                     left: 0,
                                     top: 0,
@@ -2363,7 +2367,7 @@ describe('igxOverlay', () => {
             tick();
             const styles = css(overlayWrapper);
             const expectedBackgroundColor = 'background-color: rgba(0, 0, 0, 0.38)';
-            const appliedBackgroundStyles = styles[3];
+            const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));
 
@@ -2530,7 +2534,7 @@ describe('igxOverlay', () => {
         }));
 
         // 4. Css
-        it('Should use component initial container\'s properties when is with 100% width/height and show in overlay element',
+        it('Should use component initial container\'s properties when is with 100% width and show in overlay element',
             fakeAsync(() => {
                 const fixture = TestBed.createComponent(WidthTestOverlayComponent);
                 fixture.detectChanges();
@@ -2546,8 +2550,9 @@ describe('igxOverlay', () => {
                 expect(overlayChild).toBeDefined();
                 expect(overlayChild.style.width).toEqual('100%');
                 expect(overlayChild.getBoundingClientRect().width).toEqual(420);
-                expect(overlayChild.style.height).toEqual('100%');
-                expect(overlayChild.getBoundingClientRect().height).toEqual(280);
+                // content element has no height, so the shown element will calculate its own height by itself
+                // expect(overlayChild.style.height).toEqual('100%');
+                // expect(overlayChild.getBoundingClientRect().height).toEqual(280);
                 fixture.componentInstance.overlay.hideAll();
             }));
     });
@@ -2690,7 +2695,7 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            const expectedStyle = 'width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
@@ -2740,7 +2745,7 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            const expectedStyle = 'width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
@@ -2777,7 +2782,6 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
-            fix.detectChanges();
             currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Right;
             currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
             currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
@@ -2789,17 +2793,16 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapper in NG-COMPONENT
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
-            const buttonLeft = buttonElement.offsetLeft;
-            const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth; // To the left of the button
-            const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
-            const wrapperTop = wrapperContent.getBoundingClientRect().top;
+            const contentElement = wrappers[wrappers.length - 1] as HTMLElement; // wrapper in NG-COMPONENT
+            const expectedStyle = 'width:100px; height: 100px; background-color: red';
+            expect(contentElement.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedRight = buttonElement.offsetLeft;
+            const expectedTop = buttonElement.offsetTop + buttonElement.clientHeight;
+            const contentElementRect = contentElement.getBoundingClientRect();
+            const wrapperRight = contentElementRect.right;
+            const wrapperTop = contentElementRect.top;
             expect(wrapperTop).toEqual(expectedTop);
-            expect(wrapperLeft).toEqual(expectedLeft);
+            expect(wrapperRight).toEqual(expectedRight);
         }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
@@ -2834,13 +2837,13 @@ describe('igxOverlay', () => {
             currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
             currentElement.ButtonPositioningSettings.target = buttonElement;
             buttonElement.click();
-            fix.detectChanges();
             tick();
+            fix.detectChanges();
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            const expectedStyle = 'width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
@@ -2889,11 +2892,11 @@ describe('igxOverlay', () => {
 
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1]; // wrapper in NG-COMPONENT
-            const expectedLeft = buttonElement.offsetLeft - currentElement.ButtonPositioningSettings.minSize.width;
-            const expectedTop = buttonElement.offsetTop - currentElement.ButtonPositioningSettings.minSize.height;
-            const componentRect = wrapperContent.lastElementChild.getBoundingClientRect();
-            expect(componentRect.left).toEqual(expectedLeft);
-            expect(componentRect.top).toEqual(expectedTop);
+            const expectedRight = buttonElement.offsetLeft;
+            const expectedBottom = buttonElement.offsetTop;
+            const componentRect = wrapperContent.getBoundingClientRect();
+            expect(componentRect.right).toEqual(expectedRight);
+            expect(componentRect.bottom).toEqual(expectedBottom);
         }));
 
         it(`Should show the component, ElasticPositionStrategy, inside of the viewport if it would normally be outside of bounds,
@@ -2967,7 +2970,6 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
-            fix.detectChanges();
             currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
             currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Bottom;
             currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Bottom;
@@ -2975,16 +2977,15 @@ describe('igxOverlay', () => {
             currentElement.ButtonPositioningSettings.target = buttonElement;
             currentElement.ButtonPositioningSettings.minSize = { width: 80, height: 80 };
             buttonElement.click();
-            fix.detectChanges();
             tick();
             fix.detectChanges();
 
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1]; // wrapper in NG-COMPONENT
-            const expectedLeft = buttonElement.offsetLeft - currentElement.ButtonPositioningSettings.minSize.width;
+            const contentElement = wrappers[wrappers.length - 1];
+            const expectedRight = buttonElement.offsetLeft;
             const expectedTop = buttonElement.offsetTop + buttonElement.offsetHeight;
-            const componentRect = wrapperContent.lastElementChild.getBoundingClientRect();
-            expect(componentRect.left).toEqual(expectedLeft);
+            const componentRect = contentElement.getBoundingClientRect();
+            expect(componentRect.right).toEqual(expectedRight);
             expect(componentRect.top).toEqual(expectedTop);
         }));
 
@@ -3278,16 +3279,19 @@ describe('igxOverlay', () => {
             };
 
             spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
+            spyOn(overlay.onClosing, 'emit');
 
-            overlay.show(SimpleDynamicComponent, overlaySettings);
+            const firstCallId = overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
 
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
+                    event: new MouseEvent('click') });
         }));
 
     });
@@ -3312,7 +3316,7 @@ describe('igxOverlay', () => {
             overlay.show(IgxCalendarComponent);
             // EXPECT
             fixture.detectChanges();
-            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(1);
+            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(2);
             overlay.hideAll();
             tick();
             fixture.detectChanges();
@@ -3326,7 +3330,7 @@ describe('igxOverlay', () => {
             tick();
             fixture.detectChanges();
             expect(document.querySelectorAll((IGX_AVATAR_CLASS)).length).toEqual(0);
-            overlay.show(IgxDatePickerComponent);
+            overlay.show(IgxCalendarContainerComponent);
             fixture.detectChanges();
             expect(document.querySelectorAll((IGX_DATEPICKER_CLASS)).length).toEqual(1);
             overlay.hideAll();
@@ -3340,13 +3344,11 @@ describe('igxOverlay', () => {
 @Component({
     // tslint:disable-next-line:component-selector
     selector: `simple - dynamic - component`,
-    template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+    template: '<div style=\'width:100px; height: 100px; background-color: red\'></div>'
 })
 export class SimpleDynamicComponent {
     @HostBinding('style.display')
     public hostDisplay = 'block';
-    @HostBinding('style.position')
-    public hostPosition = 'absolute';
     @HostBinding('style.width')
     @HostBinding('style.height')
     public hostDimenstions = '100px';
@@ -3363,13 +3365,11 @@ export class SimpleRefComponent {
 }
 
 @Component({
-    template: '<div style=\'position: absolute; width:3000px; height: 1000px; background-color: red\'></div>'
+    template: '<div style=\'width:3000px; height: 1000px; background-color: red\'></div>'
 })
 export class SimpleBigSizeComponent {
     @HostBinding('style.display')
     public hostDisplay = 'block';
-    @HostBinding('style.position')
-    public hostPosition = 'absolute';
     @HostBinding('style.height')
     public hostHeight = '1000px';
     @HostBinding('style.width')
@@ -3417,7 +3417,17 @@ export class SimpleDynamicWithDirectiveComponent {
 @Component({
     template: `
         <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
-    `
+    `,
+    styles: [`button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84px;
+        height: 84px;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }`]
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
@@ -3517,8 +3527,9 @@ export class TwoButtonsComponent {
 }
 
 @Component({
-    template: `<div style="width: 420px; height: 280px;">
-    <button class='300_button' igxToggle #button (click)=\'click($event)\'>Show Overlay</button>
+    template: `
+    <div style="width: 420px; height: 280px;">
+        <button class='300_button' igxToggle #button (click)=\'click($event)\'>Show Overlay</button>
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
             Some Content
         </div>

@@ -1,11 +1,10 @@
-import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 
-import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
-import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
+import { IScrollStrategy } from './scroll';
+import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -38,6 +37,7 @@ export interface PositionSettings {
     openAnimation?: AnimationReferenceMetadata;
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
+    /** The size up to which element may shrink when shown in elastic position strategy */
     minSize?: Size;
 }
 
@@ -52,6 +52,11 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
+    /**
+    * @internal @hidden
+    * Exclude the position strategy target for outside clicks
+    */
+    excludePositionTarget?: boolean;
 }
 
 export interface OverlayEventArgs {
@@ -62,6 +67,9 @@ export interface OverlayEventArgs {
 }
 
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
+}
+
+export interface OverlayClosingEventArgs extends OverlayEventArgs, CancelableBrowserEventArgs {
 }
 
 export interface OverlayAnimationEventArgs {
@@ -117,5 +125,31 @@ export interface OverlayInfo {
     closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
-    originalElementStyleSize?: Size;
 }
+
+/** @hidden @internal*/
+export function getViewportRect(document: Document): ClientRect {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    const scrollPosition = getViewportScrollPosition();
+
+    return {
+      top:    scrollPosition.y,
+      left:   scrollPosition.x,
+      right:  scrollPosition.x + width,
+      bottom: scrollPosition.y + height,
+      width:  width,
+      height: height,
+    };
+  }
+
+/** @hidden @internal*/
+export function getViewportScrollPosition(): Point {
+    const documentElement = document.documentElement;
+    const documentRect = documentElement.getBoundingClientRect();
+
+    const horizontalScrollPosition = -documentRect.left || document.body.scrollLeft || window.scrollX || documentElement.scrollLeft || 0;
+    const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
+
+    return new Point(horizontalScrollPosition, verticalScrollPosition);
+  }

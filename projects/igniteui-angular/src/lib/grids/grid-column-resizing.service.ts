@@ -24,10 +24,7 @@ export class IgxColumnResizingService {
      *@hidden
      */
     public showResizer = false;
-    /**
-     *@hidden
-     */
-    public resizerHeight: number;
+
     /**
      *@hidden
      */
@@ -39,6 +36,18 @@ export class IgxColumnResizingService {
 
     constructor(private zone: NgZone) { }
 
+    /**
+     *@hidden
+     */
+    get resizerHeight(): number {
+        let height = this.column.grid.getVisibleContentHeight();
+
+        if (this.column.level !== 0) {
+            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height;
+        }
+
+        return height;
+    }
 
     /**
      * Returns the minimal possible width to which the column can be resized.
@@ -50,7 +59,7 @@ export class IgxColumnResizingService {
         let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
         minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
 
-        return minWidth - this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        return this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width - minWidth;
     }
 
     /**

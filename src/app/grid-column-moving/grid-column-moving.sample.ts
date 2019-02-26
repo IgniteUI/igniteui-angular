@@ -18,19 +18,19 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 80, resizable: true, movable: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
-            { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
-            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
+            { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true },
+            { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
+            { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'Address', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'City', width: 150, resizable: true, movable: true, sortable: false, filterable: false, groupable: true, summary: true, type: 'string' },
+            { field: 'Region', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'Phone', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'Fax', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'number' },
+            { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'date' },
+            { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
         this.data = [
             {
@@ -39,14 +39,14 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'ContactName': 'Maria Anders',
                 'ContactTitle': 'Sales Representative',
                 'Address': 'Obere Str. 57',
-                'City': 'Berlin', 'Region': null,
+                'City': 'Berlin', 'Region': undefined,
                 'PostalCode': '12209',
                 'Country': 'Germany',
                 'Phone': '030-0074321',
                 'Fax': '030-0076545',
                 'Employees': 68,
                 'DateCreated': new Date(2018, 8, 17),
-                'Contract': true
+                'Contract': null
             },
             {
                 'ID': 'ANATR',
@@ -55,7 +55,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'ContactTitle': 'Owner',
                 'Address': 'Avda. de la Constitución 2222',
                 'City': 'México D.F.',
-                'Region': null,
+                'Region': '',
                 'PostalCode': '05021',
                 'Country': 'Mexico',
                 'Phone': '(5) 555-4729',

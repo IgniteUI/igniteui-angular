@@ -30,7 +30,7 @@ import {
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
     IgxFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
@@ -228,6 +228,31 @@ export class IgxColumnComponent implements AfterContentInit {
     set disableHiding(value: boolean) {
         if (this._disableHiding !== value) {
             this._disableHiding = value;
+            this.check();
+        }
+    }
+    /**
+     * Gets whether the pinning is disabled.
+     * ```typescript
+     * let isPinningDisabled =  this.column.disablePinning;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get disablePinning(): boolean {
+        return this._disablePinning;
+    }
+    /**
+     * Enables/disables pinning for the column.
+     * Default value is `false`.
+     * ```typescript
+     * <igx-column [pinned] = "true"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set disablePinning(value: boolean) {
+        if (this._disablePinning !== value) {
+            this._disablePinning = value;
             this.check();
         }
     }
@@ -855,11 +880,15 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _disablePinning = false;
+    /**
+     *@hidden
+     */
     protected _width: string;
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '64';
+    protected _defaultMinWidth = '80';
     /**
      *@hidden
      */
@@ -880,7 +909,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
     /**
      *@hidden
      */
@@ -1417,7 +1446,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) {
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
     }

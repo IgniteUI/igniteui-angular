@@ -31,7 +31,7 @@ export class IgxFilterOptions {
     public get_value(item: any, key: string): string {
         let result = '';
 
-        if (key) {
+        if (key && item[key]) {
             result = item[key].toString();
         } else if (item.element) {
             if (item.element.nativeElement) {
@@ -159,7 +159,9 @@ export class IgxFilterPipe implements PipeTransform {
     }
 }
 
-
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxFilterDirective, IgxFilterPipe],
     exports: [IgxFilterDirective, IgxFilterPipe],

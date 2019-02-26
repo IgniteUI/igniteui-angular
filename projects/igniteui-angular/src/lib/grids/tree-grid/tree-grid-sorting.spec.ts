@@ -6,6 +6,7 @@ import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-componen
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxTreeGrid - Sorting', () => {
     configureTestSuite();
@@ -17,7 +18,7 @@ describe('IgxTreeGrid - Sorting', () => {
             declarations: [
                 IgxTreeGridSortingComponent
             ],
-            imports: [IgxTreeGridModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));

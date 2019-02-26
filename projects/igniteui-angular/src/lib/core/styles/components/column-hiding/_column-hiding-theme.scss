@@ -100,7 +100,9 @@
 
     @include igx-scope('.igx-typography') {
         %column-hiding-title {
-            @include igx-type-style($type-scale, $title);
+            @include igx-type-style($type-scale, $title) {
+                margin: 0;
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ export * from './lib/animations/main';
  * Directives
  */
 export * from './lib/core/navigation';
+export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
 export * from './lib/directives/dragdrop/dragdrop.directive';
 export * from './lib/directives/filter/filter.directive';
@@ -63,6 +64,7 @@ export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/index';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
+export * from './lib/grids/hierarchical-grid/index';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
@@ -78,6 +80,9 @@ export * from './lib/tabbar/tabbar.component';
 export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
+export * from './lib/select/select.component';
+export * from './lib/select/select-item.component';
+
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -85,9 +90,10 @@ export * from './lib/toast/toast.component';
 export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
-export { CancelableEventArgs } from './lib/core/utils';
+export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
+export * from './lib/date-picker/date-picker.utils';
 

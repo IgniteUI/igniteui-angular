@@ -336,10 +336,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 }
 
 /**
-* The IgxTabsModule provides the {@link IgxTabsComponent}, {@link IgxTabsGroupComponent},
-*{@link IgxTabItemComponent}, {@link IgxTabItemTemplateDirective}, {@link IgxRightButtonStyleDirective}
-* and {@link IgxLeftButtonStyleDirective} inside your application.
-*/
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTabsComponent,
         IgxTabsGroupComponent,

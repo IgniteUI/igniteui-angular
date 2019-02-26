@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 
 @Pipe({
     name: 'igxGridSummaryDataPipe',
@@ -8,7 +8,7 @@ import { IgxGridBaseComponent } from '../grid-base.component';
 })
 export class IgxSummaryDataPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     transform(id: string, trigger: number = 0) {
         const summaryService = this.gridAPI.get(id).summaryService;

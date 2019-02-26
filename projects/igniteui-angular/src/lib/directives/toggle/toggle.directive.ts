@@ -18,8 +18,8 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
-import { CancelableEventArgs } from '../../core/utils';
+import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
@@ -27,7 +27,7 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
     selector: '[igxToggle]'
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
-    private _overlayId: string;
+    protected _overlayId: string;
     private destroy$ = new Subject<boolean>();
     private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
         filter(x => x.id === this._overlayId),
@@ -111,7 +111,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
     /**
@@ -161,7 +161,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     constructor(
         private elementRef: ElementRef,
         private cdr: ChangeDetectorRef,
-        @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() private navigationService: IgxNavigationService) {
     }
 
@@ -173,6 +173,19 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
+        //  if there is open animation do nothing
+        //  if toggle is not collapsed and there is no close animation do nothing
+        const info = this.overlayService.getOverlayById(this._overlayId);
+        const hasOpenAnimation = info ? info.openAnimationPlayer : false;
+        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+        if (hasOpenAnimation || !(this._collapsed || hasCloseAnimation)) {
+            return;
+        }
+
+        if (!info) {
+            this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
+        }
+
         this._collapsed = false;
         this.cdr.detectChanges();
 
@@ -184,21 +197,18 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        if (this._overlayId) {
-            this.overlayService.show(this._overlayId, overlaySettings);
-        } else {
-            this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
-        }
+        this.overlayService.show(this._overlayId, overlaySettings);
 
         this.unsubscribe();
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.onOpened.emit();
         });
+
         this._overlayClosingSub = this.overlayService
             .onClosing
             .pipe(...this._overlaySubFilter)
-            .subscribe((e: OverlayCancelableEventArgs) => {
-                const eventArgs: CancelableEventArgs = { cancel: false };
+            .subscribe((e: OverlayClosingEventArgs) => {
+                const eventArgs: CancelableBrowserEventArgs = { cancel: false, event: e.event };
                 this.onClosing.emit(eventArgs);
                 e.cancel = eventArgs.cancel;
 
@@ -209,6 +219,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
                     this.clearSubscription(this._overlayClosingSub);
                 }
             });
+
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
@@ -222,6 +233,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public close() {
+        //  if toggle is collapsed do nothing
+        //  if there is close animation do nothing, toggle will close anyway
+        const info = this.overlayService.getOverlayById(this._overlayId);
+        const hasCloseAnimation = info ? info.closeAnimationPlayer : false;
+        if (this._collapsed || hasCloseAnimation) {
+            return;
+        }
+
         this.overlayService.hide(this._overlayId);
     }
 
@@ -233,7 +252,19 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
-        this.collapsed ? this.open(overlaySettings) : this.close();
+        //  if toggle is collapsed call open
+        //  if there is close animation call open
+        if (this.collapsed || this.isClosing) {
+            this.open(overlaySettings);
+        } else {
+            this.close();
+        }
+    }
+
+    /** @hidden @internal */
+    public get isClosing() {
+        const info = this.overlayService.getOverlayById(this._overlayId);
+        return info ? info.closeAnimationPlayer : false;
     }
 
     /**
@@ -383,7 +414,8 @@ export class IgxToggleActionDirective implements OnInit {
             positionStrategy: new ConnectedPositioningStrategy({ target: this.element.nativeElement }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             closeOnOutsideClick: true,
-            modal: false
+            modal: false,
+            excludePositionTarget: true
         };
     }
 
@@ -443,6 +475,9 @@ export class IgxOverlayOutletDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],

@@ -129,8 +129,9 @@ export class IgxButtonDirective {
         this.buttonClick.emit(ev);
     }
 }
+
 /**
- * The IgxButtonModule provides the {@link IgxButtonDirective} inside your application.
+ * @hidden
  */
 @NgModule({
     declarations: [IgxButtonDirective],

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
 import {
     IgxDropDownComponent,
     OverlaySettings,
@@ -10,7 +10,8 @@ import {
     CloseScrollStrategy,
     NoOpScrollStrategy,
     IgxInputGroupModule,
-    ElasticPositionStrategy
+    ElasticPositionStrategy,
+    IgxDragDirective
 } from 'igniteui-angular';
 import { templateJitUrl } from '@angular/compiler';
 
@@ -20,14 +21,19 @@ import { templateJitUrl } from '@angular/compiler';
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
 })
-export class OverlaySampleComponent {
+export class OverlaySampleComponent implements OnInit {
+    private xAddition = 0;
+    private yAddition = 0;
+
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
         closeOnOutsideClick: true
     };
-    constructor() {
+    constructor(
+        private cdr: ChangeDetectorRef
+    ) {
         for (let item = 0; item < 100; item++) {
             this.items.push(`Item ${item}`);
         }
@@ -35,14 +41,11 @@ export class OverlaySampleComponent {
 
     items = [];
 
-    buttonLeft = 90;
-    buttonTop = 35;
-
     horizontalDirections = ['Left', 'Center', 'Right'];
-    horizontalDirection = 'Left';
+    horizontalDirection = 'Center';
 
     verticalDirections = ['Top', 'Middle', 'Bottom'];
-    verticalDirection = 'Top';
+    verticalDirection = 'Middle';
 
     horizontalStartPoints = ['Left', 'Center', 'Right'];
     horizontalStartPoint = 'Left';
@@ -51,10 +54,10 @@ export class OverlaySampleComponent {
     verticalStartPoint = 'Top';
 
     positionStrategies = ['Auto', 'Connected', 'Global', 'Elastic'];
-    positionStrategy = 'Auto';
+    positionStrategy = 'Global';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
-    scrollStrategy = 'Absolute';
+    scrollStrategy = 'NoOp';
 
     closeOnOutsideClick = true;
     modal = true;
@@ -62,68 +65,19 @@ export class OverlaySampleComponent {
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
     @ViewChild('container') public container: ElementRef;
+    @ViewChild(IgxDragDirective) public igxDrag: IgxDragDirective;
 
     onChange(ev) {
         switch (ev.radio.name) {
-            case 'hd':
-                switch (ev.value) {
-                    case 'Left':
-                        this._overlaySettings.positionStrategy.settings.horizontalDirection = -1;
-                        break;
-                    case 'Center':
-                        this._overlaySettings.positionStrategy.settings.horizontalDirection = -0.5;
-                        break;
-                    case 'Right':
-                        this._overlaySettings.positionStrategy.settings.horizontalDirection = 0;
-                        break;
-                }
-                break;
-            case 'vd':
-                switch (ev.value) {
-                    case 'Top':
-                        this._overlaySettings.positionStrategy.settings.verticalDirection = -1;
-                        break;
-                    case 'Middle':
-                        this._overlaySettings.positionStrategy.settings.verticalDirection = -0.5;
-                        break;
-                    case 'Bottom':
-                        this._overlaySettings.positionStrategy.settings.verticalDirection = 0;
-                        break;
-                }
-                break;
-            case 'hsp':
-                switch (ev.value) {
-                    case 'Left':
-                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = -1;
-                        break;
-                    case 'Center':
-                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = -0.5;
-                        break;
-                    case 'Right':
-                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = 0;
-                        break;
-                }
-                break;
-            case 'vsp':
-                switch (ev.value) {
-                    case 'Top':
-                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = -1;
-                        break;
-                    case 'Middle':
-                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = -0.5;
-                        break;
-                    case 'Bottom':
-                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = 0;
-                        break;
-                }
-                break;
             case 'ps':
+                this.removeSelectedClass('direction');
+                this.removeSelectedClass('start-point');
                 switch (ev.value) {
                     case 'Auto':
                         this._overlaySettings = {
                             positionStrategy: new AutoPositionStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -131,13 +85,15 @@ export class OverlaySampleComponent {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
+                        document.getElementById('brd').classList.add('selected');
+                        document.getElementById('blsp').classList.add('selected');
                         break;
                     case 'Connected':
                         this._overlaySettings = {
                             positionStrategy: new ConnectedPositioningStrategy(),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -145,7 +101,9 @@ export class OverlaySampleComponent {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
+                        document.getElementById('brd').classList.add('selected');
+                        document.getElementById('blsp').classList.add('selected');
                         break;
                     case 'Global':
                         this._overlaySettings.positionStrategy = new GlobalPositionStrategy();
@@ -155,6 +113,8 @@ export class OverlaySampleComponent {
                         this.verticalStartPoint = 'Middle';
                         this.closeOnOutsideClick = true;
                         this.modal = true;
+                        document.getElementById('mcd').classList.add('selected');
+                        document.getElementById('mcsp').classList.add('selected');
                         break;
                     case 'Elastic':
                         this._overlaySettings = {
@@ -162,7 +122,7 @@ export class OverlaySampleComponent {
                                 minSize: { width: 150, height: 150 }
                             }),
                             scrollStrategy: new NoOpScrollStrategy(),
-                            modal: true,
+                            modal: false,
                             closeOnOutsideClick: true
                         };
                         this.horizontalDirection = 'Right';
@@ -170,7 +130,9 @@ export class OverlaySampleComponent {
                         this.horizontalStartPoint = 'Left';
                         this.verticalStartPoint = 'Bottom';
                         this.closeOnOutsideClick = true;
-                        this.modal = true;
+                        this.modal = false;
+                        document.getElementById('brd').classList.add('selected');
+                        document.getElementById('blsp').classList.add('selected');
                         break;
                     default:
                         break;
@@ -261,10 +223,139 @@ export class OverlaySampleComponent {
         }
     }
 
+    public setDirection(e) {
+        switch (e.target.id) {
+            case 'tld':
+                this.verticalDirection = 'Top';
+                this.horizontalDirection = 'Left';
+                break;
+            case 'tcd':
+                this.verticalDirection = 'Top';
+                this.horizontalDirection = 'Center';
+                break;
+            case 'trd':
+                this.verticalDirection = 'Top';
+                this.horizontalDirection = 'Right';
+                break;
+            case 'mld':
+                this.verticalDirection = 'Middle';
+                this.horizontalDirection = 'Left';
+                break;
+            case 'mcd':
+                this.verticalDirection = 'Middle';
+                this.horizontalDirection = 'Center';
+                break;
+            case 'mrd':
+                this.verticalDirection = 'Middle';
+                this.horizontalDirection = 'Right';
+                break;
+            case 'bld':
+                this.verticalDirection = 'Bottom';
+                this.horizontalDirection = 'Left';
+                break;
+            case 'bcd':
+                this.verticalDirection = 'Bottom';
+                this.horizontalDirection = 'Center';
+                break;
+            case 'brd':
+                this.verticalDirection = 'Bottom';
+                this.horizontalDirection = 'Right';
+                break;
+        }
+
+        const old = document.getElementsByClassName('selected');
+        if (old.length > 0) {
+            old[0].classList.remove('selected');
+        }
+
+        this.removeSelectedClass('direction');
+        e.target.classList.add('selected');
+    }
+
+    public setStartPoint(e) {
+        switch (e.target.id) {
+            case 'tlsp':
+                this.verticalStartPoint = 'Top';
+                this.horizontalStartPoint = 'Left';
+                break;
+            case 'tcsp':
+                this.verticalStartPoint = 'Top';
+                this.horizontalStartPoint = 'Center';
+                break;
+            case 'trsp':
+                this.verticalStartPoint = 'Top';
+                this.horizontalStartPoint = 'Right';
+                break;
+            case 'mlsp':
+                this.verticalStartPoint = 'Middle';
+                this.horizontalStartPoint = 'Left';
+                break;
+            case 'mcsp':
+                this.verticalStartPoint = 'Middle';
+                this.horizontalStartPoint = 'Center';
+                break;
+            case 'mrsp':
+                this.verticalStartPoint = 'Middle';
+                this.horizontalStartPoint = 'Right';
+                break;
+            case 'blsp':
+                this.verticalStartPoint = 'Bottom';
+                this.horizontalStartPoint = 'Left';
+                break;
+            case 'bcsp':
+                this.verticalStartPoint = 'Bottom';
+                this.horizontalStartPoint = 'Center';
+                break;
+            case 'brsp':
+                this.verticalStartPoint = 'Bottom';
+                this.horizontalStartPoint = 'Right';
+                break;
+        }
+
+        this.removeSelectedClass('start-point');
+        e.target.classList.add('selected');
+    }
+
+    private removeSelectedClass(type: string) {
+        const items = document.getElementsByClassName(type);
+        for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            element.classList.remove('selected');
+        }
+    }
+
     public toggleDropDown() {
-        this.onChange2();
-        this._overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        if (this.igxDropDown.collapsed) {
+            this.items = [];
+            for (let item = 0; item < 12; item++) {
+                this.items.push(`Item ${item}`);
+            }
+            this.cdr.detectChanges();
+            this.onChange2();
+            this._overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        }
         this.igxDropDown.toggle(this._overlaySettings);
     }
 
+    ngOnInit(): void {
+        this.igxDrag.element.nativeElement.style.left = '300px';
+        this.igxDrag.element.nativeElement.style.top = '300px';
+    }
+
+    public onDragEnd(e) {
+        const originalEvent: PointerEvent = e.originalEvent;
+        const wrapperElement = document.getElementsByClassName('sample-wrapper')[0];
+        const wrapperElementRect = wrapperElement.getBoundingClientRect();
+        const left = originalEvent.clientX - wrapperElementRect.left - this.xAddition;
+        const top = originalEvent.clientY - wrapperElementRect.top - this.yAddition;
+        this.igxDrag.element.nativeElement.style.left = `${Math.max(0, left)}px`;
+        this.igxDrag.element.nativeElement.style.top = `${Math.max(0, top)}px`;
+    }
+
+    public onDragStart(e) {
+        const originalEvent: PointerEvent = e.originalEvent;
+        const buttonRect = (<any>originalEvent.target).getBoundingClientRect();
+        this.xAddition = originalEvent.clientX - buttonRect.left;
+        this.yAddition = originalEvent.clientY - buttonRect.top;
+    }
 }

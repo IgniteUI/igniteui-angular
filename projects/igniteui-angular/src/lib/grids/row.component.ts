@@ -18,7 +18,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +26,7 @@ import { IgxGridBaseComponent } from './grid-base.component';
     selector: 'igx-row',
     templateUrl: './grid/grid-row.component.html'
 })
-export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck {
+export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {
 
     private _rowData: any;
     /**
@@ -156,6 +156,16 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
         }
 
         return false;
+    }
+
+    /** @hidden */
+    public get added(): boolean {
+        const row: State = this.grid.transactions.getState(this.rowID);
+        if (row) {
+            return row.type === TransactionType.ADD;
+        }
+
+         return false;
     }
 
     /** @hidden */

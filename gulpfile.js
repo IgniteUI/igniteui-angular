@@ -31,7 +31,7 @@ const STYLES = {
 };
 
 const TYPEDOC_THEME = {
-    SRC: './extras/docs/themes/typedoc/src/',
+    SRC: `${path.join(__dirname, "extras", "docs", "themes", "typedoc", "src")}`,
     DIST: './extras/docs/themes/typedoc/bin/',
     STYLES: {
         ENTRY: './assets/css/main.sass',
@@ -170,7 +170,7 @@ gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
 
 gulp.task('typedoc-theme-ts', () => {
     gulp.src([
-            `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
+            `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
         ])
         .pipe(ts({
             target: "es2017",
@@ -181,7 +181,7 @@ gulp.task('typedoc-theme-ts', () => {
 });
 
 gulp.task('typedoc-copy-config', () => {
-    const themePath = path.normalize("./extras/docs/themes/config.json");
+    const themePath = path.join(__dirname, "extras", "docs", "themes", "config.json");
     gulp.src([themePath])
         .pipe(gulp.dest(TYPEDOC_THEME.DIST));
 });
@@ -255,6 +255,7 @@ const SASSDOC_THEME = {
 
 gulp.task('sassdoc-clear-main', () => {
     del.sync(`${SASSDOC_THEME.JS_DIR}/main.js`)
+    del.sync(`${SASSDOC_THEME.JS_DIR}/main.d.ts`)
 })
 
 gulp.task('sassdoc-ts',
@@ -263,7 +264,7 @@ gulp.task('sassdoc-ts',
 
 gulp.task('sassdoc-js', ['sassdoc-ts'], () => {
     gulp.src([
-        `${SASSDOC_THEME.JS_DIR}/**/*.js`,
+        `${SASSDOC_THEME.JS_DIR}/**/!(tag-versions.req)*.js`,
     ])
     .pipe(concat('main.js'))
     .pipe(gulp.dest(SASSDOC_THEME.JS_DIR));

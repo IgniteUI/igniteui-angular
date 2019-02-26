@@ -36,6 +36,9 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
+        if (!this.columnBelongsToGrid(column)) {
+            return;
+        }
         const grid = <IgxGridComponent>column.grid;
         const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
         if (column.groupable && !isGrouped && !column.columnGroup) {
@@ -48,6 +51,11 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     }
 
     public onDragLeave(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        const column: IgxColumnComponent = drag.column;
+        if (!this.columnBelongsToGrid(column)) {
+            return;
+        }
         event.detail.owner.icon.innerText = 'block';
         this.hovered = false;
     }
@@ -56,12 +64,28 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column: IgxColumnComponent = drag.column;
+            if (!this.columnBelongsToGrid(column)) {
+                return;
+            }
             const grid = <IgxGridComponent>column.grid;
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped && !column.columnGroup) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy });
             }
+        }
+    }
+    private columnBelongsToGrid(column) {
+        const elem = this.elementRef.nativeElement;
+        const closestGridID = elem.closest('[igxGroupAreaDrop]').getAttribute('gridId');
+        if (!column) {
+            return false;
+        } else {
+            const grid = <IgxGridComponent>column.grid;
+            if (!grid || grid.id !== closestGridID) {
+                return false;
+            }
+            return true;
         }
     }
 }

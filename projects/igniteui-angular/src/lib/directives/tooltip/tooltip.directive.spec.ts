@@ -214,6 +214,7 @@ describe('IgxTooltip', () => {
 
             tooltipTarget.overlaySettings = /*<OverlaySettings>*/ {
                 closeOnOutsideClick: true,
+                excludePositionTarget: false
             };
             fix.detectChanges();
 
@@ -526,7 +527,7 @@ function verifyTooltipPosition(tooltipNativeElement, actualTarget, shouldBeAlign
     if (shouldBeAligned) {
         // Verify that tooltip and target are horizontally aligned with approximately same center
         expect(horizontalOffset >= 0).toBe(true, 'tooltip and target are horizontally MISaligned');
-        expect(horizontalOffset <= 0.1).toBe(true, 'tooltip and target are horizontally MISaligned');
+        expect(horizontalOffset <= 0.5).toBe(true, 'tooltip and target are horizontally MISaligned');
         // Verify that tooltip is vertically aligned beneath the target
         expect(verticalOffset >= 0).toBe(true, 'tooltip and target are vertically MISaligned');
         expect(verticalOffset <= 6).toBe(true, 'tooltip and target are vertically MISaligned');

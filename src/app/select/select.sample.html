@@ -1,0 +1,132 @@
+<app-page-header title="Select">
+    Several select components with a variety of setups and API interaction.
+</app-page-header>
+
+<div class="sampleWrapper">
+    <igx-select #select1
+                [placeholder]="'Pick One'"
+                [(ngModel)]="value"
+                (onOpening)="testOnOpening($event)"
+                (onOpened)="testOnOpened()"
+                (onClosing)="testOnClosing($event)"
+                (onClosed)="testOnClosed()"
+                (onSelection)="testOnSelection($event)"
+                [disabled]="false">
+        <label igxLabel>Sample Label</label>
+        <!-- <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix> -->
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+            {{ item.field }}
+        </igx-select-item>
+    </igx-select>
+
+    <igx-select #select2
+                [placeholder]="'Pick One'"
+                [value]="value"
+                (onOpening)="testOnOpening($event)"
+                (onOpened)="testOnOpened()"
+                (onClosing)="testOnClosing($event)"
+                (onClosed)="testOnClosed()"
+                (onSelection)="testOnSelection($event)"
+                [disabled]="false"
+                [type]="'box'">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">favorite</igx-icon>
+        </igx-prefix>
+        <igx-suffix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-suffix>
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item [value]="1">Sofia</igx-select-item>
+        <igx-select-item [value]="2">London</igx-select-item>
+        <igx-select-item [value]="3">Paris</igx-select-item>
+        <igx-select-item [value]="4">New York</igx-select-item>
+    </igx-select>
+
+    <igx-select #select3
+                [placeholder]="'Pick One'"
+                (onOpening)="testOnOpening($event)"
+                (onOpened)="testOnOpened()"
+                (onClosing)="testOnClosing($event)"
+                (onClosed)="testOnClosed()"
+                (onSelection)="testOnSelection($event)"
+                [disabled]="false"
+                [type]="'border'">
+        <igx-select-item [value] = "'Apple'" [disabled]="true">Apple</igx-select-item>
+        <igx-select-item [value] = "'Orange'">Orange</igx-select-item>
+        <igx-select-item [value] = "'Grapes'">Grapes</igx-select-item>
+        <igx-select-item [value] = "'Banana'">Banana</igx-select-item>
+    </igx-select>
+
+    <igx-select #select4
+                [placeholder]="'Pick One'"
+                [value]="value"
+                (onOpening)="testOnOpening($event)"
+                (onOpened)="testOnOpened()"
+                (onClosing)="testOnClosing($event)"
+                (onClosed)="testOnClosed()"
+                (onSelection)="testOnSelection($event)"
+                [disabled]="false">
+        <label igxLabel>Group</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item value="1">OutsideGroup</igx-select-item>
+        <igx-select-item-group label="Group">
+            <igx-select-item [disabled]="true" value="2">InsideGroup1</igx-select-item>
+            <igx-select-item value="3">InsideGroup2</igx-select-item>
+            <igx-select-item value="4">InsideGroup3</igx-select-item>
+        </igx-select-item-group>
+    </igx-select>
+
+    <div class="sample-actions">
+        <button igxButton="raised" (click)="handleOpen()">Open</button>
+        <button igxButton="raised" (click)="handleClose()">Close</button>
+        <button igxButton="raised" (click)="toggleDisabled()">toggle Disable</button>
+        <button igxButton="raised" (click)="openCustomOverlaySettings()">open Custom Overlay</button>
+    </div>
+    <section>
+            <h4 class="sample-title"> Select in a Form</h4>
+
+            <form class="from" [formGroup]="mySelectForm" (ngSubmit)="onSubmit()">
+                <div class="wrap">
+                    <div class="inputs">
+                        <igx-input-group type="box">
+                            <label igxLabel>Label</label>
+                            <input (change)="handleInputName($event)" formControlName="name" igxInput type="text" placeholder="Placeholder" readonly/>
+                        </igx-input-group>
+
+                        <igx-input-group type="box">
+                            <label igxLabel>Label</label>
+                            <input (change)="handleInputFood($event)" formControlName="favoriteFood" igxInput type="text" placeholder="Placeholder" readonly/>
+                        </igx-input-group>
+                    </div>
+                    <div class="selects">
+                        <igx-select #dropDown1 [width]="'260px'" formControlName="name"
+                            (onSelection)="handleOnNameSelection($event)">
+                                <igx-select-item *ngFor="let user of users" [value]="user.name">
+                                     {{ user.name }}
+                                </igx-select-item>
+                        </igx-select>
+                        <igx-select #dropDown2 [width]="'260px'" formControlName="favoriteFood"
+                        (onSelection)="handleOnFoodSelection($event)">
+                            <igx-select-item *ngFor="let user of users" [value]="user.favoriteFood">
+                                 {{ user.favoriteFood }}
+                            </igx-select-item>
+                        </igx-select>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button igxButton type="button" (click)="onUpdateSelect()">Update model and Form</button>
+                    <button igxButton="raised" type="button" (click)="onSubmit()">Submit/console.log</button>
+                </div>
+
+                <p class="warn">Form value: {{ mySelectForm.value | json }}</p>
+                <p class="warn">Updated model: {{ newUser | json }}</p>
+            </form>
+        </section>
+</div>
+

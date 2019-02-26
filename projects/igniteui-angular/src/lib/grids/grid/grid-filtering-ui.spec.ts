@@ -27,6 +27,7 @@ import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
+import { FilterMode } from '../tree-grid';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -1134,9 +1135,13 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-        currentDay.nativeElement.click();
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const currentDay = calendar.querySelector('.igx-calendar__date--current');
+
+        currentDay.dispatchEvent(new Event('click'));
+
         flush();
         fix.detectChanges();
 
@@ -1169,12 +1174,15 @@ describe('IgxGrid - Filtering actions', () => {
         GridFunctions.selectFilteringCondition('Does Not Equal', ddList);
 
         input.nativeElement.click();
-        tick();
+        tick(100);
         fix.detectChanges();
 
-        const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-        currentDay.nativeElement.click();
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const currentDay = calendar.querySelector('.igx-calendar__date--current');
+
+        currentDay.dispatchEvent(new Event('click'));
         flush();
         fix.detectChanges();
 
@@ -1257,9 +1265,12 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-        currentDay.nativeElement.click();
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const currentDay = calendar.querySelector('.igx-calendar__date--current');
+
+        currentDay.dispatchEvent(new Event('click'));
         flush();
         fix.detectChanges();
 
@@ -1289,21 +1300,25 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        let calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const monthView = calendar.queryAll(By.css('.igx-calendar-picker__date'))[0];
-        monthView.nativeElement.click();
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        let calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        calendar.querySelector('.igx-calendar__date--current');
+        const monthView = calendar.querySelector('.igx-calendar-picker__date');
+
+        monthView.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
 
-        const firstMonth = calendar.queryAll(By.css(`[class*='igx-calendar__month']`))[0];
-        firstMonth.nativeElement.click();
+        const firstMonth = calendar.querySelector('.igx-calendar__month');
+        firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
 
-        calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const month = calendar.queryAll(By.css('.igx-calendar-picker__date'))[0];
+        calendar = outlet.getElementsByClassName('igx-calendar')[0];
+        const month = calendar.querySelector('.igx-calendar-picker__date');
 
-        expect(month.nativeElement.textContent.trim()).toEqual('Jan');
+        expect(month.innerHTML.trim()).toEqual('Jan');
     }));
 
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
@@ -1325,24 +1340,26 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        let calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const monthView = calendar.queryAll(By.css('.igx-calendar-picker__date'))[1];
-        monthView.nativeElement.click();
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        let calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const monthView = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
+        monthView.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
 
-        const firstMonth = calendar.queryAll(By.css('.igx-calendar__year'))[0];
-        firstMonth.nativeElement.click();
+        const firstMonth = calendar.querySelectorAll('.igx-calendar__year')[0];
+        firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
 
-        calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const month = calendar.queryAll(By.css('.igx-calendar-picker__date'))[1];
+        calendar = outlet.getElementsByClassName('igx-calendar')[0];
+        const month = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
 
         const today = new Date(Date.now());
 
         const expectedResult = today.getFullYear() - 3;
-        expect(month.nativeElement.textContent.trim()).toEqual(expectedResult.toString());
+        expect(month.innerHTML.trim()).toEqual(expectedResult.toString());
     }));
 
     // UI tests custom column
@@ -2772,11 +2789,168 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         tick();
         fix.detectChanges();
 
-        const calendar = fix.debugElement.query(By.css('igx-calendar'));
-        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].innerText;
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
-        expect(sundayLabel).toEqual('So');
+        const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+
+        expect(sundayLabel.trim()).toEqual('So');
     }));
+});
+
+describe('IgxGrid - Filtering actions - Excel style filtering', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridFilteringComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule.forRoot()]
+        })
+            .compileComponents();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('Should sorts the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should move column left/right when clicking buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should pin/unpin column when clicking buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should hide column when click on button.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should activate clear button when a value is entered in the first input.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should change selection of the list when changing And/Or operator.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should change selection of the list when changing operator.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should populate inputs when deselect all values and then select two.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should clear the filter when select ‘all filters’ item.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
+    it('Should open another filter dialog and populates the correct operator when selecting item', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // TODO
+    }));
+
 });
 
 export class CustomFilter extends IgxFilteringOperand {

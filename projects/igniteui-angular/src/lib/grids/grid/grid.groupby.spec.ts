@@ -823,6 +823,79 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRow.expanded).toBe(false);
     });
 
+    it('should retain focused group after expanding/collapsing row via KB - Alt + ArrowUp/ArrowDown', async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        await wait();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        await wait(100);
+        fix.detectChanges();
+
+        // collapse last group row
+        let groupRow = grid.getRowByIndex(11);
+        groupRow.nativeElement.focus();
+        fix.detectChanges();
+        expect(groupRow.focused).toBe(true);
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+        fix.detectChanges();
+        groupRow = grid.getRowByIndex(11);
+        expect(groupRow.focused).toBe(true);
+        // expand last group row
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+        fix.detectChanges();
+        groupRow = grid.getRowByIndex(11);
+        expect(groupRow.focused).toBe(true);
+    });
+
+    it('should allow scrolling to bottom after collapsing a few groups.', async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        await wait();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // expand 2 group rows
+
+        const groupRows = grid.groupsRowList.toArray();
+        groupRows[0].toggle();
+        groupRows[1].toggle();
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        await wait(100);
+        fix.detectChanges();
+
+        // verify virtualization states - should be in last chunk
+        const virtState = grid.verticalScrollContainer.state;
+        expect(virtState.startIndex).toBe(grid.verticalScrollContainer.igxForOf.length - virtState.chunkSize);
+
+        // verify last row is visible at bottom
+        const lastRow = grid.getRowByIndex(grid.verticalScrollContainer.igxForOf.length - 1);
+        expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
+
+    });
+
     it('should leave group rows static when scrolling horizontally.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -1324,6 +1397,59 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[0].expanded).toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     }));
+
+    it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        // group and collapse all groups
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+        grid.toggleAllGroupRows();
+        await wait(100);
+        fix.detectChanges();
+
+        // scroll left
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        fix.detectChanges();
+
+        const gridScrLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+        await wait(100);
+        fix.detectChanges();
+
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        // verify rows are scrolled to the right
+        let dataRows = grid.dataRowList.toArray();
+        dataRows.forEach(dr => {
+            const virtualization = dr.virtDirRow;
+            // should be at last chunk
+            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+            // should have correct left offset
+            const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+        });
+
+        // scroll down
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        await wait(100);
+        fix.detectChanges();
+
+         // verify rows are scrolled to the right
+         dataRows = grid.dataRowList.toArray();
+         dataRows.forEach(dr => {
+             const virtualization = dr.virtDirRow;
+             // should be at last chunk
+             const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+             expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+             // should have correct left offset
+             const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+             expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+         });
+    });
 
     // GroupBy chip
     it('should apply the chip correctly when there are grouping expressions applied and reordered', fakeAsync(() => {
@@ -2195,6 +2321,22 @@ describe('IgxGrid - GroupBy', () => {
             expect(grid.getColumnByName('Downloads').hidden).toBe(true);
             expect(grid.getColumnByName('ProductName').hidden).toBe(true);
         }));
+
+    it(`should hide the grouped columns when hideGroupedColumns option is enabled,
+    there are initially set groupingExpressions and columns are autogenareted`,
+    fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        grid.groupingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+        const groupRows = grid.groupsRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+    }));
 
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);

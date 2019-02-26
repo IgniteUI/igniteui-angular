@@ -42,9 +42,14 @@
 @mixin igx-overlay($theme) {
     @include igx-root-css-vars($theme);
 
+    %overlay-display {
+        width: 0;
+        height: 0;
+        box-sizing: border-box;
+    }
+
     %overlay-wrapper {
         position: fixed;
-        display: flex;
         top: 0;
         left: 0;
         bottom: 0;
@@ -60,12 +65,24 @@
         pointer-events: initial;
     }
 
+    %overlay-wrapper--flex {
+        display: flex;
+    }
+
     %overlay-content {
-        position: relative;
+        position: absolute;
         pointer-events: all;
     }
 
     %overlay-content--modal {
         pointer-events: initial;
+    }
+
+    %igx-toggle--hidden {
+        display: none !important;
+    }
+
+    %overlay-content--elastic {
+        overflow: auto;
     }
 }

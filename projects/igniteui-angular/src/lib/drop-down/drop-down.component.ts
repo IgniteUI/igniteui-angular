@@ -19,7 +19,7 @@ import { IgxDropDownBase } from './drop-down.base';
 import { DropDownActionKey } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
-import { CancelableEventArgs, isIE } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
@@ -48,13 +48,18 @@ import { OverlaySettings } from '../services';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
-    protected children: QueryList<IgxDropDownItemBase>;
+    protected destroy$ = new Subject<boolean>();
 
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
 
-    protected destroy$ = new Subject<boolean>();
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
+    public children: QueryList<IgxDropDownItemBase>;
+
     /**
      * Gets/sets whether items take focus. Disabled by default.
      * When enabled, drop down items gain tab index and are focused when active -
@@ -87,6 +92,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this._id = value;
     }
 
+    /** Id of the internal listbox of the drop down */
+    public get listId() {
+        return this.id + '-list';
+    }
+
     /**
      * Emitted before the dropdown is opened
      *
@@ -115,7 +125,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -197,7 +207,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
-        if (this.toggleDirective.collapsed) {
+        if (this.collapsed || this.toggleDirective.isClosing) {
             this.open(overlaySettings);
         } else {
             this.close();
@@ -243,14 +253,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @hidden
      */
     public onToggleOpened() {
-        this._focusedItem = this.selectedItem;
-        if (this._focusedItem) {
+        if (this.selectedItem) {
+            this._focusedItem = this.selectedItem;
             this._focusedItem.isFocused = true;
         } else if (this.allowItemsFocus) {
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
-            if (firstItemIndex !== -1) {
-                this.navigateItem(firstItemIndex);
-            }
+            this.navigateFirst();
         }
         this.onOpened.emit();
     }
@@ -258,7 +265,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden
      */
-    public onToggleClosing(e: CancelableEventArgs) {
+    public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
     }
 
@@ -297,7 +304,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
-    protected calculateScrollPosition(item: IgxDropDownItemBase): number {
+    /** @hidden @internal */
+    public calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
         }

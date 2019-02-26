@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter } from '@angular/core';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 
 export const IGX_COMBO_COMPONENT = 'IgxComboComponentToken';
@@ -21,7 +21,7 @@ export interface IgxComboBase {
     comboInput: ElementRef<HTMLInputElement>;
     onOpened: EventEmitter<void>;
     onOpening: EventEmitter<CancelableEventArgs>;
-    onClosing: EventEmitter<CancelableEventArgs>;
+    onClosing: EventEmitter<CancelableBrowserEventArgs>;
     onClosed: EventEmitter<void>;
     focusSearchInput(opening?: boolean): void;
     triggerCheck(): void;

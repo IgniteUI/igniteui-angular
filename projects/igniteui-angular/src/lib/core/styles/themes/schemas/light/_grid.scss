@@ -25,6 +25,7 @@
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #fff] - The hover row background color.
 /// @prop {Map} row-hover-text-color [igx-contrast-color: ('grays', 200)] - The hover row text color.
 /// @prop {Map} row-border-color [igx-color: ('grays', 300)] - The row bottom border color.
+/// @prop {map} row-highlight [igx-color: ('secondary', 500)] - The grid row highlight color.
 /// @prop {Number} pinned-border-width [2px] - The border width of the pinned border.
 /// @prop {String} pinned-border-style [solid] - The CSS border style of the pinned border.
 /// @prop {Map} pinned-border-color [igx-color: ('grays', 400)] - The color of the pinned border.
@@ -273,6 +274,10 @@ $_light-grid: (
         igx-color: ('grays', 300),
         hexrgba: #fff,
         text-contrast: ()
+    ),
+
+    row-highlight: (
+        igx-color: ('secondary', 500)
     ),
 
     grid-elevation: 2,

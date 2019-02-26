@@ -1,0 +1,17 @@
+.logo {
+    padding: 10px;
+}
+
+.box {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.group {
+    flex-grow: 1;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+}
