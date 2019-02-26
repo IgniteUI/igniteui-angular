@@ -13,7 +13,6 @@ import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
-import { IgxExcelStyleDropDownComponent } from './excel-style-drop-down.component';
 import { IgxSelectionAPIService } from '../../../core/selection';
 import { FormsModule } from '@angular/forms';
 import { IgxGridPipesModule } from '../../grid-pipes.module';
@@ -42,7 +41,6 @@ import { IgxListModule } from '../../../list/list.component';
         IgxExcelStyleCustomDialogComponent,
         IgxExcelStyleDefaultExpressionComponent,
         IgxExcelStyleDateExpressionComponent,
-        IgxExcelStyleDropDownComponent,
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
