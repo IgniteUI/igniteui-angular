@@ -67,9 +67,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public selectedOperator: string;
 
     @Input()
-    public columnData: any[];
-
-    @Input()
     public filteringService: IgxFilteringService;
 
     @Input()
