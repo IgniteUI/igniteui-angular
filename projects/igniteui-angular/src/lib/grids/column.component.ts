@@ -870,7 +870,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _formatter = null;
+    private _formatter = null;
     /**
      *@hidden
      */
@@ -1247,10 +1247,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const unpinnedColumns = this.grid.unpinnedColumns;
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
-            let cellWidth = isLastUnpinned && hasVerticalScroll &&
-                (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
-
+            let cellWidth = colWidth;
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';
             }
