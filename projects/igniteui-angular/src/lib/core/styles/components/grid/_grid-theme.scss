@@ -726,7 +726,8 @@
     %grid-row {
         display: flex;
         background-color: --var($theme, 'content-background');
-        border-bottom: 1px solid --var($theme, 'row-border-color');
+        border-bottom: 2px solid --var($theme, 'row-border-color');
+        margin-bottom: -1px;
         outline-style: none;
         position: relative;
 
@@ -1450,6 +1451,8 @@
         flex: 1 1 auto;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         min-height: map-get($grid-header-height, 'comfortable');
+        position: relative;
+        background-color: inherit;
 
         &:focus {
             outline: transparent;
