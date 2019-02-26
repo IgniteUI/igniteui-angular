@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 import { IPositionStrategy } from './IPositionStrategy';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect } from '../utilities';
 
-export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
+export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSettings: PositionSettings;
     protected _initialSize: Size;
 
@@ -58,6 +58,18 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         return false;
     }
 
-    abstract fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size);
-    abstract fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size);
+    protected abstract fitHorizontal(
+        element: HTMLElement,
+        settings: PositionSettings,
+        innerRect: ClientRect,
+        outerRect: ClientRect,
+        minSize: Size);
+
+
+    protected abstract fitVertical(
+        element: HTMLElement,
+        settings: PositionSettings,
+        innerRect: ClientRect,
+        outerRect: ClientRect,
+        minSize: Size);
 }
