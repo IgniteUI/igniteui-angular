@@ -69,9 +69,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
-import { IgxListComponent, IgxListModule } from '../list';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
-import { IgxComboModule } from '../combo';
 import { IgxExcelStyleSortingComponent } from './filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleColumnMovingComponent } from './filtering/excel-style/excel-style-column-moving.component';
 import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-style-search.component';
@@ -79,6 +77,7 @@ import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/exce
 import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
 import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-style-drop-down.component';
+import { IgxListModule } from '../list/list.component';
 
 /**
  * @hidden
@@ -181,7 +180,6 @@ import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-st
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxListComponent,
         IgxFilterModule,
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
@@ -211,9 +209,8 @@ import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-st
         IgxButtonGroupModule,
         IgxColumnPinningModule,
         IgxProgressBarModule,
-        IgxListModule,
         IgxFilterModule,
-        IgxComboModule
+        IgxListModule
     ],
     providers: [
         IgxSelectionAPIService,
