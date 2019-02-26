@@ -1,10 +1,11 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, getViewportRect } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectComponent } from './select.component';
 import { isIE } from '../core/utils';
 
+/** @hidden */
 enum Direction {
     Top = -1,
     Bottom = 1,
@@ -31,7 +32,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private defaultWindowToListOffset = 5;
-    private viewPort = this.getViewPort(document);
+    private viewPort = getViewportRect(document);
     private deltaY: number;
     private deltaX: number;
 
@@ -75,26 +76,6 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         };
     }
 
-    private getViewPort(document) {
-        const clientRect = document.documentElement.getBoundingClientRect() as DOMRect;
-        const scrollPosition = {
-            top: -clientRect.top,
-            left: -clientRect.left
-        };
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        return {
-            top: scrollPosition.top,
-            left: scrollPosition.left,
-            bottom: scrollPosition.top + height,
-            right: scrollPosition.left + width,
-            height,
-            width
-        };
-
-    }
-
     private listOutOfBounds(elementContainer: { top: number, bottom: number }, document: Document): {
         Direction: Direction,
         Amount: number
@@ -103,7 +84,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             TOP: elementContainer.top,
             BOTTOM: elementContainer.bottom,
         };
-        const viewPort = this.getViewPort(document);
+        const viewPort = getViewportRect(document);
         const documentElement = {
             TOP: viewPort.top,
             BOTTOM: viewPort.bottom
@@ -142,8 +123,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             Y: inputRect.top
         };
 
-        const LIST_HEIGHT = (contentElement.getBoundingClientRect() as DOMRect).height;
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
+        const LIST_HEIGHT = listBoundRect.height;
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
@@ -154,10 +135,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         } else {
             itemElement = this.select.getFirstItemElement();
         }
-        const inputHeight = (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).height;
+        const inputHeight = inputRect.height;
         const itemBoundRect = itemElement.getBoundingClientRect() as DOMRect;
         const itemTopListOffset = itemBoundRect.top - listBoundRect.top;
-        const itemHeight = (itemElement.getBoundingClientRect() as DOMRect).height;
+        const itemHeight = itemBoundRect.height;
 
         let CURRENT_POSITION_Y = START.Y - itemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
@@ -196,11 +177,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
             if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
-                    if (OUT_OF_BOUNDS.Direction === -1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                         this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount);
                         return;
                     }
-                    if (OUT_OF_BOUNDS.Direction === 1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
                         if (this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
@@ -211,11 +192,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     }
                 }
                 if (this.getItemsOutOfView(contentElement, itemHeight)[1] < itemHeight) {
-                    if (OUT_OF_BOUNDS.Direction === -1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                         this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
 
                     }
-                    if (OUT_OF_BOUNDS.Direction === 1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
                         this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                     }
                 }
@@ -224,10 +205,10 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0
             ) {
                 if (OUT_OF_BOUNDS) {
-                    if (OUT_OF_BOUNDS.Direction === -1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                         this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                     }
-                    if (OUT_OF_BOUNDS.Direction === 1) {
+                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
                         this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                     }
                 }
