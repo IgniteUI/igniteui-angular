@@ -143,8 +143,9 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('height/width should be calculated depending on number of records', fakeAsync(() => {
+        it('height/width should be calculated depending on number of records when height = null', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.height = null;
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
@@ -268,6 +269,7 @@ describe('IgxGrid Component Tests', () => {
         it('should render empty message', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
+            fixture.componentInstance.height = null;
             fixture.detectChanges();
 
             const grid = fixture.componentInstance.grid;
@@ -3344,7 +3346,7 @@ describe('IgxGrid Component Tests', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)" [height]="height">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -3360,7 +3362,7 @@ export class IgxGridTestComponent {
     @ViewChild('grid') public grid: IgxGridComponent;
 
     public autoGenerate = false;
-
+    public height = '100%';
     public columnEventCount = 0;
 
     public columnCreated(column: IgxColumnComponent) {
