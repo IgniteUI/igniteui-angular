@@ -23,8 +23,7 @@ describe('IgxGrid - Column properties', () => {
                 TemplatedInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent,
-                ColumnFormatterComponent
+                ColumnHiddenFromMarkupComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -271,20 +270,20 @@ describe('IgxGrid - Column properties', () => {
     });
 
     it('should apply column\'s formatter programmatically', () => {
-        const expectedVal = ['AD', 'BD', 'ACD', 'DD', 'MlDs', 'DC', 'OC'];
-        const expectedValToLower = ['ad', 'bd', 'acd', 'dd', 'mlds', 'dc', 'oc'];
-        const fix = TestBed.createComponent(ColumnFormatterComponent);
+        const expectedVal = ['Johny', 'Sally', 'Tim'];
+        const expectedValToLower = ['johny', 'sally', 'tim'];
+        const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const col = grid.columns[3];
+        const col = grid.columns[1];
         expect(col.formatter).toBeNull();
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
             // Check the display value
-            expect(grid.getCellByColumn(i, 'Region').nativeElement.textContent).toBe(expectedVal[i]);
+            expect(grid.getCellByColumn(i, 'Name').nativeElement.textContent).toBe(expectedVal[i]);
             // Check the cell's value is not changed
-            expect(grid.getCellByColumn(i, 'Region').value).toBe(expectedVal[i]);
+            expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
 
         // Apply formatter to the last column
@@ -295,9 +294,9 @@ describe('IgxGrid - Column properties', () => {
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {
             // Check the cell's formatter value(display value)
-            expect(grid.getCellByColumn(i, 'Region').nativeElement.textContent).toBe(expectedValToLower[i]);
+            expect(grid.getCellByColumn(i, 'Name').nativeElement.textContent).toBe(expectedValToLower[i]);
             // Check the cell's value is not changed
-            expect(grid.getCellByColumn(i, 'Region').value).toBe(expectedVal[i]);
+            expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
     });
 });
@@ -390,24 +389,4 @@ export class ColumnHaederClassesComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public grid: IgxGridComponent;
-}
-
-@Component({
-    template: `
-    <igx-grid [data]="data" >
-            <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
-            </igx-column>
-        </igx-grid>
-    `
-})
-export class ColumnFormatterComponent {
-    public data = SampleTestData.personIDNameRegionData();
-    public cols = [
-        { field: 'ID' },
-        { field: 'Name' },
-        { field: 'LastName' },
-        { field: 'Region' }
-    ];
-    @ViewChild(IgxGridComponent)
-    public instance: IgxGridComponent;
 }

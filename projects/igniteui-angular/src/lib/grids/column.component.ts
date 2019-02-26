@@ -844,7 +844,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _formatter = null;
+    private _formatter = null;
     /**
      *@hidden
      */
