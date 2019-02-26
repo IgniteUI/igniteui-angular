@@ -2822,7 +2822,29 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
+        grid.columns[2].sortable = true;
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[2].children[0].nativeElement;
+
+        const fitlerIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        fitlerIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
+
+        const sortDesc = sortComponent.lastElementChild.children[0].children[0];
+        sortDesc.click();
+
+        tick();
+        fix.detectChanges();
+
+        expect(grid.sortingExpressions[0].fieldName).toEqual('Downloads');
+        expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
     }));
 
     it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
