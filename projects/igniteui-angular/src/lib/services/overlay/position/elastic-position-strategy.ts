@@ -2,8 +2,12 @@ import { IPositionStrategy } from './IPositionStrategy';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 import { Size, HorizontalAlignment, VerticalAlignment, PositionSettings } from '../utilities';
 
-export class ElasticPositionStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
+/**
+ * Positions the element as in **Connected** positioning strategy and resize the element
+ * to fit in the view port in case the element is partially getting out of view
+ */
+export class ElasticPositionStrategy extends BaseFitPositionStrategy {
+    protected fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
         element.classList.add('igx-overlay__content--elastic');
         let extend = 0;
         switch (settings.horizontalDirection) {
@@ -25,7 +29,7 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy implements 
         element.style.width = `${innerRect.width - extend}px`;
     }
 
-    fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
+    protected fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
         element.classList.add('igx-overlay__content--elastic');
         let extend = 0;
         switch (settings.verticalDirection) {
