@@ -3419,9 +3419,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
             const viewPortHeight = document.documentElement.clientHeight;
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
     }
 
