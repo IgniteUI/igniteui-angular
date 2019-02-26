@@ -2,8 +2,12 @@ import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size } from '
 import { IPositionStrategy } from './IPositionStrategy';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
-export class AutoPositionStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
+/**
+ * Positions the element as in **Connected** positioning strategy and re-positions the element in
+ * the view port (calculating a different start point) in case the element is partially getting out of view
+ */
+export class AutoPositionStrategy extends BaseFitPositionStrategy {
+    protected fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
         switch (settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 settings.horizontalDirection = HorizontalAlignment.Right;
@@ -18,7 +22,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy implements IPo
         this.positionElement(element, settings);
     }
 
-    fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
+    protected fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
         switch (settings.verticalDirection) {
             case VerticalAlignment.Top:
                 settings.verticalDirection = VerticalAlignment.Bottom;
