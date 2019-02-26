@@ -18,7 +18,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
-import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -272,10 +272,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this.scrollToItem(this.selectedItem);
     }
 
-    /** @hidden @internal */
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        if (this.collapsed && this.selectedItem) {
+            this.navigateItem(this.selectedItem.itemIndex);
+        }
+        super.navigate(direction, currentIndex);
+    }
+
     private setSelection(item: IgxDropDownItemBase) {
         if (item && item.value !== undefined && item.value !== null) {
-            this.navigateItem(item.index);
             this.selection.set(this.id, new Set([item]));
         } else {
             this.selection.clear(this.id);
