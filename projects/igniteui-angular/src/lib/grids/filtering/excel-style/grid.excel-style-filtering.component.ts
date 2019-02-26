@@ -6,11 +6,8 @@ import {
     ChangeDetectionStrategy,
     TemplateRef,
     Directive,
-    OnDestroy,
-    ContentChild,
+    OnDestroy
 } from '@angular/core';
-import { IgxColumnComponent } from '../../grid';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down';
 import {
     HorizontalAlignment,
     VerticalAlignment,
@@ -37,6 +34,8 @@ import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
+import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
+import { IgxColumnComponent } from '../../column.component';
 
 /**
  *@hidden
