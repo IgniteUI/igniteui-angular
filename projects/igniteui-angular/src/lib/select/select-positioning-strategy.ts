@@ -35,6 +35,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     private viewPort = getViewportRect(document);
     private deltaY: number;
     private deltaX: number;
+    private itemTextPadding: number;
+    private itemTextIndent: number;
 
     private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
@@ -105,12 +107,15 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         return returnVals;
     }
 
+    //TODO cleanup magic number
     private adjustItemTextPadding(): number {
         return 8;
     }
 
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         if (!initialCall) {
+            this.deltaX = (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).left -
+             this.itemTextPadding - this.itemTextIndent;
             const point = new Point(this.deltaX, (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top + this.deltaY);
             this.settings.target = point;
             super.position(contentElement, size);
@@ -159,7 +164,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10) || 0;
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10) || 0;
-
+        this.itemTextPadding = numericPadding;
+        this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericPadding - numericTextIndent}px`;
         contentElement.style.width = inputRect.width + 24 + 32 + 'px';
         this.deltaX = START.X - numericPadding - numericTextIndent;
