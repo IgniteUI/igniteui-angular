@@ -923,6 +923,16 @@ describe('igxSelect', () => {
             select.selectItem(item);
             expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
         });
+
+        it('should not select header items passed through selectItem method', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            expect(select.selectedItem).toBeFalsy();
+            item.isHeader = true;
+            select.selectItem(item);
+            expect(select.selectedItem).toBeFalsy();
+            expect(select.onSelection.emit).not.toHaveBeenCalled();
+        });
     });
     describe('Grouped items tests: ', () => {
         beforeEach(async(() => {
