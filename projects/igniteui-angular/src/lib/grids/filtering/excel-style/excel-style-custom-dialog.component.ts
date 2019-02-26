@@ -107,7 +107,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     public onCustomDialogOpening() {
-        if (!this.column.filteringExpressionsTree) {
+        if (this.selectedOperator) {
             this.createInitialExpressionUIElement();
         }
     }
