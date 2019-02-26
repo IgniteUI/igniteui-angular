@@ -710,6 +710,15 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 1 Button');
             expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 2 Button');
         });
+
+        it('should have same width as the grid whole width', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestCustomToolbarComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+
+            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
+            expect(toolbar.nativeElement.offsetWidth).toEqual(hierarchicalGrid.nativeElement.offsetWidth);
+        });
     });
 
     describe('Moving', () => {
