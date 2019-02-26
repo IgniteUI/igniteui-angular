@@ -101,15 +101,6 @@ export function getPointFromPositionsSettings(settings: PositionSettings, overla
         result = settings.target;
     }
 
-    //  if for some reason overlayWrapper is not at 0,0 position, e.g. overlay is in outlet
-    //  which is in element with transform,perspective or filter set, we should translate the result
-    //  accordingly
-    if (overlayWrapper) {
-        const overlayWrapperPosition = overlayWrapper.getBoundingClientRect();
-        result.x -= overlayWrapperPosition.left;
-        result.y -= overlayWrapperPosition.top;
-    }
-
     return result;
 }
 
