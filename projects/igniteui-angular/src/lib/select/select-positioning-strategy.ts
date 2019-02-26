@@ -37,24 +37,25 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     private deltaX: number;
     private itemTextPadding: number;
     private itemTextIndent: number;
+    private inputBorderTop: number;
 
     private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
         const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
         contentElement.style.top = `${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.adjustItemTextPadding() - this.defaultWindowToListOffset);
+        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.inputBorderTop - this.defaultWindowToListOffset);
         this.deltaY = this.viewPort.bottom - listBoundRect.height -
             this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
-        contentElement.style.top = `${CURRENT_POSITION_Y - this.adjustItemTextPadding()}px`;
-        this.deltaY = CURRENT_POSITION_Y - this.adjustItemTextPadding() -
+        contentElement.style.top = `${CURRENT_POSITION_Y - this.inputBorderTop}px`;
+        this.deltaY = CURRENT_POSITION_Y - this.inputBorderTop -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
         contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.adjustItemTextPadding() + this.defaultWindowToListOffset;
+        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.inputBorderTop + this.defaultWindowToListOffset;
         this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
@@ -107,10 +108,6 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         return returnVals;
     }
 
-    //TODO cleanup magic number
-    private adjustItemTextPadding(): number {
-        return 8;
-    }
 
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         if (!initialCall) {
@@ -160,10 +157,12 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
+        const inputBorderTop = window.getComputedStyle(this.select.input.nativeElement).borderTopWidth;
+        this.inputBorderTop = parseInt(inputBorderTop.slice(0, inputBorderTop.indexOf('p')), 10) || 0;
         const itemPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10) || 0;
-        const numericTextIndent = parseInt(itemTextIndent.slice(0, itemPadding.indexOf('r')), 10) || 0;
+        const numericTextIndent = parseInt(itemTextIndent.slice(0, itemTextIndent.indexOf('r')), 10) || 0;
         this.itemTextPadding = numericPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericPadding - numericTextIndent}px`;
