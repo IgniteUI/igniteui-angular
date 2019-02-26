@@ -41,7 +41,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   protected setStyle(contentElement: HTMLElement, startPont: Point, settings: PositionSettings) {
     const size = contentElement.getBoundingClientRect();
-    let wrapperRect: ClientRect = contentElement.parentElement.getBoundingClientRect();
+    const wrapperRect: ClientRect = contentElement.parentElement.getBoundingClientRect();
 
     //  clean up styles - if auto position strategy is chosen we may pass here several times
     contentElement.style.right = '';
