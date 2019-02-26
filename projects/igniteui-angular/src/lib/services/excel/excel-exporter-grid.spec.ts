@@ -19,6 +19,7 @@ import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-gri
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -34,7 +35,7 @@ describe('Excel Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent
             ],
-            imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
+            imports: [IgxGridModule.forRoot(), IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

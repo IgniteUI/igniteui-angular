@@ -73,6 +73,12 @@ import { DeprecateMethod } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { IViewChangeEventArgs, ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import {
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -172,6 +178,11 @@ export enum GridSummaryCalculationMode {
     rootLevelOnly = 'rootLevelOnly',
     childLevelsOnly = 'childLevelsOnly',
     rootAndChildLevels = 'rootAndChildLevels'
+}
+
+export enum FilterMode {
+    quickFilter = 'quickFilter',
+    excelStyleFilter = 'excelStyleFilter'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -829,6 +840,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the filter mode.
+     * ```typescript
+     *  let filtering = this.grid.filterMode;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get filterMode() {
+        return this._filterMode;
+    }
+
+    /**
+     * Sets filter mode.
+     * By default it's set to FilterMode.quickFilter.
+     * ```html
+     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set filterMode(value) {
+        this._filterMode = value;
+    }
+
+    /**
      * Returns the summary position.
      * ```typescript
      *  let summaryPosition = this.grid.summaryPosition;
@@ -1334,6 +1369,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
+    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
+    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
+    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
+    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
      * @hidden
@@ -2230,6 +2289,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _wheelListener = null;
     protected _allowFiltering = false;
+    protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
@@ -2462,9 +2522,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
-                    this.reflow();
-                    observer.disconnect();
-                }
+                                this.reflow();
+                                observer.disconnect();
+                            }
             };
 
             observer = new MutationObserver(callback);
@@ -3576,8 +3636,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-        return this.dataLength * this.rowHeight;
-    }
+            return this.dataLength * this.rowHeight;
+        }
 
     /**
      * @hidden
@@ -3694,8 +3754,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
-                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
-            } else {
+            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+        } else {
                 return this.defaultTargetBodyHeight;
             }
         } else {
@@ -3795,7 +3855,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
         if (!width) {
-            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
         if (this.hasVerticalSroll()) {
@@ -4889,7 +4949,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
-            }
+}
         }
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;

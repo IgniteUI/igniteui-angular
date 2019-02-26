@@ -203,7 +203,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 this.subscribeNext(vContainer, () => {
                     // children = all items in the DD (including addItemButton)
                     // length - 2 instead of -1, because we do not want to focus the last loaded item (in DOM, but not visible)
-                    super.navigateItem(children[children.length - 2 - extraScroll].itemIndex); // Focus last item (excluding Add Button)
+                    // Focus last item (excluding Add Button)
+                    super.navigateItem(!addedIndex ? children[children.length - 1 - extraScroll].itemIndex : this.items.length - 2);
                 });
                 vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
             }

@@ -14,12 +14,13 @@
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
                 (onColumnMovingEnd)="onColumnMovingEnd($event)"
-                (onRangeSelection)="log($event)"
-                [rowSelectable]="false"
+                [rowSelectable]="true"
+                [filterMode]="'excelStyleFilter'"
                 [paging]="false"
-                width="900px"
-                [height]="'800px'">
-                <igx-column *ngFor="let c of columns; let index = index" [field]="c.field"
+                [width]="'900px'"
+                [height]="'800px'"
+                [style.zIndex]="'1'">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
                                                     [groupable]="c.groupable"

@@ -24,6 +24,13 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
+import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -64,6 +71,16 @@ import { IgxGridSelectionService } from '../core/grid-selection';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
+import { IgxListComponent, IgxListModule } from '../list';
+import { IgxFilterModule } from '../directives/filter/filter.directive';
+import { IgxComboModule } from '../combo';
+import { IgxExcelStyleSortingComponent } from './filtering/excel-style/excel-style-sorting.component';
+import { IgxExcelStyleColumnMovingComponent } from './filtering/excel-style/excel-style-column-moving.component';
+import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-style-search.component';
+import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/excel-style-custom-dialog.component';
+import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
+import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
+import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-style-drop-down.component';
 
 /**
  * @hidden
@@ -91,6 +108,7 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxSummaryDataPipe,
@@ -98,11 +116,23 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridDragSelectDirective
+        IgxGridDragSelectDirective,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleSearchComponent,
+        IgxExcelStyleCustomDialogComponent,
+        IgxExcelStyleDefaultExpressionComponent,
+        IgxExcelStyleDateExpressionComponent,
+        IgxExcelStyleSortingTemplateDirective,
+        IgxExcelStyleHidingTemplateDirective,
+        IgxExcelStyleMovingTemplateDirective,
+        IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleDropDownComponent
     ],
     entryComponents: [
         IgxColumnComponent,
         IgxColumnGroupComponent,
+        IgxGridExcelStyleFilteringComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -150,10 +180,17 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxProgressBarModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridDragSelectDirective
+        IgxGridDragSelectDirective,
+        IgxListComponent,
+        IgxFilterModule,
+        IgxExcelStyleSortingTemplateDirective,
+        IgxExcelStyleHidingTemplateDirective,
+        IgxExcelStyleMovingTemplateDirective,
+        IgxExcelStylePinningTemplateDirective
     ],
     imports: [
         CommonModule,
@@ -177,7 +214,10 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
+        IgxListModule,
+        IgxFilterModule,
+        IgxComboModule
     ],
     providers: [
         IgxGridSelectionService,

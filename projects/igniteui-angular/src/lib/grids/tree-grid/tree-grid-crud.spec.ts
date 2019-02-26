@@ -8,9 +8,11 @@ import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
+
 
 describe('IgxTreeGrid - CRUD', () => {
     configureTestSuite();
@@ -23,7 +25,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
             ],
-            imports: [IgxTreeGridModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));

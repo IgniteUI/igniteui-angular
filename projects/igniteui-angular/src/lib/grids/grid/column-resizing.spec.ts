@@ -83,7 +83,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('64px');
+        expect(grid.columns[0].width).toEqual('80px');
 
         expect(grid.columns[2].cells[0].value).toEqual('Brown');
 
@@ -161,7 +161,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('70px');
+        expect(grid.columns[1].width).toEqual('80px');
     }));
 
     it('should resize sortable columns.', fakeAsync(() => {
@@ -279,7 +279,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('70px');
+        expect(grid.columns[0].width).toEqual('80px');
 
         headerResArea = headers[1].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 197, 5);
@@ -311,7 +311,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('64px');
+        expect(grid.columns[1].width).toEqual('80px');
     }));
 
     it('should resize pinned column with preset max width.', fakeAsync(() => {
@@ -360,7 +360,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('78px');
+        expect(grid.columns[0].width).toEqual('80px');
 
         resizeArea = headers[1].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', resizeArea, 248, 5);
@@ -375,14 +375,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[2].width).toEqual('78px');
+        expect(grid.columns[2].width).toEqual('80px');
 
         resizeArea = headers[3].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 400, 5);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[3].width).toEqual('73px');
+        expect(grid.columns[3].width).toEqual('80px');
 
         resizeArea = headers[5].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 486, 5);
