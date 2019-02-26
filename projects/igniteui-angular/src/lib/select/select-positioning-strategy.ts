@@ -38,12 +38,12 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     private itemTextPadding: number;
     private itemTextIndent: number;
     private inputBorderTop: number;
+    private listContainerBoundRect: DOMRect;
 
     private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
-        const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        contentElement.style.top = `${this.viewPort.bottom - listBoundRect.height - this.defaultWindowToListOffset}px`;
+        contentElement.style.top = `${this.viewPort.bottom - this.listContainerBoundRect.height - this.defaultWindowToListOffset}px`;
         contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.inputBorderTop - this.defaultWindowToListOffset);
-        this.deltaY = this.viewPort.bottom - listBoundRect.height -
+        this.deltaY = this.viewPort.bottom - this.listContainerBoundRect.height -
             this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
@@ -108,25 +108,24 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         return returnVals;
     }
 
-
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
+        const inputElement = this.select.input.nativeElement;
+        const inputRect = inputElement.getBoundingClientRect() as DOMRect;
+        this.listContainerBoundRect = contentElement.getBoundingClientRect() as DOMRect;
+        const LIST_HEIGHT = this.listContainerBoundRect.height;
         if (!initialCall) {
-            this.deltaX = (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).left -
-             this.itemTextPadding - this.itemTextIndent;
-            const point = new Point(this.deltaX, (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top + this.deltaY);
+            this.deltaX = inputRect.left - this.itemTextPadding - this.itemTextIndent;
+            const point = new Point(this.deltaX, inputRect.top + this.deltaY);
             this.settings.target = point;
             super.position(contentElement, size);
             return;
         }
 
-        const inputRect = this.select.input.nativeElement.getBoundingClientRect() as DOMRect;
         const START = {
             X: inputRect.left,
             Y: inputRect.top
         };
 
-        const listBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const LIST_HEIGHT = listBoundRect.height;
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
@@ -139,11 +138,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         }
         const inputHeight = inputRect.height;
         const itemBoundRect = itemElement.getBoundingClientRect() as DOMRect;
-        const itemTopListOffset = itemBoundRect.top - listBoundRect.top;
+        const itemTopListOffset = itemBoundRect.top - this.listContainerBoundRect.top;
         const itemHeight = itemBoundRect.height;
 
         let CURRENT_POSITION_Y = START.Y - itemTopListOffset;
-        const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
+        const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + this.listContainerBoundRect.height;
 
         const OUT_OF_BOUNDS: {
             Direction: Direction,
@@ -157,7 +156,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
-        const inputBorderTop = window.getComputedStyle(this.select.input.nativeElement).borderTopWidth;
+        const inputBorderTop = window.getComputedStyle(inputElement).borderTopWidth;
         this.inputBorderTop = parseInt(inputBorderTop.slice(0, inputBorderTop.indexOf('p')), 10) || 0;
         const itemPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
