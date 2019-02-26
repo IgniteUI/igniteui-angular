@@ -131,14 +131,17 @@
 /// @param {Color} $color - The color used to return a contrast color for.
 /// @returns {Color} - Returns either white or black depending on the luminance of the input color.
 @function text-contrast($color) {
-    $lightContrast: contrast($color, white);
-    $darkContrast: contrast($color, black);
+    @if type-of($color) == 'color' {
+        $lightContrast: contrast($color, white);
+        $darkContrast: contrast($color, black);
 
-    @if ($lightContrast > $darkContrast) {
-        @return white;
-    } @else {
-        @return black;
+        @if ($lightContrast > $darkContrast) {
+            @return white;
+        } @else {
+            @return black;
+        }
     }
+    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -292,7 +295,8 @@
     $success: #4eb862,
     $warn: #fbb13c,
     $error: #ff134a,
-    $grays: #000
+    $grays: #000,
+    $surface: #fff,
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
     $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);
@@ -312,7 +316,8 @@
         info: (500: $info),
         success: (500: $success),
         warn: (500: $warn),
-        error: (500: $error)
+        error: (500: $error),
+        surface: (500: $surface)
     );
 }
 

@@ -294,7 +294,7 @@
     $secondary: igx-color($palette, 'secondary');
 
     @include igx-theme(
-        $palette: igx-palette($primary, $secondary, $grays: #fff),
+        $palette: igx-palette($primary, $secondary, $grays: #fff, $surface: #222),
         $schema: $dark-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude
