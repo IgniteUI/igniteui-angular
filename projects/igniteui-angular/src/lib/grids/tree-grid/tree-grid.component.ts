@@ -33,6 +33,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 
@@ -310,10 +311,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         viewRef: ViewContainerRef,
         navigation: IgxTreeGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, summaryService, _displayDensityOptions);
+                filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 

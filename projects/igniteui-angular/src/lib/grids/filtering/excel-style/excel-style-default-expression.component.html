@@ -37,11 +37,13 @@
     <input
         #inputValues
         igxInput
+        [type]="type"
         tabindex="0"
         [placeholder]="inputValuePlaceholder"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
         autocomplete="off"
-        [(ngModel)]="expressionUI.expression.searchVal"
+        [value]="expressionUI.expression.searchVal"
+        (input)="onValuesInput($event)"
     />
 </igx-input-group>
 

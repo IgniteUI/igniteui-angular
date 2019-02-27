@@ -2657,7 +2657,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const stringCellChip = initialChips[0].nativeElement;
 
-        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+        expect(stringCellChip.children[0].children[2].innerText).toBe('My filter');
 
         stringCellChip.click();
         fix.detectChanges();
@@ -2684,7 +2684,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const stringCellChip = initialChips[0].nativeElement;
 
-        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+        expect(stringCellChip.children[0].children[2].innerText).toBe('My filter');
 
         stringCellChip.click();
         fix.detectChanges();

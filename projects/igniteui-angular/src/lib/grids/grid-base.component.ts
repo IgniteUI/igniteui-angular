@@ -36,7 +36,14 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase, AbsoluteScrollStrategy, HorizontalAlignment, VerticalAlignment } from '../services/index';
+import {
+    IgxBaseExporter,
+    IgxExporterOptionsBase,
+    AbsoluteScrollStrategy,
+    HorizontalAlignment,
+    VerticalAlignment,
+    IgxOverlayService
+} from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -2328,6 +2335,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.disableTransitions = false;
         });
+
+        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
+            this.closeExcelStyleDialog();
+        }
     }
 
     private horizontalScrollHandler(event) {
@@ -2339,6 +2350,23 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
+
+        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
+            this.closeExcelStyleDialog();
+        }
+    }
+
+    private closeExcelStyleDialog() {
+        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu igx-toggle')[0];
+        if (excelStyleMenu) {
+            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('ng-reflect-id'));
+            if (overlay) {
+                const animation = overlay.settings.positionStrategy.settings.closeAnimation;
+                overlay.settings.positionStrategy.settings.closeAnimation = null;
+                this.overlayService.hide(overlay.id);
+                overlay.settings.positionStrategy.settings.closeAnimation = animation;
+            }
+        }
     }
 
     private keydownHandler(event) {
@@ -2368,6 +2396,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         protected viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
@@ -2606,6 +2635,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         return 0;
+    }
+
+    /**
+     * @hidden
+     */
+    protected get outlet() {
+        return this.outletDirective;
     }
 
     /**
@@ -3729,7 +3765,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+        return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**
