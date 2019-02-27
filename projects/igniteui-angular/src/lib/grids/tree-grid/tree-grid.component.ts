@@ -28,7 +28,7 @@ import { TransactionService, HierarchicalTransaction, HierarchicalState, Transac
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
-import { IgxHierarchicalTransactionService } from '../../services';
+import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
@@ -310,10 +310,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         viewRef: ViewContainerRef,
         navigation: IgxTreeGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, summaryService, _displayDensityOptions);
+                filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 

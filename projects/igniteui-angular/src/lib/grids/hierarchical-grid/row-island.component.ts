@@ -27,7 +27,7 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { TransactionService, Transaction, State } from '../../services';
+import { TransactionService, Transaction, State, IgxOverlayService } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
@@ -185,6 +185,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         viewRef: ViewContainerRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
@@ -200,6 +201,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             viewRef,
             navigation,
             filteringService,
+            overlayService,
             summaryService,
             _displayDensityOptions
         );
