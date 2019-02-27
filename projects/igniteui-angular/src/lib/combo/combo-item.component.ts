@@ -9,7 +9,7 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
+import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
 import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
 
@@ -71,6 +71,18 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             return;
         }
         this._isSelected = value;
+    }
+
+    /**
+     * @hidden
+     */
+    isVisible(direction: Navigate): boolean {
+        const rect = this.element.nativeElement.getBoundingClientRect();
+        const parentDiv = this.element.nativeElement.parentElement.parentElement.getBoundingClientRect();
+        if (direction === Navigate.Down) {
+            return rect.y + rect.height <= parentDiv.y + parentDiv.height;
+        }
+        return rect.y >= parentDiv.y;
     }
 
     @HostListener('click', ['$event'])
