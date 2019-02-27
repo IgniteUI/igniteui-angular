@@ -28,6 +28,10 @@ import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
+/**
+ * This class encapsulates the Toolbar's logic and is internally used by
+ * the `IgxGridComponent`, `IgxTreeGridComponent` and `IgxHierarchicalGridComponent`.
+ */
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
