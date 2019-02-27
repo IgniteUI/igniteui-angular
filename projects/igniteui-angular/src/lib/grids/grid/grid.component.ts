@@ -26,7 +26,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxOverlayService } from '../../services';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 

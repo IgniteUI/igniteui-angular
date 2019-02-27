@@ -181,7 +181,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        this._subMenuOverlaySettings.outlet = this.grid.rootGrid ? this.grid.rootGrid.outletDirective : this.grid.outletDirective;
+        this._subMenuOverlaySettings.outlet = this.grid.outlet;
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();

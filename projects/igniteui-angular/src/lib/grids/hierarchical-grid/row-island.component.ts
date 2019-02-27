@@ -27,12 +27,12 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { TransactionService, Transaction, State, IgxOverlayService } from '../../services';
+import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-
+import { IgxOverlayService } from '../../services/index';
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;

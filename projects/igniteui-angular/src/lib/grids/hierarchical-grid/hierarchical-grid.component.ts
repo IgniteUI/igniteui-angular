@@ -36,7 +36,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxOverlayService } from '../../services';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 

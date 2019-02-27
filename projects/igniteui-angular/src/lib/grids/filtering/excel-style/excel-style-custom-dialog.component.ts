@@ -94,7 +94,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     constructor(private cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
-        this._customDialogOverlaySettings.outlet = this.grid.rootGrid ? this.grid.rootGrid.outletDirective : this.grid.outletDirective;
+        this._customDialogOverlaySettings.outlet = this.grid.outlet;
     }
 
     get template(): TemplateRef<any> {

@@ -28,11 +28,12 @@ import { TransactionService, HierarchicalTransaction, HierarchicalState, Transac
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
-import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services';
+import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 
