@@ -1,9 +1,8 @@
 <igx-drop-down
     #dropdownConditions
     [maxHeight]="'200px'"
-    [width]="getInputWidth(inputGroupConditions)"
-    (onSelection)="onConditionsChanged($event)"
-    (onClosed)="onDropdownClosed()">
+    [width]="getInputWidth()"
+    (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ translateCondition(condition) }}</span>
@@ -12,7 +11,7 @@
 
 <igx-input-group
     #inputGroupConditions
-    (click)="toggleCustomDialogDropDown(inputGroupConditions, dropdownConditions)"
+    (click)="toggleCustomDialogDropDown()"
     type="box"
     [displayDensity]="'compact'"
     [supressInputAutofocus]="true">
@@ -24,7 +23,7 @@
 
     <input
         igxInput
-        (keydown)="onInputKeyDown($event)"
+        (keydown)="onInputConditionsKeyDown($event)"
         [igxDropDownItemNavigation]="dropdownConditions"
         tabindex="0"
         [placeholder]="inputConditionsPlaceholder"
@@ -34,47 +33,18 @@
     />
 </igx-input-group>
 
-<igx-excel-style-drop-down
-    #dropdownValues
-    [maxHeight]="'200px'"
-    [width]="getInputWidth(inputGroupValues)"
-    (onSelection)="onValuesChanged($event)"
-    (onOpening)="onDropdownValuesOpening()"
-    (onOpened)="onDropdownValuesOpened()"
-    (onClosed)="onDropdownClosed()"
-    (onClosing)="onDropdownClosing()">
-    <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="200"
-        role="listbox">
-        <ng-template igxFor let-item let-index="index" [igxForOf]="valuesData" [igxForScrollOrientation]="'vertical'"
-            [igxForContainerSize]="200" [igxForItemSize]="32">
-            <igx-drop-down-item [value]="item" [index]="index" [selected]="isValueSelected(item)">
-                <span>
-                    {{ column.formatter ? column.formatter(item) : column.dataType === 'number' ? (item | igxdecimal: column.grid.locale) : item }}
-                </span>
-            </igx-drop-down-item>
-        </ng-template>
-    </div>
-
-</igx-excel-style-drop-down>
-
 <igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
     <input
         #inputValues
         igxInput
+        [type]="type"
         tabindex="0"
         [placeholder]="inputValuePlaceholder"
         [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
         autocomplete="off"
-        [igxDropDownItemNavigation]="dropdownValues"
-        (keydown)="onInputValuesKeydown($event)"
-        [(ngModel)]="expressionUI.expression.searchVal"
+        [value]="expressionUI.expression.searchVal"
+        (input)="onValuesInput($event)"
     />
-
-    <igx-icon igxSuffix
-        (click)="toggleCustomDialogDropDown(inputGroupValues, dropdownValues)"
-        [igxDropDownItemNavigation]="dropdownValues">
-        arrow_drop_down
-    </igx-icon>
 </igx-input-group>
 
 <button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="!isSingle">

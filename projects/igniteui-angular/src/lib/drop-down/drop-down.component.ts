@@ -239,7 +239,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onToggleOpening(e: CancelableEventArgs) {
         this.onOpening.emit(e);
@@ -250,7 +250,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onToggleOpened() {
         if (this.selectedItem) {
@@ -263,14 +263,14 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onToggleClosed() {
         if (this._focusedItem) {
@@ -280,7 +280,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public ngOnDestroy() {
         this.destroy$.next(true);
@@ -323,7 +323,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
