@@ -249,6 +249,8 @@
         user-select: none;
         outline: transparent;
         white-space: nowrap;
+        border-radius: 4px;
+        margin: 8px;
 
         > igx-icon + span {
             margin-left: 32px;
