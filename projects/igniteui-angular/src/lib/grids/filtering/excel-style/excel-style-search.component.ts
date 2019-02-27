@@ -63,5 +63,6 @@ export class IgxExcelStyleSearchComponent {
                 this.data[0].indeterminate = true;
             }
         }
+        eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
 }
