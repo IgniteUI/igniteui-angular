@@ -103,6 +103,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
                 return 'text';
             case DataType.Number:
                 return 'number';
+            default:
+                return 'text';
         }
     }
 
