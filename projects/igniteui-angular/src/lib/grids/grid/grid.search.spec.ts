@@ -961,6 +961,7 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to navigate through highlights with grouping enabled', async () => {
+            grid.height = null;
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
@@ -1108,6 +1109,7 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to properly handle perPage changes with gouping and paging', async () => {
+            grid.height = null;
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
@@ -1153,6 +1155,7 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to properly handle navigating through collapsed rows', async () => {
+            grid.height = null;
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
