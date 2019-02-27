@@ -98,9 +98,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     get type() {
         switch (this.column.dataType) {
-            case DataType.String:
-            case DataType.Boolean:
-                return 'text';
             case DataType.Number:
                 return 'number';
             default:
