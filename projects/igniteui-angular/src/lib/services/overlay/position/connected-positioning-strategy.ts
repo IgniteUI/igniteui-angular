@@ -6,7 +6,8 @@ import {
   PositionSettings,
   Point,
   Size,
-  VerticalAlignment
+  VerticalAlignment,
+  cloneInstance
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
@@ -37,6 +38,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
     this.setStyle(contentElement, startPoint, this.settings);
+  }
+
+  clone(): IPositionStrategy {
+    return cloneInstance(this);
   }
 
   protected setStyle(contentElement: HTMLElement, startPont: Point, settings: PositionSettings) {
