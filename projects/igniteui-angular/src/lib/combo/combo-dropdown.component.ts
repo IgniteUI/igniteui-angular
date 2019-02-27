@@ -31,16 +31,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         super(elementRef, cdr, selection);
     }
 
-    /**
-     * @hidden
-     */
     protected get scrollContainer() {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
-    /**
-     * @hidden
-     */
     protected get isScrolledToLast(): boolean {
         const scrollTop = this.verticalScrollContainer.getVerticalScroll().scrollTop;
         const scrollHeight = this.verticalScrollContainer.getVerticalScroll().scrollHeight;
@@ -63,13 +57,13 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public children: QueryList<IgxDropDownItemBase> = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onFocus() {
         this._focusedItem = this._focusedItem || this.items[0];
@@ -79,7 +73,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onBlur(evt?) {
         if (this._focusedItem) {
@@ -89,7 +83,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onToggleOpened() {
         this.onOpened.emit();
@@ -106,7 +100,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigateFirst() {
         const vContainer = this.verticalScrollContainer;
@@ -123,7 +117,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigateLast() {
         const vContainer = this.verticalScrollContainer;
@@ -142,9 +136,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         });
     }
 
-    /**
-     * @hidden
-     */
     private navigateRemoteItem(direction) {
         this.verticalScrollContainer.addScrollTop(direction * this.combo.itemHeight);
         this.subscribeNext(this.verticalScrollContainer, () => {
@@ -157,7 +148,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public selectItem(item: IgxDropDownItemBase) {
         if (item === null || item === undefined) {
@@ -244,9 +235,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
     }
 
-    /**
-     * @hidden
-     */
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
@@ -303,16 +291,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     protected scrollToHiddenItem(newItem: any): void { }
 
-    /**
-     * @hidden
-     */
     protected scrollHandler = () => {
         this.comboAPI.disableTransitions = true;
     }
 
-    /**
-     * @hidden
-     */
     protected get sortedChildren(): IgxDropDownItemBase[] {
         if (this.children !== undefined) {
             return this.children.toArray()
@@ -344,13 +326,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         return items;
     }
 
-    /**
-     * @hidden
-     */
     protected scrollToItem() {
     }
     /**
-     * @hidden
+     * @hidden @internal
      */
     onToggleClosing(e: CancelableBrowserEventArgs) {
         super.onToggleClosing(e);
@@ -358,14 +337,14 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public onItemActionKey(key: DropDownActionKey) {
         switch (key) {
@@ -405,7 +384,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     public ngOnDestroy(): void {
         this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.scrollHandler);
