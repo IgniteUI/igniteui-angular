@@ -6,8 +6,7 @@ import {
     Output,
     EventEmitter,
     ChangeDetectorRef,
-    ViewChild,
-    OnDestroy
+    ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
@@ -20,10 +19,6 @@ import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } fr
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { IgxGridBaseComponent } from '../../grid';
-import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
-import { IgxExcelStyleDropDownComponent } from './excel-style-drop-down.component';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -42,7 +37,7 @@ export interface ILogicOperatorChangedArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
-export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, OnDestroy {
+export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -51,17 +46,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    protected _isDropdownValuesOpening = false;
-    protected _isDropdownOpened = false;
-    protected _valuesData: any[];
-    protected _scrollTop = 0;
-    protected destroy$ = new Subject<boolean>();
-
     @Input()
     public column: IgxColumnComponent;
-
-    @Input()
-    public columnData: any[];
 
     @Input()
     public expressionUI: ExpressionUI;
@@ -78,26 +64,17 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
-    @ViewChild('inputGroupValues', { read: IgxInputGroupComponent })
-    protected inputGroupValues: IgxInputGroupComponent;
-
     @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
-    private inputGroupConditions: IgxInputGroupComponent;
+    protected inputGroupConditions: IgxInputGroupComponent;
 
     @ViewChild('inputValues', { read: IgxInputDirective })
     protected inputValuesDirective: IgxInputDirective;
-
-    @ViewChild('dropdownValues', { read: IgxExcelStyleDropDownComponent })
-    protected dropdownValues: IgxExcelStyleDropDownComponent;
 
     @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
     protected dropdownConditions: IgxDropDownComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
-
-    @ViewChild(IgxForOfDirective)
-    protected valuesForOfDirective: IgxForOfDirective<IgxDropDownItemComponent>;
 
     protected get inputValuesElement() {
         return this.inputValuesDirective;
@@ -119,77 +96,26 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
-    get valuesData(): any[] {
-        if (!this._valuesData) {
-            this._valuesData = this.columnData.filter(x => x !== null && x !== undefined && x !== '');
+    get type() {
+        switch (this.column.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
         }
-
-        return this._valuesData;
     }
 
     constructor(public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
         this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
-
-        this.valuesForOfDirective.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            const isSearchValNumber = typeof (this.valuesForOfDirective.igxForOf[0]) === 'number';
-            if (isSearchValNumber) {
-                const searchVal = parseFloat(this.expressionUI.expression.searchVal);
-                const selectedItemIndex = this.dropdownValues.items.findIndex(x => x.value === searchVal);
-
-                if (selectedItemIndex !== -1) {
-                    this.dropdownValues.setSelectedItem(selectedItemIndex);
-                } else if (this.dropdownValues.selectedItem) {
-                    this.dropdownValues.selectedItem.selected = false;
-                }
-            }
-        });
-    }
-
-    public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
+        this._dropDownOverlaySettings.positionStrategy.settings.target = this.inputGroupConditions.element.nativeElement;
     }
 
     public focus() {
         // use requestAnimationFrame to focus the values input because when initializing the component
         // datepicker's input group is not yet fully initialized
         requestAnimationFrame(() => this.inputValuesElement.focus());
-    }
-
-    public onValuesChanged(eventArgs: any) {
-        if (!this._isDropdownValuesOpening) {
-            const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-            this.expressionUI.expression.searchVal = value;
-
-            this.focus();
-        }
-    }
-
-    public onDropdownValuesOpening() {
-        this._isDropdownValuesOpening = true;
-
-        if (this.expressionUI.expression.searchVal) {
-            const isSearchValNumber = typeof(this.valuesForOfDirective.igxForOf[0]) === 'number';
-            const searchVal = isSearchValNumber ? parseFloat(this.expressionUI.expression.searchVal)
-                                                : this.expressionUI.expression.searchVal;
-            const selectedItemIndex = this.valuesForOfDirective.igxForOf.indexOf(searchVal);
-
-            if (selectedItemIndex > -1) {
-                this._scrollTop = this.valuesForOfDirective.getScrollForIndex(selectedItemIndex);
-            }
-        }
-
-        (this.valuesForOfDirective as any).vh.instance.scrollTop = this._scrollTop;
-    }
-
-    public onDropdownClosing() {
-        this._scrollTop =  this.valuesForOfDirective.getVerticalScroll().scrollTop;
-    }
-
-    public onDropdownValuesOpened() {
-        this._isDropdownValuesOpening = false;
     }
 
     public isConditionSelected(conditionName: string): boolean {
@@ -200,8 +126,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         return condition ? condition.name : null;
     }
 
-    public getInputWidth(parent: any) {
-        return parent ? parent.element.nativeElement.offsetWidth + 'px' : null;
+    public getInputWidth() {
+        return this.inputGroupConditions.element.nativeElement.offsetWidth + 'px';
     }
 
     get conditions() {
@@ -222,17 +148,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         }
     }
 
-    public onDropdownClosed() {
-        this._isDropdownOpened = false;
-        (this.valuesForOfDirective as any).vh.instance.scrollTop = null;
-    }
-
-    public toggleCustomDialogDropDown(input: IgxInputGroupComponent, targetDropDown: IgxDropDownComponent) {
-        if (!this._isDropdownOpened) {
-            this._dropDownOverlaySettings.positionStrategy.settings.target = input.element.nativeElement;
-            targetDropDown.toggle(this._dropDownOverlaySettings);
-            this._isDropdownOpened = true;
-        }
+    public toggleCustomDialogDropDown() {
+        this.dropdownConditions.toggle(this._dropDownOverlaySettings);
     }
 
     public getCondition(value: string): IFilteringOperation {
@@ -252,6 +169,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         } else {
             return false;
         }
+    }
+
+    public onValuesInput(eventArgs) {
+        this.expressionUI.expression.searchVal = this.transformValue(eventArgs.target.value);
     }
 
     public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
@@ -280,17 +201,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         this.onExpressionRemoved.emit(this.expressionUI);
     }
 
-    public onInputValuesKeydown(event: KeyboardEvent) {
-        if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.toggleCustomDialogDropDown(this.inputGroupValues, this.dropdownValues);
-        }
-
-        event.stopPropagation();
-    }
-
-    public onInputKeyDown(eventArgs) {
+    public onInputConditionsKeyDown(eventArgs) {
         if (eventArgs.altKey && (eventArgs.key === KEYS.DOWN_ARROW || eventArgs.key === KEYS.DOWN_ARROW_IE)) {
-            this.toggleCustomDialogDropDown(this.inputGroupConditions, this.dropdownConditions);
+            this.toggleCustomDialogDropDown();
         }
 
         if (eventArgs.key === KEYS.TAB && eventArgs.shiftKey && this.expressionsList[0] === this.expressionUI) {
@@ -298,5 +211,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, O
         }
 
         event.stopPropagation();
+    }
+
+    private transformValue(value): any {
+        if (this.column.dataType === DataType.Number) {
+            value = parseFloat(value);
+        } else if (this.column.dataType === DataType.Boolean) {
+            value = Boolean(value);
+        }
+
+        return value;
     }
 }

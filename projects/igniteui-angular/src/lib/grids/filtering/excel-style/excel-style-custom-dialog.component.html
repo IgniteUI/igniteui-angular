@@ -5,7 +5,7 @@
     (onOpened)="onCustomDialogOpened()">
     <header class="igx-excel-filter__secondary-header">
         <h4 class="igx-typography__h6">
-            {{ grid.resourceStrings.igx_grid_excel_custom_dialog_header }}{{ column.field }}
+            {{ grid.resourceStrings.igx_grid_excel_custom_dialog_header }}{{ column.header || column.field }}
         </h4>
     </header>
 
@@ -17,20 +17,18 @@
                 [column]="column"
                 [grid]="grid"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData"
                 (onExpressionRemoved)="onExpressionRemoved($event)"
                 (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-date-expression>
         </ng-container>
 
-        <ng-container *ngIf="column.dataType != 'date'">
+        <ng-container *ngIf="column.dataType !== 'date'">
             <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
                 [column]="column"
                 [grid]="grid"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData"
                 (onExpressionRemoved)="onExpressionRemoved($event)"
                 (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-default-expression>
