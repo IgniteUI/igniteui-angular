@@ -107,7 +107,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     public maxHeight = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('class.igx-drop-down')
     public cssClass = true;
@@ -185,7 +185,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
 
     /**
      * Emits onSelection with the target item & event
-     * @hidden
+     * @hidden @internal
      * @param newSelection the item selected
      * @param event the event that triggered the call
      */
@@ -198,22 +198,19 @@ export abstract class IgxDropDownBase implements IDropDownList {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get focusedItem(): IgxDropDownItemBase {
         return this._focusedItem;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public set focusedItem(item: IgxDropDownItemBase) {
         this._focusedItem = item;
     }
 
-    /**
-     * @hidden
-     */
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
@@ -256,28 +253,28 @@ export abstract class IgxDropDownBase implements IDropDownList {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigateFirst() {
         this.navigate(Navigate.Down, -1);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigateLast() {
         this.navigate(Navigate.Up, this.items.length);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigateNext() {
         this.navigate(Navigate.Down);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public navigatePrev() {
         this.navigate(Navigate.Up);
