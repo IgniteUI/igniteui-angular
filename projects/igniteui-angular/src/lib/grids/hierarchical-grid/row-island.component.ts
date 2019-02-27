@@ -34,6 +34,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
+import { IgxOverlayService } from '../../services/index';
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -190,6 +191,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         viewRef: ViewContainerRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
@@ -207,6 +209,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             viewRef,
             navigation,
             filteringService,
+            overlayService,
             summaryService,
             _displayDensityOptions
         );

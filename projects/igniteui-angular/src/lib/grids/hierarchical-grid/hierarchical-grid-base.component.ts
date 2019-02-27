@@ -19,7 +19,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxHierarchicalTransactionService } from '../../services/index';
+import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -60,6 +60,13 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         return this._maxLevelHeaderDepth;
     }
 
+     /**
+     * @hidden
+     */
+    protected get outlet() {
+        return this.rootGrid ? this.rootGrid.outletDirective : this.outletDirective;
+    }
+
     /**
      * @hidden
      */
@@ -87,6 +94,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         viewRef: ViewContainerRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
@@ -104,6 +112,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             viewRef,
             navigation,
             filteringService,
+            overlayService,
             summaryService,
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;

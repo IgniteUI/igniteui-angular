@@ -96,6 +96,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
+    get type() {
+        switch (this.column.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
+        }
+    }
+
     constructor(public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
@@ -162,6 +171,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
+    public onValuesInput(eventArgs) {
+        this.expressionUI.expression.searchVal = this.transformValue(eventArgs.target.value);
+    }
+
     public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
         if (this.logicOperatorButtonGroup.selectedButtons.length === 0) {
             eventArgs.stopPropagation();
@@ -198,5 +211,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
 
         event.stopPropagation();
+    }
+
+    private transformValue(value): any {
+        if (this.column.dataType === DataType.Number) {
+            value = parseFloat(value);
+        } else if (this.column.dataType === DataType.Boolean) {
+            value = Boolean(value);
+        }
+
+        return value;
     }
 }

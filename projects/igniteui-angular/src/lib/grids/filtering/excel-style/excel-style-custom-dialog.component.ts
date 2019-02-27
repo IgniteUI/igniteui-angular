@@ -94,7 +94,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     constructor(private cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
-        this._customDialogOverlaySettings.outlet = this.grid.outletDirective;
+        this._customDialogOverlaySettings.outlet = this.grid.outlet;
     }
 
     get template(): TemplateRef<any> {
@@ -105,7 +105,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         return this.defaultExpressionTemplate;
     }
 
-    get grid() {
+    get grid(): any {
         return this.filteringService.grid;
     }
 
@@ -122,7 +122,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     public open() {
-        this._customDialogOverlaySettings.positionStrategy.settings.target = this.grid.nativeElement;
+        this._customDialogOverlaySettings.positionStrategy.settings.target =
+            this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement;
         this.toggle.open(this._customDialogOverlaySettings);
     }
 

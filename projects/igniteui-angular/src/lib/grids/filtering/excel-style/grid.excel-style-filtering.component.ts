@@ -95,7 +95,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private selectAllIndeterminate = false;
     private filterValues = [];
 
-    protected chunkLoaded = new Subscription();
     protected columnMoving = new Subscription();
 
     public column: IgxColumnComponent;
@@ -146,7 +145,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
-    get grid() {
+    get grid(): any {
         return this.filteringService.grid;
     }
 
@@ -181,11 +180,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        this._subMenuOverlaySettings.outlet = this.grid.outletDirective;
-
-        this.chunkLoaded = this.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.closeDropdown();
-        });
+        this._subMenuOverlaySettings.outlet = this.grid.outlet;
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
@@ -271,15 +266,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         const selectableExpressionsCount = this.expressionsList.filter(exp =>
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
-            (this.expressionsList[0].expression.condition.name === 'equals' ||
-             this.expressionsList[0].expression.condition.name === 'true' ||
-             this.expressionsList[0].expression.condition.name === 'false' ||
-             this.expressionsList[0].expression.condition.name === 'empty')).length;
-        if (selectableExpressionsCount === this.expressionsList.length) {
-            return true;
-        } else {
-            return false;
-        }
+            (exp.expression.condition.name === 'equals' ||
+             exp.expression.condition.name === 'true' ||
+             exp.expression.condition.name === 'false' ||
+             exp.expression.condition.name === 'empty')).length;
+
+        return selectableExpressionsCount === this.expressionsList.length;
     }
 
     private areExpressionsValuesInTheList() {
@@ -294,21 +286,22 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             }
         }
 
-        if (sameElements === this.filterValues.length) {
-            return true;
-        } else {
-            return false;
-        }
+        return sameElements > 0;
     }
 
     public populateColumnData() {
+        let data = this.grid.filteredData;
+        if (!data) {
+            data = this.column.gridAPI.get_all_data(this.grid.id);
+        }
+
         if (this.column.dataType === DataType.Date) {
-            this.uniqueValues = Array.from(new Set(this.grid.data.map(record =>
+            this.uniqueValues = Array.from(new Set(data.map(record =>
                 record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
             this.filterValues = this.expressionsList.map(exp =>
                 exp.expression.searchVal ? exp.expression.searchVal.toDateString() : exp.expression.searchVal);
         } else {
-            this.uniqueValues = Array.from(new Set(this.filteringService.grid.data.map(record => record[this.column.field])));
+            this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
             this.filterValues = this.expressionsList.map(exp => exp.expression.searchVal);
         }
         this.listData = new Array<FilterListItem>();
