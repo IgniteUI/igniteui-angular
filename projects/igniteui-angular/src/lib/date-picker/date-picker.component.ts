@@ -392,7 +392,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._transformedDate = value;
     }
 
-    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService, public element: ElementRef,
         private _cdr: ChangeDetectorRef, private _moduleRef: NgModuleRef<any>) { }
 
     /**

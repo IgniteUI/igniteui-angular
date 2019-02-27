@@ -937,15 +937,6 @@ describe('igxCombo', () => {
             expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
             expect(combo.isItemSelected(combo.data[itemIndex])).toBeFalsy();
         }
-        it('Should properly return the selected value(s)', () => {
-            const fixture = TestBed.createComponent(IgxComboSampleComponent);
-            fixture.detectChanges();
-            const combo = fixture.componentInstance.combo;
-            expect(combo).toBeDefined();
-            expect(combo.values).toEqual([]);
-            combo.valueKey = undefined;
-            expect(combo.values).toEqual([]);
-        });
         it('Should properly call "writeValue" method', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
