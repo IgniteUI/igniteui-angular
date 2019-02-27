@@ -28,7 +28,6 @@ import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
-/** @hidden */
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
@@ -162,7 +161,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /**
      * Returns whether the `IgxGridComponent` renders an export button.
      * ```typescript
-     * cosnt exportButton = this.igxGrid1.toolbar.shouldShowExportButton;
+     * const exportButton = this.igxGrid1.toolbar.shouldShowExportButton;
      * ```
      */
     public get shouldShowExportButton(): boolean {
@@ -172,7 +171,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /**
      * Returns whether the `IgxGridComponent` renders an Excel export button.
      * ```typescript
-     * cosnt exportExcelButton = this.igxGrid1.toolbar.shouldShowExportExcelButton;
+     * const exportExcelButton = this.igxGrid1.toolbar.shouldShowExportExcelButton;
      * ```
      */
     public get shouldShowExportExcelButton(): boolean {
@@ -182,7 +181,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /**
      * Returns whether the `IgxGridComponent` renders an CSV export button.
      * ```typescript
-     * cosnt exportCSVButton = this.igxGrid1.toolbar.shouldShowExportCsvButton;
+     * const exportCSVButton = this.igxGrid1.toolbar.shouldShowExportCsvButton;
      * ```
      */
     public get shouldShowExportCsvButton(): boolean {
@@ -326,7 +325,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /**
      * Toggles the Column Hiding UI.
      * ```typescript
-     * grid1.toolbar.toggleColumnHidingUI();
+     * this.grid1.toolbar.toggleColumnHidingUI();
      * ```
      */
     public toggleColumnHidingUI() {
@@ -338,7 +337,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /**
      * Toggles the Column Pinning UI.
      * ```typescript
-     * grid1.toolbar.toggleColumnPinningUI();
+     * this.grid1.toolbar.toggleColumnPinningUI();
      * ```
      */
     public toggleColumnPinningUI() {
@@ -351,7 +350,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * Returns the `context` object which represents the `template context` binding into the
      * `toolbar custom container` by providing references to the parent IgxGird and the toolbar itself.
      * ```typescript
-     * let context =  this.igxGrid.toolbar.context;
+     * const context =  this.igxGrid.toolbar.context;
      * ```
      */
     public get context(): any {
