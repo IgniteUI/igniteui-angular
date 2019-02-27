@@ -80,7 +80,6 @@ import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-styl
 import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/excel-style-custom-dialog.component';
 import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
 import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
-import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-style-drop-down.component';
 
 /**
  * @hidden
@@ -126,8 +125,7 @@ import { IgxExcelStyleDropDownComponent } from './filtering/excel-style/excel-st
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleDropDownComponent
+        IgxExcelStylePinningTemplateDirective
     ],
     entryComponents: [
         IgxColumnComponent,

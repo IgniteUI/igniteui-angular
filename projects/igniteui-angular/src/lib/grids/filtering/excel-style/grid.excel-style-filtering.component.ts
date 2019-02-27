@@ -254,7 +254,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
-        this.customDialog.selectedOperator = eventArgs.newSelection.value ? eventArgs.newSelection.value : 'equals';
+        this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
         this.mainDropdown.close();
         this.subMenu.close();
