@@ -208,10 +208,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     public navigateItem(newIndex: number, direction?: number) {
         const vContainer = this.verticalScrollContainer;
         const notVirtual = vContainer.dc.instance.notVirtual;
+        const items = this.items as IgxComboItemComponent[];
         if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
             super.navigateItem(newIndex); // use default scroll
-        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
-            this.navigateRemoteItem(direction);
+        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) { // Remote scroll
+            if (newIndex !== -1 &&
+                items[newIndex].isVisible(direction)) {
+                this.navigateItem(newIndex);
+            } else {
+                this.navigateRemoteItem(direction);
+            }
         } else {
             if (direction === Navigate.Up) { // Navigate UP
                 this.navigateUp(newIndex);

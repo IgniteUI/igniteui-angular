@@ -10,6 +10,7 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
+import { Navigate } from '../drop-down/drop-down.common';
 
 /** @hidden */
 @Component({
@@ -47,6 +48,16 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
      */
     get isSelected() {
         return this.combo.isItemSelected(this.itemID);
+    }
+
+    /** @hidden */
+    isVisible(direction: Navigate) {
+        const rect = this.elementRef.nativeElement.getBoundingClientRect();
+        const parentDiv = this.elementRef.nativeElement.parentElement.parentElement.getBoundingClientRect();
+        if (direction === Navigate.Down) {
+            return rect.y + rect.height <= parentDiv.y + parentDiv.height;
+        }
+        return rect.y >= parentDiv.y;
     }
 
     /**
