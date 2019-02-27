@@ -174,6 +174,7 @@ describe('IgxGrid - Summaries', () => {
     });
     it('should recalculate summary functions onRowAdded', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.componentInstance.grid1.height = null;
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
@@ -204,6 +205,7 @@ describe('IgxGrid - Summaries', () => {
     });
     it('should recalculate summary functions onRowDeleted', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.componentInstance.grid1.height = null;
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
@@ -232,6 +234,7 @@ describe('IgxGrid - Summaries', () => {
     });
     it('should recalculate summary functions on updateRow', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.componentInstance.grid1.height = null;
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
