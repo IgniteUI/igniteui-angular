@@ -36,6 +36,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 
@@ -273,6 +274,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         viewRef: ViewContainerRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
@@ -288,6 +290,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             viewRef,
             navigation,
             filteringService,
+            overlayService,
             summaryService,
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
