@@ -22,7 +22,8 @@ export class IgxExcelStyleColumnMovingComponent {
     constructor() {}
 
     get canMoveLeft() {
-        return !this.column.movable || this.column.visibleIndex === 0;
+        return !this.column.movable || this.column.visibleIndex === 0 ||
+            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning);
     }
 
     get canMoveRight() {
@@ -30,7 +31,25 @@ export class IgxExcelStyleColumnMovingComponent {
     }
 
     public onMoveButtonClicked(moveDirection) {
-        const index = this.column.visibleIndex;
-        this.grid.moveColumn(this.column, this.grid.columns[index + moveDirection]);
+        let index;
+        let position = moveDirection === 1 ? 1 : 0;
+        let targetColumn;
+
+        if (this.column.pinned) {
+            if (this.column.isLastPinned && moveDirection === 1) {
+                targetColumn = this.grid.unpinnedColumns[0];
+                position = 0;
+            } else {
+                index = this.grid.pinnedColumns.indexOf(this.column);
+                targetColumn = this.grid.pinnedColumns[index + moveDirection];
+            }
+        } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === -1) {
+            targetColumn = this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1];
+            position = 1;
+        } else {
+            index = this.grid.unpinnedColumns.indexOf(this.column);
+            targetColumn = this.grid.unpinnedColumns[index + moveDirection];
+        }
+        this.grid.moveColumn(this.column, targetColumn, position);
     }
 }
