@@ -61,21 +61,20 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
-        '-1': number,
-        '1': number
+        'currentScroll': number,
+        'remainingScroll': number
     } {
         if (contentElement.firstElementChild.scrollHeight <= contentElement.firstElementChild.clientHeight) {
             return {
-                '-1': 0,
-                '1': 0
+                'currentScroll': 0,
+                'remainingScroll': 0
             };
         }
         const currentScroll = contentElement.firstElementChild.scrollTop;
-        const remainingScroll = this.select.items.length * itemHeight
-            - currentScroll - (contentElement.getBoundingClientRect() as DOMRect).height;
+        const remainingScroll = this.select.items.length * itemHeight - currentScroll - this.listContainerBoundRect.height;
         return {
-            '-1': currentScroll,
-            '1': remainingScroll
+            'currentScroll': currentScroll,
+            'remainingScroll': remainingScroll
         };
     }
 
@@ -158,44 +157,49 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         }
         const inputBorderTop = window.getComputedStyle(inputElement).borderTopWidth;
         this.inputBorderTop = parseInt(inputBorderTop.slice(0, inputBorderTop.indexOf('p')), 10) || 0;
-        const itemPadding = window.getComputedStyle(itemElement).paddingLeft;
+        const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
-        const numericPadding = parseInt(itemPadding.slice(0, itemPadding.indexOf('p')), 10) || 0;
+        const numericPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemTextIndent.indexOf('r')), 10) || 0;
         this.itemTextPadding = numericPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericPadding - numericTextIndent}px`;
         contentElement.style.width = inputRect.width + 24 + 32 + 'px';
         this.deltaX = START.X - numericPadding - numericTextIndent;
+        const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
+        const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
 
-        if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
-            this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
+        // (5 items or less) no scroll and respectively no remaining scroll
+        if (remainingScroll === 0 && currentScroll === 0) {
             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
         }
-
-        if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 ||
-            this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0) {
-            if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && !OUT_OF_BOUNDS) {
+        // (more than 5 items) there is scroll OR remaining scroll
+        if (remainingScroll !== 0 || currentScroll !== 0) {
+            if (remainingScroll !== 0 && !OUT_OF_BOUNDS) {
                 this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
             }
-
-            if (this.getItemsOutOfView(contentElement, itemHeight)[1] !== 0 && OUT_OF_BOUNDS) {
-                if (this.getItemsOutOfView(contentElement, itemHeight)[1] > itemHeight) {
+            // (more than 5 items) and container getting out of the visible port
+            if (remainingScroll !== 0 && OUT_OF_BOUNDS) {
+                // if there is enough remaining scroll to scroll the item
+                if (remainingScroll > itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                         this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount);
                         return;
                     }
                     if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
-                        if (this.getItemsOutOfView(contentElement, itemHeight)[-1] === 0) {
+                        // (more than 5 items) and no current scroll
+                        if (currentScroll === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
+                        // (more than 5 items) and current scroll
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                             return;
                         }
                     }
                 }
-                if (this.getItemsOutOfView(contentElement, itemHeight)[1] < itemHeight) {
+                // if there is no enough remaining scroll to scroll the item
+                if (remainingScroll < itemHeight) {
                     if (OUT_OF_BOUNDS.Direction === Direction.Top) {
                         this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
 
@@ -205,20 +209,15 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                     }
                 }
             }
-            if (this.getItemsOutOfView(contentElement, itemHeight)[1] === 0 &&
-                this.getItemsOutOfView(contentElement, itemHeight)[-1] !== 0
-            ) {
+            // (more than 5 items) and no remaining scroll
+            if (remainingScroll === 0 && currentScroll !== 0) {
                 if (OUT_OF_BOUNDS) {
-                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
-                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-                    }
                     if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
                         this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
+                        return;
                     }
                 }
-                if (!OUT_OF_BOUNDS) {
-                    this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-                }
+                this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
             }
         }
     }
