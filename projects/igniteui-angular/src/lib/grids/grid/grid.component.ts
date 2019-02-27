@@ -830,11 +830,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }
-
+        super.ngAfterContentInit();
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
-        super.ngAfterContentInit();
     }
 
     public ngOnInit() {

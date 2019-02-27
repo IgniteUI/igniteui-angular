@@ -2,6 +2,21 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.1.8
+### Bug Fixes
+- Required date picker bound to displayData is shown invalid initially. #3641
+- If the columns don't fit the treeGrid viewport, horizontal scrollbar in TreeGrid is gone/disappears #3808
+- igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
+
+## 7.1.7
+### Bug fixes
+- refactor(card): apply the content color to any text element #3878 
+- style(linear-bar): Fix text alignment #3862
+
+## 7.1.6
+## Bug Fixing
+- Calling open() on an already opened IgxDropDown replays the opening animation #3810
+
 ## 7.1.5
 ### Features
 - `igxGrid`
@@ -17,6 +32,19 @@ All notable changes for each version of this project will be documented in this 
 ### Features
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
+
+## 7.1.3
+### Bug Fixes
+- When search and hide and then show a column the cell values are not correct ([3631](https://github.com/IgniteUI/igniteui-angular/issues/3631))
+- When press Ctrl+Arrow down key on a summary cell it should stay active ([3651](https://github.com/IgniteUI/igniteui-angular/issues/3651))
+- When summary row is not fully visible and press Tab the last summary cell is not activated ([3652](https://github.com/IgniteUI/igniteui-angular/issues/3652))
+- Choosing from a drop down inside a form in a drop down closes the outer drop down ([3673](https://github.com/IgniteUI/igniteui-angular/issues/3673))
+- Banner - Calling close method on collapsed panel throws error ([3669](https://github.com/IgniteUI/igniteui-angular/issues/3669))
+- Typedoc API task generates non-public exports ([2858](https://github.com/IgniteUI/igniteui-angular/issues/2858))
+- column.pin and column.unpin API descriptions need improvement ([3660](https://github.com/IgniteUI/igniteui-angular/issues/3660))
+- disabledDates for the calendar and date picker should be an @Input() ([3625](https://github.com/IgniteUI/igniteui-angular/issues/3625))
+- There is no way to determinate if a list item was panned in the click event ([3629](https://github.com/IgniteUI/igniteui-angular/issues/3629))
+- When search and hide and then show a column the cell values are not correct ([3631](https://github.com/IgniteUI/igniteui-angular/issues/3631))
 
 ## 7.1.2
 ### Features
@@ -188,17 +216,22 @@ All notable changes for each version of this project will be documented in this 
     - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
     - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
 
-
 ## 7.0.1
 ### Bug fixes
 - Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
-
 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
-## 6.2.8
+## 6.2.10
+
+## Bug Fixes
+- Cells position is changed when scroll vertical #3094
+- igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
+
+## 6.2.9
+
 ### Features
 - `igxGrid`
     - `Group By`
@@ -208,6 +241,26 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
+
+### Bug Fixing
+- Add additional ways of expanding/collapsing in Tree Grid/Group By to reflect new icons #3841
+
+## 6.2.8
+
+### Bug Fixes
+- Tree Grid collapse icon is updated to material standards #3780
+- Change collapse/expand all icon on GroupBy #3298
+
+## 6.2.7
+
+### Bug Fixes
+- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525 
+
+## 6.2.6
+
+### Bug Fixes/Other
+- Add GA to API docs ([3596](https://github.com/IgniteUI/igniteui-angular/issues/3596))
+- Modify gulp api docs tasks in order to follow the build steps ([3681](https://github.com/IgniteUI/igniteui-angular/issues/3681))
 
 ## 6.2.5
 
