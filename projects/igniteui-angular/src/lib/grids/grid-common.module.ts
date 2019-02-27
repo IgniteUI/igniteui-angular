@@ -140,6 +140,7 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
+        IgxGridDragSelectDirective,
         IgxFilterModule,
         IgxGridPipesModule
     ],

@@ -4266,7 +4266,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     dragScroll(dir: DragScrollDirection): void {
-        this.wheelHandler();
         const scrollDelta = 48;
         const horizontal = this.parentVirtDir.getHorizontalScroll();
         const vertical = this.verticalScrollContainer.getVerticalScroll();
@@ -4302,6 +4301,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             default:
                 return;
         }
+        this.wheelHandler();
     }
 
     isDefined(arg: any) {

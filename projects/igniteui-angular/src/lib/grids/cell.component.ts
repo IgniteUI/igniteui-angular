@@ -647,7 +647,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = () => {
-        this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection);
+        if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
+            this.grid.cdr.detectChanges();
+        }
     }
 
     /**
