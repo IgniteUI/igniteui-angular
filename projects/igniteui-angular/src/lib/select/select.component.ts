@@ -203,7 +203,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
-        if (newSelection === null || newSelection.disabled) {
+        if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
             return;
         }
 

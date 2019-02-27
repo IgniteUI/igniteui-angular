@@ -1,7 +1,11 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, cloneInstance } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
+/**
+ * Positions the element based on the directions passed in trough PositionSettings.
+ * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
+ */
 export class GlobalPositionStrategy implements IPositionStrategy {
     private _defaultSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
@@ -49,6 +53,10 @@ export class GlobalPositionStrategy implements IPositionStrategy {
             default:
                 break;
         }
+    }
+
+    clone(): IPositionStrategy {
+        return cloneInstance(this);
     }
 }
 
