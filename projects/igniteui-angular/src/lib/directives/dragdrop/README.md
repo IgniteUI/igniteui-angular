@@ -43,6 +43,7 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 | ghostImageClass  | string | '' | Sets a custom class that will be added to the `dragGhost` element. |
 | hideBaseOnDrag   | boolean | false | Sets if the draggable element should hide when dragging starts. |
 | animateOnRelease | boolean | false | Enables/disables the draggable element animation when the element is released. |
+| dragGhostHost | any | null | Sets the element to which the dragged element will be appended.
 
 ### Outputs
 
