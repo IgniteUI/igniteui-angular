@@ -258,7 +258,7 @@ describe('IgxGrid - GroupBy', () => {
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     });
@@ -1548,7 +1548,7 @@ describe('IgxGrid - GroupBy', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
