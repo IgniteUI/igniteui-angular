@@ -58,16 +58,15 @@ The service, should inform the combo for the total items that are on the server 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
 
 ```html
-<igx-combo #combo [(ngModel)]="values"></igx-combo>
+<igx-combo #combo [data]="data" [(ngModel)]="values"></igx-combo>
 ```
 
 ```typescript
-@ViewChild('combo', { read: IgxComboComponent }) public combo: IgxComboComponent;
-get values() {
-    return this.combo.selectedItems();
-}
-set values(newValues: Array<any>) {
-    this.combo.selectItems(newValues);
+export class MyExampleComponent {
+    ...
+    public data: ExampleType[] = ...;
+    ...
+    public values: ExampleType[] = ...;
 }
 ```
 
