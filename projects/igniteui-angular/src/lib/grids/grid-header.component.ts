@@ -225,7 +225,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             }
 
             this._filterMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
-            this._filterMenuOverlaySettings.outlet = this.grid.outletDirective;
+            this._filterMenuOverlaySettings.outlet = this.grid.outlet;
 
             this._componentOverlayId =
                 this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);

@@ -8,6 +8,7 @@
 
 @include igx-core();
 
+/* autoprefixer grid: on */
 .default-theme {
     $igx-background-color: #fff;
     $igx-foreground-color: text-contrast($igx-background-color);

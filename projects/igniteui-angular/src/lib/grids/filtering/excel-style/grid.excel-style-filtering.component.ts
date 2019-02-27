@@ -6,11 +6,8 @@ import {
     ChangeDetectionStrategy,
     TemplateRef,
     Directive,
-    OnDestroy,
-    ContentChild,
+    OnDestroy
 } from '@angular/core';
-import { IgxColumnComponent } from '../../grid';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down';
 import {
     HorizontalAlignment,
     VerticalAlignment,
@@ -37,6 +34,8 @@ import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
+import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
+import { IgxColumnComponent } from '../../column.component';
 
 /**
  *@hidden
@@ -96,7 +95,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private selectAllIndeterminate = false;
     private filterValues = [];
 
-    protected chunkLoaded = new Subscription();
     protected columnMoving = new Subscription();
 
     public column: IgxColumnComponent;
@@ -147,7 +145,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
-    get grid() {
+    get grid(): any {
         return this.filteringService.grid;
     }
 
@@ -182,11 +180,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        this._subMenuOverlaySettings.outlet = this.grid.outletDirective;
-
-        this.chunkLoaded = this.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.closeDropdown();
-        });
+        this._subMenuOverlaySettings.outlet = this.grid.outlet;
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
