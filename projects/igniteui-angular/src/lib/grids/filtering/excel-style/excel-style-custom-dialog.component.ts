@@ -31,6 +31,7 @@ import {
 } from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
+import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 
 /**
  * @hidden
@@ -75,9 +76,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public overlayService: IgxOverlayService;
 
-
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+
+    @ViewChildren(IgxExcelStyleDateExpressionComponent)
+    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
 
     @ViewChild('toggle', { read: IgxToggleDirective })
     public toggle: IgxToggleDirective;
@@ -180,6 +183,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
         this.expressionsList.splice(indexToRemove, 1);
 
+        this.cdr.detectChanges();
+
         this.markChildrenForCheck();
     }
 
@@ -217,6 +222,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private markChildrenForCheck() {
         this.expressionComponents.forEach(x => x.cdr.markForCheck());
+        this.expressionDateComponents.forEach(x => x.cdr.markForCheck());
     }
 
     private createInitialExpressionUIElement() {

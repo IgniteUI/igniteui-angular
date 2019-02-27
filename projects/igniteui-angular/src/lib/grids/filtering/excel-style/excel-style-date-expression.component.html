@@ -50,7 +50,7 @@
     </ng-template>
 </igx-date-picker>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="expressionsList.length > 1">
+<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="!isSingle">
     <igx-icon>cancel</igx-icon>
 </button>
 
