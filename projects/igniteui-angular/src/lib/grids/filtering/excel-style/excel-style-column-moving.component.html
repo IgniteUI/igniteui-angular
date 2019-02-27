@@ -2,14 +2,14 @@
 <section class="igx-excel-filter__move-buttons">
     <button
         igxButton
-        [disabled]="canMoveLeft"
+        [disabled]="canNotMoveLeft"
         (click)="onMoveButtonClicked(-1)">
         <igx-icon>arrow_back</igx-icon>
         <span>{{ grid.resourceStrings.igx_grid_excel_filter_moving_left }}</span>
     </button>
     <button
         igxButton
-        [disabled]="canMoveRight"
+        [disabled]="canNotMoveRight"
         (click)="onMoveButtonClicked(1)">
         <span>{{ grid.resourceStrings.igx_grid_excel_filter_moving_right }}</span>
         <igx-icon>arrow_forwards</igx-icon>

@@ -21,12 +21,12 @@ export class IgxExcelStyleColumnMovingComponent {
 
     constructor() {}
 
-    get canMoveLeft() {
+    get canNotMoveLeft() {
         return !this.column.movable || this.column.visibleIndex === 0 ||
             (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning);
     }
 
-    get canMoveRight() {
+    get canNotMoveRight() {
         return !this.column.movable || this.column.visibleIndex === this.grid.columns.length - 1;
     }
 
