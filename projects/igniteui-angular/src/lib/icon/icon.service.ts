@@ -136,7 +136,6 @@ export class IgxIconService {
         const subscription = request.subscribe((value: string) => {
             this.cacheSvgIcon(iconName, value, fontSet);
         }, (error) => {
-            subscription.unsubscribe();
             throw new Error(`Could not fetch SVG from url: ${url}; error: ${error.message}`);
         }, () => {
             subscription.unsubscribe();
