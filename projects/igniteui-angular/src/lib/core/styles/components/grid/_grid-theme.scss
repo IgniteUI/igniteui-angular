@@ -1293,6 +1293,8 @@
         align-items: center;
         background-color: --var($theme, 'ghost-header-background');
         color: --var($theme, 'ghost-header-text-color');
+        min-width: 168px;
+        max-width: 320px;
         height: map-get($grid-header-height, 'comfortable');
         min-height: map-get($grid-header-height, 'comfortable');
         top: -99999px;
@@ -1303,7 +1305,9 @@
         z-index: 20;
 
         %grid-cell-header-title {
-            min-width: calc(100% - 24px);
+            @include ellipsis();
+            flex: 1 0 0;
+            text-align: right;
         }
 
         %grid-cell-header-icons {

@@ -1,6 +1,9 @@
 import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
+/**
+ * Uses a tolerance and closes the shown component upon scrolling if the tolerance is exceeded
+ */
 export class CloseScrollStrategy extends ScrollStrategy {
     private _document: Document;
     private _overlayService: IgxOverlayService;

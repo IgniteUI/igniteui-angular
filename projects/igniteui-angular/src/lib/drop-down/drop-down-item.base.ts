@@ -38,7 +38,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     public id = `igx-drop-down-item-${NEXT_ID++}`;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get itemID() {
         return this;
@@ -89,7 +89,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     public value: any;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('class.igx-drop-down__item')
     get itemStyle(): boolean {
@@ -119,7 +119,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @Input()
     @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is deprecated.\n` +
@@ -129,7 +129,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     set isSelected(value: boolean) {
         this.selected = value;
@@ -161,7 +161,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
         `Use \`focused\` instead.`)
@@ -169,7 +169,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
         return this.focused;
     }
     /**
-     * @hidden
+     * @hidden @internal
      */
     set isFocused(value: boolean) {
         this.focused = value;
@@ -246,7 +246,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
 
     /**
      * Gets item element height
-     * @hidden
+     * @hidden @internal
      */
     public get elementHeight(): number {
         return this.elementRef.nativeElement.clientHeight;
@@ -254,7 +254,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
 
     /**
      * Get item html element
-     * @hidden
+     * @hidden @internal
      */
     public get element(): ElementRef {
         return this.elementRef;
@@ -268,7 +268,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     ) { }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostListener('click', ['$event'])
     clicked(event) {

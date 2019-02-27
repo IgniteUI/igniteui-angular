@@ -825,7 +825,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this._ngAfterViewInitPaassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                        (value && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
                 }
             }
 
@@ -3687,7 +3687,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
         this.summariesHeight = 0;
         if (!this._height) {
@@ -3779,7 +3779,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+        return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**
@@ -4266,7 +4266,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     dragScroll(dir: DragScrollDirection): void {
-        this.wheelHandler();
         const scrollDelta = 48;
         const horizontal = this.parentVirtDir.getHorizontalScroll();
         const vertical = this.verticalScrollContainer.getVerticalScroll();
@@ -4302,6 +4301,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             default:
                 return;
         }
+        this.wheelHandler();
     }
 
     isDefined(arg: any) {

@@ -376,22 +376,23 @@ export class IgxGridSelectionService {
         return true;
     }
 
-    pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): void {
+    pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
         if (this.dragMode) {
             emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
             this.dragMode = false;
-            return;
+            return true;
         }
 
         if (this.pointerState.shift) {
             this.clearTextSelection();
             emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
-            return;
+            return true;
         }
 
         this.add(node);
+        return false;
     }
 
     selectRange(node: ISelectionNode, state: SelectionState) {
