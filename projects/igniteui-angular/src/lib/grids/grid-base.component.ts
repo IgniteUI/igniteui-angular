@@ -3779,7 +3779,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+        return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**

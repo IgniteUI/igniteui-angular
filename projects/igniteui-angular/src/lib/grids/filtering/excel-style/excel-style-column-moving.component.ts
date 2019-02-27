@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxGridBaseComponent } from '../../grid';
+import { IgxGridBaseComponent } from '../../grid-base.component';
 
 /**
  * @hidden

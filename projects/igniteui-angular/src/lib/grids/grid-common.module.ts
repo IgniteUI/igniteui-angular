@@ -24,13 +24,6 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
-    IgxGridExcelStyleFilteringComponent,
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective
-} from './filtering/excel-style/grid.excel-style-filtering.component';
-import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -38,21 +31,14 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxColumnMovingService,
-    IgxDecimalPipeComponent,
-    IgxDatePipeComponent
+    IgxColumnMovingService
 } from './grid.common';
 import { IgxGridTransaction } from './grid-base.component';
-import {
-    IgxGridFilterConditionPipe,
-    IgxGridTransactionPipe
-} from './grid-common.pipes';
 import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
-import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowEditTemplateDirective,
@@ -70,17 +56,10 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSelectionService } from '../core/grid-selection';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
-import { IgxGridDragSelectDirective } from './drag-select.directive';
-import { IgxListComponent, IgxListModule } from '../list';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
-import { IgxComboModule } from '../combo';
-import { IgxExcelStyleSortingComponent } from './filtering/excel-style/excel-style-sorting.component';
-import { IgxExcelStyleColumnMovingComponent } from './filtering/excel-style/excel-style-column-moving.component';
-import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-style-search.component';
-import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/excel-style-custom-dialog.component';
-import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
-import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
-
+import { IgxGridPipesModule } from './grid-pipes.module';
+import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
+import { IgxGridDragSelectDirective } from './drag-select.directive';
 /**
  * @hidden
  */
@@ -103,34 +82,18 @@ import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/ex
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
-        IgxGridFilterConditionPipe,
-        IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
-        IgxGridExcelStyleFilteringComponent,
-        IgxDatePipeComponent,
-        IgxDecimalPipeComponent,
         IgxSummaryDataPipe,
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridDragSelectDirective,
-        IgxExcelStyleSortingComponent,
-        IgxExcelStyleColumnMovingComponent,
-        IgxExcelStyleSearchComponent,
-        IgxExcelStyleCustomDialogComponent,
-        IgxExcelStyleDefaultExpressionComponent,
-        IgxExcelStyleDateExpressionComponent,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxGridDragSelectDirective
     ],
     entryComponents: [
         IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxGridExcelStyleFilteringComponent
+        IgxColumnGroupComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -151,11 +114,7 @@ import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/ex
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxRowComponent,
-        IgxGridFilterConditionPipe,
-        IgxGridTransactionPipe,
         IgxSummaryDataPipe,
-        IgxDatePipeComponent,
-        IgxDecimalPipeComponent,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxIconModule,
@@ -178,17 +137,11 @@ import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/ex
         IgxProgressBarModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
-        IgxGridExcelStyleFilteringComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridDragSelectDirective,
-        IgxListComponent,
         IgxFilterModule,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxGridPipesModule
     ],
     imports: [
         CommonModule,
@@ -213,9 +166,9 @@ import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/ex
         IgxButtonGroupModule,
         IgxColumnPinningModule,
         IgxProgressBarModule,
-        IgxListModule,
         IgxFilterModule,
-        IgxComboModule
+        IgxGridPipesModule,
+        IgxGridExcelStyleFilteringModule
     ],
     providers: [
         IgxGridSelectionService,
