@@ -3,7 +3,7 @@
 </ng-template>
 
 <span class="igx-grid__th-title">
-    <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
+    <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
 </span>
 <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
