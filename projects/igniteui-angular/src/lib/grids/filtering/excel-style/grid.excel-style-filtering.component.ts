@@ -95,7 +95,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private selectAllIndeterminate = false;
     private filterValues = [];
 
-    protected chunkLoaded = new Subscription();
     protected columnMoving = new Subscription();
 
     public column: IgxColumnComponent;
@@ -146,7 +145,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
-    get grid() {
+    get grid(): any {
         return this.filteringService.grid;
     }
 
@@ -181,11 +180,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        this._subMenuOverlaySettings.outlet = this.grid.outletDirective;
-
-        this.chunkLoaded = this.grid.headerContainer.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.closeDropdown();
-        });
+        this._subMenuOverlaySettings.outlet = this.grid.outlet;
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
