@@ -233,7 +233,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: true
+        closeOnOutsideClick: true,
+        excludePositionTarget: true
     };
 
 
