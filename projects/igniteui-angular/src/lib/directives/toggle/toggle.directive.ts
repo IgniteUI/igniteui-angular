@@ -443,11 +443,8 @@ export class IgxToggleActionDirective implements OnInit {
      */
     protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
         if (settings && settings.positionStrategy) {
-            const positionStrategyClone: IPositionStrategy = Object.assign(
-                Object.create(Object.getPrototypeOf(settings.positionStrategy)),
-                settings.positionStrategy);
-
-            positionStrategyClone.settings = Object.assign({}, positionStrategyClone.settings, { 'target': this.element.nativeElement });
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            positionStrategyClone.settings.target = this.element.nativeElement;
             settings.positionStrategy = positionStrategyClone;
         }
 
