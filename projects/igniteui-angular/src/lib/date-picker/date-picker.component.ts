@@ -707,6 +707,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
 
+    /**
+    * @hidden
+    */
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event: KeyboardEvent) {
