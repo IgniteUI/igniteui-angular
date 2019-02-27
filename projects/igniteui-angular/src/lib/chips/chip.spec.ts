@@ -116,9 +116,10 @@ describe('IgxChip', () => {
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // For this first chip there are 2 elements. The prefix and content span.
-        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(2);
-        expect(chipElems[0].nativeElement.children[0].children[0].tagName).toEqual('IGX-ICON');
-        expect(chipElems[0].nativeElement.children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
+        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
+        expect(chipElems[0].nativeElement.children[0].children[0].offsetWidth).toEqual(0);
+        expect(chipElems[0].nativeElement.children[0].children[1].tagName).toEqual('IGX-ICON');
+        expect(chipElems[0].nativeElement.children[0].children[1].hasAttribute('igxprefix')).toEqual(true);
     });
 
     it('should render remove button when enabled after the content inside the chip', () => {
