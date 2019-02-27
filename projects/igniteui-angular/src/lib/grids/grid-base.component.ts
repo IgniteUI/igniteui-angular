@@ -2414,7 +2414,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.filteringService.gridId = this.id;
         this.summaryService.grid = this;
         this.columnListDiffer = this.differs.find([]).create(null);
-        this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
+        this.calcWidth = !this.isPercentWidth ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
 
@@ -3627,10 +3627,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     */
+    protected get isPercentWidth() {
+        return this._width && this._width.indexOf('%') !== -1;
+    }
+
+    /**
+     * @hidden
+     */
+    protected get isPercentHeight() {
+        return this._height && this._height.indexOf('%') !== -1;
+    }
+
+    /**
+     * @hidden
      * Sets this._height
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom || this.rowBasedHeight === 0) {
+        if (!this.isPercentHeight || !this._height || !this.isAttachedToDom || this.rowBasedHeight === 0) {
             return;
         }
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
@@ -3737,7 +3751,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return null;
         }
 
-        if (this._height && this._height.indexOf('%') !== -1) {
+        if (this.isPercentHeight) {
             /*height in %*/
             if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
             gridHeight = parseInt(computed.getPropertyValue('height'), 10);
@@ -3828,7 +3842,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const el = this.document.getElementById(this.nativeElement.id);
 
-        if (this._width && this._width.indexOf('%') !== -1) {
+        if (this.isPercentWidth) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
                 parseInt(computed.getPropertyValue('width'), 10) : null;
@@ -3920,11 +3934,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const isPercentage = this._width && this._width.indexOf('%') !== -1;
-        let width = isPercentage ?
+        let width = this.isPercentWidth ?
             this.calcWidth :
             parseInt(this._width, 10);
-        if (this.hasVerticalSroll() && !isPercentage) {
+        if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);
