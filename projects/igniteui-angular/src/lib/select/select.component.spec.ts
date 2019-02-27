@@ -910,6 +910,29 @@ describe('igxSelect', () => {
             expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
+
+        it('should not emit onSelection when selection does not change', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not select header items passed through selectItem method', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            expect(select.selectedItem).toBeFalsy();
+            item.isHeader = true;
+            select.selectItem(item);
+            expect(select.selectedItem).toBeFalsy();
+            expect(select.onSelection.emit).not.toHaveBeenCalled();
+        });
     });
     describe('Grouped items tests: ', () => {
         beforeEach(async(() => {
@@ -1886,6 +1909,17 @@ describe('igxSelect', () => {
                     expect(inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent).
                         toEqual(selectedItemRect.left + defaultItemLeftPadding);
                 }));
+        });
+    });
+    describe('EditorProvider', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+            fixture.detectChanges();
+        }));
+        it('Should return correct edit element', () => {
+            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
+            const selectInstance = fixture.componentInstance.select;
+            expect(selectInstance.getEditElement()).toEqual(inputElement);
         });
     });
 });

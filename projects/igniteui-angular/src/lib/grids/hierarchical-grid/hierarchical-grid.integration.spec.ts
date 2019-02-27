@@ -228,7 +228,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fChildCell.value).toBe('09');
             const icon = childHeaders[0].query(By.css('.sort-icon'));
             expect(icon).not.toBeNull();
-            expect(icon.nativeElement.textContent.toLowerCase()).toBe('arrow_downward');
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_downward');
         });
     });
 

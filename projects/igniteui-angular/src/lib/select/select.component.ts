@@ -23,6 +23,7 @@ import { IgxSelectItemNavigationDirective } from './select-navigation.directive'
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
+import { EditorProvider } from '../core/edit-provider';
 
 /** @hidden @internal */
 @Directive({
@@ -56,7 +57,8 @@ const noop = () => { };
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit {
+export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit,
+ EditorProvider {
 
     /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
@@ -194,9 +196,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public registerOnTouched(fn: any): void { }
 
     /** @hidden @internal */
+    public getEditElement(): HTMLElement {
+        return this.input.nativeElement;
+    }
+
+    /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
-        if (newSelection === null || newSelection.disabled) {
+        if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
             return;
         }
 

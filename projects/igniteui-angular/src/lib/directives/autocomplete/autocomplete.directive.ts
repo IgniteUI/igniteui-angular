@@ -61,7 +61,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         super(null);
     }
 
-    private settings: OverlaySettings = {
+    private defaultSettings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
@@ -74,20 +74,24 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return this.ngModel || this.formControl;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     get parentElement(): HTMLElement {
         return this.group ? this.group.element.nativeElement : this.nativeElement;
+    }
+
+    private get settings(): OverlaySettings {
+        const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
+        if (!settings.positionStrategy.settings.target) {
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            positionStrategyClone.settings.target = this.parentElement;
+            settings.positionStrategy = positionStrategyClone;
+        }
+        return settings;
     }
 
     /**
@@ -158,42 +162,27 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @Output()
     onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     @HostBinding('attr.autocomplete')
     public autofill = 'off';
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostBinding('attr.role')
     public role = 'combobox';
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostBinding('attr.aria-expanded')
     public get ariaExpanded() {
         return !this.collapsed;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostBinding('attr.aria-haspopup')
     public get hasPopUp() {
         return 'listbox';
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostBinding('attr.aria-owns')
     public get ariaOwns() {
         return this.target.listId;
@@ -211,10 +200,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostListener('input', ['$event'])
     onInput() {
         if (this.disabled)  {
@@ -225,10 +211,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     @HostListener('keydown.ArrowUp', ['$event'])
@@ -238,20 +221,14 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.open();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     @HostListener('keydown.Tab', ['$event'])
     @HostListener('keydown.Shift.Tab', [`$event`])
     onTab() {
         this.close();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     handleKeyDown(event) {
         if (!this.collapsed) {
             switch (event.key.toLowerCase()) {
@@ -267,34 +244,22 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     onArrowDownKeyDown() {
         super.onArrowDownKeyDown();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     onArrowUpKeyDown() {
         super.onArrowUpKeyDown();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     onEndKeyDown() {
         super.onEndKeyDown();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden  @internal */
     onHomeKeyDown() {
         super.onHomeKeyDown();
     }
@@ -317,12 +282,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!this.collapsed) {
             return;
         }
-        const settings = Object.assign({}, this.settings, this.autocompleteSettings);
-        if (!settings.positionStrategy.settings.target) {
-            settings.positionStrategy.settings.target = this.parentElement;
-        }
-        this.target.open(settings);
         this.target.width = this.parentElement.clientWidth + 'px';
+        this.target.open(this.settings);
         this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
         this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem);
         this.target.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.highlightFirstItem);
@@ -357,17 +318,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public ngOnDestroy() {
         this.dropDownOpened$.complete();
     }
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 @NgModule({
     imports: [IgxDropDownModule, CommonModule],
     declarations: [IgxAutocompleteDirective],

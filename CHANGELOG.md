@@ -47,6 +47,9 @@ All notable changes for each version of this project will be documented in this 
         - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related group row and when it points down clicking on it would expand the group row.
         - The collapse/expand all icons have also been updated to reflect the new group row icons better.
         - Group rows now can be expanded/collapsed using Alt + Arrow Up/Down to reflect the new icons.
+    - `filterMode` input added, which determines the filtering ui of the grid. The default value is `quickFilter`. Other possible value is `excelStyle`, which mimics the filtering in Excel with added functionality for column moving, sorting, hiding and pinning.
+    - `IgxColumnComponent` now has `disablePinning` property, which determines wether the column can be pinned from
+    the toolbar and whether the column pin will be available in the excel style filter menu. The `disableHiding` input will be used to show/hide the column hiding functionality in the menu.
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
@@ -105,6 +108,7 @@ All notable changes for each version of this project will be documented in this 
       - `attach(element: ElementRef, settings?: OverlaySettings): string` - This overload will create overlay where provided `element` will be shown.
       - `attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string` - Creates a `ComponentRef` from the provided `component` class to show in an overlay. If `moduleRef` is provided the service will use the module's `ComponentFactoryResolver` and `Injector` when creating the `ComponentRef` instead of the root ones.
     - `igxOverlay.show(component, settings)` is **deprecated**. Use `igxOverlay.attach()` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
+    - `IPositionStrategy` exposes new method `clone` that clones the strategy instance with its settings.
 
 - `igx-date-picker`
     - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:

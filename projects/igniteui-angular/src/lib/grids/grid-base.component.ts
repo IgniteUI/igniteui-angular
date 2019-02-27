@@ -71,6 +71,12 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
 import { IViewChangeEventArgs, ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import {
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -170,6 +176,11 @@ export enum GridSummaryCalculationMode {
     rootLevelOnly = 'rootLevelOnly',
     childLevelsOnly = 'childLevelsOnly',
     rootAndChildLevels = 'rootAndChildLevels'
+}
+
+export enum FilterMode {
+    quickFilter = 'quickFilter',
+    excelStyleFilter = 'excelStyleFilter'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -811,7 +822,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this._ngAfterViewInitPaassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                        (value && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
                 }
             }
 
@@ -823,6 +834,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.markForCheck();
             }
         }
+    }
+
+    /**
+     * Returns the filter mode.
+     * ```typescript
+     *  let filtering = this.grid.filterMode;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get filterMode() {
+        return this._filterMode;
+    }
+
+    /**
+     * Sets filter mode.
+     * By default it's set to FilterMode.quickFilter.
+     * ```html
+     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set filterMode(value) {
+        this._filterMode = value;
     }
 
     /**
@@ -1331,6 +1366,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
+    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
+    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
+    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
+    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
      * @hidden
@@ -2222,6 +2281,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _wheelListener = null;
     protected _allowFiltering = false;
+    protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
@@ -2438,9 +2498,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
-                    this.reflow();
-                    observer.disconnect();
-                }
+                                this.reflow();
+                                observer.disconnect();
+                            }
             };
 
             observer = new MutationObserver(callback);
@@ -3083,7 +3143,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /** @hidden */
     public deleteRowById(rowId: any) {
        this.gridAPI.deleteRowById(this.id, rowId);
-    }
+        }
 
     /**
      * Updates the `IgxGridRowComponent` and the corresponding data record by primary key.
@@ -3526,8 +3586,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-        return this.dataLength * this.rowHeight;
-    }
+            return this.dataLength * this.rowHeight;
+        }
 
     /**
      * @hidden
@@ -3577,7 +3637,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
         this.summariesHeight = 0;
         if (!this._height) {
@@ -3644,8 +3704,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
-                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
-            } else {
+            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+        } else {
                 return this.defaultTargetBodyHeight;
             }
         } else {
@@ -3745,7 +3805,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
         if (!width) {
-            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
         if (this.hasVerticalSroll()) {
@@ -4762,7 +4822,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
-            }
+}
         }
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;

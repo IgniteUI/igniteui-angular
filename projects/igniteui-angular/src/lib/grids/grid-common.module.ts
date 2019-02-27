@@ -24,6 +24,13 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
+    IgxGridExcelStyleFilteringComponent,
+    IgxExcelStyleSortingTemplateDirective,
+    IgxExcelStyleHidingTemplateDirective,
+    IgxExcelStyleMovingTemplateDirective,
+    IgxExcelStylePinningTemplateDirective
+} from './filtering/excel-style/grid.excel-style-filtering.component';
+import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -62,6 +69,15 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
+import { IgxListComponent, IgxListModule } from '../list';
+import { IgxFilterModule } from '../directives/filter/filter.directive';
+import { IgxComboModule } from '../combo';
+import { IgxExcelStyleSortingComponent } from './filtering/excel-style/excel-style-sorting.component';
+import { IgxExcelStyleColumnMovingComponent } from './filtering/excel-style/excel-style-column-moving.component';
+import { IgxExcelStyleSearchComponent } from './filtering/excel-style/excel-style-search.component';
+import { IgxExcelStyleCustomDialogComponent } from './filtering/excel-style/excel-style-custom-dialog.component';
+import { IgxExcelStyleDefaultExpressionComponent } from './filtering/excel-style/excel-style-default-expression.component';
+import { IgxExcelStyleDateExpressionComponent } from './filtering/excel-style/excel-style-date-expression.component';
 
 /**
  * @hidden
@@ -89,17 +105,29 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxSummaryDataPipe,
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleSearchComponent,
+        IgxExcelStyleCustomDialogComponent,
+        IgxExcelStyleDefaultExpressionComponent,
+        IgxExcelStyleDateExpressionComponent,
+        IgxExcelStyleSortingTemplateDirective,
+        IgxExcelStyleHidingTemplateDirective,
+        IgxExcelStyleMovingTemplateDirective,
+        IgxExcelStylePinningTemplateDirective
     ],
     entryComponents: [
         IgxColumnComponent,
         IgxColumnGroupComponent,
+        IgxGridExcelStyleFilteringComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -147,9 +175,16 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxProgressBarModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxListComponent,
+        IgxFilterModule,
+        IgxExcelStyleSortingTemplateDirective,
+        IgxExcelStyleHidingTemplateDirective,
+        IgxExcelStyleMovingTemplateDirective,
+        IgxExcelStylePinningTemplateDirective
     ],
     imports: [
         CommonModule,
@@ -173,7 +208,10 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
+        IgxListModule,
+        IgxFilterModule,
+        IgxComboModule
     ],
     providers: [
         IgxSelectionAPIService,

@@ -1,9 +1,12 @@
+@import './excel-filtering-component';
+
 ////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} bem-block
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
+/// @requires {mixin} _excel-filtering-partial
 ////
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
@@ -621,6 +624,8 @@
             }
         }
     }
+
+    @include _excel-filtering-partial();
 }
 
 @include b(igx-drop-area) {

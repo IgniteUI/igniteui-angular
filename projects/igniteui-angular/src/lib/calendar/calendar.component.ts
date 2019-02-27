@@ -341,7 +341,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
         super.activeViewDecade();
 
         requestAnimationFrame(() => {
-            this.dacadeView.el.nativeElement.focus();
+            if (this.dacadeView) {
+                this.dacadeView.el.nativeElement.focus();
+            }
         });
     }
 
