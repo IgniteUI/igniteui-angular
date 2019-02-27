@@ -21,4 +21,12 @@ export interface IPositionStrategy {
      * ```
      */
      position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void;
+
+    /**
+     * Clone the strategy instance.
+     * ```typescript
+     * settings.positionStrategy.clone();
+     * ```
+     */
+     clone(): IPositionStrategy;
 }
