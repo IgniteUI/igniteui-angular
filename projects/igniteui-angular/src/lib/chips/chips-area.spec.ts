@@ -484,10 +484,19 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         const selectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
+        const unselectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[1];
         selectedChip.selected = true;
         fix.detectChanges();
 
+        const selectedChipIconContainer = selectedChip.elementRef.nativeElement.children[0].children[0];
+        const unselectedChipIconContainer = unselectedChip.elementRef.nativeElement.children[0].children[0];
         expect(selectedChip.selected).toBe(true);
+        expect(selectedChipIconContainer.children.length).toEqual(1);
+        expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
+        expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
+        expect(unselectedChipIconContainer.children.length).toEqual(1);
+        expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
+        expect(unselectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
     });
 
     it('should focus on chip correctly', () => {

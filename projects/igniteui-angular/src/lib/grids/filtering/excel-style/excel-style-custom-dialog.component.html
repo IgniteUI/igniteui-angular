@@ -17,20 +17,18 @@
                 [column]="column"
                 [grid]="grid"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData"
                 (onExpressionRemoved)="onExpressionRemoved($event)"
                 (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-date-expression>
         </ng-container>
 
-        <ng-container *ngIf="column.dataType != 'date'">
+        <ng-container *ngIf="column.dataType !== 'date'">
             <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
                 [column]="column"
                 [grid]="grid"
                 [expressionsList]="expressionsList"
-                [columnData]="columnData"
                 (onExpressionRemoved)="onExpressionRemoved($event)"
                 (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
             </igx-excel-style-default-expression>
