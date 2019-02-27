@@ -258,7 +258,7 @@ describe('IgxGrid - GroupBy', () => {
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     });
@@ -1498,7 +1498,7 @@ describe('IgxGrid - GroupBy', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -2270,6 +2270,22 @@ describe('IgxGrid - GroupBy', () => {
             expect(grid.getColumnByName('Downloads').hidden).toBe(true);
             expect(grid.getColumnByName('ProductName').hidden).toBe(true);
         }));
+
+    it(`should hide the grouped columns when hideGroupedColumns option is enabled,
+    there are initially set groupingExpressions and columns are autogenareted`,
+    fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        grid.groupingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+        const groupRows = grid.groupsRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+    }));
 
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
