@@ -592,19 +592,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
-        this.checkOverlays();
+        this.hideOverlays();
     }
 
     public onContainerScrol() {
-        this.checkOverlays();
+        this.hideOverlays();
     }
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
-        this.checkOverlays();
+        this.hideOverlays();
     }
 
-    private checkOverlays() {
+    private hideOverlays() {
         const allOverlays = (this.overlayService as any)._overlayInfos;
         const mainOverlays = allOverlays.filter((o) => o.settings.outlet === this.outletDirective);
         if (mainOverlays.length > 0) {
