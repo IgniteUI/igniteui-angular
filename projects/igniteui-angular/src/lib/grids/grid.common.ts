@@ -366,21 +366,24 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.classList.add('material-icons');
         this.cms.icon = icon;
 
+        const hostElemLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
+        const hostElemTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
+
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
             this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         } else {
             this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[0].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         }
     }
 }

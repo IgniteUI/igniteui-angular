@@ -9,12 +9,13 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective } from '../grid';
+import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective, IgxColumnComponent } from '../grid';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
+import { IgxIconModule } from '../../icon';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -27,7 +28,7 @@ describe('IgxHierarchicalGrid Integration', () => {
                 IgxHierarchicalGridTestCustomToolbarComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
+                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
         }).compileComponents();
     }));
 
@@ -612,6 +613,40 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow instanceof IgxChildGridRowComponent).toBeTruthy();
             expect(lastRow.index).toBe(9);
         }));
+
+        it('should corerctly hide/show vertical scrollbar after page is changed.', (async() => {
+            hierarchicalGrid.paging = true;
+            hierarchicalGrid.perPage = 5;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+
+            // expand row
+            hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+
+            // change page
+            hierarchicalGrid.page = 1;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+
+            // change page
+            hierarchicalGrid.page = 0;
+            fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+        }));
     });
 
     describe('Toolbar', () => {
@@ -667,7 +702,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             // Check visible columns and headers are rendered correctly
             let childHeaders = childGrids[0].queryAll(By.css('igx-grid-header'));
             expect(childGrid.pinnedColumns.length).toEqual(0);
-            expect(childHeaders[0].children[0].nativeElement.innerText.trim()).toEqual('ID');
+            expect(childHeaders[0].children[0].nativeElement.children[0].children[0].innerText.trim()).toEqual('ID');
             expect(childHeaders[1].children[0].nativeElement.innerText.trim()).toEqual('ChildLevels');
             expect(childHeaders[2].children[0].nativeElement.innerText.trim()).toEqual('ProductName');
 
@@ -695,7 +730,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.pinnedColumns.length).toEqual(3);
             expect(childHeaders[0].children[0].nativeElement.innerText.trim()).toEqual('ChildLevels');
             expect(childHeaders[1].children[0].nativeElement.innerText.trim()).toEqual('ProductName');
-            expect(childHeaders[2].children[0].nativeElement.innerText.trim()).toEqual('ID');
+            expect(childHeaders[2].children[0].nativeElement.children[0].children[0].innerText.trim()).toEqual('ID');
         });
 
         it('should read from custom templates per level', () => {
@@ -709,6 +744,15 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(toolbars[0].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Parent Button');
             expect(toolbars[1].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 1 Button');
             expect(toolbars[2].query(By.css('button')).nativeElement.innerText.trim()).toEqual('Child 2 Button');
+        });
+
+        it('should have same width as the grid whole width', () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestCustomToolbarComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+
+            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
+            expect(toolbar.nativeElement.offsetWidth).toEqual(hierarchicalGrid.nativeElement.offsetWidth);
         });
     });
 
@@ -756,6 +800,31 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(mainHeaders[2].children[0].innerText.trim()).toEqual('ProductName');
         }));
     });
+
+    describe('Pinning', () => {
+        it('should be possible by templating the header and getting column reference for child grid', (async() => {
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            let headers = childGrid.nativeElement.querySelectorAll('igx-grid-header-group');
+            const firstHeaderIcon = headers[0].querySelector('igx-icon');
+
+            expect(headers[0].classList.contains('igx-grid__th--pinned')).toBeFalsy();
+            expect(childGrid.columnList.toArray()[0].pinned).toBeFalsy();
+            expect(firstHeaderIcon).toBeTruthy();
+
+            firstHeaderIcon.click();
+            await wait();
+            fixture.detectChanges();
+
+            headers = childGrid.nativeElement.querySelectorAll('igx-grid-header-group');
+            expect(childGrid.columnList.toArray()[0].pinned).toBeTruthy();
+            expect(headers[0].classList.contains('igx-grid__th--pinned')).toBeTruthy();
+        }));
+    });
 });
 
 @Component({
@@ -769,7 +838,14 @@ describe('IgxHierarchicalGrid Integration', () => {
         </igx-column-group>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true"
             [primaryKey]="'ID'" [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
-            <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
+            <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'>
+                <ng-template igxHeader let-columnRef="column">
+                    <div>
+                        <span>ID</span>
+                        <igx-icon fontSet="material" (click)="pinColumn(columnRef)">lock</igx-icon>
+                    </div>
+                </ng-template>
+            </igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
                     <igx-column field="ProductName" [groupable]='true'></igx-column>
@@ -809,6 +885,10 @@ export class IgxHierarchicalGridTestBaseComponent {
             'Col2': i, 'Col3': i, childData: children, childData2: children });
         }
         return prods;
+    }
+
+    pinColumn(column: IgxColumnComponent) {
+        column.pinned ? column.unpin() : column.pin();
     }
 }
 

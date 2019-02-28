@@ -5,8 +5,6 @@ import {
 } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
-import { KEYS } from '../../../core/utils';
-import { IgxInputGroupComponent } from '../../../input-group';
 
 /**
  * @hidden
@@ -22,22 +20,15 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     @ViewChild('datePicker', { read: IgxDatePickerComponent })
     private datePicker: IgxDatePickerComponent;
 
-    @ViewChild('inputGroupDateValues', { read: IgxInputGroupComponent })
-    private inputGroupDateValues: IgxInputGroupComponent;
-
     protected get inputValuesElement() {
         return this.datePicker.getEditElement();
     }
 
-    public openDatePicker(openDialog: Function) {
-        openDialog();
+    get inputDatePlaceholder(): string {
+        return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
     }
 
-    public onInputValuesKeydown(event: KeyboardEvent) {
-        if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.toggleCustomDialogDropDown(this.inputGroupDateValues, this.dropdownValues);
-        }
-
-        event.stopPropagation();
+    public openDatePicker(openDialog: Function) {
+        openDialog();
     }
 }

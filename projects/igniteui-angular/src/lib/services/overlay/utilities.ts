@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -101,15 +101,6 @@ export function getPointFromPositionsSettings(settings: PositionSettings, overla
         result = settings.target;
     }
 
-    //  if for some reason overlayWrapper is not at 0,0 position, e.g. overlay is in outlet
-    //  which is in element with transform,perspective or filter set, we should translate the result
-    //  accordingly
-    if (overlayWrapper) {
-        const overlayWrapperPosition = overlayWrapper.getBoundingClientRect();
-        result.x -= overlayWrapperPosition.left;
-        result.y -= overlayWrapperPosition.top;
-    }
-
     return result;
 }
 
@@ -152,4 +143,11 @@ export function getViewportScrollPosition(): Point {
     const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
 
     return new Point(horizontalScrollPosition, verticalScrollPosition);
+  }
+
+  /** @hidden @internal*/
+export function cloneInstance(object) {
+    const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+    clonedObj.settings = cloneValue(clonedObj.settings);
+    return clonedObj;
 }
