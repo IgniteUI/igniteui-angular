@@ -201,7 +201,7 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
         }));
         it('should close dropdown on clicking selected item', fakeAsync(() => {
-            spyOn(select.onSelection, "emit");
+            spyOn(select.onSelection, 'emit');
             select.items[1].selected = true;
             select.open();
             fixture.detectChanges();
