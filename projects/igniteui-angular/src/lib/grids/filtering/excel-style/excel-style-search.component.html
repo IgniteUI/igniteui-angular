@@ -25,6 +25,7 @@
                     *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
                     <igx-checkbox
                     [value]="item"
+                    tabindex="-1"
                     [checked]="item.isSelected"
                     [disableRipple]="true"
                     [indeterminate]="item.indeterminate"
