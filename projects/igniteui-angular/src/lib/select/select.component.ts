@@ -203,6 +203,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
+
+        if (event) {
+            this.toggleDirective.close();
+        }
         if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
             return;
         }
@@ -218,10 +222,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._value = newSelection.value;
         this.cdr.detectChanges();
         this._onChangeCallback(this.value);
-
-        if (event) {
-            this.toggleDirective.close();
-        }
     }
 
     /** @hidden @internal */
