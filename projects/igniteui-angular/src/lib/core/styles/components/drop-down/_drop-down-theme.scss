@@ -192,6 +192,10 @@
         box-shadow: --var($theme, 'shadow');
         background: --var($theme, 'background-color');
 
+        &:empty {
+            box-shadow: none;
+        }
+
         igx-input-group {
             margin-top: -16px !important;
         }
