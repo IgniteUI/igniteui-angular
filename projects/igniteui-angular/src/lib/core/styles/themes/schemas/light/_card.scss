@@ -6,7 +6,7 @@
 
 /// Generates a light card schema.
 /// @type {Map}
-/// @prop {Color} background [#fff]- The card background color.
+/// @prop {Map} background [igx-color: 'surface']- The card background color.
 /// @prop {Map} header-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The text color of the card title.
 /// @prop {Map} subtitle-text-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The text color of the card subtitle.
 /// @prop {Map} content-text-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The text color of the card content.
@@ -41,7 +41,9 @@ $_light-card: (
     ),
 
     actions-text-color: (
-        igx-color: ('grays', 600)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .6
     ),
 
     resting-elevation: 2,
