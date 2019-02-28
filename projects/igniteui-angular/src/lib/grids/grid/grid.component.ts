@@ -165,10 +165,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.get(this.id)) {
-            this._gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
+            this._gridAPI.arrange_sorting_expressions(this.id);
             this.cdr.markForCheck();
         } else {
             // setter called before grid is registered in grid API service
