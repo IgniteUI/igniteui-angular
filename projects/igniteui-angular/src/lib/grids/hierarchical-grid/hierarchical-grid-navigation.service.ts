@@ -334,8 +334,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             this.scrollGrid(currGrid.parent, 'prev',
             () => {
-            parentContainer = this.getChildContainer();
-            childRowContainer = this.getChildGridRowContainer();
+            parentContainer = this.getChildContainer(grid);
+            childRowContainer = this.getChildGridRowContainer(grid);
             prev = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
             if (prevIsSiblingChild) {
                 this.focusPrevChild(prev, visibleColumnIndex, currGrid.parent);

@@ -1,10 +1,11 @@
 <article #dropdown igxToggle
     class="igx-excel-filter__menu"
+    [id]="overlayComponentId"
     (keydown)="onKeyDown($event)"
     (onOpening)="onDropDownOpening()">
 
     <header class="igx-excel-filter__menu-header">
-        <h4 class="igx-typography__h6">{{ column.field }}</h4>
+        <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
     </header>
 
     <ng-template #defaultExcelStyleSortingTemplate>
@@ -111,7 +112,6 @@
 <igx-excel-style-custom-dialog
     #customDialog
     [column]="column"
-    [columnData]="uniqueValues"
     [filteringService]="filteringService"
     [overlayComponentId]="overlayComponentId"
     [overlayService]="overlayService">
