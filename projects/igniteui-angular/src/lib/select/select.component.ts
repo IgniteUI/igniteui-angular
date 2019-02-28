@@ -79,6 +79,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public allowItemsFocus = false;
 
+    /** @hidden @internal */
+    public height: string;
+
     private _overlayDefaults: OverlaySettings;
 
     private _value: any;
