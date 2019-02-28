@@ -202,6 +202,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
     private _locale = null;
+    private _destroyed = false;
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -2544,7 +2545,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.reflow();
+            requestAnimationFrame(() => {
+                if (!this._destroyed) {
+                    this.reflow();
+                }
+            });
         });
     }
 
@@ -2568,6 +2573,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.destroy$.next(true);
         this.destroy$.complete();
         this.gridAPI.unset(this.id);
+        this._destroyed = true;
     }
 
     /**
