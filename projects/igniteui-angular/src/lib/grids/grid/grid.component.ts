@@ -217,10 +217,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
-            this._gridAPI.arrange_sorting_expressions();
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
+            this._gridAPI.arrange_sorting_expressions();
             this.cdr.markForCheck();
         } else {
             // setter called before grid is registered in grid API service
