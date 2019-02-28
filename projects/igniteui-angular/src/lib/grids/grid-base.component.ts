@@ -1613,13 +1613,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public outletDirective: IgxOverlayOutletDirective;
+    protected _outletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    public get outletDirective() {
+        return this._outletDirective;
+    }
 
     /**
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    private rowEditingOutletDirective: IgxOverlayOutletDirective;
+    protected _rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    protected get rowEditingOutletDirective() {
+        return this._rowEditingOutletDirective;
+    }
+
 
     /**
      * @hidden
@@ -2334,10 +2346,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.disableTransitions = false;
         });
-
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
     }
 
     private horizontalScrollHandler(event) {
@@ -2349,23 +2357,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
-
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
-    }
-
-    private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu igx-toggle')[0];
-        if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('ng-reflect-id'));
-            if (overlay) {
-                const animation = overlay.settings.positionStrategy.settings.closeAnimation;
-                overlay.settings.positionStrategy.settings.closeAnimation = null;
-                this.overlayService.hide(overlay.id);
-                overlay.settings.positionStrategy.settings.closeAnimation = animation;
-            }
-        }
     }
 
     private keydownHandler(event) {
