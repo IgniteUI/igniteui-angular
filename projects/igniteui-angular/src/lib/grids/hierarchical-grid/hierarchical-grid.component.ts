@@ -357,10 +357,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this.rootGrid._outletDirective;
     }
 
-    protected get rowEditingOutletDirective() {
-        return this.rootGrid._rowEditingOutletDirective;
-    }
-
     /**
      * @hidden
      */
@@ -611,57 +607,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private checkOverlays() {
         const allOverlays = (this.overlayService as any)._overlayInfos;
         const mainOverlays = allOverlays.filter((o) => o.settings.outlet === this.outletDirective);
-        const rowEditOverlay = allOverlays.find((o) => o.settings.outlet === this.rowEditingOutletDirective);
         if (mainOverlays.length > 0) {
             mainOverlays.forEach(overlay => {
-            if (overlay) {
-                const target = overlay.settings.positionStrategy.settings.target;
-                const isInView = this._isInHorizontalView(target) &&  this._isInVerticalView(target);
-                this._toggleOverlay(overlay, isInView);
-            }
+                this.overlayService.hide(overlay.id);
             });
-        }
-        if (rowEditOverlay) {
-            const target = rowEditOverlay.settings.positionStrategy.settings.target;
-            this._toggleOverlay(rowEditOverlay, this._isInVerticalView(target));
-        }
-    }
-
-    private _toggleOverlay(overlay, show) {
-        const style = overlay.elementRef.nativeElement.style;
-        if (show) {
-            style.display = 'block';
-        } else {
-            style.display = 'none';
-        }
-    }
-
-    private _isInVerticalView(elem) {
-        if (!this.document.body.contains(elem)) {
-            // element is not in DOM
-            return false;
-        }
-        const elemClientRect = elem.getBoundingClientRect();
-        const gridClientRect = this.rootGrid.tbody.nativeElement.getBoundingClientRect();
-        const diffBottom =  elemClientRect.bottom - gridClientRect.bottom;
-        const diffTop = elemClientRect.bottom - elem.offsetHeight -  gridClientRect.top;
-
-            if (diffBottom > 0 || diffTop < 0) {
-                return false;
-            } else {
-                return true;
-            }
-    }
-
-    private _isInHorizontalView(elem) {
-        const elemClientRect = elem.getBoundingClientRect();
-        const gridClientRect = this.rootGrid.tbody.nativeElement.getBoundingClientRect();
-        const diffLeft =  elemClientRect.left - gridClientRect.left;
-        const diffRight =  gridClientRect.right + elem.offsetWidth - elemClientRect.right;
-        if (diffRight < 0 || diffLeft < 0) {
-            return false;
-        } else {
-            return true;
         }
     }
 }

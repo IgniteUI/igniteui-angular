@@ -1626,12 +1626,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    protected _rowEditingOutletDirective: IgxOverlayOutletDirective;
-
-    protected get rowEditingOutletDirective() {
-        return this._rowEditingOutletDirective;
-    }
-
+    private rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
@@ -4579,7 +4574,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.nativeElement.focus();
         } */
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
             return;
         }

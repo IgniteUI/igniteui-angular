@@ -30,7 +30,6 @@ import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { AbsoluteScrollStrategy } from '../services';
 
 /**
  * @hidden
@@ -227,7 +226,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
             this._filterMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
             this._filterMenuOverlaySettings.outlet = this.grid.outlet;
-            this._filterMenuOverlaySettings.scrollStrategy = new AbsoluteScrollStrategy();
 
             this._componentOverlayId =
                 this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);
