@@ -200,6 +200,27 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
+        it('should close dropdown on clicking selected item', fakeAsync(() => {
+            spyOn(select.onSelection, 'emit');
+            select.items[1].selected = true;
+            select.open();
+            fixture.detectChanges();
+            const selectedItemEl = selectList.children[1];
+            expect(select.collapsed).toBeFalsy();
+            selectedItemEl.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.open();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            selectedItemEl.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+        }));
         it('should toggle dropdown on toggle button click', fakeAsync(() => {
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(select.collapsed).toBeTruthy();
