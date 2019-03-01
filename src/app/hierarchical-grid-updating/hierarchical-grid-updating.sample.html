@@ -11,11 +11,12 @@
                 <igx-column field="ContactTitle"></igx-column>
                 <igx-column field="Country"></igx-column>
                 <igx-column field="Phone"></igx-column>
-                <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'400px'" [primaryKey]="'OrderID'" [autoGenerate]="false"
+                <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'400px'" [primaryKey]="'MyID'" [autoGenerate]="false"
                         [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)"
                         [rowEditable]="true">
+                        <igx-column field="MyID"></igx-column>
                         <igx-column field="OrderID"></igx-column>
-                        <igx-column field="OrderDate"></igx-column>
+                        <igx-column field="OrderDate" [dataType]='"date"'></igx-column>
                         <igx-column field="ShipCountry"></igx-column>
                         <igx-column field="ShipCity"></igx-column>
                         <igx-column field="ShipAddress"></igx-column>
