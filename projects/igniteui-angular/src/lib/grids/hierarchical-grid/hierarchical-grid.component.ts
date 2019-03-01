@@ -59,6 +59,7 @@ export interface HierarchicalStateRecord {
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
+    private _overlayIDs = [];
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -303,6 +304,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.hgridAPI.register(this);
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
+        this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective) {
+                this._overlayIDs.push(event.id);
+            }
+        });
+        this.overlayService.onClosed.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            const ind = this._overlayIDs.indexOf(event.id);
+            if (ind !== -1) {
+                this._overlayIDs.splice(ind, 1);
+            }
+        });
     }
 
     /**
@@ -605,18 +617,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     private hideOverlays() {
-        const allOverlays = (this.overlayService as any)._overlayInfos;
-        const mainOverlays = allOverlays.filter((o) => o.settings.outlet === this.outletDirective);
-        if (mainOverlays.length > 0) {
-            mainOverlays.forEach(overlay => {
-                this.overlayService.hide(overlay.id);
-                // blur in case some editor somewhere decides to move focus back
-                this.overlayService.onClosed.pipe(
-                    filter(o => o.id === overlay.id),
-                    takeUntil(this.destroy$)).subscribe(() => {
-                        (document.activeElement as any).blur();
-                    });
-            });
-        }
+        this._overlayIDs.forEach(overlayID => {
+            this.overlayService.hide(overlayID);
+            // blur in case some editor somewhere decides to move focus back
+            this.overlayService.onClosed.pipe(
+                filter(o => o.id === overlayID),
+                takeUntil(this.destroy$)).subscribe(() => {
+                    (document.activeElement as any).blur();
+                });
+        });
     }
 }
