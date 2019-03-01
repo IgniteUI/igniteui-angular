@@ -23,15 +23,13 @@ export class IgxExcelStyleColumnMovingComponent {
 
     get canNotMoveLeft() {
         const prevIndex = this.grid.columns.indexOf(this.column) - 1;
-        return !this.grid.columns[prevIndex] || !this.column.movable ||
-            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
-            (this.column.level !== 0 && this.grid.columns[prevIndex].level !== this.column.level);
+        return !this.grid.columns[prevIndex] || (this.column.level !== 0 && this.grid.columns[prevIndex].level !== this.column.level) ||
+        (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning);
     }
 
     get canNotMoveRight() {
         const nextIndex = this.grid.columns.indexOf(this.column) + 1;
-        return !this.grid.columns[nextIndex] || !this.column.movable ||
-            (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
+        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
     }
 
     public onMoveButtonClicked(moveDirection) {
