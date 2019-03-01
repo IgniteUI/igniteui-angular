@@ -34,7 +34,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxOverlayService } from '../../services/index';
 
@@ -610,6 +610,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (mainOverlays.length > 0) {
             mainOverlays.forEach(overlay => {
                 this.overlayService.hide(overlay.id);
+                // blur in case some editor somewhere decides to move focus back
+                this.overlayService.onClosed.pipe(
+                    filter(o => o.id === overlay.id),
+                    takeUntil(this.destroy$)).subscribe(() => {
+                        (document.activeElement as any).blur();
+                    });
             });
         }
     }
