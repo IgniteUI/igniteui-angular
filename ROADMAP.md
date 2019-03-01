@@ -5,13 +5,12 @@
 
 ## Milestone 6 (Due March 8th, 2019)
 
-1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
-2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
-3. Auto-complete (inline editable)
-4. Excel Style Filtering  
-5. Multi-cell Selection 
-6. Inline date and time pickers (with drop down/toggle)
-7. igxSelect Component 
+1. Hierarchical Grid #827 
+2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
+3. Auto-complete (inline editable) #3585
+4. Excel Style Filtering #3592
+6. Inline date and time pickers (with drop down/toggle) #3034 #2337
+7. igxSelect Component #3148
 
 
 ## Further Down the line
@@ -20,7 +19,8 @@
 2. Row-pinning
 3. Column Groups expand/collapse, with column grouping templates
 4. Visual Cell merging 
-5. Grid Multi-Row Layout 
+5. Multi-cell Selection #3915
+6. Grid Multi-Row Layout 
 
 
 # Previous Milestones
