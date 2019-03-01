@@ -9,8 +9,8 @@
 2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
 3. Auto-complete (inline editable) #3585
 4. Excel Style Filtering #3592
-6. Inline date and time pickers (with drop down/toggle) #3034 #2337
-7. igxSelect Component #3148
+5. Inline date and time pickers (with drop down/toggle) #3034 #2337
+6. igxSelect Component #3148
 
 
 ## Further Down the line
