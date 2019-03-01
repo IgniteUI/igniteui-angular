@@ -623,7 +623,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.overlayService.onClosed.pipe(
                 filter(o => o.id === overlayID),
                 takeUntil(this.destroy$)).subscribe(() => {
-                    (document.activeElement as any).blur();
+                    this.nativeElement.focus();
                 });
         });
     }
