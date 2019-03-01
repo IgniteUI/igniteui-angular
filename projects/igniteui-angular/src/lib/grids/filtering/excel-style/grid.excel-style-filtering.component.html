@@ -1,0 +1,118 @@
+<article #dropdown igxToggle
+    class="igx-excel-filter__menu"
+    [id]="overlayComponentId"
+    (keydown)="onKeyDown($event)"
+    (onOpening)="onDropDownOpening()">
+
+    <header class="igx-excel-filter__menu-header">
+        <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
+    </header>
+
+    <ng-template #defaultExcelStyleSortingTemplate>
+        <igx-excel-style-sorting
+            #excelStyleSorting
+            class="igx-excel-filter__sort"
+            [column]="column"
+            [grid]="grid">
+        </igx-excel-style-sorting>
+    </ng-template>
+
+    <div *ngIf="column.sortable">
+        <ng-container *ngTemplateOutlet="sortingTemplate"></ng-container>
+    </div>
+
+    <section class="igx-excel-filter__actions">
+
+        <ng-template #defaultExcelStyleMovingTemplate>
+            <igx-excel-style-column-moving
+                class="igx-excel-filter__move"
+                [column]="column"
+                [grid]="grid">
+            </igx-excel-style-column-moving>
+        </ng-template>
+
+        <div *ngIf="column.movable">
+            <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
+        </div>
+
+        <ng-template #defaultExcelStylePinningTemplate>
+            <div class="igx-excel-filter__actions-pin"
+                (click)="onPin()"
+                tabindex="0"
+                *ngIf="!column.pinned">
+                <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
+                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+            </div>
+
+            <div class="igx-excel-filter__actions-unpin"
+                (click)="onPin()"
+                tabindex="0"
+                *ngIf="column.pinned">
+                <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
+                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+            </div>
+        </ng-template>
+
+        <div *ngIf="!column.disablePinning">
+            <ng-container *ngTemplateOutlet="pinningTemplate"></ng-container>
+        </div>
+
+        <ng-template #defaultExcelStyleHidingTemplate>
+            <div class="igx-excel-filter__actions-hide"
+                tabindex="0"
+                (click)="onHide()">
+                <span>{{ grid.resourceStrings.igx_grid_excel_hide }}</span>
+                <igx-icon>visibility_off</igx-icon>
+            </div>
+        </ng-template>
+
+        <div *ngIf="!column.disableHiding">
+            <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
+        </div>
+
+        <div 
+            tabindex="0"
+            class="igx-excel-filter__actions-filter"
+            (keydown)="onTextFilterKeyDown($event)"
+            (click)="onTextFilterClick($event)"
+            [igxDropDownItemNavigation]="subMenu" >
+            <span>{{ subMenuText }}</span>
+            <igx-icon>keyboard_arrow_right</igx-icon>
+        </div>
+    </section>
+
+    <igx-excel-style-search
+        class="igx-excel-filter__menu-main"
+        #excelStyleSearch
+        [column]="column"
+        [data]="listData">
+    </igx-excel-style-search> 
+
+    <footer class="igx-excel-filter__menu-footer">
+        <button igxButton (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
+    </footer>
+</article>
+
+<igx-drop-down [maxHeight]="'397px'" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+    <div>
+        <igx-drop-down-item
+            *ngFor="let condition of conditions"
+            [value]="condition">
+            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
+        </igx-drop-down-item>
+        <igx-drop-down-item *ngIf="column.filteringExpressionsTree">
+            <igx-icon>filter_list</igx-icon>
+            <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
+        </igx-drop-down-item>
+    </div>
+</igx-drop-down>
+
+<igx-excel-style-custom-dialog
+    #customDialog
+    [column]="column"
+    [filteringService]="filteringService"
+    [overlayComponentId]="overlayComponentId"
+    [overlayService]="overlayService">
+</igx-excel-style-custom-dialog>

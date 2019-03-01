@@ -39,6 +39,8 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
+import { EditorProvider } from '../core/edit-provider';
+import { take } from 'rxjs/operators';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -109,42 +111,22 @@ const noop = () => { };
         multi: true
     }]
 })
-export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
+ OnDestroy, EditorProvider {
     /**
-     * @hidden
+     * @hidden @internal
      */
     public customValueFlag = true;
     /**
-     * @hidden
+     * @hidden @internal
      */
     public defaultFallbackGroup = 'Other';
-    /**
-     * @hidden
-     */
     protected stringFilters = IgxStringFilteringOperand;
-    /**
-     * @hidden
-     */
     protected boolenFilters = IgxBooleanFilteringOperand;
-    /**
-     * @hidden
-     */
     protected _filteringLogic = FilteringLogic.Or;
-    /**
-     * @hidden
-     */
     protected _filteringExpressions: IFilteringExpression[] = [];
-    /**
-     * @hidden
-     */
     protected _sortingExpressions: ISortingExpression[] = [];
-    /**
-     * @hidden
-     */
     protected _groupKey = '';
-    /**
-     * @hidden
-     */
     protected _displayKey: string;
     private _dataType = '';
     private destroy$ = new Subject<any>();
@@ -170,25 +152,25 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
     public dropdown: IgxComboDropDownComponent;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('searchInput')
     public searchInput: ElementRef<HTMLInputElement> = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('comboInput')
     public comboInput: ElementRef<HTMLInputElement> = null;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get displaySearchInput(): boolean {
         return this.filterable || this.allowCustomValues;
@@ -373,15 +355,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
     public clearIconTemplate: TemplateRef<any> = null;
 
-    /**
-     * @hidden
-     */
     @ViewChild('primitive', { read: TemplateRef })
     protected primitiveTemplate: TemplateRef<any>;
 
-    /**
-     * @hidden
-     */
     @ViewChild('complex', { read: TemplateRef })
     protected complexTemplate: TemplateRef<any>;
 
@@ -392,7 +368,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public virtualScrollContainer: IgxForOfDirective<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#emptyTemplate' is deprecated.\n` +
         `Use \`igxComboEmpty\` directive instead.`)
@@ -404,7 +380,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#headerTemplate' is deprecated.\n` +
         `Use \`igxComboHeader\` directive instead.`)
@@ -416,7 +392,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#footerTemplate' is deprecated.\n` +
         `Use \`igxComboFooter\` directive instead.`)
@@ -428,7 +404,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#itemTemplate' is deprecated.\n` +
         `Use \`igxComboItem\` directive instead.`)
@@ -440,7 +416,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#addItemTemplate' is deprecated.\n` +
         `Use \`igxComboAddItem\` directive instead.`)
@@ -452,7 +428,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @DeprecateProperty(`Setting combo item template with '#headerItemTemplate' is deprecated.\n` +
         `Use \`igxComboHeaderItem\` directive instead.`)
@@ -463,9 +439,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-    /**
-     * @hidden
-     */
     @ViewChild('dropdownItemContainer')
     protected dropdownContainer: ElementRef = null;
 
@@ -584,7 +557,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public width = '100%';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('class.igx-input-group--valid')
     public get validClass(): boolean {
@@ -592,7 +565,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('class.igx-input-group--invalid')
     public get invalidClass(): boolean {
@@ -600,19 +573,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('class.igx-combo')
     public cssClass = 'igx-combo'; // Independant of display density, at the time being
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding(`attr.role`)
     public role = 'combobox';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.aria-expanded')
     public get ariaExpanded(): boolean {
@@ -620,7 +593,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.aria-haspopup')
     public get hasPopUp() {
@@ -628,7 +601,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.aria-owns')
     public get ariaOwns() {
@@ -700,7 +673,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public itemHeight = 48;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public filteringLogic = FilteringLogic.Or;
 
@@ -721,7 +694,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public placeholder = '';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get inputEmpty(): boolean {
         return !this.value && !this.placeholder;
@@ -881,12 +854,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public valid: IgxComboState = IgxComboState.INITIAL;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public searchValue = '';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
@@ -897,7 +870,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     onInputClick(event: Event) {
         event.stopPropagation();
@@ -953,21 +926,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
-     */
-    public get values(): any[] {
-        return this.valueKey !== undefined ? this.selectedItems().map((e) => e[this.valueKey]) : [];
-    }
-
-    /**
-     * @hidden
+     * @hidden @internal
      */
     public get filteringExpressions(): IFilteringExpression[] {
         return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public set filteringExpressions(value: IFilteringExpression[]) {
         this._filteringExpressions = value;
@@ -975,23 +941,20 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get sortingExpressions(): ISortingExpression[] {
         return this._sortingExpressions;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = value;
         this.cdr.markForCheck();
     }
 
-    /**
-     * @hidden
-     */
     protected clearSorting(field?: string | number) {
         if (field === undefined || field === null) {
             this.sortingExpressions = [];
@@ -1018,14 +981,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get filteredData(): any[] {
         return this.filterable ? this._filteredData : this.data;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public set filteredData(val: any[]) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
@@ -1033,7 +996,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleKeyUp(event: KeyboardEvent): void {
         if (event.key === 'ArrowDown' || event.key === 'Down') {
@@ -1045,7 +1008,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleKeyDown(event: KeyboardEvent) {
         if (event.key === 'ArrowUp' || event.key === 'Up') {
@@ -1066,22 +1029,37 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleInputChange(event?: string) {
+        let cdrFlag = false;
+        const vContainer = this.dropdown.verticalScrollContainer;
         if (event !== undefined) {
-            this.dropdown.verticalScrollContainer.scrollTo(0);
+            // Do not scroll if not scrollable
+            if (vContainer.isScrollable()) {
+                vContainer.scrollTo(0);
+            } else {
+                cdrFlag = true;
+            }
             this.onSearchInput.emit(event);
         }
         if (this.filterable) {
             this.filter();
+            // If there was no scroll before filtering, check if there is after and detect changes
+            if (cdrFlag) {
+                vContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    if (vContainer.isScrollable()) {
+                        this.cdr.detectChanges();
+                    }
+                });
+            }
         } else {
             this.checkMatch();
         }
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public sort(fieldName: string, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true,
         strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
@@ -1095,7 +1073,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public getValueByValueKey(val: any): any {
         if (!val && val !== 0) {
@@ -1106,9 +1084,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.data.filter((e) => e === val);
     }
 
-    /**
-     * @hidden
-     */
     protected prepare_sorting_expression(state: ISortingExpression[], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
         strategy: ISortingStrategy) {
 
@@ -1127,7 +1102,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get dataType(): string {
         if (this.valueKey) {
@@ -1137,7 +1112,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get isRemote() {
         return this.totalItemCount > 0 &&
@@ -1168,14 +1143,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * Triggers change detection on the combo view
      */
     public triggerCheck() {
         this.cdr.detectChanges();
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public isAddButtonVisible(): boolean {
         // This should always return a boolean value. If this.searchValue was '', it returns '' instead of false;
@@ -1183,7 +1158,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleSelectAll(evt) {
         if (evt.checked) {
@@ -1194,7 +1169,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public addItemToCollection() {
         if (!this.searchValue) {
@@ -1227,7 +1202,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public focusSearchInput(opening?: boolean): void {
         if (this.displaySearchInput && this.searchInput) {
@@ -1243,9 +1218,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
 
-    /**
-     * @hidden
-     */
     protected prepare_filtering_expression(searchVal, condition, ignoreCase, fieldName?) {
         const newArray = [...this.filteringExpressions];
         const expression = newArray.find((expr) => expr.fieldName === fieldName);
@@ -1270,9 +1242,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.filteringExpressions = newArray;
     }
 
-    /**
-     * @hidden
-     */
     protected onStatusChanged(formControl: FormControl): boolean {
         if ((formControl.touched || formControl.dirty) &&
             (formControl.validator || formControl.asyncValidator)) {
@@ -1283,7 +1252,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public filter() {
         this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
@@ -1291,7 +1260,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public ngOnInit() {
         this._positionCallback = () => this.dropdown.updateScrollPosition();
@@ -1301,14 +1270,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public ngOnDestroy() {
         this.destroy$.complete();
@@ -1317,14 +1286,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public writeValue(value: any): void {
         // selectItems can handle Array<any>, no valueKey is needed;
@@ -1333,19 +1302,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    public registerOnTouched(fn: any): void {}
+    public registerOnTouched(fn: any): void { }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
@@ -1359,14 +1328,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public validate(c: FormControl) {
         return this.onStatusChanged(c);
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get template(): TemplateRef<any> {
         this._dataType = this.dataType;
@@ -1380,7 +1349,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get context(): any {
         return {
@@ -1389,7 +1358,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleClearItems(event: Event): void {
         this.deselectAllItems(true, event);
@@ -1400,7 +1369,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * A method that opens/closes the combo.
      *
      *```html
-     *<button (click)="combo.toggle()>Toggle Combo</button>
+     *<button (click)="combo.toggle()">Toggle Combo</button>
      *<igx-combo #combo></igx-combo>
      *```
      */
@@ -1412,7 +1381,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * A method that opens the combo.
      *
      *```html
-     *<button (click)="combo.open()>Open Combo</button>
+     *<button (click)="combo.open()">Open Combo</button>
      *<igx-combo #combo></igx-combo>
      *```
      */
@@ -1424,7 +1393,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * A method that closes the combo.
      *
      *```html
-     *<button (click)="combo.close()>Close Combo</button>
+     *<button (click)="combo.close()">Close Combo</button>
      *<igx-combo #combo></igx-combo>
      *```
      */
@@ -1570,7 +1539,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleOpened() {
         this.triggerCheck();
@@ -1579,7 +1548,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleClosing(event) {
         this.onClosing.emit(event);
@@ -1590,7 +1559,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public handleClosed() {
         this.comboInput.nativeElement.focus();

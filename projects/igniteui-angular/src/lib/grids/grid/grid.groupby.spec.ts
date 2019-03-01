@@ -258,7 +258,7 @@ describe('IgxGrid - GroupBy', () => {
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     });
@@ -1548,7 +1548,7 @@ describe('IgxGrid - GroupBy', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -2365,23 +2365,23 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
         grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
-
+        fix.detectChanges();
         expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         expect(grid.groupingExpressions).toEqual([]);
 
-        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false });
-        grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
-
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+        grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+        fix.detectChanges();
         expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
             { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
             { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         expect(grid.groupingExpressions).toEqual([{
-            fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false
+            fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
         }]);
     });
 
@@ -2487,6 +2487,46 @@ describe('IgxGrid - GroupBy', () => {
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips[0].getAttribute('title')).toEqual('ProductName');
         expect(chips[1].getAttribute('title')).toEqual('Released');
+    });
+
+    it('should order sorting expressions correctly when setting groupingExpressions runtime.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const sExprs: ISortingExpression[] = [
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: true }
+        ];
+        const grid = fix.componentInstance.instance;
+        grid.sortingExpressions = sExprs;
+
+        fix.detectChanges();
+        let dataRows = grid.dataRowList.toArray();
+        expect(dataRows.length).toEqual(8);
+        // verify data records order
+        const expectedDataRecsOrder = [true, true, true, true, false, false, false, null];
+        dataRows.forEach((row, index) => {
+            expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+        });
+
+        const grExprs: ISortingExpression[] = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true }
+        ];
+        grid.groupingExpressions = grExprs;
+        fix.detectChanges();
+
+        // check sorting expressions order - grouping should be applied first
+        expect(grid.sortingExpressions.length).toBe(2);
+        expect(grid.sortingExpressions[0]).toBe(grExprs[0]);
+        expect(grid.sortingExpressions[1]).toBe(sExprs[0]);
+
+        dataRows = grid.dataRowList.toArray();
+        const expectedReleaseRecsOrder = [true, false, true, false, false, null, true, true];
+        const expectedProductNameOrder = ['NetAdvantage', 'NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for JavaScript',
+         'Ignite UI for Angular', 'Ignite UI for Angular', '', null];
+        dataRows.forEach((row, index) => {
+            expect(row.rowData.Released).toEqual(expectedReleaseRecsOrder[index]);
+            expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
+        });
     });
 
     function sendInput(element, text, fix) {

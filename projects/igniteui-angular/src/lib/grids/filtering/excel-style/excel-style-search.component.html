@@ -1,0 +1,39 @@
+<igx-input-group
+            type="box"
+            [displayDensity]="'compact'"
+            [supressInputAutofocus]="true">
+            <igx-icon igxPrefix>search</igx-icon>
+            <input
+                #input
+                igxInput
+                tabindex="0"
+                [(ngModel)]="searchValue"
+                [placeholder]="column.grid.resourceStrings.igx_grid_excel_search_placeholder"
+                autocomplete="off"/>
+            <igx-icon
+                igxSuffix
+                *ngIf="searchValue || searchValue === 0"
+                (click)="clearInput()"
+                tabindex="0">
+                clear
+            </igx-icon>
+        </igx-input-group>
+
+        <igx-list [style.height.px]="250">
+            <div [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item
+                    *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">
+                    <igx-checkbox
+                    [value]="item"
+                    tabindex="-1"
+                    [checked]="item.isSelected"
+                    [disableRipple]="true"
+                    [indeterminate]="item.indeterminate"
+                    [disableTransitions]="true"
+                    (change)="onCheckboxChange($event)">
+                        {{ column.formatter ? column.formatter(item.label) : column.dataType === 'number' ? (item.label | igxdecimal:
+                            column.grid.locale) : column.dataType === 'date' ? (item.label | igxdate: column.grid.locale) : item.label }}
+                    </igx-checkbox>
+                </igx-list-item>
+            </div>
+        </igx-list>

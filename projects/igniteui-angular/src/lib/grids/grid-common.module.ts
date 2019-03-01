@@ -31,21 +31,14 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxColumnMovingService,
-    IgxDecimalPipeComponent,
-    IgxDatePipeComponent
+    IgxColumnMovingService
 } from './grid.common';
 import { IgxGridTransaction } from './grid-base.component';
-import {
-    IgxGridFilterConditionPipe,
-    IgxGridTransactionPipe
-} from './grid-common.pipes';
 import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
-import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowEditTemplateDirective,
@@ -62,7 +55,9 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
-
+import { IgxFilterModule } from '../directives/filter/filter.directive';
+import { IgxGridPipesModule } from './grid-pipes.module';
+import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 /**
  * @hidden
  */
@@ -85,12 +80,8 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
-        IgxGridFilterConditionPipe,
-        IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
-        IgxDatePipeComponent,
-        IgxDecimalPipeComponent,
         IgxSummaryDataPipe,
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
@@ -99,7 +90,7 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
     ],
     entryComponents: [
         IgxColumnComponent,
-        IgxColumnGroupComponent,
+        IgxColumnGroupComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -120,11 +111,7 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxRowComponent,
-        IgxGridFilterConditionPipe,
-        IgxGridTransactionPipe,
         IgxSummaryDataPipe,
-        IgxDatePipeComponent,
-        IgxDecimalPipeComponent,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxIconModule,
@@ -149,7 +136,9 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxFilterModule,
+        IgxGridPipesModule
     ],
     imports: [
         CommonModule,
@@ -173,7 +162,10 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
+        IgxFilterModule,
+        IgxGridPipesModule,
+        IgxGridExcelStyleFilteringModule
     ],
     providers: [
         IgxSelectionAPIService,

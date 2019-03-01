@@ -232,6 +232,31 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
+     * Gets whether the pinning is disabled.
+     * ```typescript
+     * let isPinningDisabled =  this.column.disablePinning;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get disablePinning(): boolean {
+        return this._disablePinning;
+    }
+    /**
+     * Enables/disables pinning for the column.
+     * Default value is `false`.
+     * ```typescript
+     * <igx-column [pinned] = "true"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set disablePinning(value: boolean) {
+        if (this._disablePinning !== value) {
+            this._disablePinning = value;
+            this.check();
+        }
+    }
+    /**
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      * ```typescript
@@ -353,18 +378,32 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.columns.indexOf(this);
     }
     /**
-     * Sets/gets formatter for the column.
+     * Gets formatter for the column.
      * ```typescript
      * let columnFormatter = this.column.formatter;
-     * ```
-     * ```typescript
-     * this.column.formatter = (val: Date) => {
-     * return new Intl.DateTimeFormat("en-US").format(val);
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public formatter: (value: any) => any;
+    public get formatter(): any {
+        return this._formatter;
+    }
+    /**
+     * Sets formatter for the column.
+     * ```typescript
+     * this.column.formatter = (val: Date) => {
+     *  return new Intl.DateTimeFormat("en-US").format(val); }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set formatter(value: any) {
+        if (this._formatter !== value) {
+            this._formatter = value;
+            if (this.grid) {
+                this.grid.cdr.detectChanges();
+            }
+        }
+    }
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -532,13 +571,13 @@ export class IgxColumnComponent implements AfterContentInit {
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
-     /**
-     * Gets the function that compares values for grouping.
-     * ```typescript
-     * let groupingComparer = this.column.groupingComparer'
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Gets the function that compares values for grouping.
+    * ```typescript
+    * let groupingComparer = this.column.groupingComparer'
+    * ```
+    * @memberof IgxColumnComponent
+    */
     @Input()
     public get groupingComparer(): (a: any, b: any) => number {
         return this._groupingComparer;
@@ -831,6 +870,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    private _formatter = null;
+    /**
+     *@hidden
+     */
     protected _filters = null;
     /**
      *@hidden
@@ -855,11 +898,15 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _disablePinning = false;
+    /**
+     *@hidden
+     */
     protected _width: string;
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '64';
+    protected _defaultMinWidth = '80';
     /**
      *@hidden
      */
@@ -1087,14 +1134,14 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
-     /**
-     * Returns a reference to the filter cell of the column.
-     * ```typescript
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let filterell = column.filterell;
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Returns a reference to the filter cell of the column.
+    * ```typescript
+    * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+    * let filterell = column.filterell;
+    * ```
+    * @memberof IgxColumnComponent
+    */
     get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
@@ -1201,7 +1248,6 @@ export class IgxColumnComponent implements AfterContentInit {
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
             let cellWidth = colWidth;
-
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';
             }
