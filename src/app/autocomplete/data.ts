@@ -15,7 +15,7 @@ export const worldInfo = [
 
 export const attractions = [
     { id: 1, name: 'Art galleries and museums', image: 'palette'},
-    { id: 2, name: 'Buildings and structures - castles, bridges', image: 'account_balance'},
+    { id: 2, name: 'Buildings and structures (castles, bridges)', image: 'account_balance'},
     { id: 3, name: 'Monuments', image: 'terrain'},
     { id: 4, name: 'Public Art events', image: 'brush'},
     { id: 5, name: 'Botanical gardens and zoos', image: 'nature_people'},
