@@ -3,7 +3,7 @@
 # Current Milestone
  
 
-## Milestone 6 (Due March 8, 2019)
+## Milestone 6 (Due March 8th, 2019)
 
 1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
 2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
