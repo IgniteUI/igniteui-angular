@@ -31,7 +31,8 @@ describe('IgxGrid - Column Pinning ', () => {
                 GridFeaturesComponent,
                 OverPinnedGridComponent,
                 PinnedGroupsGridComponent,
-                InnerPinnedGroupsGridComponent
+                InnerPinnedGroupsGridComponent,
+                GridInitialPinningComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -592,6 +593,16 @@ describe('IgxGrid - Column Pinning ', () => {
 
             expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
         }));
+
+        fit('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
+            const fix = TestBed.createComponent(GridInitialPinningComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+
+
+            expect(grid.pinnedColumns.length).toEqual(1);
+            expect(grid.unpinnedColumns.length).toEqual(2);
+        }));
 });
 
 /* tslint:disable */
@@ -887,4 +898,43 @@ export class InnerPinnedGroupsGridComponent {
 
     public selectedCell;
     public data = companyData;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='width'
+            [data]="data"
+          >
+        <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]="c.pinned">
+        </igx-column>
+        </igx-grid>
+    `
+})
+export class GridInitialPinningComponent {
+    public selectedCell;
+    public width = '100%';
+    public height = '300px';
+    public data = [{
+        ID: 'ALFKI',
+        CompanyName: 'Alfreds Futterkiste',
+        ContactName: 'Maria Anders',
+        ContactTitle: 'Sales Representative',
+        Address: 'Obere Str. 57',
+        City: 'Berlin',
+        Region: null,
+        PostalCode: '12209',
+        Country: 'Germany',
+        Phone: '030-0074321',
+        Fax: '030-0076545'
+    }];
+    public columns = [
+        { field: 'ID', width: 100, pinned: true },
+        { field: 'CompanyName', width: 300 },
+        { field: 'ContactName', width: 200 },
+    ];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
 }
