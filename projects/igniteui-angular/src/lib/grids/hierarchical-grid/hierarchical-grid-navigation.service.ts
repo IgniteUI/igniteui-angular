@@ -249,6 +249,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                         this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex);
                 }
             }
+        } else if (visibleColumnIndex === 0 && currentRowEl.previousElementSibling &&
+            currentRowEl.previousElementSibling.children[0].tagName.toLowerCase() === 'igx-child-grid-row') {
+            const gridElem = currentRowEl.previousElementSibling.querySelector('igx-hierarchical-grid');
+            const childGridID = gridElem.getAttribute('id');
+            const childGrid = this.getChildGrid(childGridID, this.grid);
+            this.navigateUp(currentRowEl, rowIndex, childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex);
         } else {
             super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex);
         }
@@ -276,6 +282,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const gridElem = elem.querySelector('igx-hierarchical-grid');
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
+
+        // Update column index since the next child can have in general less columns than visibleColumnIndex value.
+        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
+
         if (childGrid.rowList.toArray().length === 0) {
             this.focusNext(visibleColumnIndex, childGrid);
             return;
@@ -300,6 +311,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const gridElem = grids[grids.length - 1];
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
+
+        // Update column index since the previous child can have in general less columns than visibleColumnIndex value.
+        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
+
         if (childGrid.rowList.toArray().length === 0) {
             this.focusPrev(visibleColumnIndex, childGrid);
             return;

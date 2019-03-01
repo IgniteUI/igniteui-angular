@@ -203,12 +203,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /** @hidden  @internal */
     @HostListener('input', ['$event'])
     onInput() {
-        if (this.disabled)  {
-            return;
-        }
-        if (this.collapsed) {
-            this.open();
-        }
+        this.open();
     }
 
     /** @hidden  @internal */
@@ -279,7 +274,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Opens autocomplete drop down
      */
     public open() {
-        if (!this.collapsed) {
+        if (this.disabled || !this.collapsed) {
             return;
         }
         this.target.width = this.parentElement.clientWidth + 'px';
