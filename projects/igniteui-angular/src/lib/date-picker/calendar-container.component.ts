@@ -15,7 +15,7 @@ export class IgxCalendarContainerComponent {
     public calendar: IgxCalendarComponent;
 
     @Input()
-    public mode: DatePickerInteractionMode = DatePickerInteractionMode.READONLY;
+    public mode: DatePickerInteractionMode = DatePickerInteractionMode.dialog;
 
     @Input()
     public vertical = false;
@@ -37,12 +37,12 @@ export class IgxCalendarContainerComponent {
 
     @HostBinding('class.igx-date-picker--dropdown')
     get dropdownCSS(): boolean {
-        return this.mode === DatePickerInteractionMode.EDITABLE;
+        return this.mode === DatePickerInteractionMode.dropdown;
     }
 
     @HostBinding('class.igx-date-picker--vertical')
     get verticalCSS(): boolean {
-        return this.vertical && this.mode === DatePickerInteractionMode.READONLY;
+        return this.vertical && this.mode === DatePickerInteractionMode.dialog;
     }
 
     @HostListener('keydown.esc', ['$event'])
@@ -53,12 +53,12 @@ export class IgxCalendarContainerComponent {
     }
 
     /**
-     * Returns whether the date-picker is in readonly mode.
+     * Returns whether the date-picker is in readonly dialog mode.
      *
      * @hidden
     */
     public get isReadonly() {
-        return this.mode === DatePickerInteractionMode.READONLY;
+        return this.mode === DatePickerInteractionMode.dialog;
     }
 
     /**

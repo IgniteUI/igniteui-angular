@@ -94,12 +94,12 @@ export interface IFormatOptions {
 }
 
 /**
- * This enumeration is used to configure whether the date picker has an editable input
- * or is readonly - the date is selected only through a popup calendar.
+ * This enumeration is used to configure whether the date picker has an editable input with drop down calendar
+ * or is readonly - the date is selected only through a calendar dialog.
  */
 export const enum DatePickerInteractionMode {
-    EDITABLE = 'editable',
-    READONLY = 'readonly'
+    dropdown = 'dropdown',
+    dialog = 'dialog'
 }
 
 /**
@@ -211,7 +211,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Returns the date display format of the editable `IgxDatePickerComponent`.
+     *Returns the date display format of the `IgxDatePickerComponent` in dropdown mode.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
@@ -226,7 +226,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-    *Sets the date format of the `IgxDatePickerComponent` when in edit mode.
+    *Sets the date format of the `IgxDatePickerComponent` when in editable dropdown mode.
     *```typescript
     *@ViewChild("MyDatePicker")
     *public datePicker: IgxDatePickerComponent;
@@ -239,7 +239,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Returns the date mask of the `IgxDatePickerComponent` when in edit mode.
+     *Returns the date mask of the `IgxDatePickerComponent` when in editable dropdown mode.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
@@ -355,7 +355,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Returns the formatted date when `IgxDatePickerComponent` is readonly.
+     *Returns the formatted date when `IgxDatePickerComponent` is in dialog mode.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
@@ -406,7 +406,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this.datePickerTemplateDirective) {
             return this.datePickerTemplateDirective.template;
         }
-        return (this.mode === DatePickerInteractionMode.READONLY) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
+        return (this.mode === DatePickerInteractionMode.dialog) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
     }
 
     /**
@@ -516,13 +516,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public cancelButtonLabel: string;
 
     /**
-     *An @Input property that sets whether `IgxDatePickerComponent` is readonly or editable.
+     *An @Input property that sets whether `IgxDatePickerComponent` is in dialog or drop down mode.
      *```html
-     *<igx-date-picker mode="editable"></igx-date-picker>
+     *<igx-date-picker mode="dropdown"></igx-date-picker>
      *```
      */
     @Input()
-    public mode = DatePickerInteractionMode.READONLY;
+    public mode = DatePickerInteractionMode.dialog;
 
     /**
      *An @Input property that sets whether the `IgxDatePickerComponent` date parts would spin continuously or stop when min/max is reached.
@@ -748,7 +748,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden */
     public getEditElement() {
         let inputElement;
-        if (this.mode === DatePickerInteractionMode.EDITABLE) {
+        if (this.mode === DatePickerInteractionMode.dropdown) {
             inputElement = (this.editableInput) ? this.editableInput : this.input;
         } else {
             inputElement = (this.readonlyInput) ? this.readonlyInput : this.input;
@@ -797,7 +797,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this._onClosed();
             });
 
-        if (this.mode === DatePickerInteractionMode.EDITABLE) {
+        if (this.mode === DatePickerInteractionMode.dropdown) {
             this.dateFormatParts = DatePickerUtil.parseDateFormat(this.mask, this.locale);
             if (this.mask === undefined) {
                 this.mask = DatePickerUtil.getMask(this.dateFormatParts);
@@ -881,14 +881,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             return;
         }
         switch (this.mode) {
-            case DatePickerInteractionMode.READONLY: {
+            case DatePickerInteractionMode.dialog: {
                 this.hasHeader = true;
                 const modalOverlay = (this.modalOverlaySettings !== undefined) ? this._modalOverlay : this._modalOverlaySettings;
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, modalOverlay);
                 break;
             }
-            case DatePickerInteractionMode.EDITABLE: {
+            case DatePickerInteractionMode.dropdown: {
                 this.hasHeader = false;
                 const dropDownOverlay =
                     (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
@@ -1139,7 +1139,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this.calendar = componentInstance.calendar;
-        const isVertical = (this.vertical && this.mode !== DatePickerInteractionMode.EDITABLE);
+        const isVertical = (this.vertical && this.mode === DatePickerInteractionMode.dialog);
         this.calendar.hasHeader = this.hasHeader;
         this.calendar.formatOptions = this.formatOptions;
         this.calendar.formatViews = this.formatViews;

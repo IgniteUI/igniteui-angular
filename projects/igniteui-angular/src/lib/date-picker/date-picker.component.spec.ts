@@ -963,7 +963,7 @@ export class IgxDatePickerRetemplatedComponent { }
 
 @Component({
     template: `
-        <igx-date-picker [value]="date" mode="editable" format="dd.MM.y" mask="dd-MM-yy"></igx-date-picker>
+        <igx-date-picker [value]="date" mode="dropdown" format="dd.MM.y" mask="dd-MM-yy"></igx-date-picker>
     `
 })
 export class IgxDatePickerEditableComponent {

@@ -59,9 +59,9 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 </igx-date-picker>
 ```
 
-The DatePicker has editable mode as well. Custom display format and editor mask can be configured by setting the `format` and `mask` properties.
+The DatePicker has `dropdown` mode as well. Custom display format and editor mask can be configured by setting the `format` and `mask` properties.
 ```html
-<igx-date-picker [(ngModel)]="myDateValue" mode="editable" mask="dd-MM-y">
+<igx-date-picker [(ngModel)]="myDateValue" mode="dropdown" mask="dd-MM-y">
 </igx-date-picker>
 ```
 
@@ -98,8 +98,8 @@ The DatePicker input group could be retemplated.
 | `specialDates` | `DateRangeDescriptor[]` | Configure the special dates. |
 | `value` | `Date` | Configure the datePicker value and selected date in the calendar. |
 | `vertical` | `boolean` | Configure the calendar mode - horizontal or vertical in read-only datePicker. |
-| `mode` | `DatePickerInteractionMode` | Configure the datePicker input mode - READONLY or EDITABLE. In editable mode, the datePicker input is editable, in read-only mode  - the input is not editable and popup appears to select a date.|
-| `isSpinLoop` | `boolean` | Configure whether the date parts would spin continuously or stop when min/max value is reached in editable mode.|
+| `mode` | `DatePickerInteractionMode` | Configure the datePicker mode - `dialog` or `dropdown`. In `dropdown` mode, the datePicker input is editable and drop down calendar is displayed, in a `dialog` mode  - the input is read-only and calendar dialog appears to select a date.|
+| `isSpinLoop` | `boolean` | Configure whether the date parts would spin continuously or stop when min/max value is reached in `dropdown` mode.|
 
 
 ### Outputs
@@ -108,8 +108,8 @@ The DatePicker input group could be retemplated.
 | `onSelection` | `Date` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
 | `onOpen`  | `datePicker` | Emitted when a datePicker calendar is being opened. |
 | `onClose`  | `datePicker` | Emitted when a datePicker calendar is being closed. |
-| `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in editable mode. |
-| `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in editable mode. |
+| `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in `dropdown` mode. |
+| `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in `dropdown` mode. |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
