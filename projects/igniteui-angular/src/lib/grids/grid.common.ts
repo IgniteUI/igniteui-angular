@@ -654,10 +654,6 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
             container.getBoundingClientRect().bottom <
                 target.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
 
-        // Change wrapper position from 'fixed' to 'absolute'
-        // so that it is hidden when scrolled below the parent grid body content.
-        contentElement.parentElement.style.position = 'absolute';
-
         // Set width of the row editing overlay to equal row width, otherwise it fits 100% of the grid.
         contentElement.style.width = target.clientWidth + 'px';
         this.settings.verticalStartPoint = this.settings.verticalDirection = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
