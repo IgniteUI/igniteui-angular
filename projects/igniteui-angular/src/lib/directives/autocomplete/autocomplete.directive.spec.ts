@@ -132,24 +132,24 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
         }));
         it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
-            spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete, 'close').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
+            spyOn(autocomplete.target, 'close').and.callThrough();
 
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             autocomplete.disabled = true;
             autocomplete.close();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            expect(autocomplete.close).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
         }));
         it('Should not close the dropdown when clicked on a input or the group', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
@@ -280,9 +280,8 @@ describe('IgxAutocomplete', () => {
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownList.children.length).toEqual(0);
         });
-        it('Should not open dropdown when disabled', () => {
+        it('Should not open dropdown when disabled', fakeAsync(() => {
             fixture.detectChanges();
-            spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete.target, 'open').and.callThrough();
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
 
@@ -293,9 +292,43 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListElement.children.length).toEqual(0);
-            expect(autocomplete.open).toHaveBeenCalledTimes(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
-        });
+
+            autocomplete.open();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            const altKey = true;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+        }));
         it('Should select item when drop down item is clicked', fakeAsync(() => {
             const startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
@@ -552,24 +585,19 @@ describe('IgxAutocomplete', () => {
             let startsWith = 'g';
             spyOn(autocomplete, 'onInput').and.callThrough();
             spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
             spyOn(autocomplete.target, 'close').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
 
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(1);
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             startsWith = 'ga';
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             // Keeps dropdown opened
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.close).toHaveBeenCalledTimes(0);
             expect(autocomplete.target.close).toHaveBeenCalledTimes(0);
 
@@ -593,7 +621,6 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(3);
-            expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(2);
         }));
         it('Should navigate through dropdown items with arrow up/down keys', () => {
