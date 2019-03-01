@@ -410,6 +410,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('Summaries', () => {
+        const INDENT_LEVEL_CLASS = 'igx-grid__row-indentation--level-1';
         it('should allow defining summaries for child grid and child should be sized correctly.', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -425,6 +426,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
             expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
 
+            // there should be indentation of the summaries
+            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(true);
+
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
             const elementsHeight = childElems.map(elem => elem.offsetHeight).reduce((total, height) => {
@@ -433,6 +437,17 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
             expect(elementsHeight).toEqual(gridHeight);
+
+            childGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const childGridDebugElement = childGrids[0].query(By.css('igx-hierarchical-grid'));
+            const grandChild = childGridDebugElement.query(By.css('igx-hierarchical-grid')).componentInstance;
+            const grandChildSummaryRow = grandChild.summariesRowList.first.nativeElement;
+
+            expect(grandChildSummaryRow.children.length).toEqual(1);
+            // there should be no indentation of the summaries of the leaf grid
+            expect(grandChildSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) === -1).toBe(true);
         });
 
         it('should render summaries for column inside a column group.', () => {
