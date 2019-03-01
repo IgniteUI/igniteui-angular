@@ -277,7 +277,7 @@ describe('IgxHighlight', () => {
         expect(component.textContent).toBe('');
     });
 
-    fit('Should apply correct styles on the highlight and active highlight spans', () => {
+    it('Should apply correct styles on the highlight and active highlight spans', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
