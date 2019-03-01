@@ -23,13 +23,15 @@ export class IgxExcelStyleColumnMovingComponent {
 
     get canNotMoveLeft() {
         const prevIndex = this.grid.columns.indexOf(this.column) - 1;
-        return !this.grid.columns[prevIndex] || (this.column.level !== 0 && this.grid.columns[prevIndex].level !== this.column.level) ||
-        (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning);
+        return this.column.visibleIndex === 0 ||
+            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
+            (this.column.level !== 0 && this.grid.columns[prevIndex] && this.grid.columns[prevIndex].level !== this.column.level);
     }
 
     get canNotMoveRight() {
         const nextIndex = this.grid.columns.indexOf(this.column) + 1;
-        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
+        return this.column.visibleIndex === this.grid.columns.length - 1 ||
+            (this.column.level !== 0 && this.grid.columns[nextIndex] && this.grid.columns[nextIndex].level !== this.column.level);
     }
 
     public onMoveButtonClicked(moveDirection) {
@@ -53,7 +55,7 @@ export class IgxExcelStyleColumnMovingComponent {
     private findColumn(moveDirection: number, columns: IgxColumnComponent[]) {
         let index = columns.indexOf(this.column);
         if (moveDirection === 0) {
-            while (index >= 0) {
+            while (index > 0) {
                 index--;
                 if (columns[index].level === this.column.level && columns[index].parent === this.column.parent) {
                     return columns[index];
