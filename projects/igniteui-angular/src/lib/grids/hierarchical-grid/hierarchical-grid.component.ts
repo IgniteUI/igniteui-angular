@@ -595,7 +595,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.hideOverlays();
     }
 
-    public onContainerScrol() {
+    public onContainerScroll() {
         this.hideOverlays();
     }
 
