@@ -32,9 +32,8 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                 case 'space':
                 case 'spacebar':
                 case ' ':
-                    event.preventDefault();
-                /* falls through */
                 case 'enter':
+                    event.preventDefault();
                     this.target.open();
                     return;
                 case 'arrowdown':
