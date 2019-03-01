@@ -276,6 +276,35 @@ describe('IgxHighlight', () => {
 
         expect(component.textContent).toBe('');
     });
+
+    fit('Should apply correct styles on the highlight and active highlight spans', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        component.highlightText('a');
+        component.activate(0);
+
+        const spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        const activeSpans = fix.debugElement.nativeElement.querySelectorAll('.' + component.activeHighlightClass);
+        expect(spans.length).toBe(4);
+        expect(activeSpans.length).toBe(1);
+
+        const activeSpan = activeSpans[0];
+        const activeStyle = getComputedStyle(activeSpan);
+        expect(activeStyle.background.indexOf('rgb(255, 165, 0)')).toBe(0);
+        expect(activeStyle.color).toBe('rgb(0, 0, 0)');
+        expect(activeStyle.fontWeight).toBe('400');
+
+        for (const span of spans) {
+            if (span !== activeSpan) {
+                const style = getComputedStyle(span);
+                expect(style.background.indexOf('rgb(255, 255, 0)')).toBe(0);
+                expect(style.color).toBe('rgb(0, 0, 0)');
+                expect(style.fontWeight).toBe('400');
+            }
+        }
+    });
 });
 
 @Component({
