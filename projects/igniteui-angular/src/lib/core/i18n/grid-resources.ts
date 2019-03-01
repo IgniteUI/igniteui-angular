@@ -38,6 +38,7 @@ export interface IGridResourceStrings {
     igx_grid_filter_true?: string;
     igx_grid_filter_false?: string;
     igx_grid_filter_all?: string;
+    igx_grid_filter_condition_placeholder?: string;
     igx_grid_summary_count?: string;
     igx_grid_summary_min?: string;
     igx_grid_summary_max?: string;
@@ -45,6 +46,28 @@ export interface IGridResourceStrings {
     igx_grid_summary_average?: string;
     igx_grid_summary_earliest?: string;
     igx_grid_summary_latest?: string;
+    igx_grid_excel_filter_moving_left?: string;
+    igx_grid_excel_filter_moving_right?: string;
+    igx_grid_excel_filter_moving_header?: string;
+    igx_grid_excel_filter_sorting_asc?: string;
+    igx_grid_excel_filter_sorting_desc?: string;
+    igx_grid_excel_filter_sorting_header?: string;
+    igx_grid_excel_custom_dialog_add?: string;
+    igx_grid_excel_custom_dialog_clear?: string;
+    igx_grid_excel_custom_dialog_header?: string;
+    igx_grid_excel_cancel?: string;
+    igx_grid_excel_apply?: string;
+    igx_grid_excel_search_placeholder?: string;
+    igx_grid_excel_select_all?: string;
+    igx_grid_excel_blanks?: string;
+    igx_grid_excel_hide?: string;
+    igx_grid_excel_pin?: string;
+    igx_grid_excel_unpin?: string;
+    igx_grid_excel_text_filter?: string;
+    igx_grid_excel_number_filter?: string;
+    igx_grid_excel_date_filter?: string;
+    igx_grid_excel_boolean_filter?: string;
+    igx_grid_excel_custom_filter?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -87,6 +110,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_true: 'True',
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'All',
+    igx_grid_filter_condition_placeholder: 'Select filter',
     igx_grid_summary_count: 'Count',
     igx_grid_summary_min: 'Min',
     igx_grid_summary_max: 'Max',
@@ -94,4 +118,26 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_summary_average: 'Avg',
     igx_grid_summary_earliest: 'Earliest',
     igx_grid_summary_latest: 'Latest',
+    igx_grid_excel_filter_moving_left: 'left',
+    igx_grid_excel_filter_moving_right: 'right',
+    igx_grid_excel_filter_moving_header: 'column moving',
+    igx_grid_excel_filter_sorting_asc: 'ascending',
+    igx_grid_excel_filter_sorting_desc: 'descending',
+    igx_grid_excel_filter_sorting_header: 'sorting',
+    igx_grid_excel_custom_dialog_add: 'add filter',
+    igx_grid_excel_custom_dialog_clear: 'clear filter',
+    igx_grid_excel_custom_dialog_header: 'Custom auto-filter on column: ',
+    igx_grid_excel_cancel: 'cancel',
+    igx_grid_excel_apply: 'apply',
+    igx_grid_excel_search_placeholder: 'Search',
+    igx_grid_excel_select_all: 'Select All',
+    igx_grid_excel_blanks: '(Blanks)',
+    igx_grid_excel_hide: 'Hide column',
+    igx_grid_excel_pin: 'Pin column',
+    igx_grid_excel_unpin: 'Unpin column',
+    igx_grid_excel_text_filter: 'Text filter',
+    igx_grid_excel_number_filter: 'Number filter',
+    igx_grid_excel_date_filter: 'Date filter',
+    igx_grid_excel_boolean_filter: 'Boolean filter',
+    igx_grid_excel_custom_filter: 'Custom filter...'
 };

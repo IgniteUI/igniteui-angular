@@ -1,6 +1,9 @@
 import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
+/**
+ * Prevents scrolling while the overlay content is shown.
+ */
 export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
     private _document: Document;

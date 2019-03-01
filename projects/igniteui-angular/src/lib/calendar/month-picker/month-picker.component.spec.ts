@@ -3,9 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxMonthPickerComponent, IgxMonthPickerModule } from './month-picker.component';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxMonthPickerComponent } from './month-picker.component';
+import { IgxCalendarModule } from '../calendar.module';
 
 describe('IgxMonthPicker', () => {
     configureTestSuite();
@@ -13,7 +14,7 @@ describe('IgxMonthPicker', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [IgxMonthPickerSampleComponent],
-            imports: [IgxMonthPickerModule, FormsModule, NoopAnimationsModule]
+            imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule]
         }).compileComponents();
     });
 
@@ -192,7 +193,7 @@ describe('IgxMonthPicker', () => {
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
 
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Apr');
-        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
     });
 
     it('should navigate to the previous/next year.', () => {
@@ -258,6 +259,20 @@ describe('IgxMonthPicker', () => {
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
+
+        yearBtn.nativeElement.focus();
+
+        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowRight');
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2022);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
+
+        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowLeft');
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
     });
 
     it('should open years view, navigate through and select an year via KB.', () => {
@@ -307,7 +322,7 @@ describe('IgxMonthPicker', () => {
         const monthPicker = fixture.componentInstance.monthPicker;
 
         const months = dom.queryAll(By.css('.igx-calendar__month'));
-        let currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+        const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
 
         expect(months.length).toEqual(11);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');
@@ -315,30 +330,25 @@ describe('IgxMonthPicker', () => {
         UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
         fixture.detectChanges();
 
-        currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-        expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jan');
+        expect(document.activeElement.textContent.trim()).toMatch('Jan');
 
         UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'End');
         fixture.detectChanges();
 
-        currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-        expect(currentMonth.nativeElement.textContent.trim()).toMatch('Dec');
+        expect(document.activeElement.textContent.trim()).toMatch('Dec');
 
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowLeft');
+        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
         fixture.detectChanges();
 
-        currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowUp');
+        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
         fixture.detectChanges();
 
-        currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'ArrowRight');
+        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
         fixture.detectChanges();
 
-        currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-        expect(currentMonth.nativeElement.textContent.trim()).toMatch('Sep');
+        expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Enter');
+        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getMonth()).toEqual(8);

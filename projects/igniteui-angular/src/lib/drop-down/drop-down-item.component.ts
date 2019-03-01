@@ -16,7 +16,7 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.tabindex')
     get setTabIndex() {
@@ -29,7 +29,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostListener('click', ['$event'])
     clicked(event) {

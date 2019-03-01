@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group';
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { IgxIconModule } from '../../icon';
-import { ConnectedPositioningStrategy, VerticalAlignment } from '../../services';
+import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
@@ -132,24 +132,24 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
         }));
         it('Should close the dropdown when disabled dynamically', fakeAsync(() => {
-            spyOn(autocomplete, 'open').and.callThrough();
-            spyOn(autocomplete, 'close').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
+            spyOn(autocomplete.target, 'close').and.callThrough();
 
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             autocomplete.disabled = true;
             autocomplete.close();
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            expect(autocomplete.close).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
         }));
         it('Should not close the dropdown when clicked on a input or the group', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
@@ -280,9 +280,8 @@ describe('IgxAutocomplete', () => {
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownList.children.length).toEqual(0);
         });
-        it('Should not open dropdown when disabled', () => {
+        it('Should not open dropdown when disabled', fakeAsync(() => {
             fixture.detectChanges();
-            spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete.target, 'open').and.callThrough();
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
 
@@ -293,9 +292,43 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             expect(dropdownListElement.children.length).toEqual(0);
-            expect(autocomplete.open).toHaveBeenCalledTimes(0);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
-        });
+
+            autocomplete.open();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            const altKey = true;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true, altKey);
+            tick();
+            fixture.detectChanges();
+            expect(dropDown.collapsed).toBeTruthy();
+            expect(dropdownListElement.children.length).toEqual(0);
+            expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
+        }));
         it('Should select item when drop down item is clicked', fakeAsync(() => {
             const startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
@@ -552,24 +585,19 @@ describe('IgxAutocomplete', () => {
             let startsWith = 'g';
             spyOn(autocomplete, 'onInput').and.callThrough();
             spyOn(autocomplete, 'handleKeyDown').and.callThrough();
-            spyOn(autocomplete, 'open').and.callThrough();
             spyOn(autocomplete, 'close').and.callThrough();
-            spyOn(autocomplete.target, 'open').and.callThrough();
             spyOn(autocomplete.target, 'close').and.callThrough();
+            spyOn(autocomplete.target, 'open').and.callThrough();
 
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(1);
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             startsWith = 'ga';
             UIInteractions.sendInput(input, startsWith, fixture);
             fixture.detectChanges();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             // Keeps dropdown opened
-            expect(autocomplete.open).toHaveBeenCalledTimes(1);
-            expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.close).toHaveBeenCalledTimes(0);
             expect(autocomplete.target.close).toHaveBeenCalledTimes(0);
 
@@ -593,7 +621,6 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             tick();
             expect(autocomplete.onInput).toHaveBeenCalledTimes(3);
-            expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(2);
         }));
         it('Should navigate through dropdown items with arrow up/down keys', () => {
@@ -662,7 +689,7 @@ describe('IgxAutocomplete', () => {
         }));
     });
     describe('Positioning settings tests', () => {
-        it('Panel settings', fakeAsync(() => {
+        it('Panel settings - direction and startPoint: top', fakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.componentInstance.settings = {
                 positionStrategy: new ConnectedPositioningStrategy({
@@ -687,6 +714,34 @@ describe('IgxAutocomplete', () => {
             const gRect = group.element.nativeElement.getBoundingClientRect();
             expect(ddRect.bottom).toEqual(gRect.top);
             expect(ddRect.left).toEqual(gRect.left);
+        }));
+
+        it('Panel settings - direction: left; StartPoint: right', fakeAsync(() => {
+            fixture = TestBed.createComponent(AutocompleteComponent);
+            fixture.componentInstance.settings = {
+                positionStrategy: new ConnectedPositioningStrategy({
+                    closeAnimation: null,
+                    openAnimation: null,
+                    horizontalDirection: HorizontalAlignment.Left,
+                    horizontalStartPoint: HorizontalAlignment.Right
+                })
+            };
+            fixture.detectChanges();
+            autocomplete = fixture.componentInstance.autocomplete;
+            group = fixture.componentInstance.group;
+            input = fixture.componentInstance.input;
+            dropDown = fixture.componentInstance.dropDown;
+            input.nativeElement.click();
+
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            const ddRect = dropdownListElement.nativeElement.getBoundingClientRect();
+            const gRect = group.element.nativeElement.getBoundingClientRect();
+            expect(ddRect.left).toEqual(gRect.left);
+            expect(ddRect.right).toEqual(gRect.right);
+            expect(ddRect.width).toEqual(gRect.width);
         }));
     });
     describe('Other elements integration tests', () => {

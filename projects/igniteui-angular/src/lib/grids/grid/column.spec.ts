@@ -8,6 +8,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../../test-utils/grid-samples.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();
@@ -25,7 +26,7 @@ describe('IgxGrid - Column properties', () => {
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
         })
             .compileComponents();
     }));
@@ -226,7 +227,7 @@ describe('IgxGrid - Column properties', () => {
         }, 100);
     }));
 
-    it('column width should be adjusted after a column has been hidden', async() => {
+    it('column width should be adjusted after a column has been hidden', async () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
@@ -267,6 +268,37 @@ describe('IgxGrid - Column properties', () => {
 
         expect(cell.nativeElement.querySelector('.customEditorTemplate')).toBeDefined();
 
+    });
+
+    it('should apply column\'s formatter programmatically', () => {
+        const expectedVal = ['Johny', 'Sally', 'Tim'];
+        const expectedValToLower = ['johny', 'sally', 'tim'];
+        const fix = TestBed.createComponent(ColumnsFromIterableComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const col = grid.columns[1];
+        expect(col.formatter).toBeNull();
+        const rowCount = grid.rowList.length;
+        for (let i = 0; i < rowCount; i++) {
+            // Check the display value
+            expect(grid.getCellByColumn(i, 'Name').nativeElement.textContent).toBe(expectedVal[i]);
+            // Check the cell's value is not changed
+            expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
+        }
+
+        // Apply formatter to the last column
+        col.formatter = (val: string) => {
+            return val.toLowerCase();
+        };
+        expect(col.formatter).toBeTruthy();
+        expect(col.formatter).toBeDefined();
+        for (let i = 0; i < rowCount; i++) {
+            // Check the cell's formatter value(display value)
+            expect(grid.getCellByColumn(i, 'Name').nativeElement.textContent).toBe(expectedValToLower[i]);
+            // Check the cell's value is not changed
+            expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
+        }
     });
 });
 
