@@ -172,15 +172,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
             UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
-            await wait();
+            await wait(250);
             fixture.detectChanges();
 
-            const resizer = headers[0].parent.nativeElement.children[2].children[0];
+            const resizer = fixture.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            await wait();
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-            await wait();
             fixture.detectChanges();
 
             expect(grid.columns[0].width).toEqual('250px');
