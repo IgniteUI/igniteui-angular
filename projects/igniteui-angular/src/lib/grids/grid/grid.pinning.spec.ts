@@ -594,7 +594,7 @@ describe('IgxGrid - Column Pinning ', () => {
             expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
         }));
 
-        fit('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
+        it('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
             const fix = TestBed.createComponent(GridInitialPinningComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
