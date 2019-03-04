@@ -654,6 +654,8 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
             container.getBoundingClientRect().bottom <
                 target.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
 
+        // Set width of the row editing overlay to equal row width, otherwise it fits 100% of the grid.
+        contentElement.style.width = target.clientWidth + 'px';
         this.settings.verticalStartPoint = this.settings.verticalDirection = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
         this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
 
