@@ -111,9 +111,9 @@ const theme = themeleon(__dirname, function (t) {
             trimType: (value) => {
                 return value.substring(0, 3);
             },
-            baseURl: () => {
-                const config = getConfigData(process.env);
-                return config ? config.url : '';
+            baseURl: (prop, lang) => {
+                const config = getConfigData(process.env, lang);
+                return config ? config[prop] : '';
             },
             gaID: () => {
                 const config = getConfigData(process.env);
@@ -122,6 +122,9 @@ const theme = themeleon(__dirname, function (t) {
             versionsUrl: () => {
                 const config = getConfigData(process.env);
                 return config ? config.versions : '';
+            },
+            getLang: () => {
+                return process.env.SASSDOC_LANG;
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
@@ -288,12 +291,13 @@ module.exports = function (dest, ctx) {
     return theme.apply(this, arguments);
 };
 
-function getConfigData(envs) {
+function getConfigData(envs, templateLang) {
     let {
         NODE_ENV: env,
-        SASSDOC_LANG: lang
+        SASSDOC_LANG: settingsLang
     } = envs;
 
+    const lang = templateLang && !templateLang.name ? templateLang : settingsLang;
     if (!env || !lang) {
         return;
     }
