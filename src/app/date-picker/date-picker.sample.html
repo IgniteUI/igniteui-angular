@@ -59,7 +59,7 @@
                 <igx-date-picker #editableDatePicker mode="dropdown" [weekStart]="1" [(ngModel)]="date1"
                     [isSpinLoop]="false">
                 </igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect($event)">Deselect date</button>
+                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">Deselect date</button>
             </div>
         </article>
     </section>

@@ -33,7 +33,7 @@ import {
 } from './time-picker.directives';
 import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimePickerInteractionMode } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
@@ -46,6 +46,7 @@ import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes'
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS } from '../core/utils';
+import { InteractionMode } from '../core/enums';
 
 let NEXT_ID = 0;
 
@@ -125,7 +126,7 @@ export class IgxTimePickerComponent implements
             this._onChangeCallback(value);
 
             const dispVal = this._formatTime(this.value, this.format);
-            if (this.mode === TimePickerInteractionMode.dropdown && this._displayValue !== dispVal) {
+            if (this.mode === InteractionMode.DROPDOWN && this._displayValue !== dispVal) {
                 this.displayValue = dispVal;
             }
 
@@ -210,12 +211,12 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     set cancelButtonLabel(value: string) {
-         this._cancelButtonLabel = value;
+        this._cancelButtonLabel = value;
     }
 
-     /**
-     * An accessor that returns the label of cancel button.
-    */
+    /**
+    * An accessor that returns the label of cancel button.
+   */
     get cancelButtonLabel(): string {
         return this._cancelButtonLabel || this.resourceStrings.igx_time_picker_cancel;
     }
@@ -317,14 +318,14 @@ export class IgxTimePickerComponent implements
      * a dialog picker or dropdown with editable masked input.
      * Deafult is dialog picker.
      *```html
-     *public mode = TimePickerInteractionMode.dropdown;
+     *public mode = InteractionMode.DROPDOWN;
      *  //..
      *<igx-time-picker [mode]="mode"></igx-time-picker>
      *```
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public mode = TimePickerInteractionMode.dialog;
+    public mode = InteractionMode.DIALOG;
 
     /**
      *@hidden
@@ -491,10 +492,6 @@ export class IgxTimePickerComponent implements
      * @hidden
     */
     public inputFormat = new TimeInputFormatPipe(this);
-    /**
-     * @hidden
-    */
-    public interactMode = TimePickerInteractionMode;
 
     /**
      * @hidden
@@ -640,7 +637,7 @@ export class IgxTimePickerComponent implements
         if (this.timePickerTemplateDirective) {
             return this.timePickerTemplateDirective.template;
         }
-        return this.mode === TimePickerInteractionMode.dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
+        return this.mode === InteractionMode.DIALOG ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
     }
 
     /**
@@ -668,7 +665,7 @@ export class IgxTimePickerComponent implements
                     this._input.nativeElement.focus();
                 }
 
-                if (this.mode === TimePickerInteractionMode.dropdown) {
+                if (this.mode === InteractionMode.DROPDOWN) {
                     this._onDropDownClosed();
                 }
 
@@ -699,7 +696,7 @@ export class IgxTimePickerComponent implements
             verticalStartPoint: VerticalAlignment.Bottom
         };
 
-         this._dropDownOverlaySettings = {
+        this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
             scrollStrategy: new NoOpScrollStrategy(),
@@ -713,7 +710,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === TimePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             fromEvent(this.input.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
@@ -1032,7 +1029,7 @@ export class IgxTimePickerComponent implements
     }
 
     private _updateEditableInput(): void {
-        if (this.mode === TimePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             this.displayValue = this._formatTime(this._getSelectedTime(), this.format);
         }
     }
@@ -1115,7 +1112,7 @@ export class IgxTimePickerComponent implements
 
         this.value = value;
 
-        if (this.mode === TimePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             this.displayValue = this._formatTime(this.value, this.format);
         }
     }
@@ -1141,7 +1138,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.mode === TimePickerInteractionMode.dialog) {
+        if (this.mode === InteractionMode.DIALOG) {
             this.collapsed = false;
             if (this.outlet) {
                 this._dialogOverlaySettings.outlet = this.outlet;
@@ -1150,7 +1147,7 @@ export class IgxTimePickerComponent implements
             this.overlayService.show(this._overlayId);
         }
 
-        if (this.mode === TimePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             if (this.collapsed) {
                 this.collapsed = false;
                 if (this.outlet) {
@@ -1516,7 +1513,7 @@ export class IgxTimePickerComponent implements
                 };
                 this.onValidationFailed.emit(args);
             }
-        // handle cases where the user deletes the display value (when pressing backspace or delete)
+            // handle cases where the user deletes the display value (when pressing backspace or delete)
         } else if (!this.value || !val || val === this.parseMask(false)) {
             this.isNotEmpty = false;
 

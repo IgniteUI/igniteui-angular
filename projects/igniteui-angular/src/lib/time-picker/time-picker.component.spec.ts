@@ -8,7 +8,7 @@ import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.compo
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { TimePickerInteractionMode } from './time-picker.common';
+import { InteractionMode } from '../core/enums';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -1382,7 +1382,7 @@ describe('IgxTimePicker', () => {
 
             expect(dom.query(By.css('.igx-time-picker--dropdown'))).toBeDefined();
 
-            fixture.componentInstance.timePicker.mode = TimePickerInteractionMode.dialog;
+            fixture.componentInstance.timePicker.mode = InteractionMode.DIALOG;
             fixture.detectChanges();
 
             UIInteractions.clickElement(iconTime);
@@ -1525,7 +1525,7 @@ export class IgxTimePickerRetemplatedComponent { }
 
 @Component({
     template: `
-    <igx-time-picker [mode]="mode.dropdown"
+    <igx-time-picker mode="dropdown"
                      [isSpinLoop]="isSpinLoop"
                      [(ngModel)]="date"
                      [itemsDelta]="itemsDelta"
@@ -1538,7 +1538,6 @@ export class IgxTimePickerDropDownComponent {
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
-    mode = TimePickerInteractionMode;
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
@@ -1554,7 +1553,7 @@ export class IgxTimePickerDropDownComponent {
 })
 export class IgxTimePickerDropDownSingleHourComponent {
     customDate = new Date(2018, 10, 27, 4, 5);
-    mode = TimePickerInteractionMode.dropdown;
+    mode = InteractionMode.DROPDOWN;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
@@ -1567,7 +1566,7 @@ export class IgxTimePickerDropDownSingleHourComponent {
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
-    mode = TimePickerInteractionMode.dropdown;
+    mode = InteractionMode.DROPDOWN;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }

@@ -98,7 +98,7 @@ The DatePicker input group could be retemplated.
 | `specialDates` | `DateRangeDescriptor[]` | Configure the special dates. |
 | `value` | `Date` | Configure the datePicker value and selected date in the calendar. |
 | `vertical` | `boolean` | Configure the calendar mode - horizontal or vertical in read-only datePicker. |
-| `mode` | `DatePickerInteractionMode` | Configure the datePicker mode - `dialog` or `dropdown`. In `dropdown` mode, the datePicker input is editable and drop down calendar is displayed, in a `dialog` mode  - the input is read-only and calendar dialog appears to select a date.|
+| `mode` | `InteractionMode` | Configure the datePicker mode - `dialog` or `dropdown`. In `dropdown` mode, the datePicker input is editable and drop down calendar is displayed, in a `dialog` mode  - the input is read-only and calendar dialog appears to select a date.|
 | `isSpinLoop` | `boolean` | Configure whether the date parts would spin continuously or stop when min/max value is reached in `dropdown` mode.|
 
 

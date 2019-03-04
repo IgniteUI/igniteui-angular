@@ -1,6 +1,6 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { DatePickerInteractionMode } from './date-picker.component';
 import { IgxCalendarComponent } from '../calendar';
+import { InteractionMode } from '../core/enums';
 
 /**
  * @hidden
@@ -15,7 +15,7 @@ export class IgxCalendarContainerComponent {
     public calendar: IgxCalendarComponent;
 
     @Input()
-    public mode: DatePickerInteractionMode = DatePickerInteractionMode.dialog;
+    public mode: InteractionMode = InteractionMode.DIALOG;
 
     @Input()
     public vertical = false;
@@ -37,12 +37,12 @@ export class IgxCalendarContainerComponent {
 
     @HostBinding('class.igx-date-picker--dropdown')
     get dropdownCSS(): boolean {
-        return this.mode === DatePickerInteractionMode.dropdown;
+        return this.mode === InteractionMode.DROPDOWN;
     }
 
     @HostBinding('class.igx-date-picker--vertical')
     get verticalCSS(): boolean {
-        return this.vertical && this.mode === DatePickerInteractionMode.dialog;
+        return this.vertical && this.mode === InteractionMode.DIALOG;
     }
 
     @HostListener('keydown.esc', ['$event'])
@@ -58,7 +58,7 @@ export class IgxCalendarContainerComponent {
      * @hidden
     */
     public get isReadonly() {
-        return this.mode === DatePickerInteractionMode.dialog;
+        return this.mode === InteractionMode.DIALOG;
     }
 
     /**

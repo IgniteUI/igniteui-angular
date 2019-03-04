@@ -53,6 +53,7 @@ import { IDatePicker } from './date-picker.common';
 import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
+import { InteractionMode } from '../core/enums';
 
 let NEXT_ID = 0;
 
@@ -91,15 +92,6 @@ export interface IFormatOptions {
     month?: string;
     weekday?: string;
     year?: string;
-}
-
-/**
- * This enumeration is used to configure whether the date picker has an editable input with drop down calendar
- * or is readonly - the date is selected only through a calendar dialog.
- */
-export const enum DatePickerInteractionMode {
-    dropdown = 'dropdown',
-    dialog = 'dialog'
 }
 
 /**
@@ -406,7 +398,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this.datePickerTemplateDirective) {
             return this.datePickerTemplateDirective.template;
         }
-        return (this.mode === DatePickerInteractionMode.dialog) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
+        return (this.mode === InteractionMode.DIALOG) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
     }
 
     /**
@@ -522,7 +514,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *```
      */
     @Input()
-    public mode = DatePickerInteractionMode.dialog;
+    public mode = InteractionMode.DIALOG;
 
     /**
      *An @Input property that sets whether the `IgxDatePickerComponent` date parts would spin continuously or stop when min/max is reached.
@@ -748,7 +740,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden */
     public getEditElement() {
         let inputElement;
-        if (this.mode === DatePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             inputElement = (this.editableInput) ? this.editableInput : this.input;
         } else {
             inputElement = (this.readonlyInput) ? this.readonlyInput : this.input;
@@ -797,7 +789,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this._onClosed();
             });
 
-        if (this.mode === DatePickerInteractionMode.dropdown) {
+        if (this.mode === InteractionMode.DROPDOWN) {
             this.dateFormatParts = DatePickerUtil.parseDateFormat(this.mask, this.locale);
             if (this.mask === undefined) {
                 this.mask = DatePickerUtil.getMask(this.dateFormatParts);
@@ -881,14 +873,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             return;
         }
         switch (this.mode) {
-            case DatePickerInteractionMode.dialog: {
+            case InteractionMode.DIALOG: {
                 this.hasHeader = true;
                 const modalOverlay = (this.modalOverlaySettings !== undefined) ? this._modalOverlay : this._modalOverlaySettings;
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, modalOverlay);
                 break;
             }
-            case DatePickerInteractionMode.dropdown: {
+            case InteractionMode.DROPDOWN: {
                 this.hasHeader = false;
                 const dropDownOverlay =
                     (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
@@ -1139,7 +1131,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
         this.calendar = componentInstance.calendar;
-        const isVertical = (this.vertical && this.mode === DatePickerInteractionMode.dialog);
+        const isVertical = (this.vertical && this.mode === InteractionMode.DIALOG);
         this.calendar.hasHeader = this.hasHeader;
         this.calendar.formatOptions = this.formatOptions;
         this.calendar.formatViews = this.formatViews;
