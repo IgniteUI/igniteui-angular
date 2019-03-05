@@ -1080,7 +1080,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        fit('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
+        it('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
