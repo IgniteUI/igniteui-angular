@@ -70,6 +70,14 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
         this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
+            if (rowIsland.key === 'Orders') {
+                let index = 0;
+                data['value'].forEach(item => {
+                    item.OrderDate = new Date(item.OrderDate);
+                    item.MyID = index;
+                    index++;
+                });
+            }
             event.grid.data = data['value'];
             event.grid.cdr.detectChanges();
         });

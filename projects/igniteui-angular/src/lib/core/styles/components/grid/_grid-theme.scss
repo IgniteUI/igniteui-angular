@@ -1717,6 +1717,11 @@
     %igx-grid__row-editing-outlet {
         z-index: 10000;
         position: absolute;
+
+        %overlay-wrapper {
+            /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
+            position: absolute;
+        }
     }
 
     %igx-grid__filtering-cell {
