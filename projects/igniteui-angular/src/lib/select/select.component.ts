@@ -85,9 +85,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _overlayDefaults: OverlaySettings;
 
     private _value: any;
+
     /**
-     * An @Input property that sets the input value.
+     * An @Input property that gets/sets the component value.
      *
+     * ```typescript
+     * // get
+     * let selectValue = this.select.value;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.select.value = 'London';
+     * ```
      */
     @Input()
     public get value(): any {
