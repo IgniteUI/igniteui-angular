@@ -356,6 +356,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isColumnRightVisible(columnIndex: number): boolean {
+        // If displayContainerWidth is 0 than there is no horizontal scrollbar, which means that all columns are fully visible.
+        if (this.filteringService.displayContainerWidth === 0) {
+            return true;
+        }
         let currentColumnRight = 0;
         for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
             currentColumnRight += parseInt(this.filteringService.unpinnedColumns[index].width, 10);
@@ -368,6 +372,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isColumnLeftVisible(columnIndex: number): boolean {
+        // If displayContainerWidth is 0 than there is no horizontal scrollbar, which means that all columns are fully visible.
+        if (this.filteringService.displayContainerWidth === 0) {
+            return true;
+        }
         let currentColumnLeft = 0;
         for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
             if (this.filteringService.unpinnedColumns[index] === this.filteringService.unpinnedFilterableColumns[columnIndex]) {
