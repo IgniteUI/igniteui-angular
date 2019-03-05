@@ -4856,14 +4856,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
             args.view.detectChanges();
             const row = this.getRowByIndex(args.context.index);
-            if (row) {
+            if (row && row instanceof IgxRowComponent) {
                 row.cells.forEach((c) => {
                     c.highlightText(
                         this.lastSearchInfo.searchText,
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
-}
+            }
         }
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;
