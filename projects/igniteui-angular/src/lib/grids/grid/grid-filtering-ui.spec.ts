@@ -9,7 +9,11 @@ import { IgxGridModule } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand, IgxStringFilteringOperand, IgxFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
