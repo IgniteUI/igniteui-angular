@@ -21,7 +21,7 @@ describe('IgxGrid - Grid Paging', () => {
                 PagingAndEditingComponent,
                 GridIDNameJobTitleComponent
             ],
-            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
