@@ -200,6 +200,27 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
+        it('should close dropdown on clicking selected item', fakeAsync(() => {
+            spyOn(select.onSelection, 'emit');
+            select.items[1].selected = true;
+            select.open();
+            fixture.detectChanges();
+            const selectedItemEl = selectList.children[1];
+            expect(select.collapsed).toBeFalsy();
+            selectedItemEl.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.open();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            selectedItemEl.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+        }));
         it('should toggle dropdown on toggle button click', fakeAsync(() => {
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(select.collapsed).toBeTruthy();
@@ -910,6 +931,29 @@ describe('igxSelect', () => {
             expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
             expect(select.onSelection.emit).toHaveBeenCalledWith(args);
         });
+
+        it('should not emit onSelection when selection does not change', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            select.selectItem(item);
+            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not select header items passed through selectItem method', () => {
+            const item = select.items[5];
+            spyOn(select.onSelection, 'emit');
+            expect(select.selectedItem).toBeFalsy();
+            item.isHeader = true;
+            select.selectItem(item);
+            expect(select.selectedItem).toBeFalsy();
+            expect(select.onSelection.emit).not.toHaveBeenCalled();
+        });
     });
     describe('Grouped items tests: ', () => {
         beforeEach(async(() => {
@@ -1594,6 +1638,22 @@ describe('igxSelect', () => {
             verifyFocusedItem(filteredItemsInxs[1]);
             tick(500);
             fixture.detectChanges();
+        }));
+
+        it('Should navigate through items when dropdown is closed and initial value is passed', fakeAsync(() => {
+            select.close();
+            tick();
+            fixture.detectChanges();
+            spyOn(select, 'navigateNext').and.callThrough();
+            const choices = select.children.toArray();
+            select.value = choices[5].value;
+            tick();
+            fixture.detectChanges();
+            select.input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            tick();
+            fixture.detectChanges();
+            expect(select.navigateNext).toHaveBeenCalled();
+            expect(select.value).toEqual(choices[6].value);
         }));
     });
     describe('Positioning tests: ', () => {

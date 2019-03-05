@@ -1,9 +1,8 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
-    OnInit, ViewChild, ViewChildren, QueryList, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, TemplateRef } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -468,7 +467,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
 
 describe('IgxHierarchicalGrid Remote Scenarios', () => {
     configureTestSuite();
-    let fixture;
+    let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
     beforeEach(async(() => {
@@ -508,6 +507,24 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
         expect(colHeaders.length).toBeGreaterThan(0);
         expect(loadingIndicator).toBeNull();
     }));
+
+    it('should render disabled collapse all icon for child grid even when it has no data but with child row island', () => {
+        const hierarchicalGrid = fixture.componentInstance.instance;
+
+        fixture.componentInstance.bind();
+        fixture.detectChanges();
+
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        const gridHead = fixture.debugElement.queryAll(By.css(THEAD_CLASS))[1];
+        const headerExpanderElem = gridHead.queryAll(By.css('.igx-grid__hierarchical-expander--header'))[0];
+        const icon = headerExpanderElem.query(By.css('igx-icon')).componentInstance;
+        const iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
+        expect(iconTxt).toBe('unfold_less');
+        expect(icon.getActive).toBe(false);
+    });
 });
 
 @Component({
@@ -581,32 +598,40 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     template: `
         <igx-hierarchical-grid [data]="data" (onDataPreLoad)="dataLoading($event)"
          [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="height" [isLoading]="true" #rowIsland1>
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1>
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ProductName"></igx-column>
+                <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2>
+                </igx-row-island>
             </igx-row-island>
         </igx-hierarchical-grid>
     `
 })
 export class IgxHGridRemoteOnDemandComponent {
     public data;
+
     @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent })
     public instance: IgxHierarchicalGridComponent;
+
     @ViewChild('customTemplate', { read: TemplateRef })
     public customTemaplate: TemplateRef<any>;
+
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent })
+    public rowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent })
+    public rowIsland2: IgxRowIslandComponent;
+
     constructor(public cdr: ChangeDetectorRef) { }
 
     generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
-        let children;
         for (let i = 0; i < count; i++) {
             const rowID = parendID ? parendID + i : i.toString();
-            if (level > 0 ) {
-               // Have child grids for row with even id less rows by not multiplying by 2
-               children = this.generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
-            }
             prods.push({
                 ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i, childData: children, childData2: children });
+                'Col2': i, 'Col3': i });
         }
         return prods;
     }

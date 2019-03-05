@@ -392,7 +392,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._transformedDate = value;
     }
 
-    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService, public element: ElementRef,
         private _cdr: ChangeDetectorRef, private _moduleRef: NgModuleRef<any>) { }
 
     /**
@@ -707,6 +707,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
 
+    /**
+    * @hidden
+    */
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event: KeyboardEvent) {
@@ -1008,11 +1011,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     * @hidden
     */
     public onWheel(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const sign = (event.deltaY > 0) ? -1 : 1;
-        this.spinValue(event.target.value, sign, event.type);
-
+        if (this._isInEditMode) {
+            event.preventDefault();
+            event.stopPropagation();
+            const sign = (event.deltaY > 0) ? -1 : 1;
+            this.spinValue(event.target.value, sign, event.type);
+        }
     }
 
     /**
