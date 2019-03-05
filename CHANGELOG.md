@@ -113,9 +113,9 @@ All notable changes for each version of this project will be documented in this 
     - `IPositionStrategy` exposes new method `clone` that clones the strategy instance with its settings.
 
 - `igx-date-picker`
-    - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:
+    - **Feature** Added `dropdown` `mode` to enable the input field value editing and spinning of the date parts as well as displaying a drop down calendar to select a date. Example:
     ```html
-      <igx-date-picker #editableDatePicker1 mode="editable" [value]="date" format="dd.MM.y" mask="M/d/y">
+      <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="date" format="dd.MM.y" mask="M/d/y">
       </igx-date-picker>
      ```
  **Components roundness**
