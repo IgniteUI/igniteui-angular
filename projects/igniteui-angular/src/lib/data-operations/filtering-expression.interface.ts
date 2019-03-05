@@ -1,4 +1,4 @@
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation } from './filtering-condition';
 
 export enum FilteringLogic {
     And,
