@@ -1,9 +1,11 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgxCheckboxComponent, IgxGridComponent, IgxGridCellComponent } from '../../public_api';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { take } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxGridComponent } from '../grids/grid/grid.component';
+import { IgxGridCellComponent } from '../grids/cell.component';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const DEBOUNCETIME = 50;

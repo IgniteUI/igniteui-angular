@@ -484,7 +484,7 @@ $var3: igx-comp-theme(
     declarations: components,
     imports: [
         IgxIconModule.forRoot(),
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         IgxTreeGridModule,
         module1
     ],
@@ -507,7 +507,7 @@ export class AppModule { }`;
     declarations: components,
     imports: [
         IgxIconModule,
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         IgxTreeGridModule,
         module2
     ],
