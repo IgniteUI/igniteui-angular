@@ -143,6 +143,31 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
+    it('Should not revert cell\' value when onDoubleClick while in editMode', (async () => {
+        const fix = TestBed.createComponent(CellEditingTestComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'fullName');
+
+        expect(firstCell.nativeElement.textContent).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeFalsy();
+
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        const editCell = cellElem.query(By.css('input'));
+        expect(editCell.nativeElement.value).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeTruthy();
+
+        UIInteractions.sendInput(editCell, 'test');
+        fix.detectChanges();
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(editCell.nativeElement.value).toBe('test');
+        expect(firstCell.inEditMode).toBeTruthy();
+    }));
+
     describe('Cell Editing', () => {
         configureTestSuite();
 
