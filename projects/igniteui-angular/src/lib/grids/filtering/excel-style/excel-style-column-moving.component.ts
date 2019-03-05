@@ -30,8 +30,7 @@ export class IgxExcelStyleColumnMovingComponent {
 
     get canNotMoveRight() {
         const nextIndex = this.grid.columns.indexOf(this.column) + 1;
-        return this.column.visibleIndex === this.grid.columns.length - 1 ||
-            (this.column.level !== 0 && this.grid.columns[nextIndex] && this.grid.columns[nextIndex].level !== this.column.level);
+        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
     }
 
     public onMoveButtonClicked(moveDirection) {
