@@ -156,7 +156,7 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (this.timePicker.mode === InteractionMode.DROPDOWN) {
+        if (this.timePicker.mode === InteractionMode.DropDown) {
             this.timePicker.hideOverlay();
             return;
         }

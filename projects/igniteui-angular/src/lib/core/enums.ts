@@ -3,6 +3,6 @@
  * or is readonly - the date/time is selected only through a dialog.
  */
 export const enum InteractionMode {
-    DROPDOWN = 'dropdown',
-    DIALOG = 'dialog'
+    DropDown = 'dropdown',
+    Dialog = 'dialog'
 }

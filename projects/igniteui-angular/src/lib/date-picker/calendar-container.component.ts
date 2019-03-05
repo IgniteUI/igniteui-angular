@@ -15,7 +15,7 @@ export class IgxCalendarContainerComponent {
     public calendar: IgxCalendarComponent;
 
     @Input()
-    public mode: InteractionMode = InteractionMode.DIALOG;
+    public mode: InteractionMode = InteractionMode.Dialog;
 
     @Input()
     public vertical = false;
@@ -37,12 +37,12 @@ export class IgxCalendarContainerComponent {
 
     @HostBinding('class.igx-date-picker--dropdown')
     get dropdownCSS(): boolean {
-        return this.mode === InteractionMode.DROPDOWN;
+        return this.mode === InteractionMode.DropDown;
     }
 
     @HostBinding('class.igx-date-picker--vertical')
     get verticalCSS(): boolean {
-        return this.vertical && this.mode === InteractionMode.DIALOG;
+        return this.vertical && this.mode === InteractionMode.Dialog;
     }
 
     @HostListener('keydown.esc', ['$event'])
@@ -58,7 +58,7 @@ export class IgxCalendarContainerComponent {
      * @hidden
     */
     public get isReadonly() {
-        return this.mode === InteractionMode.DIALOG;
+        return this.mode === InteractionMode.Dialog;
     }
 
     /**

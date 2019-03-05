@@ -529,7 +529,7 @@ describe('IgxDatePicker', () => {
             expect(dropDown).toBeDefined();
         }));
 
-        it('should have correctly selected date', (() => {
+        it('should have correctly selected date - dropdown mode', (() => {
             const dom = fixture.debugElement;
             fixture.detectChanges();
 
@@ -588,7 +588,7 @@ describe('IgxDatePicker', () => {
             expect(input.nativeNode.placeholder).toBe('dd-MM-yy');
         }));
 
-        it('Should be able to deselect using the API - edit mode', () => {
+        it('Should be able to deselect using the API - dropdown mode', () => {
             const date = new Date(Date.now());
             datePicker.selectDate(date);
             fixture.detectChanges();

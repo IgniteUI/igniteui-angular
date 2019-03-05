@@ -1382,7 +1382,7 @@ describe('IgxTimePicker', () => {
 
             expect(dom.query(By.css('.igx-time-picker--dropdown'))).toBeDefined();
 
-            fixture.componentInstance.timePicker.mode = InteractionMode.DIALOG;
+            fixture.componentInstance.timePicker.mode = InteractionMode.Dialog;
             fixture.detectChanges();
 
             UIInteractions.clickElement(iconTime);
@@ -1553,7 +1553,7 @@ export class IgxTimePickerDropDownComponent {
 })
 export class IgxTimePickerDropDownSingleHourComponent {
     customDate = new Date(2018, 10, 27, 4, 5);
-    mode = InteractionMode.DROPDOWN;
+    mode = InteractionMode.DropDown;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
@@ -1566,7 +1566,7 @@ export class IgxTimePickerDropDownSingleHourComponent {
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
-    mode = InteractionMode.DROPDOWN;
+    mode = InteractionMode.DropDown;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }

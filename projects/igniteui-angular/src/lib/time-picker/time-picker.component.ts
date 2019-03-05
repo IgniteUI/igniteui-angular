@@ -126,7 +126,7 @@ export class IgxTimePickerComponent implements
             this._onChangeCallback(value);
 
             const dispVal = this._formatTime(this.value, this.format);
-            if (this.mode === InteractionMode.DROPDOWN && this._displayValue !== dispVal) {
+            if (this.mode === InteractionMode.DropDown && this._displayValue !== dispVal) {
                 this.displayValue = dispVal;
             }
 
@@ -325,7 +325,7 @@ export class IgxTimePickerComponent implements
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public mode = InteractionMode.DIALOG;
+    public mode = InteractionMode.Dialog;
 
     /**
      *@hidden
@@ -637,7 +637,7 @@ export class IgxTimePickerComponent implements
         if (this.timePickerTemplateDirective) {
             return this.timePickerTemplateDirective.template;
         }
-        return this.mode === InteractionMode.DIALOG ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
+        return this.mode === InteractionMode.Dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
     }
 
     /**
@@ -665,7 +665,7 @@ export class IgxTimePickerComponent implements
                     this._input.nativeElement.focus();
                 }
 
-                if (this.mode === InteractionMode.DROPDOWN) {
+                if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
                 }
 
@@ -710,7 +710,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DROPDOWN) {
+        if (this.mode === InteractionMode.DropDown) {
             fromEvent(this.input.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
@@ -1029,7 +1029,7 @@ export class IgxTimePickerComponent implements
     }
 
     private _updateEditableInput(): void {
-        if (this.mode === InteractionMode.DROPDOWN) {
+        if (this.mode === InteractionMode.DropDown) {
             this.displayValue = this._formatTime(this._getSelectedTime(), this.format);
         }
     }
@@ -1112,7 +1112,7 @@ export class IgxTimePickerComponent implements
 
         this.value = value;
 
-        if (this.mode === InteractionMode.DROPDOWN) {
+        if (this.mode === InteractionMode.DropDown) {
             this.displayValue = this._formatTime(this.value, this.format);
         }
     }
@@ -1138,7 +1138,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.mode === InteractionMode.DIALOG) {
+        if (this.mode === InteractionMode.Dialog) {
             this.collapsed = false;
             if (this.outlet) {
                 this._dialogOverlaySettings.outlet = this.outlet;
@@ -1147,7 +1147,7 @@ export class IgxTimePickerComponent implements
             this.overlayService.show(this._overlayId);
         }
 
-        if (this.mode === InteractionMode.DROPDOWN) {
+        if (this.mode === InteractionMode.DropDown) {
             if (this.collapsed) {
                 this.collapsed = false;
                 if (this.outlet) {

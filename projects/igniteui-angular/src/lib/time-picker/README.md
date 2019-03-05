@@ -60,7 +60,7 @@ The TimePicker input group could be retemplated.
 ```
 The TimePicker supports another interaction mode - an editable masked input and a dropdown. The user can enter or edit the time value inside the text input or select a vlaue from a dropdown, that will be applied on the text input.
 ```typescript
-mode = InteractionMode.dropdown;
+mode = InteractionMode.DropDown;
 ```
 
 ```html
