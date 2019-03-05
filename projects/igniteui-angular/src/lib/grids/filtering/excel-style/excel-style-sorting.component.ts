@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxGridBaseComponent, IgxGridComponent } from '../../grid';
+import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -31,12 +31,8 @@ export class IgxExcelStyleSortingComponent {
     constructor() {}
 
     public onSortButtonClicked(sortDirection) {
-        let isColumnGrouped;
-        if (this.grid instanceof IgxGridComponent) {
-            isColumnGrouped = (this.grid as IgxGridComponent).groupingExpressions.find(exp => exp.fieldName === this.column.field);
-        }
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
-            if (isColumnGrouped) {
+            if (this.grid.isColumnGrouped(this.column.field)) {
                 this.selectButton(sortDirection);
             } else {
                 this.grid.clearSort(this.column.field);
