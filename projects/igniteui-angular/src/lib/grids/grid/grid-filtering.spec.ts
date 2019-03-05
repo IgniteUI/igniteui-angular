@@ -24,7 +24,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
         .compileComponents();
     }));

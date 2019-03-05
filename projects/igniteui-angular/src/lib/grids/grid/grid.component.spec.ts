@@ -55,7 +55,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRemoteOnDemandComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -486,7 +486,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridFormattingComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -1054,7 +1054,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRowEditingTransactionComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -1175,7 +1175,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRowEditingWithFeaturesComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 

@@ -41,7 +41,7 @@ describe('IgxGrid - GroupBy', () => {
                 GroupByDataMoreColumnsComponent,
                 MultiColumnHeadersWithGroupingComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
