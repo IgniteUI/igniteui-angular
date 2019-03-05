@@ -244,11 +244,11 @@ export abstract class IgxDropDownBase implements IDropDownList {
             const oldItem = this._focusedItem;
             const newItem = this.items[newIndex];
             if (oldItem) {
-                oldItem.isFocused = false;
+                oldItem.focused = false;
             }
             this._focusedItem = newItem;
             this.scrollToHiddenItem(newItem);
-            this._focusedItem.isFocused = true;
+            this._focusedItem.focused = true;
         }
     }
 
