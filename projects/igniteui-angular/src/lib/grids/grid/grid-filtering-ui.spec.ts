@@ -40,7 +40,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));
@@ -1625,7 +1625,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         }).compileComponents();
     }));
 
@@ -2807,7 +2807,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));
