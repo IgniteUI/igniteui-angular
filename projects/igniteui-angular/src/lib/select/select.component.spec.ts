@@ -36,6 +36,8 @@ const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
+const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', {'key': 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -1078,7 +1080,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close dropdown on pressing ESC key', fakeAsync(() => {
+        fit('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1090,6 +1092,25 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', tabKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
         }));
         it('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
