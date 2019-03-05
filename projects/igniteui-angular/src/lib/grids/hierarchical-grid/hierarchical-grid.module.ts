@@ -37,7 +37,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridModule.forRoot()
+    IgxGridModule
   ],
   providers: [
     IgxHierarchicalSelectionAPIService

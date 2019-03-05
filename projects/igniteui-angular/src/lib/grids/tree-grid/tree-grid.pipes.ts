@@ -4,9 +4,9 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { ISortingExpression } from '../../../public_api';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent, IgxSummaryResult, IGridDataBindable } from '../grid';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 
 /**
  *@hidden
