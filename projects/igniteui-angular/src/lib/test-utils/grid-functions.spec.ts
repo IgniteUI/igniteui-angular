@@ -1,29 +1,17 @@
-import { Calendar,
-    ICalendarDate,
-    IgxGridComponent,
-    IgxColumnGroupComponent,
-    SortingDirection,
-    IgxCheckboxComponent } from '../../public_api';
+
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/grid-header.component';
 import { IgxChipComponent } from '../chips';
+import { IgxGridComponent } from '../grids/grid/grid.component';
+import { IgxColumnGroupComponent } from '../grids/column.component';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
-const SUMMARY_CLASS = '.igx-grid-summary';
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
-const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-const ITEM_CLASS = 'igx-grid-summary__item';
-const HIDDEN_ITEM_CLASS = 'igx-grid-summary__item--inactive';
-const INITIAL_SUMMARY_SIZE = 36.36;
-const COLUMN_HEADER_CLASS = '.igx-grid__th';
-const CELL_CSS_CLASS = '.igx-grid__td';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
-const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
-const DISABLED_CHIP = 'igx-chip--disabled';
-const CHIP_REMOVE_ICON = '.igx-chip__remove-icon';
-const CHIP = 'igx-chip';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
@@ -99,7 +87,7 @@ export class GridFunctions {
     }
 
     // Generate expected results for 'date' filtering conditions based on the current date
-    public static createDateFilterConditions(grid: IgxGridComponent, calendar: Calendar, today) {
+    public static createDateFilterConditions(grid: IgxGridComponent, today) {
         const expectedResults = [];
         // day + 15
         const dateItem0 = GridFunctions.generateICalendarDate(grid.data[0].ReleaseDate,
