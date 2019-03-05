@@ -1620,7 +1620,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public outletDirective: IgxOverlayOutletDirective;
+    protected _outletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    public get outletDirective() {
+        return this._outletDirective;
+    }
 
     /**
      * @hidden
@@ -2344,7 +2351,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.disableTransitions = false;
         });
-
         if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
             this.closeExcelStyleDialog();
         }
@@ -2359,7 +2365,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
-
         if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
             this.closeExcelStyleDialog();
         }
@@ -4736,7 +4741,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return arr.filter(c => !c.columnGroup);
     }
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
             return;
         }

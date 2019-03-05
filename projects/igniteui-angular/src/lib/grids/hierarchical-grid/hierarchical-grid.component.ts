@@ -34,7 +34,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
@@ -62,6 +62,7 @@ export interface HierarchicalStateRecord {
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
+    private _overlayIDs = [];
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -309,6 +310,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     ngOnInit() {
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
+        this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective) {
+                this._overlayIDs.push(event.id);
+            }
+        });
+        this.overlayService.onClosed.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            const ind = this._overlayIDs.indexOf(event.id);
+            if (ind !== -1) {
+                this._overlayIDs.splice(ind, 1);
+            }
+        });
     }
 
     /**
@@ -357,6 +369,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+    }
+
+    public get outletDirective() {
+        return this.rootGrid._outletDirective;
     }
 
     /**
@@ -594,9 +610,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
+        this.hideOverlays();
+    }
+
+    public onContainerScroll() {
+        this.hideOverlays();
     }
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
+        this.hideOverlays();
+    }
+
+    private hideOverlays() {
+        this._overlayIDs.forEach(overlayID => {
+            this.overlayService.hide(overlayID);
+            // blur in case some editor somewhere decides to move focus back
+            this.overlayService.onClosed.pipe(
+                filter(o => o.id === overlayID),
+                takeUntil(this.destroy$)).subscribe(() => {
+                    this.nativeElement.focus();
+                });
+        });
     }
 }
