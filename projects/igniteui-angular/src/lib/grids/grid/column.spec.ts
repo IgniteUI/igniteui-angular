@@ -26,7 +26,7 @@ describe('IgxGrid - Column properties', () => {
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent
             ],
-            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));

@@ -33,7 +33,7 @@ describe('IgxGrid - Column Pinning ', () => {
                 PinnedGroupsGridComponent,
                 InnerPinnedGroupsGridComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 

@@ -35,7 +35,7 @@ describe('Excel Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent
             ],
-            imports: [IgxGridModule.forRoot(), IgxTreeGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

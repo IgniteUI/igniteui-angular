@@ -79,7 +79,7 @@
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
-            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' [ngClass]="{
+            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()' [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
             }">
