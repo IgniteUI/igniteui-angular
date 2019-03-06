@@ -44,7 +44,7 @@ describe('igxExpansionPanel', () => {
                 IgxRippleModule,
                 IgxButtonModule,
                 IgxListModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         }).compileComponents();
     }));
