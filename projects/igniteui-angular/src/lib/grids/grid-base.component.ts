@@ -3860,7 +3860,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public hasVerticalSroll() {
-        if (!this._ngAfterViewInitPaassed) { return false; }
+        if (!this._ngAfterViewInitPassed) { return false; }
         const count = this.totalItemCount !== null ? this.totalItemCount :
         (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
         const isScrollable = this.verticalScrollContainer.isScrollable();
