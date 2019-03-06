@@ -28,7 +28,7 @@ describe('IgxGrid - Grid Sorting', () => {
                 GridDeclaredColumnsComponent,
                 SortByParityComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         })
         .compileComponents();
     }));
