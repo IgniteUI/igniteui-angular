@@ -1422,7 +1422,7 @@ describe('igxOverlay', () => {
 
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green;');
             const contentElement = document.createElement('div');
             contentElement.setAttribute('style', 'color:gray; position: absolute;');
             contentElement.classList.add('contentWrapper');
