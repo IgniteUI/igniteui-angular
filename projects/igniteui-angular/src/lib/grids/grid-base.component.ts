@@ -4855,8 +4855,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
             args.view.detectChanges();
-            const row = this.getRowByIndex(args.context.index);
-            if (row && row instanceof IgxRowComponent) {
+            const row = this.dataRowList.find((r) => r.index === args.context.index);
+            if (row) {
                 row.cells.forEach((c) => {
                     c.highlightText(
                         this.lastSearchInfo.searchText,
