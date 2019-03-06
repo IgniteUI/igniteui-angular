@@ -17,7 +17,7 @@ export function addResetCss(host: Tree): boolean {
     const project = config.projects[config.defaultProject] as WorkspaceProject<ProjectType.Application>;
     let addPackage;
 
-    const styleExts = ['css', 'scss', 'sass'];
+    const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
     const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));
     if (!styleExt) {
         return false;
@@ -25,8 +25,8 @@ export function addResetCss(host: Tree): boolean {
     const stylesFile = path.posix.join(project.sourceRoot, `styles.${styleExt}`);
 
     switch (styleExt) {
-        case 'sass':
-        case 'scss':
+    case 'sass':
+    case 'scss':
         let content = host.read(stylesFile).toString();
         if (content.indexOf(`~minireset.css/minireset`) === -1) {
             content = scssImport + content;
@@ -35,6 +35,8 @@ export function addResetCss(host: Tree): boolean {
         }
         break;
     case 'css':
+    case 'less':
+    case 'styl':
         if (!project.architect ||
             !project.architect.build ||
             project.projectType !== ProjectType.Application) {

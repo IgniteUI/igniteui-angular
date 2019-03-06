@@ -30,6 +30,11 @@ describe('ng-add schematics', () => {
     devDependencies: {}
   };
 
+  function resetJsonConfigs(tree: UnitTestTree) {
+    tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig));
+    tree.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
+  }
+
   beforeEach(() => {
     tree = new UnitTestTree(new EmptyTree());
     tree.create('/angular.json', JSON.stringify(ngJsonConfig));
@@ -123,7 +128,7 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     let pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(tree.readContent('src/styles.scss')).toEqual(scssImport);
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
-    tree.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
+    resetJsonConfigs(tree);
     tree.delete('src/styles.scss');
 
     tree.create('src/styles.sass', '');
@@ -131,7 +136,7 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(tree.readContent('src/styles.sass')).toEqual(scssImport);
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
-    tree.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
+    resetJsonConfigs(tree);
     tree.delete('src/styles.sass');
 
     tree.create('src/styles.css', '');
@@ -140,6 +145,26 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     expect(tree.readContent('src/styles.css')).toBe('');
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
+    resetJsonConfigs(tree);
+    tree.delete('src/styles.css');
+
+    tree.create('src/styles.less', '');
+    runner.runSchematic('ng-add', { normalizeCss: true }, tree);
+    pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(tree.readContent('src/styles.less')).toBe('');
+    expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
+    expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
+    resetJsonConfigs(tree);
+    tree.delete('src/styles.less');
+
+    tree.create('src/styles.styl', '');
+    runner.runSchematic('ng-add', { normalizeCss: true }, tree);
+    pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(tree.readContent('src/styles.styl')).toBe('');
+    expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
+    expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
+    resetJsonConfigs(tree);
+    tree.delete('src/styles.styl');
   });
 
   it('should properly add web animations', () => {
