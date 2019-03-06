@@ -259,11 +259,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         }
 
         const months = this.dates.toArray();
+        const nodeRect = node.nativeElement.getBoundingClientRect();
+
         for (let index = months.indexOf(node) - 1; index >= 0; index--) {
-            if (node.nativeElement.getBoundingClientRect().top !== months[index].nativeElement.getBoundingClientRect().top &&
-                    node.nativeElement.getBoundingClientRect().left === months[index].nativeElement.getBoundingClientRect().left) {
-                        months[index].nativeElement.focus();
-                        break;
+            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
+            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+                months[index].nativeElement.focus();
+                break;
             }
         }
     }
@@ -282,11 +284,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         }
 
         const months = this.dates.toArray();
+        const nodeRect = node.nativeElement.getBoundingClientRect();
+
         for (let index = months.indexOf(node) + 1; index < months.length; index++) {
-            if (node.nativeElement.getBoundingClientRect().top !== months[index].nativeElement.getBoundingClientRect().top &&
-                    node.nativeElement.getBoundingClientRect().left === months[index].nativeElement.getBoundingClientRect().left) {
-                        months[index].nativeElement.focus();
-                        break;
+            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
+            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+                months[index].nativeElement.focus();
+                break;
             }
         }
     }
