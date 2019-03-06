@@ -98,6 +98,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * // set
      * this.select.value = 'London';
      * ```
+     * ```html
+     * <igx-select [value]="value"></igx-select>
+     * ```
      */
     @Input()
     public get value(): any {
@@ -144,7 +147,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The default is `line`.
      * ```html
-     *<igx-select [type]="'box'">
+     *<igx-select [type]="'box'"></igx-select>
      * ```
      */
     @Input()
@@ -154,7 +157,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets what display density to be used for the input group.
      * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
      * ```html
-     *<igx-select [displayDensity]="'compact'">
+     *<igx-select [displayDensity]="'compact'"></igx-select>
      * ```
      */
     @Input()
