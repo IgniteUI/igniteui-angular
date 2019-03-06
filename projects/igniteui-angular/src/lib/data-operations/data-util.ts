@@ -71,23 +71,23 @@ export class DataUtil {
         if (state.expressions.length === 0) {
             return groupData.data;
         }
-        return this.restoreGroupsIterative(groupData, state);
+        return this.restoreGroupsIterative(groupData, state, groupsRecords);
     }
-    private static restoreGroupsIterative(groupData: IGroupByResult, state: IGroupingState): any[] {
+    private static restoreGroupsIterative(groupData: IGroupByResult,
+            state: IGroupingState, groupsRecords: any[]): any[] {
         const metadata = groupData.metadata;
         const result = [], added = [];
         let chain: any[];
-        let i = 0, j, chainIndex = 0;
+        let i = 0, j;
         let pointer: IGroupByRecord;
         let expanded: boolean;
         for (i = 0; i < metadata.length;) {
             chain = [metadata[i]];
-            chainIndex = 0;
             pointer = metadata[i].groupParent;
             // break off if the parent is already added
-            while (pointer && added[chainIndex++] !== pointer) {
+            while (pointer && added[0] !== pointer) {
                 chain.push(pointer);
-                added.pop();
+                added.shift();
                 pointer = pointer.groupParent;
             }
             for (j = chain.length - 1; j >= 0; j--) {
@@ -102,11 +102,13 @@ export class DataUtil {
                 }
             }
             added.shift();
-            j = j < 0 ? 0 : j;
+            j = Math.max(j, 0);
+            const start = chain[j].records.findIndex(r => r === groupData.data[i]);
+            const end = Math.min(metadata.length - i + start, chain[j].records.length);
             if (expanded) {
-                result.push(...chain[j].records);
+                result.push(...chain[j].records.slice(start, end));
             }
-            i += chain[j].records.length;
+            i += end - start;
         }
         return result;
     }
