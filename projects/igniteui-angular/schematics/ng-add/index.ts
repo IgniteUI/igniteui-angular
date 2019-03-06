@@ -50,7 +50,10 @@ function enablePolyfills(options: Options): Rule {
 function addNormalize(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
     if (options.normalizeCss) {
-      addNormalizeCss(tree);
+      const result = addNormalizeCss(tree);
+      if (!result) {
+        context.logger.warn(`Could not complete adding normalize styles. Those may need to be added manually.`);
+      }
     }
   };
 }
