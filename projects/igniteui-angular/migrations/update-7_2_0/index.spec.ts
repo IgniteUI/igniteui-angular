@@ -4,6 +4,9 @@ import * as path from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 // tslint:disable-next-line:no-submodule-imports
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+
+import { scssImport } from '../../schematics/ng-add/add-normalize';
 
 describe('Update 7.2.0', () => {
     let appTree: UnitTestTree;
@@ -81,6 +84,20 @@ describe('Update 7.2.0', () => {
                 </igx-drop-down-item>
             </igx-drop-down>`);
 
+        done();
+    });
+
+    it(`should add normalize-scss package and import`, done => {
+        appTree.create('/testSrc/styles.scss', '');
+        appTree.create('package.json', '{}');
+
+        const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
+        expect(tree.readContent('/testSrc/styles.scss'))
+            .toEqual(scssImport);
+        expect(JSON.parse(tree.readContent('package.json'))).toEqual({
+            dependencies: { 'normalize-scss': '^7.0.1' }
+        });
+        expect(schematicRunner.tasks).toContain(new NodePackageInstallTask().toConfiguration());
         done();
     });
 });
