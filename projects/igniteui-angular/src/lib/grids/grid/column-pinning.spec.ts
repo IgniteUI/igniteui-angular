@@ -34,7 +34,7 @@ describe('Column Pinning UI', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot(),
+                IgxGridModule,
                 IgxColumnPinningModule,
                 IgxButtonModule
             ]

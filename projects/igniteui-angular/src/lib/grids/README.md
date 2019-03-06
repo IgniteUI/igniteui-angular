@@ -24,7 +24,7 @@ import { IgxGridModule } from 'igniteui-angular/grid';
 @NgModule({
     imports: [
         ...
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         ...
     ]
 })

@@ -12,7 +12,6 @@ import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
-import { IgxNumberFilteringOperand, IgxTransactionService } from '../../../public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -22,10 +21,10 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import {
     IgxRowEditTabStopDirective
 } from '../grid.rowEdit.directive';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from '../cell.component';
-import { TransactionType, Transaction } from '../../services';
+import { TransactionType, Transaction, IgxTransactionService } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
@@ -56,7 +55,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridEmptyMessage100PercentComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -513,7 +512,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridFormattingComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -1081,7 +1080,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRowEditingTransactionComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
@@ -1202,7 +1201,7 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRowEditingWithFeaturesComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
+                    NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
         }));
 
