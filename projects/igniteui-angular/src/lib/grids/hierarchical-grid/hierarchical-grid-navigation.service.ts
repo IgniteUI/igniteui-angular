@@ -194,7 +194,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const childContainer = this.grid.nativeElement.parentNode.parentNode;
             const diff =
             childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
-            const endIsVisible = diff < 0;
+            const endIsVisible = diff <= 0;
             if (!endIsVisible) {
                 this.scrollGrid(this.grid.parent, diff, () => super.onKeydownEnd(rowIndex));
             } else {
