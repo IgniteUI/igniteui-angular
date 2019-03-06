@@ -1,17 +1,12 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
-    NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
+    Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
     AfterContentInit, HostBinding, Directive, TemplateRef
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {  ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IgxDropDownModule, IgxDropDownItemBase } from '../drop-down/index';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxDropDownItemBase} from '../drop-down/index';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -19,7 +14,6 @@ import { SelectPositioningStrategy } from './select-positioning-strategy';
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
-import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
@@ -291,12 +285,3 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 }
 
-/** @hidden */
-@NgModule({
-    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
-    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
-    providers: []
-})
-export class IgxSelectModule { }
