@@ -6,7 +6,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { IgxDropDownModule, IgxDropDownItemBase } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemBase, IgxDropDownGroupComponent } from '../drop-down/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -294,7 +294,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 /** @hidden */
 @NgModule({
     declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
-    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
+    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective,
+         IgxSelectToggleIconDirective, IgxDropDownGroupComponent],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: []
