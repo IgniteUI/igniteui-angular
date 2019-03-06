@@ -1649,22 +1649,34 @@
         position: absolute;
         cursor: pointer;
         user-select: none;
-        top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        top: calc(50% - 12px);
         left: map-get($grid-grouping-indicator-padding, 'comfortable');
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color');
         }
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        }
     }
 
+
+
     %igx-grid__group-expand-btn--cosy {
-        top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
         left: map-get($grid-grouping-indicator-padding, 'cosy');
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
+        }
     }
 
     %igx-grid__group-expand-btn--compact {
-        top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
         left: map-get($grid-grouping-indicator-padding, 'compact');
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
+        }
     }
 
     @for $i from 1 through 10 {

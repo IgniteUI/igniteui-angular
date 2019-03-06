@@ -368,6 +368,10 @@
         @extend %igx-grid__group-expand-btn !optional;
     }
 
+    @include e(group-expand-btn, $m: 'push') {
+        @extend %igx-grid__group-expand-btn--push !optional;
+    }
+
     @include e(outlet) {
         @extend %igx-grid__outlet !optional;
     }
