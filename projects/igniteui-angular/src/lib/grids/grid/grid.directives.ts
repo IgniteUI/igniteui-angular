@@ -75,9 +75,16 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             }
         }
     }
+
+    private closestParentByAttr(elem, attr) {
+        return elem.hasAttribute(attr) ?
+            elem :
+            this.closestParentByAttr(elem.parentElement, attr);
+    }
+
     private columnBelongsToGrid(column) {
         const elem = this.elementRef.nativeElement;
-        const closestGridID = elem.closest('[igxGroupAreaDrop]').getAttribute('gridId');
+        const closestGridID = this.closestParentByAttr(elem, 'igxGroupAreaDrop').getAttribute('gridId');
         if (!column) {
             return false;
         } else {

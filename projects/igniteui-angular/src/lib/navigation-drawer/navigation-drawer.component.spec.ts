@@ -8,9 +8,11 @@ import {
 
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import * as Infragistics from '../../public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxNavigationDrawerModule } from './navigation-drawer.module';
+import { IgxNavigationToggleDirective, IgxNavigationCloseDirective } from '../core/navigation/directives';
+import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
+import { IgxNavigationService } from '../core/navigation/nav.service';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
@@ -23,19 +25,19 @@ describe('Navigation Drawer', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             declarations: [
-                Infragistics.IgxNavigationCloseDirective,
-                Infragistics.IgxNavigationToggleDirective,
+                IgxNavigationCloseDirective,
+                IgxNavigationToggleDirective,
                 TestComponent,
                 TestComponentDIComponent,
                 TestComponentPin,
                 TestComponentMini
             ],
-            imports: [Infragistics.IgxNavigationDrawerModule]
+            imports: [IgxNavigationDrawerModule]
         });
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
-        widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
+        widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
@@ -48,7 +50,7 @@ describe('Navigation Drawer', () => {
             const fixture = TestBed.createComponent(TestComponent);
             fixture.detectChanges();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                IgxNavigationDrawerComponent).toBeTruthy();
             expect(fixture.componentInstance.viewChild.state).toBeNull();
         });
     }));
@@ -60,8 +62,8 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.viewChild).toBeDefined();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
-            expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
+                IgxNavigationDrawerComponent).toBeTruthy();
+            expect(fixture.componentInstance.viewChild.state instanceof IgxNavigationService)
                 .toBeTruthy();
         });
     }));
@@ -75,7 +77,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.viewChild).toBeDefined();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                IgxNavigationDrawerComponent).toBeTruthy();
             expect(() => fixture.destroy()).not.toThrow();
         });
     }));
@@ -115,7 +117,7 @@ describe('Navigation Drawer', () => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
-            const state: Infragistics.IgxNavigationService = fixture.componentInstance.viewChild.state;
+            const state: IgxNavigationService = fixture.componentInstance.viewChild.state;
             const touchManager = fixture.componentInstance.viewChild.touchManager;
 
             expect(state.get('testNav')).toBeDefined();
@@ -134,7 +136,7 @@ describe('Navigation Drawer', () => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
-            const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
+            const drawer: IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
             expect(drawer.isOpen).toBeFalsy();
 
             drawer.open();
@@ -599,18 +601,18 @@ describe('Navigation Drawer', () => {
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponent {
-     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
+     @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
 }
 
 @Component({
-    providers: [Infragistics.IgxNavigationService],
+    providers: [IgxNavigationService],
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponentDIComponent {
      public drawerMiniWidth: string | number;
      public drawerWidth: string | number;
-     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
+     @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDIComponent {

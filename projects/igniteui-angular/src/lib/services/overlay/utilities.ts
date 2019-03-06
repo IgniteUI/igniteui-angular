@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -53,16 +53,16 @@ export interface OverlaySettings {
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
-    * @internal @hidden
-    * Exclude the position strategy target for outside clicks
-    */
+     * @hidden @internal
+     * Exclude the position strategy target for outside clicks
+     */
     excludePositionTarget?: boolean;
 }
 
 export interface OverlayEventArgs {
-    /** Id of the overlay as returned by the `show()` method */
+    /** Id of the overlay generated with `attach()` method */
     id: string;
-    /** Available when `Type<T>` is provided to the `show()` method and allows access to the created Component instance */
+    /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<{}>;
 }
 
@@ -73,7 +73,7 @@ export interface OverlayClosingEventArgs extends OverlayEventArgs, CancelableBro
 }
 
 export interface OverlayAnimationEventArgs {
-    /** Id of the overlay as returned by the `show()` method */
+    /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Animation player that will play the animation */
     animationPlayer: AnimationPlayer;
@@ -101,15 +101,6 @@ export function getPointFromPositionsSettings(settings: PositionSettings, overla
         result = settings.target;
     }
 
-    //  if for some reason overlayWrapper is not at 0,0 position, e.g. overlay is in outlet
-    //  which is in element with transform,perspective or filter set, we should translate the result
-    //  accordingly
-    if (overlayWrapper) {
-        const overlayWrapperPosition = overlayWrapper.getBoundingClientRect();
-        result.x -= overlayWrapperPosition.left;
-        result.y -= overlayWrapperPosition.top;
-    }
-
     return result;
 }
 
@@ -127,23 +118,23 @@ export interface OverlayInfo {
     closeAnimationInnerPlayer?: any;
 }
 
-/** @hidden @internal*/
+/** @hidden @internal */
 export function getViewportRect(document: Document): ClientRect {
     const width = document.documentElement.clientWidth;
     const height = document.documentElement.clientHeight;
     const scrollPosition = getViewportScrollPosition();
 
     return {
-      top:    scrollPosition.y,
-      left:   scrollPosition.x,
-      right:  scrollPosition.x + width,
-      bottom: scrollPosition.y + height,
-      width:  width,
-      height: height,
+        top: scrollPosition.y,
+        left: scrollPosition.x,
+        right: scrollPosition.x + width,
+        bottom: scrollPosition.y + height,
+        width: width,
+        height: height,
     };
-  }
+}
 
-/** @hidden @internal*/
+/** @hidden @internal */
 export function getViewportScrollPosition(): Point {
     const documentElement = document.documentElement;
     const documentRect = documentElement.getBoundingClientRect();
@@ -153,3 +144,10 @@ export function getViewportScrollPosition(): Point {
 
     return new Point(horizontalScrollPosition, verticalScrollPosition);
   }
+
+  /** @hidden @internal*/
+export function cloneInstance(object) {
+    const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+    clonedObj.settings = cloneValue(clonedObj.settings);
+    return clonedObj;
+}

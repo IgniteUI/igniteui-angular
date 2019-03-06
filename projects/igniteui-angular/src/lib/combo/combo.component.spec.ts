@@ -937,15 +937,6 @@ describe('igxCombo', () => {
             expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
             expect(combo.isItemSelected(combo.data[itemIndex])).toBeFalsy();
         }
-        it('Should properly return the selected value(s)', () => {
-            const fixture = TestBed.createComponent(IgxComboSampleComponent);
-            fixture.detectChanges();
-            const combo = fixture.componentInstance.combo;
-            expect(combo).toBeDefined();
-            expect(combo.values).toEqual([]);
-            combo.valueKey = undefined;
-            expect(combo.values).toEqual([]);
-        });
         it('Should properly call "writeValue" method', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -1069,6 +1060,27 @@ describe('igxCombo', () => {
                 cancel: false
             });
         }));
+
+        it(`Should properly handle 'selectItems([]) call'`, fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            combo.selectItems([], false);
+            expect(combo.selectedItems()).toEqual([]);
+            combo.selectItems([], true);
+            expect(combo.selectedItems()).toEqual([]);
+            const selectedItems = combo.data.slice(0, 3);
+            combo.selectItems(combo.data.slice(0, 3), true);
+            expect(combo.selectedItems()).toEqual(selectedItems);
+            combo.selectItems([], false);
+            expect(combo.selectedItems()).toEqual(selectedItems);
+            selectedItems.push(combo.data[3]);
+            combo.selectItems([combo.data[3]], false);
+            expect(combo.selectedItems()).toEqual(combo.data.slice(0, 4));
+            combo.selectItems([], true);
+            expect(combo.selectedItems()).toEqual([]);
+        }));
+
         it('Should properly select/deselect ALL items', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();

@@ -1,6 +1,9 @@
 import { IgxComboItemComponent } from './combo-item.component';
 import { Component } from '@angular/core';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
