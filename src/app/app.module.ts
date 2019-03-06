@@ -86,13 +86,14 @@ import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sa
 import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
-import { AutocompleteSampleComponent, IgxAutocompletePipeStartsWith } from './autocomplete/autocomplete.sample';
+import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
 
 
 
 const components = [
     AppComponent,
-    IgxAutocompletePipeStartsWith,
+    AutocompletePipeContains,
+    AutocompleteGroupPipeContains,
     AutocompleteSampleComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
@@ -178,7 +179,7 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
         IgxColumnHidingModule,

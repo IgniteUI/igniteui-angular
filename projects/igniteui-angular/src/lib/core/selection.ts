@@ -88,6 +88,8 @@ export class IgxSelectionAPIService {
         let selection: Set<any>;
         if (clearSelection) {
             selection = this.get_empty();
+        } else if (itemIDs && itemIDs.length === 0) {
+            selection = new Set(this.get(componentID));
         }
         itemIDs.forEach((item) => selection = this.add_item(componentID, item, selection));
         return selection;

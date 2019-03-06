@@ -1,9 +1,8 @@
 
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
-import { IgxExporterOptionsBase } from './exporter-options-base';
-import { IgxStringFilteringOperand } from '../../../public_api';
 import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 export class TestMethods {
 
