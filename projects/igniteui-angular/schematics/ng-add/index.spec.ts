@@ -2,7 +2,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
-import { scssImport, cssImport, scssBoxSizing, sassBoxSizing } from './add-normalize';
+import { scssImport, cssImport } from './add-normalize';
 import { ProjectType } from '@schematics/angular/utility/workspace-models';
 
 describe('ng-add schematics', () => {
@@ -117,28 +117,28 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 
-  it('should properly add normalize', () => {
+  it('should properly add css reset', () => {
     tree.create('src/styles.scss', '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     let pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.scss')).toEqual(scssImport + scssBoxSizing);
-    expect(pkgJsonData.dependencies['normalize-scss']).toBeTruthy();
+    expect(tree.readContent('src/styles.scss')).toEqual(scssImport);
+    expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     tree.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
     tree.delete('src/styles.scss');
 
     tree.create('src/styles.sass', '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.sass')).toEqual(scssImport + sassBoxSizing);
-    expect(pkgJsonData.dependencies['normalize-scss']).toBeTruthy();
+    expect(tree.readContent('src/styles.sass')).toEqual(scssImport);
+    expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     tree.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
     tree.delete('src/styles.sass');
 
     tree.create('src/styles.css', '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.css')).toContain(scssBoxSizing);
-    expect(pkgJsonData.dependencies['normalize.css']).toBeTruthy();
+    expect(tree.readContent('src/styles.css')).toBe('');
+    expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
   });
 

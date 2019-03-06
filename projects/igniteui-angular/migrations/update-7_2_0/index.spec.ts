@@ -87,17 +87,17 @@ describe('Update 7.2.0', () => {
         done();
     });
 
-    it(`should add normalize-scss package and import`, done => {
+    it(`should add minireset css package and import`, done => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
-        spyOn(addNormalize, 'addNormalizeCss').and.callThrough();
+        spyOn(addNormalize, 'addResetCss').and.callThrough();
 
         const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
 
-        expect(addNormalize.addNormalizeCss).toHaveBeenCalledWith(appTree);
+        expect(addNormalize.addResetCss).toHaveBeenCalledWith(appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({
-            dependencies: { 'normalize-scss': '^7.0.1' }
+            dependencies: { 'minireset.css': '~0.0.4' }
         });
         expect(schematicRunner.tasks).toContain(new NodePackageInstallTask().toConfiguration());
         done();

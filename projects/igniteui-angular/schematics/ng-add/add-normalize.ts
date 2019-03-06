@@ -4,24 +4,15 @@ import { Tree } from '@angular-devkit/schematics';
 import { getWorkspace, getWorkspacePath } from '@schematics/angular/utility/config';
 import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
 
-const cssPackage = { 'normalize.css': '^8.0.1' };
-const scssPackage = { 'normalize-scss': '^7.0.1' };
+const resetPackage = { 'minireset.css': '~0.0.4' };
 
-export const cssImport = 'node_modules/normalize.css/normalize.css';
-export const scssImport = `@import "~/normalize-scss/sass/normalize";\n`
-    + `// Standard CSS normalize, comment out if not required or using a different module\n`
-    + `@include normalize();\n`;
+export const cssImport = 'node_modules/minireset.css/minireset.css';
+export const scssImport =
+    `// CSS Reset, comment out if not required or using a different module\n`
+    + `@import '~minireset.css/minireset';\n`;
 
-export const scssBoxSizing =
-    `*, *::before, *::after {\n`
-    + `    box-sizing: border-box;\n`
-    + `}\n\n`;
 
-export const sassBoxSizing =
-    `*, *::before, *::after \n`
-    + `    box-sizing: border-box\n\n`;
-
-export function addNormalizeCss(host: Tree): boolean {
+export function addResetCss(host: Tree): boolean {
     const config = getWorkspace(host);
     const project = config.projects[config.defaultProject] as WorkspaceProject<ProjectType.Application>;
     let addPackage;
@@ -33,18 +24,14 @@ export function addNormalizeCss(host: Tree): boolean {
     }
     const stylesFile = path.posix.join(project.sourceRoot, `styles.${styleExt}`);
 
-    let stylesContent = host.read(stylesFile).toString();
-    let boxSizeStyle = scssBoxSizing;
-
     switch (styleExt) {
-    case 'sass':
-        boxSizeStyle = sassBoxSizing;
-        /* falls through */
-    case 'scss':
-        if (stylesContent.indexOf(`@include normalize();`) === -1) {
-            stylesContent = scssImport + boxSizeStyle + stylesContent;
-            host.overwrite(stylesFile, stylesContent);
-            addPackage = scssPackage;
+        case 'sass':
+        case 'scss':
+        let content = host.read(stylesFile).toString();
+        if (content.indexOf(`~minireset.css/minireset`) === -1) {
+            content = scssImport + content;
+            host.overwrite(stylesFile, content);
+            addPackage = resetPackage;
         }
         break;
     case 'css':
@@ -59,13 +46,8 @@ export function addNormalizeCss(host: Tree): boolean {
         } else {
             project.architect.build.options.styles = [cssImport];
         }
-        stylesContent =
-            `/* Box sizing reset and normalize.css (in angular.json styles), remove if not required or using a different module */\n`
-            + scssBoxSizing
-            + stylesContent;
-        host.overwrite(stylesFile, stylesContent);
         host.overwrite(getWorkspacePath(host), JSON.stringify(config, null, 2));
-        addPackage = cssPackage;
+        addPackage = resetPackage;
         break;
     default:
         break;

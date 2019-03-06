@@ -4,7 +4,7 @@ import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
 
 import * as os from 'os';
-import { addNormalizeCss } from './add-normalize';
+import { addResetCss } from './add-normalize';
 
 /**
  *  ES7 `Object.entries` needed for igxGrid to render in IE.
@@ -49,10 +49,10 @@ function enablePolyfills(options: Options): Rule {
 
 function addNormalize(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    if (options.normalizeCss) {
-      const result = addNormalizeCss(tree);
+    if (options.resetCss) {
+      const result = addResetCss(tree);
       if (!result) {
-        context.logger.warn(`Could not complete adding normalize styles. Those may need to be added manually.`);
+        context.logger.warn(`Could not complete adding reset styles. Those may need to be added manually.`);
       }
     }
   };

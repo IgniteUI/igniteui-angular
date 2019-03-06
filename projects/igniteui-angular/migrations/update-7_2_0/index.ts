@@ -5,7 +5,7 @@ import {
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { addNormalizeCss } from '../../schematics/ng-add/add-normalize';
+import { addResetCss } from '../../schematics/ng-add/add-normalize';
 
 const version = '7.2.0';
 
@@ -17,7 +17,7 @@ export default function (): Rule {
         update.applyChanges();
 
         // add normalize:
-        if (addNormalizeCss(host)) {
+        if (addResetCss(host)) {
             context.addTask(new NodePackageInstallTask());
         }
     };
