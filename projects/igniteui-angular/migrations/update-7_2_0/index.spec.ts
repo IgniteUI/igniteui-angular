@@ -6,7 +6,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-import { scssImport } from '../../schematics/ng-add/add-normalize';
+import * as addNormalize from '../../schematics/ng-add/add-normalize';
 
 describe('Update 7.2.0', () => {
     let appTree: UnitTestTree;
@@ -90,10 +90,12 @@ describe('Update 7.2.0', () => {
     it(`should add normalize-scss package and import`, done => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
+        spyOn(addNormalize, 'addNormalizeCss').and.callThrough();
 
         const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
-        expect(tree.readContent('/testSrc/styles.scss'))
-            .toEqual(scssImport);
+
+        expect(addNormalize.addNormalizeCss).toHaveBeenCalledWith(appTree);
+        expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({
             dependencies: { 'normalize-scss': '^7.0.1' }
         });
