@@ -496,6 +496,10 @@
             @extend %igx-grid__grouparea--cosy !optional;
         }
 
+        @include e(header-indentation) {
+            @extend %igx-grid__header-indentation--cosy !optional;
+        }
+
         @include e(grouping-indicator) {
             @extend %igx-grid__grouping-indicator--cosy !optional;
         }
@@ -586,6 +590,10 @@
 
         @include e(grouparea) {
             @extend %igx-grid__grouparea--compact !optional;
+        }
+
+        @include e(header-indentation) {
+            @extend %igx-grid__header-indentation--compact !optional;
         }
 
         @include e(grouping-indicator) {
