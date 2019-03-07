@@ -6,7 +6,9 @@ import {
     ChangeDetectionStrategy,
     TemplateRef,
     Directive,
-    OnDestroy
+    OnDestroy,
+    AfterViewInit,
+    ElementRef
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -84,7 +86,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit{
 
     private shouldOpenSubMenu = true;
     private originalColumnData = new Array<FilterListItem>();
@@ -118,8 +120,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
-    @ViewChild('dropdown', { read: IgxToggleDirective })
-    public mainDropdown: IgxToggleDirective;
+    @ViewChild('dropdown', { read: ElementRef })
+    public mainDropdown: ElementRef;
 
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
@@ -173,6 +175,23 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.destroy$.complete();
     }
 
+    ngAfterViewInit(): void {
+        this.expressionsList = new Array<ExpressionUI>();
+        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
+        this.customDialog.expressionsList = this.expressionsList;
+        this.populateColumnData();
+        this.originalColumnData = cloneArray(this.listData, true);
+
+        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
+        if (se) {
+            this.excelStyleSorting.selectButton(se.dir);
+        }
+
+        requestAnimationFrame(() => {
+            this.excelStyleSearch.searchInput.nativeElement.focus();
+        });
+    }
+
     public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.column = column;
@@ -216,7 +235,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.currentTarget;
 
             const gridRect = this.grid.nativeElement.getBoundingClientRect();
-            const dropdownRect = this.mainDropdown.element.getBoundingClientRect();
+            const dropdownRect = this.mainDropdown.nativeElement.getBoundingClientRect();
 
             let x = dropdownRect.left + dropdownRect.width;
             let x1 = gridRect.left + gridRect.width;
@@ -250,7 +269,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
-        this.mainDropdown.close();
+        this.mainDropdown.nativeElement.style.display = 'none';
         this.subMenu.close();
         this.customDialog.open();
     }
@@ -439,27 +458,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     // TODO: sort members by access modifier
-
-    public toggleDropdown(overlaySettings: OverlaySettings) {
-        this.mainDropdown.open(overlaySettings);
-    }
-
-    public onDropDownOpening() {
-        this.expressionsList = new Array<ExpressionUI>();
-        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
-        this.customDialog.expressionsList = this.expressionsList;
-        this.populateColumnData();
-        this.originalColumnData = cloneArray(this.listData, true);
-
-        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
-        if (se) {
-            this.excelStyleSorting.selectButton(se.dir);
-        }
-
-        requestAnimationFrame(() => {
-            this.excelStyleSearch.searchInput.nativeElement.focus();
-        });
-    }
 
     get sortingTemplate() {
         if (this.grid.excelStyleSortingTemplateDirective) {

@@ -261,12 +261,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                 this.onOverlayOpening(eventArgs);
             });
 
-        this._overlayService.onOpened.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this._destroy$)).subscribe((eventArgs) => {
-                this.onOverlayOpened(eventArgs);
-            });
-
         this._overlayService.onClosed.pipe(
             filter(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this._destroy$)).subscribe(() => {
@@ -278,13 +272,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         const instance = eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
         if (instance) {
             instance.initialize(this.column, this._filteringService, this._overlayService, eventArgs.id);
-        }
-    }
-
-    private onOverlayOpened(eventArgs) {
-        const instance = eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
-        if (instance) {
-            instance.toggleDropdown(this._filterMenuOverlaySettings);
         }
     }
 
