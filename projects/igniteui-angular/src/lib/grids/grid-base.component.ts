@@ -1614,7 +1614,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public outletDirective: IgxOverlayOutletDirective;
+    protected _outletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    public get outletDirective() {
+        return this._outletDirective;
+    }
 
     /**
      * @hidden
@@ -2335,7 +2342,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.disableTransitions = false;
         });
-
         if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
             this.closeExcelStyleDialog();
         }
@@ -2350,7 +2356,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
-
         if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
             this.closeExcelStyleDialog();
         }
@@ -4594,7 +4599,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.nativeElement.focus();
         } */
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
             return;
         }
@@ -4848,9 +4853,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
-        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
+        const tmplId = args.context.templateID;
+        const index = args.context.index;
+        if (tmplId === 'dataRow' && args.context.$implicit === args.oldContext.$implicit) {
             args.view.detectChanges();
-            const row = this.getRowByIndex(args.context.index);
+            const row = this.dataRowList.find((r) => r.index === index);
             if (row) {
                 row.cells.forEach((c) => {
                     c.highlightText(
@@ -4858,17 +4865,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
-}
+            }
         }
         if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
-            const index = args.context.index;
             args.view.detectChanges();
-            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
-            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
-            if (row && row instanceof IgxRowComponent) {
+            const row = tmplId === 'dataRow' ? this.dataRowList.find((r) => r.index === index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
+            if (row) {
                 this._restoreVirtState(row);
-            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
+            } else if (summaryRow) {
                 this._restoreVirtState(summaryRow);
             }
         }
