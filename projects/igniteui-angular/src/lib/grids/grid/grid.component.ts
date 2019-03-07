@@ -765,7 +765,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         let sum = super.getPinnedWidth(takeHidden);
 
         if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.clientWidth;
+            sum += this.headerGroupContainer.nativeElement.offsetWidth;
         }
         return sum;
     }

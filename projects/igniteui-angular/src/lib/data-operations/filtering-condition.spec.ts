@@ -1,16 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-
-import { DataGenerator } from './test-util/data-generator';
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand } from '../../public_api';
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand } from './filtering-condition';
+
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
         const fc = IgxStringFilteringOperand.instance();
