@@ -25,11 +25,11 @@ import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { OverlaySettings, PositionSettings, VerticalAlignment, HorizontalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
-import { CloseScrollStrategy } from '../services/overlay/scroll/close-scroll-strategy';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AbsoluteScrollStrategy } from '../services';
 
 /**
  * @hidden
@@ -252,7 +252,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             closeOnOutsideClick: true,
             modal: false,
             positionStrategy: new ConnectedPositioningStrategy(this._filterMenuPositionSettings),
-            scrollStrategy: new CloseScrollStrategy()
+            scrollStrategy: new AbsoluteScrollStrategy()
         };
 
         this._overlayService.onOpening.pipe(

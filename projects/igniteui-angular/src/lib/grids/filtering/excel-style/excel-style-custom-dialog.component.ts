@@ -22,12 +22,12 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     ConnectedPositioningStrategy,
-    CloseScrollStrategy,
     OverlaySettings,
     VerticalAlignment,
     PositionSettings,
     HorizontalAlignment,
-    IgxOverlayService
+    IgxOverlayService,
+    AbsoluteScrollStrategy
 } from '../../../services';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
@@ -58,7 +58,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     @Input()

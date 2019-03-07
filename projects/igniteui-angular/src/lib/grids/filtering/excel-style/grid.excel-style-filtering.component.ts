@@ -14,9 +14,9 @@ import {
     HorizontalAlignment,
     VerticalAlignment,
     ConnectedPositioningStrategy,
-    CloseScrollStrategy,
     OverlaySettings,
-    IgxOverlayService
+    IgxOverlayService,
+    AbsoluteScrollStrategy
 } from '../../../services';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
@@ -114,7 +114,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._subMenuPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     @HostBinding('class.igx-excel-filter')
