@@ -3006,22 +3006,52 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(grid.columns[2].hidden).toBeTruthy();
     }));
 
-    it('Should activate clear button when a value is entered in the first input.', fakeAsync(() => {
+    fit('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
-    }));
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        let headerResArea = headers[2].children[0].nativeElement;
 
-    it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
-        grid.filterMode = FilterMode.excelStyleFilter;
+        let filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
         fix.detectChanges();
 
-        // TODO
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const customFilterComponent = excelMenu.querySelector('.igx-excel-filter__actions-filter');
+
+        customFilterComponent.click();
+
+        tick();
+        fix.detectChanges();
+
+        const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+        const equalsItem = subMenu.children[0].children[0];
+
+        equalsItem.click();
+        tick();
+        fix.detectChanges();
+
+        const customMenu = grid.nativeElement.querySelector('.igx-excel-filter__secondary');
+
+        // set first expression's value
+        GridFunctions.setInputValueESF(customMenu, 0, 20, fix);
+
+        // select second expression's operator
+        GridFunctions.setOperatorESF(customMenu, grid, 1, 1, fix);
+
+        // set second expression's value
+        GridFunctions.setInputValueESF(customMenu, 1, 0, fix);
+
+        const applyButton = customMenu.querySelector('.igx-button--raised');
+        applyButton.click();
+        fix.detectChanges();
+
+        expect(grid.filteredData.length).toEqual(1);
     }));
 
     it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
