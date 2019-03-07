@@ -22,7 +22,7 @@ describe('IgxGrid - CRUD operations', () => {
             declarations: [
                 DefaultCRUDGridComponent
             ],
-            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

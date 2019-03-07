@@ -4,18 +4,10 @@
         <igx-prefix (click)="openDialog()">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <input #input type="text" [igxMask]="mask" igxInput
-                                  [includeLiterals]="false"
-                                  [placeholder]="format"
-                                  [displayValuePipe]="displayFormat"
-                                  [focusedValuePipe]="inputFormat"
-                                  [promptChar]="promptChar"
-                                  [value]="displayValue"
-                                  (input)="onInput($event)"
-                                  (blur)="onBlur($event)"
-                                  (focus)="onFocus($event)"
-                                  (wheel)="spinOnEdit($event)"
-                                  [disabled]="disabled"/>
+        <input #input type="text" [igxMask]="mask" igxInput [includeLiterals]="false" [placeholder]="format"
+            [displayValuePipe]="displayFormat" [focusedValuePipe]="inputFormat" [promptChar]="promptChar"
+            [value]="displayValue" (input)="onInput($event)" (blur)="onBlur($event)" (focus)="onFocus($event)"
+            (wheel)="spinOnEdit($event)" [disabled]="disabled" />
         <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
@@ -32,10 +24,9 @@
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
-<div #container [hidden]="collapsed"
-    [style.width.px]="dropDownWidth" class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': mode === interactMode.dropdown, 'igx-time-picker--vertical': vertical && mode === interactMode.dialog}">
-    <div *ngIf="mode === interactMode.dialog" class="igx-time-picker__header">
+<div #container [hidden]="collapsed" [style.width.px]="dropDownWidth" class="igx-time-picker"
+    [ngClass]="{'igx-time-picker--dropdown': mode === 'dropdown', 'igx-time-picker--vertical': vertical && mode === 'dialog'}">
+    <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
             <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
@@ -53,7 +44,7 @@
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
-        <div *ngIf="mode === interactMode.dialog" class="igx-time-picker__buttons">
+        <div *ngIf="mode === 'dialog'" class="igx-time-picker__buttons">
             <button *ngIf="cancelButtonLabel.length" igxButton="flat" (click)="cancelButtonClick()">
                 {{cancelButtonLabel}}
             </button>

@@ -14,7 +14,7 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
         Handlebars.registerHelper('getConfigData', this.getConfigData);
     }
 
-    private getConfigData(prop) {
+    private getConfigData(prop: string, lang) {
         const fileName = 'config.json';
         let settings;
         let config;
@@ -28,8 +28,10 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
             const normalizedPath = path.join(settings.theme, fileName);
             config = JSON.parse(fs.readFileSync(normalizedPath, 'utf8'));
         }
-        if (config && settings.localize && process.env.NODE_ENV) {
-            data = config[settings.localize][process.env.NODE_ENV.trim()];
+
+        const getLang = lang.name ? settings.localize : lang;
+        if (config && getLang && process.env.NODE_ENV) {
+            data = config[getLang][process.env.NODE_ENV.trim()];
         }
 
         return data ? data[prop] : '';
