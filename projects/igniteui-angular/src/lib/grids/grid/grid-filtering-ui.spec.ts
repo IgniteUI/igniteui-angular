@@ -2831,8 +2831,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[2].children[0].nativeElement;
 
-        const fitlerIcon = headerResArea.querySelector('.igx-excel-filter__icon');
-        fitlerIcon.click();
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
 
         tick();
         fix.detectChanges();
@@ -2840,8 +2840,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
         const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
 
-        const sortDesc = sortComponent.lastElementChild.children[0].children[0];
-        sortDesc.click();
+        const sortAsc = sortComponent.lastElementChild.children[0].children[0];
+        sortAsc.click();
 
         tick();
         fix.detectChanges();
@@ -2856,7 +2856,28 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
+        grid.columns[2].sortable = true;
+        grid.sortingExpressions.push({dir: SortingDirection.Asc, fieldName: 'Downloads'});
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[2].children[0].nativeElement;
+
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
+
+        const sortAsc = sortComponent.lastElementChild.children[0].children[0];
+        const sortDesc = sortComponent.lastElementChild.children[0].children[1];
+
+        expect(sortAsc).toHaveClass("igx-button-group__item--selected");
+        expect(sortDesc).not.toHaveClass("igx-button-group__item--selected");
+
     }));
 
     it('Should move column left/right when clicking buttons.', fakeAsync(() => {
@@ -2865,16 +2886,98 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
+        grid.columns[2].movable = true;
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[2].children[0].nativeElement;
+
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const moveComponent = excelMenu.querySelector('.igx-excel-filter__move');
+
+        const moveLeft = moveComponent.lastElementChild.children[0];
+        const moveRight = moveComponent.lastElementChild.children[1];
+
+        moveLeft.click();
+        fix.detectChanges();
+
+        expect(grid.columns[2].field).toBe('ProductName');
+        expect(grid.columns[1].field).toBe('Downloads');
+
+        moveLeft.click();
+        fix.detectChanges();
+
+        expect(grid.columns[1].field).toBe('ID');
+        expect(grid.columns[0].field).toBe('Downloads');
+        expect(moveLeft).toHaveClass('igx-button--disabled');
+
+        moveRight.click();
+        fix.detectChanges();
+
+        expect(grid.columns[0].field).toBe('ID');
+        expect(grid.columns[1].field).toBe('Downloads');
+        expect(moveLeft).not.toHaveClass('igx-button--disabled');
     }));
 
-    it('Should pin/unpin column when clicking buttons.', fakeAsync(() => {
+    it('Should pin column when clicking buttons.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        let headerResArea = headers[2].children[0].nativeElement;
+
+        let filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const pinComponent = excelMenu.querySelector('.igx-excel-filter__actions-pin');
+
+        pinComponent.click();
+
+        tick();
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns[0].field).toEqual('Downloads');
+    }));
+
+    it('Should unpin column when clicking buttons.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        grid.columns[2].pinned = true;
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        let headerResArea = headers[0].children[0].nativeElement;
+
+        let filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const unpinComponent = excelMenu.querySelector('.igx-excel-filter__actions-unpin');
+
+        unpinComponent.click();
+
+        tick();
+        fix.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(0);
     }));
 
     it('Should hide column when click on button.', fakeAsync(() => {
@@ -2883,7 +2986,24 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
 
-        // TODO
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        let headerResArea = headers[2].children[0].nativeElement;
+
+        let filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+
+        tick();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
+
+        hideComponent.click();
+
+        tick();
+        fix.detectChanges();
+
+        expect(grid.columns[2].hidden).toBeTruthy();
     }));
 
     it('Should activate clear button when a value is entered in the first input.', fakeAsync(() => {
