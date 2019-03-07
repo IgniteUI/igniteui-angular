@@ -15,7 +15,7 @@ import {
     CloseScrollStrategy,
     OverlaySettings,
     IgxOverlayService
-} from '../../../services';
+} from '../../../services/index';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
