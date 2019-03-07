@@ -86,10 +86,9 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit{
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
 
     private shouldOpenSubMenu = true;
-    private originalColumnData = new Array<FilterListItem>();
     private expressionsList = new Array<ExpressionUI>();
     private destroy$ = new Subject<boolean>();
     private containsNullOrEmpty = false;
@@ -180,7 +179,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
         this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
-        this.originalColumnData = cloneArray(this.listData, true);
 
         const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
         if (se) {
@@ -527,7 +525,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             this.grid.clearFilter(this.column.field);
         }
 
-        this.originalColumnData = new Array<FilterListItem>();
         this.closeDropdown();
     }
 
