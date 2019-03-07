@@ -92,6 +92,23 @@ describe('Column Hiding UI', () => {
             expect(columnChooser.title).toBe('');
         });
 
+        it('filter input visibility is controlled via \'disableFilter\' property.', () => {
+            let filterInputElement = columnChooserElement.query(By.css('.igx-column-hiding__header-input'));
+            expect(filterInputElement).not.toBeNull();
+
+            fix.componentInstance.disableFilter = true;
+            fix.detectChanges();
+
+            filterInputElement = columnChooserElement.query(By.css('.igx-column-hiding__header-input'));
+            expect(filterInputElement).toBeNull();
+
+            fix.componentInstance.disableFilter = false;
+            fix.detectChanges();
+
+            filterInputElement = columnChooserElement.query(By.css('.igx-column-hiding__header-input'));
+            expect(filterInputElement).not.toBeNull();
+        });
+
         it('lists all 4 hidable grid columns.', () => {
             const columnItems = columnChooser.columnItems;
             expect(columnItems.length).toBe(5);
