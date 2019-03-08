@@ -156,7 +156,7 @@
             $line-height: rem(28px),
             $text-transform: none,
             $margin-top: rem(28px),
-            $margin-bottom: 0,
+            $margin-bottom: rem(16),
         ),
         body-2: igx-type-style(
             $font-size: rem(14px),
