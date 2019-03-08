@@ -30,7 +30,7 @@ describe('IgxGrid - Cell component', () => {
                 ColumnEditablePropertyTestComponent,
                 GridColumnWidthsComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 

@@ -26,7 +26,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * Sets/gets the `id` of the item.
      * ```html
-     * <igx-select-item [id] = 'select-item-0'></igx-select-item>
+     * <igx-drop-down-item [id] = 'igx-drop-down-item-0'></igx-drop-down-item>
      * ```
      * ```typescript
      * let itemId =  this.item.id;

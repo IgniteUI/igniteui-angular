@@ -36,7 +36,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 PinOnInitAndSelectionComponent,
                 PinningComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 

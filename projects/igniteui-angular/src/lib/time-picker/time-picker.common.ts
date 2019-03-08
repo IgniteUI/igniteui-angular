@@ -1,4 +1,5 @@
 import { ElementRef } from '@angular/core';
+import { InteractionMode } from '../core/enums';
 
 /** @hidden */
 export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
@@ -16,7 +17,7 @@ export interface IgxTimePickerBase {
     promptChar: string;
     cleared: boolean;
     collapsed: boolean;
-    mode: TimePickerInteractionMode;
+    mode: InteractionMode;
     nextHour();
     prevHour();
     nextMinute();
@@ -32,10 +33,3 @@ export interface IgxTimePickerBase {
     parseMask(preserveAmPm?: boolean): string;
 }
 
-/**
- * Defines the posible values of the igxTimePicker's time selection mode.
- */
-export enum TimePickerInteractionMode {
-    dialog,
-    dropdown
-}

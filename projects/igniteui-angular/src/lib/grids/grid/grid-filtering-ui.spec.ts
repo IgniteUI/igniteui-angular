@@ -1,19 +1,19 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import {
-    IgxFilteringOperand, IgxStringFilteringOperand,
-    FilteringExpressionsTree, FilteringLogic, IgxChipComponent
-} from '../../../public_api';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
@@ -28,6 +28,9 @@ import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 import { FilterMode } from '../tree-grid';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IgxChipComponent } from '../../chips/chip.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -40,7 +43,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));
@@ -1625,7 +1628,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         }).compileComponents();
     }));
 
@@ -2792,7 +2795,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));
