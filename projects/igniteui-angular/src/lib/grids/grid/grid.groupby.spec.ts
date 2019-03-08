@@ -1063,20 +1063,16 @@ describe('IgxGrid - GroupBy', () => {
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        tick(200);
         UIInteractions.simulateMouseEvent('mouseup', headerResArea, 200, 5);
-        tick(100);
-        fix.detectChanges();
-        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
-        tick(100);
         fix.detectChanges();
 
-        const resizer = headers[0].children[1].children[0].nativeElement;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-        tick(100);
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
-        tick();
         fix.detectChanges();
 
         expect(grid.columns[0].width).toEqual('550px');

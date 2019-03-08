@@ -205,7 +205,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @hidden
      */
     public ngOnDestroy() {
-        console.log(this.column.field);
         this.destroy$.next(true);
         this.destroy$.complete();
     }
