@@ -1,6 +1,7 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
+import { IgxColumnComponent, FilterMode } from '../grid';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
@@ -234,9 +235,25 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             super.performTab(currentRowEl, rowIndex, visibleColumnIndex);
         }
     }
+
+    public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
+        if (column.visibleIndex === 0 && this.grid.parent) {
+            eventArgs.preventDefault();
+            let targetGrid = this.grid.parent;
+            const prevSiblingChild = this.getChildGridRowContainer().previousElementSibling;
+            if (prevSiblingChild) {
+                const gridElem = prevSiblingChild.querySelectorAll('igx-hierarchical-grid')[0];
+                targetGrid = this.getChildGrid(gridElem.getAttribute('id'), this.grid.parent);
+            }
+            this.focusPrev(targetGrid.unpinnedColumns[targetGrid.unpinnedColumns.length - 1].visibleIndex);
+        } else {
+            super.navigatePrevFilterCell(column, eventArgs);
+        }
+    }
+
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
         if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent) {
-            if (this.grid.allowFiltering) {
+            if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
             } else {
                 const prevSiblingChild = this.getChildGridRowContainer().previousElementSibling;
@@ -287,6 +304,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
         visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
 
+        if (childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
+            childGrid.navigation.moveFocusToFilterCell(true);
+            return;
+        }
         if (childGrid.rowList.toArray().length === 0) {
             this.focusNext(visibleColumnIndex, childGrid);
             return;

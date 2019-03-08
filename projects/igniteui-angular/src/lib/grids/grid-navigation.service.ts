@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -456,13 +457,65 @@ export class IgxGridNavigationService {
         }
     }
 
-    public moveFocusToFilterCell() {
+    public moveFocusToFilterCell(toStart?: boolean) {
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
-        if (this.isColumnFullyVisible(columns.length - 1)) {
-            this.grid.filteringService.focusFilterCellChip(columns[columns.length - 1], false);
+        const targetIndex = toStart ? 0 : columns.length - 1;
+        const isVisible = toStart ? this.isColumnLeftFullyVisible(targetIndex) : this.isColumnFullyVisible(targetIndex);
+        if (isVisible) {
+            this.grid.filteringService.focusFilterCellChip(columns[targetIndex], false);
         } else {
-            this.grid.filteringService.scrollToFilterCell(columns[columns.length - 1], false);
+            this.grid.filteringService.scrollToFilterCell(columns[targetIndex], false);
         }
+    }
+
+    public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
+        const cols = this.grid.filteringService.unpinnedFilterableColumns;
+        const prevFilterableIndex = this.grid.filteringService.unpinnedFilterableColumns.indexOf(column) - 1;
+        const prevIndex = cols[prevFilterableIndex].visibleIndex;
+        const visibleIndex = column.visibleIndex;
+
+        if (prevIndex >= 0 && visibleIndex > 0 && !this.isColumnLeftFullyVisible(prevIndex) && !column.pinned) {
+            eventArgs.preventDefault();
+            this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[prevIndex], false);
+        } else if (column.visibleIndex === 0 ||
+                    (prevIndex < 0 && !this.getFirstPinnedFilterableColumn()) ||
+                    column === this.getFirstPinnedFilterableColumn()) {
+            eventArgs.preventDefault();
+        }
+    }
+
+    public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
+        const nextIndex = this.grid.filteringService.unpinnedFilterableColumns.indexOf(column) + 1;
+        if (column === this.getLastPinnedFilterableColumn() &&
+        !this.isColumnFullyVisible(nextIndex)) {
+        this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], false);
+        eventArgs.stopPropagation();
+        return;
+    }
+
+    if (nextIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
+        if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
+            if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
+                eventArgs.stopPropagation();
+                return;
+            }
+            this.goToFirstCell();
+        }
+        eventArgs.preventDefault();
+    } else if (!column.pinned && !this.isColumnFullyVisible(nextIndex)) {
+        eventArgs.preventDefault();
+        this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], true);
+    }
+    }
+
+    private getLastPinnedFilterableColumn(): IgxColumnComponent {
+        const pinnedFilterableColums =
+            this.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+        return pinnedFilterableColums[pinnedFilterableColums.length - 1];
+    }
+
+    private getFirstPinnedFilterableColumn(): IgxColumnComponent {
+        return this.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable)[0];
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
