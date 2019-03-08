@@ -28,7 +28,7 @@ import {
     PositionSettings,
     HorizontalAlignment,
     IgxOverlayService
-} from '../../../services';
+} from '../../../services/index';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
