@@ -1369,6 +1369,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
+    /**
+     * @hidden
+     */
     @ViewChild(IgxGridColumnResizerComponent)
     public resizeLine: IgxGridColumnResizerComponent;
 

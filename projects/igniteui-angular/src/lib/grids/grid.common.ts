@@ -113,7 +113,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     onMousedown(event) {
         event.preventDefault();
-
         const parent = this.element.nativeElement.parentElement.parentElement;
 
         this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
@@ -123,8 +122,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     }
 
     onMousemove(event) {
-        this.resize.next(event);
         event.preventDefault();
+        this.resize.next(event);
     }
 }
 

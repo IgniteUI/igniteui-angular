@@ -11,7 +11,8 @@ import {
     DoCheck,
     ElementRef,
     OnDestroy,
-    AfterViewInit
+    AfterViewInit,
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -196,6 +197,15 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @hidden
      */
     private _dblClick = false;
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown', ['$event'])
+    public onMouseMove(event): void {
+        // hack for preventing text selection in IE and Edge while dragging the resizer
+        event.preventDefault();
+    }
 
     public ngDoCheck() {
         this.cdr.markForCheck();
