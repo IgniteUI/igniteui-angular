@@ -34,7 +34,7 @@
                 </div>
                 <igx-dialog #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
                 <div class="submit">
-                    <button igxButton (click)="onSearch($event)" [disabled]="!travel.valid">Search</button>
+                    <button igxButton (click)="onSearch()" [disabled]="!travel.valid">Search</button>
                 </div>
             </form>
         </article>
