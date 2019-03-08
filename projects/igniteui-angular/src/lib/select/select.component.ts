@@ -1,7 +1,7 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
 } from '@angular/core';
 import {  ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -18,6 +18,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxSelectionAPIService } from '../core/selection';
 
 /** @hidden @internal */
 @Directive({
@@ -187,6 +188,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
+    }
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, selection);
     }
 
     /** @hidden @internal */
