@@ -3,6 +3,7 @@
         "target": "es6",
         "module": "commonjs",
         "sourceMap": false,
+        "composite": true,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/schematics/"
     }

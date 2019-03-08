@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -23,7 +22,7 @@ export class IgxExcelStyleSortingComponent {
     public column: IgxColumnComponent;
 
     @Input()
-    public grid: IgxGridBaseComponent;
+    public grid: any;
 
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
