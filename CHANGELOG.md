@@ -1,5 +1,9 @@
 # Ignite UI for Angular Change Log
 
+## 7.2.1
+- **Themes**
+    - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
+
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
 - `igxCalendar`
