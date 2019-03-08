@@ -80,8 +80,7 @@ export * from './lib/tabbar/tabbar.component';
 export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
-export * from './lib/select/select.component';
-export * from './lib/select/select-item.component';
+export * from './lib/select/index';
 
 
 /**
@@ -93,7 +92,7 @@ export * from './lib/core/density';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
-export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export * from './lib/date-picker/date-picker.utils';
+export { InteractionMode } from './lib/core/enums';
 

@@ -30,7 +30,7 @@ describe('IgxGrid - Row Selection', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         })
             .compileComponents();

@@ -41,12 +41,12 @@
         </article>
 
         <article class="datepicker-column">
-            <h4 class="sample-title">Editable Date Picker</h4>
+            <h4 class="sample-title">Editable Drop Down Date Picker</h4>
             <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
             <label>Format: {{ editableDatePicker1.format }}</label>
             <label>mask: {{ editableDatePicker1.mask }}</label>
             <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker1 mode="editable" [value]="testDate" format="dd.MM.y" mask="M/d/y">
+                <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="testDate" format="dd.MM.y" mask="M/d/y">
                 </igx-date-picker>
             </div>
         </article>
@@ -56,10 +56,10 @@
             <label>Date: {{ editableDatePicker.value }}</label>
             <label>Format: {{ editableDatePicker.format }}</label>
             <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker mode="editable" [weekStart]="1" [(ngModel)]="date1"
+                <igx-date-picker #editableDatePicker mode="dropdown" [weekStart]="1" [(ngModel)]="date1"
                     [isSpinLoop]="false">
                 </igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect($event)">Deselect date</button>
+                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">Deselect date</button>
             </div>
         </article>
     </section>
