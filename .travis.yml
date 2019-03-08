@@ -23,8 +23,8 @@ script:
 - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
-- npm run build:migration
 - npm run build:schematics
+- npm run build:migration
 # move to dist
 - cd dist/igniteui-angular
 # update package versions
