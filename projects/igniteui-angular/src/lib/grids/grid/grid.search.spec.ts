@@ -26,7 +26,7 @@ describe('IgxGrid - search API', () => {
                 GroupableGridSearchComponent,
                 ScrollableGridSearchComponent
             ],
-            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

@@ -39,7 +39,7 @@ describe('IgxGrid - Column Moving', () => {
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()
+                IgxGridModule
             ]
         }).compileComponents();
     }));

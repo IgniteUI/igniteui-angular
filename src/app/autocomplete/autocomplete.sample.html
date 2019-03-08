@@ -2,48 +2,39 @@
     <app-page-header title="Autocomplete"></app-page-header>
     <section class="sample-content">
         <article class="sample-column">
-            <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit()">
+            <form class="input-sample" action="/" method="POST" [formGroup]="travel">
                 <div class="box">
                     <igx-input-group class="group">
-                        <igx-prefix><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
-                        <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
-                            [igxAutocomplete]='townsPanel'/>
-                        <label igxLabel for="towns">Towns</label>
+                        <igx-prefix><igx-icon fontSet="material">language</igx-icon></igx-prefix>
+                        <input formControlName="country" igxInput type="text" required
+                            [igxAutocomplete]='countryPanel'/>
+                        <label igxLabel>Country</label>
                     </igx-input-group>
-                    <igx-drop-down #townsPanel maxHeight="400px">
-                        <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
-                            {{town}}
-                        </igx-drop-down-item>
+                    <igx-drop-down #countryPanel maxHeight="400px">
+                        <igx-drop-down-item-group *ngFor="let continent of worldInfo | groupContains: travel.value.country" [label]="continent.name">
+                            <igx-drop-down-item *ngFor="let country of continent.countries | contains: travel.value.country" [value]="country">
+                                {{ country }}
+                            </igx-drop-down-item>
+                        </igx-drop-down-item-group>
                     </igx-drop-down>
                 </div>
                 <div class="box">
                     <igx-input-group class="group">
-                        <igx-prefix><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
-                        <input igxInput name="townsDetailed" type="text" [(ngModel)]="townSelected" required
-                            [igxAutocomplete]='townsDetailedPanel' [igxAutocompleteSettings]='settings' />
-                        <label igxLabel for="townsDetailed">Towns Detailed</label>
-                        <igx-suffix><igx-icon fontSet="material" (click)="townSelected = ''">clear</igx-icon> </igx-suffix>
+                        <igx-prefix><igx-icon fontSet="material">insert_emoticon</igx-icon></igx-prefix>
+                        <input igxInput formControlName="attraction" type="text" required
+                            [igxAutocomplete]='attractionsPanel'/>
+                        <label igxLabel>Attraction</label>
                     </igx-input-group>
-                    <igx-drop-down #townsDetailedPanel>
-                        <igx-drop-down-item *ngFor="let town of townsDetailed | startsWith:townSelected:'name'" [value]="town.name">
-                            <img [src]="town.image" class='logo' width="50" height="50"/>
-                                {{town.name}}
+                    <igx-drop-down #attractionsPanel maxHeight="300px">
+                        <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
+                            <igx-icon class="logo" fontSet="material">{{attraction.image}}</igx-icon>
+                            {{attraction.name}}
                         </igx-drop-down-item>
                     </igx-drop-down>
                 </div>
-                <div class="box">
-                    <igx-input-group class="group">
-                        <igx-prefix><igx-icon fontSet="material">{{ enabled ? 'place' : 'not_interested' }}</igx-icon> </igx-prefix>
-                        <input igxInput name="townsDisabled" type="text" [(ngModel)]="townSelected" required
-                            [igxAutocomplete]='townsDetailedPanel'
-                            [igxAutocompleteDisabled]="!enabled"/>
-                        <label igxLabel for="townsDisabled">Towns Disabled</label>
-                    </igx-input-group>
-                    <igx-switch name="toggle" [(ngModel)]="enabled"></igx-switch>
-                </div>
-                <igx-dialog #alert title="Submited value" [message]="townSelected" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+                <igx-dialog #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
                 <div class="submit">
-                    <button igxButton (click)="alert.open()">Submit</button>
+                    <button igxButton (click)="onSearch()" [disabled]="!travel.valid">Search</button>
                 </div>
             </form>
         </article>

@@ -12,7 +12,8 @@ import {
     Input,
     TemplateRef
 } from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase, TimePickerInteractionMode } from './time-picker.common';
+import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { InteractionMode } from '../core/enums';
 
 /** @hidden */
 @Directive({
@@ -26,8 +27,8 @@ export class IgxItemListDirective {
     public isActive: boolean;
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-                public timePicker: IgxTimePickerBase,
-                private elementRef: ElementRef) {}
+    public timePicker: IgxTimePickerBase,
+        private elementRef: ElementRef) { }
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -155,7 +156,7 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (this.timePicker.mode === TimePickerInteractionMode.dropdown) {
+        if (this.timePicker.mode === InteractionMode.DropDown) {
             this.timePicker.hideOverlay();
             return;
         }
@@ -239,8 +240,8 @@ export class IgxHourItemDirective {
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-                public timePicker: IgxTimePickerBase,
-                private itemList: IgxItemListDirective) {}
+    public timePicker: IgxTimePickerBase,
+        private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {
@@ -281,8 +282,8 @@ export class IgxMinuteItemDirective {
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-                public timePicker: IgxTimePickerBase,
-                private itemList: IgxItemListDirective) {}
+    public timePicker: IgxTimePickerBase,
+        private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {
@@ -323,8 +324,8 @@ export class IgxAmPmItemDirective {
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-                public timePicker: IgxTimePickerBase,
-                private itemList: IgxItemListDirective) {}
+    public timePicker: IgxTimePickerBase,
+        private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {
@@ -341,6 +342,6 @@ export class IgxAmPmItemDirective {
     selector: '[igxTimePickerTemplate]'
 })
 export class IgxTimePickerTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
