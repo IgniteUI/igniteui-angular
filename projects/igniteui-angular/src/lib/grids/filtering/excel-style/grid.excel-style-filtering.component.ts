@@ -173,6 +173,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.destroy$.complete();
     }
 
+    public clearFilterClass() {
+        if (this.column.filteringExpressionsTree) {
+            return 'igx-excel-filter__actions-clear';
+        } else {
+            return 'igx-excel-filter__actions-clear--disabled';
+        }
+    }
+
     public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.column = column;
@@ -524,9 +532,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 });
             });
             this.expressionsList = new Array<ExpressionUI>();
-            this.grid.filter(this.column.field, null, filterTree);
+            this.filteringService.filter(this.column.field, filterTree);
         } else {
-            this.grid.clearFilter(this.column.field);
+            this.filteringService.clearFilter(this.column.field);
         }
 
         this.originalColumnData = new Array<FilterListItem>();
@@ -541,7 +549,21 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     public onKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE) {
+            this.closeDropdown();
+        }
         eventArgs.stopPropagation();
+    }
+
+    public clearFilter() {
+        this.filteringService.clearFilter(this.column.field);
+        this.populateColumnData();
+    }
+
+    public onClearFilterKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.ENTER) {
+            this.clearFilter();
+        }
     }
 
     private createCondition(conditionName: string) {

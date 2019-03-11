@@ -72,6 +72,15 @@
 
         <div 
             tabindex="0"
+            [ngClass]="clearFilterClass()"
+            (keydown)="onClearFilterKeyDown($event)"
+            (click)="clearFilter()">
+            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</span>
+            <igx-icon>clear</igx-icon>
+        </div>
+
+        <div 
+            tabindex="0"
             class="igx-excel-filter__actions-filter"
             (keydown)="onTextFilterKeyDown($event)"
             (click)="onTextFilterClick($event)"
