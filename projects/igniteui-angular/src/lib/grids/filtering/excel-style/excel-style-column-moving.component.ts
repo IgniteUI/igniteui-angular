@@ -21,6 +21,10 @@ export class IgxExcelStyleColumnMovingComponent {
 
     constructor() {}
 
+    private get visibleColumns() {
+        return this.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+    }
+
     get canNotMoveLeft() {
         const prevIndex = this.grid.columns.indexOf(this.column) - 1;
         return this.column.visibleIndex === 0 ||
@@ -50,10 +54,6 @@ export class IgxExcelStyleColumnMovingComponent {
             targetColumn = this.findColumn(moveDirection, this.grid.unpinnedColumns);
         }
         this.grid.moveColumn(this.column, targetColumn, moveDirection);
-    }
-
-    private get visibleColumns() {
-        return this.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
     }
 
     private findColumn(moveDirection: number, columns: IgxColumnComponent[]) {
