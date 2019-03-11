@@ -3,7 +3,6 @@
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
     </div>
-    <input/>
     <igx-hierarchical-grid class="hgrid" [allowFiltering]='true' #grid1 [data]="localData" [displayDensity]="density" [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true"
         [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded" #hGrid>
         <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
@@ -12,13 +11,13 @@
             <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
 
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [allowFiltering]='true' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
                 <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
                 <igx-column-group header="Information2">
                     <igx-column field="ChildLevels"  [groupable]='true'></igx-column>
                     <igx-column field="ProductName"  [groupable]='true'></igx-column>
                 </igx-column-group>
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' [allowFiltering]='true' >
                     <igx-column field="ID" [hasSummary]='true'></igx-column>
                     <igx-column-group header="Information3">
                         <igx-column field="ChildLevels"></igx-column>

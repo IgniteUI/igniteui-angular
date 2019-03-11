@@ -501,6 +501,36 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(parentCell.focused).toBeTruthy();
 
     }));
+
+    it('should move focus to/from filter chip when navigat with Tab/Shift+Tab from parent to child that has filtering. ', (async () => {
+        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        child1.allowFiltering = true;
+        fixture.detectChanges();
+
+        const horizontalScrDir = hierarchicalGrid.dataRowList.toArray()[0].virtDirRow;
+        horizontalScrDir.scrollTo(6);
+        await wait(100);
+        fixture.detectChanges();
+
+        const lastParentCell = hierarchicalGrid.getCellByColumn(0, 'childData2');
+        lastParentCell.nativeElement.focus();
+        fixture.detectChanges();
+
+        lastParentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await wait(100);
+        fixture.detectChanges();
+
+        const filterItems = fixture.debugElement.queryAll(By.css('.igx-chip__item'));
+        const firstFilterItem =  filterItems[0].nativeElement;
+        expect(document.activeElement === firstFilterItem).toBeTruthy();
+
+        firstFilterItem.closest('.igx-grid__filtering-cell').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(lastParentCell.selected).toBeTruthy();
+        expect(lastParentCell.focused).toBeTruthy();
+    }));
 });
 
 
