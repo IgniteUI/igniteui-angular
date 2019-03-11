@@ -436,6 +436,19 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
+        it('should close dropdown on blur', fakeAsync(() => {
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -1099,6 +1112,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
             inputElement.triggerEventHandler('keydown', tabKeyEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -1108,10 +1122,10 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
             inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
-
         }));
         it('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
