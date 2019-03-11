@@ -55,6 +55,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         }
     }
 
+    /** @inheritdoc */
     clone(): IPositionStrategy {
         return cloneInstance(this);
     }
