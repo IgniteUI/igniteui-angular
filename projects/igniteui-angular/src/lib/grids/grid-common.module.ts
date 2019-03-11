@@ -138,7 +138,8 @@ import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.e
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
         IgxFilterModule,
-        IgxGridPipesModule
+        IgxGridPipesModule,
+        IgxGridExcelStyleFilteringModule
     ],
     imports: [
         CommonModule,

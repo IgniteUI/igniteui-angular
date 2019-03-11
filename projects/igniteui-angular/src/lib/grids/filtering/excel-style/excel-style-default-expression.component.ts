@@ -11,14 +11,13 @@ import {
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down';
-import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
+import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
+import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/index';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
+import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -56,7 +55,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public expressionsList: Array<ExpressionUI>;
 
     @Input()
-    public grid: IgxGridBaseComponent;
+    public grid: any;
 
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();
