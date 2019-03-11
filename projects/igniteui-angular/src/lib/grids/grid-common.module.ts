@@ -141,7 +141,8 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxSummaryCellComponent,
         IgxGridColumnResizerComponent,
         IgxFilterModule,
-        IgxGridPipesModule
+        IgxGridPipesModule,
+        IgxGridExcelStyleFilteringModule
     ],
     imports: [
         CommonModule,
