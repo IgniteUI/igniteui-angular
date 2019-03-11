@@ -637,7 +637,7 @@ export class IgxGridCellComponent implements OnInit {
      */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
-        if (this.column.editable) {
+        if (this.column.editable && !this.inEditMode) {
             this.inEditMode = true;
         }
 
