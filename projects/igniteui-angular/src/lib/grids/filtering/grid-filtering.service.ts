@@ -12,8 +12,9 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
+import { IgxDatePipeComponent } from '../grid.common';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 

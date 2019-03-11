@@ -1,7 +1,7 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
 } from '@angular/core';
 import {  ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -18,6 +18,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxSelectionAPIService } from '../core/selection';
 
 /** @hidden @internal */
 @Directive({
@@ -79,9 +80,22 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _overlayDefaults: OverlaySettings;
 
     private _value: any;
+
     /**
-     * An @Input property that sets the input value.
+     * An @Input property that gets/sets the component value.
      *
+     * ```typescript
+     * // get
+     * let selectValue = this.select.value;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.select.value = 'London';
+     * ```
+     * ```html
+     * <igx-select [value]="value"></igx-select>
+     * ```
      */
     @Input()
     public get value(): any {
@@ -128,7 +142,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The default is `line`.
      * ```html
-     *<igx-select [type]="'box'">
+     *<igx-select [type]="'box'"></igx-select>
      * ```
      */
     @Input()
@@ -138,7 +152,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets what display density to be used for the input group.
      * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
      * ```html
-     *<igx-select [displayDensity]="'compact'">
+     *<igx-select [displayDensity]="'compact'"></igx-select>
      * ```
      */
     @Input()
@@ -174,6 +188,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
+    }
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, selection);
     }
 
     /** @hidden @internal */
