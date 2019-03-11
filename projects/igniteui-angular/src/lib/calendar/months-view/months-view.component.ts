@@ -102,6 +102,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
+     * Gets/sets whether the view should be rendered
+     * according to the locale and monthFormat, if any.
+     */
+    @Input()
+    public formatView = true;
+
+    /**
      * Emits an event when a selection is made in the months view.
      * Provides reference the `date` property in the `IgxMonthsViewComponent`.
      * ```html
@@ -195,7 +202,10 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     public formattedMonth(value: Date): string {
-        return this._formatterMonth.format(value);
+        if (this.formatView) {
+            return this._formatterMonth.format(value);
+        }
+        return `${value.getMonth()}`;
     }
 
     /**
