@@ -29,7 +29,7 @@ import { useAnimation } from '@angular/animations';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../animations/main';
-import { AbsoluteScrollStrategy } from '../services/index';
+import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 
 /**
  * @hidden
