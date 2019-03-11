@@ -50,7 +50,7 @@ describe('IgxGrid - Summaries', () => {
                 SummaryColumnsWithSpecificWidthsComponent,
                 SummariesGroupByTransactionsComponent
             ],
-            imports: [BrowserAnimationsModule, IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
