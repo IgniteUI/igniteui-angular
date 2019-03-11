@@ -76,7 +76,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
-    public selectedIndex = 0;
+    public get selectedIndex(): number {
+        return this._selectedIndex;
+    }
+
+    public set selectedIndex(index: number) {
+        this._selectedIndex = index;
+        this.setSelectedGroup();
+    }
 
     /**
      * Emitted when a tab item is selected.
@@ -193,18 +200,19 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public offset = 0;
 
     private _groupChanges$: Subscription;
+    private _selectedIndex = 0;
 
     /**
      * @hidden
      */
-    public scrollLeft(event) {
+    public scrollLeft(event): void {
         this._scroll(false);
     }
 
     /**
      * @hidden
      */
-    public scrollRight(event) {
+    public scrollRight(event): void {
         this._scroll(true);
     }
 
@@ -256,15 +264,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
-        setTimeout(() => {
-            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
-                // if nothing is selected - select the first tabs group
-                this._selectGroupByIndex(0);
-            } else {
-                this._selectGroupByIndex(this.selectedIndex);
-            }
-        });
-
+        this.setSelectedGroup();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
@@ -279,7 +279,18 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    private resetSelectionOnCollectionChanged() {
+    private setSelectedGroup(): void {
+        requestAnimationFrame(() => {
+            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
+                // if nothing is selected - select the first tabs group
+                this._selectGroupByIndex(0);
+            } else {
+                this._selectGroupByIndex(this.selectedIndex);
+            }
+        });
+    }
+
+    private resetSelectionOnCollectionChanged(): void {
         setTimeout(() => {
             if (this.groups.toArray()[this.selectedIndex] !== undefined) {
                 // persist the selected index and applied it to the new collection
@@ -293,7 +304,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }, 0);
     }
 
-    private _selectGroupByIndex(selectedIndex: number) {
+    private _selectGroupByIndex(selectedIndex: number): void {
         const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
         const group = selectableGroups[selectedIndex];
 
@@ -324,7 +335,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         });
     }
 
-    private _deselectGroup(group: IgxTabsGroupComponent) {
+    private _deselectGroup(group: IgxTabsGroupComponent): void {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (group.disabled || this.selectedTabItem.index === group.index) {
             return;
