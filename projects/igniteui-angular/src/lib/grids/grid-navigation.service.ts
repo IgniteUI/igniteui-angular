@@ -470,13 +470,13 @@ export class IgxGridNavigationService {
 
     public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
-        const prevFilterableIndex = this.grid.filteringService.unpinnedFilterableColumns.indexOf(column) - 1;
+        const prevFilterableIndex = cols.indexOf(column) - 1;
         const prevIndex = cols[prevFilterableIndex].visibleIndex;
         const visibleIndex = column.visibleIndex;
 
         if (prevIndex >= 0 && visibleIndex > 0 && !this.isColumnLeftFullyVisible(prevIndex) && !column.pinned) {
             eventArgs.preventDefault();
-            this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[prevIndex], false);
+            this.grid.filteringService.scrollToFilterCell(cols[prevIndex], false);
         } else if (column.visibleIndex === 0 ||
                     (prevIndex < 0 && !this.getFirstPinnedFilterableColumn()) ||
                     column === this.getFirstPinnedFilterableColumn()) {
@@ -485,10 +485,11 @@ export class IgxGridNavigationService {
     }
 
     public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
-        const nextIndex = this.grid.filteringService.unpinnedFilterableColumns.indexOf(column) + 1;
+        const cols = this.grid.filteringService.unpinnedFilterableColumns;
+        const nextIndex = cols.indexOf(column) + 1;
         if (column === this.getLastPinnedFilterableColumn() &&
         !this.isColumnFullyVisible(nextIndex)) {
-        this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], false);
+        this.grid.filteringService.scrollToFilterCell(cols[nextIndex], false);
         eventArgs.stopPropagation();
         return;
     }
