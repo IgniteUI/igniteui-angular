@@ -87,18 +87,20 @@ export class DataUtil {
             // break off if the parent is already added
             while (pointer && added[0] !== pointer) {
                 chain.push(pointer);
-                const p = added.shift();
-                if (p) {
-                    if (p['groups']) {
-                        p['groups'].push(chain[0]);
-                    } else {
-                        p['groups'] = [chain[0]];
-                    }
-                }
+                added.shift();
                 pointer = pointer.groupParent;
             }
             for (j = chain.length - 1; j >= 0; j--) {
-                groupsRecords.push(chain[j]);
+                if (!chain[j].level) {
+                    groupsRecords.push(chain[j]);
+                } else {
+                    const p = chain[j + 1] || added[added.length - 1];
+                    if (p['groups']) {
+                        p['groups'].push(chain[j]);
+                    } else {
+                        p['groups'] = [chain[j]];
+                    }
+                }
                 result.push(chain[j]);
                 added.unshift(chain[j]);
                 const hierarchy = this.getHierarchy(chain[j]);
