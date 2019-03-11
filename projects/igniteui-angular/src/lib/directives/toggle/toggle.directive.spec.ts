@@ -420,7 +420,7 @@ describe('IgxToggle', () => {
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
-    fit('fix for #4222 - Should emit closed when closed second time', fakeAsync(() => {
+    it('fix for #4222 - Should emit closed when closed second time', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
