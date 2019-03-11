@@ -1,4 +1,5 @@
 import { IgxOverlayService } from '../overlay';
+import { NgZone } from '@angular/core';
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_scroll.html).
  * Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService.
@@ -13,7 +14,7 @@ export interface IScrollStrategy {
      * settings.scrollStrategy.initialize(document, overlay, id);
      * ```
      */
-     initialize(document: Document, overlayService: IgxOverlayService, id: string);
+     initialize(document: Document, overlayService: IgxOverlayService, id: string, zone?: NgZone);
 
     /**
      * Attaches the strategy

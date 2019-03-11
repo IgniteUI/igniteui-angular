@@ -22,7 +22,8 @@ import {
     Injector,
     Type,
     OnDestroy,
-    NgModuleRef
+    NgModuleRef,
+    NgZone
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
@@ -106,7 +107,8 @@ export class IgxOverlayService implements OnDestroy {
         private _appRef: ApplicationRef,
         private _injector: Injector,
         private builder: AnimationBuilder,
-        @Inject(DOCUMENT) private document: any) {
+        @Inject(DOCUMENT) private document: any,
+        private _zone: NgZone) {
         this._document = <Document>this.document;
     }
 
@@ -274,7 +276,7 @@ export class IgxOverlayService implements OnDestroy {
                 { width: info.initialSize.width, height: info.initialSize.height },
                 document,
                 true);
-            info.settings.scrollStrategy.initialize(this._document, this, info.id);
+            info.settings.scrollStrategy.initialize(this._document, this, info.id, this._zone);
             info.settings.scrollStrategy.attach();
         }
 
