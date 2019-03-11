@@ -1,20 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IColumnResizeEventArgs } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe, DatePipe } from '@angular/common';
-import { cloneArray } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
-// import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-// import { TitleCasePipe } from '@angular/common';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
+import { IgxDatePipeComponent } from '../grid.common';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -40,8 +35,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    // private filterPipe = new IgxGridFilterConditionPipe();
-    // private titlecasePipe = new TitleCasePipe();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 

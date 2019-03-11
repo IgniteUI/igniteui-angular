@@ -142,7 +142,8 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
         IgxFilterModule,
-        IgxGridPipesModule
+        IgxGridPipesModule,
+        IgxGridExcelStyleFilteringModule
     ],
     imports: [
         CommonModule,

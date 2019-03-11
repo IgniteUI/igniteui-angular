@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 
 @Component({
@@ -79,7 +78,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public index: number;
 
     @ViewChild('hgrid')
-    private hGrid: IgxHierarchicalGridComponent;
+    private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
      * @hidden
@@ -111,8 +110,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * ```
      */
     // TODO: Refactor
-    get parentGrid(): IgxHierarchicalGridComponent {
-        return this.gridAPI.grid; // get(this.parentGridID);
+    get parentGrid(): any/* TODO: IgxHierarchicalGridComponent*/ {
+        return this.gridAPI.grid;
     }
 
     @HostBinding('attr.data-level')
@@ -132,7 +131,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         return this.element.nativeElement;
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
+    constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
         private selectionAPI: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
