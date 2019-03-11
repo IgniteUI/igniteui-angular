@@ -2993,6 +2993,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const pinned = this._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
 
+        if (to.columnGroup) {
+            dropIndex += to.allChildren.length;
+        }
+
         if (position === DropPosition.BeforeDropTarget) {
             dropIndex--;
         }

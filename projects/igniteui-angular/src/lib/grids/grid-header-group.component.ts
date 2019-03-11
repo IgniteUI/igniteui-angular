@@ -12,7 +12,8 @@ import {
     ElementRef,
     OnDestroy,
     AfterViewInit,
-    HostListener
+    HostListener,
+    NgZone
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -21,7 +22,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { Subject, fromEvent } from 'rxjs';
+import { Subject, fromEvent, Subscription } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 
 const Z_INDEX = 9999;
@@ -202,7 +203,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @hidden
      */
     @HostListener('mousedown', ['$event'])
-    public onMouseMove(event): void {
+    public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
         event.preventDefault();
     }
@@ -224,23 +225,26 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      */
     public ngAfterViewInit() {
         if (!this.column.columnGroup) {
-            fromEvent(this.resizeHandle.nativeElement, 'mousedown').pipe(
-                debounceTime(DEBOUNCE_TIME),
-                takeUntil(this.destroy$)
-            ).subscribe((event) => {
+            this.zone.runOutsideAngular(() => {
+                fromEvent(this.resizeHandle.nativeElement, 'mousedown').pipe(
+                    debounceTime(DEBOUNCE_TIME),
+                    takeUntil(this.destroy$)
+                ).subscribe((event) => {
 
-                if (this._dblClick) {
-                    this._dblClick = false;
-                    return;
-                }
+                    if (this._dblClick) {
+                        this._dblClick = false;
+                        return;
+                    }
 
-                this._onResizeAreaMouseDown(event);
-                this.grid.resizeLine.resizer.onMousedown(event);
+                    this._onResizeAreaMouseDown(event);
+                    this.grid.resizeLine.resizer.onMousedown(event);
+                });
             });
         }
     }
 
     constructor(private cdr: ChangeDetectorRef,
+                private zone: NgZone,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,

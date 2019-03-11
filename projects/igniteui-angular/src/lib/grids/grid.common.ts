@@ -74,8 +74,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
             if (left > max) {
                 this.left = max;
-            } else if (left > max) {
-                this.left = left;
             }
         });
 
