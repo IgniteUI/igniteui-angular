@@ -578,6 +578,14 @@ describe('IgxGrid - Filtering actions', () => {
         const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
         HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
+
+    it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
