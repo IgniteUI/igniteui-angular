@@ -580,7 +580,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             }
         } else {
             this.horizontalScrollGridToIndex(grid, visibleColumnIndex, () => {
-                this.focusPrevRow(elem, visibleColumnIndex, grid, inChild);
+                this.focusPrevRow(elem, visibleColumnIndex, grid, inChild, isSummary);
             });
         }
     }

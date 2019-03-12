@@ -194,6 +194,34 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childLastCell.focused).toBe(true);
     }));
 
+    it('should include summary rows in tab sequence.', (async () => {
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        childGrid.getColumnByName('ID').hasSummary = true;
+        fixture.detectChanges();
+        childGrid.cdr.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(2);
+        await wait(100);
+        fixture.detectChanges();
+
+        const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
+        parentCell.nativeElement.focus();
+
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+
+        const summaryCells = fixture.debugElement.queryAll(By.css('igx-grid-summary-cell'));
+        const lastSummaryCell = summaryCells[summaryCells.length - 1].nativeElement;
+        expect(document.activeElement).toBe(lastSummaryCell);
+
+        lastSummaryCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(parentCell.selected).toBe(true);
+        expect(parentCell.focused).toBe(true);
+    }));
+
     it('should allow navigating to end in child grid when child grid target row moves outside the parent view port.', (async () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
