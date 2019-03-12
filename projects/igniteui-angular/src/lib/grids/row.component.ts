@@ -206,12 +206,16 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     }
 
     /**
-     * @hidden
+     * Gets the ID of the row.
+     * A row in the grid is identified either by:
+     * - primaryKey data value,
+     * - the whole rowData, if the primaryKey is omitted.
+     *
+     * ```typescript
+     * let rowID = this.grid.selectedRows[2].rowID;
+     * ```
      */
     public get rowID() {
-        // A row in the grid is identified either by:
-        // primaryKey data value,
-        // or if the primaryKey is omitted, then the whole rowData is used instead.
         const primaryKey = this.grid.primaryKey;
         return primaryKey ? this._rowData[primaryKey] : this._rowData;
     }
