@@ -108,7 +108,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
-|initialize       | Initialize the strategy. Should be called once                  |document, overlayService, id|
+|initialize       | Initialize the strategy. Should be called once            |document, overlayService, id, zone|
 |attach           | Attaches the strategy                                                           |-           |
 |detach           | Detaches the strategy                                                           |-           |
 

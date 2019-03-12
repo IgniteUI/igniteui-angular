@@ -111,6 +111,7 @@ All notable changes for each version of this project will be documented in this 
       - `attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string` - Creates a `ComponentRef` from the provided `component` class to show in an overlay. If `moduleRef` is provided the service will use the module's `ComponentFactoryResolver` and `Injector` when creating the `ComponentRef` instead of the root ones.
     - `igxOverlay.show(component, settings)` is **deprecated**. Use `igxOverlay.attach()` method to obtain an Id, and then call `igxOverlay.show(id, settings)` method to show a component in the overlay.
     - `IPositionStrategy` exposes new method `clone` that clones the strategy instance with its settings.
+    - `IScrollStrategy's` `initialize` method accept optional `zone` argument. If passed `AutoScrollStrategy` will perform repositioning of overlay content outside `NgZone`.
 
 - `igx-date-picker`
     - **Feature** Added `dropdown` `mode` to enable the input field value editing and spinning of the date parts as well as displaying a drop down calendar to select a date. Example:
