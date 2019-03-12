@@ -263,7 +263,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 const parentSummary = parent.summariesRowList.toArray()[0].nativeElement;
                 parent.navigation.focusNextRow(parentSummary, 0, this.grid.rootGrid, true);
             } else {
-                this.focusNext(0, this.grid);
+                this.focusNext(0);
             }
         } else  if (isLastDataRow && hasSummaries && isLastColumn && this.grid.parent) {
             // navigating in child rows, next is child grid's summary row
