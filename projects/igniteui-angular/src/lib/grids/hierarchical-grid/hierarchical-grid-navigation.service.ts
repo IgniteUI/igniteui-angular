@@ -249,9 +249,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextIsDataRow = this.grid.dataRowList.find(row => row.index === rowIndex + 1) ;
         const isLastColumn =  this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
         const isLastSummaryRow = hasSummaries && isSummaryRow;
-        if (!nextIsDataRow && !isLastDataRow && isLastColumn && !isSummaryRow) {
+        if (!nextIsDataRow && !(isLastDataRow && hasSummaries) && isLastColumn && !isSummaryRow) {
+            // navigating in child, next is not summary
             this.navigateDown(currentRowEl, rowIndex, 0);
         } else if (isLastSummaryRow && isLastColumn && this.grid.parent) {
+            // navigating in child summary, next is parent summary or next parent row
             const parent = this.grid.parent;
             const parentHasSummary = parent.summariesRowList.toArray().length > 0;
             const parentRowIndex = parseInt(
@@ -264,9 +266,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this.focusNext(0, this.grid);
             }
         } else  if (isLastDataRow && hasSummaries && isLastColumn && this.grid.parent) {
-            // should also scroll it in view
+            // navigating in child rows, next is child grid's summary row
            this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid.parent, true);
         } else {
+            // navigating in normal cells
             super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow);
         }
     }
