@@ -1,7 +1,8 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent, FilterMode } from '../grid';
+import { FilterMode } from '../grid-base.component';
+import { IgxColumnComponent } from '../../grids/column.component';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
@@ -232,9 +233,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextIndex = rowIndex + 1;
         const virt = this.grid.verticalScrollContainer;
         const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
-          this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
-          if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent &&
-          this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+            this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
+        if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent && isLastColumn) {
             const childContainer = this.getChildGridRowContainer();
             const nextIsSiblingChild = this.grid.parent ? !!childContainer.nextElementSibling : false;
             if (nextIsSiblingChild) {
@@ -242,7 +242,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 return;
             }
             this.navigateDown(currentRowEl, rowIndex, 0);
-          } else if (isLastColumn && isNextChild) {
+        } else if (isLastColumn && isNextChild) {
             const isInView = virt.state.startIndex + virt.state.chunkSize > nextIndex;
             if (!isInView) {
                 this.scrollGrid(this.grid, 'next', () => {

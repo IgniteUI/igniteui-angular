@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 
 enum MoveDirection {
@@ -487,36 +487,35 @@ export class IgxGridNavigationService {
     public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
         const nextIndex = cols.indexOf(column) + 1;
-        if (column === this.getLastPinnedFilterableColumn() &&
-        !this.isColumnFullyVisible(nextIndex)) {
-        this.grid.filteringService.scrollToFilterCell(cols[nextIndex], false);
-        eventArgs.stopPropagation();
-        return;
-    }
-
-    if (nextIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
-        if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
-            if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
-                eventArgs.stopPropagation();
-                return;
-            }
-            this.goToFirstCell();
+        if (column === this.getLastPinnedFilterableColumn() && !this.isColumnFullyVisible(nextIndex)) {
+            this.grid.filteringService.scrollToFilterCell(cols[nextIndex], false);
+            eventArgs.stopPropagation();
+            return;
         }
-        eventArgs.preventDefault();
-    } else if (!column.pinned && !this.isColumnFullyVisible(nextIndex)) {
-        eventArgs.preventDefault();
-        this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], true);
-    }
+
+        if (nextIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
+            if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
+                if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
+                    eventArgs.stopPropagation();
+                    return;
+                }
+                this.goToFirstCell();
+            }
+            eventArgs.preventDefault();
+        } else if (!column.pinned && !this.isColumnFullyVisible(nextIndex)) {
+            eventArgs.preventDefault();
+            this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], true);
+        }
     }
 
     private getLastPinnedFilterableColumn(): IgxColumnComponent {
         const pinnedFilterableColums =
-            this.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+            this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable);
         return pinnedFilterableColums[pinnedFilterableColums.length - 1];
     }
 
     private getFirstPinnedFilterableColumn(): IgxColumnComponent {
-        return this.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable)[0];
+        return this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable)[0];
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
