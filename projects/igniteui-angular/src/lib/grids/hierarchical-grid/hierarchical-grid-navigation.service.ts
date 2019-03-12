@@ -246,9 +246,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const summaryRows = this.grid.summariesRowList.toArray();
         const hasSummaries = summaryRows.length > 0;
         const isLastDataRow = rowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1;
+        const nextIsDataRow = this.grid.dataRowList.find(row => row.index === rowIndex + 1) ;
         const isLastColumn =  this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
         const isLastSummaryRow = hasSummaries && isSummaryRow;
-        if (isLastDataRow && !hasSummaries && isLastColumn && this.grid.parent) {
+        if (!nextIsDataRow && isLastColumn && !isSummaryRow) {
             this.navigateDown(currentRowEl, rowIndex, 0);
         } else if (isLastSummaryRow && isLastColumn && this.grid.parent) {
             const parent = this.grid.parent;

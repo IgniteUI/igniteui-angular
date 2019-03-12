@@ -429,7 +429,7 @@ export class IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
-        if (rowIndex === 0 &&
+        if (isSummaryRow && rowIndex === 0 &&
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
                 return;
 
@@ -471,7 +471,7 @@ export class IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
-        if (rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
+        if (isSummary && rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
             this.goToLastBodyElement();
             return;
         }
