@@ -269,7 +269,6 @@ describe('IgxGrid Component Tests', () => {
         it('should render empty message', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
-            fixture.componentInstance.height = null;
             fixture.detectChanges();
 
             const grid = fixture.componentInstance.grid;
