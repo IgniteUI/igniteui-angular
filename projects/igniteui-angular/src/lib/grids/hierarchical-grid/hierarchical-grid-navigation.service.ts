@@ -251,7 +251,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (isLastDataRow && !hasSummaries && isLastColumn && this.grid.parent) {
             this.navigateDown(currentRowEl, rowIndex, 0);
         } else if (isLastSummaryRow && isLastColumn && this.grid.parent) {
-            this.focusNext(0, this.grid);
+            const parent = this.grid.parent;
+            const parentHasSummary = parent.summariesRowList.toArray().length > 0;
+            const parentRowIndex = parseInt(
+                this.getClosestElemByTag(currentRowEl, 'igx-child-grid-row').parentNode.getAttribute('data-rowindex'), 10);
+            const isLastRowInParent = parent.verticalScrollContainer.igxForOf.length - 1 === parentRowIndex;
+            if (isLastRowInParent && parentHasSummary) {
+                const parentSummary = parent.summariesRowList.toArray()[0].nativeElement;
+                parent.navigation.focusNextRow(parentSummary, 0, this.grid.rootGrid, true);
+            } else {
+                this.focusNext(0, this.grid);
+            }
         } else  if (isLastDataRow && hasSummaries && isLastColumn && this.grid.parent) {
             // should also scroll it in view
            this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid.parent, true);

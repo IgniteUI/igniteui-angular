@@ -165,7 +165,8 @@ export class IgxSummaryCellComponent {
     }
 
     private getRowElementByIndex(rowIndex) {
-        return this.grid.nativeElement.querySelector(`igx-grid-summary-row[data-rowindex="${rowIndex}"]`);
+        const summaryRows = this.grid.summariesRowList.toArray();
+        return summaryRows.find((sr) => sr.dataRowIndex === rowIndex).nativeElement;
     }
 
     private isKeySupportedInCell(key) {
