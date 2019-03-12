@@ -17,9 +17,9 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { IGridDataBindable } from './grid';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
@@ -27,9 +27,9 @@ import { OverlaySettings, PositionSettings, VerticalAlignment, HorizontalAlignme
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { CloseScrollStrategy } from '../services/overlay/scroll/close-scroll-strategy';
 import { useAnimation } from '@angular/animations';
-import { fadeIn, fadeOut } from 'igniteui-angular';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { fadeIn, fadeOut } from '../animations/main';
 
 /**
  * @hidden

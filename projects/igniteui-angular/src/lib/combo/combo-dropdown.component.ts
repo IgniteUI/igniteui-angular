@@ -68,7 +68,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public onFocus() {
         this._focusedItem = this._focusedItem || this.items[0];
         if (this._focusedItem) {
-            this._focusedItem.isFocused = true;
+            this._focusedItem.focused = true;
         }
     }
 
@@ -77,7 +77,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     public onBlur(evt?) {
         if (this._focusedItem) {
-            this._focusedItem.isFocused = false;
+            this._focusedItem.focused = false;
             this._focusedItem = null;
         }
     }

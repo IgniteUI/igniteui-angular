@@ -1,6 +1,6 @@
-import { experimental } from '@angular-devkit/core';
 import { filter, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 /**
  * Filter tree to project source dirs
@@ -8,7 +8,7 @@ import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
  */
 export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
     // tslint:disable:arrow-parens
-    let config: experimental.workspace.WorkspaceSchema;
+    let config: WorkspaceSchema;
     const configPath = getWorkspacePath(host);
     let sourcePaths: string[];
     const schematicPosition = context.schematic.collection.listSchematicNames().indexOf(context.schematic.description.name);
