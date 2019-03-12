@@ -70,7 +70,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         if (this.isHeader) {
             return;
         }
-        this._isSelected = value;
+        this._selected = value;
     }
 
     /**

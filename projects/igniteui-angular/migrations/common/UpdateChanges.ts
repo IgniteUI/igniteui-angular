@@ -1,5 +1,5 @@
 import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
 import * as path from 'path';
