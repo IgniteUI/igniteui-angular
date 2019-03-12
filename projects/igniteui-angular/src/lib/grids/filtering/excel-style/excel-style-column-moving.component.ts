@@ -22,34 +22,46 @@ export class IgxExcelStyleColumnMovingComponent {
     constructor() {}
 
     get canNotMoveLeft() {
-        return !this.column.movable || this.column.visibleIndex === 0 ||
-            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning);
+        const prevIndex = this.grid.columns.indexOf(this.column) - 1;
+        return this.column.visibleIndex === 0 ||
+            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
+            (this.column.level !== 0 && this.grid.columns[prevIndex] && this.grid.columns[prevIndex].level !== this.column.level);
     }
 
     get canNotMoveRight() {
-        return !this.column.movable || this.column.visibleIndex === this.grid.columns.length - 1;
+        const nextIndex = this.grid.columns.indexOf(this.column) + 1;
+        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
     }
 
     public onMoveButtonClicked(moveDirection) {
-        let index;
-        let position = moveDirection === 1 ? 1 : 0;
         let targetColumn;
-
         if (this.column.pinned) {
             if (this.column.isLastPinned && moveDirection === 1) {
                 targetColumn = this.grid.unpinnedColumns[0];
-                position = 0;
+                moveDirection = 0;
             } else {
-                index = this.grid.pinnedColumns.indexOf(this.column);
-                targetColumn = this.grid.pinnedColumns[index + moveDirection];
+                targetColumn = this.findColumn(moveDirection, this.grid.pinnedColumns);
             }
-        } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === -1) {
+        } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === 0) {
             targetColumn = this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1];
-            position = 1;
+            moveDirection = 1;
         } else {
-            index = this.grid.unpinnedColumns.indexOf(this.column);
-            targetColumn = this.grid.unpinnedColumns[index + moveDirection];
+            targetColumn = this.findColumn(moveDirection, this.grid.unpinnedColumns);
         }
-        this.grid.moveColumn(this.column, targetColumn, position);
+        this.grid.moveColumn(this.column, targetColumn, moveDirection);
+    }
+
+    private findColumn(moveDirection: number, columns: IgxColumnComponent[]) {
+        let index = columns.indexOf(this.column);
+        if (moveDirection === 0) {
+            while (index > 0) {
+                index--;
+                if (columns[index].level === this.column.level && columns[index].parent === this.column.parent) {
+                    return columns[index];
+                }
+            }
+        } else {
+            return columns[index + 1];
+        }
     }
 }
