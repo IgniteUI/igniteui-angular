@@ -283,14 +283,15 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
 
-        // Update column index since the next child can have in general less columns than visibleColumnIndex value.
-        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-
         if (childGrid.rowList.toArray().length === 0) {
             this.focusNext(visibleColumnIndex, childGrid);
             return;
         }
+
+        // Update column index since the next child can have in general less columns than visibleColumnIndex value.
+        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
+
         if (childGrid.verticalScrollContainer.state.startIndex !== 0) {
             // scroll to top
             this.scrollGrid(childGrid, 'top', () => this.focusNextRow(elem, visibleColumnIndex, childGrid));
@@ -312,14 +313,15 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
 
-        // Update column index since the previous child can have in general less columns than visibleColumnIndex value.
-        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-
         if (childGrid.rowList.toArray().length === 0) {
             this.focusPrev(visibleColumnIndex, childGrid);
             return;
         }
+
+        // Update column index since the previous child can have in general less columns than visibleColumnIndex value.
+        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
+
         const isScrolledToBottom = this._isScrolledToBottom(childGrid);
         const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
         if (!isScrolledToBottom) {
@@ -401,7 +403,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
             } else {
-                this.focusNextRow(next, visibleColumnIndex, nextParentGrid);
+                this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
             }
         } else if (verticalScroll.scrollTop !==
             verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize ) {
@@ -413,7 +415,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 if (next && nextIsSiblingChild) {
                     this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
                 } else if (next) {
-                    this.focusNextRow(next, visibleColumnIndex, nextParentGrid);
+                    this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
                 }
             });
         }
