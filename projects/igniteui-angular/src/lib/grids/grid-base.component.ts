@@ -2360,8 +2360,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._keydownListener = this.keydownHandler.bind(this);
             this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
-        this.initPinning();
         this.calculateGridSizes();
+        this.initPinning();
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
@@ -4305,9 +4305,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const unpinnedColumns = [];
         const newUnpinnedCols = [];
 
-        if (this.calcWidth === 0) {
-            this.calculateGridWidth();
-        }
         // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
