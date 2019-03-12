@@ -179,7 +179,7 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
         IgxColumnHidingModule,

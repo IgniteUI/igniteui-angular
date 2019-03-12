@@ -1,19 +1,20 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar, ICalendarDate } from '../../calendar/calendar';
+import { Calendar } from '../../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand, FilteringExpressionsTree } from '../../../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-
-const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
-const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
+import { IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxFilteringOperand,
+    IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -24,7 +25,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
         .compileComponents();
     }));
