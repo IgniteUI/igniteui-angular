@@ -1,16 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
+import { FilteringStrategy } from './filtering-strategy';
+import { FilteringExpressionsTree } from './filtering-expressions-tree';
+import { FilteringLogic } from './filtering-expression.interface';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
 
-import { FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState, IgxStringFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand,
-    FilteringExpressionsTree } from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
