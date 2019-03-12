@@ -429,6 +429,11 @@ export class IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
+        if (rowIndex === 0 &&
+            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+                return;
+
+        }
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex)) {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
@@ -466,6 +471,10 @@ export class IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
+        if (rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
+            this.goToLastBodyElement();
+            return;
+        }
         if (visibleColumnIndex === 0) {
             if (this.isRowInEditMode(rowIndex)) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
