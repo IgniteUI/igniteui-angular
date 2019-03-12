@@ -395,7 +395,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
             const elementToActivate = spans[index];
             this.renderer.addClass(elementToActivate, this.activeCssClass);
-            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold;color:black');
+            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;color:black');
         }
     }
 
@@ -413,7 +413,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
         const elementToDeactivate = spans[this._activeElementIndex];
         this.renderer.removeClass(elementToDeactivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;font-weight:bold;color:black');
+        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;color:black');
         this._activeElementIndex = -1;
     }
 
@@ -440,7 +440,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         if (exactMatch) {
             if (contentStringResolved === searchTextResolved) {
                 // tslint:disable-next-line:max-line-length
-                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue}</span>`);
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;color:black">${stringValue}</span>`);
                 matchCount++;
             } else {
                 this.appendText(stringValue);
@@ -455,7 +455,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
                 this.appendText(stringValue.substring(previousMatchEnd, start));
                 // tslint:disable-next-line:max-line-length
-                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;color:black">${stringValue.substring(start, end)}</span>`);
 
                 previousMatchEnd = end;
                 matchCount++;
