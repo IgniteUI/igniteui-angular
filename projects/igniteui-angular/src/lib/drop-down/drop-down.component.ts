@@ -255,7 +255,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public onToggleOpened() {
         if (this.selectedItem) {
             this._focusedItem = this.selectedItem;
-            this._focusedItem.isFocused = true;
+            this._focusedItem.focused = true;
         } else if (this.allowItemsFocus) {
             this.navigateFirst();
         }
@@ -274,7 +274,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleClosed() {
         if (this._focusedItem) {
-            this._focusedItem.isFocused = false;
+            this._focusedItem.focused = false;
         }
         this.onClosed.emit();
     }
