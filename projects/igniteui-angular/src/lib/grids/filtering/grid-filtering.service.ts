@@ -12,8 +12,9 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
+import { IgxDatePipeComponent } from '../grid.common';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -125,7 +126,12 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         const expressionsTree = this.createSimpleFilteringTree(field, expressionUIList);
-        this.grid.filter(field, null, expressionsTree);
+
+        if (expressionsTree.filteringOperands.length === 0) {
+            this.grid.clearFilter(field);
+        } else {
+            this.grid.filter(field, null, expressionsTree);
+        }
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(expressionsTree));
