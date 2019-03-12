@@ -45,7 +45,7 @@
     %overlay-display {
         width: 0;
         height: 0;
-        box-sizing: border-box;
+        box-sizing: content-box;
     }
 
     %overlay-wrapper {
@@ -58,6 +58,7 @@
         transition: background-color .25s $ease-in-out-quad;
         pointer-events: none;
         z-index: 10;
+        box-sizing: content-box;
     }
 
     %overlay-wrapper--modal {
@@ -72,6 +73,7 @@
     %overlay-content {
         position: absolute;
         pointer-events: all;
+        box-sizing: content-box;
     }
 
     %overlay-content--modal {
