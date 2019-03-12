@@ -2362,9 +2362,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu igx-toggle')[0];
+        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu')[0];
         if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('ng-reflect-id'));
+            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('id'));
             if (overlay) {
                 const animation = overlay.settings.positionStrategy.settings.closeAnimation;
                 overlay.settings.positionStrategy.settings.closeAnimation = null;
