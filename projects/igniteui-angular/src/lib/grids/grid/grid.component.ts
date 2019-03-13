@@ -126,6 +126,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.setupColumns();
             this.reflow();
         }
+        this.cdr.markForCheck();
     }
 
     /**

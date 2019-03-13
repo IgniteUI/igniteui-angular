@@ -103,6 +103,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             this.setupColumns();
             this.reflow();
         }
+        this.cdr.markForCheck();
     }
 
     /**
