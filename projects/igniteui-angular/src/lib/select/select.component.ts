@@ -3,9 +3,9 @@ import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
     AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
 } from '@angular/core';
-import {  ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IgxDropDownItemBase} from '../drop-down/index';
+import { IgxDropDownItemBase } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
@@ -50,10 +50,15 @@ const noop = () => { };
     templateUrl: './select.component.html',
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
-        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
+        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }],
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit,
- EditorProvider {
+    EditorProvider {
 
     /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;

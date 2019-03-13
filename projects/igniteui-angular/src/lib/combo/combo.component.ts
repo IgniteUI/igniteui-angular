@@ -112,7 +112,7 @@ const noop = () => { };
     }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
- OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -554,7 +554,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostBinding('style.width')
     @Input()
-    public width = '100%';
+    public width: string;
 
     /**
      * @hidden @internal
