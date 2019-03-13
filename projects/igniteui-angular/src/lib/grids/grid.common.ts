@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    HostListener,
     Inject,
     Injectable,
     Input,
@@ -17,14 +16,15 @@ import {
     TemplateRef,
     LOCALE_ID
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject, Subscription } from 'rxjs';
+import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
-import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
+import { KEYS } from '../core/utils';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 /**
@@ -311,7 +311,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.column.grid.onColumnMovingStart.emit(args);
 
         this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === 'Escape' || ev.key === 'Esc') {
+            if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
                 this.onEscape(ev);
             }
         });
@@ -402,6 +402,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private _unsubscribe() {
         if (this.subscription$) {
             this.subscription$.unsubscribe();
+            this.subscription$ = null;
         }
     }
 }
