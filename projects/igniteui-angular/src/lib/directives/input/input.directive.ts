@@ -93,6 +93,37 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.nativeElement.hasAttribute('disabled');
     }
     /**
+     * Sets the `required` property.
+     * ```html
+     * <input-group>
+     *  <input igxInput #igxInput [required]="true">
+     * </input-group>
+     * ```
+     * @memberof IgxInputDirective
+     */
+    @Input()
+    public set required(value: boolean) {
+        if (typeof value === 'boolean') {
+            this.nativeElement.required = this.inputGroup.isRequired = value;
+
+            if (value && !this.nativeElement.checkValidity()) {
+                this._valid = IgxInputState.INVALID;
+            } else {
+                this._valid = IgxInputState.INITIAL;
+            }
+        }
+    }
+    /**
+     * Gets whether the igxInput is required.
+     * ```typescript
+     * let isRequired = this.igxInput.required;
+     * ```
+     * @memberof IgxInputDirective
+     */
+    public get required() {
+        return this.nativeElement.hasAttribute('required');
+    }
+    /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
      * ```typescript
@@ -226,16 +257,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 this._valid = IgxInputState.INVALID;
             }
         }
-    }
-    /**
-     * Gets whether the igxInput is required.
-     * ```typescript
-     * let isRequired = this.igxInput.required;
-     * ```
-     * @memberof IgxInputDirective
-     */
-    public get required() {
-        return this.nativeElement.hasAttribute('required');
     }
     /**
      * Gets whether the igxInput has a placeholder.
