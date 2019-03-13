@@ -4,14 +4,13 @@ import {
     ContentChildren,
     ElementRef,
     forwardRef,
-    NgModule,
     QueryList,
     OnInit,
     Input,
     OnDestroy,
     ViewChild,
     EventEmitter,
-    Output,
+    Output
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
