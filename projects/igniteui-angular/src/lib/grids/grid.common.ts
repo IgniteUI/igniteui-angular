@@ -17,7 +17,7 @@ import {
     TemplateRef,
     LOCALE_ID
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
+import { animationFrameScheduler, fromEvent, interval, Observable, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
@@ -222,7 +222,7 @@ export enum DropPosition {
 @Directive({
     selector: '[igxColumnMovingDrag]'
 })
-export class IgxColumnMovingDragDirective extends IgxDragDirective {
+export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
     set data(val) {
@@ -241,16 +241,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         return this.cms.icon;
     }
 
+    private subscription$: Subscription;
     private _column: IgxColumnComponent;
     private _ghostImageClass = 'igx-grid__drag-ghost-image';
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
-
-    @HostListener('document:keydown.escape', ['$event'])
-    public onEscape(event) {
-        this.cms.cancelDrop = true;
-        this.onPointerUp(event);
-    }
 
     constructor(
         _element: ElementRef,
@@ -260,6 +255,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         private cms: IgxColumnMovingService,
     ) {
         super(_cdr, _element, _zone, _renderer);
+    }
+
+    public ngOnDestroy() {
+        this._unsubscribe();
+    }
+
+    public onEscape(event) {
+        this.cms.cancelDrop = true;
+        this.onPointerUp(event);
     }
 
     public onPointerDown(event) {
@@ -305,6 +309,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             source: this.column
         };
         this.column.grid.onColumnMovingStart.emit(args);
+
+        this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+            if (ev.key === 'Escape' || ev.key === 'Esc') {
+                this.onEscape(ev);
+            }
+        });
     }
 
     public onPointerMove(event) {
@@ -338,6 +348,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         });
+
+        this._unsubscribe();
     }
 
     protected createDragGhost(event) {
@@ -384,6 +396,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+        }
+    }
+
+    private _unsubscribe() {
+        if (this.subscription$) {
+            this.subscription$.unsubscribe();
         }
     }
 }
