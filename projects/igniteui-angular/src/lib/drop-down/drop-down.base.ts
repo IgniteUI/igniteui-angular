@@ -1,12 +1,11 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, ContentChild
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 let NEXT_ID = 0;
 
@@ -22,9 +21,6 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected _height;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
-
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
-    public virtDir: IgxForOfDirective<any>;
 
     /**
      * Get dropdown's html element of it scroll container
@@ -123,8 +119,8 @@ export abstract class IgxDropDownBase implements IDropDownList {
      * let myDropDownItems = this.dropdown.items;
      * ```
      */
-    public get items(): any[] | IgxDropDownItemBase[] {
-        const items: any[] | IgxDropDownItemBase[] = [];
+    public get items(): IgxDropDownItemBase[] {
+        const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -244,20 +240,11 @@ export abstract class IgxDropDownBase implements IDropDownList {
      * @param newIndex number - the index of the item in the `items` collection
      */
     public navigateItem(newIndex: number) {
-        const oldItem = this._focusedItem;
-        let newItem;
-        if (this.virtDir) {
-            this.virtDir.scrollTo(newIndex);
-            if (newIndex < this.virtDir.state.startIndex + this.virtDir.state.chunkSize) {
-                newItem = this.items[this.virtDir.state.startIndex + this.virtDir.state.chunkSize - newIndex];
-            } else {
-                newItem = this.items[this.items.length - 1];
-            }
-        } else if (newIndex !== -1) {
-
+        if (newIndex !== -1) {
+            const oldItem = this._focusedItem;
+            const newItem = this.items[newIndex];
             if (oldItem) {
                 oldItem.focused = false;
-                newItem = this.items[newIndex];
             }
             this._focusedItem = newItem;
             this.scrollToHiddenItem(newItem);
@@ -291,35 +278,6 @@ export abstract class IgxDropDownBase implements IDropDownList {
      */
     public navigatePrev() {
         this.navigate(Navigate.Up);
-    }
-
-    /**
-     * Virtual scroll implementation
-     * @hidden @internal
-     */
-    public navigateFirst_virtual() {
-        this.navigateItem(0);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public navigateLast_virtual() {
-        this.navigateItem(this.items.length - 1);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public navigateNext_virtual() {
-        this.navigateItem(this._focusedItem ? this._focusedItem.index + 1 : 0);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public navigatePrev_virtual() {
-        this.navigateItem(this._focusedItem ? this._focusedItem.index - 1 : 0);
     }
 
     protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {

@@ -10,19 +10,22 @@ import {
     OnDestroy,
     ViewChild,
     EventEmitter,
-    Output
+    Output,
+    ContentChild
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { DropDownActionKey } from './drop-down.common';
+import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
-import { ISelectionEventArgs, Navigate } from './drop-down.common';
+import { ISelectionEventArgs } from './drop-down.common';
 import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { OverlaySettings } from '../services';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { take } from 'rxjs/operators';
 
 
 /**
@@ -48,6 +51,10 @@ import { OverlaySettings } from '../services';
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
     protected destroy$ = new Subject<boolean>();
+    protected _focusedItemIndex;
+
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
+    public virtDir: IgxForOfDirective<any>;
 
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
@@ -79,6 +86,27 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     @Input()
     public allowItemsFocus = false;
+
+    /**
+     * @hidden @internal
+     */
+    public get focusedItem(): IgxDropDownItemBase {
+        if (this.virtDir) {
+            if (this._focusedItemIndex) {
+                return this.children.find(e => e.index === this._focusedItemIndex);
+            } else {
+                return null;
+            }
+        }
+        return this._focusedItem;
+    }
+
+    public set focusedItem(value: IgxDropDownItemBase) {
+        this._focusedItem = value;
+        if (this.virtDir) {
+            this._focusedItemIndex = value.index;
+        }
+    }
 
     @Input()
     get id(): string {
@@ -146,7 +174,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (selectedItem.selected) {
+            if (this.virtDir) {
+                return selectedItem;
+            } else if (selectedItem.selected) {
                 return selectedItem;
             }
             this.selection.clear(this.id);
@@ -230,10 +260,43 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newIndex number
      */
     public navigateItem(index: number) {
-        super.navigateItem(index);
+        if (this.virtDir) {
+            if (index === -1 || index >= this.virtDir.igxForOf.length) {
+                return;
+            }
+            const virtState = this.virtDir.state;
+            const subRequired = index < virtState.startIndex || index >= virtState.chunkSize + virtState.startIndex - 1;
+            const direction = index > this._focusedItemIndex ? Navigate.Down : Navigate.Up;
+            if (subRequired) {
+                this.virtDir.scrollTo(index);
+            }
+            this._focusedItemIndex = index;
+            if (subRequired) {
+                this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    this.skipHeader(direction);
+                });
+            } else {
+                this.skipHeader(direction);
+            }
+        } else {
+            super.navigateItem(index);
+        }
         if (this.allowItemsFocus && this.focusedItem) {
             this.focusedItem.element.nativeElement.focus();
             this.cdr.markForCheck();
+        }
+    }
+
+    protected skipHeader(direction: Navigate) {
+        if (!this.focusedItem) {
+            return;
+        }
+        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
+            if (direction === Navigate.Up) {
+                this.navigatePrev();
+            } else {
+                this.navigateNext();
+            }
         }
     }
 
@@ -245,7 +308,15 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (e.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+        if (this.virtDir && this.selectedItem) {
+            const virtDirective = this.virtDir;
+            const chunkSize = virtDirective.state.chunkSize;
+            const targetIndex = this.selectedItem.index > chunkSize / 2 ? this.selectedItem.index + chunkSize / 2 : this.selectedItem.index;
+            virtDirective.scrollTo(Math.trunc(targetIndex));
+            this._focusedItemIndex = this.selectedItem ? this.selectedItem.index : this._focusedItemIndex;
+        } else {
+            this.scrollToItem(this.selectedItem);
+        }
     }
 
     /**
@@ -335,6 +406,51 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
+     * Virtual scroll implementation
+     * @hidden @internal
+     */
+    public navigateFirst() {
+        if (this.virtDir) {
+            this.navigateItem(0);
+        } else {
+            super.navigateFirst();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigateLast() {
+        if (this.virtDir) {
+            this.navigateItem(this.virtDir.igxForOf.length - 1);
+        } else {
+            super.navigateLast();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigateNext() {
+        if (this.virtDir) {
+            this.navigateItem(this._focusedItemIndex !== undefined ? this._focusedItemIndex + 1 : 0);
+        } else {
+            super.navigateNext();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigatePrev() {
+        if (this.virtDir) {
+            this.navigateItem(this._focusedItemIndex !== undefined ? this._focusedItemIndex - 1 : 0);
+        } else {
+            super.navigatePrev();
+        }
+    }
+
+    /**
      * Handles the `onSelection` emit and the drop down toggle when selection changes
      * @hidden
      * @internal
@@ -351,6 +467,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
         if (newSelection.isHeader) {
             return;
+        }
+        if (this.virtDir) {
+            newSelection = {
+                value: newSelection.value,
+                index: newSelection.index
+            } as any;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);

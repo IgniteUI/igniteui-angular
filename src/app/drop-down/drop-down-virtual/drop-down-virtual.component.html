@@ -1,10 +1,10 @@
-<button igxButton [igxToggleAction]="dropdown" [igxVirtualNavigation]="dropdown">Toggle Drop Down</button>
-<igx-drop-down #dropdown (onOpened)="scrollToIndex()" (onSelection)="handleSelection($event)">
+<button igxButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Drop Down</button>
+<igx-drop-down #dropdown>
   <div [style.maxHeight.px]="itemsMaxHeight" [style.width.px]="420">
     <ng-template igxFor let-item let-index="index" [igxForOf]="items" [igxForScrollOrientation]="'vertical'"
       [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight">
-      <igx-drop-down-item [selected]="selectedItem === item" [value]="item" role="option" [index]="index">
-        {{ index }}
+      <igx-drop-down-item [value]="item" [isHeader]="index % 7 === 0" role="option" [index]="index">
+        {{ item.name }}
       </igx-drop-down-item>
     </ng-template>
   </div>
