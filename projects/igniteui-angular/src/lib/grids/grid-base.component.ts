@@ -182,6 +182,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set data(value: any[]) {
         this._data = value;
         this.summaryService.clearSummaryCache();
+        this.cdr.markForCheck();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
