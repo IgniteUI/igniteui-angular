@@ -199,6 +199,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return this.toggleDirective.element;
     }
 
+    protected get collectionLength() {
+        if (this.virtDir) {
+            return this.virtDir.totalItemCount || this.virtDir.igxForOf.length;
+        }
+    }
+
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -261,7 +267,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigateItem(index: number) {
         if (this.virtDir) {
-            if (index === -1 || index >= this.virtDir.igxForOf.length) {
+            if (index === -1 || index >= this.collectionLength) {
                 return;
             }
             const virtState = this.virtDir.state;
