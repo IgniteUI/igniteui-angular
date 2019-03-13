@@ -812,6 +812,14 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnPinning(ci.genInfoColGroup, true);
     }));
 
+    it('Should initially pin the whole group when one column of the group is pinned', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
+        fixture.componentInstance.cnPinned = true;
+        fixture.detectChanges();
+        const contactTitle = fixture.componentInstance.grid.getColumnByName('ContactTitle');
+        expect(contactTitle.pinned).toBeTruthy();
+    }));
+
     it('Should not allow moving group to another level via API.', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
@@ -1645,7 +1653,7 @@ export class ColumnGroupTwoGroupsTestComponent {
     template: `
     <igx-grid #grid [data]="data" height="600px" width="1000px">
         <igx-column-group #genInfoColGroup header="General Information">
-            <igx-column #companyNameCol field="CompanyName"></igx-column>
+            <igx-column #companyNameCol field="CompanyName" [pinned]="cnPinned"></igx-column>
             <igx-column #contactNameCol field="ContactName"></igx-column>
             <igx-column #contactTitleCol field="ContactTitle"></igx-column>
         </igx-column-group>
@@ -1694,6 +1702,7 @@ export class ThreeGroupsThreeColumnsGridComponent {
     postalCodeCol: IgxColumnComponent;
 
     data = SampleTestData.contactInfoDataFull();
+    public cnPinned = false;
 }
 
 @Component({
