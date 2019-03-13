@@ -900,6 +900,27 @@ describe('Column Hiding UI', () => {
             verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
             verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
         }));
+
+        it('onColumnVisibilityChanged event is fired on grid.toggleColumnVisibility(args).', fakeAsync(() => {
+            const currentArgs: IColumnVisibilityChangedEventArgs = { column: grid.columns.find(c => c.header === 'Person Details'),
+                                                                    newValue: true };
+            let counter = 0;
+            grid.onColumnVisibilityChanged.pipe(take(1)).subscribe((args: IColumnVisibilityChangedEventArgs) => {
+                counter++;
+            });
+
+            grid.toggleColumnVisibility(currentArgs);
+            tick();
+            fix.detectChanges();
+
+            expect(counter).toBe(1);
+
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
+        }));
     });
 
     describe('toolbar button', () => {
