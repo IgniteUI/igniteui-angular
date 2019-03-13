@@ -15,6 +15,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { take } from 'rxjs/internal/operators/take';
 
 describe('Column Hiding UI', () => {
     configureTestSuite();
@@ -880,7 +881,7 @@ describe('Column Hiding UI', () => {
         it('onColumnVisibilityChanged event is fired on toggling column group checkboxes.', fakeAsync(() => {
             let currentArgs: IColumnVisibilityChangedEventArgs;
             let counter = 0;
-            columnChooser.onColumnVisibilityChanged.subscribe((args: IColumnVisibilityChangedEventArgs) => {
+            columnChooser.onColumnVisibilityChanged.pipe(take(1)).subscribe((args: IColumnVisibilityChangedEventArgs) => {
                 counter++;
                 currentArgs = args;
             });
