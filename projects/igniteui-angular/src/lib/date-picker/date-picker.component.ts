@@ -37,7 +37,8 @@ import {
     VerticalAlignment,
     HorizontalAlignment,
     PositionSettings,
-    ConnectedPositioningStrategy
+    ConnectedPositioningStrategy,
+    AbsoluteScrollStrategy
 } from '../services/index';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
@@ -761,6 +762,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._dropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
+            scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
             outlet: outlet
         };
