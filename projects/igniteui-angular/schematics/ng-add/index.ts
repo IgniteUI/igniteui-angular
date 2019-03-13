@@ -13,17 +13,23 @@ import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
  * - https://github.com/IgniteUI/igniteui-cli/issues/344
  */
 function addIgxGridSupportForIe(polyfillsData: string): string {
-  const targetImport = 'import \'core-js/es6/set\';';
+  const targetImportPattern = /import \'classlist.js\';.*/;
+  const targetImport = targetImportPattern.exec(polyfillsData);
   const lineToAdd = 'import \'core-js/es7/object\';';
   const comment = '/** ES7 `Object.entries` needed for igxGrid to render in IE. */';
-  return polyfillsData.replace(targetImport, `${targetImport}${os.EOL}${comment}${os.EOL}${lineToAdd}`);
+  if (!polyfillsData.includes(lineToAdd)) {
+    return polyfillsData.replace(targetImportPattern, `${targetImport}${os.EOL}${os.EOL}${comment}${os.EOL}${lineToAdd}`);
+  }
+
+  return polyfillsData;
 }
 
 /**
  * Checks whether a property exists in the angular workspace.
  */
 function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchema): boolean {
-  return getPropertyFromWorkspace(targetProp, workspace) !== null;
+  const foundProp = getPropertyFromWorkspace(targetProp, workspace);
+  return foundProp !== null && foundProp.key === targetProp;
 }
 
 /**
@@ -56,7 +62,7 @@ function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = '
   return null;
 }
 
-function enablePolyfills(tree: Tree, context: SchematicContext): void {
+function enablePolyfills(tree: Tree, context: SchematicContext): any {
   const targetFile = 'src/polyfills.ts';
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
@@ -73,10 +79,10 @@ function enablePolyfills(tree: Tree, context: SchematicContext): void {
     }
   }
 
-  enableWebAnimations(tree, targetFile, polyfillsData);
+  return polyfillsData;
 }
 
-function enableWebAnimations(tree: Tree, targetFile: string, polyfillsData: any): void {
+function enableWebAnimationsAndGridSupport(tree: Tree, targetFile: string, polyfillsData: any): void {
   // Target the web-animations-js commented import statement and uncomment it.
   const webAnimationsLine = '// import \'web-animations-js\';';
   polyfillsData = polyfillsData.replace(webAnimationsLine,
@@ -91,22 +97,21 @@ function readInput(options: Options): Rule {
     if (options.polyfills) {
       const workspace = getWorkspace(tree);
       const targetProperty = 'es5BrowserSupport';
-      const polyfills = 'src/polyfills.ts';
+      const polyfillsFile = 'src/polyfills.ts';
       const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
-      const polyfillsData = tree.read(polyfills).toString();
+      let polyfillsData = tree.read(polyfillsFile).toString();
       if (propertyExists) {
-        // If project targets angular version >= 7.3
+        // If project targets angular cli version >= 7.3
         workspace.projects[workspace.defaultProject].architect.build.options[targetProperty] = true;
-        enableWebAnimations(tree, polyfills, polyfillsData);
+        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
         overwriteJsonFile(tree, 'angular.json', workspace);
       } else {
-        // TODO
-        // If project targets angular version < 7.3
-        enablePolyfills(tree, context);
-        enableWebAnimations(tree, polyfills, polyfillsData);
+        // If project targets angular cli version < 7.3
+        polyfillsData = enablePolyfills(tree, context);
+        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
       }
     }
-  }
+  };
 }
 
 function addNormalize(options: Options): Rule {
