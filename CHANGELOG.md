@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.2.1
+- `igxGrid`
+    - **Breaking Change** The `groupsRecords` property now only returns the visible tree and does not include groups that are children of collapsed parents.
+
 ## 7.2.0
 - `igxCalendar`
     - `igxCalendar` has been refactored to provide the ability to instantiate each view as a separate component.
