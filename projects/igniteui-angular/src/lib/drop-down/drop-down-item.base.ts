@@ -18,8 +18,8 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */
-    protected _isFocused = false;
-    protected _isSelected = false;
+    protected _focused = false;
+    protected _selected = false;
     protected _index = null;
     protected _disabled = false;
 
@@ -108,14 +108,14 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     get selected(): boolean {
-        return this._isSelected;
+        return this._selected;
     }
 
     set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
-        this._isSelected = value;
+        this._selected = value;
     }
 
     /**
@@ -144,7 +144,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get focused(): boolean {
-        return (!this.isHeader && !this.disabled) && this._isFocused;
+        return (!this.isHeader && !this.disabled) && this._focused;
     }
 
     /**
@@ -157,7 +157,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * ```
      */
     set focused(value: boolean) {
-        this._isFocused = value;
+        this._focused = value;
     }
 
     /**
