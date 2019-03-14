@@ -1142,6 +1142,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.weekStart = this.weekStart;
         this.calendar.specialDates = this.specialDates;
         this.calendar.disabledDates = this.disabledDates;
+        this.calendar.headerTemplate = this.headerTemplate;
+        this.calendar.subheaderTemplate = this.subheaderTemplate;
         this.calendar.onSelection.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
 
         if (this.value) {
