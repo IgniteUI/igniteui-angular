@@ -106,6 +106,21 @@ export class UIInteractions {
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
+    public static simulateDragScrollOverCellEvent(eventName: string, element, clientX, clientY, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            clientX: clientX,
+            clientY: clientY
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
+    }
+
     public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
         element.nativeElement.dispatchEvent(new Event('focus'));
