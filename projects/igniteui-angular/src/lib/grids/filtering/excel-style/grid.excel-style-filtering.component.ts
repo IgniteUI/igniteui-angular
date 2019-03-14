@@ -194,7 +194,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         if (this.column.filteringExpressionsTree) {
             return 'igx-excel-filter__actions-clear';
         }
-        
+
         return 'igx-excel-filter__actions-clear--disabled';
     }
 
