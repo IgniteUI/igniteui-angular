@@ -4069,6 +4069,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public isColumnGrouped(fieldName: string): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
     public onHeaderCheckboxClick(event, filteredData) {
         this.allRowsSelected = event.checked;
         const newSelection =
