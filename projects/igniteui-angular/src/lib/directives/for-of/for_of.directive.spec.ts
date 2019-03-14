@@ -665,16 +665,16 @@ describe('IgxForOf directive -', () => {
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            await expect(async() => {
-                const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-                UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
-                UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
-                UIInteractions.simulateTouchEndEvent(dcElem, 200, -300);
-                fix.detectChanges();
-                await wait();
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait(100);
+            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+            UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
+            UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulateTouchEndEvent(dcElem, 200, -300);
+            await wait();
+            fix.detectChanges();
+
             rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
