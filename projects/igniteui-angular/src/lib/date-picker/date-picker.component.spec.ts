@@ -11,6 +11,8 @@ import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DateRangeType } from 'igniteui-angular';
+import { IgxCalendarModule } from '../calendar';
+import { InteractionMode } from '../core/enums';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -24,9 +26,10 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerWIthLocaleComponent,
                 IgxDatePickerNgModelComponent,
                 IgxDatePickerRetemplatedComponent,
-                IgxDatePickerEditableComponent
+                IgxDatePickerEditableComponent,
+                IgxDatePickerCustomizedComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule]
+            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule]
         })
             .compileComponents();
     }));
@@ -252,6 +255,43 @@ describe('IgxDatePicker', () => {
         const expectedResult = 'Mon';
 
         expect(firstDayValue).toBe(expectedResult);
+    });
+
+    it('Retemplated calendar in date picker', () => {
+        const fixture = TestBed.createComponent(IgxDatePickerCustomizedComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const datePickerTarget = dom.query(By.css('.igx-date-picker__input-date'));
+
+        UIInteractions.clickElement(datePickerTarget);
+        fixture.detectChanges();
+
+        const formattedHeaderDate = document.getElementsByClassName('igx-calendar__header-date')[0];
+        const formattedHeaderText = (formattedHeaderDate as HTMLElement).innerText;
+        expect(formattedHeaderText).toBe('10/20/19');
+
+        const picker = document.getElementsByClassName('igx-calendar-picker');
+        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
+        expect(formattedSubHeaderText).toBe('2019/Oct');
+    });
+
+    it('Retemplated calendar in date picker - dropdown mode', () => {
+        const fixture = TestBed.createComponent(IgxDatePickerCustomizedComponent);
+        const datePicker = fixture.componentInstance.customizedDatePicker;
+        datePicker.mode = InteractionMode.DropDown;
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const iconDate = dom.query(By.css('.igx-icon'));
+        expect(iconDate).toBeDefined();
+
+        UIInteractions.clickElement(iconDate);
+        fixture.detectChanges();
+
+        const picker = document.getElementsByClassName('igx-calendar-picker');
+        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
+        expect(formattedSubHeaderText).toBe('2019/Oct');
     });
 
     it('locale propagate calendar value (de-DE)', () => {
@@ -999,6 +1039,24 @@ export class IgxDatePickerRetemplatedComponent { }
 export class IgxDatePickerEditableComponent {
     public date: Date = new Date(2011, 9, 20);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+}
+
+@Component({
+    template: `
+    <igx-date-picker [value]="date">
+        <ng-template igxCalendarHeader let-format>
+            {{ format.date | date:'shortDate'}}
+        </ng-template>
+        <ng-template igxCalendarSubheader let-format>
+            <span class="date__el" (click)="format.yearView()">{{ format.year.combined }}/</span>
+            <span class="date__el" (click)="format.monthView()">{{ format.month.combined | titlecase }}</span>
+        </ng-template>
+    </igx-date-picker>
+    `
+})
+export class IgxDatePickerCustomizedComponent {
+    public date: Date = new Date(2019, 9, 20);
+    @ViewChild(IgxDatePickerComponent) public customizedDatePicker: IgxDatePickerComponent;
 }
 
 
