@@ -70,7 +70,7 @@
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
         </div>
 
-        <div 
+        <div
             tabindex="0"
             [ngClass]="clearFilterClass()"
             (keydown)="onClearFilterKeyDown($event)"
@@ -79,7 +79,7 @@
             <igx-icon>clear</igx-icon>
         </div>
 
-        <div 
+        <div
             tabindex="0"
             class="igx-excel-filter__actions-filter"
             (keydown)="onTextFilterKeyDown($event)"
@@ -95,7 +95,7 @@
         #excelStyleSearch
         [column]="column"
         [data]="listData">
-    </igx-excel-style-search> 
+    </igx-excel-style-search>
 
     <footer class="igx-excel-filter__menu-footer">
         <button igxButton (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
