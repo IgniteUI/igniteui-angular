@@ -24,7 +24,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 
 describe('IgxGrid - Summaries', () => {
@@ -682,6 +682,25 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count'], ['10']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 4,
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+            });
+
+            it('CRUD: Apply filter and update cell', () => {
+                grid.filter('ProductName', 'ch', IgxStringFilteringOperand.instance().condition('contains'));
+                fix.detectChanges();
+
+                let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+                HelperUtils.verifyColumnSummaries(summaryRow, 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '52', '20,000', '29,810', '7,452.5']);
+
+                const cell = grid.getCellByColumn(2, 'ProductName');
+                cell.update('Teatime Cocoa Biscuits');
+                fix.detectChanges();
+
+                summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+                HelperUtils.verifyColumnSummaries(summaryRow, 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
             });
         });
 
