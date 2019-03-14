@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.1.10
+### Features
+- Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
 
 ## 7.1.8
 ### Bug Fixes
@@ -10,7 +13,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 7.1.7
 ### Bug fixes
-- refactor(card): apply the content color to any text element #3878 
+- refactor(card): apply the content color to any text element #3878
 - style(linear-bar): Fix text alignment #3862
 
 ## 7.1.6
@@ -254,7 +257,7 @@ All notable changes for each version of this project will be documented in this 
 ## 6.2.7
 
 ### Bug Fixes
-- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525 
+- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525
 
 ## 6.2.6
 
