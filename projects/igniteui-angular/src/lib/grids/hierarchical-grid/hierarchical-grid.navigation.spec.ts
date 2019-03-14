@@ -568,6 +568,29 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(lastParentCell.selected).toBeTruthy();
         expect(lastParentCell.focused).toBeTruthy();
     }));
+
+    it('should navigate inside summary row with Ctrl + Arrow Right/ Ctrl + Arrow Left', (async () => {
+        const col = hierarchicalGrid.getColumnByName('ID');
+        col.hasSummary = true;
+        fixture.detectChanges();
+
+        const summaryCells = hierarchicalGrid.summariesRowList.toArray()[0].summaryCells.toArray();
+
+        const firstCell =  summaryCells[0];
+        firstCell.nativeElement.focus();
+        fixture.detectChanges();
+
+        firstCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        const lastCell = summaryCells.find((s) => s.column.field === 'childData2');
+        expect(lastCell.focused).toBeTruthy();
+
+        lastCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        expect(firstCell.focused).toBeTruthy();
+    }));
 });
 
 
