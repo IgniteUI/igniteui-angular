@@ -460,7 +460,8 @@ export class IgxGridNavigationService {
     public moveFocusToFilterCell(toStart?: boolean) {
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         const targetIndex = toStart ? 0 : columns.length - 1;
-        const isVisible = toStart ? this.isColumnLeftFullyVisible(targetIndex) : this.isColumnFullyVisible(targetIndex);
+        const visibleIndex = columns[targetIndex].visibleIndex;
+        const isVisible = toStart ? this.isColumnLeftFullyVisible(visibleIndex) : this.isColumnFullyVisible(visibleIndex);
         if (isVisible) {
             this.grid.filteringService.focusFilterCellChip(columns[targetIndex], false);
         } else {
