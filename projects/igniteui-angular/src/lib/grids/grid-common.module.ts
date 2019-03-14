@@ -58,6 +58,7 @@ import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
+import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 /**
  * @hidden
  */
@@ -86,7 +87,8 @@ import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.e
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
-        IgxSummaryCellComponent
+        IgxSummaryCellComponent,
+        IgxGridColumnResizerComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -137,6 +139,7 @@ import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.e
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
+        IgxGridColumnResizerComponent,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule

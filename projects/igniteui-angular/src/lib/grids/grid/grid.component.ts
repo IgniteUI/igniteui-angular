@@ -167,6 +167,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _filteredData = null;
 
     constructor(
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
