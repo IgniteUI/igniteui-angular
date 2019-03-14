@@ -5,8 +5,8 @@ import { first } from 'rxjs/operators';
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
-    protected getCellSelector(visibleIndex?: number) {
-       return 'igx-hierarchical-grid-cell';
+    protected getCellSelector(visibleIndex?: number, isSummary = false) {
+        return isSummary ? 'igx-grid-summary-cell' : 'igx-hierarchical-grid-cell';
     }
 
     protected getRowSelector() {
@@ -187,8 +187,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    public onKeydownEnd(rowIndex) {
-        if (this.grid.parent) {
+    public onKeydownEnd(rowIndex, isSummary = false) {
+        if (this.grid.parent && !isSummary) {
             // handle scenario where last child row might not be in view
             // parent should scroll to child grid end
             const childContainer = this.grid.nativeElement.parentNode.parentNode;
@@ -198,10 +198,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (!endIsVisible) {
                 this.scrollGrid(this.grid.parent, diff, () => super.onKeydownEnd(rowIndex));
             } else {
-                super.onKeydownEnd(rowIndex);
+                super.onKeydownEnd(rowIndex, isSummary);
             }
         } else {
-            super.onKeydownEnd(rowIndex);
+            super.onKeydownEnd(rowIndex, isSummary);
         }
 
     }

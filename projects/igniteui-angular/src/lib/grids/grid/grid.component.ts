@@ -641,6 +641,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     * @hidden
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
+    }
+
+    /**
     * @hidden
     */
    public getContext(rowData, rowIndex): any {
