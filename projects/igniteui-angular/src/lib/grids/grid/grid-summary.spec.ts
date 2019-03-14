@@ -458,7 +458,6 @@ describe('IgxGrid - Summaries', () => {
             beforeEach(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 grid = fix.componentInstance.grid;
-                grid.height = null;
                 fix.detectChanges();
             });
 
