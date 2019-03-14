@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.2.1
+- `Components' Display Type` - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
+
 ## 7.2.0
 - `igxCalendar`
     - `igxCalendar` has been refactored to provide the ability to instantiate each view as a separate component.
