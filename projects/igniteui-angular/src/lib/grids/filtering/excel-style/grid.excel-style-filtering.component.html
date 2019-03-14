@@ -1,8 +1,7 @@
-<article #dropdown igxToggle
+<article #dropdown
     class="igx-excel-filter__menu"
     [id]="overlayComponentId"
-    (keydown)="onKeyDown($event)"
-    (onOpening)="onDropDownOpening()">
+    (keydown)="onKeyDown($event)">
 
     <header class="igx-excel-filter__menu-header">
         <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
