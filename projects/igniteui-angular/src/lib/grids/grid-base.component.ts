@@ -4069,6 +4069,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public isColumnGrouped(fieldName: string): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
     public onHeaderCheckboxClick(event, filteredData) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -4283,10 +4290,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public wheelHandler(isScroll = false) {
+        if (document.activeElement &&
         // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
+            (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
         // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
+            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
