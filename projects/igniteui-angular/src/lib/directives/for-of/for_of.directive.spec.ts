@@ -667,17 +667,14 @@ describe('IgxForOf directive -', () => {
 
             await expect(async() => {
                 const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-                UIInteractions.simulateTouchStartEvent(
-                    dcElem,
-                    200,
-                    200
-                );
+                UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
                 UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
+                UIInteractions.simulateTouchEndEvent(dcElem, 200, -300);
                 fix.detectChanges();
                 await wait();
                 fix.detectChanges();
             }).not.toThrow();
-            await wait();
+            await wait(100);
             rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
