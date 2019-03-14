@@ -31,7 +31,11 @@ export class IgxExcelStyleSortingComponent {
 
     public onSortButtonClicked(sortDirection) {
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
-            this.grid.clearSort(this.column.field);
+            if (this.grid.isColumnGrouped(this.column.field)) {
+                this.selectButton(sortDirection);
+            } else {
+                this.grid.clearSort(this.column.field);
+            }
         } else {
             this.grid.sort({ fieldName: this.column.field, dir: sortDirection, ignoreCase: true });
         }
