@@ -23,14 +23,14 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
         if (dropDown.virtDir) {
             return dropDown.focusedItem ? dropDown.focusedItem.index === this.index : false;
         }
-        return (!this.isHeader && !this.disabled) && this._isFocused;
+        return (!this.isHeader && !this.disabled) && this._focused;
     }
 
     /**
      * @inheritdoc
      */
     set focused(value: boolean) {
-        this._isFocused = value;
+        this._focused = value;
     }
     /**
      * @inheritdoc
@@ -40,7 +40,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
         if (dropDown.virtDir) {
             return dropDown.selectedItem ? dropDown.selectedItem.index === this.index : false;
         }
-        return this._isSelected;
+        return this._selected;
     }
 
     /**
@@ -50,7 +50,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
         if (this.isHeader) {
             return;
         }
-        this._isSelected = value;
+        this._selected = value;
     }
     /**
      * @hidden @internal
