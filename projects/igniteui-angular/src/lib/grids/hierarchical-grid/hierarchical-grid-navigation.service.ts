@@ -192,8 +192,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    public onKeydownEnd(rowIndex) {
-        if (this.grid.parent) {
+    public onKeydownEnd(rowIndex, isSummary = false) {
+        if (this.grid.parent && !isSummary) {
             // handle scenario where last child row might not be in view
             // parent should scroll to child grid end
             const childContainer = this.grid.nativeElement.parentNode.parentNode;
@@ -214,10 +214,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
             this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
             } else {
-                super.onKeydownEnd(rowIndex);
+                super.onKeydownEnd(rowIndex, isSummary);
             }
         } else {
-            super.onKeydownEnd(rowIndex);
+            super.onKeydownEnd(rowIndex, isSummary);
         }
 
     }
@@ -341,13 +341,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const cell = cells[0];
         const childContainer = this.grid.nativeElement.parentNode.parentNode;
         const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
-        if (scrTop === 0) {
+        const dc = childContainer.parentNode.parentNode;
+        const scrWith = parseInt(dc.style.top, 10);
+        if (scrTop === 0 || scrWith === 0) {
             // cell is in view
             cell.focus({preventScroll: true});
         } else {
             // scroll parent so that cell is in view
-            const dc = childContainer.parentNode.parentNode;
-            const scrWith = parseInt(dc.style.top, 10);
             this.scrollGrid(this.grid.parent, scrWith , () => cell.focus({preventScroll: true}));
         }
     }
