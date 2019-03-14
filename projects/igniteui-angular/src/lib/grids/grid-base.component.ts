@@ -2362,9 +2362,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu igx-toggle')[0];
+        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu')[0];
         if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('ng-reflect-id'));
+            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('id'));
             if (overlay) {
                 const animation = overlay.settings.positionStrategy.settings.closeAnimation;
                 overlay.settings.positionStrategy.settings.closeAnimation = null;
@@ -4297,10 +4297,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public wheelHandler(isScroll = false) {
+        if (document.activeElement &&
         // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
+            (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
         // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
+            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
