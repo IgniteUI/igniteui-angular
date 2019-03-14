@@ -471,29 +471,29 @@ export class IgxGridNavigationService {
     public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
         const prevFilterableIndex = cols.indexOf(column) - 1;
-        const prevIndex = cols[prevFilterableIndex].visibleIndex;
         const visibleIndex = column.visibleIndex;
+        if (visibleIndex === 0 || prevFilterableIndex < 0) {
+            // prev is not filter cell
+            const firstFiltarableCol = this.getFirstPinnedFilterableColumn();
+            if (!firstFiltarableCol || column === firstFiltarableCol) {
+                eventArgs.preventDefault();
+            }
+            return;
+        }
+        const prevColumn = cols[prevFilterableIndex];
+        const prevVisibleIndex = prevColumn.visibleIndex;
 
-        if (prevIndex >= 0 && visibleIndex > 0 && !this.isColumnLeftFullyVisible(prevIndex) && !column.pinned) {
+        if (prevFilterableIndex >= 0 && visibleIndex > 0 && !this.isColumnLeftFullyVisible(prevVisibleIndex) && !column.pinned) {
             eventArgs.preventDefault();
-            this.grid.filteringService.scrollToFilterCell(cols[prevIndex], false);
-        } else if (column.visibleIndex === 0 ||
-                    (prevIndex < 0 && !this.getFirstPinnedFilterableColumn()) ||
-                    column === this.getFirstPinnedFilterableColumn()) {
-            eventArgs.preventDefault();
+            this.grid.filteringService.scrollToFilterCell(prevColumn, false);
         }
     }
 
     public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
-        const nextIndex = cols.indexOf(column) + 1;
-        if (column === this.getLastPinnedFilterableColumn() && !this.isColumnFullyVisible(nextIndex)) {
-            this.grid.filteringService.scrollToFilterCell(cols[nextIndex], false);
-            eventArgs.stopPropagation();
-            return;
-        }
-
-        if (nextIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
+        const nextFilterableIndex = cols.indexOf(column) + 1;
+        if (nextFilterableIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
+            // next is not filter cell
             if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
                 if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
                     eventArgs.stopPropagation();
@@ -502,9 +502,16 @@ export class IgxGridNavigationService {
                 this.goToFirstCell();
             }
             eventArgs.preventDefault();
-        } else if (!column.pinned && !this.isColumnFullyVisible(nextIndex)) {
+            return;
+        }
+        const nextColumn = cols[nextFilterableIndex];
+        const nextVisibleIndex = nextColumn.visibleIndex;
+        if (!column.pinned && !this.isColumnFullyVisible(nextVisibleIndex)) {
             eventArgs.preventDefault();
-            this.grid.filteringService.scrollToFilterCell(this.grid.filteringService.unpinnedFilterableColumns[nextIndex], true);
+            this.grid.filteringService.scrollToFilterCell(nextColumn, true);
+        } else if (column === this.getLastPinnedFilterableColumn() && !this.isColumnFullyVisible(nextVisibleIndex)) {
+            this.grid.filteringService.scrollToFilterCell(nextColumn, false);
+            eventArgs.stopPropagation();
         }
     }
 
