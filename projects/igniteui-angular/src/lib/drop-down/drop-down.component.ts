@@ -102,11 +102,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
-            if (this._focusedItemIndex !== -1) {
-                return this.children.find(e => e.index === this._focusedItemIndex);
-            } else {
-                return null;
-            }
+            return this._focusedItemIndex !== -1 ? this.children.find(e => e.index === this._focusedItemIndex) : null;
         }
         return this._focusedItem;
     }
@@ -114,7 +110,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public set focusedItem(value: IgxDropDownItemBase) {
         this._focusedItem = value;
         if (this.virtDir) {
-            this._focusedItemIndex = value.index;
+            this._focusedItemIndex = value ? value.index : -1;
         }
     }
 
@@ -425,12 +421,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.toggleDirective.id = this.id;
         const that = this;
         if (this.overlay) {
+            // TODO: Try to refactor this...
             this.overlay.onAnimation.pipe(filter(e => e.animationType === 'open' &&
-            (e as any).animationPlayer.element === this._dropdownElement),
-            takeUntil(this.destroy$)).subscribe((event) => {
-                console.log(that);
-                this.updateScrollPosition();
-            });
+                (e as any).animationPlayer.element === this._dropdownElement),
+                takeUntil(this.destroy$)).subscribe((event) => {
+                    this.updateScrollPosition();
+                });
         }
     }
 
