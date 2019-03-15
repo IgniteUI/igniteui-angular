@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.2.1
+- **Feature** Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
+
 ## 7.2.0
 - `igxCalendar`
     - `igxCalendar` has been refactored to provide the ability to instantiate each view as a separate component.
@@ -132,15 +135,15 @@ All notable changes for each version of this project will be documented in this 
 * _igx-drop-down_
 * _igx-expansion-panel_
 * _igx-input-group_
-* _igx-list_ 
+* _igx-list_
   * _igx-list-item_
 * *igx-navdrawe*r
 * _igx-snackbar_
 * _igx-toast_
 * _igxTooltip_
 
-- **Breaking Change** 
-- The `$button-roundness` property on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`. 
+- **Breaking Change**
+- The `$button-roundness` property on the `igx-button-theme` have been replaced for each button type with: `$flat-border-radius`,`$raised-border-radius`,`$outline-border-radius`,`$fab-border-radius`, `$icon-border-radius`.
 - The`$roundness` property on the `igx-chip-theme` have been replaced with `$border-radius`.
 - The`$roundness` property on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
 
@@ -167,7 +170,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 7.1.7
 ### Bug fixes
-- refactor(card): apply the content color to any text element #3878 
+- refactor(card): apply the content color to any text element #3878
 - style(linear-bar): Fix text alignment #3862
 
 ## 7.1.6
@@ -416,7 +419,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.7
 ### Bug Fixes
-- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525 
+- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525
 
 ## 6.2.6
 ### Bug Fixes/Other
