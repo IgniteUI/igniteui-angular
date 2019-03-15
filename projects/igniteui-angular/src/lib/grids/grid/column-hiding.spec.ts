@@ -15,6 +15,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { take } from 'rxjs/internal/operators/take';
 
 describe('Column Hiding UI', () => {
     configureTestSuite();
@@ -874,6 +875,51 @@ describe('Column Hiding UI', () => {
             for (let i = 1; i < 6; i++) {
                 verifyColumnIsHidden(grid.columns[i], true, 2);
             }
+        }));
+
+
+        it('onColumnVisibilityChanged event is fired on toggling column group checkboxes.', fakeAsync(() => {
+            let currentArgs: IColumnVisibilityChangedEventArgs;
+            let counter = 0;
+            columnChooser.onColumnVisibilityChanged.pipe(take(1)).subscribe((args: IColumnVisibilityChangedEventArgs) => {
+                counter++;
+                currentArgs = args;
+            });
+
+            getCheckboxInput('Person Details', columnChooserElement, fix).click();
+            tick();
+            fix.detectChanges();
+
+            expect(counter).toBe(1);
+            expect(currentArgs.column.header).toBe('Person Details');
+            expect(currentArgs.newValue).toBe(true);
+
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
+        }));
+
+        it('onColumnVisibilityChanged event is fired on grid.toggleColumnVisibility(args).', fakeAsync(() => {
+            const currentArgs: IColumnVisibilityChangedEventArgs = { column: grid.columns.find(c => c.header === 'Person Details'),
+                                                                    newValue: true };
+            let counter = 0;
+            grid.onColumnVisibilityChanged.pipe(take(1)).subscribe((args: IColumnVisibilityChangedEventArgs) => {
+                counter++;
+            });
+
+            grid.toggleColumnVisibility(currentArgs);
+            tick();
+            fix.detectChanges();
+
+            expect(counter).toBe(1);
+
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
         }));
     });
 
