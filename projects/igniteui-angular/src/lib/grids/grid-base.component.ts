@@ -2620,7 +2620,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = this.getColumnByName(args.column.field);
+        const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
+
+        if (!col) {
+            return;
+        }
+
         col.hidden = args.newValue;
         this.onColumnVisibilityChanged.emit(args);
 
