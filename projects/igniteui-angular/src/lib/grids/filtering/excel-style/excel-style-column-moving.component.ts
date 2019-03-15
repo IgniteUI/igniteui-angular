@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
 import { IgxGridBaseComponent } from '../../grid-base.component';
 
 /**
@@ -21,6 +21,10 @@ export class IgxExcelStyleColumnMovingComponent {
 
     constructor() {}
 
+    private get visibleColumns() {
+        return this.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+    }
+
     get canNotMoveLeft() {
         const prevIndex = this.grid.columns.indexOf(this.column) - 1;
         return this.column.visibleIndex === 0 ||
@@ -30,7 +34,8 @@ export class IgxExcelStyleColumnMovingComponent {
 
     get canNotMoveRight() {
         const nextIndex = this.grid.columns.indexOf(this.column) + 1;
-        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
+        return this.column.visibleIndex === this.visibleColumns.length - 1 ||
+            (this.column.level !== 0 && this.grid.columns[nextIndex] && this.grid.columns[nextIndex].level !== this.column.level);
     }
 
     public onMoveButtonClicked(moveDirection) {
