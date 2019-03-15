@@ -122,10 +122,15 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Execute filtering on the grid.
      */
-    public filter(field: string, expressionUIList = null): void {
+    public filter(field: string, expressions: FilteringExpressionsTree | Array<ExpressionUI> = null): void {
         this.isFiltering = true;
 
-        const expressionsTree = this.createSimpleFilteringTree(field, expressionUIList);
+        let expressionsTree;
+        if (expressions instanceof FilteringExpressionsTree) {
+            expressionsTree = expressions;
+        } else {
+            expressionsTree = this.createSimpleFilteringTree(field, expressions);
+        }
 
         if (expressionsTree.filteringOperands.length === 0) {
             this.grid.clearFilter(field);
