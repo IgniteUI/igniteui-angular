@@ -170,10 +170,12 @@ export abstract class IgxBaseExporter {
         }
 
         let skippedPinnedColumnsCount = 0;
+        let columnsWithoutHeaderCount = 1;
         this._columnList.forEach((column, index) => {
             if (!column.skip) {
                 const columnExportArgs = {
-                    header: column.header,
+                    header: ExportUtilities.isNullOrWhitespaces(column.header) ?
+                        'Column' + columnsWithoutHeaderCount++ : column.header,
                     field: column.field,
                     columnIndex: index,
                     cancel: false,

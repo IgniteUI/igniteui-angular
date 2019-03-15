@@ -17,13 +17,13 @@ import {
     TemplateRef,
     LOCALE_ID
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
+import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
-import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -40,9 +40,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     @Input()
     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
-
-    @Input()
-    public resizeEndTimeout = 0;
 
     @Output()
     public resizeEnd = new Subject<any>();
@@ -77,8 +74,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
             if (left > max) {
                 this.left = max;
-            } else if (left > max) {
-                this.left = left;
             }
         });
 
@@ -86,9 +81,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, 'mousedown').pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onMousedown(res));
-
             fromEvent(this.document.defaultView, 'mousemove').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy)
@@ -101,31 +93,35 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
     }
 
     public set left(val) {
         requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
     }
 
+    public set top(val) {
+        requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+    }
+
     onMouseup(event) {
-        setTimeout(() => {
-            this.resizeEnd.next(event);
-            this.resizeEnd.complete();
-        }, this.resizeEndTimeout);
+        this.resizeEnd.next(event);
+        this.resizeEnd.complete();
     }
 
     onMousedown(event) {
-        this.resizeStart.next(event);
         event.preventDefault();
+        const parent = this.element.nativeElement.parentElement.parentElement;
 
-        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
-        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
+        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
+        this.top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
+
+        this.resizeStart.next(event);
     }
 
     onMousemove(event) {
-        this.resize.next(event);
         event.preventDefault();
+        this.resize.next(event);
     }
 }
 
