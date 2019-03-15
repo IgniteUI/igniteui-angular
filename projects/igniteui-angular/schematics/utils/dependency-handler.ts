@@ -10,6 +10,10 @@ function logIncludingDependency(context: SchematicContext, pkg: string, version:
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
+export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
+    tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
+}
+
 export function logSuccess(options: Options): Rule {
     return (tree: Tree, context: SchematicContext) => {
         context.logger.info('');
@@ -57,13 +61,12 @@ export function addDependencies(options: Options): Rule {
 
 function addHammerJsToWorkspace(tree: Tree): Tree {
     try {
-        const targetFile = 'angular.json';
         const workspace = getWorkspace(tree);
         const addedtoBuildScripts = addHammerToAngularWorkspace(workspace, 'build');
         const addedtoToTestScripts = addHammerToAngularWorkspace(workspace, 'test');
 
         if (addedtoBuildScripts || addedtoToTestScripts) {
-            tree.overwrite(targetFile, JSON.stringify(workspace, null, 2) + '\n');
+            overwriteJsonFile(tree, 'angular.json', workspace);
         }
 
         return tree;
