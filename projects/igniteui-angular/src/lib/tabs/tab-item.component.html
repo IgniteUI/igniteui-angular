@@ -4,7 +4,7 @@
         <igx-badge [value]="changesCount" [hidden]="changesCount === 0"></igx-badge>
     </div>
     <div *ngIf="relatedGroup.label" ngClass="igx-tabs__item-label">{{relatedGroup.label}}</div>
-
 </ng-template>
-<ng-container *ngTemplateOutlet="relatedGroup.customTabTemplate ? relatedGroup.customTabTemplate : defaultTabTemplate; context: { $implicit: relatedGroup }">
+<ng-container
+    *ngTemplateOutlet="relatedGroup.customTabTemplate ? relatedGroup.customTabTemplate : defaultTabTemplate; context: { $implicit: relatedGroup }">
 </ng-container>
