@@ -8,6 +8,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
+import { first, delay } from 'rxjs/operators';
 
 describe('IgxHierarchicalGrid Virtualization', () => {
     configureTestSuite();
@@ -338,6 +339,31 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(childRowComponent.index).toBe(4);
     });
 
+    it('should update grid size cache when expanding a row with data loaded after initial view initialization',  async(done) => {
+        fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
+        fixture.detectChanges();
+
+        fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
+            async(args) => {
+                args.grid.data = fixture.componentInstance.generateData(10, 0);
+                await wait(200);
+                fixture.detectChanges();
+
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(1184);
+                done();
+            }
+        );
+
+
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(500);
+
+        // expand 1st row
+        const row = hierarchicalGrid.dataRowList.toArray()[0];
+        row.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(550);
+    });
 });
 
 @Component({

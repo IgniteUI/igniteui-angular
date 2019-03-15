@@ -90,6 +90,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.reflow();
         }
         this.cdr.markForCheck();
+        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
+            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
+            requestAnimationFrame(() => {
+                this.updateParentSizes();
+            });
+        }
     }
 
     /**
