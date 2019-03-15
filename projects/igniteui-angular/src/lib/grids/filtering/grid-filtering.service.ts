@@ -68,6 +68,10 @@ export class IgxFilteringService implements OnDestroy {
         return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
     }
 
+    public get areAllColumnsInView() {
+        return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10) === 0;
+    }
+
     public get unpinnedFilterableColumns() {
         return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
     }
