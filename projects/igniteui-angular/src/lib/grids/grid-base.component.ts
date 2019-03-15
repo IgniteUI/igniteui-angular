@@ -182,6 +182,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set data(value: any[]) {
         this._data = value;
         this.summaryService.clearSummaryCache();
+        this.cdr.markForCheck();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -935,8 +936,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * objects in the event arguments are defined for the corresponding
      * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
      * ```typescript
-     * editCancel(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editCancel(event: IGridEditEventArgs){
+     *    const rowID: IgxColumnComponent = event.rowID;
      * }
      * ```
      * ```html
@@ -958,8 +959,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * objects in the event arguments are defined for the corresponding
      * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
      * ```typescript
-     * editStart(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editStart(event: IGridEditEventArgs){
+     *    const value: IgxColumnComponent = event.newValue;
      * }
      * ```
      * ```html
@@ -981,8 +982,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * objects in the event arguments are defined for the corresponding
      * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
      * ```typescript
-     * editDone(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editDone(event: IGridEditEventArgs){
+     *    const value: IgxColumnComponent = event.newValue;
      * }
      * ```
      * ```html
@@ -2457,7 +2458,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = this.getColumnByName(args.column.field);
+        const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
+
+        if (!col) {
+            return;
+        }
+
         col.hidden = args.newValue;
         this.onColumnVisibilityChanged.emit(args);
 
@@ -4172,10 +4178,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public wheelHandler(isScroll = false) {
+        if (document.activeElement &&
         // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-            // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
+            (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
+        // tslint:disable-next-line:no-bitwise
+            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
@@ -4305,9 +4312,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const unpinnedColumns = [];
         const newUnpinnedCols = [];
 
-        if (this.calcWidth === 0) {
-            this.calculateGridWidth();
-        }
+        this.calculateGridWidth();
         // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
