@@ -1,4 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -33,7 +34,8 @@ describe('Excel Exporter', () => {
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
-                ProductsComponent
+                ProductsComponent,
+                GridWithEmtpyColumnsComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -419,6 +421,22 @@ describe('Excel Exporter', () => {
             // Verify the exported data with formatting
             await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleWithFormatting);
         });
+
+        it('should export columns without header', async () => {
+            const fix = TestBed.createComponent(GridWithEmtpyColumnsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            // Verify the data without formatting
+            await exportAndVerify(grid, options, actualData.gridWithEmptyColums);
+
+            exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+                if (value.columnIndex === 0 || value.columnIndex === 2) {
+                    value.cancel = true;
+                }
+            });
+            await exportAndVerify(grid, options, actualData.simpleGridData);
+        });
     });
 
     describe('', () => {
@@ -603,3 +621,24 @@ describe('Excel Exporter', () => {
         await wrapper.verifyDataFilesContent(expectedData);
     }
 });
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data">
+        <igx-column>
+            <ng-template igxCell>
+                <button>SimpleBtn</button>
+            </ng-template>
+        </igx-column>
+        <igx-column header="" field="ID"></igx-column>
+        <igx-column header="  " field=""></igx-column>
+        <igx-column header="Name" field="Name"></igx-column>
+        <igx-column header="JobTitle" field="JobTitle"></igx-column>
+    </igx-grid>`
+})
+
+export class GridWithEmtpyColumnsComponent {
+    public data = SampleTestData.personJobDataFull();
+
+    @ViewChild('grid1') public grid: IgxGridComponent;
+}
