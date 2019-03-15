@@ -109,6 +109,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
+     * Gets/sets whether the view should be rendered
+     * according to the locale and yearFormat, if any.
+     */
+    @Input()
+    public formatView: boolean;
+
+    /**
      * Emits an event when a selection is made in the years view.
      * Provides reference the `date` property in the `IgxYearsViewComponent`.
      * ```html
@@ -195,7 +202,10 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     public formattedYear(value: Date): string {
-        return this._formatterYear.format(value);
+        if (this.formatView) {
+            return this._formatterYear.format(value);
+        }
+        return `${value.getFullYear()}`;
     }
 
     /**
