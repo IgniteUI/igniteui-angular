@@ -668,11 +668,7 @@ describe('IgxForOf directive -', () => {
             const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
             UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
-            await wait();
-            fix.detectChanges();
-
-            UIInteractions.simulateTouchEndEvent(dcElem, 200, -300);
-            await wait();
+            await wait(200);
             fix.detectChanges();
 
             rowsRendered = displayContainer.querySelectorAll('igx-display-container');
@@ -681,6 +677,10 @@ describe('IgxForOf directive -', () => {
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[10 + i][1].toString());
             }
+
+            UIInteractions.simulateTouchEndEvent(dcElem, 200, -300);
+            await wait(200);
+            fix.detectChanges();
         });
 
         it('should apply inertia when swiping via touch interaction.', async() => {
