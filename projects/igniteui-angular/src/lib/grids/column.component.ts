@@ -318,7 +318,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
-    
+
     /**
      * Sets/gets the class selector of the column group header.
      * ```typescript
