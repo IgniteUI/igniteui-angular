@@ -1,5 +1,5 @@
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,17 +7,18 @@ import { IgxAvatarModule } from '../../avatar/avatar.component';
 import { Calendar } from '../../calendar';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
-
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Deferred Column Resizing', () => {
     configureTestSuite();
+    const DEBOUNCE_TIME = 200;
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const COLUMN_FILTER_CELL_SELECTOR = 'igx-grid-filtering-cell';
 
@@ -43,7 +44,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
             .compileComponents();
     }));
 
-    it('should define grid with resizable columns.', fakeAsync(() => {
+    it('should define grid with resizable columns.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
@@ -56,31 +57,25 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[0].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        let resizer = headers[0].parent.children[1].children[0].nativeElement;
+        let resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 15);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 15);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('250px');
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 250, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        resizer = headers[0].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 40, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 40, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('80px');
@@ -89,13 +84,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         headers[2].nativeElement.dispatchEvent(new Event('click'));
         headers[2].nativeElement.dispatchEvent(new Event('click'));
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[2].cells[0].value).toEqual('Wilson');
-    }));
+    });
 
-    it('should resize column outside grid view.', fakeAsync(() => {
+    it('should resize column outside grid view.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
@@ -106,22 +100,19 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[0].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[0].parent.children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 700, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 700, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('700px');
-    }));
+    });
 
-    it('should resize column with preset min and max widths.', fakeAsync(() => {
+    it('should resize column with preset min and max widths.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
@@ -135,36 +126,30 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[1].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        let resizer = headers[1].parent.children[1].children[0].nativeElement;
+        let resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('250px');
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 350, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        resizer = headers[1].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('80px');
-    }));
+    });
 
-    it('should resize sortable columns.', fakeAsync(() => {
+    it('should resize sortable columns.', async() => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
@@ -177,16 +162,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[2].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[2].parent.children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
-        tick(100);
         fixture.detectChanges();
 
         expect(grid.columns[2].width).toEqual('250px');
@@ -194,13 +176,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         headers[2].nativeElement.dispatchEvent(new Event('click'));
         headers[2].nativeElement.dispatchEvent(new Event('click'));
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[2].cells[0].value).toEqual(1000);
-    }));
+    });
 
-    it('should resize pinned columns.', fakeAsync(() => {
+    it('should resize pinned columns.', async() => {
         const fixture = TestBed.createComponent(PinnedColumnsComponent);
         fixture.detectChanges();
 
@@ -212,37 +193,31 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[0].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        let resizer = headers[0].parent.children[1].children[0].nativeElement;
+        let resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 450, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 450, 5);
-        tick(100);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('300px');
         expect(grid.columns[1].width).toEqual('100px');
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 300, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        resizer = headers[0].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('100px');
-    }));
+    });
 
-    it('should resize columns with initial width of null.', fakeAsync(() => {
+    it('should resize columns with initial width of null.', async() => {
         const fixture = TestBed.createComponent(NullColumnsComponent);
         fixture.detectChanges();
 
@@ -253,68 +228,56 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         let headerResArea = headers[0].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 126, 5);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        let resizer = headers[0].parent.children[1].children[0].nativeElement;
+        let resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 5);
-        tick(100);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('200px');
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        resizer = headers[0].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         UIInteractions.simulateMouseEvent('mousemove', resizer, 50, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 50, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('80px');
 
         headerResArea = headers[1].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 197, 5);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(parseInt(grid.columns[1].width, 10)).not.toBeNaN();
 
-        resizer = headers[1].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-        tick(100);
         fixture.detectChanges();
 
         expect(parseInt(grid.columns[1].width, 10)).toBeGreaterThanOrEqual(100);
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 300, 5);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        resizer = headers[1].parent.children[1].children[0].nativeElement;
+        resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         UIInteractions.simulateMouseEvent('mousemove', resizer, 50, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 50, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('80px');
-    }));
+    });
 
-    it('should resize pinned column with preset max width.', fakeAsync(() => {
+    it('should resize pinned column with preset max width.', async() => {
         const fixture = TestBed.createComponent(PinnedColumnsComponent);
         fixture.detectChanges();
 
@@ -322,29 +285,25 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         grid.pinColumn('LastName');
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('100px');
 
         const headerResArea = headers[1].parent.children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[1].parent.children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 350, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 350, 5);
-        tick(100);
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('150px');
-    }));
+    });
 
-    it('should autoresize column on double click.', fakeAsync(() => {
+    it('should autoresize column on double click.', async() => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
@@ -355,44 +314,15 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[1].width).toEqual('150px');
         expect(grid.columns[2].width).toEqual('150px');
 
-        let resizeArea = headers[0].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 148, 15);
-        tick();
-        fixture.detectChanges();
-
-        expect(grid.columns[0].width).toEqual('80px');
-
-        resizeArea = headers[1].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('mouseover', resizeArea, 248, 5);
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 248, 5);
-        tick();
+        const resizeArea = headers[1].children[1].nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('195px');
+    });
 
-        resizeArea = headers[2].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 305, 5);
-        tick();
-        fixture.detectChanges();
-
-        expect(grid.columns[2].width).toEqual('80px');
-
-        resizeArea = headers[3].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 400, 5);
-        tick();
-        fixture.detectChanges();
-
-        expect(grid.columns[3].width).toEqual('80px');
-
-        resizeArea = headers[5].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 486, 5);
-        tick(100);
-        fixture.detectChanges();
-
-        expect(grid.columns[5].width).toEqual('89px');
-    }));
-
-    it('should autoresize column wilth preset max width.', fakeAsync(() => {
+    it('should autoresize column wilth preset max width.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -403,14 +333,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[4].maxWidth).toEqual('100px');
 
         const resizeArea = headers[4].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 448, 15);
-        tick();
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[4].width).toEqual('100px');
-    }));
+    });
 
-    it('should autoresize templated column on double click.', fakeAsync(() => {
+    it('should autoresize templated column on double click.', async() => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
@@ -420,14 +350,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[5].width).toEqual('150px');
 
         const resizeArea = headers[5].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 898, 5);
-        tick();
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[5].width).toEqual('89px');
-    }));
+    });
 
-    it('should autoresize pinned column on double click.', fakeAsync(() => {
+    it('should autoresize pinned column on double click.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -437,14 +367,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[2].width).toEqual('100px');
 
         const resizeArea = headers[2].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 298, 5);
-        tick();
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[2].width).toEqual('92px');
-    }));
+    });
 
-    it('should autoresize pinned column on double click - edge case.', fakeAsync(() => {
+    it('should autoresize pinned column on double click - edge case.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -456,8 +386,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[2].width).toEqual('100px');
 
         const resizeArea = headers[1].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 198, 5);
-        tick();
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('100px');
@@ -466,25 +396,22 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[0].children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 450, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 450, 5);
-        tick(100);
         fixture.detectChanges();
 
         const expetedWidth = grid.calcPinnedContainerMaxWidth - parseInt(grid.columns[1].width, 10) - parseInt(grid.columns[2].width, 10);
         expect(grid.columns[0].width).toEqual(expetedWidth + 'px');
         expect(grid.columns[1].width).toEqual('100px');
         expect(grid.columns[2].width).toEqual('100px');
-    }));
+    });
 
-    it('should fire onColumnResized with correct event args.', fakeAsync(() => {
+    it('should fire onColumnResized with correct event args.', async() => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
@@ -496,16 +423,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 150, 5);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[0].children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('300px');
@@ -517,8 +441,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[1].width).toEqual('150px');
 
         const resizeArea = headers[1].children[1].nativeElement;
-        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 198, 5);
-        tick();
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('195px');
@@ -526,9 +450,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(fixture.componentInstance.column).toBe(grid.columns[1]);
         expect(fixture.componentInstance.prevWidth).toEqual('150');
         expect(fixture.componentInstance.newWidth).toEqual('195px');
-    }));
+    });
 
-    it('should update grid after resizing a column to be bigger.', fakeAsync(() => {
+    it('should update grid after resizing a column to be bigger.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -543,22 +467,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         // Resize first column
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[0].children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 700, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 700, 5);
-        tick();
-        fixture.detectChanges();
-
-        // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
-        // To be investigated.
-        grid.markForCheck();
-        tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('700px');
@@ -571,9 +486,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         expect(hScrollVisible).toBe(true);
         expect(colsRendered.length).toEqual(4);
-    }));
+    });
 
-    it('should recalculate grid heights after resizing so the horizontal scrollbar appears.', fakeAsync(() => {
+    it('should recalculate grid heights after resizing so the horizontal scrollbar appears.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
@@ -589,22 +504,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         // Resize first column
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const resizer = headers[0].children[1].children[0].nativeElement;
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 250, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 250, 5);
-        tick();
-        fixture.detectChanges();
-
-        // We call this again becuase for some reason in test it is not called the same amount of time as in real use.
-        // To be investigated.
-        grid.markForCheck();
-        tick(500);
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('250px');
@@ -616,9 +522,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         // Should 243 - 18, because the horizontal scrollbar has 18px height
         expect(grid.calcHeight).toEqual(expectedHeight - 18);
         expect(hScrollVisible).toBe(true);
-    }));
+    });
 
-    it('should autosize column programmatically.', fakeAsync(() => {
+    it('should autosize column programmatically.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -626,13 +532,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('100px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
 
         expect(column.width).toEqual('63px');
-    }));
+    });
 
-    it('should autosize pinned column programmatically.', fakeAsync(() => {
+    it('should autosize pinned column programmatically.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -640,13 +545,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('100px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
 
         expect(column.width).toEqual('95px');
-    }));
+    });
 
-    it('should autosize last pinned column programmatically.', fakeAsync(() => {
+    it('should autosize last pinned column programmatically.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
@@ -654,13 +558,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('100px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
 
         expect(column.width).toEqual('92px');
-    }));
+    });
 
-    it('should autosize templated column programmatically.', fakeAsync(() => {
+    it('should autosize templated column programmatically.', async() => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
@@ -668,13 +571,12 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('150px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
 
         expect(column.width).toEqual('89px');
-    }));
+    });
 
-    it('should autosize filterable/sortable/resizable/movable column programmatically.', fakeAsync(() => {
+    it('should autosize filterable/sortable/resizable/movable column programmatically.', async() => {
         const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
         fixture.detectChanges();
 
@@ -682,12 +584,11 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('100px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('104px');
-    }));
+        expect(column.width).toEqual('119px');
+    });
 
-    it('should autosize MCHs programmatically.', fakeAsync(() => {
+    it('should autosize MCHs programmatically.', async() => {
         const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
         fixture.detectChanges();
 
@@ -695,7 +596,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('130px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
         expect(column.width).toEqual('239px');
 
@@ -703,7 +603,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('100px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
         expect(column.width).toEqual('148px');
 
@@ -711,7 +610,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('150px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
         expect(column.width).toEqual('85px');
 
@@ -719,12 +617,11 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('90px');
 
         column.autosize();
-        tick();
         fixture.detectChanges();
         expect(column.width).toEqual('111px');
-    }));
+    });
 
-    it('should size headers correctly when column width is below the allowed minimum.', fakeAsync(() => {
+    it('should size headers correctly when column width is below the allowed minimum.', async() => {
         const fixture = TestBed.createComponent(ColGridComponent);
         fixture.detectChanges();
 
@@ -743,9 +640,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
-    }));
+    });
 
-    it('should size headers correctly when column width is in %.', fakeAsync(() => {
+    it('should size headers correctly when column width is in %.', async() => {
         const fixture = TestBed.createComponent(ColPercentageGridComponent);
         fixture.detectChanges();
 
@@ -768,7 +665,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
-    }));
+    });
 });
 
 @Component({

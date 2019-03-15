@@ -39,22 +39,30 @@ export enum TabsType {
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     /**
-     * Provides an observable collection of all `IgxTabItemComponent`s.
-     * ```typescript
-     * const tabItems = this.myTabComponent.tabs;
-     * ```
-     */
-    @ViewChildren(forwardRef(() => IgxTabItemComponent))
-    public tabs: QueryList<IgxTabItemComponent>;
-
-    /**
-     * Provides an observable collection of all `IgxTabsGroupComponent`s.
-     * ```typescript
-     * const groupItems = this.myTabComponent.tabs;
-     * ```
-     */
+    * Provides an observable collection of all `IgxTabsGroupComponent`s.
+    * ```typescript
+    * const groupItems = this.myTabComponent.tabs;
+    * ```
+    */
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
     public groups: QueryList<IgxTabsGroupComponent>;
+
+    /**
+    * An @Input property that sets the value of the `selectedIndex`.
+    * Default value is 0.
+    * ```html
+    * <igx-tabs selectedIndex="1">
+    * ```
+    */
+    @Input()
+    public get selectedIndex(): number {
+        return this._selectedIndex;
+    }
+
+    public set selectedIndex(index: number) {
+        this._selectedIndex = index;
+        this.setSelectedGroup();
+    }
 
     /**
      * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.
@@ -67,33 +75,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @Input('tabsType')
     public tabsType: string | TabsType = 'contentfit';
-
-    /**
-     * An @Input property that sets the value of the `selectedIndex`.
-     * Default value is 0.
-     * ```html
-     * <igx-tabs selectedIndex="1">
-     * ```
-     */
-    @Input()
-    public selectedIndex = 0;
-
-    /**
-     * Emitted when a tab item is selected.
-     * ```html
-     * <igx-tabs (onTabItemSelected)="itemSelected($event)">
-     *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-     *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
-     * </igx-tabs>
-     * ```
-     * ```typescript
-     * itemSelected(e){
-     *      const tabGroup = e.group;
-     *      const tabItem = e.tab;
-     * }
-     * ```
-     */
-    @Output() public onTabItemSelected = new EventEmitter();
 
     /**
      * Emitted when a tab item is deselected.
@@ -113,10 +94,27 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     @Output() public onTabItemDeselected = new EventEmitter();
 
     /**
+    * Emitted when a tab item is selected.
+    * ```html
+    * <igx-tabs (onTabItemSelected)="itemSelected($event)">
+    *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+    *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+    * </igx-tabs>
+    * ```
+    * ```typescript
+    * itemSelected(e){
+    *      const tabGroup = e.group;
+    *      const tabItem = e.tab;
+    * }
+    * ```
+    */
+    @Output() public onTabItemSelected = new EventEmitter();
+
+    /**
      * @hidden
      */
-    @ViewChild('tabsContainer')
-    public tabsContainer: ElementRef;
+    @ViewChild('contentsContainer')
+    public contentsContainer: ElementRef;
 
     /**
      * @hidden
@@ -133,20 +131,47 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @ViewChild('contentsContainer')
-    public contentsContainer: ElementRef;
-
-    /**
-     * @hidden
-     */
     @ViewChild('selectedIndicator')
     public selectedIndicator: ElementRef;
+
+    /**
+    * @hidden
+    */
+    @ViewChild('tabsContainer')
+    public tabsContainer: ElementRef;
 
     /**
      * @hidden
      */
     @ViewChild('viewPort')
     public viewPort: ElementRef;
+
+    /**
+     * Provides an observable collection of all `IgxTabItemComponent`s.
+     * ```typescript
+     * const tabItems = this.myTabComponent.tabs;
+     * ```
+     */
+    @ViewChildren(forwardRef(() => IgxTabItemComponent))
+    public tabs: QueryList<IgxTabItemComponent>;
+
+    /**
+     * @hidden
+     */
+    public calculatedWidth: number;
+
+    /**
+     * @hidden
+     */
+    public visibleItemsWidth: number;
+
+    /**
+     * @hidden
+     */
+    public offset = 0;
+
+    private _groupChanges$: Subscription;
+    private _selectedIndex = 0;
 
     /**
      * @hidden
@@ -180,51 +205,37 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    public calculatedWidth: number;
-
-    /**
-     * @hidden
-     */
-    public visibleItemsWidth: number;
-
-    /**
-     * @hidden
-     */
-    public offset = 0;
-
-    private _groupChanges$: Subscription;
-
-    /**
-     * @hidden
-     */
-    public scrollLeft(event) {
-        this._scroll(false);
-    }
-
-    /**
-     * @hidden
-     */
-    public scrollRight(event) {
-        this._scroll(true);
-    }
-
-    private _scroll(scrollRight: boolean): void {
-        const tabsArray = this.tabs.toArray();
-        for (const tab of tabsArray) {
-            const element = tab.nativeTabItem.nativeElement;
-            if (scrollRight) {
-                if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
-                    this.scrollElement(element, scrollRight);
-                    break;
-                }
-            } else {
-                if (element.offsetWidth + element.offsetLeft >= this.offset) {
-                    this.scrollElement(element, scrollRight);
-                    break;
-                }
-            }
+    @HostListener('onTabItemSelected', ['$event'])
+    public selectedGroupHandler(args) {
+        const prevSelectedIndex = this.selectedIndex;
+        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
+            this.onTabItemDeselected.emit(
+                {
+                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
+                    group: this.groups.toArray()[prevSelectedIndex]
+                });
         }
 
+        this.selectedIndex = args.group.index;
+        this.groups.forEach((p) => {
+            if (p.index !== this.selectedIndex) {
+                this.deselectGroup(p);
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    public scrollLeft(event): void {
+        this.scroll(false);
+    }
+
+    /**
+     * @hidden
+     */
+    public scrollRight(event): void {
+        this.scroll(true);
     }
 
     /**
@@ -256,15 +267,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
-        setTimeout(() => {
-            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
-                // if nothing is selected - select the first tabs group
-                this._selectGroupByIndex(0);
-            } else {
-                this._selectGroupByIndex(this.selectedIndex);
-            }
-        });
-
+        this.setSelectedGroup();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
@@ -279,21 +282,32 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    private resetSelectionOnCollectionChanged() {
+    private setSelectedGroup(): void {
+        requestAnimationFrame(() => {
+            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
+                // if nothing is selected - select the first tabs group
+                this.selectGroupByIndex(0);
+            } else {
+                this.selectGroupByIndex(this.selectedIndex);
+            }
+        });
+    }
+
+    private resetSelectionOnCollectionChanged(): void {
         setTimeout(() => {
             if (this.groups.toArray()[this.selectedIndex] !== undefined) {
                 // persist the selected index and applied it to the new collection
-                this._selectGroupByIndex(this.selectedIndex);
+                this.selectGroupByIndex(this.selectedIndex);
             } else {
                 if (this.selectedIndex >= this.groups.length) {
                     // in case the selected index is no longer valid, select the last group in the new collection
-                    this._selectGroupByIndex(this.groups.length - 1);
+                    this.selectGroupByIndex(this.groups.length - 1);
                 }
             }
         }, 0);
     }
 
-    private _selectGroupByIndex(selectedIndex: number) {
+    private selectGroupByIndex(selectedIndex: number): void {
         const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
         const group = selectableGroups[selectedIndex];
 
@@ -302,29 +316,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('onTabItemSelected', ['$event'])
-    public _selectedGroupHandler(args) {
-        const prevSelectedIndex = this.selectedIndex;
-        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
-            this.onTabItemDeselected.emit(
-                {
-                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
-                    group: this.groups.toArray()[prevSelectedIndex]
-                });
-        }
-
-        this.selectedIndex = args.group.index;
-        this.groups.forEach((p) => {
-            if (p.index !== this.selectedIndex) {
-                this._deselectGroup(p);
-            }
-        });
-    }
-
-    private _deselectGroup(group: IgxTabsGroupComponent) {
+    private deselectGroup(group: IgxTabsGroupComponent): void {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (group.disabled || this.selectedTabItem.index === group.index) {
             return;
@@ -332,6 +324,24 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
         group.isSelected = false;
         group.relatedTab.tabindex = -1;
+    }
+
+    private scroll(scrollRight: boolean): void {
+        const tabsArray = this.tabs.toArray();
+        for (const tab of tabsArray) {
+            const element = tab.nativeTabItem.nativeElement;
+            if (scrollRight) {
+                if (element.offsetWidth + element.offsetLeft > this.viewPort.nativeElement.offsetWidth + this.offset) {
+                    this.scrollElement(element, scrollRight);
+                    break;
+                }
+            } else {
+                if (element.offsetWidth + element.offsetLeft >= this.offset) {
+                    this.scrollElement(element, scrollRight);
+                    break;
+                }
+            }
+        }
     }
 }
 

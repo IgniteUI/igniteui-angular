@@ -2479,16 +2479,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[1].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick(100);
         fix.detectChanges();
 
         colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -2529,16 +2524,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(headers[1].nativeElement.offsetWidth).toEqual(250);
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[1].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick(100);
         fix.detectChanges();
 
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -2584,16 +2574,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[2].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[2].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-        tick(100);
         fix.detectChanges();
 
         colChips = GridFunctions.getFilterChipsForColumn('Downloads', fix);
