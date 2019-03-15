@@ -20,16 +20,15 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 })
 
 export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit, AfterViewChecked {
-    public isSelected = false;
 
     /**
-    * An @Input property that sets the value of the `label`.
+    * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
     *```html
-    *<igx-tabs-group label="Tab 1" icon="folder">
+    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
     *```
     */
     @Input()
-    public label: string;
+    public disabled = false;
 
     /**
     * An @Input property that sets the value of the `icon`.
@@ -42,13 +41,26 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     public icon: string;
 
     /**
-    * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
+    * An @Input property that sets the value of the `label`.
     *```html
-    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
+    *<igx-tabs-group label="Tab 1" icon="folder">
     *```
     */
     @Input()
-    public disabled = false;
+    public label: string;
+
+    public isSelected = false;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    protected tabTemplate: IgxTabItemTemplateDirective;
+
+    private _tabTemplate: TemplateRef<any>;
+
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+    }
 
     /**
      * @hidden
@@ -62,6 +74,13 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
+    }
+
+    @HostListener('window:resize', ['$event'])
+    public onResize(event) {
+        if (this.isSelected) {
+            this.transformContentAnimation(0);
+        }
     }
 
     /**
@@ -90,7 +109,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      * }
      * ```
      */
-    get index() {
+    get index(): number {
         if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
         }
@@ -108,25 +127,6 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
-    }
-
-    private _tabTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
-    protected tabTemplate: IgxTabItemTemplateDirective;
-
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
-    }
-
-
-    @HostListener('window:resize', ['$event'])
-    public onResize(event) {
-        if (this.isSelected) {
-            this.transformContentAnimation(0);
-        }
     }
 
     /**
@@ -162,7 +162,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 200) {
+    public select(focusDelay = 200): void {
         if (this.disabled || this.isSelected) {
             return;
         }
@@ -175,11 +175,11 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
                 this.relatedTab.nativeTabItem.nativeElement.focus();
             }, focusDelay);
         }
-        this._handleSelection();
+        this.handleSelection();
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 
-    private _handleSelection() {
+    private handleSelection(): void {
         const tabElement = this.relatedTab.nativeTabItem.nativeElement;
 
         // Scroll to the left
@@ -201,7 +201,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
         this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
     }
 
-    private transformContentAnimation(duration: number) {
+    private transformContentAnimation(duration: number): void {
         const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
         this._tabs.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
         this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
