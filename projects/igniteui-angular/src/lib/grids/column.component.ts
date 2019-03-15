@@ -1222,7 +1222,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
-            if (this.sortable) {
+            if (this.sortable || this.filterable) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
             }
 

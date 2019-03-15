@@ -84,6 +84,7 @@ import {
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1367,6 +1368,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+    /**
+     * @hidden
+     */
+    @ViewChild(IgxGridColumnResizerComponent)
+    public resizeLine: IgxGridColumnResizerComponent;
 
     /**
      * @hidden
@@ -2986,6 +2993,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const pinned = this._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
 
+        if (to.columnGroup) {
+            dropIndex += to.allChildren.length;
+        }
+
         if (position === DropPosition.BeforeDropTarget) {
             dropIndex--;
         }
@@ -4069,6 +4080,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public isColumnGrouped(fieldName: string): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
     public onHeaderCheckboxClick(event, filteredData) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -4283,10 +4301,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public wheelHandler(isScroll = false) {
+        if (document.activeElement &&
         // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
+            (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
         // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
+            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
