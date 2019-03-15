@@ -24,11 +24,6 @@ export class IgxColumnResizingService {
      *@hidden
      */
     public showResizer = false;
-
-    /**
-     *@hidden
-     */
-    public resizeEndTimeout = isFirefox() ? 200 : 0;
     /**
      * The column being resized.
      */
@@ -130,8 +125,6 @@ export class IgxColumnResizingService {
      * Resizes the column regaridng to the column minWidth and maxWidth.
      */
     public resizeColumn(event: MouseEvent) {
-        this.isColumnResizing = false;
-
         this.showResizer = false;
         const diff = event.clientX - this.startResizePos;
 
@@ -168,5 +161,7 @@ export class IgxColumnResizingService {
                 });
             }
         }
+
+        this.isColumnResizing = false;
     }
 }
