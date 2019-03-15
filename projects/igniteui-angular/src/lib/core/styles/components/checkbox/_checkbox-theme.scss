@@ -90,6 +90,7 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
+        outline-style: none;
     }
 
     %cbx-display--disabled {
