@@ -11,7 +11,8 @@ import {
     ViewChild,
     EventEmitter,
     Output,
-    ContentChild
+    ContentChild,
+    Optional
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -23,9 +24,9 @@ import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/u
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { OverlaySettings } from '../services';
+import { OverlaySettings, IgxOverlayService } from '../services';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { take } from 'rxjs/operators';
+import { take, takeUntil, filter } from 'rxjs/operators';
 
 
 /**
@@ -51,7 +52,12 @@ import { take } from 'rxjs/operators';
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
     protected destroy$ = new Subject<boolean>();
-    protected _focusedItemIndex;
+    protected _focusedItemIndex = 1;
+    protected _scrollPosition;
+    protected _dropdownElement = null;
+
+    @ViewChild('content')
+    protected content;
 
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     public virtDir: IgxForOfDirective<any>;
@@ -87,12 +93,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     @Input()
     public allowItemsFocus = false;
 
+    public get focusedIndex(): number {
+        return this._focusedItemIndex;
+    }
+
     /**
      * @hidden @internal
      */
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
-            if (this._focusedItemIndex) {
+            if (this._focusedItemIndex !== -1) {
                 return this.children.find(e => e.index === this._focusedItemIndex);
             } else {
                 return null;
@@ -208,7 +218,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
+        protected selection: IgxSelectionAPIService,
+        @Optional() protected overlay?: IgxOverlayService) {
         super(elementRef, cdr);
     }
 
@@ -309,18 +320,21 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden @internal
      */
+    updateScrollPosition() {
+        if (this.virtDir) {
+            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onToggleOpening(e: CancelableEventArgs) {
         this.onOpening.emit(e);
         if (e.cancel) {
             return;
         }
-        if (this.virtDir && this.selectedItem) {
-            const virtDirective = this.virtDir;
-            const chunkSize = virtDirective.state.chunkSize;
-            const targetIndex = this.selectedItem.index > chunkSize / 2 ? this.selectedItem.index + chunkSize / 2 : this.selectedItem.index;
-            virtDirective.scrollTo(Math.trunc(targetIndex));
-            this._focusedItemIndex = this.selectedItem ? this.selectedItem.index : this._focusedItemIndex;
-        } else {
+        if (!this.virtDir && this.selectedItem) {
             this.scrollToItem(this.selectedItem);
         }
     }
@@ -343,6 +357,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
+        if (!this._dropdownElement && this.content) {
+            this._dropdownElement = this.content.nativeElement.parentElement;
+        }
+        if (this.virtDir) {
+            this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
+        }
     }
 
     /**
@@ -403,6 +423,15 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
+        const that = this;
+        if (this.overlay) {
+            this.overlay.onAnimation.pipe(filter(e => e.animationType === 'open' &&
+            (e as any).animationPlayer.element === this._dropdownElement),
+            takeUntil(this.destroy$)).subscribe((event) => {
+                console.log(that);
+                this.updateScrollPosition();
+            });
+        }
     }
 
     /** Keydown Handler */
@@ -439,7 +468,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigateNext() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedItemIndex !== undefined ? this._focusedItemIndex + 1 : 0);
+            this.navigateItem(this._focusedItemIndex !== -1 ? this._focusedItemIndex + 1 : 0);
         } else {
             super.navigateNext();
         }
@@ -450,7 +479,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigatePrev() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedItemIndex !== undefined ? this._focusedItemIndex - 1 : 0);
+            this.navigateItem(this._focusedItemIndex !== -1 ? this._focusedItemIndex - 1 : 0);
         } else {
             super.navigatePrev();
         }

@@ -3,3 +3,9 @@
     flex-flow: row;
     justify-content: space-evenly;
 }
+
+.drop-down-virtual-wrapper {
+    overflow: hidden;
+    max-height: 480px;
+    width: 420px;
+}

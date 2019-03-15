@@ -2,7 +2,7 @@
 [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox"
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-    <ng-container *ngIf="!collapsed">
+    <ng-container  #content *ngIf="!collapsed">
         <ng-content></ng-content>
     </ng-container>
 </div>

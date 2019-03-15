@@ -109,7 +109,7 @@ const noop = () => { };
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+ OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -887,7 +887,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get virtualizationState(): IForOfState {
-        return this.dropdown.verticalScrollContainer.state;
+        return this.dropdown.virtDir.state;
     }
     /**
      * Sets the current state of the virtualized data.
@@ -898,7 +898,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set virtualizationState(state: IForOfState) {
-        this.dropdown.verticalScrollContainer.state = state;
+        this.dropdown.virtDir.state = state;
     }
 
     /**
@@ -910,7 +910,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get totalItemCount(): number {
-        return this.dropdown.verticalScrollContainer.totalItemCount;
+        return this.dropdown.virtDir.totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
@@ -921,7 +921,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set totalItemCount(count: number) {
-        this.dropdown.verticalScrollContainer.totalItemCount = count;
+        this.dropdown.virtDir.totalItemCount = count;
         this.cdr.detectChanges();
     }
 
@@ -1033,7 +1033,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleInputChange(event?: string) {
         let cdrFlag = false;
-        const vContainer = this.dropdown.verticalScrollContainer;
+        const vContainer = this.dropdown.virtDir;
         if (event !== undefined && this._prevInputValue === event) {
             // Nothing has changed
             return;
@@ -1295,7 +1295,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
-        }
+    }
     }
 
     /**
