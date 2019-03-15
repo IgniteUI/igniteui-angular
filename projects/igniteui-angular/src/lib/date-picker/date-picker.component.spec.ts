@@ -11,6 +11,7 @@ import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DateRangeType } from 'igniteui-angular';
+import { IgxButtonModule } from '../directives/button/button.directive';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -27,7 +28,7 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerEditableComponent,
                 IgxDropDownDatePickerRetemplatedComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule]
+            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxButtonModule]
         })
             .compileComponents();
     }));
@@ -309,12 +310,24 @@ describe('IgxDatePicker', () => {
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     }));
 
-    // TODO
-    it('Retemplate dropdown date picker', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxDropDownDatePickerRetemplatedComponent);
-        tick();
-        fix.detectChanges();
-    }));
+    it('Retemplate dropdown date picker - dropdown mode', () => {
+        const fixture = TestBed.createComponent(IgxDropDownDatePickerRetemplatedComponent);
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+
+        const input = dom.query(By.css('.igx-input-group__input'));
+        expect(input).not.toBeNull();
+        expect(input.nativeElement.value).toBe('10/20/2020');
+
+        const button = dom.query(By.css('.igx-button--flat'));
+        UIInteractions.clickElement(button);
+
+        fixture.detectChanges();
+
+        const dropdown = document.getElementsByClassName('igx-date-picker--dropdown');
+        expect(dropdown.length).toBe(1);
+        expect(dropdown[0]).not.toBeNull();
+    });
 
     it('Should be able to deselect using the API.', () => {
         const fix = TestBed.createComponent(IgxDatePickerTestComponent);
@@ -1007,7 +1020,7 @@ export class IgxDatePickerRetemplatedComponent { }
             <igx-input-group>
             <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"/>
             </igx-input-group>
-            <button (click)="openDialog()">Select Date</button>
+            <button igxButton (click)="openDialog()">Select Date</button>
         </ng-template>
     </igx-date-picker>
     `
