@@ -37,6 +37,7 @@ import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.compo
 import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxOverlayService } from '../../services/index';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -274,6 +275,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollLeft = 0;
 
     constructor(
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,

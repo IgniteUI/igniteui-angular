@@ -147,7 +147,10 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     public formattedDate(value: Date): string {
-        return this.formatterDay.format(value);
+        if (this.formatViews.day) {
+            return this.formatterDay.format(value);
+        }
+        return `${value.getDate()}`;
     }
 
     /**
