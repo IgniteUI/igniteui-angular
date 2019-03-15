@@ -1070,7 +1070,7 @@
         align-items: center;
         justify-content: flex-end;
         user-select: none;
-        min-width: 15px; /* sort-icon width */
+        min-width: 30px; /* sort-icon + filter icon width */
         height: map-get($grid-header-height, 'comfortable');
         align-self: flex-end;
 
@@ -1161,7 +1161,7 @@
     }
 
     %grid__resize-line {
-        position: fixed;
+        position: absolute;
         cursor: col-resize;
         width: 4px;
         background-color: --var($theme, 'resize-line-color');
