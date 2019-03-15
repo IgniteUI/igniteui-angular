@@ -25,19 +25,19 @@ export class CalendarViewsSampleComponent implements OnInit {
 
     locale = 'en';
     localeFr = 'fr';
-    localeDe = 'de'
+    localeDe = 'de';
 
     formatOptions = {
         day: '2-digit',
-        month: 'long',
-        weekday: 'long',
-        year: 'numeric'
-    }
+        month: 'short',
+        weekday: 'short',
+        year: '2-digit'
+    };
 
     formatViews = {
-        day: true,
+        day: false,
         month: true,
-        year: true
+        year: false
     };
 
     disabledDates = [{
