@@ -933,7 +933,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * An @Output property emitting an event when `IgxGridCellComponent`
      * editing has been performed in the grid and the values have **not** been submitted (e.g. `Esc` key was pressed).
      * This event is cancelable.
-     * 
+     *
      * args: IGridEditEventArgs = {
      *      cancel: bool,
      *      cellID: {
@@ -943,9 +943,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *      }
      *      newValue: object,
      *      oldValue: object,
-     *      rowID: int	
+     *      rowID: int
      *  }
-     * 
+     *
      * ```typescript
      * editCancel(event: IGridEditEventArgs){
      *    const rowID: IgxColumnComponent = event.rowID;
@@ -967,7 +967,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * An @Output property emitting an event when `IgxGridCellComponent` enters edit mode.
      * This event is cancelable.
-     * 
+     *
      * args: IGridEditEventArgs = {
      *      cancel: bool,
      *      cellID: {
@@ -976,9 +976,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *          rowIndex: int
      *      }
      *      oldValue: object,
-     *      rowID: int	
+     *      rowID: int
      *  }
-     * 
+     *
      * ```typescript
      * editStart(event: IGridEditEventArgs){
      *    const value: IgxColumnComponent = event.newValue;
@@ -1001,7 +1001,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * An @Output property emitting an event when `IgxGridCellComponent` editing has been performed in the grid.
      * Event is fired after editing is completed, when the cell is exiting edit mode.
      * This event is cancelable.
-     * 
+     *
      * args: IGridEditEventArgs = {
      *      cancel: bool,
      *      cellID: {
@@ -1011,9 +1011,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *      }
      *      newValue: object,
      *      oldValue: object,
-     *      rowID: int	
+     *      rowID: int
      *  }
-     * 
+     *
      * ```typescript
      * editDone(event: IGridEditEventArgs){
      *    const value: IgxColumnComponent = event.newValue;
@@ -1041,7 +1041,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *      oldValue: <rowObj>,
      *      rowID: int
      *  }
-     * 
+     *
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
@@ -1086,7 +1086,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
      * </igx-grid>
      * ```
-     * 
+     *
      * ```typescript
      *      editDone(event: IGridEditEventArgs) {
      *          const originalRowObj = event.oldValue;
