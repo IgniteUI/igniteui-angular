@@ -139,12 +139,10 @@ describe('IgxTreeGrid - Indentation', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
-            tick();
+            tick(200);
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-            tick();
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
-            tick();
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
@@ -292,12 +290,10 @@ describe('IgxTreeGrid - Indentation', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
-            tick();
+            tick(200);
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
-            tick();
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
-            tick();
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
