@@ -1,9 +1,38 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
 ## 7.1.10
 ### Features
 - Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
+
+### Bug Fixes
+- Tooltip remains opened after clicking its target #4127
+- TextHighlight Directive makes the matching spans bold #4129
+- igx-grid: `pinned` property doesn't work when `width` property is set together. #4125
+- Double click in editMode reverts the cell's value #3985
+- Issue with export excel/csv from grid #3763
+- Error when scrolling grid with mouse wheel after closing a dialog window in the page #4232
+- Circular progress bar throws error on IE11 #3787
+- Setting grid data property manually after initial rendering without binding it to the input is not detected. #4242
+- `headerGroupClasses` is marked as hidden #4276
+- When you pin child column the whole group is not pinned #4278
+- igx-column-group does not fire onColumnVisibilityChanged #4194
+- When grid is filtered and update a cell summaries are not updated #4211
+
+## 7.1.9
+### Bug Fixes
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- Grid doesn't reflect the applied formatter immediately #3819
+- Cannot set chip as selected through API if selectable is false #2383
+- IgxCombo - Keyboard navigation in combo with remote data is incorrect #4049
+- Setting groupingExpressions run-time has different result than using the UI/methods #3952
+- Error on app-shell build in the icon module #4065
+- Grid/TreeGrid toolbar dropdowns reopen when trying to close it every other time #4045
+- When grid and columns have width in IE the columns are visible outside the grid #3716
+- IgxGridToolbarComponent is hidden from the API docs #3974
+- igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
+- IgxToggleAction logs deprecated message in the console #4126
 
 ## 7.1.8
 ### Bug Fixes
@@ -227,8 +256,19 @@ All notable changes for each version of this project will be documented in this 
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
-## 6.2.10
+## 6.2.12
+### Bug fixes
+- igx-grid: `pinned` property doesn't work when `width` property is set together. #4125
+- When you pin child column the whole group is not pinned #4278
 
+## 6.2.11
+### Bug fixes
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- Cannot set chip as selected through API if selectable is false #2383
+- Setting groupingExpressions run-time has different result than using the UI/methods #3952
+- igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
+
+## 6.2.10
 ## Bug Fixes
 - Cells position is changed when scroll vertical #3094
 - igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
