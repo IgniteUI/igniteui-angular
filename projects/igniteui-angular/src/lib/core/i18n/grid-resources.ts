@@ -125,7 +125,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_filter_sorting_desc: 'descending',
     igx_grid_excel_filter_sorting_header: 'sorting',
     igx_grid_excel_custom_dialog_add: 'add filter',
-    igx_grid_excel_custom_dialog_clear: 'clear filter',
+    igx_grid_excel_custom_dialog_clear: 'Clear filter',
     igx_grid_excel_custom_dialog_header: 'Custom auto-filter on column: ',
     igx_grid_excel_cancel: 'cancel',
     igx_grid_excel_apply: 'apply',
