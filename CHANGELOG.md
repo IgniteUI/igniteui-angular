@@ -1,8 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 7.2.1
+# 7.2.2
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
+
+## 7.2.1
 - **Feature** Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
 
 ## 7.2.0
