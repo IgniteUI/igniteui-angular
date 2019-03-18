@@ -60,6 +60,7 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
+import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 /**
  * @hidden
  */
@@ -89,7 +90,8 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridDragSelectDirective
+        IgxGridDragSelectDirective,
+        IgxGridColumnResizerComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -141,6 +143,7 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
+        IgxGridColumnResizerComponent,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule

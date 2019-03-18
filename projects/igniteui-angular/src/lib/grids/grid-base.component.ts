@@ -86,6 +86,7 @@ import {
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1375,6 +1376,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @ViewChild(IgxGridColumnResizerComponent)
+    public resizeLine: IgxGridColumnResizerComponent;
+
+    /**
+     * @hidden
+     */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -2637,7 +2644,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = this.getColumnByName(args.column.field);
+        const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
+
+        if (!col) {
+            return;
+        }
+
         col.hidden = args.newValue;
         this.onColumnVisibilityChanged.emit(args);
 
@@ -3009,6 +3021,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
         const pinned = this._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
+
+        if (to.columnGroup) {
+            dropIndex += to.allChildren.length;
+        }
 
         if (position === DropPosition.BeforeDropTarget) {
             dropIndex--;
@@ -4120,6 +4136,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         }
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+    }
+
+    /**
+     * @hidden
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return false;
     }
 
     /**

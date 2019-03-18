@@ -38,6 +38,7 @@ import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -120,7 +121,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     * @memberof IgxHierarchicalGridComponent
     */
     @Input()
-    public hierarchicalState: HierarchicalStateRecord[] = [];
+    public get hierarchicalState() {
+        return this._hierarchicalState;
+    }
+    public set hierarchicalState(val) {
+        this._hierarchicalState = val;
+        if (this.parent) {
+            requestAnimationFrame(() => {
+                this.updateParentSizes();
+            });
+        }
+    }
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
@@ -269,6 +280,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -633,5 +645,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     this.nativeElement.focus();
                 });
         });
+    }
+
+    private updateParentSizes() {
+        let currGrid = this.parent;
+        while (currGrid) {
+            const virt = currGrid.verticalScrollContainer;
+            virt.recalcUpdateSizes();
+            const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scr = virt.getVerticalScroll();
+            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
+            currGrid = currGrid.parent;
+        }
     }
 }
