@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, forwardRef
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, forwardRef
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -14,7 +14,7 @@ import {
     IgxComboToggleIconDirective,
     IgxComboClearIconDirective
 } from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NG_VALIDATORS } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
@@ -32,7 +32,7 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -101,15 +101,11 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService, {
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => IgxComboComponent),
-        multi: true
-    }, {
-        provide: NG_VALIDATORS,
-        useExisting: forwardRef(() => IgxComboComponent),
-        multi: true
-    }]
+    providers: [
+        IgxComboAPIService,
+        { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxComboComponent), multi: true }
+    ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
  OnDestroy, EditorProvider {
@@ -122,13 +118,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public defaultFallbackGroup = 'Other';
     protected stringFilters = IgxStringFilteringOperand;
-    protected boolenFilters = IgxBooleanFilteringOperand;
+    protected booleanFilters = IgxBooleanFilteringOperand;
     protected _filteringLogic = FilteringLogic.Or;
     protected _filteringExpressions: IFilteringExpression[] = [];
     protected _sortingExpressions: ISortingExpression[] = [];
     protected _groupKey = '';
     protected _displayKey: string;
     private _dataType = '';
+    private ngControl: NgControl = null;
+    private _statusChanges$: Subscription;
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
@@ -146,7 +144,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() private _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
     }
@@ -576,7 +575,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     @HostBinding('class.igx-combo')
-    public cssClass = 'igx-combo'; // Independant of display density, at the time being
+    public cssClass = 'igx-combo'; // Independent of display density, at the time being
 
     /**
      * @hidden @internal
@@ -1242,13 +1241,24 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.filteringExpressions = newArray;
     }
 
-    protected onStatusChanged(formControl: FormControl): boolean {
-        if ((formControl.touched || formControl.dirty) &&
-            (formControl.validator || formControl.asyncValidator)) {
-            this.valid = this.value ? IgxComboState.VALID : IgxComboState.INVALID;
-            return !this.value;
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
         }
-        return null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onBlur() {
+        if (this.collapsed) {
+            if (this.ngControl && !this.ngControl.valid) {
+                this.valid = IgxComboState.INVALID;
+            } else {
+                this.valid = IgxComboState.INITIAL;
+            }
+        }
     }
 
     /**
@@ -1263,6 +1273,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public ngOnInit() {
+        try {
+            this.ngControl = this._injector.get(NgControl);
+        } catch (e) { }
         this._positionCallback = () => this.dropdown.updateScrollPosition();
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
@@ -1274,6 +1287,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
+
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        }
     }
 
     /**
@@ -1283,6 +1300,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.destroy$.complete();
         this.comboAPI.clear();
         this.selection.clear(this.id);
+
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
     }
 
     /**
@@ -1325,13 +1346,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public getEditElement(): HTMLElement {
         return this.comboInput.nativeElement;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public validate(c: FormControl) {
-        return this.onStatusChanged(c);
     }
 
     /**
