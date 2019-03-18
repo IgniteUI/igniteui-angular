@@ -52,7 +52,7 @@ import { take, takeUntil, filter } from 'rxjs/operators';
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
     protected destroy$ = new Subject<boolean>();
-    protected _focusedItemIndex = 1;
+    protected _focusedItemIndex = -1;
     protected _scrollPosition;
     protected _dropdownElement = null;
 
@@ -270,6 +270,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     /**
      * Navigates to the item on the specified index
+     * If the data in the drop-down is virtualized, pass the index of the item in the virtualized data.
      * @param newIndex number
      */
     public navigateItem(index: number) {

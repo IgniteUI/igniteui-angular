@@ -58,7 +58,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden @internal
      */
     public onFocus() {
-        this._focusedItemIndex = this._focusedItemIndex || this.items[0].index;
+        this._focusedItemIndex = this._focusedItemIndex !== -1 ? this._focusedItemIndex : this.items[0].index;
     }
 
     /**
