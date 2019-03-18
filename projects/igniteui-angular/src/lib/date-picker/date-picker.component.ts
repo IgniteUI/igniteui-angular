@@ -895,8 +895,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 if (this.editableInputGroup) {
                     dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
                 } else {
-                    // if the date picker is retemplated, set an element marked with #dropDownTarget as a target to the drop-down
-                    dropDownOverlay.positionStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                    try {
+                        // if the date picker is retemplated, set an element marked with #dropDownTarget as a target to the drop-down
+                        dropDownOverlay.positionStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                    } catch {
+                        throw new Error('There is no target element for the dropdown to attach. Mark an element with #dropDownTarget.');
+                    }
                 }
 
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
