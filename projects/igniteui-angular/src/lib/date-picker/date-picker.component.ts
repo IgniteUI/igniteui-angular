@@ -55,6 +55,8 @@ import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
+import { getViewportRect } from '../services/overlay/utilities';
+import { fadeIn, fadeOut } from '../animations/fade';
 
 let NEXT_ID = 0;
 
@@ -672,8 +674,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public isEmpty = true;
     public invalidDate = '';
 
-    private readonly SPIN_DELTA = 1;
-    private readonly DEFAULT_LOCALE = 'en';
+    private readonly spinDelta = 1;
+    private readonly defaultLocale = 'en';
+    private readonly calendarHeight = 400;
 
     private _formatOptions = {
         day: 'numeric',
@@ -756,6 +759,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._positionSettings = {
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
+            openAnimation: fadeIn,
+            closeAnimation: fadeOut
         };
 
         const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
@@ -884,9 +889,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
             case InteractionMode.DropDown: {
                 this.hasHeader = false;
-                const dropDownOverlay =
-                    (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
-                dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
+                let dropDownOverlay;
+
+                if (this.dropDownOverlaySettings !== undefined) {
+                    dropDownOverlay = this._dropDownOverlay;
+                } else {
+                    dropDownOverlay = this._dropDownOverlaySettings;
+                    dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
+                    dropDownOverlay.positionStrategy.settings.verticalDirection = this._getDropDownVerticalAlignment();
+                }
+
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, dropDownOverlay);
                 break;
@@ -1094,7 +1106,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const cursorPosition = this._getCursorPosition();
 
         const modifiedInputValue =
-            DatePickerUtil.getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, this.SPIN_DELTA * sign, this.isSpinLoop);
+            DatePickerUtil.getModifiedDateInput(this.dateFormatParts, inputValue, cursorPosition, this.spinDelta * sign, this.isSpinLoop);
 
         this.getEditElement().value = modifiedInputValue;
         this._setCursorPosition(cursorPosition);
@@ -1181,6 +1193,21 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         });
     }
 
+    private _getDropDownVerticalAlignment() {
+        const windowHeight = getViewportRect(document).height;
+        const inputGroupRect = this.editableInputGroup.nativeElement.getBoundingClientRect() as DOMRect;
+        const heightAbove = inputGroupRect.top + inputGroupRect.height;
+        const heightBelow = windowHeight - heightAbove;
+
+        if (heightBelow > this.calendarHeight) {
+            return VerticalAlignment.Bottom;
+        } else if (heightAbove > this.calendarHeight) {
+            return VerticalAlignment.Top;
+        } else {
+            return VerticalAlignment.Middle;
+        }
+    }
+
     /**
      * Apply custom user formatter upon date.
      * @param formatter custom formatter function.
@@ -1198,7 +1225,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     */
     private _getDisplayDate(value: any): string {
         if (this.format && !this.formatter) {
-            const locale = this.locale || this.DEFAULT_LOCALE;
+            const locale = this.locale || this.defaultLocale;
             return formatDate(value, this.format, locale);
         } else {
             return this._customFormatChecker(this.formatter, value);
@@ -1206,7 +1233,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _getEditorDate(value: any) {
-        const locale = this.locale || this.DEFAULT_LOCALE;
+        const locale = this.locale || this.defaultLocale;
         const changedValue = (value) ? formatDate(value, this.mask, locale) : '';
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
