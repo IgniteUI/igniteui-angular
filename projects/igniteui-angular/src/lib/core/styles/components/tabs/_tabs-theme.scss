@@ -74,7 +74,9 @@
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
 
     @if not($item-text-color) and $item-background {
-        $item-text-color: rgba(text-contrast($item-background), .54);
+        @if type-of($item-background) == 'color' {
+            $item-text-color: rgba(text-contrast($item-background), .54);
+        }
     }
 
     @if not($item-hover-color) and $item-background {
@@ -124,7 +126,7 @@
     }
 
     @if not($button-background) and $item-background {
-        @if (lightness($item-background) > 50) {
+        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-background: transparent;
         } @else {
             $button-background: rgba(255, 255, 255 , .1);
@@ -132,7 +134,7 @@
     }
 
     @if not($button-hover-background) and $item-background {
-        @if (lightness($item-background) > 50) {
+        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-hover-background: rgba(0, 0, 0, .05);
         } @else {
             $button-hover-background: rgba(255, 255, 255 , .14);
@@ -140,7 +142,7 @@
     }
 
     @if not($button-ripple-color) and $button-background {
-        @if (lightness($item-background) > 50) {
+        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-ripple-color: rgba(0, 0, 0, .4);
         } @else {
             $button-ripple-color: rgba(255, 255, 255, .4);
@@ -156,8 +158,6 @@
     @if not($tab-ripple-color) and $item-background {
         $tab-ripple-color: text-contrast($item-background);
     }
-
-
 
     @return extend($theme, (
         name: $name,

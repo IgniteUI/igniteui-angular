@@ -1,4 +1,6 @@
 # Ignite UI for Angular Change Log
+## 7.2.2
+- **Themes** - Add support for gradients and images as values for component themes via the component theme functions.
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.1
