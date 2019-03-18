@@ -189,8 +189,9 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
    */
   it('should enable es5BrowserSupport on projects with ng cli version >= 7.3', () => {
     tree.create('src/polyfills.ts', '');
-    ngJsonConfig.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
-    tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig));
+    const newJson: any = JSON.parse(tree.read('/angular.json').toString());
+    newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
+    tree.overwrite('/angular.json', JSON.stringify(newJson));
     runner.runSchematic('ng-add', { polyfills: true }, tree);
     const ngJsonData = JSON.parse(tree.readContent('/angular.json').toString());
     expect(ngJsonData.projects['testProj'].architect.build.options['es5BrowserSupport']).toBeTruthy();
@@ -198,14 +199,14 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 
   it('should enable web-anmations and object.entries properly on projects with ng cli version >= 7.3', () => {
     const polyfills = `
-** IE10 and IE11 requires the following for NgClass support on SVG elements */
+/** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run \`npm install --save classlist.js\`.
 
 // import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     `;
 
     const result = `
-** IE10 and IE11 requires the following for NgClass support on SVG elements */
+/** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run \`npm install --save classlist.js\`.
 
 /** ES7 \`Object.entries\` needed for igxGrid to render in IE. */
@@ -215,8 +216,9 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     `;
 
     tree.create('src/polyfills.ts', polyfills);
-    ngJsonConfig.projects['testProj'].architect.build.options['es5BrowserSupport'] = true;
-    tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig));
+    const newJson: any = JSON.parse(tree.read('/angular.json').toString());
+    newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
+    tree.overwrite('/angular.json', JSON.stringify(newJson));
     runner.runSchematic('ng-add', { polyfills: true }, tree);
     expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
