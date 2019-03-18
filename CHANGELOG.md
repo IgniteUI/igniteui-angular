@@ -1,6 +1,6 @@
 # Ignite UI for Angular Change Log
 
-## 7.2.1
+## 7.2.2
 - **Themes**
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
 
