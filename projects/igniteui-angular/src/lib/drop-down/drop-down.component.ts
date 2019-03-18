@@ -420,12 +420,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        const that = this;
         if (this.overlay) {
-            // TODO: Try to refactor this...
-            this.overlay.onAnimation.pipe(filter(e => e.animationType === 'open' &&
-                (e as any).animationPlayer.element === this._dropdownElement),
-                takeUntil(this.destroy$)).subscribe((event) => {
+            this.toggleDirective.onAnimation.pipe(filter(e => e.animationType === 'open'),
+                takeUntil(this.destroy$))
+                .subscribe(() => {
                     this.updateScrollPosition();
                 });
         }

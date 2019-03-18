@@ -18,7 +18,7 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
+import { OverlayClosingEventArgs, OverlayAnimationEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
@@ -29,7 +29,8 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     protected _overlayId: string;
     private destroy$ = new Subject<boolean>();
-    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
+    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs | OverlayAnimationEventArgs>,
+        MonoTypeOperatorFunction<OverlayEventArgs | OverlayAnimationEventArgs>] = [
         filter(x => x.id === this._overlayId),
         takeUntil(this.destroy$)
     ];
@@ -114,6 +115,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
+    private _overlayAnimationSub: Subscription;
+
+    @Output()
+    public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
     /**
      * @hidden
      */
@@ -223,6 +228,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
+
+        this._overlayAnimationSub = this.overlayService.onAnimation
+        .pipe(...this._overlaySubFilter)
+        .subscribe((event: OverlayAnimationEventArgs) => {
+            this.onAnimation.emit(event);
+        });
     }
 
     /**
