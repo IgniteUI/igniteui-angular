@@ -324,13 +324,34 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
 
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(180px)');
+    }));
+
+    it('should change selection in runtime using selectedIndex', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TemplatedTabsTestComponent);
+        const tabs = fixture.componentInstance.tabs;
+        const tabsComponent = fixture.componentInstance.tabs;
+
+        tick(100);
+        fixture.detectChanges();
+
+        const tabsItems = tabs.tabs.toArray();
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.selectedTabItem).toBe(tabsItems[0]);
+
+        tabsComponent.selectedIndex = 2;
+
+        tick(100);
+        fixture.detectChanges();
+
+        expect(tabs.selectedTabItem).toBe(tabsItems[2]);
+        expect(tabs.selectedTabItem.relatedGroup.label).toBe('Tab 3');
     }));
 });
 

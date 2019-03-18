@@ -43,7 +43,9 @@
     $theme: apply-palette($bottom-nav-schema, $palette);
 
     @if not($idle-item-color) and $background {
-        $idle-item-color: rgba(text-contrast($background), .7);
+        @if type-of($background) == 'color' {
+            $idle-item-color: rgba(text-contrast($background), .7);
+        }
     }
 
     @if not($shadow) {
