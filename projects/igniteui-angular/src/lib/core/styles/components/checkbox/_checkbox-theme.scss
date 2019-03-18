@@ -234,13 +234,13 @@
 
     %cbx-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: --var($theme, 'empty-color');
-        transition: background-color .2s $ease-out-quad;
+        background: --var($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
         opacity: .12;
     }
 
     %cbx-ripple--focused-checked {
-        background-color: --var($theme, 'fill-color');
+        background: --var($theme, 'fill-color');
     }
 
     %cbx-ripple--hover {
@@ -257,13 +257,13 @@
 
     %cbx-ripple--hover-unchecked {
         &::after {
-            background-color: --var($theme, 'empty-color');
+            background: --var($theme, 'empty-color');
         }
     }
 
     %cbx-ripple--hover-checked {
         &::after {
-            background-color: --var($theme, 'fill-color');
+            background: --var($theme, 'fill-color');
         }
     }
 

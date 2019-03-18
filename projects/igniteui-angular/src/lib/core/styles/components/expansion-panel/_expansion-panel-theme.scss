@@ -57,7 +57,9 @@
     }
 
     @if not($header-description-color) and $header-background {
-        $header-description-color: rgba(text-contrast($header-background), .8);
+        @if type-of($header-background) == 'color' {
+            $header-description-color: rgba(text-contrast($header-background), .8);
+        }
     }
 
     @if not($header-icon-color) and $header-background {
