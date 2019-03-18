@@ -26,6 +26,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxOverlayService } from '../../services/index';
 
 let NEXT_ID = 0;
 
@@ -130,6 +131,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.setupColumns();
             this.reflow();
         }
+        this.cdr.markForCheck();
     }
 
     /**
@@ -165,6 +167,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _filteredData = null;
 
     constructor(
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
@@ -177,10 +180,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService, summaryService, _displayDensityOptions);
+                  filteringService, overlayService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -217,10 +221,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.get(this.id)) {
-            this._gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
+            this._gridAPI.arrange_sorting_expressions(this.id);
             this.cdr.markForCheck();
         } else {
             // setter called before grid is registered in grid API service
@@ -637,6 +641,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     * @hidden
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
+    }
+
+    /**
     * @hidden
     */
    public getContext(rowData, rowIndex): any {
@@ -765,7 +776,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         let sum = super.getPinnedWidth(takeHidden);
 
         if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.clientWidth;
+            sum += this.headerGroupContainer.nativeElement.offsetWidth;
         }
         return sum;
     }

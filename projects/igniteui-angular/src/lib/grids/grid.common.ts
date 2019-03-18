@@ -17,13 +17,13 @@ import {
     TemplateRef,
     LOCALE_ID
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
+import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
-import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -40,9 +40,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     @Input()
     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
-
-    @Input()
-    public resizeEndTimeout = 0;
 
     @Output()
     public resizeEnd = new Subject<any>();
@@ -77,8 +74,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
             if (left > max) {
                 this.left = max;
-            } else if (left > max) {
-                this.left = left;
             }
         });
 
@@ -86,9 +81,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, 'mousedown').pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onMousedown(res));
-
             fromEvent(this.document.defaultView, 'mousemove').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy)
@@ -101,31 +93,35 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
     }
 
     public set left(val) {
         requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
     }
 
+    public set top(val) {
+        requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+    }
+
     onMouseup(event) {
-        setTimeout(() => {
-            this.resizeEnd.next(event);
-            this.resizeEnd.complete();
-        }, this.resizeEndTimeout);
+        this.resizeEnd.next(event);
+        this.resizeEnd.complete();
     }
 
     onMousedown(event) {
-        this.resizeStart.next(event);
         event.preventDefault();
+        const parent = this.element.nativeElement.parentElement.parentElement;
 
-        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
-        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
+        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
+        this.top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
+
+        this.resizeStart.next(event);
     }
 
     onMousemove(event) {
-        this.resize.next(event);
         event.preventDefault();
+        this.resize.next(event);
     }
 }
 
@@ -366,21 +362,24 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.classList.add('material-icons');
         this.cms.icon = icon;
 
+        const hostElemLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
+        const hostElemTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
+
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
             this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         } else {
             this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[0].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         }
     }
 }
@@ -641,7 +640,6 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row
-        super.position(contentElement, { width: target.clientWidth, height: target.clientHeight }, document, initialCall);
 
         // Position of the overlay depends on the available space in the grid.
         // If the bottom space is not enough then the the row overlay will show at the top of the row.
@@ -649,15 +647,14 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         // which means that when scrolling then overlay may hide, while the row is still visible (UX requirement).
         this.isTop = this.isTopInitialPosition !== null ?
             this.isTopInitialPosition :
-            container.clientHeight <
-            target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
-        this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
-        this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
-        const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
+            container.getBoundingClientRect().bottom <
+                target.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
 
-        //  TODO: extract transform setting in util function
-        const top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height;
-        contentElement.style.top = `${top}px`;
+        // Set width of the row editing overlay to equal row width, otherwise it fits 100% of the grid.
         contentElement.style.width = target.clientWidth + 'px';
+        this.settings.verticalStartPoint = this.settings.verticalDirection = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
+        this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
+
+        super.position(contentElement, { width: target.clientWidth, height: target.clientHeight }, document, initialCall);
     }
 }

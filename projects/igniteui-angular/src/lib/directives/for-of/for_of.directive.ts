@@ -1281,7 +1281,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
         let newHeight = oldHeight;
-        if (changes) {
+        if (changes && !this.isRemote) {
             newHeight = this.handleCacheChanges(changes);
         } else {
             newHeight = this.initSizesCache(this.igxForOf);

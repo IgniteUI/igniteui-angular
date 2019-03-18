@@ -402,23 +402,27 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly set style on position method call - ConnectedPosition.', () => {
-            const mockElement = jasmine.createSpyObj('parentElement', [
-                'style',
-                'getBoundingClientRect',
-                'lastElementChild'
-            ]);
-            const mockItem = document.createElement('div');
+            const left = 0;
+            const top = 0;
             const width = 200;
             const height = 200;
             const right = 200;
             const bottom = 200;
+            const mockElement = document.createElement('div');
+            spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => {
+                return {
+                    left, top, width, height, right, bottom
+                };
+            });
+
+            const mockItem = document.createElement('div');
+            mockElement.append(mockItem);
             spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
                 return {
                     width, height, right, bottom
                 };
             });
-            spyOn<any>(mockItem, 'parentElement').and.returnValue(mockElement);
-            spyOn<any>(mockItem, 'firstElementChild').and.returnValue(mockElement);
+
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
                 verticalDirection: VerticalAlignment.Bottom,
@@ -698,7 +702,7 @@ describe('igxOverlay', () => {
             contentElement.classList.add('no-height');
             contentElement.setAttribute('style', 'width:100px; position: absolute;');
             contentElement.appendChild(compElement);
-            const wrapperElement  = document.createElement('div');
+            const wrapperElement = document.createElement('div');
             wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0;');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
@@ -747,7 +751,7 @@ describe('igxOverlay', () => {
             spyOn(appRef, 'attachView');
             const mockComponent = {
                 hostView: 'test',
-                location: { nativeElement: 'element'}
+                location: { nativeElement: 'element' }
             };
             const factoryMock = jasmine.createSpyObj('factoryMock', {
                 create: mockComponent
@@ -757,7 +761,7 @@ describe('igxOverlay', () => {
                 resolveComponentFactory: factoryMock
             });
 
-            const id = overlay.attach(SimpleDynamicComponent, {}, {componentFactoryResolver, injector} as any);
+            const id = overlay.attach(SimpleDynamicComponent, {}, { componentFactoryResolver, injector } as any);
             expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
             expect(factoryMock.create).toHaveBeenCalledWith(injector);
             expect(appRef.attachView).toHaveBeenCalledWith('test');
@@ -1367,12 +1371,12 @@ describe('igxOverlay', () => {
 
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green;');
             const contentElement = document.createElement('div');
             contentElement.setAttribute('style', 'position: absolute; color:gray;');
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(compElement);
-            const wrapperElement  = document.createElement('div');
+            const wrapperElement = document.createElement('div');
             wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
@@ -1418,12 +1422,12 @@ describe('igxOverlay', () => {
 
             const size = { width: 60, height: 60 };
             const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green;');
             const contentElement = document.createElement('div');
             contentElement.setAttribute('style', 'color:gray; position: absolute;');
             contentElement.classList.add('contentWrapper');
             contentElement.appendChild(compElement);
-            const wrapperElement  = document.createElement('div');
+            const wrapperElement = document.createElement('div');
             wrapperElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%; top: 0; left: 0');
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
@@ -3290,8 +3294,10 @@ describe('igxOverlay', () => {
             tick();
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
-                    event: new MouseEvent('click') });
+                .toHaveBeenCalledWith({
+                    id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
+                    event: new MouseEvent('click')
+                });
         }));
 
     });
@@ -3380,7 +3386,7 @@ export class SimpleBigSizeComponent {
     template: `
             <div igxToggle>
                 <div class='scrollableDiv' *ngIf='visible' style =\'position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red\'>
+        overflow-y: scroll; background-color: red; \'>
             <p> AAAAA </p>
             <p> AAAAA </p>
             <p> AAAAA </p>
@@ -3533,14 +3539,14 @@ export class TwoButtonsComponent {
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
             Some Content
         </div>
-    <div>`,
+    </div>`,
     styles: [`button {
         position: absolute;
         top: 300px;
         left: 300px;
         width: 100px;
         height: 60px;
-        border: 0px;
+        border: 0;
     }`]
 })
 export class WidthTestOverlayComponent {

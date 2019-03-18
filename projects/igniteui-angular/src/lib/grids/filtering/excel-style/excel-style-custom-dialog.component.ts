@@ -22,15 +22,16 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     ConnectedPositioningStrategy,
-    CloseScrollStrategy,
     OverlaySettings,
     VerticalAlignment,
     PositionSettings,
     HorizontalAlignment,
-    IgxOverlayService
-} from '../../../services';
+    IgxOverlayService,
+    AbsoluteScrollStrategy
+} from '../../../services/index';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
+import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 
 /**
  * @hidden
@@ -57,7 +58,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     @Input()
@@ -75,9 +76,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public overlayService: IgxOverlayService;
 
-
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+
+    @ViewChildren(IgxExcelStyleDateExpressionComponent)
+    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
 
     @ViewChild('toggle', { read: IgxToggleDirective })
     public toggle: IgxToggleDirective;
@@ -91,7 +94,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     constructor(private cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit(): void {
-        this._customDialogOverlaySettings.outlet = this.grid.outletDirective;
+        this._customDialogOverlaySettings.outlet = this.grid.outlet;
     }
 
     get template(): TemplateRef<any> {
@@ -102,7 +105,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         return this.defaultExpressionTemplate;
     }
 
-    get grid() {
+    get grid(): any {
         return this.filteringService.grid;
     }
 
@@ -119,7 +122,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     public open() {
-        this._customDialogOverlaySettings.positionStrategy.settings.target = this.grid.nativeElement;
+        this._customDialogOverlaySettings.positionStrategy.settings.target =
+            this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement;
         this.toggle.open(this._customDialogOverlaySettings);
     }
 
@@ -138,6 +142,12 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
             element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
+
+        if (this.expressionsList.length > 0) {
+            this.expressionsList[0].beforeOperator = null;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+        }
+
         this.filteringService.filter(this.column.field, this.expressionsList);
         this.closeDialog();
     }
@@ -173,6 +183,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
 
         this.expressionsList.splice(indexToRemove, 1);
+
+        this.cdr.detectChanges();
 
         this.markChildrenForCheck();
     }
@@ -211,6 +223,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private markChildrenForCheck() {
         this.expressionComponents.forEach(x => x.cdr.markForCheck());
+        this.expressionDateComponents.forEach(x => x.cdr.markForCheck());
     }
 
     private createInitialExpressionUIElement() {

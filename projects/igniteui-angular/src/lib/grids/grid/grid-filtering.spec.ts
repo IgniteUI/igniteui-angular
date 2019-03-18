@@ -1,19 +1,20 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar, ICalendarDate } from '../../calendar/calendar';
+import { Calendar } from '../../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand, FilteringExpressionsTree } from '../../../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-
-const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
-const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
+import { IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxFilteringOperand,
+    IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -24,7 +25,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
         .compileComponents();
     }));
@@ -578,6 +579,14 @@ describe('IgxGrid - Filtering actions', () => {
         const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
         HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
+
+    it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -602,14 +611,14 @@ export class CustomFilter extends IgxFilteringOperand {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
-        <igx-column [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="true" dataType="date">
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`

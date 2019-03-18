@@ -1,17 +1,12 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
-    NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef
+    Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {  ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IgxDropDownModule, IgxDropDownItemBase } from '../drop-down/index';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxDropDownItemBase} from '../drop-down/index';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -19,11 +14,11 @@ import { SelectPositioningStrategy } from './select-positioning-strategy';
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
-import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxSelectionAPIService } from '../core/selection';
 
 /** @hidden @internal */
 @Directive({
@@ -79,12 +74,28 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public allowItemsFocus = false;
 
+    /** @hidden @internal */
+    public height: string;
+
     private _overlayDefaults: OverlaySettings;
 
     private _value: any;
+
     /**
-     * An @Input property that sets the input value.
+     * An @Input property that gets/sets the component value.
      *
+     * ```typescript
+     * // get
+     * let selectValue = this.select.value;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.select.value = 'London';
+     * ```
+     * ```html
+     * <igx-select [value]="value"></igx-select>
+     * ```
      */
     @Input()
     public get value(): any {
@@ -131,7 +142,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The default is `line`.
      * ```html
-     *<igx-select [type]="'box'">
+     *<igx-select [type]="'box'"></igx-select>
      * ```
      */
     @Input()
@@ -141,7 +152,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets what display density to be used for the input group.
      * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
      * ```html
-     *<igx-select [displayDensity]="'compact'">
+     *<igx-select [displayDensity]="'compact'"></igx-select>
      * ```
      */
     @Input()
@@ -179,6 +190,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.selection.first_item(this.id);
     }
 
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, selection);
+    }
+
     /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
 
@@ -203,6 +221,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
+
+        if (event) {
+            this.toggleDirective.close();
+        }
         if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
             return;
         }
@@ -218,10 +240,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._value = newSelection.value;
         this.cdr.detectChanges();
         this._onChangeCallback(this.value);
-
-        if (event) {
-            this.toggleDirective.close();
-        }
     }
 
     /** @hidden @internal */
@@ -288,12 +306,3 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 }
 
-/** @hidden */
-@NgModule({
-    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
-    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective, IgxSelectToggleIconDirective],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
-    providers: []
-})
-export class IgxSelectModule { }

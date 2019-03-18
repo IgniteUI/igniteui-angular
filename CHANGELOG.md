@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** advanced keyboard navigation support has been added. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/calendar/README.md)
 
 - **New component** `IgxMonthPicker`:
-    - Provides the ability to pick a specific month. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/month-picker/README.md)
+    - Provides the ability to pick a specific month. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/calendar/month-picker/README.md)
 
 - **New component** `IgxHierarchicalGrid`:
     - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
@@ -24,7 +24,7 @@ All notable changes for each version of this project will be documented in this 
 
 [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/select/README.md)
 
-- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/autcomomplete/README.md).
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/autocomplete/README.md).
 
     ```html
     <input igxInput type="text" [igxAutocomplete]="townsPanel" />
@@ -100,6 +100,8 @@ All notable changes for each version of this project will be documented in this 
     - We can now search in the treegrid's data by using the `findNext` and the `findPrev` methods and we can clear the search results with the `clearSearch` method.
 - `IgxTextHighlightDirective`
     - `IgxTextHighlightDirective.page` input property is **deprecated**. `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are also **deprecated**. Instead, `row` and `column` optional properties are added.
+- `igxDragDrop`
+    - `dragGhostHost` input property added. Sets the element to which the dragged element will be appended. If not provided, the dragged element is appended to the body.
 - `Column Hiding UI`
     - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
 - `igxButton` - **New Button Style** - Include [outlined](https://material.io/design/components/buttons.html#outlined-button) button style to support the latest material spec.
@@ -111,9 +113,9 @@ All notable changes for each version of this project will be documented in this 
     - `IPositionStrategy` exposes new method `clone` that clones the strategy instance with its settings.
 
 - `igx-date-picker`
-    - **Feature** Added editable `mode` to enable the input field value editing and spinning of the date parts. Example:
+    - **Feature** Added `dropdown` `mode` to enable the input field value editing and spinning of the date parts as well as displaying a drop down calendar to select a date. Example:
     ```html
-      <igx-date-picker #editableDatePicker1 mode="editable" [value]="date" format="dd.MM.y" mask="M/d/y">
+      <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="date" format="dd.MM.y" mask="M/d/y">
       </igx-date-picker>
      ```
  **Components roundness**
@@ -142,13 +144,43 @@ All notable changes for each version of this project will be documented in this 
 - The`$roundness` property on the `igx-chip-theme` have been replaced with `$border-radius`.
 - The`$roundness` property on the `iigx-tooltip-theme` have been replaced with `$border-radius`.
 
+## 7.1.9
+### Bug Fixes
+
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- Grid doesn't reflect the applied formatter immediately #3819
+- Cannot set chip as selected through API if selectable is false #2383
+- IgxCombo - Keyboard navigation in combo with remote data is incorrect #4049
+- Setting groupingExpressions run-time has different result than using the UI/methods #3952
+- Error on app-shell build in the icon module #4065
+- Grid/TreeGrid toolbar dropdowns reopen when trying to close it every other time #4045
+- When grid and columns have width in IE the columns are visible outside the grid #3716
+- IgxGridToolbarComponent is hidden from the API docs #3974
+- igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
+- IgxToggleAction logs deprecated message in the console #4126
+
+## 7.1.8
+### Bug Fixes
+- Required date picker bound to displayData is shown invalid initially. #3641
+- If the columns don't fit the treeGrid viewport, horizontal scrollbar in TreeGrid is gone/disappears #3808
+- igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
+
+## 7.1.7
+### Bug fixes
+- refactor(card): apply the content color to any text element #3878 
+- style(linear-bar): Fix text alignment #3862
+
+## 7.1.6
+### Bug Fixes
+- Calling open() on an already opened IgxDropDown replays the opening animation #3810
+
 ## 7.1.5
 ### Features
 - `igxGrid`
     - `Group By`
         - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related group row and when it points down clicking on it would expand the group row.
         - The collapse/expand all icons have also been updated to reflect the new group row icons better.
-        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Dow to reflect the new icons.
+        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Down to reflect the new icons.
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
@@ -157,6 +189,24 @@ All notable changes for each version of this project will be documented in this 
 
 - `igxOverlayService`
     - `onClosing` event arguments are of type `OverlayClosingEventArgs` that adds an optional `event` property with the original DOM event. The browser event is available when closing of the overlay is caused by an outside click. This also affects all components and directives that use `igxOverlay` service - `igxToggle`, `igxDropDown`, `igxCombo`, `igxSelect` and `igxAutocomplete`. When they emit their respective `onClosing` event, the arguments are of type `CancelableBrowserEventArgs`, including the optional browser event.
+
+## 7.1.4
+### Features
+- `Column Hiding UI`
+    - **Behavioral Change** - The UI now hides the columns whose `disableHiding` property is set to true instead of simply disabling them.
+
+## 7.1.3
+### Bug Fixes
+- When search and hide and then show a column the cell values are not correct ([3631](https://github.com/IgniteUI/igniteui-angular/issues/3631))
+- When press Ctrl+Arrow down key on a summary cell it should stay active ([3651](https://github.com/IgniteUI/igniteui-angular/issues/3651))
+- When summary row is not fully visible and press Tab the last summary cell is not activated ([3652](https://github.com/IgniteUI/igniteui-angular/issues/3652))
+- Choosing from a drop down inside a form in a drop down closes the outer drop down ([3673](https://github.com/IgniteUI/igniteui-angular/issues/3673))
+- Banner - Calling close method on collapsed panel throws error ([3669](https://github.com/IgniteUI/igniteui-angular/issues/3669))
+- Typedoc API task generates non-public exports ([2858](https://github.com/IgniteUI/igniteui-angular/issues/2858))
+- column.pin and column.unpin API descriptions need improvement ([3660](https://github.com/IgniteUI/igniteui-angular/issues/3660))
+- disabledDates for the calendar and date picker should be an @Input() ([3625](https://github.com/IgniteUI/igniteui-angular/issues/3625))
+- There is no way to determinate if a list item was panned in the click event ([3629](https://github.com/IgniteUI/igniteui-angular/issues/3629))
+- When search and hide and then show a column the cell values are not correct ([3631](https://github.com/IgniteUI/igniteui-angular/issues/3631))
 
 ## 7.1.2
 ### Features
@@ -251,7 +301,6 @@ All notable changes for each version of this project will be documented in this 
 
 
 ## 7.0.5
-
 ### Bug Fixes
 
 * igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group. ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
@@ -334,19 +383,47 @@ All notable changes for each version of this project will be documented in this 
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
-## 6.2.8
+## 6.2.11
+### Bug Fixes
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- Cannot set chip as selected through API if selectable is false #2383
+- Setting groupingExpressions run-time has different result than using the UI/methods #3952
+- igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
+
+## 6.2.10
+### Bug Fixes
+- Cells position is changed when scroll vertical #3094
+- igxGrid setting autogenerate and groupingExpressions inputs results in errors #3951
+
+## 6.2.9
 ### Features
 - `igxGrid`
     - `Group By`
         - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related group row and when it points down clicking on it would expand the group row.
         - The collapse/expand all icons have also been updated to reflect the new group row icons better.
-        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Dow to reflect the new icons.
+        - Group rows now can be expanded/collapsed using Alt + Arrow Up/Down to reflect the new icons.
 - `igxTreeGrid`
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
 
-## 6.2.5
+### Bug Fixing
+- Add additional ways of expanding/collapsing in Tree Grid/Group By to reflect new icons #3841
 
+## 6.2.8
+### Bug Fixes
+- Tree Grid collapse icon is updated to material standards #3780
+- Change collapse/expand all icon on GroupBy #3298
+
+## 6.2.7
+### Bug Fixes
+- igx-grid editing: Japanese inputs are not committed on enter or press key in edit mode #2525 
+
+## 6.2.6
+### Bug Fixes/Other
+- Add GA to API docs ([3596](https://github.com/IgniteUI/igniteui-angular/issues/3596))
+- Modify gulp api docs tasks in order to follow the build steps ([3681](https://github.com/IgniteUI/igniteui-angular/issues/3681))
+
+## 6.2.5
 ### Bug Fixes
 - Setting required IgxInput's value not via typing does not clear the invalid style ([3550](https://github.com/IgniteUI/igniteui-angular/issues/3550))
 - igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
@@ -364,7 +441,6 @@ All notable changes for each version of this project will be documented in this 
 - Pressing ESC on a cell in an editable column throws an error ([3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
 
 ## 6.2.4
-
 ### Bug Fixes
 * onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
 * igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
@@ -440,7 +516,6 @@ All notable changes for each version of this project will be documented in this 
 ### Bug fixes
 - Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
 
-
 ## 6.2.1
 ### Features
 - `igxGrid`, `igxChip`: Add display density DI token to igxGrid and igxChip ([#2804](https://github.com/IgniteUI/igniteui-angular/issues/2804))
@@ -489,7 +564,6 @@ All notable changes for each version of this project will be documented in this 
 - `igxCalendar`
     - make all css class names unique ([#2287](https://github.com/IgniteUI/igniteui-angular/issues/2287))
 - Fixed runtime errors when using the package in applications targeting es2015(es6) and newer ([#3011](https://github.com/IgniteUI/igniteui-angular/pull/3011))
-
 
 ## 6.2.0
 - Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
@@ -687,7 +761,7 @@ When you focus a specific cell and press one of the following key combinations, 
 
 ## 6.1.6
 
-## Bug Fixes
+### Bug Fixes
 - IgxChip raises onSelection before onRemove #2612
 - Summaries are shown on horizontal scrolling when Row Selectors are enabled #2522
 - Bug - IgxCombo - Combo does not bind properly with [(ngModel)] and simple data (e.g. string[]) #2620
@@ -839,7 +913,7 @@ When you focus a specific cell and press one of the following key combinations, 
 - `igxTimePicker` changes
     - `onClose` event added.
 
-## Bug Fixes
+### Bug Fixes
 
 - Exit edit mode when move column through grid API #1932
 - IgxListItemComponent and the two template directives are missing from public_api.ts. #1939

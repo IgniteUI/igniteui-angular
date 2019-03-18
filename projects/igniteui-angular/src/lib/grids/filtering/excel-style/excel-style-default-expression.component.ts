@@ -11,14 +11,13 @@ import {
 import { IgxColumnComponent } from '../../column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down';
-import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group';
+import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
+import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/index';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services';
+import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { IgxGridBaseComponent } from '../../grid';
 
 /**
  * @hidden
@@ -56,7 +55,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public expressionsList: Array<ExpressionUI>;
 
     @Input()
-    public grid: IgxGridBaseComponent;
+    public grid: any;
 
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();
@@ -94,6 +93,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     get inputValuePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
+    }
+
+    get type() {
+        switch (this.column.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
+        }
     }
 
     constructor(public cdr: ChangeDetectorRef) {}
@@ -162,6 +170,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
+    public onValuesInput(eventArgs) {
+        this.expressionUI.expression.searchVal = this.transformValue(eventArgs.target.value);
+    }
+
     public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
         if (this.logicOperatorButtonGroup.selectedButtons.length === 0) {
             eventArgs.stopPropagation();
@@ -198,5 +210,15 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
 
         event.stopPropagation();
+    }
+
+    private transformValue(value): any {
+        if (this.column.dataType === DataType.Number) {
+            value = parseFloat(value);
+        } else if (this.column.dataType === DataType.Boolean) {
+            value = Boolean(value);
+        }
+
+        return value;
     }
 }

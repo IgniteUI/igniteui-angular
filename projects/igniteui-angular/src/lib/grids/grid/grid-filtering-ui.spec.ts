@@ -1,19 +1,19 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import {
-    IgxFilteringOperand, IgxStringFilteringOperand,
-    FilteringExpressionsTree, FilteringLogic, IgxChipComponent
-} from '../../../public_api';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
@@ -28,6 +28,9 @@ import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 import { FilterMode } from '../tree-grid';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IgxChipComponent } from '../../chips/chip.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -40,7 +43,7 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));
@@ -1625,7 +1628,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         }).compileComponents();
     }));
 
@@ -2476,16 +2479,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[1].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick(100);
         fix.detectChanges();
 
         colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -2526,16 +2524,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(headers[1].nativeElement.offsetWidth).toEqual(250);
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[1].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
-        tick(100);
         fix.detectChanges();
 
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -2581,16 +2574,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[2].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-        tick();
-        fix.detectChanges();
-
-        const resizer = headers[2].children[2].children[0].nativeElement;
+        tick(200);
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-        tick();
-
         UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-        tick(100);
         fix.detectChanges();
 
         colChips = GridFunctions.getFilterChipsForColumn('Downloads', fix);
@@ -2657,7 +2645,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const stringCellChip = initialChips[0].nativeElement;
 
-        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+        expect(stringCellChip.children[0].children[2].innerText).toBe('My filter');
 
         stringCellChip.click();
         fix.detectChanges();
@@ -2684,7 +2672,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const stringCellChip = initialChips[0].nativeElement;
 
-        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+        expect(stringCellChip.children[0].children[2].innerText).toBe('My filter');
 
         stringCellChip.click();
         fix.detectChanges();
@@ -2807,7 +2795,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule.forRoot()]
+                IgxGridModule]
         })
             .compileComponents();
     }));

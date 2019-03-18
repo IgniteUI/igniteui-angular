@@ -1070,7 +1070,7 @@
         align-items: center;
         justify-content: flex-end;
         user-select: none;
-        min-width: 15px; /* sort-icon width */
+        min-width: 30px; /* sort-icon + filter icon width */
         height: map-get($grid-header-height, 'comfortable');
         align-self: flex-end;
 
@@ -1161,7 +1161,7 @@
     }
 
     %grid__resize-line {
-        position: fixed;
+        position: absolute;
         cursor: col-resize;
         width: 4px;
         background-color: --var($theme, 'resize-line-color');
@@ -1293,6 +1293,8 @@
         align-items: center;
         background-color: --var($theme, 'ghost-header-background');
         color: --var($theme, 'ghost-header-text-color');
+        min-width: 168px;
+        max-width: 320px;
         height: map-get($grid-header-height, 'comfortable');
         min-height: map-get($grid-header-height, 'comfortable');
         top: -99999px;
@@ -1303,7 +1305,9 @@
         z-index: 20;
 
         %grid-cell-header-title {
-            min-width: calc(100% - 24px);
+            @include ellipsis();
+            flex: 1 0 0;
+            text-align: right;
         }
 
         %grid-cell-header-icons {
@@ -1636,31 +1640,50 @@
 
     %igx-grid__header-indentation {
         position: relative;
-        padding-right: $grouping-padding-right;
+        padding-right: map-get($grid-grouping-indicator-padding, 'comfortable');
+        border-right: 1px solid --var($theme, 'header-border-color');
         background: --var($theme, 'header-background');
         z-index: 1;
+    }
+
+    %igx-grid__header-indentation--cosy {
+        padding-right: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__header-indentation--compact {
+        padding-right: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
     %igx-grid__group-expand-btn {
         position: absolute;
         cursor: pointer;
         user-select: none;
-        top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        top: calc(50% - 12px);
         left: map-get($grid-grouping-indicator-padding, 'comfortable');
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color');
         }
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        }
     }
 
     %igx-grid__group-expand-btn--cosy {
-        top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
         left: map-get($grid-grouping-indicator-padding, 'cosy');
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
+        }
     }
 
     %igx-grid__group-expand-btn--compact {
-        top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
         left: map-get($grid-grouping-indicator-padding, 'compact');
+
+        &%igx-grid__group-expand-btn--push {
+            top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
+        }
     }
 
     @for $i from 1 through 10 {
@@ -1713,6 +1736,11 @@
     %igx-grid__row-editing-outlet {
         z-index: 10000;
         position: absolute;
+
+        %overlay-wrapper {
+            /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
+            position: absolute;
+        }
     }
 
     %igx-grid__filtering-cell {
