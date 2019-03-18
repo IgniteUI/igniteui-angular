@@ -80,11 +80,15 @@
         pointer-events: initial;
     }
 
-    %igx-toggle--hidden {
-        display: none !important;
-    }
-
     %overlay-content--elastic {
         overflow: auto;
+    }
+
+    %overlay-content--relative {
+        position: relative;
+    }
+
+    %igx-toggle--hidden {
+        display: none !important;
     }
 }
