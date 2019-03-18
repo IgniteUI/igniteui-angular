@@ -601,6 +601,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
+    /**
+    * @hidden
+    */
+    @ViewChild('datePickerOutlet', { read: ElementRef })
+    public outletDirective: ElementRef;
+
     /*
      * @hidden
      */
@@ -622,6 +628,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
+    @ContentChild('dropDownTarget', { read: ElementRef })
+    protected templateDropDownTarget: ElementRef;
+
+    /*
+     * @hidden
+     */
     @ViewChild('editableInput', { read: ElementRef })
     protected editableInput: ElementRef;
 
@@ -636,12 +648,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     */
     @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('datePickerOutlet', { read: ElementRef })
-    public outletDirective: ElementRef;
 
     /**
      *@hidden
@@ -886,7 +892,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.hasHeader = false;
                 const dropDownOverlay =
                     (this.dropDownOverlaySettings !== undefined) ? this._dropDownOverlay : this._dropDownOverlaySettings;
-                dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
+                if (this.editableInputGroup) {
+                    dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
+                } else {
+                    try {
+                        // if the date picker is retemplated, set an element marked with #dropDownTarget as a target to the drop-down
+                        dropDownOverlay.positionStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                    } catch {
+                        throw new Error('There is no target element for the dropdown to attach. Mark an element with #dropDownTarget.');
+                    }
+                }
+
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
                 this._overlayService.show(this._componentID, dropDownOverlay);
                 break;
