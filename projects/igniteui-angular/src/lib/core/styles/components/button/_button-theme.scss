@@ -170,11 +170,11 @@
     }
 
     @if not($flat-hover-background) and $flat-background {
-        $flat-hover-background: lighten($flat-background, 5%);
+        $flat-hover-background: lighten-color($flat-background, 5%);
     }
 
     @if not($flat-focus-background) and $flat-background {
-        $flat-focus-background: lighten($flat-background, 5%);
+        $flat-focus-background: lighten-color($flat-background, 5%);
     }
 
     @if not($flat-hover-text-color) and $flat-hover-background {
@@ -190,11 +190,11 @@
     }
 
     @if not($outlined-hover-background) and $outlined-background {
-        $outlined-hover-background: lighten($outlined-background, 5%);
+        $outlined-hover-background: lighten-color($outlined-background, 5%);
     }
 
     @if not($outlined-focus-background) and $outlined-background {
-        $outlined-focus-background: lighten($outlined-background, 5%);
+        $outlined-focus-background: lighten-color($outlined-background, 5%);
     }
 
     @if not($outlined-hover-text-color) and $outlined-hover-background {
@@ -210,11 +210,11 @@
     }
 
     @if not($raised-hover-background) and $raised-background {
-        $raised-hover-background: lighten($raised-background, 5%);
+        $raised-hover-background: lighten-color($raised-background, 5%);
     }
 
     @if not($raised-focus-background) and $raised-background {
-        $raised-focus-background: lighten($raised-background, 5%);
+        $raised-focus-background: lighten-color($raised-background, 5%);
     }
 
     @if not($raised-hover-text-color) and $raised-hover-background {
@@ -230,11 +230,11 @@
     }
 
     @if not($fab-hover-background) and $fab-background {
-        $fab-hover-background: lighten($fab-background, 5%);
+        $fab-hover-background: lighten-color($fab-background, 5%);
     }
 
     @if not($fab-focus-background) and $fab-background {
-        $fab-focus-background: lighten($fab-background, 5%);
+        $fab-focus-background: lighten-color($fab-background, 5%);
     }
 
     @if not($fab-hover-text-color) and $fab-hover-background {
@@ -250,11 +250,11 @@
     }
 
     @if not($icon-hover-background) and $icon-background {
-        $icon-hover-background: lighten($icon-background, 5%);
+        $icon-hover-background: lighten-color($icon-background, 5%);
     }
 
     @if not($icon-focus-background) and $icon-background {
-        $icon-focus-background: lighten($icon-background, 5%);
+        $icon-focus-background: lighten-color($icon-background, 5%);
     }
 
     @if not($icon-focus-color) and $icon-focus-background {
