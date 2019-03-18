@@ -25,6 +25,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     }
 
     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
+        contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
