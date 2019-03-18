@@ -156,14 +156,14 @@
         width: $switch-width;
         height: $switch-height;
         border-radius: $switch-radius;
-        background-color: --var($theme, 'track-off-color');
+        background: --var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
     }
 
     %switch-composite--x {
-        background-color: --var($theme, 'track-on-color');
+        background: --var($theme, 'track-on-color');
     }
 
     %switch-composite--disabled {
@@ -216,13 +216,13 @@
 
     %switch-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: --var($theme, 'track-off-color');
-        transition: background-color .2s $ease-out-quad;
+        background: --var($theme, 'track-off-color');
+        transition: background .2s $ease-out-quad;
         opacity: .12;
     }
 
     %switch-ripple--focused-checked {
-        background-color: --var($theme, 'thumb-on-color');
+        background: --var($theme, 'thumb-on-color');
     }
 
     %switch-label {
@@ -282,13 +282,13 @@
 
     %switch-ripple--hover-unchecked {
         &::after {
-            background-color: --var($theme, 'track-off-color');
+            background: --var($theme, 'track-off-color');
         }
     }
 
     %switch-ripple--hover-checked {
         &::after {
-            background-color: --var($theme, 'thumb-on-color');
+            background: --var($theme, 'thumb-on-color');
         }
     }
 
