@@ -131,6 +131,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.setupColumns();
             this.reflow();
         }
+        this.cdr.markForCheck();
     }
 
     /**
@@ -166,6 +167,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _filteredData = null;
 
     constructor(
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
@@ -636,6 +638,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     protected _applyGrouping() {
         this._gridAPI.sort_multiple(this.id, this._groupingExpressions);
+    }
+
+    /**
+     * @hidden
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
     }
 
     /**

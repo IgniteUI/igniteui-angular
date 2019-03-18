@@ -38,6 +38,11 @@
         @extend %overlay-content !optional;
         @extend %overlay-content--elastic !optional;
     }
+
+    @include e(content, $m: relative) {
+        @extend %overlay-content !optional;
+        @extend %overlay-content--relative !optional;
+    }
 }
 
 @include b(igx-toggle) {
