@@ -33,6 +33,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -126,7 +127,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected _displayKey: string;
     private _dataType = '';
     private ngControl: NgControl = null;
-    private _statusChanges$: Subscription;
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
@@ -1241,7 +1241,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.filteringExpressions = newArray;
     }
 
-    protected onStatusChanged() {
+    protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
@@ -1289,7 +1289,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.filteredData = [...this.data];
 
         if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
         }
     }
 
@@ -1300,10 +1300,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.destroy$.complete();
         this.comboAPI.clear();
         this.selection.clear(this.id);
-
-        if (this._statusChanges$) {
-            this._statusChanges$.unsubscribe();
-        }
     }
 
     /**
