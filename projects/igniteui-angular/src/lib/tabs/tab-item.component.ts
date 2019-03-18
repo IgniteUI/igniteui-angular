@@ -15,17 +15,22 @@ import { IgxTabItemBase, IgxTabsBase } from './tabs.common';
 })
 
 export class IgxTabItemComponent implements IgxTabItemBase {
+
+    /**
+    * Gets the group associated with the tab.
+    * ```html
+    * const relatedGroup = this.tabbar.tabs.toArray()[1].relatedGroup;
+    * ```
+    */
+    @Input()
+    public relatedGroup: IgxTabsGroupComponent;
+
     private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
-    /**
-     * Gets the group associated with the tab.
-     * ```html
-     * const relatedGroup = this.tabbar.tabs.toArray()[1].relatedGroup;
-     * ```
-     */
-    @Input()
-    public relatedGroup: IgxTabsGroupComponent;
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+        this._nativeTabItem = _element;
+    }
 
     /**
      * @hidden
@@ -63,7 +68,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      */
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event: KeyboardEvent) {
-        this._onKeyDown(false);
+        this.onKeyDown(false);
     }
 
     /**
@@ -71,7 +76,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      */
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event: KeyboardEvent) {
-        this._onKeyDown(true);
+        this.onKeyDown(true);
     }
 
     /**
@@ -80,7 +85,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
-        this._onKeyDown(false, 0);
+        this.onKeyDown(false, 0);
     }
 
     /**
@@ -89,18 +94,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
-        this._onKeyDown(false, this._tabs.tabs.toArray().length - 1);
-    }
-
-    private _onKeyDown(isLeftArrow: boolean, index = null): void {
-        const tabsArray = this._tabs.tabs.toArray();
-        if (index === null) {
-            index = (isLeftArrow)
-                ? (this._tabs.selectedIndex === 0) ? tabsArray.length - 1 : this._tabs.selectedIndex - 1
-                : (this._tabs.selectedIndex === tabsArray.length - 1) ? 0 : this._tabs.selectedIndex + 1;
-        }
-        const tab = tabsArray[index];
-        tab.select(200);
+        this.onKeyDown(false, this._tabs.tabs.toArray().length - 1);
     }
 
     /**
@@ -113,16 +107,16 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     /**
      * @hidden
      */
-    get nativeTabItem() {
+    get nativeTabItem(): ElementRef {
         return this._nativeTabItem;
     }
 
     /**
-     * 	Gets whether the tab is disabled.
-     * ```
-     * const disabledItem = this.myTabComponent.tabs.first.disabled;
-     * ```
-     */
+    * 	Gets whether the tab is disabled.
+    * ```
+    * const disabledItem = this.myTabComponent.tabs.first.disabled;
+    * ```
+    */
     get disabled(): boolean {
         const group = this.relatedGroup;
 
@@ -152,14 +146,21 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         return this._tabs.tabs.toArray().indexOf(this);
     }
 
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
-        this._nativeTabItem = _element;
-    }
-
     /**
      * @hidden
      */
-    public select(focusDelay = 200) {
+    public select(focusDelay = 200): void {
         this.relatedGroup.select(focusDelay);
+    }
+
+    private onKeyDown(isLeftArrow: boolean, index = null): void {
+        const tabsArray = this._tabs.tabs.toArray();
+        if (index === null) {
+            index = (isLeftArrow)
+                ? (this._tabs.selectedIndex === 0) ? tabsArray.length - 1 : this._tabs.selectedIndex - 1
+                : (this._tabs.selectedIndex === tabsArray.length - 1) ? 0 : this._tabs.selectedIndex + 1;
+        }
+        const tab = tabsArray[index];
+        tab.select(200);
     }
 }
