@@ -68,7 +68,9 @@
     }
 
     @if not($header-time-period-color) and $header-background {
-        $header-time-period-color: rgba(text-contrast($header-background), .8);
+        @if type-of($header-background) == 'color' {
+            $header-time-period-color: rgba(text-contrast($header-background), .8);
+        }
     }
 
     @if not($selected-text-color) and $active-item-background {
@@ -76,7 +78,9 @@
     }
 
     @if not($active-item-background) and $background-color {
-        $active-item-background: rgba(text-contrast($background-color), .12);
+        @if type-of($background-color) == 'color' {
+            $active-item-background: rgba(text-contrast($background-color), .12);
+        }
     }
 
     @if not($modal-shadow) {
@@ -248,6 +252,10 @@
         justify-content: flex-end;
         height: rem(52px);
         padding: rem(8px);
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(8px);
+        }
     }
 }
 
