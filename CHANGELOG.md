@@ -91,6 +91,8 @@ All notable changes for each version of this project will be documented in this 
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
+- `IgxToggleDirective`
+    - when `show` and `hide` methods are called, `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the `overlay id` of the toggle component's instance.
 
 ### Bug fixes
 - fix(tabs): Fix for applying styles to tabs group #4371

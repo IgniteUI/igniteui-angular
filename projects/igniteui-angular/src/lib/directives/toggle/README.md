@@ -42,6 +42,7 @@ handlers when the toggle is opened and respectively closed.
 | `onOpened` | `void` | Emits an event after the toggle container is opened. |
 | `onClosing` | `void` | Emits an event before the toggle container is closed. |
 | `onClosed` | `void` | Emits an event after the toggle container is closed. |
+| `onAnimation` | `void` | Emits an event if the toggle container has an `open` or `close` animation, before the resp. animation begins to play. |
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|

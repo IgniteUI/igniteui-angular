@@ -58,14 +58,14 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden @internal
      */
     public onFocus() {
-        this._focusedItemIndex = this._focusedItemIndex !== -1 ? this._focusedItemIndex : this.items[0].index;
+        this._virtualFocusedIndex = this._virtualFocusedIndex !== -1 ? this._virtualFocusedIndex : this.items[0].index;
     }
 
     /**
      * @hidden @internal
      */
     public onBlur(evt?) {
-        this._focusedItemIndex = -1;
+        this._virtualFocusedIndex = -1;
     }
 
     /**
@@ -79,7 +79,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigatePrev() {
-        if (this._focusedItemIndex === 0 && this.virtDir.state.startIndex === 0) {
+        if (this._virtualFocusedIndex === 0 && this.virtDir.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
         } else {
             super.navigatePrev();
@@ -91,7 +91,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigateNext() {
-        if (this._focusedItemIndex === this.virtDir.igxForOf.length - 1) {
+        if (this._virtualFocusedIndex === this.virtDir.igxForOf.length - 1) {
             this.focusAddItemButton();
         } else {
             super.navigateNext();

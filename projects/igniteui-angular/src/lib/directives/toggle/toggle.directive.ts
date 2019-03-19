@@ -117,6 +117,21 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _collapsed = true;
     private _overlayAnimationSub: Subscription;
 
+    /**
+     * Emitted when the toggled element's `open` or `close` animation is played
+     * Only emitted if the `open` or `close` animation **is not null**
+     * ```typescript
+     *  onAnimation(event: OverlayAnimationEventArgs) {
+     *      // Do something
+     *  }
+     * ```
+     * ```html
+     * <div
+     *  igxToggle
+     *  (onAnimation)="onAnimation($event)">
+     * </div>
+     * ```
+     */
     @Output()
     public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
     /**

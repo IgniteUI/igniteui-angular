@@ -51,7 +51,7 @@ import { take, takeUntil, filter } from 'rxjs/operators';
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
     protected destroy$ = new Subject<boolean>();
-    protected _focusedItemIndex = -1;
+    protected _virtualFocusedIndex = -1;
     protected _scrollPosition: number;
 
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
@@ -88,8 +88,13 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     @Input()
     public allowItemsFocus = false;
 
-    public get focusedIndex(): number {
-        return this._focusedItemIndex;
+
+    /**
+     * Returns the data entry index that is focused
+     * Should only be used if the drop down is virtual (e.g. items are passed and rendered via `IgxForOfDirective`)
+     */
+    public get virtualFocusIndex(): number {
+        return this._virtualFocusedIndex;
     }
 
     /**
@@ -97,7 +102,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
-            return this._focusedItemIndex !== -1 ? this.children.find(e => e.index === this._focusedItemIndex) : null;
+            return this._virtualFocusedIndex !== -1 ? this.children.find(e => e.index === this._virtualFocusedIndex) : null;
         }
         return this._focusedItem;
     }
@@ -105,7 +110,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public set focusedItem(value: IgxDropDownItemBase) {
         this._focusedItem = value;
         if (this.virtDir) {
-            this._focusedItemIndex = value ? value.index : -1;
+            this._virtualFocusedIndex = value ? value.index : -1;
         }
     }
 
@@ -235,11 +240,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             }
             const virtState = this.virtDir.state;
             const subRequired = index < virtState.startIndex || index >= virtState.chunkSize + virtState.startIndex - 1;
-            const direction = index > this._focusedItemIndex ? Navigate.Down : Navigate.Up;
+            const direction = index > this._virtualFocusedIndex ? Navigate.Down : Navigate.Up;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
             }
-            this._focusedItemIndex = index;
+            this._virtualFocusedIndex = index;
             if (subRequired) {
                 this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                     this.skipHeader(direction);
@@ -418,7 +423,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigateNext() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedItemIndex !== -1 ? this._focusedItemIndex + 1 : 0);
+            this.navigateItem(this._virtualFocusedIndex !== -1 ? this._virtualFocusedIndex + 1 : 0);
         } else {
             super.navigateNext();
         }
@@ -429,7 +434,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigatePrev() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedItemIndex !== -1 ? this._focusedItemIndex - 1 : 0);
+            this.navigateItem(this._virtualFocusedIndex !== -1 ? this._virtualFocusedIndex - 1 : 0);
         } else {
             super.navigatePrev();
         }

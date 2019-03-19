@@ -20,7 +20,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      */
     get focused(): boolean {
         const focusedState = this.dropDown.virtDir ? this.dropDown.focusedIndex === this.index : this._focused;
-        return (!this.isHeader && !this.disabled) && focusedState;
+        return !this.isHeader && !this.disabled && focusedState;
     }
 
     /**
