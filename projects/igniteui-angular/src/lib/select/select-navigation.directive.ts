@@ -17,7 +17,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
     /** Captures keydown events and calls the appropriate handlers on the target component */
     handleKeyDown(event: KeyboardEvent) {
-        if (!event) {
+        if (!event || event.shiftKey) {
             return;
         }
 
