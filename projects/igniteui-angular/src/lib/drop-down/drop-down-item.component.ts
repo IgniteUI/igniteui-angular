@@ -19,11 +19,8 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get focused(): boolean {
-        const dropDown = (<any>this.dropDown);
-        if (dropDown.virtDir) {
-            return dropDown.focusedIndex === this.index;
-        }
-        return (!this.isHeader && !this.disabled) && this._focused;
+        const focusedState = this.dropDown.virtDir ? this.dropDown.focusedIndex === this.index : this._focused;
+        return (!this.isHeader && !this.disabled) && focusedState;
     }
 
     /**
@@ -36,9 +33,8 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get selected(): boolean {
-        const dropDown = (<any>this.dropDown);
-        if (dropDown.virtDir) {
-            return dropDown.selectedItem ? dropDown.selectedItem.index === this.index : false;
+        if (this.dropDown.virtDir) {
+            return this.dropDown.selectedItem ? this.dropDown.selectedItem.index === this.index : false;
         }
         return this._selected;
     }

@@ -1,7 +1,8 @@
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
-import { OnInit, EventEmitter } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 /** @hidden */
 export enum Navigate {
@@ -71,6 +72,8 @@ export interface IDropDownList {
 export interface IDropDownBase extends IDropDownList, IToggleView {
     selectedItem: any;
     allowItemsFocus?: boolean;
+    virtDir?: IgxForOfDirective<any>;
+    focusedIndex?: number;
     setSelectedItem(index: number): void;
     selectItem(item: IgxDropDownItemBase, event?: Event): void;
 }
