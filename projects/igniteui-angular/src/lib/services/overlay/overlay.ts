@@ -118,7 +118,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    attach(element: ElementRef , settings?: OverlaySettings): string;
+    attach(element: ElementRef, settings?: OverlaySettings): string;
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      * @param component Component Type to show in overlay
@@ -276,7 +276,7 @@ export class IgxOverlayService implements OnDestroy {
                 { width: info.initialSize.width, height: info.initialSize.height },
                 document,
                 true);
-            info.settings.scrollStrategy.initialize(this._document, this, info.id, this._zone);
+            info.settings.scrollStrategy.initialize(this._document, this, info.id);
             info.settings.scrollStrategy.attach();
         }
 
@@ -331,7 +331,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private getOverlayInfo(component: any, moduleRef?: NgModuleRef<any>): OverlayInfo {
-        const info: OverlayInfo = {};
+        const info: OverlayInfo = { ngZone: this._zone };
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
         } else {

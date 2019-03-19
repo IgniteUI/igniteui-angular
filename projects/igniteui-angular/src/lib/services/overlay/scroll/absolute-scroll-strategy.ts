@@ -19,14 +19,14 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
     }
 
     /** @inheritdoc */
-    public initialize(document: Document, overlayService: IgxOverlayService, id: string, zone?: NgZone) {
+    public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
         }
         this._overlayService = overlayService;
         this._id = id;
         this._document = document;
-        this._zone = zone;
+        this._zone = overlayService.getOverlayById(id).ngZone;
         this._initialized = true;
     }
 
