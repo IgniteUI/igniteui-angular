@@ -217,6 +217,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const oldExpressions: IGroupingExpression[] = this.groupingExpressions;
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
+        this.groupingExpressionsChange.emit(this._groupingExpressions);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.get(this.id)) {
             /* grouping should work in conjunction with sorting
@@ -257,6 +258,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
+    @Output()
+    public groupingExpressionsChange = new EventEmitter<any>();
+
     /**
      * Returns a list of expansion states for group rows.
      * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
@@ -284,8 +288,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     set groupingExpansionState(value) {
         this._groupingExpandState = cloneArray(value);
+        this.groupingExpansionStateChange.emit(this._groupingExpandState);
         this.cdr.detectChanges();
     }
+
+    @Output()
+    public groupingExpansionStateChange = new EventEmitter<any>();
 
     /**
      * An @Input property that determines whether created groups are rendered expanded or collapsed.

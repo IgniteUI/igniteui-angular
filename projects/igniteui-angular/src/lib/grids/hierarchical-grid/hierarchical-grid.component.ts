@@ -19,7 +19,9 @@ import {
     AfterViewInit,
     AfterContentInit,
     Optional,
-    OnInit
+    OnInit,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -116,7 +118,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     * @memberof IgxHierarchicalGridComponent
     */
     @Input()
-    public hierarchicalState: HierarchicalStateRecord[] = [];
+    public get hierarchicalState(): HierarchicalStateRecord[] {
+        return this._hierarchicalState;
+    }
+    public set hierarchicalState(state: HierarchicalStateRecord[]) {
+        this._hierarchicalState = state;
+        this.hierarchicalStateChange.emit(state);
+    }
+
+    @Output()
+    public hierarchicalStateChange = new EventEmitter<any>();
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.

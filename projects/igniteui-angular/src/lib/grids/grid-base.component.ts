@@ -313,12 +313,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
+            this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
             this.filteringService.refreshExpressions();
             this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
     }
+
+    @Output()
+    public filteringExpressionsTreeChange = new EventEmitter<any>();
 
     /**
      * Returns the locale of the grid.
@@ -394,8 +398,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
+        this.pageChange.emit(this._page);
         this.cdr.markForCheck();
     }
+
+    @Output()
+    public pageChange = new EventEmitter<any>();
 
     /**
      * Returns the number of visible items per page of the `IgxGridComponent`.
@@ -423,9 +431,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this._perPage = val;
+        this.perPageChange.emit(this._perPage);
         this.page = 0;
         this.endEdit(true);
     }
+
+    @Output()
+    public perPageChange = new EventEmitter<any>();
 
     /**
      * You can provide a custom `ng-template` for the pagination UI of the grid.
@@ -1767,8 +1779,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = cloneArray(value);
+        this.sortingExpressionsChange.emit(this._sortingExpressions);
         this.cdr.markForCheck();
     }
+
+    @Output()
+    public sortingExpressionsChange = new EventEmitter<any>();
 
     /**
      * Returns the state of the grid virtualization, including the start index and how many records are rendered.

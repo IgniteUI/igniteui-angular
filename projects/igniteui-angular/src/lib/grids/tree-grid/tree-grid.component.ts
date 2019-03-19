@@ -270,8 +270,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
+        this.expansionStatesChange.emit(this._expansionStates);
         this.cdr.detectChanges();
     }
+
+    @Output()
+    public expansionStatesChange = new EventEmitter<any>();
 
     /**
      * Emitted when the expanded state of a row gets changed.

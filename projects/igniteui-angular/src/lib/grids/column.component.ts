@@ -8,7 +8,9 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -188,6 +190,7 @@ export class IgxColumnComponent implements AfterContentInit {
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            this.hiddenChange.emit(this._hidden);
             if (this.grid) {
                 this.grid.endEdit(true);
             }
@@ -206,6 +209,9 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+
+    @Output()
+    public hiddenChange = new EventEmitter<any>();
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -291,8 +297,12 @@ export class IgxColumnComponent implements AfterContentInit {
         if (value) {
             this.widthSetByUser = true;
             this._width = value;
+            this.widthChange.emit(this._width);
         }
     }
+
+    @Output()
+    public widthChange = new EventEmitter<any>();
 
     public get calcWidth(): any {
         const colWidth = this.width;
@@ -472,8 +482,13 @@ export class IgxColumnComponent implements AfterContentInit {
                will re-init the group (if present)
             */
             this._pinned = value;
+            this.pinnedChange.emit(this._pinned);
         }
     }
+
+    @Output()
+    public pinnedChange = new EventEmitter<any>();
+
     /**
      * Gets/Sets the `id` of the `igx-grid`.
      * ```typescript
@@ -1016,6 +1031,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         this._pinned = true;
+        this.pinnedChange.emit(this._pinned);
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
@@ -1077,6 +1093,7 @@ export class IgxColumnComponent implements AfterContentInit {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
+        this.pinnedChange.emit(this._pinned);
 
         const targetColumn = grid._unpinnedColumns[index];
         grid._unpinnedColumns.splice(index, 0, this);
@@ -1404,8 +1421,12 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     set hidden(value: boolean) {
         this._hidden = value;
+        this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+    @Output()
+    public hiddenChange = new EventEmitter<any>();
+
     /**
      *@hidden
      */
