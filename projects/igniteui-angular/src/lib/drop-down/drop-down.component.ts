@@ -54,6 +54,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     protected _virtualFocusedIndex = -1;
     protected _scrollPosition: number;
 
+    /**
+     * @hidden @internal
+     */
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     public virtDir: IgxForOfDirective<any>;
 
@@ -92,6 +95,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * Returns the data entry index that is focused
      * Should only be used if the drop down is virtual (e.g. items are passed and rendered via `IgxForOfDirective`)
+     * @hidden @internal
      */
     public get virtualFocusIndex(): number {
         return this._virtualFocusedIndex;
