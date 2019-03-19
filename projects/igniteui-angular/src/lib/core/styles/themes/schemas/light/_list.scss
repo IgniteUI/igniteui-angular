@@ -7,13 +7,13 @@
 /// Generates a light list schema.
 /// @type {Map}
 ///
-/// @property {Color} background [#fff] - The list background color.
-/// @property {Color} header-background [#fff] - The list header background color.
-/// @property {map} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
-/// @property {Color} item-background [#fff] - The list item background color.
-/// @property {map} item-text-color [igx-color: ('grays', 800)] - The list item text color.
-/// @property {map} item-background-active [igx-color: ('grays', 100), hexrgba: ()] - The active list item background color.
-/// @property {map} item-text-color-active [igx-color: ('grays', 800)] - The active list item text color.
+/// @property {Map} background [igx-color: 'surface'] - The list background color.
+/// @property {Map} header-background [igx-color: 'surface'] - The list header background color.
+/// @property {Color} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
+/// @property {Map} item-background [igx-color: 'surface'] - The list item background color.
+/// @property {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
+/// @property {Map} item-background-active [igx-color: ('grays', 200)] - The active list item background color.
+/// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: ()] - The active list item text color.
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
@@ -25,26 +25,34 @@ $_light-list: (
     border-radius: 0,
     item-border-radius: 0,
 
-    background: #fff,
+    background: (
+        igx-color: 'surface'
+    ),
 
-    header-background: #fff,
+    header-background: (
+        igx-color: 'surface'
+    ),
 
     header-text-color:  (
         igx-color: ('secondary', 500)
     ),
 
-    item-background: #fff,
+    item-background: (
+        igx-color: 'surface'
+    ),
 
     item-text-color: (
-        igx-color: ('grays', 800)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .74
     ),
 
     item-background-active: (
-        igx-color: ('grays', 100),
-        hexrgba: ()
+        igx-color: ('grays', 200)
     ),
 
     item-text-color-active: (
-        igx-color: ('grays', 800)
+        igx-color: 'surface',
+        text-contrast: ()
     )
 );
