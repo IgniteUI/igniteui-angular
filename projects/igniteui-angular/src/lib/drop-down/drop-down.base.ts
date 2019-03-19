@@ -6,6 +6,7 @@ import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBase } from './drop-down-item.base';
+import { CancelableBrowserEventArgs, CancelableEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -34,6 +35,46 @@ export abstract class IgxDropDownBase implements IDropDownList {
      * @internal
      */
     public children: QueryList<IgxDropDownItemBase>;
+
+    /**
+     * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpening = new EventEmitter<CancelableEventArgs>();
+
+    /**
+     * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpened = new EventEmitter<void>();
+
+    /**
+     * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+
+    /**
+     * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosed = new EventEmitter<void>();
 
     /**
      * Emitted when item selection is changing, before the selection completes

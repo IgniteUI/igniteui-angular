@@ -9,8 +9,6 @@ import {
     Input,
     OnDestroy,
     ViewChild,
-    EventEmitter,
-    Output,
     ContentChild,
     Optional,
     AfterViewInit
@@ -126,46 +124,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get listId() {
         return this.id + '-list';
     }
-
-    /**
-     * Emitted before the dropdown is opened
-     *
-     * ```html
-     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
-     * ```
-     */
-    @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs>();
-
-    /**
-     * Emitted after the dropdown is opened
-     *
-     * ```html
-     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
-     * ```
-     */
-    @Output()
-    public onOpened = new EventEmitter<void>();
-
-    /**
-     * Emitted before the dropdown is closed
-     *
-     * ```html
-     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
-     * ```
-     */
-    @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
-
-    /**
-     * Emitted after the dropdown is closed
-     *
-     * ```html
-     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
-     * ```
-     */
-    @Output()
-    public onClosed = new EventEmitter<void>();
 
     /**
      * Get currently selected item

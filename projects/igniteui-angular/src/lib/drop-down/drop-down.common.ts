@@ -49,12 +49,14 @@ export interface IDropDownList {
     height: string;
     id: string;
     maxHeight: string;
-
     collapsed: boolean;
-
     items: IgxDropDownItemBase[];
     headers: IgxDropDownItemBase[];
     focusedItem: IgxDropDownItemBase;
+    onOpening: EventEmitter<CancelableEventArgs>;
+    onOpened: EventEmitter<void>;
+    onClosing: EventEmitter<CancelableBrowserEventArgs>;
+    onClosed: EventEmitter<void>;
     navigateFirst(): void;
     navigateLast(): void;
     navigateNext(): void;
@@ -67,11 +69,6 @@ export interface IDropDownList {
  * @hidden
  */
 export interface IDropDownBase extends IDropDownList, IToggleView {
-    onOpening: EventEmitter<CancelableEventArgs>;
-    onOpened: EventEmitter<void>;
-    onClosing: EventEmitter<CancelableBrowserEventArgs>;
-    onClosed: EventEmitter<void>;
-
     selectedItem: any;
     allowItemsFocus?: boolean;
     setSelectedItem(index: number): void;
