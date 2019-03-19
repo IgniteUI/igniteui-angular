@@ -36,11 +36,14 @@
 ///
 /// @param {Color} $color - The color to calculate luminance for.
 @function luminance($color) {
-    $red: nth($linear-channel-values, red($color) + 1);
-    $green: nth($linear-channel-values, green($color) + 1);
-    $blue: nth($linear-channel-values, blue($color) + 1);
+    @if type-of($color) == 'color' {
+        $red: nth($linear-channel-values, red($color) + 1);
+        $green: nth($linear-channel-values, green($color) + 1);
+        $blue: nth($linear-channel-values, blue($color) + 1);
 
-    @return .2126 * $red + .7152 * $green + .0722 * $blue;
+        @return .2126 * $red + .7152 * $green + .0722 * $blue;
+    }
+    @return $color;
 }
 
 /// Calculates the contrast ratio between two colors.
@@ -131,14 +134,17 @@
 /// @param {Color} $color - The color used to return a contrast color for.
 /// @returns {Color} - Returns either white or black depending on the luminance of the input color.
 @function text-contrast($color) {
-    $lightContrast: contrast($color, white);
-    $darkContrast: contrast($color, black);
+    @if type-of($color) == 'color' {
+        $lightContrast: contrast($color, white);
+        $darkContrast: contrast($color, black);
 
-    @if ($lightContrast > $darkContrast) {
-        @return white;
-    } @else {
-        @return black;
+        @if ($lightContrast > $darkContrast) {
+            @return white;
+        } @else {
+            @return black;
+        }
     }
+    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -507,4 +513,34 @@
     }
 
     @return $value;
+}
+
+/// A thin wrapper around Sass' lighten function
+/// to allow pass-through for values other than those
+/// of type color.
+/// @access private
+/// @param {Color} $color - The color to be lightened.
+/// @param {Percent} $amount - The percent value by which the color will be lightened.
+/// @returns {Color | any} - The modified color as produced by the lighten function.
+/// If the value passed is not a color, then the passed value will be returned.
+@function lighten-color($color, $amount) {
+    @if type-of($color) == 'color' {
+        @return lighten($color, $amount);
+    }
+    @return $color;
+}
+
+/// A thin wrapper around Sass' darken function
+/// to allow pass-through for values other than those
+/// of type color.
+/// @access private
+/// @param {Color} $color - The color to be lightened.
+/// @param {Percent} $amount - The percent value by which the color will be lightened.
+/// @returns {Color | any} - The modified color as produced by the lighten function.
+/// If the value passed is not a color, then the passed value will be returned.
+@function darken-color($color, $amount) {
+    @if type-of($color) == 'color' {
+        @return darken($color, $amount);
+    }
+    @return $color;
 }

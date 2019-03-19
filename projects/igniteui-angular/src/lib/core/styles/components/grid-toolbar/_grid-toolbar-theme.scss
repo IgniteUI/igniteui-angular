@@ -85,18 +85,27 @@
     }
 
     @if not($button-hover-background) and $background-color {
-        $button-hover-background: rgba(text-contrast($background-color), .2);
         $button-hover-text-color: text-contrast($background-color);
+
+        @if type-of($background-color) == 'color' {
+            $button-hover-background: rgba(text-contrast($background-color), .2);
+        }
     }
 
     @if not($button-focus-background) and $background-color {
-        $button-focus-background: rgba(text-contrast($background-color), .2);
         $button-focus-text-color: text-contrast($background-color);
+
+        @if type-of($background-color) == 'color' {
+            $button-focus-background: rgba(text-contrast($background-color), .2);
+        }
     }
 
     @if not($button-background) and $background-color {
-        $button-background: rgba(text-contrast($background-color), .1);
         $button-text-color: text-contrast($background-color);
+
+        @if type-of($background-color) == 'color' {
+            $button-background: rgba(text-contrast($background-color), .1);
+        }
     }
 
     @return extend($theme, (
