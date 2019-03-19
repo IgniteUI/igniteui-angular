@@ -148,7 +148,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
         }
 
-        this.filteringService.filter(this.column.field, this.expressionsList);
+        this.filteringService.filterInternal(this.column.field, this.expressionsList);
         this.closeDialog();
     }
 

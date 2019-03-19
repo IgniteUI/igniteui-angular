@@ -701,6 +701,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private filter() {
-        this.filteringService.filter(this.column.field);
+        this.filteringService.filterInternal(this.column.field);
     }
 }
