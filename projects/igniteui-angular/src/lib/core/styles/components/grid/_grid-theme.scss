@@ -171,10 +171,12 @@
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
-    $row-selected-cell-background: darken(map-get($theme, 'row-selected-background'), 8%);
+    $row-selected-cell-background: darken-color(map-get($theme, 'row-selected-background'), 8%);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
-        $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+        @if type-of($ghost-header-background) == 'color' {
+            $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+        }
     }
 
     @if not($ghost-header-text-color) and $ghost-header-background {
@@ -186,7 +188,9 @@
     }
 
     @if not($header-border-color) and $header-background {
-        $header-border-color: rgba(text-contrast($header-background), .24);
+        @if type-of($header-background) == 'color' {
+            $header-border-color: rgba(text-contrast($header-background), .24);
+        }
     }
 
     @if not($content-text-color) and $content-background {
@@ -210,7 +214,9 @@
     }
 
     @if not($row-hover-background) and $content-background {
-        $row-hover-background: rgba(text-contrast($content-background), .08)
+        @if type-of($content-background) == 'color' {
+            $row-hover-background: rgba(text-contrast($content-background), .08)
+        }
     }
 
     @if not($row-hover-text-color) and $row-hover-background {
@@ -226,11 +232,15 @@
     }
 
     @if not($row-border-color) and $content-background {
-        $row-border-color: rgba(text-contrast($content-background), .08)
+        @if type-of($content-background) == 'color' {
+            $row-border-color: rgba(text-contrast($content-background), .08)
+        }
     }
 
     @if not($pinned-border-color) and $content-background {
-        $pinned-border-color: rgba(text-contrast($content-background), .08)
+        @if type-of($content-background) == 'color' {
+            $pinned-border-color: rgba(text-contrast($content-background), .08)
+        }
     }
 
     @if not($group-row-background) and $header-background {
@@ -254,7 +264,9 @@
     }
 
     @if not($expand-all-icon-color) and $header-background {
-        $expand-all-icon-color: rgba(text-contrast($header-background), .87);
+        @if type-of($header-background) == 'color' {
+            $expand-all-icon-color: rgba(text-contrast($header-background), .87);
+        }
     }
 
     @if not($expand-all-icon-hover-color) and $header-background {
@@ -290,8 +302,8 @@
     }
 
     @if not($filtering-header-background) and $header-background {
-        @if luminance($header-background) < .5 {
-            $filtering-header-background: lighten($header-background, 25%);
+        @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
+            $filtering-header-background: lighten-color($header-background, 25%);
         }
     }
 
@@ -300,8 +312,8 @@
     }
 
     @if not($filtering-row-background) and $header-background {
-        @if luminance($header-background) < .5 {
-            $filtering-row-background: lighten($header-background, 25%);
+        @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
+            $filtering-row-background: lighten-color($header-background, 25%);
         }
     }
 
@@ -725,13 +737,13 @@
 
     %grid-row {
         display: flex;
-        background-color: --var($theme, 'content-background');
+        background: --var($theme, 'content-background');
         border-bottom: 1px solid --var($theme, 'row-border-color');
         outline-style: none;
         position: relative;
 
         &:hover {
-            background-color: --var($theme, 'row-hover-background');
+            background: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
         }
     }
@@ -748,15 +760,15 @@
 
     %grid-row--selected {
         color: --var($theme, 'row-selected-text-color');
-        background-color: --var($theme, 'row-selected-background');
+        background: --var($theme, 'row-selected-background');
 
         %grid-cell--selected,
         %grid-cell--pinned-selected {
-            background-color: --var($theme, 'row-selected-cell-background');
+            background: --var($theme, 'row-selected-cell-background');
         }
 
         &:hover {
-            background-color: --var($theme, 'row-selected-background');
+            background: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
         }
 
@@ -928,7 +940,7 @@
 
     %grid-cell--selected {
         color: --var($theme, 'cell-selected-text-color');
-        background-color: --var($theme, 'cell-selected-background');
+        background: --var($theme, 'cell-selected-background');
         border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
@@ -956,7 +968,7 @@
     }
 
     %igx-grid__td--editing {
-        background-color: --var($theme, 'cell-editing-background') !important;
+        background: --var($theme, 'cell-editing-background') !important;
         box-shadow: inset 0 0 0 rem(2px) --var($theme, 'edit-mode-color');
 
         igx-input-group {
@@ -973,13 +985,13 @@
 
     %grid-cell--pinned {
         position: relative;
-        background-color: inherit;
+        background: inherit;
         z-index: 9999;
     }
 
     %grid-cell--pinned-selected {
         color: --var($theme, 'cell-selected-text-color');
-        background-color: --var($theme, 'cell-selected-background');
+        background: --var($theme, 'cell-selected-background');
         border-bottom: 0;
     }
 
@@ -1164,7 +1176,7 @@
         position: absolute;
         cursor: col-resize;
         width: 4px;
-        background-color: --var($theme, 'resize-line-color');
+        background: --var($theme, 'resize-line-color');
         z-index: 2;
 
         &::before,
@@ -1291,7 +1303,7 @@
         position: absolute;
         display: flex;
         align-items: center;
-        background-color: --var($theme, 'ghost-header-background');
+        background: --var($theme, 'ghost-header-background');
         color: --var($theme, 'ghost-header-text-color');
         min-width: 168px;
         max-width: 320px;
@@ -1342,7 +1354,7 @@
     }
 
     %igx-grid__drag-col-header {
-        background-color: --var($theme, 'header-background');
+        background: --var($theme, 'header-background');
 
         %grid-cell-header {
             opacity: .4;
@@ -1351,7 +1363,7 @@
 
     // Group by section
     %igx-grid__group-row {
-        background-color: --var($theme, 'group-row-background');
+        background: --var($theme, 'group-row-background');
         display: flex;
         outline-style: none;
         border-bottom: 1px solid --var($theme, 'row-border-color');
@@ -1412,7 +1424,7 @@
 
     %igx-group-label__count-badge {
         > div {
-            background-color: --var($theme, 'group-count-background');
+            background: --var($theme, 'group-count-background');
             color: --var($theme, 'group-count-text-color');
             font-size: $grid-head-fs;
         }

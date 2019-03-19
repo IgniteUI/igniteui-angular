@@ -62,15 +62,21 @@
     }
 
     @if not($actions-text-color) and $background {
-        $actions-text-color: rgba(text-contrast($background), .5);
+        @if type-of($background) == 'color' {
+            $actions-text-color: rgba(text-contrast($background), .5);
+        }
     }
 
     @if not($content-text-color) and $background {
-        $content-text-color: rgba(text-contrast($background), .7);
+        @if type-of($background) == 'color' {
+            $content-text-color: rgba(text-contrast($background), .7);
+        }
     }
 
     @if not($subtitle-text-color) and $background {
-        $subtitle-text-color: rgba(text-contrast($background), .7);
+        @if type-of($background) == 'color' {
+            $subtitle-text-color: rgba(text-contrast($background), .7);
+        }
     }
 
     @if not($resting-shadow) {
