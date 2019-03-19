@@ -145,7 +145,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() private _injector: Injector) {
+        @Optional() private injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
     }
@@ -1273,9 +1273,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public ngOnInit() {
-        try {
-            this.ngControl = this._injector.get(NgControl);
-        } catch (e) { }
+        this.ngControl = this.injector.get(NgControl, null);
         this._positionCallback = () => this.dropdown.updateScrollPosition();
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
