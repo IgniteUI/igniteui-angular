@@ -53,7 +53,9 @@
     }
 
     @if not($message-color) and $background{
-        $message-color: rgba(text-contrast($background), .8);
+        @if type-of($background) == 'color' {
+            $message-color: rgba(text-contrast($background), .8);
+        }
     }
 
     @if not($shadow) {
