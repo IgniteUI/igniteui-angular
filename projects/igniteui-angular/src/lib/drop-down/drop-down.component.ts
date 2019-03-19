@@ -338,7 +338,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleOpened() {
         if (this.selectedItem) {
-            this._focusedItem = this.selectedItem;
+            this.focusedItem = this.selectedItem;
             this._focusedItem.focused = true;
         } else if (this.allowItemsFocus) {
             this.navigateFirst();
