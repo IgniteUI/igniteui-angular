@@ -29,7 +29,8 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerRetemplatedComponent,
                 IgxDatePickerEditableComponent,
                 IgxDatePickerCustomizedComponent,
-                IgxDropDownDatePickerRetemplatedComponent
+                IgxDropDownDatePickerRetemplatedComponent,
+                IgxDatePickerOpeningComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule]
         })
@@ -478,6 +479,54 @@ describe('IgxDatePicker', () => {
 
         month = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[0];
         expect(month.innerText.trim()).toBe(expectedResult.trim());
+    }));
+
+    it('Drop-down should open above the input when there is not space below - dropdown mode', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxDatePickerOpeningComponent);
+        const datePicker = fixture.componentInstance.datePicker;
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+
+        let inputGroup, inputGroupRect, inputGroupTop;
+        let calendar, calendarRect, calendarTop;
+
+        // check default behavior - drop down is opened below the input
+        datePicker.element.nativeElement.style = 'position: fixed; top: 150px';
+        fixture.detectChanges();
+        tick();
+
+        inputGroup = document.getElementsByTagName('igx-input-group');
+        inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
+        inputGroupTop = inputGroupRect.top;
+
+        const iconDate = dom.query(By.css('.igx-icon'));
+        expect(iconDate).toBeDefined();
+
+        UIInteractions.clickElement(iconDate);
+        fixture.detectChanges();
+
+        calendar = document.getElementsByTagName('igx-calendar-container');
+        calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
+        calendarTop = calendarRect.top;
+
+        expect(inputGroupTop).toBeLessThan(calendarTop);
+
+        // check if drop down is opened above the input if there is no space below
+        datePicker.element.nativeElement.style = 'position: fixed; bottom: 150px';
+        fixture.detectChanges();
+        tick();
+
+        inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
+        inputGroupTop = inputGroupRect.top;
+
+        UIInteractions.clickElement(iconDate);
+        fixture.detectChanges();
+
+        calendar = document.getElementsByTagName('igx-calendar-container');
+        calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
+        calendarTop = calendarRect.top;
+
+        expect(inputGroupTop).toBeGreaterThan(calendarTop);
     }));
 
     describe('Drop-down mode', () => {
@@ -1097,4 +1146,12 @@ export class IgxDatePickerCustomizedComponent {
     @ViewChild(IgxDatePickerComponent) public customizedDatePicker: IgxDatePickerComponent;
 }
 
-
+@Component({
+    template:
+        `
+        <igx-date-picker mode="dropdown"></igx-date-picker>
+        `
+})
+export class IgxDatePickerOpeningComponent {
+    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+}
