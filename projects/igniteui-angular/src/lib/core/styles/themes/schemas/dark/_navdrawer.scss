@@ -8,11 +8,8 @@
 
 /// Generates a dark navdrawer schema.
 /// @type {Map}
-/// @prop {Color} background [#222] - The navigation drawer background color.
 /// @requires {function} extend
 /// @requires $_light-navdrawer
 /// @see $default-palette
 
-$_dark-navdrawer: extend($_light-navdrawer, (
-    background: #222
-));
+$_dark-navdrawer: extend($_light-navdrawer, ());
