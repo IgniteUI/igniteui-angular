@@ -603,6 +603,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
+    /**
+    * @hidden
+    */
+    @ViewChild('datePickerOutlet', { read: ElementRef })
+    public outletDirective: ElementRef;
+
     /*
      * @hidden
      */
@@ -624,6 +630,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
+    @ContentChild('dropDownTarget', { read: ElementRef })
+    protected templateDropDownTarget: ElementRef;
+
+    /*
+     * @hidden
+     */
     @ViewChild('editableInput', { read: ElementRef })
     protected editableInput: ElementRef;
 
@@ -638,12 +650,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     */
     @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('datePickerOutlet', { read: ElementRef })
-    public outletDirective: ElementRef;
 
     /**
      *@hidden
@@ -891,12 +897,26 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.hasHeader = false;
                 let dropDownOverlay;
 
+                // dropdown overlay settings are modified via input
                 if (this.dropDownOverlaySettings !== undefined) {
                     dropDownOverlay = this._dropDownOverlay;
                 } else {
                     dropDownOverlay = this._dropDownOverlaySettings;
-                    dropDownOverlay.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
-                    dropDownOverlay.positionStrategy.settings.verticalDirection = this._getDropDownVerticalAlignment();
+                    let dropDownTarget;
+
+                    if (this.editableInputGroup) {
+                        dropDownTarget = this.editableInputGroup.nativeElement;
+                    } else {
+                        if (this.templateDropDownTarget) {
+                            // if the date picker is re-templated, set an element marked with #dropDownTarget as a target to the drop-down
+                            dropDownTarget = this.templateDropDownTarget.nativeElement;
+                        } else {
+                            throw new Error('There is no target element for the dropdown to attach. Mark an element with #dropDownTarget.');
+                        }
+                    }
+
+                    dropDownOverlay.positionStrategy.settings.target = dropDownTarget;
+                    dropDownOverlay.positionStrategy.settings.verticalDirection = this._getDropDownVerticalAlignment(dropDownTarget);
                 }
 
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
@@ -1193,9 +1213,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         });
     }
 
-    private _getDropDownVerticalAlignment() {
+    private _getDropDownVerticalAlignment(dropDownTarget: HTMLElement): VerticalAlignment {
         const windowHeight = getViewportRect(document).height;
-        const inputGroupRect = this.editableInputGroup.nativeElement.getBoundingClientRect() as DOMRect;
+        const inputGroupRect = dropDownTarget.getBoundingClientRect() as DOMRect;
         const heightAbove = inputGroupRect.top + inputGroupRect.height;
         const heightBelow = windowHeight - heightAbove;
 
