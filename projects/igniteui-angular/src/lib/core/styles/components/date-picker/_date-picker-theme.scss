@@ -23,7 +23,7 @@
         }
 
         %cal-header-display {
-            background-color: --var($theme, 'header-background');
+            background: --var($theme, 'header-background');
             color: --var($theme, 'header-text-color');
         }
 
@@ -87,7 +87,7 @@
 
         %cal-value--selected {
             color: --var($theme, 'date-selected-text-color');
-            background-color: --var($theme, 'date-selected-background') !important;
+            background: --var($theme, 'date-selected-background') !important;
         }
 
         %cal-value--current {
@@ -95,7 +95,7 @@
         }
 
         %cal-value--hover {
-            background-color: --var($theme, 'date-hover-background');
+            background: --var($theme, 'date-hover-background');
         }
     }
 
