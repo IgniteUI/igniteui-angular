@@ -495,11 +495,6 @@ describe('IgxDatePicker', () => {
         it('Drop-down should open below the input by default if there is enough space - dropdown mode', fakeAsync(() => {
             const dom = fixture.debugElement;
 
-            // check default behavior - drop down is opened below the input
-            datePicker.element.nativeElement.style = 'position: fixed; top: 150px';
-            fixture.detectChanges();
-            tick();
-
             const inputGroup = document.getElementsByTagName('igx-input-group');
             const inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
             const inputGroupTop = inputGroupRect.top;
