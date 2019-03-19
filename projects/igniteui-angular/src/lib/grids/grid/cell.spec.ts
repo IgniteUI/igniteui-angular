@@ -8,7 +8,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
@@ -406,8 +406,8 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe(cellValue);
             }));
 
-            it('should not throw errors when update cell to value, which does not match filter criteria', (async () => {
-                grid.filter('personNumber', 1, IgxStringFilteringOperand.instance().condition('equals'));
+            it('should not throw errors when update cell to value, which does not match filter criteria', (fakeAsync(() => {
+                grid.filter('personNumber', 1, IgxNumberFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'personNumber');
@@ -415,15 +415,15 @@ describe('IgxGrid - Cell component', () => {
                 const previousCell = grid.getCellByColumn(0, 'birthday');
 
                 cellDomPK.triggerEventHandler('dblclick', {});
-                await wait();
+                tick();
                 expect(cell.inEditMode).toBe(true);
 
                 const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, 9);
-                await wait();
+                tick();
 
                 expect (() => previousCell.onClick({})).not.toThrow();
-            }));
+            })));
 
             it('should exit edit mode on sorting', (async () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
