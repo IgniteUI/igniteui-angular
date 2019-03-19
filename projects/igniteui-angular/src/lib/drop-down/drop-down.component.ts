@@ -12,7 +12,8 @@ import {
     EventEmitter,
     Output,
     ContentChild,
-    Optional
+    Optional,
+    AfterViewInit
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -50,14 +51,10 @@ import { take, takeUntil, filter } from 'rxjs/operators';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
+export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
     protected destroy$ = new Subject<boolean>();
     protected _focusedItemIndex = -1;
-    protected _scrollPosition;
-    protected _dropdownElement = null;
-
-    @ViewChild('content')
-    protected content;
+    protected _scrollPosition: number;
 
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     public virtDir: IgxForOfDirective<any>;
@@ -354,9 +351,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
-        if (!this._dropdownElement && this.content) {
-            this._dropdownElement = this.content.nativeElement.parentElement;
-        }
         if (this.virtDir) {
             this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
         }
@@ -420,7 +414,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        if (this.overlay) {
+    }
+
+    ngAfterViewInit() {
+        if (this.overlay && this.virtDir) {
             this.toggleDirective.onAnimation.pipe(filter(e => e.animationType === 'open'),
                 takeUntil(this.destroy$))
                 .subscribe(() => {
