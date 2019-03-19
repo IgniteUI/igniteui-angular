@@ -481,53 +481,65 @@ describe('IgxDatePicker', () => {
         expect(month.innerText.trim()).toBe(expectedResult.trim());
     }));
 
-    it('Drop-down should open above the input when there is not space below - dropdown mode', fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxDatePickerOpeningComponent);
-        const datePicker = fixture.componentInstance.datePicker;
-        fixture.detectChanges();
-        const dom = fixture.debugElement;
+    describe('Drop-down opening', () => {
+        configureTestSuite();
+        let fixture: ComponentFixture<IgxDatePickerOpeningComponent>;
+        let datePicker: IgxDatePickerComponent;
 
-        let inputGroup, inputGroupRect, inputGroupTop;
-        let calendar, calendarRect, calendarTop;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxDatePickerOpeningComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+        });
 
-        // check default behavior - drop down is opened below the input
-        datePicker.element.nativeElement.style = 'position: fixed; top: 150px';
-        fixture.detectChanges();
-        tick();
+        it('Drop-down should open below the input by default if there is enough space - dropdown mode', fakeAsync(() => {
+            const dom = fixture.debugElement;
 
-        inputGroup = document.getElementsByTagName('igx-input-group');
-        inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
-        inputGroupTop = inputGroupRect.top;
+            // check default behavior - drop down is opened below the input
+            datePicker.element.nativeElement.style = 'position: fixed; top: 150px';
+            fixture.detectChanges();
+            tick();
 
-        const iconDate = dom.query(By.css('.igx-icon'));
-        expect(iconDate).toBeDefined();
+            const inputGroup = document.getElementsByTagName('igx-input-group');
+            const inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
+            const inputGroupTop = inputGroupRect.top;
 
-        UIInteractions.clickElement(iconDate);
-        fixture.detectChanges();
+            const iconDate = dom.query(By.css('.igx-icon'));
+            UIInteractions.clickElement(iconDate);
+            fixture.detectChanges();
+            tick();
 
-        calendar = document.getElementsByTagName('igx-calendar-container');
-        calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
-        calendarTop = calendarRect.top;
+            const calendar = document.getElementsByTagName('igx-calendar-container');
+            const calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
+            const calendarTop = calendarRect.top;
 
-        expect(inputGroupTop).toBeLessThan(calendarTop);
+            expect(inputGroupTop).toBeLessThan(calendarTop);
+        }));
 
-        // check if drop down is opened above the input if there is no space below
-        datePicker.element.nativeElement.style = 'position: fixed; bottom: 150px';
-        fixture.detectChanges();
-        tick();
+        it('Drop-down should open above the input when there is no enough space below - dropdown mode', fakeAsync(() => {
+            const dom = fixture.debugElement;
 
-        inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
-        inputGroupTop = inputGroupRect.top;
+            // check if drop down is opened above the input if there is no space below
+            datePicker.element.nativeElement.style = 'position: fixed; bottom: 150px';
+            fixture.detectChanges();
+            tick();
 
-        UIInteractions.clickElement(iconDate);
-        fixture.detectChanges();
+            const inputGroup = document.getElementsByTagName('igx-input-group');
+            const inputGroupRect = inputGroup[0].getBoundingClientRect() as DOMRect;
+            const inputGroupTop = inputGroupRect.top;
 
-        calendar = document.getElementsByTagName('igx-calendar-container');
-        calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
-        calendarTop = calendarRect.top;
+            const iconDate = dom.query(By.css('.igx-icon'));
+            UIInteractions.clickElement(iconDate);
+            fixture.detectChanges();
+            tick();
 
-        expect(inputGroupTop).toBeGreaterThan(calendarTop);
-    }));
+            const calendar = document.getElementsByTagName('igx-calendar-container');
+            const calendarRect = calendar[0].getBoundingClientRect() as DOMRect;
+            const calendarTop = calendarRect.top;
+
+            expect(inputGroupTop).toBeGreaterThan(calendarTop);
+        }));
+    });
 
     describe('Drop-down mode', () => {
         configureTestSuite();
