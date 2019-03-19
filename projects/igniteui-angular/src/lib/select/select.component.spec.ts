@@ -262,17 +262,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close on click outside of the component', fakeAsync(() => {
-            expect(select.collapsed).toBeTruthy();
-            select.toggle();
-            tick();
-            expect(select.collapsed).toBeFalsy();
-
-            document.documentElement.dispatchEvent(new Event('click'));
-            tick();
-            fixture.detectChanges();
-            expect(select.collapsed).toBeTruthy();
-        }));
         it('should not display dropdown list when no select items', fakeAsync(() => {
             fixture.componentInstance.items = [];
             fixture.detectChanges();
@@ -356,7 +345,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on click outside of the component', fakeAsync(() => {
+        it('should emit closing events on input blur', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -366,7 +355,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            document.documentElement.dispatchEvent(new Event('click'));
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
