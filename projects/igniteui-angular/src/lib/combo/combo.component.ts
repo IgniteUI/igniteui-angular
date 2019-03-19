@@ -112,7 +112,7 @@ const noop = () => { };
     }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
- OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -128,6 +128,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected _sortingExpressions: ISortingExpression[] = [];
     protected _groupKey = '';
     protected _displayKey: string;
+    protected _prevInputValue = '';
     private _dataType = '';
     private destroy$ = new Subject<any>();
     private _data = [];
@@ -1034,6 +1035,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public handleInputChange(event?: string) {
         let cdrFlag = false;
         const vContainer = this.dropdown.verticalScrollContainer;
+        if (event !== undefined && this._prevInputValue === event) {
+            // Nothing has changed
+            return;
+        } else {
+            this._prevInputValue = event !== undefined ? event : '';
+        }
         if (event !== undefined) {
             // Do not scroll if not scrollable
             if (vContainer.isScrollable()) {

@@ -84,7 +84,9 @@
     }
 
     @if not($item-active-background) and $background {
-        $item-active-background: rgba(text-contrast($background), .24);
+        @if type-of($background) == 'color' {
+            $item-active-background: rgba(text-contrast($background), .24);
+        }
     }
 
     @if not($item-active-text-color) and $item-active-background {
@@ -96,7 +98,9 @@
     }
 
     @if not($item-hover-background) and $background {
-        $item-hover-background: rgba(text-contrast($background), .08);
+        @if type-of($background) == 'color' {
+            $item-hover-background: rgba(text-contrast($background), .08);
+        }
     }
 
     @if not($item-hover-text-color) and $background {
@@ -147,7 +151,7 @@
         max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
-        background-color: --var($theme, 'background');
+        background: --var($theme, 'background');
         top: 0;
         bottom: 0;
         left: 0;
@@ -207,7 +211,7 @@
 
     %overlay {
         opacity: 1;
-        background-color: $overlay-color;
+        background: $overlay-color;
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
@@ -266,7 +270,7 @@
 
         &:hover,
         &:focus {
-            background-color: --var($theme, 'item-hover-background');
+            background: --var($theme, 'item-hover-background');
             color: --var($theme, 'item-hover-text-color');
 
             igx-icon {
@@ -278,7 +282,7 @@
     %item--active {
         // should be app primary color
         color: --var($theme, 'item-active-text-color');
-        background-color: --var($theme, 'item-active-background');
+        background: --var($theme, 'item-active-background');
 
         igx-icon {
             color: --var($theme, 'item-active-icon-color');
@@ -287,7 +291,7 @@
         &:focus,
         &:hover {
             color: --var($theme, 'item-active-text-color');
-            background-color: --var($theme, 'item-active-background');
+            background: --var($theme, 'item-active-background');
 
             igx-icon {
                 color: --var($theme, 'item-active-icon-color');

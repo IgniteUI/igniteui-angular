@@ -427,6 +427,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /**
+     *  Event handler for date picker's selection.
+     */
+    public onDateSelected(value: Date) {
+        this.value = value;
+    }
+
+    /**
      * Opens the conditions dropdown.
      */
     public toggleConditionsDropDown(target: any) {

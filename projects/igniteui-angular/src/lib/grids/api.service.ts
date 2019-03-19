@@ -500,7 +500,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-        } else {
+        } else if (!fieldName) {
             filteringState.filteringOperands = [];
         }
 
