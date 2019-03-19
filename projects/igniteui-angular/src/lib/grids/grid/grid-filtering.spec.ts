@@ -579,6 +579,14 @@ describe('IgxGrid - Filtering actions', () => {
         const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
         HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
+
+    it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -603,14 +611,14 @@ export class CustomFilter extends IgxFilteringOperand {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
-        <igx-column [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="true" dataType="date">
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
