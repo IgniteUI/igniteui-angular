@@ -87,6 +87,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 
 
 
@@ -153,6 +154,7 @@ const components = [
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridWithTransactionsComponent,
+    TreeGridLoadOnDemandSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,

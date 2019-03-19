@@ -27,10 +27,17 @@
     <ng-container *ngIf="indentation > 0">
         <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
     </ng-container>
-    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
+    <div #indicator
+         *ngIf="!isLoading"
+         class="igx-grid__tree-grouping-indicator"
+         [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
+    </div>
+    <div *ngIf="isLoading" class="igx-grid__tree-grouping-indicator" style="width: 1.5rem; height: 1.5rem">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
     </div>
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context">

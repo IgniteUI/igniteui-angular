@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -13,6 +13,9 @@ import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 })
 export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
+
+    @Input()
+    public isLoading: boolean;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 selection: IgxSelectionAPIService,
@@ -50,7 +53,10 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public get hasChildren() {
-        return this.row.treeRow.children && this.row.treeRow.children.length > 0;
+        return this.grid.loadChildrenOnDemand ?
+            this.grid.hasChildrenKey ? this.row.rowData[this.grid.hasChildrenKey] :
+                !(this.grid.expansionStates.get(this.row.rowID) && (!this.row.treeRow.children || !this.row.treeRow.children.length)) :
+            (this.row.treeRow.children && this.row.treeRow.children.length > 0);
     }
 
     /**

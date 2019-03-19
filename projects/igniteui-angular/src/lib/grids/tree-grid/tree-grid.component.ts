@@ -34,6 +34,8 @@ import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxOverlayService } from '../../services/index';
+import { takeUntil } from 'rxjs/operators';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 
@@ -213,6 +215,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     @Input()
     public foreignKey;
 
+    @Input()
+    public hasChildrenKey;
+
     /**
      * An @Input property indicating whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
@@ -273,6 +278,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.cdr.detectChanges();
     }
 
+    @Input()
+    public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
+
     /**
      * Emitted when the expanded state of a row gets changed.
      * ```typescript
@@ -322,6 +330,30 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     public ngOnInit() {
         this._gridAPI.register(this);
         super.ngOnInit();
+
+        this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (this.loadChildrenOnDemand) {
+                const parentID = args.rowID;
+
+                if (args.expanded && !this._expansionStates.has(parentID)) {
+                    const row = this.getRowByKey(parentID) as IgxTreeGridRowComponent;
+                    row.isLoading = true;
+
+                    this.loadChildrenOnDemand(parentID, children => {
+                        row.isLoading = false;
+                        row.cdr.markForCheck();
+
+                        if (this.primaryKey && this.foreignKey) {
+                            for (const child of children) {
+                                child[this.foreignKey] = parentID;
+                            }
+                            this.data.push(...children);
+                            this._pipeTrigger++;
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {

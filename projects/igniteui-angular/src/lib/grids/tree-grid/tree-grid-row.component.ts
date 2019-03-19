@@ -77,6 +77,9 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         (this.gridAPI as IgxTreeGridAPIService).trigger_row_expansion_toggle(this.gridID, this._treeRow, value);
     }
 
+    @Input()
+    public isLoading: boolean;
+
     /**
      * @hidden
      */
