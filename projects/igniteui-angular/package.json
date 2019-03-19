@@ -23,6 +23,9 @@
     "hierarchical table",
     "combo",
     "drop down",
+    "select",
+    "auto complete",
+    "autocomplete",
     "list",
     "tabs",
     "calendar",
@@ -57,6 +60,8 @@
     "slider",
     "toast",
     "snackbar",
+    "banner",
+    "expansion panel",
     "excel export",
     "csv export"
   ],
