@@ -1040,14 +1040,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         } else {
             this._prevInputValue = event !== undefined ? event : '';
         }
-        if (vContainer.isScrollable()) {
-            vContainer.scrollTo(0);
-        } else {
-            cdrFlag = true;
-        }
         if (event !== undefined) {
             // Do not scroll if not scrollable
+            if (vContainer.isScrollable()) {
+                vContainer.scrollTo(0);
+            } else {
+                cdrFlag = true;
+            }
             this.onSearchInput.emit(event);
+        } else {
+            cdrFlag = true;
         }
         if (this.filterable) {
             this.filter();
