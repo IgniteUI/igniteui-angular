@@ -344,8 +344,16 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
+
     /**
-     *@hidden
+     * Sets/gets the class selector of the column group header.
+     * ```typescript
+     * let columnHeaderClass = this.column.headerGroupClasses;
+     * ```
+     * ```html
+     * <igx-column [headerGroupClasses] = "'column-group-header'"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
      */
     @Input()
     public headerGroupClasses = '';
@@ -1214,7 +1222,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
-            if (this.sortable) {
+            if (this.sortable || this.filterable) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
             }
 

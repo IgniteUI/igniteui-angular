@@ -102,6 +102,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
+     * Gets/sets whether the view should be rendered
+     * according to the locale and monthFormat, if any.
+     */
+    @Input()
+    public formatView = true;
+
+    /**
      * Emits an event when a selection is made in the months view.
      * Provides reference the `date` property in the `IgxMonthsViewComponent`.
      * ```html
@@ -195,7 +202,10 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     public formattedMonth(value: Date): string {
-        return this._formatterMonth.format(value);
+        if (this.formatView) {
+            return this._formatterMonth.format(value);
+        }
+        return `${value.getMonth()}`;
     }
 
     /**
@@ -259,11 +269,15 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         }
 
         const months = this.dates.toArray();
-        if (months.indexOf(node) - 3 >= 0) {
-            const month = months[months.indexOf(node) - 3];
+        const nodeRect = node.nativeElement.getBoundingClientRect();
 
-            month.nativeElement.focus();
-         }
+        for (let index = months.indexOf(node) - 1; index >= 0; index--) {
+            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
+            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+                months[index].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
@@ -280,11 +294,15 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         }
 
         const months = this.dates.toArray();
-        if (months.indexOf(node) + 3 < months.length) {
-            const month = months[months.indexOf(node) + 3];
+        const nodeRect = node.nativeElement.getBoundingClientRect();
 
-            month.nativeElement.focus();
-         }
+        for (let index = months.indexOf(node) + 1; index < months.length; index++) {
+            const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
+            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+                months[index].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
