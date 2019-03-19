@@ -2631,16 +2631,11 @@ describe('IgxGrid Component Tests', () => {
                 const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
                 const headerResArea = headers[2].children[1].nativeElement;
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
-                tick();
-                fix.detectChanges();
-
-                const resizer = headers[2].children[1].children[0].nativeElement;
+                tick(200);
+                const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
-                tick();
-
                 UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
-                tick(100);
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
