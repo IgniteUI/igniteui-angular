@@ -15,7 +15,9 @@ import {
     forwardRef,
     Optional,
     OnInit,
-    TemplateRef
+    TemplateRef,
+    ContentChild,
+    AfterContentInit
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -37,6 +39,7 @@ import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 
 let NEXT_ID = 0;
 
@@ -64,9 +67,10 @@ let NEXT_ID = 0;
     providers: [ IgxTreeGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
+    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -280,6 +284,22 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.cdr.detectChanges();
     }
 
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
+    protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
+
+    @Input()
+    public get rowLoadingIndicatorTemplate(): TemplateRef<any> {
+        return this._rowLoadingIndicatorTemplate;
+    }
+
+    public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
+        this._rowLoadingIndicatorTemplate = value;
+        this.cdr.markForCheck();
+    }
+
     @Input()
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
 
@@ -335,6 +355,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         this._gridAPI.register(this);
         super.ngOnInit();
@@ -342,6 +365,16 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+        if (this.rowLoadingTemplate) {
+            this._rowLoadingIndicatorTemplate = this.rowLoadingTemplate.template;
+        }
+        super.ngAfterContentInit();
     }
 
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {

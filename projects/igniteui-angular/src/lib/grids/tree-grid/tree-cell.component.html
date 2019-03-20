@@ -36,9 +36,13 @@
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
     </div>
     <div *ngIf="isLoading" class="igx-grid__tree-grouping-indicator" style="width: 1.5rem; height: 1.5rem">
+        <ng-container *ngTemplateOutlet="grid.rowLoadingIndicatorTemplate ? grid.rowLoadingIndicatorTemplate : defaultLoadingIndicatorTemplate">
+        </ng-container>
+    </div>
+    <ng-template #defaultLoadingIndicatorTemplate>
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
-    </div>
+    </ng-template>
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>
