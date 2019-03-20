@@ -4,14 +4,17 @@
 
 
 ## Milestone 7 (Due May 1st, 2019) 
+1. Multi-cell Selection #3915
+2. Grid Multi-Row Layout 
+3. Grid Row Dragging 
+
+
+## Going down the road
 
 1. Advanced Filtering
 2. Row-pinning
 3. Column Groups expand/collapse, with column grouping templates
 4. Visual Cell merging 
-5. Multi-cell Selection #3915
-6. Grid Multi-Row Layout 
-7. Grid Row Dragging 
 
 
 # Previous Milestones
