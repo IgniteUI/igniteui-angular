@@ -24,7 +24,8 @@ export enum IgxInputState {
 }
 
 @Directive({
-    selector: '[igxInput]'
+    selector: '[igxInput]',
+    exportAs: 'igxInput'
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
@@ -92,6 +93,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get disabled() {
         return this.nativeElement.hasAttribute('disabled');
     }
+
     /**
      * Sets the `required` property.
      * ```html
@@ -113,6 +115,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             }
         }
     }
+
     /**
      * Gets whether the igxInput is required.
      * ```typescript
@@ -123,6 +126,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get required() {
         return this.nativeElement.hasAttribute('required');
     }
+
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -308,6 +312,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get valid(): IgxInputState {
         return this._valid;
     }
+
+    /**
+     * Gets whether the igxInput is valid.
+     * ```typescript
+     * let valid = this.igxInput.isValid;
+     * ```
+     * @memberof IgxInputDirective
+     */
+    public get isValid(): boolean {
+        return this.valid !== IgxInputState.INVALID;
+    }
+
     /**
      * Sets the state of the igxInput.
      * ```typescript
