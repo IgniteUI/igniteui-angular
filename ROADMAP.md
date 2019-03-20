@@ -1,11 +1,9 @@
 # Roadmap - Ignite UI for Angular
 
 # Current Milestone
- 
 
 
-
-## Milestone 7 (Due May 1st 2019) 
+## Milestone 7 (Due May 1st, 2019) 
 
 1. Advanced Filtering
 2. Row-pinning
@@ -13,7 +11,7 @@
 4. Visual Cell merging 
 5. Multi-cell Selection #3915
 6. Grid Multi-Row Layout 
-7. Row Dragging 
+7. Grid Row Dragging 
 
 
 # Previous Milestones
