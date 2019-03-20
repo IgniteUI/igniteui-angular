@@ -65,10 +65,12 @@
     }
 
     @if not($item-background-active) and $background {
-        @if lightness($background) > 50 {
-            $item-background-active: rgba(text-contrast($background), .04);
-        } @else {
-            $item-background-active: rgba(text-contrast($background), .12);
+        @if type-of($background) == 'color' {
+            @if lightness($background) > 50 {
+                $item-background-active: rgba(text-contrast($background), .04);
+            } @else {
+                $item-background-active: rgba(text-contrast($background), .12);
+            }
         }
     }
 
@@ -115,7 +117,7 @@
         position: relative;
         display: flex;
         flex-flow: column nowrap;
-        background-color: --var($theme, 'background');
+        background: --var($theme, 'background');
         height: 100%;
         overflow: hidden;
         z-index: 0;
@@ -143,7 +145,7 @@
         display: flex;
         align-items: center;
         color: --var($theme, 'header-text-color');
-        background-color: --var($theme, 'header-background');
+        background: --var($theme, 'header-background');
         padding: $list-item-padding;
         user-select: none;
     }
@@ -170,14 +172,14 @@
         padding: $list-item-padding;
         min-height: $list-item-height;
         color: --var($theme, 'item-text-color');
-        background-color: --var($theme, 'item-background');
+        background: --var($theme, 'item-background');
         z-index: 2;
         border-radius: --var($theme, 'item-border-radius');
     }
 
     %igx-list-item-content--active {
         color: --var($theme, 'item-text-color-active');
-        background-color: --var($theme, 'item-background-active');
+        background: --var($theme, 'item-background-active');
         z-index: 3;
     }
 
