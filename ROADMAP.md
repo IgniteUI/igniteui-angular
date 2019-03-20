@@ -3,17 +3,9 @@
 # Current Milestone
  
 
-## Milestone 6 (Due March 8th, 2019)
-
-1. Hierarchical Grid #827 
-2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
-3. Auto-complete (inline editable) #3585
-4. Excel Style Filtering #3592
-5. Inline date and time pickers (with drop down/toggle) #3034 #2337
-6. igxSelect Component #3148
 
 
-## Further Down the line
+## Milestone 7 (Due May 1st 2019) 
 
 1. Advanced Filtering
 2. Row-pinning
@@ -21,6 +13,7 @@
 4. Visual Cell merging 
 5. Multi-cell Selection #3915
 6. Grid Multi-Row Layout 
+7. Row Dragging 
 
 
 # Previous Milestones
@@ -90,3 +83,12 @@
 2. **[DONE]** Grid GroupBy summaries
 3. **[DONE]** Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
 4. **[DONE]** Toolbar Templatable and NavBar Templatable
+
+## Milestone 6 (Due March 8th, 2019)
+
+1. **[DONE]** Hierarchical Grid #827 
+2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
+3. **[DONE]** Auto-complete (inline editable) #3585
+4. **[DONE]** Excel Style Filtering #3592
+5. **[DONE]** Inline date and time pickers (with drop down/toggle) #3034 #2337
+6. **[DONE]** igxSelect Component #3148
