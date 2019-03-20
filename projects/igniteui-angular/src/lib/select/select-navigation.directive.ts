@@ -20,8 +20,8 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         if (!event || event.shiftKey) {
             return;
         }
-        const key = event.key.toLowerCase();
 
+        const key = event.key.toLowerCase();
         if (event.altKey && (key === 'arrowdown' || key === 'arrowup' || key === 'down' || key === 'up')) {
             this.target.toggle();
             return;
@@ -53,10 +53,6 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             }
         }
 
-        if (!this.target.collapsed && (key === 'tab')) {
-            this.target.close();
-            return;
-        }
         super.handleKeyDown(event);
     }
 

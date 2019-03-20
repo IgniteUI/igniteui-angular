@@ -3,7 +3,9 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.2.2
-- **Themes** - Add support for gradients and images as values for component themes via the component theme functions.
+- **Themes** 
+    - Add support for gradients and images as values for component themes via the component theme functions.
+    - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
 
 ## 7.2.1
 - **Feature** Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
