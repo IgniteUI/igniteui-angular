@@ -272,9 +272,15 @@
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
 
     @include igx-theme(
-        $palette: igx-palette($primary, $secondary, $grays: #000),
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #fff),
+            $grays: #000
+        ),
         $schema: $light-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude
@@ -292,9 +298,15 @@
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
 
     @include igx-theme(
-        $palette: igx-palette($primary, $secondary, $grays: #fff),
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #222),
+            $grays: #fff
+        ),
         $schema: $dark-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude
