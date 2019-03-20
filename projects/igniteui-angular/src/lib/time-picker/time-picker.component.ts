@@ -89,7 +89,12 @@ export interface IgxTimePickerValidationFailedEventArgs {
         }
     ],
     selector: 'igx-time-picker',
-    templateUrl: 'time-picker.component.html'
+    templateUrl: 'time-picker.component.html',
+    styles: [
+        `:host {
+            display: block;
+        }`
+    ]
 })
 export class IgxTimePickerComponent implements
     IgxTimePickerBase,
