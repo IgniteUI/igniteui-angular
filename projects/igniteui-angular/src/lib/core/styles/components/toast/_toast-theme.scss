@@ -82,7 +82,7 @@
         padding: $toast-padding;
         min-width: $toast-width;
         color: --var($theme, 'text-color');
-        background-color: --var($theme, 'background');
+        background: --var($theme, 'background');
         border-radius: --var($theme, 'border-radius');
         opacity: 0;
         z-index: 999999;

@@ -83,6 +83,11 @@ export abstract class ColumnChooserBase implements OnDestroy {
         this._filterColumnsPrompt = (value) ? value : '';
     }
     /**
+     * Hides/ shows the filtering columns input from the UI.
+     */
+    @Input()
+    public disableFilter = false;
+    /**
      * Gets the items of the selected columns.
      * ```typescript
      * let columnItems =  this.columnHidingUI.columnItems;
