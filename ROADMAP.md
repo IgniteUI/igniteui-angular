@@ -4,6 +4,7 @@
 
 
 ## Milestone 7 (Due May 1st, 2019) 
+
 1. Multi-cell Selection #3915
 2. Grid Multi-Row Layout 
 3. Grid Row Dragging 
