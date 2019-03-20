@@ -440,7 +440,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public set value(date: Date) {
         this._value = date;
         this._onChangeCallback(date);
+        this.valueChange.emit(this._value);
     }
+
+    @Output()
+    public valueChange = new EventEmitter<any>();
 
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.

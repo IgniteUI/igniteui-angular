@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
+import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -116,7 +116,11 @@ export abstract class IgxDropDownItemBase implements DoCheck {
             return;
         }
         this._isSelected = value;
+        this.selectedChange.emit(this._isSelected);
     }
+
+    @Output()
+    public selectedChange = new EventEmitter<any>();
 
     /**
      * @hidden @internal
