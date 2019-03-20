@@ -2963,8 +2963,47 @@ describe('igxCombo', () => {
             clearButton.click();
             fix.detectChanges();
             expect(combo.valid).toEqual(IgxComboState.INVALID);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
+
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
             expect(combo.valid).toEqual(IgxComboState.VALID);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+        }));
+
+        it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboFormComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            const form: FormGroup = fix.componentInstance.reactiveForm;
+            form.controls.townCombo.validator = null;
+            expect(combo).toBeDefined();
+            const comboFormReference = fix.componentInstance.reactiveForm.controls.townCombo;
+            expect(comboFormReference).toBeDefined();
+            expect(combo.selectedItems()).toEqual(comboFormReference.value);
+            expect(combo.selectedItems().length).toEqual(1);
+            expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+            clearButton.click();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
         }));
 
         it('Should be possible to be enabled/disabled when used as a form control', () => {
@@ -2983,6 +3022,7 @@ describe('igxCombo', () => {
             combo.comboInput.nativeElement.click();
             fix.detectChanges();
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+            combo.comboInput.nativeElement.blur();
 
             form.disable();
             // Disabling the form disables all of the controls in it
@@ -2995,6 +3035,7 @@ describe('igxCombo', () => {
             combo.comboInput.nativeElement.click();
             fix.detectChanges();
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+            combo.comboInput.nativeElement.blur();
 
             // Can enabling the form re-enables all of the controls in it
             form.enable();
