@@ -555,7 +555,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostBinding('style.width')
     @Input()
-    public width = '100%';
+    public width: string;
 
     /**
      * @hidden @internal
