@@ -305,6 +305,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     @Output()
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
+    /**
+     * @hidden
+     */
+    public loadingRows = new Set<any>();
+
     private _gridAPI: IgxTreeGridAPIService;
     private _filteredData = null;
 
@@ -335,22 +340,34 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         super.ngOnInit();
 
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            if (this.loadChildrenOnDemand) {
-                const parentID = args.rowID;
-
-                if (args.expanded && !this._expansionStates.has(parentID)) {
-                    const row = this.getRowByKey(parentID) as IgxTreeGridRowComponent;
-                    row.isLoading = true;
-
-                    this.loadChildrenOnDemand(parentID, children => {
-                        row.isLoading = false;
-                        row.cdr.markForCheck();
-
-                        this.addChildRows(children, parentID);
-                    });
-                }
-            }
+            this.loadChildrenOnRowExpansion(args);
         });
+    }
+
+    private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
+        if (this.loadChildrenOnDemand) {
+            const parentID = args.rowID;
+
+            if (args.expanded && !this._expansionStates.has(parentID)) {
+                this.loadingRows.add(parentID);
+
+                this.loadChildrenOnDemand(parentID, children => {
+                    this.loadingRows.delete(parentID);
+                    this.addChildRows(children, parentID);
+                    this.cdr.markForCheck();
+
+                    requestAnimationFrame(() => {
+                        const cellID = this.selection.first_item(`${this.id}-cell`);
+                        if (cellID) {
+                            const cell = this._gridAPI.get_cell_by_index(this.id, cellID.rowIndex, cellID.columnID);
+                            if (cell) {
+                                cell.nativeElement.focus();
+                            }
+                        }
+                    });
+                });
+            }
+        }
     }
 
     private addChildRows(children: any[], parentID: any) {
