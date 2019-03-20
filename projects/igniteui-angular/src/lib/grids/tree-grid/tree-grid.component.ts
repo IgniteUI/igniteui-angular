@@ -346,17 +346,25 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                         row.isLoading = false;
                         row.cdr.markForCheck();
 
-                        if (this.primaryKey && this.foreignKey) {
-                            for (const child of children) {
-                                child[this.foreignKey] = parentID;
-                            }
-                            this.data.push(...children);
-                            this._pipeTrigger++;
-                        }
+                        this.addChildRows(children, parentID);
                     });
                 }
             }
         });
+    }
+
+    private addChildRows(children: any[], parentID: any) {
+        if (this.primaryKey && this.foreignKey) {
+            for (const child of children) {
+                child[this.foreignKey] = parentID;
+            }
+            this.data.push(...children);
+        } else if (this.childDataKey) {
+            const parent = this.records.get(parentID);
+            parent.data[this.childDataKey] = children;
+        }
+
+        this._pipeTrigger++;
     }
 
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {

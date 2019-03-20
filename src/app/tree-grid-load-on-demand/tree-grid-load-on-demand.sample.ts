@@ -26,7 +26,8 @@ export class MySummaryOperand extends IgxSummaryOperand {
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
 
-    public data: Array<any>;
+    public data1: Array<any>;
+    public data2: Array<any>;
     public columns: Array<any>;
     private nextRow = 1;
     public summaryMode = 'rootLevelOnly';
@@ -61,17 +62,21 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
             { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true },
             { field: 'Salary', label: 'Salary', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false }
         ];
-        this.data = [];
-        this.dataService.getData(-1, children => this.data = children);
+        this.data1 = [];
+        this.data2 = [];
+        this.dataService.getData(-1, children => {
+            this.data1 = children.slice();
+            this.data2 = children.slice();
+        });
     }
 
-    public loadChildren = (parentID, done) => {
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
         this.dataService.getData(parentID, children => done(children));
     }
 
     public addRow() {
         this.grid1.addRow({
-            'employeeID': this.data.length + this.nextRow++,
+            'employeeID': this.data1.length + this.nextRow++,
             'PID': -1,
             'firstName': 'John',
             'lastName': 'Doe',
@@ -83,7 +88,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
         const selectedRowId = this.grid1.selectedRows()[0];
         this.grid1.addRow(
             {
-                'employeeID': this.data.length + this.nextRow++,
+                'employeeID': this.data1.length + this.nextRow++,
                 'firstName': `Added `,
                 'lastName': 'Added',
                 'Title': 'Sales Manager'
@@ -125,7 +130,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     }
 
     public commit() {
-        this.grid1.transactions.commit(this.data);
+        this.grid1.transactions.commit(this.data1);
     }
 
     public exportToExcel() {
