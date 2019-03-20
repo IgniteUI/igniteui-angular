@@ -5,7 +5,7 @@ import { isIE } from '../core/utils';
  *
  *@hidden
  */
-export const enum DateState {
+export enum DateState {
     Valid = 'valid',
     Invalid = 'invalid',
 }
