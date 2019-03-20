@@ -132,7 +132,12 @@ export const enum PredefinedFormatOptions {
         }],
     // tslint:disable-next-line:component-selector
     selector: 'igx-date-picker',
-    templateUrl: 'date-picker.component.html'
+    templateUrl: 'date-picker.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
