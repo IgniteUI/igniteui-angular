@@ -269,7 +269,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     ngAfterContentInit() {
         this._overlayDefaults = {
             modal: false,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: false,
             positionStrategy: new SelectPositioningStrategy(this, { target: this.inputGroup.element.nativeElement }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
@@ -302,6 +302,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.selection.set(this.id, new Set([item]));
         } else {
             this.selection.clear(this.id);
+        }
+    }
+
+    /** @hidden @internal */
+    public onBlur(): void {
+        if (!this.collapsed) {
+            this.toggleDirective.close();
         }
     }
 }

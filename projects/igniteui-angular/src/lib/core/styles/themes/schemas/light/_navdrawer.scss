@@ -9,38 +9,45 @@
 ///
 /// @prop {Color} background [#fff] - The navigation drawer background color.
 /// @prop {Color} border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
-/// @prop {map} item-header-text-color [igx-color: ('grays', 600)] - The header's idle text color.
-/// @prop {map} item-text-color [igx-color: ('grays', 700)] - The item's idle text color.
-/// @prop {map} item-icon-color [igx-color: ('grays', 700)] - The item's icon color.
+/// @prop {map} item-header-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The header's idle text color.
+/// @prop {map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's idle text color.
+/// @prop {map} item-icon-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's icon color.
 /// @prop {map} item-active-text-color [igx-color: ('primary', 500)] - The item's active text color.
-/// @prop {map} item-active-background [igx-color: ('grays', 100)] - The item's active background color.
+/// @prop {map} item-active-background [igx-color: ('primary', 500), rgba: .12] - The item's active background color.
 /// @prop {map} item-active-icon-color [igx-color: ('primary', 500)] - The item's icon active color.
-/// @prop {map} item-hover-background [igx-color: ('grays', 200)] - The item's hover background color.
-/// @prop {map} item-hover-text-color [igx-color: ('grays', 800)] - The item's hover text color.
-/// @prop {map} item-hover-icon-color [igx-color: ('primary', 500)] - The item's hover icon color.
-/// @prop {map} item-hover-icon-color [igx-color: ('primary', 500)] - The item's hover icon color.
+/// @prop {map} item-hover-background [ igx-color: 'surface', text-contrast: (), rgba: .08] - The item's hover background color.
+/// @prop {map} item-hover-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover text color.
+/// @prop {map} item-hover-icon-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover icon color.
 /// @prop {map} elevation [16] - The elevation level of the drawer, between 0 - 24.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for navdrawer component.
 ///
 /// @see $default-palette
 
 $_light-navdrawer: (
-    background: #fff,
+    background: (
+        igx-color: 'surface'
+    ),
 
     border-radius: 0,
 
     border-color: rgba(0, 0, 0, .14),
 
     item-header-text-color: (
-        igx-color: ('grays', 600)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .87
     ),
 
     item-text-color: (
-        igx-color: ('grays', 700)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .54
     ),
 
     item-icon-color: (
-        igx-color: ('grays', 700)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .54
     ),
 
     item-active-text-color: (
@@ -48,15 +55,20 @@ $_light-navdrawer: (
     ),
 
     item-active-background: (
-        igx-color: ('grays', 100)
+        igx-color: ('primary', 500),
+        rgba: .12
     ),
 
     item-hover-background: (
-        igx-color: ('grays', 200)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .08
     ),
 
     item-hover-text-color: (
-        igx-color: ('grays', 800)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .87
     ),
 
     item-active-icon-color: (
@@ -64,7 +76,9 @@ $_light-navdrawer: (
     ),
 
     item-hover-icon-color: (
-        igx-color: ('grays', 800)
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .87
     ),
 
     elevation: 16
