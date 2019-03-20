@@ -153,23 +153,23 @@
     }
 
     %igx-badge--default {
-        background-color: --var($theme, 'background-color');
+        background: --var($theme, 'background-color');
     }
 
     %igx-circle--success {
-        background-color: igx-color($palette, 'success');
+        background: igx-color($palette, 'success');
     }
 
     %igx-badge--info {
-        background-color: igx-color($palette, 'info');
+        background: igx-color($palette, 'info');
     }
 
     %igx-circle--warn {
-        background-color: igx-color($palette, 'warn');
+        background: igx-color($palette, 'warn');
     }
 
     %igx-circle--error {
-        background-color: igx-color($palette, 'error');
+        background: igx-color($palette, 'error');
     }
 
     %igx-badge--hidden {

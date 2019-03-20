@@ -36,6 +36,9 @@ export class DatePickerSampleComponent {
         new Date(new Date().getFullYear(), new Date().getMonth(), 8)
     ];
 
+    @ViewChild('retemplated')
+    private retemplatedDP;
+
     formatter = (_: Date) => {
         return _.toLocaleString('en');
     }
@@ -66,5 +69,11 @@ export class DatePickerSampleComponent {
         this.date2 = date2;
         this.date3 = date3;
         this.date4 = date3;
+    }
+
+    public changeDate(event) {
+        const input = event.target.value;
+        const parsedDate = (input !== '') ? new Date(input) : '';
+        this.retemplatedDP.value = parsedDate;
     }
 }
