@@ -2,7 +2,8 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.2.2
+# 7.2.2
+- **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
