@@ -299,7 +299,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public groupsExpanded = true;
 
     /**
-     * A hierarchical representation of the group by records.
+     * A hierarchical representation of the visible group by records.
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```

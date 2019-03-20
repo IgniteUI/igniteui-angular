@@ -7,11 +7,8 @@
 
 /// Generates a dark banner schema.
 /// @type {Map}
-/// @prop {Color} banner-background [#222]- The background color used banner background.
 /// @requires extend
 /// @requires $_light-banner
 /// @see $default-palette
 
-$_dark-banner: extend($_light-banner, (
-    banner-background: #222,
-));
+$_dark-banner: extend($_light-banner, ());
