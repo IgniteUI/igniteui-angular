@@ -5,12 +5,12 @@
 
 ## Milestone 6 (Due March 8th, 2019)
 
-1. Hierarchical Grid #827 
+1. **[DONE]** Hierarchical Grid #827 
 2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
-3. Auto-complete (inline editable) #3585
-4. Excel Style Filtering #3592
-5. Inline date and time pickers (with drop down/toggle) #3034 #2337
-6. igxSelect Component #3148
+3. **[DONE]** Auto-complete (inline editable) #3585
+4. **[DONE]** Excel Style Filtering #3592
+5. **[DONE]** Inline date and time pickers (with drop down/toggle) #3034 #2337
+6. **[DONE]** igxSelect Component #3148
 
 
 ## Further Down the line
