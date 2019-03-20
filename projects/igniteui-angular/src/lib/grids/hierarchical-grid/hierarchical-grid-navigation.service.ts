@@ -294,8 +294,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             }
         } else if (visibleColumnIndex === 0 && currentRowEl.previousElementSibling &&
             currentRowEl.previousElementSibling.children[0].tagName.toLowerCase() === 'igx-child-grid-row') {
-            const gridElements = currentRowEl.previousElementSibling.querySelectorAll('igx-hierarchical-grid');
-            const gridElem = gridElements[gridElements.length - 1];
+            const gridElem = this.getLastGridElem(currentRowEl.previousElementSibling);
             this.performShiftTabIntoChild(gridElem, currentRowEl, rowIndex);
         } else if (visibleColumnIndex === 0 && isSummary) {
             const lastRowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
@@ -305,12 +304,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(lastRowIndex, true);
                 const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
                 if (verticalScroll.scrollTop === scrTopPosition || isNaN(scrTopPosition)) {
-                    const closestChild = this.grid.getRowByIndex(lastRowIndex).nativeElement.querySelector('igx-hierarchical-grid');
+                    const closestChild = this.getLastGridElem(this.grid.getRowByIndex(lastRowIndex).nativeElement.parentElement);
                     this.performShiftTabIntoChild(closestChild, currentRowEl, rowIndex);
                 } else {
                     this.scrollGrid(this.grid, scrTopPosition - verticalScroll.scrollTop,
                         () => {
-                            const closestChild = this.grid.getRowByIndex(lastRowIndex).nativeElement.querySelector('igx-hierarchical-grid');
+                            const closestChild = this.getLastGridElem(this.grid.getRowByIndex(lastRowIndex).nativeElement.parentElement);
                             this.performShiftTabIntoChild(closestChild, currentRowEl, rowIndex);
                         });
                 }
@@ -318,6 +317,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
         }
+    }
+
+    private getLastGridElem(trContainer) {
+        const children = trContainer.children;
+        const closestChild = children[children.length - 1].children[0].children[0];
+        return closestChild;
     }
 
     private performShiftTabIntoChild(gridElem, currentRowEl, rowIndex) {

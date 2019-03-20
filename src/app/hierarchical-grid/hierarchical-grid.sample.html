@@ -30,6 +30,10 @@
                             <igx-column field="ProductName"></igx-column>
                         </igx-column-group>
                     </igx-row-island>
+                    <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
+                        <igx-column field="ChildLevels" [groupable]='true' [hasSummary]='true'></igx-column>
+                        <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
+                </igx-row-island>
 
             </igx-row-island>
         </igx-row-island>
