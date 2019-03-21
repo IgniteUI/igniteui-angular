@@ -1162,7 +1162,7 @@ export class IgxTimePickerComponent implements
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
         if (this.mode === InteractionMode.Dialog) {
             this.collapsed = false;
-            const dialogSettings = this.overlaySettings ? this.overlaySettings : this._dialogOverlaySettings;
+            const dialogSettings = this.overlaySettings || this._dialogOverlaySettings;
             if (this.outlet) {
                 dialogSettings.outlet = this.outlet;
             }
@@ -1173,7 +1173,7 @@ export class IgxTimePickerComponent implements
         if (this.mode === InteractionMode.DropDown) {
             if (this.collapsed) {
                 this.collapsed = false;
-                const dropdownSettings = this.overlaySettings ? this.overlaySettings : this._dropDownOverlaySettings;
+                const dropdownSettings = this.overlaySettings || this._dropDownOverlaySettings;
                 if (this.outlet) {
                     dropdownSettings.outlet = this.outlet;
                 }
