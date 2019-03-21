@@ -21,7 +21,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component'
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridFilteringCellComponent, IgxQuickFilterTemplateDirective } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
     IgxCellEditorTemplateDirective,
@@ -88,7 +88,8 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
-        IgxGridColumnResizerComponent
+        IgxGridColumnResizerComponent,
+        IgxQuickFilterTemplateDirective
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -142,7 +143,8 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxGridColumnResizerComponent,
         IgxFilterModule,
         IgxGridPipesModule,
-        IgxGridExcelStyleFilteringModule
+        IgxGridExcelStyleFilteringModule,
+        IgxQuickFilterTemplateDirective
     ],
     imports: [
         CommonModule,

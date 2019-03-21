@@ -10,7 +10,8 @@ import {
     HostListener,
     OnInit,
     ChangeDetectionStrategy,
-    DoCheck
+    DoCheck,
+    Directive
 } from '@angular/core';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -19,6 +20,13 @@ import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
+
+@Directive({
+    selector: '[igxQuickFilterTemplate]'
+})
+export class IgxQuickFilterTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
 
 /**
  * @hidden
@@ -146,6 +154,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         if (!this.column.filterable) {
             this.currentTemplate = null;
             return null;
+        }
+
+        if (this.filteringService.grid.quickFilterTemplateDirective) {
+            this.currentTemplate = this.filteringService.grid.quickFilterTemplateDirective.template;
+            return this.filteringService.grid.quickFilterTemplateDirective.template;
         }
 
         const expressionTree = this.column.filteringExpressionsTree;
