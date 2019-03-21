@@ -39,6 +39,7 @@ import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.compo
 import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxOverlayService } from '../../services/index';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -90,6 +91,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.setupColumns();
             this.reflow();
         }
+        this.cdr.markForCheck();
     }
 
     /**
@@ -118,12 +120,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     * @memberof IgxHierarchicalGridComponent
     */
     @Input()
-    public get hierarchicalState(): HierarchicalStateRecord[] {
+    public get hierarchicalState() {
         return this._hierarchicalState;
     }
-    public set hierarchicalState(state: HierarchicalStateRecord[]) {
-        this._hierarchicalState = state;
-        this.hierarchicalStateChange.emit(state);
+    public set hierarchicalState(val) {
+        this._hierarchicalState = val;
+        this.hierarchicalStateChange.emit(this._hierarchicalState);
+        if (this.parent) {
+            requestAnimationFrame(() => {
+                this.updateParentSizes();
+            });
+        }
     }
 
     @Output()
@@ -274,6 +281,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollLeft = 0;
 
     constructor(
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -637,5 +645,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     this.nativeElement.focus();
                 });
         });
+    }
+
+    private updateParentSizes() {
+        let currGrid = this.parent;
+        while (currGrid) {
+            const virt = currGrid.verticalScrollContainer;
+            virt.recalcUpdateSizes();
+            const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scr = virt.getVerticalScroll();
+            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
+            currGrid = currGrid.parent;
+        }
     }
 }
