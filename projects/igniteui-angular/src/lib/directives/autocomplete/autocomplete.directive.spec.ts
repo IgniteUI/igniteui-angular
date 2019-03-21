@@ -806,6 +806,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             input = fixture.componentInstance.input;
+            group = fixture.componentInstance.group;
             dropDown = fixture.componentInstance.dropDown;
             input.nativeElement.click();
             UIInteractions.sendInput(input, 's', fixture);
@@ -821,6 +822,12 @@ describe('IgxAutocomplete', () => {
             tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.nativeElement.value).toBe('Sofia');
+            expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeTruthy();
+
+            fixture.componentInstance.plainInput.nativeElement.focus();
+            fixture.detectChanges();
+            tick();
+            expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeFalsy();
         }));
     });
 });
@@ -898,6 +905,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
             {{town}}
         </igx-drop-down-item>
     </igx-drop-down>
+    <input #plainInput/>
     <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
 </form>
 `
@@ -908,6 +916,7 @@ class AutocompleteFormComponent {
     @ViewChild(IgxInputGroupComponent) public group: IgxInputGroupComponent;
     @ViewChild(IgxInputDirective) public input: IgxInputDirective;
     @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
+    @ViewChild('plainInput') public plainInput: ElementRef<HTMLInputElement>;
     towns;
 
     reactiveForm: FormGroup;
