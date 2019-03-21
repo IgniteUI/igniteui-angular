@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -148,7 +148,7 @@ describe('IgxTreeGrid - search API', () => {
             verifySearchResult(fixNativeElement, 7, 1, actualCount);
         });
 
-        it('Should update search highlights when filtering', () => {
+        it('Should update search highlights when filtering', fakeAsync(() => {
             treeGrid.findNext('Software Developer');
 
             verifySearchResult(fixNativeElement, 3, 0);
@@ -158,9 +158,9 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 2, 0);
-        });
+        }));
 
-        it('Should update search highlights when clearing filter', () => {
+        it('Should update search highlights when clearing filter', fakeAsync(() => {
             // Apply filter
             treeGrid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
@@ -174,7 +174,7 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 3, 0);
-        });
+        }));
 
         it('Should update search highlights when sorting', () => {
             treeGrid.findNext('er');

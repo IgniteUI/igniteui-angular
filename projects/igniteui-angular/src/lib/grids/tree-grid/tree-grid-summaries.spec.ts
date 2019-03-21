@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
 import {
@@ -358,7 +358,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
         });
 
-        it('Filtering: should render correct summaries when filter and found only children', () => {
+        it('Filtering: should render correct summaries when filter and found only children', fakeAsync(() => {
             treeGrid.filter('ID', 12, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -370,18 +370,18 @@ describe('IgxTreeGrid - Summaries', () => {
 
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             verifySummaryIsEmpty(summaryRow);
-        });
+        }));
 
-        it('Filtering: should render correct summaries when filter and no results are found', () => {
+        it('Filtering: should render correct summaries when filter and no results are found', fakeAsync(() => {
             treeGrid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             verifySummaryIsEmpty(summaryRow);
-        });
+        }));
 
-        it('Filtering: should render correct summaries when filter', () => {
+        it('Filtering: should render correct summaries when filter', fakeAsync(() => {
             treeGrid.filter('ID', 17, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -401,7 +401,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '61', '61', '61', '61']);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Feb 1, 2010', 'Feb 1, 2010']);
-        });
+        }));
 
         it('Paging: should render correct summaries when paging is enable and position is bottom', () => {
             treeGrid.paging = true;
