@@ -383,19 +383,19 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
 
-            it('should exit edit mode on filtering', (async () => {
+            it('should exit edit mode on filtering', (fakeAsync(() => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 const cellValue = cell.value;
 
                 cellDom.triggerEventHandler('dblclick', {});
-                await wait();
+                tick();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
-                await wait();
+                tick();
 
                 grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
@@ -404,7 +404,7 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
-            }));
+            })));
 
             it('should not throw errors when update cell to value, which does not match filter criteria', (fakeAsync(() => {
                 grid.filter('personNumber', 1, IgxNumberFilteringOperand.instance().condition('equals'));
