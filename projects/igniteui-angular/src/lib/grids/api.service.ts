@@ -10,7 +10,7 @@ import { IGridEditEventArgs, IgxGridBaseComponent, IGridDataBindable } from './g
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { Transaction, TransactionType, State } from '../services/index';
+import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
 /**
  *@hidden
@@ -500,7 +500,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-        } else {
+        } else if (!fieldName) {
             filteringState.filteringOperands = [];
         }
 

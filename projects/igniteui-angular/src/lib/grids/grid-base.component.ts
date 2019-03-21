@@ -84,6 +84,7 @@ import {
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -364,7 +365,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._paging = value;
         this._pipeTrigger++;
 
-        if (this._ngAfterViewInitPaassed) {
+        if (this._ngAfterViewInitPassed) {
             this.cdr.detectChanges();
             this.calculateGridHeight();
             this.cdr.detectChanges();
@@ -463,7 +464,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._columnHiding = value;
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
-                if (this._ngAfterViewInitPaassed) {
+                if (this._ngAfterViewInitPassed) {
                     this.calculateGridSizes();
                 }
             }
@@ -784,7 +785,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._columnPinning = value;
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
-                if (this._ngAfterViewInitPaassed) {
+                if (this._ngAfterViewInitPassed) {
                     this.calculateGridSizes();
                 }
             }
@@ -826,7 +827,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._allowFiltering = value;
 
             this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
                         (value && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
@@ -986,13 +987,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * An @Output property emitting an event when `IgxGridCellComponent`
-     * editing has been performed in the grid and the values have **not** been submitted.
-     * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
-     * objects in the event arguments are defined for the corresponding
-     * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
+     * editing has been performed in the grid and the values have **not** been submitted (e.g. `Esc` key was pressed).
+     * This event is cancelable.
+     *
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      cellID: {
+     *          columnID: int,
+     *          rowID: int,
+     *          rowIndex: int
+     *      }
+     *      newValue: object,
+     *      oldValue: object,
+     *      rowID: int
+     *  }
+     *
      * ```typescript
-     * editCancel(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editCancel(event: IGridEditEventArgs){
+     *    const rowID: IgxColumnComponent = event.rowID;
      * }
      * ```
      * ```html
@@ -1010,12 +1022,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * An @Output property emitting an event when `IgxGridCellComponent` enters edit mode.
-     * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
-     * objects in the event arguments are defined for the corresponding
-     * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
+     * This event is cancelable.
+     *
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      cellID: {
+     *          columnID: int,
+     *          rowID: int,
+     *          rowIndex: int
+     *      }
+     *      oldValue: object,
+     *      rowID: int
+     *  }
+     *
      * ```typescript
-     * editStart(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editStart(event: IGridEditEventArgs){
+     *    const value: IgxColumnComponent = event.newValue;
      * }
      * ```
      * ```html
@@ -1033,12 +1055,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * An @Output property emitting an event when `IgxGridCellComponent` editing has been performed in the grid.
-     * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
-     * objects in the event arguments are defined for the corresponding
-     * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
+     * Event is fired after editing is completed, when the cell is exiting edit mode.
+     * This event is cancelable.
+     *
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      cellID: {
+     *          columnID: int,
+     *          rowID: int,
+     *          rowIndex: int
+     *      }
+     *      newValue: object,
+     *      oldValue: object,
+     *      rowID: int
+     *  }
+     *
      * ```typescript
-     * editDone(event: IgxColumnComponent){
-     *    const column: IgxColumnComponent = event;
+     * editDone(event: IGridEditEventArgs){
+     *    const value: IgxColumnComponent = event.newValue;
      * }
      * ```
      * ```html
@@ -1056,8 +1090,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" a row enters edit mode.
+     * This event is cancelable.
      *
-     * Emits the current row and it's state.
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      oldValue: <rowObj>,
+     *      rowID: int
+     *  }
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -1069,10 +1108,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * </igx-grid>
      * ```
      * ```typescript
-     *      editStart(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
-     *          const editedRow = emitted.row;
-     *          const cancelValue = emitted.newValue;
-     *          const oldValue = emitted.oldValue;
+     *      editStart(event: IGridEditEventArgs) {
+     *          const editedRowObj = event.oldValue;
+     *          const cancelValue = event.cancel;
+     *          const rowID = event.rowID;
      *      }
      * ```
 	 * @memberof IgxGridComponent
@@ -1083,10 +1122,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
-     * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
-     * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
+     * performing paging operation, column resizing, pinning, moving or hitting  `Done`
+     * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
+     * This event is cancelable.
      *
-     * Emits the current row and it's state.
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      newValue: <rowObj>,
+     *      oldValue: <rowObj>,
+     *      rowID: int
+     *  }
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -1097,11 +1142,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
      * </igx-grid>
      * ```
+     *
      * ```typescript
-     *      editDone(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
-     *          const editedRow = emitted.row;
-     *          const newValue = emitted.newValue;
-     *          const oldValue = emitted.oldValue;
+     *      editDone(event: IGridEditEventArgs) {
+     *          const originalRowObj = event.oldValue;
+     *          const updatedRowObj = event.newValue;
+     *          const cancelValue = event.cancel;
+     *          const rowID = event.rowID;
      *      }
      * ```
 	 * @memberof IgxGridBaseComponent
@@ -1113,8 +1160,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * An @Output property emitting an event when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
+     * This event is cancelable.
      *
-     * Emits the current row and it's state.
+     * args: IGridEditEventArgs = {
+     *      cancel: bool,
+     *      newValue: <rowObj>,
+     *      oldValue: <rowObj>,
+     *      rowID: int
+     *  }
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -1127,9 +1180,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```typescript
      *      editCancel(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
-     *          const editedRow = emitted.row;
-     *          const cancelValue = emitted.newValue;
-     *          const oldValue = emitted.oldValue;
+     *          const originalRowObj = event.oldValue;
+     *          const updatedRowObj = event.newValue;
+     *          const cancelValue = event.cancel;
+     *          const rowID = event.rowID;
      *      }
      * ```
 	 * @memberof IgxGridBaseComponent
@@ -1367,6 +1421,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+    /**
+     * @hidden
+     */
+    @ViewChild(IgxGridColumnResizerComponent)
+    public resizeLine: IgxGridColumnResizerComponent;
 
     /**
      * @hidden
@@ -1952,7 +2012,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._showToolbar !== newValue) {
             this._showToolbar = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -1982,7 +2042,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._toolbarTitle !== newValue) {
             this._toolbarTitle = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2012,7 +2072,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._exportExcel !== newValue) {
             this._exportExcel = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2042,7 +2102,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._exportCsv !== newValue) {
             this._exportCsv = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2072,7 +2132,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._exportText !== newValue) {
             this._exportText = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2102,7 +2162,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._exportExcelText !== newValue) {
             this._exportExcelText = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2132,7 +2192,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._exportCsvText !== newValue) {
             this._exportCsvText = newValue;
             this.cdr.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
+            if (this._ngAfterViewInitPassed) {
                 this.calculateGridSizes();
             }
         }
@@ -2303,7 +2363,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _ngAfterViewInitPaassed = false;
+    private _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
 
     private _columnWidth: string;
@@ -2362,9 +2422,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu igx-toggle')[0];
+        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu')[0];
         if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('ng-reflect-id'));
+            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('id'));
             if (overlay) {
                 const animation = overlay.settings.positionStrategy.settings.closeAnimation;
                 overlay.settings.positionStrategy.settings.closeAnimation = null;
@@ -2518,7 +2578,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
-        this._ngAfterViewInitPaassed = true;
+        this._ngAfterViewInitPassed = true;
         this.calculateGridSizes();
 
         // In some rare cases we get the AfterViewInit before the grid is added to the DOM
@@ -2613,7 +2673,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = this.getColumnByName(args.column.field);
+        const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
+
+        if (!col) {
+            return;
+        }
+
         col.hidden = args.newValue;
         this.onColumnVisibilityChanged.emit(args);
 
@@ -2985,6 +3050,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
         const pinned = this._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
+
+        if (to.columnGroup) {
+            dropIndex += to.allChildren.length;
+        }
 
         if (position === DropPosition.BeforeDropTarget) {
             dropIndex--;
@@ -3860,7 +3929,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public hasVerticalSroll() {
-        if (!this._ngAfterViewInitPaassed) { return false; }
+        if (!this._ngAfterViewInitPassed) { return false; }
         const count = this.totalItemCount !== null ? this.totalItemCount :
         (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
         const isScrollable = this.verticalScrollContainer.isScrollable();
@@ -4064,6 +4133,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         }
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+    }
+
+    /**
+     * @hidden
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return false;
     }
 
     /**
@@ -4283,10 +4359,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public wheelHandler(isScroll = false) {
+        if (document.activeElement &&
         // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
+            (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
         // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll)) {
+            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
@@ -4400,6 +4477,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const unpinnedColumns = [];
         const newUnpinnedCols = [];
 
+        if (this.calcWidth === 0) {
+            this.calculateGridWidth();
+        }
         // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
@@ -4450,6 +4530,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Assign the applicaple collections.
         this._pinnedColumns = pinnedColumns;
         this._unpinnedColumns = unpinnedColumns;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -4853,9 +4934,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
-        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
+        const tmplId = args.context.templateID;
+        const index = args.context.index;
+        if (tmplId === 'dataRow' && args.context.$implicit === args.oldContext.$implicit) {
             args.view.detectChanges();
-            const row = this.getRowByIndex(args.context.index);
+            const row = this.dataRowList.find((r) => r.index === index);
             if (row) {
                 row.cells.forEach((c) => {
                     c.highlightText(
@@ -4863,17 +4946,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.lastSearchInfo.caseSensitive,
                         this.lastSearchInfo.exactMatch);
                 });
-}
+            }
         }
         if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
-            const index = args.context.index;
             args.view.detectChanges();
-            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
-            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
-            if (row && row instanceof IgxRowComponent) {
+            const row = tmplId === 'dataRow' ? this.dataRowList.find((r) => r.index === index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
+            if (row) {
                 this._restoreVirtState(row);
-            } else if (summaryRow && summaryRow instanceof IgxSummaryRowComponent) {
+            } else if (summaryRow) {
                 this._restoreVirtState(summaryRow);
             }
         }

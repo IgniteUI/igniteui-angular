@@ -81,7 +81,12 @@ let NEXT_ID = 0;
         ])
     ],
     selector: 'igx-snackbar',
-    templateUrl: 'snackbar.component.html'
+    templateUrl: 'snackbar.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxSnackbarComponent {
 

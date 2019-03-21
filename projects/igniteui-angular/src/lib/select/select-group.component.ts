@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxDropDownGroupComponent } from '../drop-down';
+import { IgxDropDownGroupComponent } from '../drop-down/index';
 
 /**
  * The `<igx-select-item>` is a container intended for row items in
