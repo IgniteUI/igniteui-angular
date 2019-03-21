@@ -2,13 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.2.2
+# 7.2.2
+- **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
 
 ## 7.2.1
-- **Feature** Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
+- `igxGrid`
+    - **Breaking Change** The `groupsRecords` property now only returns the visible tree and does not include groups that are children of collapsed parents.
+    - **Feature** Column Hiding and Column Pinning components now expose a `disableFilter` property which allows hiding the filter columns input from the UI.
 
 ### Improvements
 - igxSelect - select-positioning-strategy code cleanup #4019
