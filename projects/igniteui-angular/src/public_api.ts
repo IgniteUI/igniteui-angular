@@ -93,6 +93,5 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
-export * from './lib/date-picker/date-picker.utils';
 export { InteractionMode } from './lib/core/enums';
 

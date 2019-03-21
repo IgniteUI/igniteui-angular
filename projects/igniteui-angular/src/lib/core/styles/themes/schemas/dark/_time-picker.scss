@@ -8,12 +8,9 @@
 
 /// Generates a dark time-picker schema.
 /// @type {Map}
-/// @property {Color} background-color [#222] - The time-picker panel background color.
 /// @requires {function} extend
 /// @requires $_light-time-picker
 /// @see $default-palette
 
 
-$_dark-time-picker: extend($_light-time-picker, (
-    background-color: #222
-));
+$_dark-time-picker: extend($_light-time-picker, ());
