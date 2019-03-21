@@ -13,6 +13,7 @@ export const TREE_CELL_SELECTION_CSS_CLASS = 'igx-grid__td--selected';
 export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
+export const TREE_CELL_LOADING_CSS_CLASS = '.igx-grid__tree-loading-indicator';
 export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 export const CELL_VALUE_DIV_CSS_CLASS = '.igx-grid__td-text';
 export const ROW_EDITING_BANNER_OVERLAY_CLASS = 'igx-overlay__content';
@@ -68,6 +69,11 @@ export class TreeGridFunctions {
     public static getExpansionIndicatorDiv(rowDOM) {
         const treeGridCell = TreeGridFunctions.getTreeCell(rowDOM);
         return treeGridCell.query(By.css(TREE_CELL_INDICATOR_CSS_CLASS));
+    }
+
+    public static getLoadingIndicatorDiv(rowDOM) {
+        const treeGridCell = TreeGridFunctions.getTreeCell(rowDOM);
+        return treeGridCell.query(By.css(TREE_CELL_LOADING_CSS_CLASS));
     }
 
     public static getHeaderCell(fix, columnKey) {
@@ -351,6 +357,20 @@ export class TreeGridFunctions {
             expect(selectedCell.column.field).toEqual(cell.column.field);
             expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
             expect(selectedCell.value).toEqual(cell.value);
+        }
+    }
+
+    public static verifyTreeRowIndicator(row, isLoading: boolean, isExpandVisible = true) {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+        const loadingDiv = TreeGridFunctions.getLoadingIndicatorDiv(row);
+
+        if (isLoading) {
+            expect(loadingDiv).toBeDefined();
+            expect(indicatorDiv).toBeNull();
+        } else {
+            expect(loadingDiv).toBeNull();
+            expect(indicatorDiv).toBeDefined();
+            expect(indicatorDiv.nativeElement.style.visibility).toBe(isExpandVisible ? 'visible' : 'hidden');
         }
     }
 
