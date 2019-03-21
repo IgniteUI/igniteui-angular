@@ -30,6 +30,7 @@ import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+import { IgxForOfSyncService } from './for_of.sync.service';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -177,7 +178,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected hScroll;
     protected func;
-    protected sizesCache: number[];
+    private _sizesCache: number[] = [];
+    private _chunkSize = 0;
     protected vh: ComponentRef<VirtualHelperComponent>;
     protected hvh: ComponentRef<HVirtualHelperComponent>;
     protected _differ: IterableDiffer<T> | null = null;
@@ -185,6 +187,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected heightCache = [];
     private _adjustToIndex;
     private MAX_PERF_SCROLL_DIFF = 4;
+
+    protected get sizesCache(): number[] {
+        return this._sizesCache;
+    }
+    protected set sizesCache(value: number[]) {
+        this._sizesCache = value;
+    }
+
+    protected get chunkSize(): number {
+        return this._chunkSize;
+    }
+    protected set chunkSize(value: number) {
+        this._chunkSize = value;
+    }
 
     private get _isScrolledToBottom() {
         if (!this.getVerticalScroll()) {
@@ -281,12 +297,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForOf && this.igxForOf.length) {
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
-            totalSize = this.initSizesCache(this.igxForOf);
+            totalSize = this.sizesCache.length ? this.sizesCache[this.sizesCache.length - 1] :
+                this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
             if (this.hScroll) {
                 this.state.startIndex = this.getIndexAt(this.hScroll.scrollLeft, this.sizesCache, 0);
             }
-            this.state.chunkSize = this._calculateChunkSize();
+            this.state.chunkSize = this.chunkSize = this.chunkSize || this._calculateChunkSize();
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -1142,7 +1159,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     protected applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
+        const chunkSize = this.chunkSize = this.chunkSize || (this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) :
+            this._calculateChunkSize());
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
@@ -1198,6 +1216,17 @@ export interface IForOfState {
 })
 export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
+    constructor(
+        _viewContainer: ViewContainerRef,
+        _template: TemplateRef<NgForOfContext<T>>,
+        _differs: IterableDiffers,
+        resolver: ComponentFactoryResolver,
+        cdr: ChangeDetectorRef,
+        _zone: NgZone,
+        protected syncService: IgxForOfSyncService) {
+            super(_viewContainer, _template, _differs, resolver, cdr, _zone);
+        }
+
     @Input()
     set igxGridForOf(value) {
         this.igxForOf = value;
@@ -1235,6 +1264,24 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
             this._recalcOnContainerChange(changes);
         }
+    }
+
+    protected get sizesCache(): number[] {
+        return this.syncService.sizesCache.get(this.igxForScrollOrientation);
+    }
+    protected set sizesCache(value: number[]) {
+        this.syncService.sizesCache.set(this.igxForScrollOrientation, value);
+    }
+
+    protected get chunkSize(): number {
+        return this.syncService.chunkSize
+            .get(this.igxForScrollOrientation)
+            .get(this.igxForContainerSize);
+    }
+    protected set chunkSize(value: number) {
+        this.syncService.chunkSize
+            .get(this.igxForScrollOrientation)
+            .set(this.igxForContainerSize, value);
     }
 
     protected get itemsDimension() {
