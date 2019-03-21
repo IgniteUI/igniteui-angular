@@ -37,7 +37,7 @@ export enum TabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-
+    private _selectedIndex = 0;
     /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * ```typescript
@@ -76,7 +76,15 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
-    public selectedIndex = 0;
+    public get selectedIndex() {
+        return this._selectedIndex;
+    }
+    public set selectedIndex(value) {
+        this._selectedIndex = value;
+        this.selectedIndexChange.emit(this._selectedIndex);
+    }
+    @Output()
+    public selectedIndexChange = new EventEmitter<any>();
 
     /**
      * Emitted when a tab item is selected.

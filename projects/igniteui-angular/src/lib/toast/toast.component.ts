@@ -45,6 +45,7 @@ let NEXT_ID = 0;
     templateUrl: 'toast.component.html'
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
+    private _isVisible = false;
     /**
      * Returns a list of available CSS classes.
      * ```typescript
@@ -169,7 +170,16 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * @memberof IgxToastComponent
      */
     @Input()
-    public isVisible = false;
+    public get isVisible() {
+        return this._isVisible;
+    }
+    public set isVisible(value) {
+        this._isVisible = value;
+        this.isVisibleChange.emit(this._isVisible);
+
+    }
+    @Output()
+    public isVisibleChange = new EventEmitter<any>();
 
     /**
      * Sets/gets the message that will be shown by the toast.
