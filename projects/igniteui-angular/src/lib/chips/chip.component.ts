@@ -148,7 +148,11 @@ export class IgxChipComponent extends DisplayDensityBase {
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
+        this.selectedChange.emit(this._selected);
     }
+
+    @Output()
+    public selectedChange = new EventEmitter<any>();
 
     /**
      * Returns if the `IgxChipComponent` is selected.
