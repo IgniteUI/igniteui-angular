@@ -37,7 +37,6 @@ export enum TabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-    private _selectedIndex = 0;
     /**
     * Provides an observable collection of all `IgxTabsGroupComponent`s.
     * ```typescript
