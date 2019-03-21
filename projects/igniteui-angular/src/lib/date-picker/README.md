@@ -65,11 +65,23 @@ The DatePicker has `dropdown` mode as well. Custom display format and editor mas
 </igx-date-picker>
 ```
 
-The DatePicker input group could be retemplated.
+The default DatePicker input group could be retemplated.
 ```html
 <igx-date-picker>
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
         <igx-input-group (click)="openDialog()">
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
+</igx-date-picker>
+```
+
+In order to re-template a date picker in `dropdown` mode, an element should be marked with `dropDownTarget` id to be used as a target for the calendar dropdown.
+```html
+<igx-date-picker>
+    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+        <igx-input-group (click)="openDialog()" #dropDownTarget> 
             <label igxLabel>Date</label>
             <input igxInput [value]="displayData"/>
         </igx-input-group>

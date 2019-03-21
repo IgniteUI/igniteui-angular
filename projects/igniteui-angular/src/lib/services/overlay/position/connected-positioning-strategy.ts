@@ -40,6 +40,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.setStyle(contentElement, startPoint, this.settings);
   }
 
+  /** @inheritdoc */
   clone(): IPositionStrategy {
     return cloneInstance(this);
   }
