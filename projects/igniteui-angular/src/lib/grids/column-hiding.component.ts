@@ -133,11 +133,11 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
         const item = new IgxColumnHidingItemDirective();
         item.container = container;
         item.column = column;
-        if (!item.column.columnGroup) {
-            item.valueChanged.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-                this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
-            });
-        }
+
+        item.valueChanged.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
+        });
+
         return item;
     }
     /**

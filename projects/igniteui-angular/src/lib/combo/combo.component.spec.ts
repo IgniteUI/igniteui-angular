@@ -264,7 +264,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
             expect(combo.collapsed).toBeFalsy();
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.itemIndex).toEqual(0);
@@ -274,7 +274,7 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.itemIndex).toEqual(0);
@@ -293,7 +293,7 @@ describe('igxCombo', () => {
             expect(IgxDropDownBase.prototype.navigatePrev).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should properly call dropdown navigateNext with virutal items', ( async () => {
+        it('Should properly call dropdown navigateNext with virutal items', (async () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -463,19 +463,19 @@ describe('igxCombo', () => {
             spyOn(combo, 'selectAllItems');
             spyOn(combo, 'toggle');
             spyOn(combo.dropdown, 'onFocus').and.callThrough();
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'A'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'A' }));
             combo.handleKeyUp(new KeyboardEvent('keyup', {}));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter' }));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             spyOnProperty(combo, 'filteredData', 'get').and.returnValue([1]);
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter' }));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
-            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Escape'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Escape' }));
             expect(combo.toggle).toHaveBeenCalledTimes(1);
         }));
         it('Dropdown button should open/close dropdown list', fakeAsync(() => {
@@ -1384,7 +1384,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             const verifyOnSelectionChangeEventIsFired = function (itemIndex: number) {
-                const dropdownItems =  fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+                const dropdownItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
                 const checkbox = dropdownItems[itemIndex];
                 checkbox.triggerEventHandler('click', mockEvent);
                 fixture.detectChanges();
@@ -1545,21 +1545,17 @@ describe('igxCombo', () => {
 
     describe('Rendering tests: ', () => {
         it('Should apply all appropriate classes on combo initialization', () => {
-            const defaultComboWidth = '100%';
-            const defaultComboDDWidth = '100%';
             const fix = TestBed.createComponent(IgxComboScrollTestComponent);
             fix.detectChanges();
 
             const comboWrapper = fix.nativeElement.querySelector(CSS_CLASS_COMBO);
             expect(comboWrapper).not.toBeNull();
-            expect(comboWrapper.style.width).toEqual(defaultComboWidth);
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Items');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-data').nodeValue).toEqual('Item 1,Item 2,Item 3');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
             expect(comboWrapper.childElementCount).toEqual(2); // Input Group + Dropdown
             expect(comboWrapper.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
             expect(comboWrapper.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
-            expect(comboWrapper.style.width).toEqual(defaultComboWidth);
             expect(comboWrapper.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
             expect(comboWrapper.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
             expect(comboWrapper.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
@@ -1602,13 +1598,11 @@ describe('igxCombo', () => {
             const dropDownElement = comboWrapper.children[1];
             expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
-            expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
             expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
-            expect(dropDownList.style.width).toEqual(defaultComboDDWidth);
             expect(dropDownList.childElementCount).toEqual(0);
         });
         it('Should render aria attribute properly', fakeAsync(() => {
@@ -2070,7 +2064,7 @@ describe('igxCombo', () => {
             verifyComboData();
             // index is at bottom
             expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
-            .toEqual(productIndex);
+                .toEqual(productIndex);
             await wait(20);
 
             productIndex = 485;
@@ -2080,7 +2074,7 @@ describe('igxCombo', () => {
             verifyComboData();
             // index is at bottom
             expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
-            .toEqual(productIndex);
+                .toEqual(productIndex);
             await wait(20);
 
             productIndex = 873;
@@ -2883,7 +2877,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('My New Custom Item');
         }));
 
-       it('Disable/Enable filtering at runtime', fakeAsync(() => {
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2954,7 +2948,7 @@ describe('igxCombo', () => {
 
     describe('Form control tests: ', () => {
 
-       it('Should properly initialize when used as a form control', fakeAsync(() => {
+        it('Should properly initialize when used as a form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2969,8 +2963,47 @@ describe('igxCombo', () => {
             clearButton.click();
             fix.detectChanges();
             expect(combo.valid).toEqual(IgxComboState.INVALID);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
+
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
             expect(combo.valid).toEqual(IgxComboState.VALID);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+        }));
+
+        it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboFormComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            const form: FormGroup = fix.componentInstance.reactiveForm;
+            form.controls.townCombo.validator = null;
+            expect(combo).toBeDefined();
+            const comboFormReference = fix.componentInstance.reactiveForm.controls.townCombo;
+            expect(comboFormReference).toBeDefined();
+            expect(combo.selectedItems()).toEqual(comboFormReference.value);
+            expect(combo.selectedItems().length).toEqual(1);
+            expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+            clearButton.click();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+
+            combo.onBlur();
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
         }));
 
         it('Should be possible to be enabled/disabled when used as a form control', () => {
@@ -2989,6 +3022,7 @@ describe('igxCombo', () => {
             combo.comboInput.nativeElement.click();
             fix.detectChanges();
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+            combo.comboInput.nativeElement.blur();
 
             form.disable();
             // Disabling the form disables all of the controls in it
@@ -3001,6 +3035,7 @@ describe('igxCombo', () => {
             combo.comboInput.nativeElement.click();
             fix.detectChanges();
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+            combo.comboInput.nativeElement.blur();
 
             // Can enabling the form re-enables all of the controls in it
             form.enable();
