@@ -180,9 +180,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
 
-        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
-        if (se) {
-            this.excelStyleSorting.selectButton(se.dir);
+        if (this.excelStyleSorting) {
+            const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
+            if (se) {
+                this.excelStyleSorting.selectButton(se.dir);
+            }
         }
 
         requestAnimationFrame(() => {
