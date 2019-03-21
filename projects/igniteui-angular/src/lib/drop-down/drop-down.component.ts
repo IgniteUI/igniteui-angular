@@ -384,12 +384,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     ngAfterViewInit() {
-        if (this.overlay && this.virtDir) {
-            this.toggleDirective.onAnimation.pipe(filter(e => e.animationType === 'open'),
-                takeUntil(this.destroy$))
-                .subscribe(() => {
-                    this.updateScrollPosition();
-                });
+        if (this.virtDir) {
+            this.virtDir.igxForItemSize = 32;
+
+            if (this.overlay) {
+                this.toggleDirective.onAnimation.pipe(filter(e => e.animationType === 'open'),
+                    takeUntil(this.destroy$))
+                    .subscribe(() => {
+                        this.updateScrollPosition();
+                    });
+            }
         }
     }
 
