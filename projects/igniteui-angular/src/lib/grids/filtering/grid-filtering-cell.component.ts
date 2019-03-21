@@ -253,7 +253,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.removeExpression(this.column.field, indexToRemove);
 
         this.updateVisibleFilters();
-        this.filteringService.filter(this.column.field);
+        this.filteringService.filterInternal(this.column.field);
     }
 
     private isMoreIconHidden(): boolean {
