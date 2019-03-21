@@ -176,6 +176,7 @@ describe('IgxTreeGrid - Integration', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
+            treeGrid.cdr.detectChanges();
 
             expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(225);

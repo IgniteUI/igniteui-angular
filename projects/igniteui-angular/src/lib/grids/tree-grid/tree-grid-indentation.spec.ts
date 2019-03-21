@@ -11,6 +11,7 @@ import { DropPosition } from '../grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Grid10x30WithSummariesComponent } from '../../test-utils/grid-samples.spec';
 
 describe('IgxTreeGrid - Indentation', () => {
     configureTestSuite();
@@ -130,6 +131,7 @@ describe('IgxTreeGrid - Indentation', () => {
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
             fix.detectChanges();
+            treeGrid.cdr.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
@@ -281,6 +283,7 @@ describe('IgxTreeGrid - Indentation', () => {
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
             fix.detectChanges();
+            treeGrid.cdr.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
