@@ -1,5 +1,5 @@
 import { Input, Output, EventEmitter } from '@angular/core';
-import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions } from './calendar';
+import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 
@@ -66,6 +66,23 @@ export class IgxCalendarBase implements ControlValueAccessor {
     public set formatOptions(formatOptions: IFormattingOptions) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
         this.initFormatters();
+    }
+
+    /**
+     * Gets whether the `day`, `month` and `year` should be rendered
+     * according to the locale and formatOptions, if any.
+     */
+    @Input()
+    public get formatViews(): IFormattingViews {
+        return this._formatViews;
+    }
+
+    /**
+     * Gets whether the `day`, `month` and `year` should be rendered
+     * according to the locale and formatOptions, if any.
+     */
+    public set formatViews(formatViews: IFormattingViews) {
+        this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
     /**
@@ -232,6 +249,15 @@ export class IgxCalendarBase implements ControlValueAccessor {
         month: 'short',
         weekday: 'short',
         year: 'numeric'
+    };
+
+    /**
+     *@hidden
+     */
+    private _formatViews: IFormattingViews = {
+        day: false,
+        month: true,
+        year: false
     };
 
     /**

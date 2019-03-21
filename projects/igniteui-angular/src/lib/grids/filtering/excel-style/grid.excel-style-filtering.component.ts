@@ -180,14 +180,24 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
 
-        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
-        if (se) {
-            this.excelStyleSorting.selectButton(se.dir);
+        if (this.excelStyleSorting) {
+            const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
+            if (se) {
+                this.excelStyleSorting.selectButton(se.dir);
+            }
         }
 
         requestAnimationFrame(() => {
             this.excelStyleSearch.searchInput.nativeElement.focus();
         });
+    }
+
+    public clearFilterClass() {
+        if (this.column.filteringExpressionsTree) {
+            return 'igx-excel-filter__actions-clear';
+        }
+
+        return 'igx-excel-filter__actions-clear--disabled';
     }
 
     public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
@@ -520,9 +530,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 });
             });
             this.expressionsList = new Array<ExpressionUI>();
-            this.grid.filter(this.column.field, null, filterTree);
+            this.filteringService.filter(this.column.field, filterTree);
         } else {
-            this.grid.clearFilter(this.column.field);
+            this.filteringService.clearFilter(this.column.field);
         }
 
         this.closeDropdown();
@@ -536,7 +546,21 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     public onKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE) {
+            this.closeDropdown();
+        }
         eventArgs.stopPropagation();
+    }
+
+    public clearFilter() {
+        this.filteringService.clearFilter(this.column.field);
+        this.populateColumnData();
+    }
+
+    public onClearFilterKeyDown(eventArgs) {
+        if (eventArgs.key === KEYS.ENTER) {
+            this.clearFilter();
+        }
     }
 
     private createCondition(conditionName: string) {
