@@ -1686,6 +1686,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @ViewChild('igxRowEditingOuterOverlayOutlet', { read: IgxOverlayOutletDirective })
+    private rowEditingOuterOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     private rowEditingOutletDirective: IgxOverlayOutletDirective;
 
@@ -4712,7 +4718,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.gridAPI.set_edit_row_state(this.id, rowState);
         this._currentRowState = this.transactions.getAggregatedValue(args.rowID, true);
         this.transactions.startPending();
-        this.configureRowEditingOverlay(cell.rowID);
+        this.configureRowEditingOverlay(cell.rowID, this.rowList.length <= 2);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this._wheelListener = this.rowEditingWheelHandler.bind(this);
@@ -4758,8 +4764,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private configureRowEditingOverlay(rowID: any) {
-        this.rowEditSettings.outlet = this.rowEditingOutletDirective;
+    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+        this.rowEditSettings.outlet = useOuter ? this.rowEditingOuterOutletDirective : this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         // this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
         const targetRow = this.gridAPI.get_row_by_key(this.id, rowID);
