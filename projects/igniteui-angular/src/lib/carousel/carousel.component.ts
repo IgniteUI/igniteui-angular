@@ -509,7 +509,7 @@ export class IgxCarouselComponent implements OnDestroy {
 })
 
 export class IgxSlideComponent implements OnInit, OnDestroy {
-
+    private _active;
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
@@ -541,7 +541,15 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.active')
-    @Input() public active: boolean;
+    @Input()
+    public get active(): boolean {
+        return this._active;
+    }
+    public set active(value)  {
+        this._active = value;
+        this.activeChange.emit(this._active);
+    }
+    @Output() public activeChange = new EventEmitter<any>();
 
     constructor(private carousel: IgxCarouselComponent) { }
     /**

@@ -123,9 +123,6 @@ export class IgxCalendarBase implements ControlValueAccessor {
         this.selectDate(value);
     }
 
-    @Output()
-    public valueChange = new EventEmitter<any>();
-
     /**
      * Gets the date that is presented.
      * By default it is the current date.
@@ -520,7 +517,6 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.selectRange(value, true);
                 break;
         }
-        this.valueChange.emit(this.selectedDates);
     }
 
     /**
@@ -549,7 +545,6 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.deselectRange(value as Date[]);
                 break;
         }
-        this.valueChange.emit(this.selectedDates);
     }
 
     /**
