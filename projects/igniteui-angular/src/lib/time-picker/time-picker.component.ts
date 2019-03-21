@@ -35,7 +35,7 @@ import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
-import { NoOpScrollStrategy } from '../services/overlay/scroll';
+import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil, filter, throttle } from 'rxjs/operators';
@@ -337,6 +337,23 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+    * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
+    * ```typescript
+    * const settings: OverlaySettings = {
+    *      closeOnOutsideClick: true,
+    *      modal: false
+    *  }
+    * ```
+    * ---
+    * ```html
+    * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
+    * ```
+     * @memberof IgxTimePickerComponent
+     */
+    @Input()
+    public overlaySettings: OverlaySettings;
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
@@ -704,7 +721,7 @@ export class IgxTimePickerComponent implements
         this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
-            scrollStrategy: new NoOpScrollStrategy(),
+            scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
         };
 
@@ -1145,21 +1162,23 @@ export class IgxTimePickerComponent implements
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
         if (this.mode === InteractionMode.Dialog) {
             this.collapsed = false;
+            const dialogSettings = this.overlaySettings ? this.overlaySettings : this._dialogOverlaySettings;
             if (this.outlet) {
-                this._dialogOverlaySettings.outlet = this.outlet;
+                dialogSettings.outlet = this.outlet;
             }
-            this._overlayId = this.overlayService.attach(this.container, this._dialogOverlaySettings);
+            this._overlayId = this.overlayService.attach(this.container, dialogSettings);
             this.overlayService.show(this._overlayId);
         }
 
         if (this.mode === InteractionMode.DropDown) {
             if (this.collapsed) {
                 this.collapsed = false;
+                const dropdownSettings = this.overlaySettings ? this.overlaySettings : this._dropDownOverlaySettings;
                 if (this.outlet) {
-                    this._dropDownOverlaySettings.outlet = this.outlet;
+                    dropdownSettings.outlet = this.outlet;
                 }
-                this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-                this._overlayId = this.overlayService.attach(this.container, this._dropDownOverlaySettings);
+                dropdownSettings.positionStrategy.settings.target = this.group.element.nativeElement;
+                this._overlayId = this.overlayService.attach(this.container, dropdownSettings);
                 this.overlayService.show(this._overlayId);
             } else {
                 this._onDropDownClosed();
