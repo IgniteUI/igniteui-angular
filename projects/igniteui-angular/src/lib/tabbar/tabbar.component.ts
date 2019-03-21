@@ -55,7 +55,12 @@ export class IgxTabTemplateDirective {
  */
 @Component({
     selector: 'igx-bottom-nav',
-    templateUrl: 'tab-bar-content.component.html'
+    templateUrl: 'tab-bar-content.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxBottomNavComponent implements AfterViewInit {
     /**
