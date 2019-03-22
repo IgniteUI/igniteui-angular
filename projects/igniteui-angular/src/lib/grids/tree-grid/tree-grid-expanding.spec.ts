@@ -476,6 +476,9 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             });
 
             for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
+                if (rowToToggle === 1) {
+                    continue;
+                }
                 const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(rows[rowToToggle]);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
 
