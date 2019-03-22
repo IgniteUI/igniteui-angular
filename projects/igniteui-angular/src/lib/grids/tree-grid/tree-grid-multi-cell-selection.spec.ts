@@ -51,6 +51,48 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             verifySelectingRangeWithMouseDrag(fix, treeGrid, detect);
         });
 
+        it('Should not change selection when expand collapse row with keyboard', (async () => {
+            const startCell = treeGrid.getCellByColumn(4, 'ID');
+            const endCell = treeGrid.getCellByColumn(5, 'ID');
+            const expectedData1 = [
+                { ID: 19 },
+                { ID: 15 }
+            ];
+            const expectedData2 = [
+                { ID: 19 },
+                { ID: 17 }
+            ];
+
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(30);
+            fix.detectChanges();
+
+            await HelperUtils.selectCellsRange(fix, startCell, endCell);
+
+            expect(startCell.focused).toBe(true);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            expect(treeGrid.getSelectedData()).toEqual(expectedData1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', startCell.nativeElement, true, true);
+            await wait(30);
+            fix.detectChanges();
+
+            expect(startCell.focused).toBe(true);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            expect(treeGrid.getSelectedData()).toEqual(expectedData2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', startCell.nativeElement, true, true);
+            await wait(30);
+            fix.detectChanges();
+
+            expect(startCell.focused).toBe(true);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            expect(treeGrid.getSelectedData()).toEqual(expectedData1);
+        }));
+
         it('Should be able to select a range with holding Shift key', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = treeGrid.getCellByColumn(6, 'Age');
