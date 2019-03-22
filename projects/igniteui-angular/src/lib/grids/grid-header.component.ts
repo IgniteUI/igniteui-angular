@@ -87,14 +87,14 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     @HostBinding('style.-ms-grid-row-span')
-    private msGridRowSpan;
+    public msGridRowSpan;
 
     @HostBinding('style.-ms-grid-column-span')
-    private msGridColumnSpan;
+    public msGridColumnSpan;
 
 
     @HostBinding('style.grid-row-end')
-    private _rowEnd;
+    public _rowEnd;
 
     get rowEnd() {
         return this._rowEnd;
@@ -109,7 +109,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     @HostBinding('style.grid-column-end')
-    private _colEnd;
+    public _colEnd;
 
     get colEnd() {
         return this._colEnd;
