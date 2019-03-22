@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs } from '../grid-base.component';
+import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -9,8 +9,9 @@ import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
 import { IgxDatePipeComponent } from '../grid.common';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
+import { GridBaseAPIService } from '../api.service';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -49,7 +50,7 @@ export class IgxFilteringService implements OnDestroy {
 
     grid: IgxGridBaseComponent;
 
-    constructor(private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -69,11 +70,11 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public get unpinnedFilterableColumns() {
-        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+        return this.grid.unpinnedColumns.filter(col => !col.columnGroup && col.filterable);
     }
 
     public get unpinnedColumns() {
-        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+        return this.grid.unpinnedColumns.filter(col => !col.columnGroup);
     }
 
     public get datePipe(): IgxDatePipeComponent {
@@ -107,7 +108,7 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
-            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
                 });
@@ -142,18 +143,18 @@ export class IgxFilteringService implements OnDestroy {
      */
     public filter(field: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.gridId, field);
+        const col = this.gridAPI.get_column_by_name(field);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         if (conditionOrExpressionTree) {
-            this.gridAPI.filter(this.gridId, field, value, conditionOrExpressionTree, filteringIgnoreCase);
+            this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
             if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(this.gridId, field, value, expressionsTreeForColumn, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(this.gridId, field, value, expressionForColumn.condition, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
             }
         }
 
@@ -166,7 +167,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public clearFilter(field: string): void {
         if (field) {
-            const column = this.gridAPI.get_column_by_name(this.gridId, field);
+            const column = this.gridAPI.get_column_by_name(field);
             if (!column) {
                 return;
             }
@@ -174,7 +175,7 @@ export class IgxFilteringService implements OnDestroy {
 
         this.isFiltering = true;
 
-        this.gridAPI.clear_filter(this.gridId, field);
+        this.gridAPI.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
@@ -191,7 +192,7 @@ export class IgxFilteringService implements OnDestroy {
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
     public filterGlobal(value: any, condition?, ignoreCase?) {
-        this.gridAPI.filter_global(this.gridId, value, condition, ignoreCase);
+        this.gridAPI.filter_global(value, condition, ignoreCase);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
