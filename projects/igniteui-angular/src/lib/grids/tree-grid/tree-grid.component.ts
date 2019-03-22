@@ -204,7 +204,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="employees" [autoGenerate]="true"></igx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridComponent
      */
@@ -214,13 +214,25 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
      * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></igx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
+     * </igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridComponent
      */
     @Input()
     public foreignKey;
 
+    /**
+     * An @Input property that sets the key indicating whether a row has children.
+     * This property is only used for load on demand scenarios.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
+     *                [loadChildrenOnDemand]="loadChildren"
+     *                [hasChildrenKey]="'hasEmployees'">
+     * </igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     @Input()
     public hasChildrenKey;
 
@@ -228,7 +240,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * An @Input property indicating whether child records should be deleted when their parent gets deleted.
      * By default it is set to true and deletes all children along with the parent.
      * ```html
-     * <igx-tree-grid [data]="employeeData" [primaryKey]="employeeID" [foreignKey]="parentID" cascadeOnDelete="false" [autoGenerate]="true">
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
      * </igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridComponent
@@ -242,7 +254,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="employees" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
      * ```
 	 * @memberof IgxTreeGridComponent
      */
@@ -290,6 +302,20 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
+    /**
+     * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
+     * ```html
+     * <ng-template #rowLoadingTemplate>
+     *     <igx-icon fontSet="material">loop</igx-icon>
+     * </ng-template>
+     *
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"
+     *                [loadChildrenOnDemand]="loadChildren"
+     *                [rowLoadingIndicatorTemplate]="rowLoadingTemplate">
+     * </igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     @Input()
     public get rowLoadingIndicatorTemplate(): TemplateRef<any> {
         return this._rowLoadingIndicatorTemplate;
@@ -300,6 +326,19 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.cdr.markForCheck();
     }
 
+    /**
+     * An @Input property that provides a callback for loading child rows on demand.
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
+     * </igx-tree-grid>
+     * ```
+     * ```typescript
+     * public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+     *     this.dataService.getData(parentID, children => done(children));
+     * }
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     @Input()
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
 

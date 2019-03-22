@@ -14,9 +14,6 @@ import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
 
-    @Input()
-    public isLoading: boolean;
-
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 selection: IgxSelectionAPIService,
                 cdr: ChangeDetectorRef,
@@ -34,6 +31,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
 
     @ViewChild('defaultContentElement', { read: ElementRef })
     public defaultContentElement: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    public isLoading: boolean;
 
     /**
      * @hidden
