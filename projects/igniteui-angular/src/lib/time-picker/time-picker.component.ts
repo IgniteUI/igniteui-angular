@@ -1160,29 +1160,31 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.mode === InteractionMode.Dialog) {
-            this.collapsed = false;
-            const dialogSettings = this.overlaySettings || this._dialogOverlaySettings;
-            if (this.outlet) {
-                dialogSettings.outlet = this.outlet;
-            }
-            this._overlayId = this.overlayService.attach(this.container, dialogSettings);
-            this.overlayService.show(this._overlayId);
-        }
 
-        if (this.mode === InteractionMode.DropDown) {
-            if (this.collapsed) {
-                this.collapsed = false;
-                const dropdownSettings = this.overlaySettings || this._dropDownOverlaySettings;
-                if (this.outlet) {
-                    dropdownSettings.outlet = this.outlet;
-                }
-                dropdownSettings.positionStrategy.settings.target = this.group.element.nativeElement;
-                this._overlayId = this.overlayService.attach(this.container, dropdownSettings);
-                this.overlayService.show(this._overlayId);
-            } else {
-                this._onDropDownClosed();
+        if (this.collapsed) {
+            this.collapsed = false;
+
+            let settings;
+            if (this.mode === InteractionMode.Dialog) {
+                settings = this.overlaySettings || this._dialogOverlaySettings;
             }
+
+            if (this.mode === InteractionMode.DropDown) {
+                settings = this.overlaySettings || this._dropDownOverlaySettings;
+                if (settings.positionStrategy && settings.positionStrategy.settings) {
+                    settings.positionStrategy.settings.target = this.group.element.nativeElement;
+                }
+            }
+
+            if (this.outlet) {
+                settings.outlet = this.outlet;
+            }
+
+            this._overlayId = this.overlayService.attach(this.container, settings);
+            this.overlayService.show(this._overlayId);
+
+        } else if (this.mode === InteractionMode.DropDown) {
+            this._onDropDownClosed();
         }
 
         if (this.value) {
