@@ -1056,7 +1056,7 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, () => {
+            disapear and the new value should not persist onto the next row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.componentInstance.initColumnsRows(5, 5);
                 fix.detectChanges();
@@ -1074,7 +1074,7 @@ describe('IgxGrid Component Tests', () => {
                 const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
-            });
+            }));
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);

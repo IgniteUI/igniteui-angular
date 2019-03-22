@@ -6,7 +6,7 @@ import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModu
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;

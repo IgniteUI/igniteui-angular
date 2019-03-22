@@ -128,7 +128,7 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['8', earliest, latest]);
         });
 
-        it('should properly render custom summaries', () => {
+        it('should properly render custom summaries', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomSummariesComponent);
             const gridComp = fixture.componentInstance.grid1;
             fixture.detectChanges();
@@ -144,7 +144,7 @@ describe('IgxGrid - Summaries', () => {
             expect(filterResult).toEqual(0);
 
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['0', '0', '0']);
-        });
+        }));
 
         it(`Should update summary section when the column is outside of the
             viewport and have identical width with others`, (async () => {
@@ -461,7 +461,7 @@ describe('IgxGrid - Summaries', () => {
                 grid = fix.componentInstance.grid;
             });
 
-            it('Filtering: should calculate summaries only over filteredData', () => {
+            it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
                 fix.detectChanges();
 
@@ -502,7 +502,7 @@ describe('IgxGrid - Summaries', () => {
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 4,
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
-            });
+            }));
 
             it('Moving: should move summaries when move colomn', () => {
                 const colUnitsInStock = grid.getColumnByName('UnitsInStock');
@@ -684,7 +684,7 @@ describe('IgxGrid - Summaries', () => {
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             });
 
-            it('CRUD: Apply filter and update cell', () => {
+            it('CRUD: Apply filter and update cell', fakeAsync(() => {
                 grid.filter('ProductName', 'ch', IgxStringFilteringOperand.instance().condition('contains'));
                 fix.detectChanges();
 
@@ -701,7 +701,7 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 3,
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
-            });
+            }));
         });
 
         it('MCH - verify summaries when there are grouped columns', (async () => {
@@ -1840,7 +1840,7 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
         });
 
-        it('Filtering: should render correct summaries when filter', () => {
+        it('Filtering: should render correct summaries when filter', fakeAsync(() => {
             grid.filter('ID', 12, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -1861,9 +1861,9 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
-        });
+        }));
 
-        it('Filtering: should render correct summaries when filter with no results found', () => {
+        it('Filtering: should render correct summaries when filter with no results found', fakeAsync(() => {
             grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -1879,7 +1879,7 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
-        });
+        }));
 
         it('Paging: should render correct summaries when paging is enable and position is buttom', () => {
             grid.paging = true;

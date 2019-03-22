@@ -497,7 +497,7 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells.length).toBe(0);
         });
 
-        it('should persist selection after filtering', () => {
+        it('should persist selection after filtering', fakeAsync(() => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
@@ -515,10 +515,8 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.filter('ID', '8', IgxStringFilteringOperand.instance().condition('startsWith'), true);
             fix.detectChanges();
 
-            expect(treeGrid.selectedCells.length).toBe(1);
-            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
-            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
-        });
+            expect(treeGrid.selectedCells.length).toBe(0);
+        }));
 
         it('should persist selection after scrolling', async () => {
             treeGrid.paging = false;

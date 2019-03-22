@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
@@ -80,7 +80,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(elem.scrollTop).toBe(400);
     });
 
-    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async() => {
+    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
@@ -89,7 +89,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
         childCell.nativeElement.focus();
-        await wait(10);
+        tick(10);
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
@@ -99,7 +99,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         childGrid.filter('ProductName', null, filteringExpressionsTree);
-        await wait();
+        tick();
         fixture.detectChanges();
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
@@ -110,17 +110,18 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         elem.scrollTop = 1000;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        tick();
 
         // scroll to top
         elem.scrollTop = 0;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        tick();
 
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
-    });
+    }));
+
     it('should render correct data for child grid after scrolling and start index changes.', async() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator

@@ -275,7 +275,7 @@ describe('IgxGrid - search API', () => {
             expect(count).toBe(0);
         });
 
-        it('Should update exact match highlights when filtering.', async () => {
+        it('Should update exact match highlights when filtering.', fakeAsync(() => {
             const count = grid.findNext('Software Developer', false, true);
             let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -283,7 +283,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            await wait();
+            tick();
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -292,13 +292,13 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
-            await wait();
+            tick();
             fix.detectChanges();
-        });
+        }));
 
-        it('Should update exact match highlights when clearing filter.', async () => {
+        it('Should update exact match highlights when clearing filter.', fakeAsync(() => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            await wait();
+            tick();
             fix.detectChanges();
 
             const count = grid.findNext('Software Developer', false, true);
@@ -308,14 +308,14 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
-            await wait();
+            tick();
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-        });
+        }));
 
         it('Should update the active highlight when sorting', () => {
             const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -539,14 +539,14 @@ describe('IgxGrid - search API', () => {
             expect(finds).toEqual(0);
         });
 
-        it('Clear filter properly updates the highlights', async () => {
+        it('Clear filter properly updates the highlights', fakeAsync(() => {
             let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
             let activeHighlight: any;
             let highlights: NodeListOf<Element>;
 
             grid.findNext('director');
-            await wait();
+            tick();
             fix.detectChanges();
 
             gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
@@ -556,7 +556,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.filter('Name', 'Tanya', IgxStringFilteringOperand.instance().condition('contains'));
-            await wait();
+            tick();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(0, 'JobTitle').nativeElement;
@@ -566,7 +566,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.clearFilter();
-            await wait();
+            tick();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
@@ -576,7 +576,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.findNext('Director');
-            await wait();
+            tick();
             fix.detectChanges();
 
             gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
@@ -584,7 +584,7 @@ describe('IgxGrid - search API', () => {
             highlights = gilbertoDirectorCell.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-        });
+        }));
 
         it('Unsearchable column should not interfere with active highlight for other columns on its right', () => {
             grid.columns[1].searchable = false;
@@ -675,22 +675,22 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Active highlight should be updated when filtering is applied', async () => {
+        it('Active highlight should be updated when filtering is applied', fakeAsync(() => {
             grid.findNext('developer');
 
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            await wait();
+            tick();
             fix.detectChanges();
 
             const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(2);
             expect(activeHighlight).toBe(highlights[0]);
-        });
+        }));
 
-        it('Active highlight should be preserved when all rows are filtered out', async () => {
+        it('Active highlight should be preserved when all rows are filtered out', fakeAsync(() => {
             grid.height = '500px';
-            await wait();
+            tick();
             fix.detectChanges();
 
             grid.findNext('casey');
@@ -699,7 +699,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
 
             grid.filter('Name', 'zxxz', IgxStringFilteringOperand.instance().condition('contains'));
-            await wait();
+            tick();
             fix.detectChanges();
 
             let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -708,13 +708,13 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('Name');
-            await wait();
+            tick();
             fix.detectChanges();
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-        });
+        }));
 
         it('Active highlight should be preserved when a column is moved', () => {
             grid.findNext('casey');

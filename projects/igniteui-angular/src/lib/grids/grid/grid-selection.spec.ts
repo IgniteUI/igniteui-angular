@@ -543,7 +543,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
     }));
 
-    it('Filtering and row selection', () => {
+    it('Filtering and row selection', fakeAsync(() => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
 
@@ -667,7 +667,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.getRowByIndex(0).isSelected).toBeFalsy();
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
-    });
+    }));
 
     it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
         const fix = TestBed.createComponent(SelectionComponent);
