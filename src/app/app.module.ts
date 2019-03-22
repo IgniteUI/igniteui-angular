@@ -87,6 +87,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
 
 
 
@@ -147,6 +148,7 @@ const components = [
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
+    GridMRLSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,

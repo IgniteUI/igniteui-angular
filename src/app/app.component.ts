@@ -134,6 +134,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Groups'
         },
         {
+            link: '/gridMRL',
+            icon: 'view_column',
+            name: 'Grid MRL'
+        },
+        {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'

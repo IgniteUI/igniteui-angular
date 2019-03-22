@@ -801,6 +801,11 @@ export class IgxColumnComponent implements AfterContentInit {
         return pinnedCols.indexOf(this) === pinnedCols.length - 1;
     }
 
+    @Input() rowEnd: string;
+    @Input() colEnd: string;
+    @Input() rowStart: string;
+    @Input() colStart: string;
+
     /**
      * hidden
      */
@@ -1243,6 +1248,10 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
+        if (this.grid.enableMRL && this.rowEnd && this.rowEnd.indexOf('span') !== -1) {
+            return '';
+        }
+
         if (colWidth && !isPercentageWidth) {
             const unpinnedColumns = this.grid.unpinnedColumns;
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
@@ -1447,17 +1456,31 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        let isChildrenWidthInPercent = false;
-        const width = `${this.children.reduce((acc, val) => {
-            if (val.hidden) {
-                return acc;
-            }
-
-            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                isChildrenWidthInPercent = true;
-            }
-            return acc + parseInt(val.width, 10);
-        }, 0)}`;
+        let isChildrenWidthInPercent = false, width;
+        if (this.grid.enableMRL) {
+            width = `${this.children.reduce((acc, val) => {
+                if (val.hidden) {
+                    return acc;
+                }
+                if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
+                    isChildrenWidthInPercent = true;
+                }
+                if (parseInt(val.rowStart, 10) !== 1) {
+                    return acc;
+                }
+                return acc + parseInt(val.width, 10);
+            }, 0)}`;
+        } else {
+            width = `${this.children.reduce((acc, val) => {
+                if (val.hidden) {
+                    return acc;
+                }
+                if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
+                    isChildrenWidthInPercent = true;
+                }
+                return acc + parseInt(val.width, 10);
+            }, 0)}`;
+        }
         return isChildrenWidthInPercent ? width + '%' : width;
     }
 

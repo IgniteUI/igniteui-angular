@@ -1,4 +1,27 @@
-<ng-container *ngIf="column.columnGroup">
+<ng-container *ngIf="grid.enableMRL && column.columnGroup">
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <div class="igx-grid__thead-group igx-grid__mrl_block">
+        <ng-container *ngFor="let child of column.children" >
+            <igx-grid-header [gridID]="child.gridID"
+                [column]="child"
+                [rowStart]="child.rowStart"
+                [rowEnd]="child.rowEnd"
+                [colStart]="child.colStart"
+                [colEnd]="child.colEnd">
+            </igx-grid-header>
+            <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="child" [attr.draggable]="false"></igx-grid-filtering-cell>
+            <span *ngIf="!child.columnGroup" class="igx-grid__th-resize-handle"
+                [attr.draggable]="false" #resizeHandle
+                [style.cursor]="colResizingService.resizeCursor"
+                (mouseover)="onResizeAreaMouseOver()"
+                (dblclick)="onResizeAreaDoubleClick()">
+            </span>
+        </ng-container>
+    </div>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+</ng-container>
+
+<ng-container *ngIf="!grid.enableMRL && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-title"
         [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}">{{ column.header }}</div>

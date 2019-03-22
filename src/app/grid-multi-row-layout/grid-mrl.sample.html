@@ -1,0 +1,19 @@
+<div  class="sample-wrapper">
+    <app-page-header title="Grid MRL"></app-page-header>
+    <section style="height: 800px" class="sample-content">
+        <igx-grid [enableMRL]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact">
+            <igx-column-group [movable]="true" [pinned]="false" [width]="'500px'">
+                <igx-column [rowStart]="1" [colStart]="1" [movable]="true" [pinned]="false" sortable="true" resizable="true" field="ContactName"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="2" [movable]="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="3" [movable]="true" sortable="true" resizable="true" field="Country"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="4" [movable]="true" sortable="true" resizable="true" field="Phone"></igx-column>
+                
+                <igx-column [rowStart]="2" [colStart]="4" [movable]="true" sortable="true" resizable="true" field="City"></igx-column>
+                <igx-column [rowStart]="3" [colStart]="4" [movable]="true" sortable="true" resizable="true" field="Address"></igx-column>
+                <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="'span 2'" [colEnd]="'span 3'" [movable]="true" [filterable]="false" sortable="true" resizable="true" field="CompanyName"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+        <span igxButton (click)="pinGroup()">Pin first block</span>
+        <span igxButton (click)="hideGroup()">Hide first block</span>
+    </section>
+</div>

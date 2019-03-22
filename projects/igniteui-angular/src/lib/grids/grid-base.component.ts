@@ -926,6 +926,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * A property to enable Multi Row Layout.
+     */
+    @Input() enableMRL: boolean;
+
+    /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1825,7 +1830,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.enableMRL ?
+                this.columnList.reduce((acc, col) => Math.max(acc, parseInt(col.rowStart, 10)), 0) :
+                this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -3820,7 +3827,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
-        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
+        const columnsToSize = this.enableMRL ?
+            visibleChildColumns.reduce((acc, col) => Math.max(acc, parseInt(col.colStart, 10)), 1) :
+            visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
