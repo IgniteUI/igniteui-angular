@@ -566,6 +566,35 @@ export class IgxTreeGridLoadOnDemandComponent {
 
 @Component({
     template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees"
+                   [loadChildrenOnDemand]="loadChildren"
+                   width="900px" height="600px">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridLoadOnDemandChildDataComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
+
+    constructor() {
+        this.data = this.allData.filter(r => r.ParentID === -1);
+    }
+
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        setTimeout(() => {
+            done(this.allData.filter(r => r.ParentID === parentID));
+        }, 1000);
+    }
+}
+
+@Component({
+    template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID"
                    [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
                    width="900px" height="600px">
