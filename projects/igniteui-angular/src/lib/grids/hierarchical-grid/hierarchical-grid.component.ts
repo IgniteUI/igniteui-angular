@@ -90,6 +90,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.reflow();
         }
         this.cdr.markForCheck();
+        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
+            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
+            requestAnimationFrame(() => {
+                this.updateParentSizes();
+            });
+        }
     }
 
     /**
@@ -644,11 +650,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private updateParentSizes() {
         let currGrid = this.parent;
         while (currGrid) {
+            const hadScrollbar = currGrid.hasVerticalSroll();
             const virt = currGrid.verticalScrollContainer;
             virt.recalcUpdateSizes();
             const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scr = virt.getVerticalScroll();
             scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
+
+            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
+                // If after recalculations the grid should show vertical scrollbar it should also reflow.
+                currGrid.reflow();
+            }
+
             currGrid = currGrid.parent;
         }
     }
