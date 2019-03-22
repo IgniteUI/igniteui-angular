@@ -71,7 +71,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
         const grid = this.get(id);
 
-        if (row.expanded === expanded) {
+        if (row.expanded === expanded ||
+            ((!row.children || !row.children.length) && !grid.loadChildrenOnDemand)) {
             return;
         }
 
