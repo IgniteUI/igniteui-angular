@@ -11,7 +11,6 @@ import {
     forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
@@ -190,14 +189,10 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._hidden !== value) {
             this._hidden = value;
             if (this.grid) {
+                this.grid.resetCaches();
                 this.grid.endEdit(true);
             }
-            // const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
-            // if (cellInEditMode) {
-            //     if (cellInEditMode.cell.column.field === this.field) {
-            //         this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
-            //     }
-            // }
+            // TODO: Simplify
             this.check();
             if (this.grid) {
                 this.grid.refreshSearch(true);
@@ -394,25 +389,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get formatter(): any {
-        return this._formatter;
-    }
-    /**
-     * Sets formatter for the column.
-     * ```typescript
-     * this.column.formatter = (val: Date) => {
-     *  return new Intl.DateTimeFormat("en-US").format(val); }
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    public set formatter(value: any) {
-        if (this._formatter !== value) {
-            this._formatter = value;
-            if (this.grid) {
-                this.grid.cdr.detectChanges();
-            }
-        }
-    }
+    formatter: (value: any) => any;
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -743,6 +720,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
+        if (!isNaN(this._vIndex)) {
+            return this._vIndex;
+        }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
         let col = this;
@@ -758,6 +738,7 @@ export class IgxColumnComponent implements AfterContentInit {
         } else {
             vIndex = pinnedColumns.indexOf(col);
         }
+        this._vIndex = vIndex;
         return vIndex;
     }
     /**
@@ -879,10 +860,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    private _formatter = null;
-    /**
-     *@hidden
-     */
     protected _filters = null;
     /**
      *@hidden
@@ -936,7 +913,18 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
+    private _vIndex = NaN;
+
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetVisibleIndex() {
+        this._vIndex = NaN;
+    }
+
     /**
      *@hidden
      */
@@ -1018,7 +1006,6 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const width = parseInt(this.width, 10);
-        const oldIndex = this.visibleIndex;
 
         if (!this.parent && (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth)) {
             return false;
@@ -1048,6 +1035,7 @@ export class IgxColumnComponent implements AfterContentInit {
             grid.reinitPinStates();
         }
 
+        grid.resetCaches();
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
@@ -1082,7 +1070,6 @@ export class IgxColumnComponent implements AfterContentInit {
             return false;
         }
 
-        const oldIndex = this.visibleIndex;
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
@@ -1102,6 +1089,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.reinitPinStates();
+        grid.resetCaches();
 
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
@@ -1248,13 +1236,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     public getCellWidth() {
-        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
         if (colWidth && !isPercentageWidth) {
-            const unpinnedColumns = this.grid.unpinnedColumns;
-            const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
             let cellWidth = colWidth;
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {

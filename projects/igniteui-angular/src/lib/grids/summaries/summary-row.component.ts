@@ -76,12 +76,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.summaries.get(columnName);
 
     }
-    /**
-     * @hidden
-     */
-    public notGroups(columns) {
-        return columns.filter(c => !c.columnGroup);
-    }
 
     /**
      * @hidden

@@ -176,12 +176,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
-    public notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
 
     private _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {

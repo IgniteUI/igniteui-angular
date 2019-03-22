@@ -26,11 +26,9 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxHierarchicalTransactionService } from '../../services';
+import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
-import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { mergeObjects } from '../../core/utils';

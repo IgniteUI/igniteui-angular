@@ -23,6 +23,7 @@ import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 
+// TODO: Move into core utils
 const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
                                 'home', 'end', 'space', 'spacebar', ' ']);
 const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
@@ -139,9 +140,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get formatter(): (value: any) => any {
-        return this.column.formatter;
-    }
+    @Input()
+    formatter: (value: any) => any;
 
     /**
      * Gets the cell template context object.
@@ -228,20 +228,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.data-visibleIndex')
-    get visibleColumnIndex(): number {
-        return this.column.visibleIndex;
-    }
-
-    // /**
-    //  * Gets the `index` of the unpinned column in which the cell is stored.
-    //  * ```typescript
-    //  * let unpinnedColumnIndex = this.cell.ununpinnedColumnIndex;
-    //  * ```
-    //  * @memberof IgxGridCellComponent
-    //  */
-    // get unpinnedColumnIndex(): number {
-    //     return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
-    // }
+    @Input()
+    visibleColumnIndex = -1;
 
     /**
      * Gets the ID of the cell.
@@ -276,6 +264,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
 
      // TODO: Deprecate
+    /**
+     * @deprecated
+     */
     get inEditMode(): boolean {
         return this.editMode;
     }
@@ -382,20 +373,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('style.min-width')
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
-    get width() {
-        return this.column.getCellWidth();
-    }
+    @Input()
+    width = '';
 
-    // /**
-    //  * Gets whether the cell is stored in a pinned column.
-    //  * ```typescript
-    //  * let isPinned = this.cell.isPinned;
-    //  * ```
-    //  * @memberof IgxGridCellComponent
-    //  */
-    // get isPinned() {
-    //     return this.column.pinned;
-    // }
+    /**
+     * Gets whether the cell is stored in a pinned column.
+     * ```typescript
+     * let isPinned = this.cell.isPinned;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    get isPinned() {
+        return this.column.pinned;
+    }
 
     /**
      * Gets whether the cell is stored in the last column in the pinned area.
@@ -409,17 +399,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return pinnedCols[pinnedCols.length - 1] === this.column;
     }
 
-    // /**
-    //  * Gets whether the cell is stored in the last column in the unpinned area.
-    //  * ```typescript
-    //  * let isLastUnpinned = this.cell.isLastUnpinned;
-    //  * ```
-    //  * @memberof IgxGridCellComponent
-    //  */
-    // get isLastUnpinned() {
-    //     const unpinnedColumns = this.grid.unpinnedColumns;
-    //     return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    // }
+    /**
+     * Gets whether the cell is stored in the last column in the unpinned area.
+     * ```typescript
+     * let isLastUnpinned = this.cell.isLastUnpinned;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    get isLastUnpinned() {
+        const unpinnedColumns = this.grid.unpinnedColumns;
+        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
+    }
 
     /**
      * Gets whether the cell is selected.
@@ -563,11 +553,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public _updateCellSelectionStatus() {
-        const node = this.selectionNode;
-
         if (this.editMode) {
             return;
         }
+
+        const node = this.selectionNode;
 
         this._updateCRUDStatus();
         this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection);

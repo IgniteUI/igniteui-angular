@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../grids/grid-base.component';
 
 
@@ -194,6 +194,7 @@ export class IgxGridSelectionService {
 
 
     selection = new Map<number, Set<number>>();
+    temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
 
 
@@ -218,7 +219,7 @@ export class IgxGridSelectionService {
         return ranges;
     }
 
-    constructor() {
+    constructor(private zone: NgZone) {
         this.initPointerState();
         this.initKeyboardState();
     }
@@ -259,8 +260,13 @@ export class IgxGridSelectionService {
         }));
     }
 
+    isInMap(node: ISelectionNode): boolean {
+        return (this.selection.has(node.row) && this.selection.get(node.row).has(node.column)) ||
+            (this.temp.has(node.row) && this.temp.get(node.row).has(node.column));
+    }
+
     selected(node: ISelectionNode): boolean {
-        return this.isActiveNode(node) || (this.selection.has(node.row) && this.selection.get(node.row).has(node.column));
+        return this.isActiveNode(node) || this.isInMap(node);
     }
 
     isActiveNode(node: ISelectionNode): boolean {
@@ -270,20 +276,18 @@ export class IgxGridSelectionService {
         return false;
     }
 
-    addRangeMeta(node: ISelectionNode, state: SelectionState) {
-        const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
+    addRangeMeta(node: ISelectionNode, state?: SelectionState): void {
+        this._ranges.add(JSON.stringify(this.generateRange(node, state)));
+    }
 
-        this._ranges.add(JSON.stringify({
-            rowStart,
-            rowEnd,
-            columnStart,
-            columnEnd
-        }));
+    removeRangeMeta(node: ISelectionNode, state?: SelectionState): void {
+        this._ranges.delete(JSON.stringify(this.generateRange(node, state)));
     }
 
     /**
      * Generates a new selection range from the given `node`.
-     * If a `state` is passed instead it will generate it
+     * If `state` is passed instead it will generate the range based on the passed `node`
+     * and the start node of the `state`.
      */
     generateRange(node: ISelectionNode, state?: SelectionState): GridSelectionRange {
         if (!state) {
@@ -340,6 +344,11 @@ export class IgxGridSelectionService {
     }
 
     pointerDown(node: ISelectionNode, shift: boolean, ctrl: boolean): void {
+
+        if (this.keyboardState.range) {
+            this._ranges.add(JSON.stringify(this.keyboardState.range));
+        }
+
         this.initKeyboardState();
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
@@ -350,14 +359,16 @@ export class IgxGridSelectionService {
         }
 
         if (shift) {
+            // No previously 'clicked' node. Use the last active node.
             if (!this.pointerState.node) {
-                this.pointerState.node = node;
+                this.pointerState.node = this.activeElement;
             }
             this.pointerDownShiftKey(node);
             this.clearTextSelection();
             return;
         }
 
+        this.removeRangeMeta(node);
         this.pointerState.node = node;
     }
 
@@ -366,20 +377,42 @@ export class IgxGridSelectionService {
         this.selectRange(node, this.pointerState);
     }
 
+    mergeMap(target: Map<number, Set<number>>, source: Map<number, Set<number>>): void {
+        const iterator = source.entries();
+        let pair = iterator.next();
+        let key: number;
+        let value: Set<number>;
+
+        while (!pair.done) {
+            [key, value] = pair.value;
+            if (target.has(key)) {
+                const newValue = target.get(key);
+                value.forEach(record => newValue.add(record));
+                target.set(key, newValue);
+            } else {
+                target.set(key, value);
+            }
+            pair = iterator.next();
+        }
+    }
+
     pointerEnter(node: ISelectionNode, dragEnabled: boolean): boolean {
         this.dragMode = dragEnabled;
         if (!this.dragMode) {
             return false;
         }
         this.clearTextSelection();
-        this.dragSelect(node, this.pointerState);
+        this.pointerState.ctrl ? this.blah(node, this.pointerState) :
+            this.dragSelect(node, this.pointerState);
         return true;
     }
 
     pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
         if (this.dragMode) {
-            emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
+            this.mergeMap(this.selection, this.temp);
+            this.zone.runTask(() => emitter.emit(this.generateRange(node, this.pointerState)));
+            this.temp.clear();
             this.dragMode = false;
             return true;
         }
@@ -405,6 +438,17 @@ export class IgxGridSelectionService {
         }
     }
 
+    blah(node: ISelectionNode, state: SelectionState) {
+        this.temp.clear();
+        const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
+        for (let i = rowStart; i <= rowEnd; i++) {
+            for (let j = columnStart as number; j <= columnEnd; j++) {
+                this.temp.has(i) ? this.temp.get(i).add(j) :
+                    this.temp.set(i, new Set<number>()).get(i).add(j);
+            }
+        }
+    }
+
     dragSelect(node: ISelectionNode, state: SelectionState): void {
         if (!this.pointerState.ctrl) {
             this.selection.clear();
@@ -414,6 +458,7 @@ export class IgxGridSelectionService {
 
     clear(): void {
         this.selection.clear();
+        this.temp.clear();
         this._ranges.clear();
     }
 

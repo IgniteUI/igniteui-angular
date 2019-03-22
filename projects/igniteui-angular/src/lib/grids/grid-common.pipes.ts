@@ -5,6 +5,29 @@ import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
 
 /**
+ * @hidden
+ * @internal
+ */
+@Pipe({
+    name: 'igxNotGrouped'
+})
+export class IgxGridNotGroupedPipe implements PipeTransform {
+
+    transform(value: any[]): any[] {
+        return value.filter(item => !item.columnGroup);
+    }
+}
+
+@Pipe({
+    name: 'igxTopLevel'
+})
+export class IgxGridTopLevelColumns implements PipeTransform {
+
+    transform(value: any[]): any[] {
+        return value.filter(item => item.level === 0);
+    }
+}
+/**
  *@hidden
  */
 @Pipe({

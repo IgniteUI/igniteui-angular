@@ -1,6 +1,6 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { first } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
 /** @hidden */
@@ -21,6 +21,8 @@ export class IgxRowEditTextDirective { }
 })
 export class IgxRowEditActionsDirective { }
 
+
+// TODO: Refactor circular ref, deps and logic
 /** @hidden */
 @Directive({
     selector: `[igxRowEditTabStop]`
@@ -57,7 +59,7 @@ export class IgxRowEditTabStopDirective {
     }
     private focusNextCell(rowIndex, cellIndex) {
         const grid = this.grid as any;
-        grid.parentVirtDir.onChunkLoad.pipe(first()).subscribe(() => {
+        grid.parentVirtDir.onChunkLoad.pipe(first(), tap(() => grid.markForCheck())).subscribe(() => {
             grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
         });
     }

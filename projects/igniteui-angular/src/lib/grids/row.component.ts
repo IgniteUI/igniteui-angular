@@ -323,13 +323,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
-
-    /**
-     * @hidden
-     */
     protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
