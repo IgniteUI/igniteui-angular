@@ -95,17 +95,8 @@ export class IgxSummaryCellComponent {
         switch (key) {
             case 'tab':
                 if (shift) {
-                    if (this.rowIndex === 0 && this.visibleColumnIndex === 0 && this.grid.data && this.grid.data.length) {
-                        this.grid.navigation.goToLastBodyElement();
-                        return;
-                    }
                     this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
                     break;
-                }
-                if (this.rowIndex === 0 &&
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
-                        return;
-
                 }
                 this.grid.navigation.performTab(row, this.rowIndex, this.visibleColumnIndex, true);
                 break;
@@ -174,7 +165,8 @@ export class IgxSummaryCellComponent {
     }
 
     private getRowElementByIndex(rowIndex) {
-        return this.grid.nativeElement.querySelector(`igx-grid-summary-row[data-rowindex="${rowIndex}"]`);
+        const summaryRows = this.grid.summariesRowList.toArray();
+        return summaryRows.find((sr) => sr.dataRowIndex === rowIndex).nativeElement;
     }
 
     private isKeySupportedInCell(key) {
