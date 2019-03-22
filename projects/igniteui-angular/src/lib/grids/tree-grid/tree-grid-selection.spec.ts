@@ -495,7 +495,7 @@ describe('IgxTreeGrid - Selection', () => {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
         });
 
-        it('should persist selection after filtering', () => {
+        it('should persist selection after filtering', fakeAsync(() => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
@@ -513,7 +513,7 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
-        });
+        }));
 
         it('should persist selection after scrolling', async () => {
             treeGrid.paging = false;
