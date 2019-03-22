@@ -779,6 +779,7 @@
                 color: --var($theme, 'row-selected-text-color');
             }
         }
+
     }
 
     %igx-grid__tr--expanded {
@@ -897,6 +898,16 @@
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
+    %igx-grid__tree-loading-indicator {
+        width: rem(24px, 16px);
+        height: rem(24px, 16px);
+        margin-right: rem(8px, 16px);
+
+        %circular-outer {
+            stroke: --var($theme, 'expand-icon-color');
         }
     }
 
