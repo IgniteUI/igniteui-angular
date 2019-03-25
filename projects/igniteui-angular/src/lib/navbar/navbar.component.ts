@@ -41,7 +41,13 @@ let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-navbar',
-    templateUrl: 'navbar.component.html'
+    templateUrl: 'navbar.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `
+    ]
 })
 
 export class IgxNavbarComponent {

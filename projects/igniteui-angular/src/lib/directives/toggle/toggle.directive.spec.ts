@@ -420,6 +420,36 @@ describe('IgxToggle', () => {
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
+    it('fix for #4222 - Should emit closed when closed second time', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        toggle.onClosed.subscribe(() => {
+            toggle.open();
+        });
+
+        spyOn(toggle.onOpening, 'emit');
+        spyOn(toggle.onClosed, 'emit').and.callThrough();
+
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(2);
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(3);
+    }));
+
     describe('overlay settings', () => {
         configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {

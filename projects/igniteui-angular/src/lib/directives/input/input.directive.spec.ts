@@ -33,7 +33,8 @@ describe('IgxInput', () => {
                 RequiredTwoWayDataBoundInputComponent,
                 DataBoundDisabledInputComponent,
                 ReactiveFormComponent,
-                InputsWithSameNameAttributesComponent
+                InputsWithSameNameAttributesComponent,
+                ToggleRequiredWithNgModelInputComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -247,6 +248,7 @@ describe('IgxInput', () => {
     });
 
     it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
+
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
 
@@ -319,6 +321,116 @@ describe('IgxInput', () => {
         fix.detectChanges();
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
     }));
+
+    it('Should style input when required is toggled dynamically.', () => {
+        const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance;
+        const input = instance.igxInputs.toArray()[1];
+        const inputGroup = instance.igxInputGroups.toArray()[1];
+
+        expect(input.required).toBe(false);
+        expect(inputGroup.isRequired).toBeFalsy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        instance.isRequired = true;
+        fixture.detectChanges();
+
+        expect(input.required).toBe(true);
+
+        expect(inputGroup.isRequired).toBeTruthy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('Should style input with ngModel when required is toggled dynamically.', () => {
+        const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance;
+        const input = instance.igxInputs.toArray()[0];
+        const inputGroup = instance.igxInputGroups.toArray()[0];
+
+        expect(input.required).toBe(false);
+        expect(inputGroup.isRequired).toBeFalsy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        instance.isRequired = true;
+        fixture.detectChanges();
+
+        expect(input.required).toBe(true);
+
+        expect(inputGroup.isRequired).toBeTruthy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+    });
 });
 
 @Component({ template: `
@@ -527,6 +639,26 @@ class ReactiveFormComponent {
             }
         }
     }
+}
+
+@Component({ template: `<igx-input-group>
+                            <label for="test" igxLabel>Test</label>
+                            <input name="test" type="text" igxInput [(ngModel)]="data" [required]="isRequired"/>
+                        </igx-input-group>
+                        <igx-input-group>
+                            <label for="test" igxLabel>Test</label>
+                            <input name="test" type="text" igxInput [value]="data1" [required]="isRequired"/>
+                        </igx-input-group>` })
+class ToggleRequiredWithNgModelInputComponent {
+    @ViewChildren(IgxInputDirective)
+    public igxInputs: QueryList<IgxInputDirective>;
+
+    @ViewChildren(IgxInputGroupComponent)
+    public igxInputGroups: QueryList<IgxInputGroupComponent>;
+
+    public data = '';
+    public data1 = '';
+    public isRequired = false;
 }
 
 function testRequiredValidation(inputElement, fixture) {

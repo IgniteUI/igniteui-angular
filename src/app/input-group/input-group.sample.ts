@@ -11,4 +11,11 @@ export class InputGroupSampleComponent {
         firstName: 'Oke',
         lastName: 'Nduka'
     };
+
+    public isRequired = true;
+    public value = '';
+
+    public toggleRequired() {
+        this.isRequired = !this.isRequired;
+    }
 }
