@@ -8,7 +8,8 @@ import {
     forwardRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    DoCheck
+    DoCheck,
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -176,6 +177,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
+
+    @HostListener('click', ['$event'])
+    public onClick(event) {
+        // hack for fixing chrome sort issue #4376
+        this.column.headerCell.onClick(event);
+    }
 
     /**
      * @hidden
