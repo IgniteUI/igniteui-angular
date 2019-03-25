@@ -1080,9 +1080,6 @@ export class IgxColumnComponent implements AfterContentInit {
 
         const targetColumn = grid._unpinnedColumns[index];
 
-        const args = { column: this, insertAtIndex: -1, columnIsPinned: false };
-        grid.onColumnPinning.emit(args);
-
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
@@ -1098,9 +1095,14 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.reinitPinStates();
 
+        const insertAtIndex = grid._unpinnedColumns.indexOf(this);
+        const args = { column: this, insertAtIndex, columnIsPinned: false };
+        grid.onColumnPinning.emit(args);
+
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
+
         return true;
     }
     /**

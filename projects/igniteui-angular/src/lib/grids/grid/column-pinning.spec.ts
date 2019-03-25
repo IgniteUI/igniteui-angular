@@ -161,17 +161,18 @@ describe('Column Pinning UI', () => {
             expect(currentArgs.columnIsPinned).toBe(true);
 
             GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+
             // When unpinning columns onColumnPinning event should be fired
             expect(counter).toBe(3);
             expect(currentArgs.column.field).toBe('ReleaseDate');
-            expect(currentArgs.insertAtIndex).toBe(-1);
+            expect(currentArgs.insertAtIndex).toBe(3);
             expect(currentArgs.columnIsPinned).toBe(false);
 
             GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(4);
             expect(currentArgs.column.field).toBe('Downloads');
-            expect(currentArgs.insertAtIndex).toBe(-1);
+            expect(currentArgs.insertAtIndex).toBe(2);
             expect(currentArgs.columnIsPinned).toBe(false);
 
             GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).click();
@@ -203,7 +204,7 @@ describe('Column Pinning UI', () => {
             grid.columns[0].unpin();
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('ID');
-            expect(currentArgs.insertAtIndex).toBe(-1);
+            expect(currentArgs.insertAtIndex).toBe(0);
             expect(currentArgs.columnIsPinned).toBe(false);
         }));
 
