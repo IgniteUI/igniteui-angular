@@ -37,6 +37,8 @@ const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
+const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', {'key': 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -260,17 +262,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close on click outside of the component', fakeAsync(() => {
-            expect(select.collapsed).toBeTruthy();
-            select.toggle();
-            tick();
-            expect(select.collapsed).toBeFalsy();
-
-            document.documentElement.dispatchEvent(new Event('click'));
-            tick();
-            fixture.detectChanges();
-            expect(select.collapsed).toBeTruthy();
-        }));
         it('should not display dropdown list when no select items', fakeAsync(() => {
             fixture.componentInstance.items = [];
             fixture.detectChanges();
@@ -354,7 +345,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on click outside of the component', fakeAsync(() => {
+        it('should emit closing events on input blur', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -364,7 +355,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            document.documentElement.dispatchEvent(new Event('click'));
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -434,6 +425,19 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
+        it('should close dropdown on blur', fakeAsync(() => {
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -1079,7 +1083,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close dropdown on pressing ESC key', fakeAsync(() => {
+        it('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1088,6 +1092,26 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
 
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', tabKeyEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();

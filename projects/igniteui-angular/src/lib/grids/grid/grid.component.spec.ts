@@ -1058,7 +1058,7 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, () => {
+            disapear and the new value should not persist onto the next row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.componentInstance.initColumnsRows(5, 5);
                 fix.detectChanges();
@@ -1076,7 +1076,7 @@ describe('IgxGrid Component Tests', () => {
                 const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
-            });
+            }));
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
@@ -2631,16 +2631,11 @@ describe('IgxGrid Component Tests', () => {
                 const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
                 const headerResArea = headers[2].children[1].nativeElement;
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
-                tick();
-                fix.detectChanges();
-
-                const resizer = headers[2].children[1].children[0].nativeElement;
+                tick(200);
+                const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
-                tick();
-
                 UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
-                tick(100);
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();

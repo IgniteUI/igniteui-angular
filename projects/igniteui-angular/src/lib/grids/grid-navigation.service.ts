@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 
@@ -429,6 +429,11 @@ export class IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
+        if (isSummaryRow && rowIndex === 0 &&
+            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+                return;
+
+        }
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex)) {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
@@ -466,12 +471,16 @@ export class IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
+        if (isSummary && rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
+            this.goToLastBodyElement();
+            return;
+        }
         if (visibleColumnIndex === 0) {
             if (this.isRowInEditMode(rowIndex)) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
                 return;
             }
-            if (rowIndex === 0 && this.grid.allowFiltering) {
+            if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
             } else {
                 this.navigateUp(currentRowEl, rowIndex,

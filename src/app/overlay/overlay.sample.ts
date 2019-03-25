@@ -61,11 +61,13 @@ export class OverlaySampleComponent implements OnInit {
 
     closeOnOutsideClick = true;
     modal = true;
+    useOutlet = false;
 
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
     @ViewChild('container') public container: ElementRef;
     @ViewChild(IgxDragDirective) public igxDrag: IgxDragDirective;
+    @ViewChild('outlet') public outletElement: ElementRef;
 
     onChange(ev) {
         switch (ev.radio.name) {
@@ -210,6 +212,7 @@ export class OverlaySampleComponent implements OnInit {
             stringMapping['HorizontalDirection'][this.horizontalDirection];
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
             stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
+        this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
     }
 
     onSwitchChange(ev) {
@@ -219,6 +222,9 @@ export class OverlaySampleComponent implements OnInit {
                 break;
             case 'modal':
                 this._overlaySettings.modal = ev.checked;
+                break;
+            case 'outlet':
+                this._overlaySettings.outlet = ev.checked ? this.outletElement : null;
                 break;
         }
     }

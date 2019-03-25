@@ -4,7 +4,7 @@ import { InjectionToken, Input, Output, EventEmitter, DoCheck } from '@angular/c
 /**
  * Defines the posible values of the components' display density.
  */
-export const enum DisplayDensity {
+export enum DisplayDensity {
     comfortable = 'comfortable',
     cosy = 'cosy',
     compact = 'compact'
