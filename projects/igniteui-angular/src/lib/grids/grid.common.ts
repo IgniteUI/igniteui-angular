@@ -126,6 +126,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 }
 
 @Directive({
+    selector: '[igxQuickFilterTemplate]'
+})
+export class IgxQuickFilterTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
     selector: '[igxCell]'
 })
 export class IgxCellTemplateDirective {

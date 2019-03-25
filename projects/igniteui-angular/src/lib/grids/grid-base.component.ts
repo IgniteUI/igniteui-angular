@@ -68,7 +68,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { IgxGridFilteringCellComponent, IgxQuickFilterTemplateDirective } from './filtering/grid-filtering-cell.component';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
@@ -1457,12 +1457,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
-
-    /**
-     *@hidden
-     */
-    @ContentChild(IgxQuickFilterTemplateDirective, { read: IgxQuickFilterTemplateDirective })
-    public quickFilterTemplateDirective: IgxQuickFilterTemplateDirective;
 
     /**
      * @hidden

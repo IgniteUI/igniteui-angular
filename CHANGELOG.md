@@ -2,9 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-# 7.2.2
+# 7.2.3
 - `igxGrid`
     - `igxQuickFilterTemplate` directive added that allows retemplating of the filter cell.
+    - `IgxColumnComponent` now has `quickFilterTemplate` property that can be used to retemplate the filter cell.
+
+# 7.2.2
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
