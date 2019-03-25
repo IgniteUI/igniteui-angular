@@ -1,25 +1,20 @@
 # Roadmap - Ignite UI for Angular
 
 # Current Milestone
- 
-
-## Milestone 6 (28.02.2019)
-
-1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
-2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
-3. Auto-complete (inline editable)
-4. Excel Style Filtering  
-5. Multi-cell Selection 
-6. Inline date and time pickers (with drop down/toggle)
 
 
-## Further Down the line
+## Milestone 7 (Due May 1st, 2019) 
+1. Multi-cell Selection #3915
+2. Grid Multi-Row Layout 
+3. Grid Row Dragging 
+
+
+## Going down the road
 
 1. Advanced Filtering
 2. Row-pinning
 3. Column Groups expand/collapse, with column grouping templates
 4. Visual Cell merging 
-5. Grid Multi-Row Layout 
 
 
 # Previous Milestones
@@ -89,3 +84,12 @@
 2. **[DONE]** Grid GroupBy summaries
 3. **[DONE]** Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
 4. **[DONE]** Toolbar Templatable and NavBar Templatable
+
+## Milestone 6 (Due March 8th, 2019)
+
+1. **[DONE]** Hierarchical Grid #827 
+2. **[DROPPED]** igxGrid rendering strategies (like record-based rendering) #2384
+3. **[DONE]** Auto-complete (inline editable) #3585
+4. **[DONE]** Excel Style Filtering #3592
+5. **[DONE]** Inline date and time pickers (with drop down/toggle) #3034 #2337
+6. **[DONE]** igxSelect Component #3148

@@ -253,7 +253,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.removeExpression(this.column.field, indexToRemove);
 
         this.updateVisibleFilters();
-        this.filteringService.filter(this.column.field);
+        this.filteringService.filterInternal(this.column.field);
     }
 
     private isMoreIconHidden(): boolean {
@@ -356,6 +356,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isColumnRightVisible(columnIndex: number): boolean {
+        if (this.filteringService.areAllColumnsInView) {
+            return true;
+        }
         let currentColumnRight = 0;
         for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
             currentColumnRight += parseInt(this.filteringService.unpinnedColumns[index].width, 10);
@@ -368,6 +371,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isColumnLeftVisible(columnIndex: number): boolean {
+        if (this.filteringService.areAllColumnsInView) {
+            return true;
+        }
         let currentColumnLeft = 0;
         for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
             if (this.filteringService.unpinnedColumns[index] === this.filteringService.unpinnedFilterableColumns[columnIndex]) {

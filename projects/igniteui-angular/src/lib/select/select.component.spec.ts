@@ -6,12 +6,13 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent, IgxSelectModule } from './select.component';
+import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
+import { IgxSelectModule } from './select.module';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -36,6 +37,8 @@ const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
+const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', {'key': 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -259,17 +262,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close on click outside of the component', fakeAsync(() => {
-            expect(select.collapsed).toBeTruthy();
-            select.toggle();
-            tick();
-            expect(select.collapsed).toBeFalsy();
-
-            document.documentElement.dispatchEvent(new Event('click'));
-            tick();
-            fixture.detectChanges();
-            expect(select.collapsed).toBeTruthy();
-        }));
         it('should not display dropdown list when no select items', fakeAsync(() => {
             fixture.componentInstance.items = [];
             fixture.detectChanges();
@@ -353,7 +345,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on click outside of the component', fakeAsync(() => {
+        it('should emit closing events on input blur', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -363,7 +355,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            document.documentElement.dispatchEvent(new Event('click'));
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -433,6 +425,19 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
+        it('should close dropdown on blur', fakeAsync(() => {
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -1078,7 +1083,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close dropdown on pressing ESC key', fakeAsync(() => {
+        it('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1087,6 +1092,26 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
 
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', tabKeyEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -1679,21 +1704,21 @@ describe('igxSelect', () => {
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
         const verifySelectedItemPositioning = function (reversed = false) {
-            expect(selectedItemRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
+            expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height :
                 inputRect.top - defaultItemTopPadding;
-            expect(selectedItemRect.top).toEqual(expectedItemTop);
+            expect(selectedItemRect.top).toBeCloseTo(expectedItemTop, 0);
             const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
                 inputRect.bottom + defaultItemBottomPadding;
-            expect(selectedItemRect.bottom).toEqual(expectedItemBottom);
+            expect(selectedItemRect.bottom).toBeCloseTo(expectedItemBottom, 0);
             expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
         };
         const verifyListPositioning = function () {
-            expect(listRect.left).toEqual(inputRect.left - defaultItemLeftPadding);
+            expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             expect(listRect.top).toEqual(listTop);
             expect(listRect.bottom).toEqual(listBottom);
-            expect(listRect.width).toEqual(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2);
+            expect(listRect.width).toBeCloseTo(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2, 0);
             const listHeight = hasScroll ? selectedItemRect.height * visibleItems + defaultItemTopPadding + defaultItemBottomPadding :
                 selectedItemRect.height * visibleItems;
             expect(listRect.height).toEqual(listHeight);
@@ -1947,6 +1972,123 @@ describe('igxSelect', () => {
                         toEqual(selectedItemRect.left + defaultItemLeftPadding);
                 }));
         });
+        describe('Document bigger than the visible viewport tests: ', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectMiddleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            }));
+            it('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
+                hasScroll = false;
+                visibleItems = 3;
+                selectedItemIndex = 1;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollLeft += 50;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height;
+                verifyListPositioning();
+
+                selectedItemIndex = 2;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollLeft += 50;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height * 2;
+                listBottom = selectedItemRect.bottom;
+                verifyListPositioning();
+
+                selectedItemIndex = 0;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollLeft += 50;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
+                verifyListPositioning();
+            }));
+            it('should correctly reposition the items container when perform vertical scroll', fakeAsync(() => {
+                hasScroll = false;
+                visibleItems = 3;
+                selectedItemIndex = 1;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollTop += 20;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height;
+                verifyListPositioning();
+
+                selectedItemIndex = 2;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollTop += 20;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top - selectedItemRect.height * 2;
+                listBottom = selectedItemRect.bottom;
+                verifyListPositioning();
+
+                selectedItemIndex = 0;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                document.documentElement.scrollTop += 20;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+                listTop = selectedItemRect.top;
+                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
+                verifyListPositioning();
+            }));
+        });
     });
     describe('EditorProvider', () => {
         beforeEach(async(() => {
@@ -2021,13 +2163,16 @@ class IgxSelectGroupsComponent {
             { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
         ];
 }
+
 @Component({
     template: `
-    <igx-select #select [(ngModel)]="value" >
-    <igx-select-item *ngFor="let item of items" [value]="item">
-        {{ item }}
-    </igx-select-item>
-    </igx-select>
+    <div style="width: 2500px; height: 400px;"></div>
+        <igx-select #select [(ngModel)]="value" >
+        <igx-select-item *ngFor="let item of items" [value]="item">
+            {{ item }}
+        </igx-select-item>
+        </igx-select>
+    <div style="width: 2500px; height: 400px;"></div>
 `,
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })

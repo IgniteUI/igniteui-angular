@@ -6,6 +6,7 @@ import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
@@ -204,25 +205,48 @@ describe('IgxTooltip', () => {
         }));
 
         it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
-            tooltipTarget.showTooltip();
+            // Hover the button.
+            hoverElement(button);
+            flush();
+            // Verify default position of the tooltip.
+            verifyTooltipPosition(tooltipNativeElement, button, true);
+            unhoverElement(button);
             flush();
 
-            // click button (the button is outside the tooltip, so we can use it for the test)
-            UIInteractions.clickElement(button);
-            flush();
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-
+            // Use custom overlaySettings.
             tooltipTarget.overlaySettings = /*<OverlaySettings>*/ {
-                closeOnOutsideClick: true,
-                excludePositionTarget: false
+                positionStrategy: new AutoPositionStrategy({
+                    target: tooltipTarget.nativeElement,
+                    horizontalStartPoint: HorizontalAlignment.Right,
+                    verticalStartPoint: VerticalAlignment.Bottom,
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom
+                })
             };
             fix.detectChanges();
 
-            tooltipTarget.showTooltip();
+            // Hover the button again.
+            hoverElement(button);
             flush();
+            // Verify that the position of the tooltip is changed.
+            verifyTooltipPosition(tooltipNativeElement, button, false);
+            const targetRect = (<HTMLElement>tooltipTarget.nativeElement).getBoundingClientRect();
+            const tooltipRect = (<HTMLElement>tooltipNativeElement).getBoundingClientRect();
+            expect(Math.abs(tooltipRect.top - targetRect.bottom) <= 0.5).toBe(true);
+            expect(Math.abs(tooltipRect.left - targetRect.right) <= 0.5).toBe(true);
+            unhoverElement(button);
+            flush();
+        }));
+
+        it('IgxTooltip closes when the target is clicked', fakeAsync(() => {
+            hoverElement(button);
+            flush();
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
             UIInteractions.clickElement(button);
             flush();
+
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 

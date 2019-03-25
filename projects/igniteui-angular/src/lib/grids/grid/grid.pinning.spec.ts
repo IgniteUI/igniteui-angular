@@ -31,9 +31,10 @@ describe('IgxGrid - Column Pinning ', () => {
                 GridFeaturesComponent,
                 OverPinnedGridComponent,
                 PinnedGroupsGridComponent,
-                InnerPinnedGroupsGridComponent
+                InnerPinnedGroupsGridComponent,
+                GridInitialPinningComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
@@ -204,7 +205,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[1].context.column.field).toEqual('ID');
     }));
 
-    it('should allow filter pinned columns', () => {
+    it('should allow filter pinned columns', fakeAsync(() => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
         fix.detectChanges();
 
@@ -223,7 +224,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         expect(grid.getCellByColumn(1, 'ID').value).toEqual(3);
-    });
+    }));
 
     it('should allow sorting pinned columns', () => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
@@ -592,6 +593,16 @@ describe('IgxGrid - Column Pinning ', () => {
 
             expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
         }));
+
+        it('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
+            const fix = TestBed.createComponent(GridInitialPinningComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+
+
+            expect(grid.pinnedColumns.length).toEqual(1);
+            expect(grid.unpinnedColumns.length).toEqual(2);
+        }));
 });
 
 /* tslint:disable */
@@ -887,4 +898,43 @@ export class InnerPinnedGroupsGridComponent {
 
     public selectedCell;
     public data = companyData;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='width'
+            [data]="data"
+          >
+        <igx-column  *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]="c.pinned">
+        </igx-column>
+        </igx-grid>
+    `
+})
+export class GridInitialPinningComponent {
+    public selectedCell;
+    public width = '100%';
+    public height = '300px';
+    public data = [{
+        ID: 'ALFKI',
+        CompanyName: 'Alfreds Futterkiste',
+        ContactName: 'Maria Anders',
+        ContactTitle: 'Sales Representative',
+        Address: 'Obere Str. 57',
+        City: 'Berlin',
+        Region: null,
+        PostalCode: '12209',
+        Country: 'Germany',
+        Phone: '030-0074321',
+        Fax: '030-0076545'
+    }];
+    public columns = [
+        { field: 'ID', width: 100, pinned: true },
+        { field: 'CompanyName', width: 300 },
+        { field: 'ContactName', width: 200 },
+    ];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
 }

@@ -45,7 +45,7 @@
     %overlay-display {
         width: 0;
         height: 0;
-        box-sizing: border-box;
+        box-sizing: content-box;
     }
 
     %overlay-wrapper {
@@ -54,14 +54,15 @@
         left: 0;
         bottom: 0;
         right: 0;
-        background-color: transparent;
-        transition: background-color .25s $ease-in-out-quad;
+        background: transparent;
+        transition: background .25s $ease-in-out-quad;
         pointer-events: none;
         z-index: 10;
+        box-sizing: content-box;
     }
 
     %overlay-wrapper--modal {
-        background-color: --var($theme, 'background-color');
+        background: --var($theme, 'background-color');
         pointer-events: initial;
     }
 
@@ -72,17 +73,22 @@
     %overlay-content {
         position: absolute;
         pointer-events: all;
+        box-sizing: content-box;
     }
 
     %overlay-content--modal {
         pointer-events: initial;
     }
 
-    %igx-toggle--hidden {
-        display: none !important;
-    }
-
     %overlay-content--elastic {
         overflow: auto;
+    }
+
+    %overlay-content--relative {
+        position: relative;
+    }
+
+    %igx-toggle--hidden {
+        display: none !important;
     }
 }

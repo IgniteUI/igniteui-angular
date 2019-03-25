@@ -7,6 +7,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 
 describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
@@ -192,6 +193,34 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.focused).toBe(true);
+    }));
+
+    it('should include summary rows in tab sequence.', (async () => {
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        childGrid.getColumnByName('ID').hasSummary = true;
+        fixture.detectChanges();
+        childGrid.cdr.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(2);
+        await wait(100);
+        fixture.detectChanges();
+
+        const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
+        parentCell.nativeElement.focus();
+
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+
+        const summaryCells = fixture.debugElement.queryAll(By.css('igx-grid-summary-cell'));
+        const lastSummaryCell = summaryCells[summaryCells.length - 1].nativeElement;
+        expect(document.activeElement).toBe(lastSummaryCell);
+
+        lastSummaryCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(parentCell.selected).toBe(true);
+        expect(parentCell.focused).toBe(true);
     }));
 
     it('should allow navigating to end in child grid when child grid target row moves outside the parent view port.', (async () => {
@@ -500,6 +529,65 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(parentCell.selected).toBeTruthy();
         expect(parentCell.focused).toBeTruthy();
 
+    }));
+
+    it('should skip nested child grids that have no data when navigating up/down', (async () => {
+        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        child1.height = '150px';
+        await wait(100);
+        fixture.detectChanges();
+        const row = child1.getRowByIndex(0);
+        (row as IgxHierarchicalRowComponent).toggle();
+        await wait(100);
+        fixture.detectChanges();
+        //  set nested child to not have data
+        const subChild = child1.hgridAPI.getChildGrids(false)[0];
+        subChild.data = [];
+        subChild.cdr.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
+        const fchildRowCell = row.cells.toArray()[0];
+        fchildRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await wait(100);
+        fixture.detectChanges();
+        // second child row should be in view
+        const sChildRowCell = child1.getRowByIndex(2).cells.toArray()[0];
+        expect(sChildRowCell.selected).toBeTruthy();
+        expect(sChildRowCell.focused).toBeTruthy();
+
+        expect(child1.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThanOrEqual(150);
+
+        sChildRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await wait(100);
+        fixture.detectChanges();
+        expect(fchildRowCell.selected).toBeTruthy();
+        expect(fchildRowCell.focused).toBeTruthy();
+        expect(child1.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+
+    }));
+
+    it('should navigate inside summary row with Ctrl + Arrow Right/ Ctrl + Arrow Left', (async () => {
+        const col = hierarchicalGrid.getColumnByName('ID');
+        col.hasSummary = true;
+        fixture.detectChanges();
+
+        const summaryCells = hierarchicalGrid.summariesRowList.toArray()[0].summaryCells.toArray();
+
+        const firstCell =  summaryCells[0];
+        firstCell.nativeElement.focus();
+        fixture.detectChanges();
+
+        firstCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        const lastCell = summaryCells.find((s) => s.column.field === 'childData2');
+        expect(lastCell.focused).toBeTruthy();
+
+        lastCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        expect(firstCell.focused).toBeTruthy();
     }));
 });
 

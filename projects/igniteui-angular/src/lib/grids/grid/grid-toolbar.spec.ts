@@ -22,7 +22,7 @@ describe('IgxGrid - Grid Toolbar', () => {
                 GridToolbarTestPage1Component
             ],
             imports: [
-                IgxGridModule.forRoot(),
+                IgxGridModule,
                 NoopAnimationsModule
             ],
             providers: [
@@ -530,7 +530,7 @@ describe('IgxGrid - Grid Toolbar Custom Content', () => {
                 GridToolbarTestPage2Component
             ],
             imports: [
-                IgxGridModule.forRoot(),
+                IgxGridModule,
                 NoopAnimationsModule
             ],
             providers: [

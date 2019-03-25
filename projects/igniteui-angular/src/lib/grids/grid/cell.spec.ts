@@ -8,7 +8,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
@@ -30,7 +30,7 @@ describe('IgxGrid - Cell component', () => {
                 ColumnEditablePropertyTestComponent,
                 GridColumnWidthsComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
@@ -99,6 +99,27 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
+    it('Should trigger onDoubleClick event', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.columns[0].editable = true;
+        fix.detectChanges();
+
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'index');
+
+        spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(fix.componentInstance.eventCounter).toBe(1);
+
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(fix.componentInstance.eventCounter).toBe(2);
+    });
+
     it('Should trigger onContextMenu event when right click into cell', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -160,6 +181,32 @@ describe('IgxGrid - Cell component', () => {
         fixture.detectChanges();
 
         expect(document.activeElement).toEqual(document.body);
+
+    }));
+
+    it('Should not revert cell\' value when onDoubleClick while in editMode', (async () => {
+        const fix = TestBed.createComponent(CellEditingTestComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'fullName');
+
+        expect(firstCell.nativeElement.textContent).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeFalsy();
+
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        const editCell = cellElem.query(By.css('input'));
+        expect(editCell.nativeElement.value).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeTruthy();
+
+        UIInteractions.sendInput(editCell, 'test');
+        fix.detectChanges();
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(editCell.nativeElement.value).toBe('test');
+        expect(firstCell.inEditMode).toBeTruthy();
     }));
 
     describe('Cell Editing', () => {
@@ -336,19 +383,19 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
 
-            it('should exit edit mode on filtering', (async () => {
+            it('should exit edit mode on filtering', (fakeAsync(() => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
                 const cellValue = cell.value;
 
                 cellDom.triggerEventHandler('dblclick', {});
-                await wait();
+                tick();
 
                 const editTemplate = cellDom.query(By.css('input'));
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
-                await wait();
+                tick();
 
                 grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
@@ -357,10 +404,10 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
-            }));
+            })));
 
-            it('should not throw errors when update cell to value, which does not match filter criteria', (async () => {
-                grid.filter('personNumber', 1, IgxStringFilteringOperand.instance().condition('equals'));
+            it('should not throw errors when update cell to value, which does not match filter criteria', (fakeAsync(() => {
+                grid.filter('personNumber', 1, IgxNumberFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'personNumber');
@@ -368,15 +415,15 @@ describe('IgxGrid - Cell component', () => {
                 const previousCell = grid.getCellByColumn(0, 'birthday');
 
                 cellDomPK.triggerEventHandler('dblclick', {});
-                await wait();
+                tick();
                 expect(cell.inEditMode).toBe(true);
 
                 const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
                 UIInteractions.sendInput(editTemplate, 9);
-                await wait();
+                tick();
 
                 expect (() => previousCell.onClick({})).not.toThrow();
-            }));
+            })));
 
             it('should exit edit mode on sorting', (async () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
@@ -768,8 +815,8 @@ describe('IgxGrid - Cell component', () => {
     it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
-         const grid = fixture.componentInstance.grid;
-         const columns: IgxColumnComponent[] = grid.columnList.toArray();
+        const grid = fixture.componentInstance.grid;
+        const columns: IgxColumnComponent[] = grid.columnList.toArray();
         expect(columns[0].editable).toBeFalsy();
         expect(columns[1].editable).toBeFalsy();
         expect(columns[2].editable).toBeTruthy();
@@ -800,7 +847,7 @@ export class DefaultGridComponent {
 
     public selectedCell: IgxGridCellComponent;
     public clickedCell: IgxGridCellComponent;
-
+    public eventCounter = 0;
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
@@ -816,8 +863,10 @@ export class DefaultGridComponent {
         this.clickedCell = evt.cell;
     }
 
+
     public doubleClick(evt) {
         this.clickedCell = evt.cell;
+        this.eventCounter++;
     }
 }
 
@@ -1058,8 +1107,8 @@ export class ConditionalCellStyleTestComponent implements OnInit {
     `
 })
 export class ColumnEditablePropertyTestComponent {
-     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-     public data = [
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    public data = [
         { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
         { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
@@ -1081,7 +1130,7 @@ export class ColumnEditablePropertyTestComponent {
 })
 export class GridColumnWidthsComponent {
     public static COLUMN_WIDTH;
-     @ViewChild('grid', { read: IgxGridComponent })
+    @ViewChild('grid', { read: IgxGridComponent })
     public instance: IgxGridComponent;
     public data;
     public columns;

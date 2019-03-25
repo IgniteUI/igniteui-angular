@@ -2,10 +2,10 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
@@ -30,7 +30,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         grid = fix.componentInstance.treeGrid;
     });
 
-    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
+    it('should correctly filter a string column using the \'contains\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -59,9 +59,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should correctly filter a string column using the \'endswith\' filtering conditions', () => {
+    it('should correctly filter a string column using the \'endswith\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -90,9 +90,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should correctly filter a number column using the \'greaterThan\' filtering conditions', () => {
+    it('should correctly filter a number column using the \'greaterThan\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -127,9 +127,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should correctly filter a number column using the \'lessThan\' filtering conditions', () => {
+    it('should correctly filter a number column using the \'lessThan\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -164,9 +164,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should correctly filter a date column using the \'before\' filtering conditions', () => {
+    it('should correctly filter a date column using the \'before\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -201,9 +201,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should correctly filter a date column using the \'after\' filtering conditions', () => {
+    it('should correctly filter a date column using the \'after\' filtering conditions', fakeAsync(() => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -241,9 +241,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
-    });
+    }));
 
-    it('should allow row collapsing after filtering is applied', () => {
+    it('should allow row collapsing after filtering is applied', fakeAsync(() => {
         grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
@@ -255,7 +255,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
-    });
+    }));
 
     describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;

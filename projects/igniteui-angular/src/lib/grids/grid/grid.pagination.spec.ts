@@ -3,12 +3,12 @@ import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
 import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
-import { IgxNumberFilteringOperand } from '../../../public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxGrid - Grid Paging', () => {
     configureTestSuite();
@@ -21,7 +21,7 @@ describe('IgxGrid - Grid Paging', () => {
                 PagingAndEditingComponent,
                 GridIDNameJobTitleComponent
             ],
-            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

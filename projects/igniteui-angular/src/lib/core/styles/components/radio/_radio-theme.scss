@@ -133,7 +133,7 @@
     %radio-composite--x {
         &::before {
             border: $border-style --var($theme, 'fill-color');
-            background-color: --var($theme, 'fill-color');
+            background: --var($theme, 'fill-color');
             transform: scale3d(.5, .5, .5);
         }
 
@@ -154,7 +154,7 @@
         }
 
         &::before {
-            background-color: --var($theme, 'disabled-color');
+            background: --var($theme, 'disabled-color');
             border: $border-style transparent;
         }
     }
@@ -209,13 +209,13 @@
 
     %radio-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: --var($theme, 'empty-color');
-        transition: background-color .2s $ease-out-quad;
+        background: --var($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
         opacity: .12;
     }
 
     %radio-ripple--focused-checked {
-        background-color: --var($theme, 'fill-color');
+        background: --var($theme, 'fill-color');
     }
 
     %radio-ripple--hover {
@@ -232,13 +232,13 @@
 
     %radio-ripple--hover-unchecked {
         &::after {
-            background-color: --var($theme, 'empty-color');
+            background: --var($theme, 'empty-color');
         }
     }
 
     %radio-ripple--hover-checked {
         &::after {
-            background-color: --var($theme, 'fill-color');
+            background: --var($theme, 'fill-color');
         }
     }
 

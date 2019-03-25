@@ -22,13 +22,13 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     ConnectedPositioningStrategy,
-    CloseScrollStrategy,
     OverlaySettings,
     VerticalAlignment,
     PositionSettings,
     HorizontalAlignment,
-    IgxOverlayService
-} from '../../../services';
+    IgxOverlayService,
+    AbsoluteScrollStrategy
+} from '../../../services/index';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
@@ -58,7 +58,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     @Input()
@@ -148,7 +148,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
         }
 
-        this.filteringService.filter(this.column.field, this.expressionsList);
+        this.filteringService.filterInternal(this.column.field, this.expressionsList);
         this.closeDialog();
     }
 

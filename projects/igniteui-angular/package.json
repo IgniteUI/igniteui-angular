@@ -16,8 +16,16 @@
     "angular6",
     "UI components",
     "grid",
+    "data table",
+    "tree grid",
+    "tree table",
+    "hierarchical grid",
+    "hierarchical table",
     "combo",
     "drop down",
+    "select",
+    "auto complete",
+    "autocomplete",
     "list",
     "tabs",
     "calendar",
@@ -52,6 +60,8 @@
     "slider",
     "toast",
     "snackbar",
+    "banner",
+    "expansion panel",
     "excel export",
     "csv export"
   ],
@@ -68,7 +78,7 @@
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
-    "igniteui-cli": "~3.2.0"
+    "igniteui-cli": "~4.1.0"
   },
   "ng-update": {
     "migrations": "./migrations/migration-collection.json"

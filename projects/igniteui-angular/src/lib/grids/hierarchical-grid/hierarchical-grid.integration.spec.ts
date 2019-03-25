@@ -334,7 +334,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(document.querySelectorAll('igx-grid-filtering-row').length).toEqual(2);
         }));
 
-        it('should not lose child grid states after filtering in parent grid.', () => {
+        it('should not lose child grid states after filtering in parent grid.', fakeAsync(() => {
             // expand 1st row
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -353,9 +353,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
             fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
             expect(fChildCell.selected).toBe(true);
-        });
+        }));
 
-        it('should retain selected row when filtering', () => {
+        it('should retain selected row when filtering', fakeAsync(() => {
             hierarchicalGrid.rowSelectable = true;
             fixture.detectChanges();
 
@@ -372,9 +372,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
             const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
             expect(headerCheckbox.indeterminate).toBeTruthy();
-        });
+        }));
 
-        it('should show empty filter message when there are no records matching the filter', () => {
+        it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
             fixture.componentInstance.data = [];
             fixture.detectChanges();
 
@@ -387,7 +387,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.filter('ID', '123450', IgxStringFilteringOperand.instance().condition('contains'), true);
             fixture.detectChanges();
             expect(gridBody.nativeElement.innerText).toMatch(hierarchicalGrid.emptyFilteredGridMessage);
-        });
+        }));
 
         it('should apply classes to the header when filter row is visible', () => {
             hierarchicalGrid.rowSelectable = true;
@@ -410,6 +410,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('Summaries', () => {
+        const INDENT_LEVEL_CLASS = 'igx-grid__row-indentation--level-1';
         it('should allow defining summaries for child grid and child should be sized correctly.', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -425,6 +426,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
             expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
 
+            // there should be indentation of the summaries
+            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(true);
+
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
             const elementsHeight = childElems.map(elem => elem.offsetHeight).reduce((total, height) => {
@@ -433,6 +437,17 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
             expect(elementsHeight).toEqual(gridHeight);
+
+            childGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const childGridDebugElement = childGrids[0].query(By.css('igx-hierarchical-grid'));
+            const grandChild = childGridDebugElement.query(By.css('igx-hierarchical-grid')).componentInstance;
+            const grandChildSummaryRow = grandChild.summariesRowList.first.nativeElement;
+
+            expect(grandChildSummaryRow.children.length).toEqual(1);
+            // there should be no indentation of the summaries of the leaf grid
+            expect(grandChildSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) === -1).toBe(true);
         });
 
         it('should render summaries for column inside a column group.', () => {

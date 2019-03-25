@@ -1,4 +1,15 @@
-import { Directive, NgModule, Input, QueryList, Output, EventEmitter, AfterContentInit, ContentChildren, OnDestroy } from '@angular/core';
+import {
+    Directive,
+    NgModule,
+    Input,
+    QueryList,
+    Output,
+    EventEmitter,
+    AfterContentInit,
+    ContentChildren,
+    OnDestroy,
+    HostBinding
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
@@ -155,6 +166,12 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     @Output()
     readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+
+    /**
+     *@hidden
+     */
+    @HostBinding('style.display')
+    public displayStyle = 'block';
 
     /**
      *@hidden

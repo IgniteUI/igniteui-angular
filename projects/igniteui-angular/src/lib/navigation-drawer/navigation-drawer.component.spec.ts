@@ -1,16 +1,18 @@
 import {
-  async,
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick
+    async,
+    ComponentFixture,
+    fakeAsync,
+    TestBed,
+    tick
 } from '@angular/core/testing';
 
 import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import * as Infragistics from '../../public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxNavigationDrawerModule } from './navigation-drawer.module';
+import { IgxNavigationToggleDirective, IgxNavigationCloseDirective } from '../core/navigation/directives';
+import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
+import { IgxNavigationService } from '../core/navigation/nav.service';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
@@ -23,19 +25,19 @@ describe('Navigation Drawer', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             declarations: [
-                Infragistics.IgxNavigationCloseDirective,
-                Infragistics.IgxNavigationToggleDirective,
+                IgxNavigationCloseDirective,
+                IgxNavigationToggleDirective,
                 TestComponent,
                 TestComponentDIComponent,
                 TestComponentPin,
                 TestComponentMini
             ],
-            imports: [Infragistics.IgxNavigationDrawerModule]
+            imports: [IgxNavigationDrawerModule]
         });
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
-        widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
+        widthSpyOverride = spyOn(IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
@@ -48,7 +50,7 @@ describe('Navigation Drawer', () => {
             const fixture = TestBed.createComponent(TestComponent);
             fixture.detectChanges();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                IgxNavigationDrawerComponent).toBeTruthy();
             expect(fixture.componentInstance.viewChild.state).toBeNull();
         });
     }));
@@ -60,8 +62,8 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.viewChild).toBeDefined();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
-            expect(fixture.componentInstance.viewChild.state instanceof Infragistics.IgxNavigationService)
+                IgxNavigationDrawerComponent).toBeTruthy();
+            expect(fixture.componentInstance.viewChild.state instanceof IgxNavigationService)
                 .toBeTruthy();
         });
     }));
@@ -75,7 +77,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.viewChild).toBeDefined();
             expect(fixture.componentInstance.viewChild instanceof
-                Infragistics.IgxNavigationDrawerComponent).toBeTruthy();
+                IgxNavigationDrawerComponent).toBeTruthy();
             expect(() => fixture.destroy()).not.toThrow();
         });
     }));
@@ -99,23 +101,24 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.viewChild.id).toBe('customNavDrawer');
             expect(domNavDrawer.id).toBe('customNavDrawer');
 
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
-        }));
+    }));
 
     it('should attach events and register to nav service and detach on destroy', async(() => {
         const template = '<igx-nav-drawer id=\'testNav\'></igx-nav-drawer>';
         TestBed.overrideComponent(TestComponentDIComponent, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
-            const state: Infragistics.IgxNavigationService = fixture.componentInstance.viewChild.state;
+            const state: IgxNavigationService = fixture.componentInstance.viewChild.state;
             const touchManager = fixture.componentInstance.viewChild.touchManager;
 
             expect(state.get('testNav')).toBeDefined();
@@ -125,16 +128,16 @@ describe('Navigation Drawer', () => {
             expect(state.get('testNav')).toBeUndefined();
             expect(touchManager.getManagerForElement(document)).toBe(null);
 
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
-        }));
+    }));
 
     it('should open and close with API calls', async(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
-            const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
+            const drawer: IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
             expect(drawer.isOpen).toBeFalsy();
 
             drawer.open();
@@ -152,7 +155,7 @@ describe('Navigation Drawer', () => {
             drawer.toggle();
             expect(drawer.isOpen).toBeFalsy();
 
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
     }));
@@ -176,20 +179,20 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
         })
-        .then((value) => {
-            expect(drawer.opening.emit).toHaveBeenCalled();
-            expect(drawer.opened.emit).toHaveBeenCalled();
+            .then((value) => {
+                expect(drawer.opening.emit).toHaveBeenCalled();
+                expect(drawer.opened.emit).toHaveBeenCalled();
 
-            const re = drawer.toggle(true);
-            fixture.detectChanges();
-            fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
-        })
-        .then((value) => {
+                const re = drawer.toggle(true);
+                fixture.detectChanges();
+                fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
+            })
+            .then((value) => {
                 expect(drawer.closing.emit).toHaveBeenCalled();
                 expect(drawer.closed.emit).toHaveBeenCalled();
                 // resolver();
-        });
-        }));
+            });
+    }));
 
     it('should properly initialize with min template', async(() => {
         const template = `<igx-nav-drawer>
@@ -197,9 +200,10 @@ describe('Navigation Drawer', () => {
                             <ng-template igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentDIComponent, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
@@ -209,7 +213,7 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.viewChild.hasAnimateWidth).toBeTruthy();
             expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--mini');
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
     }));
@@ -223,9 +227,10 @@ describe('Navigation Drawer', () => {
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentMini, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
         let fixture;
         let asideElem;
 
@@ -245,18 +250,19 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(asideElem.styles['width']).toEqual(fixture.componentInstance.viewChild.miniWidth);
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
     }));
 
     it('should set pin, gestures options', async(() => {
-        const template =  `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
+        const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPin, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
@@ -273,68 +279,74 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             expect(fixture.componentInstance.viewChild.enableGestures).toBeTruthy();
 
-        }).catch ((reason) => {
+        }).catch((reason) => {
             return Promise.reject(reason);
         });
     }));
 
     it('should stay at 100% parent height when pinned', async(() => {
-        const template = `<div>
-                            <igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures"></igx-nav-drawer>
-                            </div>`;
-        TestBed.overrideComponent(TestComponentPin, { set: { template }});
+        const template = `<div style="height: 100%">
+                            <igx-nav-drawer
+                                [pin]="pin"
+                                pinThreshold="false"
+                                [enableGestures]="enableGestures">
+                            </igx-nav-drawer>
+                          </div>`;
+
+        TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
-        .then(() => {
-            const fixture = TestBed.createComponent(TestComponentPin);
-            const windowHeight = window.innerHeight;
-            const aside = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement;
-            const container = fixture.debugElement.query(By.css('div')).nativeElement;
+            .then(() => {
+                const fixture = TestBed.createComponent(TestComponentPin);
+                const windowHeight = window.innerHeight;
+                const container = fixture.debugElement.query(By.css('div')).nativeElement;
+                const navdrawer = fixture.debugElement.query(By.css('igx-nav-drawer > aside')).nativeElement;
 
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(aside.clientHeight).toEqual(windowHeight);
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
 
-            fixture.componentInstance.pin = true;
-            fixture.detectChanges();
-            expect(aside.clientHeight).toEqual(container.clientHeight);
+                fixture.componentInstance.pin = true;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(container.clientHeight);
 
-            container.style.height =  `${windowHeight - 50}px`;
-            expect(aside.clientHeight).toEqual(windowHeight - 50);
+                container.style.height = `${windowHeight - 50}px`;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight - 50);
 
-            // unpin :
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(aside.clientHeight).toEqual(windowHeight);
-        });
+                // unpin :
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(navdrawer.clientHeight).toEqual(windowHeight);
+            });
     }));
 
     it('should set flex-basis and order when pinned', async(() => {
-        const template =  `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
-        TestBed.overrideComponent(TestComponentPin, { set: { template }});
+        const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
+        TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
-        .then(() => {
-            const fixture = TestBed.createComponent(TestComponentPin);
-            const drawer = fixture.componentInstance.viewChild;
-            drawer.isOpen = true;
-            fixture.detectChanges();
-            const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
+            .then(() => {
+                const fixture = TestBed.createComponent(TestComponentPin);
+                const drawer = fixture.componentInstance.viewChild;
+                drawer.isOpen = true;
+                fixture.detectChanges();
+                const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
 
-            expect(drawer.pin).toBeTruthy();
-            expect(drawerElem.style.flexBasis).toEqual(drawer.width);
-            expect(drawerElem.style.order).toEqual('0');
+                expect(drawer.pin).toBeTruthy();
+                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(drawerElem.style.order).toEqual('0');
 
-            drawer.width = '345px';
-            drawer.position = 'right';
-            fixture.detectChanges();
-            expect(drawerElem.style.flexBasis).toEqual(drawer.width);
-            expect(drawerElem.style.order).toEqual('1');
+                drawer.width = '345px';
+                drawer.position = 'right';
+                fixture.detectChanges();
+                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(drawerElem.style.order).toEqual('1');
 
-            fixture.componentInstance.pin = false;
-            fixture.detectChanges();
-            expect(drawer.pin).toBeFalsy();
-            expect(drawerElem.style.flexBasis).toEqual('0px');
-            expect(drawerElem.style.order).toEqual('0');
-        });
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(drawer.pin).toBeFalsy();
+                expect(drawerElem.style.flexBasis).toEqual('0px');
+                expect(drawerElem.style.order).toEqual('0');
+            });
     }));
 
     it('should toggle on edge swipe gesture', (done) => {
@@ -348,23 +360,23 @@ describe('Navigation Drawer', () => {
             // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
             return swipe(document.body, 80, 10, 100, 250, 0);
         })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.isOpen)
-                .toEqual(false, 'should ignore swipes too far away from the edge');
-            return swipe(document.body, 10, 10, 150, 250, 0);
-        })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.isOpen).toEqual(true, 'Should accept edge swipe');
-            return swipe(document.body, 180, 10, 150, -180, 0);
-        })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
-            done();
-        })
-        .catch ((reason) => {
-            done();
-        });
-        }, 10000);
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.isOpen)
+                    .toEqual(false, 'should ignore swipes too far away from the edge');
+                return swipe(document.body, 10, 10, 150, 250, 0);
+            })
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.isOpen).toEqual(true, 'Should accept edge swipe');
+                return swipe(document.body, 180, 10, 150, -180, 0);
+            })
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
+                done();
+            })
+            .catch((reason) => {
+                done();
+            });
+    }, 10000);
 
     it('should toggle on edge pan gesture', (done) => {
         let navDrawer;
@@ -389,28 +401,28 @@ describe('Navigation Drawer', () => {
 
             return pan(document.body, 10, 10, 150, 20, 0);
         })
-        .then(() => {
-            expect(navDrawer.isOpen).toEqual(false, 'should ignore too short pan');
+            .then(() => {
+                expect(navDrawer.isOpen).toEqual(false, 'should ignore too short pan');
 
-            // valid pan
-            return pan(document.body, 10, 10, 100, 200, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen).toEqual(true, 'should open on valid pan');
+                // valid pan
+                return pan(document.body, 10, 10, 100, 200, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen).toEqual(true, 'should open on valid pan');
 
-            // not enough distance, closing
-            return pan(document.body, 200, 10, 100, -20, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen).toEqual(true, 'should remain open on too short pan');
+                // not enough distance, closing
+                return pan(document.body, 200, 10, 100, -20, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen).toEqual(true, 'should remain open on too short pan');
 
-            // close
-            return pan(document.body, 250, 10, 100, -200, 0);
-        }).then(() => {
-            expect(navDrawer.isOpen).toEqual(false, 'should close on valid pan');
-            done();
-        }).catch ((reason) => {
-            done();
-        });
-        }, 10000);
+                // close
+                return pan(document.body, 250, 10, 100, -200, 0);
+            }).then(() => {
+                expect(navDrawer.isOpen).toEqual(false, 'should close on valid pan');
+                done();
+            }).catch((reason) => {
+                done();
+            });
+    }, 10000);
 
     it('should update edge zone with mini width', async(() => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
@@ -419,9 +431,10 @@ describe('Navigation Drawer', () => {
                             </igx-nav-drawer>`;
         let fixture: ComponentFixture<TestComponentDIComponent>;
         TestBed.overrideComponent(TestComponentDIComponent, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
@@ -437,10 +450,10 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.viewChild.maxEdgeZone)
                 .toBe(fixture.componentInstance.drawerMiniWidth * 1.1);
 
-            }).catch ((reason) => {
-                return Promise.reject(reason);
-            });
-        }));
+        }).catch((reason) => {
+            return Promise.reject(reason);
+        });
+    }));
 
     it('should update width from css or property', fakeAsync((done) => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
@@ -449,9 +462,10 @@ describe('Navigation Drawer', () => {
                         </igx-nav-drawer>`;
         let fixture: ComponentFixture<TestComponentDIComponent>;
         TestBed.overrideComponent(TestComponentDIComponent, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         TestBed.compileComponents().then(() => {
@@ -463,40 +477,41 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('');
             return fixture.componentInstance.viewChild.open();
         })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('');
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('');
 
-            fixture.componentInstance.drawerMiniWidth = '80px';
-            fixture.componentInstance.drawerWidth = '250px';
-            fixture.detectChanges();
-            return fixture.whenStable(); // let changes apply in the meantime
-        })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('250px');
-            return fixture.componentInstance.viewChild.close();
-        })
-        .then(() => {
-            tick(1000);
-            expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('80px');
-            fixture.componentInstance.drawerWidth = '350px';
-            fixture.detectChanges();
-            return fixture.componentInstance.viewChild.open();
-        })
-        .then(() => {
-            expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('350px');
-            done();
-        }).catch ((reason) => {
-            return Promise.reject(reason);
-        });
+                fixture.componentInstance.drawerMiniWidth = '80px';
+                fixture.componentInstance.drawerWidth = '250px';
+                fixture.detectChanges();
+                return fixture.whenStable(); // let changes apply in the meantime
+            })
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('250px');
+                return fixture.componentInstance.viewChild.close();
+            })
+            .then(() => {
+                tick(1000);
+                expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('80px');
+                fixture.componentInstance.drawerWidth = '350px';
+                fixture.detectChanges();
+                return fixture.componentInstance.viewChild.open();
+            })
+            .then(() => {
+                expect(fixture.componentInstance.viewChild.drawer.style.width).toBe('350px');
+                done();
+            }).catch((reason) => {
+                return Promise.reject(reason);
+            });
     }));
 
     it('should update pin based on window width (pinThreshold)', async (done) => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
         let fixture: ComponentFixture<TestComponentPin>;
         TestBed.overrideComponent(TestComponentPin, {
-        set: {
-            template
-        }});
+            set: {
+                template
+            }
+        });
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         await TestBed.compileComponents();
@@ -599,24 +614,24 @@ describe('Navigation Drawer', () => {
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponent {
-     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
+    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
 }
 
 @Component({
-    providers: [Infragistics.IgxNavigationService],
+    providers: [IgxNavigationService],
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponentDIComponent {
-     public drawerMiniWidth: string | number;
-     public drawerWidth: string | number;
-     @ViewChild(Infragistics.IgxNavigationDrawerComponent) public viewChild: Infragistics.IgxNavigationDrawerComponent;
+    public drawerMiniWidth: string | number;
+    public drawerWidth: string | number;
+    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDIComponent {
-     public pin = true;
-     public enableGestures = '';
-     public pinThreshold = 1024;
+    public pin = true;
+    public enableGestures = '';
+    public pinThreshold = 1024;
 }
 
 class TestComponentMini extends TestComponentDIComponent {

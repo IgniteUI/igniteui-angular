@@ -1,10 +1,11 @@
-import { normalize, experimental } from '@angular-devkit/core';
+import { normalize } from '@angular-devkit/core';
 import * as path from 'path';
 import { Tree } from '@angular-devkit/schematics';
+import { WorkspaceSchema, WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
-export function getProjectPaths(config: experimental.workspace.WorkspaceSchema, appendPrefix = true): string[] {
+export function getProjectPaths(config: WorkspaceSchema, appendPrefix = true): string[] {
     const sourceDirs = [];
     let globalPrefix;
 
@@ -27,7 +28,7 @@ export function getWorkspacePath(host: Tree): string {
     return configPaths.find(x => host.exists(x));
 }
 
-export function getWorkspace(host: Tree): experimental.workspace.WorkspaceSchema {
+export function getWorkspace(host: Tree): WorkspaceSchema {
     const configPath = getWorkspacePath(host);
     if (configPath) {
         return JSON.parse(host.read(configPath).toString());
@@ -35,16 +36,16 @@ export function getWorkspace(host: Tree): experimental.workspace.WorkspaceSchema
     return null;
 }
 
-export function getProjects(config: experimental.workspace.WorkspaceSchema): experimental.workspace.WorkspaceProject[] {
-    const projects: experimental.workspace.WorkspaceProject[] = [];
+export function getProjects(config: WorkspaceSchema): WorkspaceProject<ProjectType.Application>[] {
+    const projects: WorkspaceProject<ProjectType.Application>[] = [];
 
     for (const projName of Object.keys(config.projects)) {
         const proj = config.projects[projName];
-        if (proj.architect && proj.architect.e2e) {
-            // filter out e2e apps
+        if ((proj.projectType && proj.projectType !== ProjectType.Application) ||
+            (proj.architect && proj.architect.e2e)) {
             continue;
         }
-        projects.push(proj);
+        projects.push(proj as WorkspaceProject<ProjectType.Application>);
     }
     return projects;
 }
