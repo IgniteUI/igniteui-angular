@@ -11,8 +11,21 @@ import {
     ListCustomLoadingComponent,
     TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 
 declare var Simulator: any;
+
+const LIST_CSS_CLASS = 'igx-list';
+const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
+const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
+
+const LIST_ITEM_BASE_CSS_CLASS = 'igx-list__item-base';
+const LIST_ITEM_BASE_COMPACT_DENSITY_CSS_CLASS = 'igx-list__item-base--compact';
+const LIST_ITEM_BASE_COSY_DENSITY_CSS_CLASS = 'igx-list__item-base--cosy';
+
+const LIST_ITEM_HEADER_CSS_CLASS = 'igx-list__header';
+const LIST_ITEM_HEADER_COMPACT_DENSITY_CSS_CLASS = 'igx-list__header--compact';
+const LIST_ITEM_HEADER_COSY_DENSITY_CSS_CLASS = 'igx-list__header--cosy';
 
 describe('List', () => {
     configureTestSuite();
@@ -623,6 +636,55 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
+    it('display density is properly applied', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        const list = fixture.componentInstance.list as IgxListComponent;
+        const domList = fixture.debugElement.query(By.css('igx-list'));
+        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.comfortable);
+
+        list.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.comfortable);
+    });
+
+    it('should emit onDensityChanged with proper event arguments', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        let oldDensity: DisplayDensity;
+        let newDensity: DisplayDensity;
+        const list = fixture.componentInstance.list as IgxListComponent;
+
+        list.onDensityChanged.subscribe((args: IDensityChangedEventArgs) => {
+            oldDensity = args.oldDensity;
+            newDensity = args.newDensity;
+        });
+
+        list.displayDensity = DisplayDensity.compact;
+        expect(oldDensity).toBeUndefined();
+        expect(newDensity).toBe(DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        expect(oldDensity).toBe(DisplayDensity.compact);
+        expect(newDensity).toBe(DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        expect(oldDensity).toBe(DisplayDensity.cosy);
+        expect(newDensity).toBe(DisplayDensity.comfortable);
+
+        unsubscribeEvents(list);
+    });
+
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
             deltaX: itemWidth * 0.6,
@@ -706,5 +768,53 @@ describe('List', () => {
         list.onPanStateChange.unsubscribe();
         list.onRightPan.unsubscribe();
         list.onItemClicked.unsubscribe();
+        list.onDensityChanged.unsubscribe();
+    }
+
+    /**
+     * Verifies the display density of the IgxList and its items by providing the IgxListComponent, the list DebugElement,
+     * the expected items and headers count and the expected DisplayDensity enumeration value.
+    */
+    function verifyDisplayDensity(listComp, listDebugEl, expectedItemsCount, expectdHeadersCount, expectedDisplayDensity: DisplayDensity) {
+        let expectedListDensityClass;
+        let expectedListItemBaseClass;
+        let expectedListItemHeaderClass;
+
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: {
+                expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS;
+                expectedListItemBaseClass = LIST_ITEM_BASE_COMPACT_DENSITY_CSS_CLASS;
+                expectedListItemHeaderClass = LIST_ITEM_HEADER_COMPACT_DENSITY_CSS_CLASS;
+            } break;
+            case DisplayDensity.cosy: {
+                expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS;
+                expectedListItemBaseClass = LIST_ITEM_BASE_COSY_DENSITY_CSS_CLASS;
+                expectedListItemHeaderClass = LIST_ITEM_HEADER_COSY_DENSITY_CSS_CLASS;
+            } break;
+            default: {
+                expectedListDensityClass = LIST_CSS_CLASS;
+                expectedListItemBaseClass = LIST_ITEM_BASE_CSS_CLASS;
+                expectedListItemHeaderClass = LIST_ITEM_HEADER_CSS_CLASS;
+            } break;
+        }
+
+        // Verify list display density.
+        expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
+        expect(listComp.hostClass).toBe(expectedListDensityClass);
+        expect(listComp.displayDensity).toBe(expectedDisplayDensity);
+
+        // Verify list items display density.
+        const listDomItems = listDebugEl.queryAll(By.css('.' + expectedListItemBaseClass));
+        expect(listDomItems.length).toBe(expectedItemsCount, `Incorrect count of ${expectedListItemBaseClass} items.`);
+        for (const listItem of listComp.items) {
+            expect(listItem.hostClass).toBe(expectedListItemBaseClass);
+        }
+
+        // Verify list headers display density.
+        const listDomHeaders = listDebugEl.queryAll(By.css('.' + expectedListItemHeaderClass));
+        expect(listDomHeaders.length).toBe(expectdHeadersCount, `Incorrect count of ${expectedListItemHeaderClass} items.`);
+        for (const listItem of listComp.headers) {
+            expect(listItem.hostClass).toBe(expectedListItemHeaderClass);
+        }
     }
 });
