@@ -2,7 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-# 7.2.2
+## 7.3.0
+### Features
+- `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
+
+## 7.2.2
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
