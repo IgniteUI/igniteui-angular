@@ -1159,8 +1159,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     protected applyChunkSizeChange() {
-        const chunkSize = this.chunkSize = this.chunkSize || (this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) :
-            this._calculateChunkSize());
+        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
@@ -1505,6 +1504,22 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
         this._updateViews(prevChunkSize);
+    }
+
+    protected applyChunkSizeChange() {
+        const chunkSize = this.chunkSize = this.chunkSize || (this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) :
+            this._calculateChunkSize());
+        if (chunkSize > this.state.chunkSize) {
+            const diff = chunkSize - this.state.chunkSize;
+            for (let i = 0; i < diff; i++) {
+                this.addLastElem();
+            }
+        } else if (chunkSize < this.state.chunkSize) {
+            const diff = this.state.chunkSize - chunkSize;
+            for (let i = 0; i < diff; i++) {
+                this.removeLastElem();
+            }
+        }
     }
 }
 
