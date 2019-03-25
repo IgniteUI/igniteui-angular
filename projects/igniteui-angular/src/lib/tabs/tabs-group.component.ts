@@ -71,10 +71,8 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     /**
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        return 'igx-tabs__group';
-    }
+    @HostBinding('class.igx-tabs__group')
+    public styleClass = true;
 
     @HostListener('window:resize', ['$event'])
     public onResize(event) {

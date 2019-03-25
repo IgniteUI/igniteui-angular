@@ -105,7 +105,7 @@ export interface IFormatOptions {
  * 'longDate': equivalent to 'MMMM d, y' (June 15, 2015).
  * 'fullDate': equivalent to 'EEEE, MMMM d, y' (Monday, June 15, 2015).
  */
-export const enum PredefinedFormatOptions {
+export enum PredefinedFormatOptions {
     ShortDate = 'shortDate',
     MediumDate = 'mediumDate',
     LongDate = 'longDate',
@@ -132,7 +132,12 @@ export const enum PredefinedFormatOptions {
         }],
     // tslint:disable-next-line:component-selector
     selector: 'igx-date-picker',
-    templateUrl: 'date-picker.component.html'
+    templateUrl: 'date-picker.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
