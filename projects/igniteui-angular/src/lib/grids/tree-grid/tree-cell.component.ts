@@ -91,6 +91,13 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     /**
      * @hidden
      */
+    public onLoadingDblClick(event: Event) {
+        event.stopPropagation();
+    }
+
+    /**
+     * @hidden
+     */
     public calculateSizeToFit(range: any): number {
         const indicatorWidth = this.indicator.nativeElement.getBoundingClientRect().width;
         const indicatorStyle = this.document.defaultView.getComputedStyle(this.indicator.nativeElement);

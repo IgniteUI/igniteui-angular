@@ -35,7 +35,9 @@
         <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
     </div>
-    <div *ngIf="isLoading" class="igx-grid__tree-loading-indicator">
+    <div *ngIf="isLoading"
+         (dblclick)="onLoadingDblClick($event)"
+         class="igx-grid__tree-loading-indicator">
         <ng-container *ngTemplateOutlet="grid.rowLoadingIndicatorTemplate ? grid.rowLoadingIndicatorTemplate : defaultLoadingIndicatorTemplate">
         </ng-container>
     </div>
