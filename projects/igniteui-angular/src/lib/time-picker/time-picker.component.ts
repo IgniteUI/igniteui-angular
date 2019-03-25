@@ -35,7 +35,7 @@ import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
-import { NoOpScrollStrategy } from '../services/overlay/scroll';
+import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil, filter, throttle } from 'rxjs/operators';
@@ -89,7 +89,12 @@ export interface IgxTimePickerValidationFailedEventArgs {
         }
     ],
     selector: 'igx-time-picker',
-    templateUrl: 'time-picker.component.html'
+    templateUrl: 'time-picker.component.html',
+    styles: [
+        `:host {
+            display: block;
+        }`
+    ]
 })
 export class IgxTimePickerComponent implements
     IgxTimePickerBase,
@@ -332,6 +337,23 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+    * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
+    * ```typescript
+    * const settings: OverlaySettings = {
+    *      closeOnOutsideClick: true,
+    *      modal: false
+    *  }
+    * ```
+    * ---
+    * ```html
+    * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
+    * ```
+     * @memberof IgxTimePickerComponent
+     */
+    @Input()
+    public overlaySettings: OverlaySettings;
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
@@ -699,7 +721,7 @@ export class IgxTimePickerComponent implements
         this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
-            scrollStrategy: new NoOpScrollStrategy(),
+            scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
         };
 
@@ -1138,27 +1160,31 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.mode === InteractionMode.Dialog) {
-            this.collapsed = false;
-            if (this.outlet) {
-                this._dialogOverlaySettings.outlet = this.outlet;
-            }
-            this._overlayId = this.overlayService.attach(this.container, this._dialogOverlaySettings);
-            this.overlayService.show(this._overlayId);
-        }
 
-        if (this.mode === InteractionMode.DropDown) {
-            if (this.collapsed) {
-                this.collapsed = false;
-                if (this.outlet) {
-                    this._dropDownOverlaySettings.outlet = this.outlet;
-                }
-                this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-                this._overlayId = this.overlayService.attach(this.container, this._dropDownOverlaySettings);
-                this.overlayService.show(this._overlayId);
-            } else {
-                this._onDropDownClosed();
+        if (this.collapsed) {
+            this.collapsed = false;
+
+            let settings;
+            if (this.mode === InteractionMode.Dialog) {
+                settings = this.overlaySettings || this._dialogOverlaySettings;
             }
+
+            if (this.mode === InteractionMode.DropDown) {
+                settings = this.overlaySettings || this._dropDownOverlaySettings;
+                if (settings.positionStrategy && settings.positionStrategy.settings) {
+                    settings.positionStrategy.settings.target = this.group.element.nativeElement;
+                }
+            }
+
+            if (this.outlet) {
+                settings.outlet = this.outlet;
+            }
+
+            this._overlayId = this.overlayService.attach(this.container, settings);
+            this.overlayService.show(this._overlayId);
+
+        } else if (this.mode === InteractionMode.DropDown) {
+            this._onDropDownClosed();
         }
 
         if (this.value) {
