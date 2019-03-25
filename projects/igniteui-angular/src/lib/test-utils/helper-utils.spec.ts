@@ -6,10 +6,17 @@ import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component'
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { ComponentFixture } from '@angular/core/testing';
+import { IgxGridBaseComponent } from '../grids/index';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const DEBOUNCETIME = 50;
+
+export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
+    grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
+    grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
+}
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {

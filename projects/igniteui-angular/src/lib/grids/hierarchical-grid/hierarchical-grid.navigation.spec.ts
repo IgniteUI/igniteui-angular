@@ -8,6 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
@@ -27,6 +28,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupGridScrollDetection(fixture, hierarchicalGrid);
     }));
 
     // simple tests
@@ -610,6 +612,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
+            setupGridScrollDetection(fixture, hierarchicalGrid);
         }));
 
         // complex tests
@@ -738,6 +741,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupGridScrollDetection(fixture, hierarchicalGrid);
     }));
     it('should allow navigating up/down between sibling child grids.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
@@ -877,6 +881,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupGridScrollDetection(fixture, hierarchicalGrid);
     }));
 
     it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', (async () => {

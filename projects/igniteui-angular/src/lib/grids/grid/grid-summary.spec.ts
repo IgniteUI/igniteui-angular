@@ -22,7 +22,7 @@ import {
     SummariesGroupByWithScrollsComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
@@ -740,6 +740,7 @@ describe('IgxGrid - Summaries', () => {
             fix = TestBed.createComponent(SummariesGroupByWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            setupGridScrollDetection(fix, grid);
         });
 
         it('should be able to select summaries with arrow keys', async () => {

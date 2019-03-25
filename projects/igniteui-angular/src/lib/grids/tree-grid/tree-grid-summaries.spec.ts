@@ -10,7 +10,7 @@ import {
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
@@ -43,6 +43,7 @@ describe('IgxTreeGrid - Summaries', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('should render summaries for all the rows when have parentKey', () => {
@@ -657,6 +658,7 @@ describe('IgxTreeGrid - Summaries', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('Delete root node', () => {
@@ -1171,6 +1173,7 @@ describe('IgxTreeGrid - Summaries', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyScroliingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('should be able to select root summaries with arrow keys', async () => {

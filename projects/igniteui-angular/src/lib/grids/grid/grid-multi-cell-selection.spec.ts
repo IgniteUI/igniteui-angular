@@ -7,7 +7,7 @@ import { SelectionWithScrollsComponent, SelectionWithTransactionsComponent } fro
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 
 
@@ -739,6 +739,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
         });
 
@@ -1462,6 +1463,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
         });
 

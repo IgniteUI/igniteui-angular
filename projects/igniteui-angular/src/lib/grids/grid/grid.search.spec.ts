@@ -12,6 +12,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - search API', () => {
     configureTestSuite();
@@ -795,6 +796,7 @@ describe('IgxGrid - search API', () => {
 
             component = fix.componentInstance;
             grid = component.grid;
+            setupGridScrollDetection(fix, grid);
             grid.data[29] = { ID: 30, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '1887-11-28T11:23:17.714Z' };
             grid.width = '500px';
             grid.height = '600px';

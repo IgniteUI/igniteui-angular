@@ -28,6 +28,7 @@ import { TransactionType, Transaction, IgxTransactionService } from '../../servi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -1386,10 +1387,16 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            it(`Should jump from first editable columns to overlay buttons`, (async () => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+            let fixture;
+            let grid;
+
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
+                grid = fixture.componentInstance.grid;
+                setupGridScrollDetection(fixture, grid);
+            });
+            it(`Should jump from first editable columns to overlay buttons`, (async () => {
                 const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
                 fixture.detectChanges();
@@ -1418,9 +1425,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should jump from last editable columns to overlay buttons`, (async () => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
                 await wait(DEBOUNCETIME);
                 const targetCell = fixture.componentInstance.getCell(0, 'Test');
@@ -1452,10 +1456,7 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should scroll editable column into view when navigating from buttons`, (async () => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
                 let currentEditCell: IgxGridCellComponent;
-                const grid = fixture.componentInstance.grid;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
                 grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
@@ -1506,9 +1507,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns`, fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
                 targetCell.onKeydownEnterEditMode();
@@ -1535,9 +1533,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns when column pinning is enabled`, fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.pinnedFlag = true;
@@ -1576,9 +1571,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns when column hiding is enabled`, fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
@@ -1627,9 +1619,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns when column pinning & hiding is enabled`, fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
@@ -1679,9 +1668,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns when column grouping is enabled`, (async () => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.columnGroupingFlag = true;
@@ -1727,9 +1713,6 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should skip non-editable columns when column when all column features are enabled`, fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;

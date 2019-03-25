@@ -278,7 +278,7 @@ describe('IgxGrid - Column properties', () => {
 
         const grid = fix.componentInstance.instance;
         const col = grid.columns[1];
-        expect(col.formatter).toBeNull();
+        expect(col.formatter).toBeUndefined();
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
             // Check the display value
@@ -291,6 +291,7 @@ describe('IgxGrid - Column properties', () => {
         col.formatter = (val: string) => {
             return val.toLowerCase();
         };
+        grid.markForCheck();
         expect(col.formatter).toBeTruthy();
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {

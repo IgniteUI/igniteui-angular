@@ -9,7 +9,7 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxTreeGridModule } from '.';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Multi Cell selection', () => {
@@ -36,6 +36,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
         });
 
@@ -493,6 +494,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
         });
 
@@ -600,6 +602,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('CRUD: selected range should not change when delete row', () => {
@@ -724,6 +727,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('CRUD: selected range should not change when delete row', () => {

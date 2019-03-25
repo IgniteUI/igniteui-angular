@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule, IgxGridRowComponent, IgxGridGroupByRowComponent, } from './index';
@@ -9,7 +9,7 @@ import { IGridCellEventArgs } from '../grid-base.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     PinOnInitAndSelectionComponent, PinningComponent,
@@ -140,6 +140,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         const fix = TestBed.createComponent(ScrollsComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
+        setupGridScrollDetection(fix, grid);
 
         const firstRow = grid.getRowByIndex(0);
         const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
@@ -453,12 +454,13 @@ describe('IgxGrid - Keyboard navigation', () => {
     describe('in virtualized grid', () => {
         configureTestSuite();
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            setupGridScrollDetection(fix, grid);
         });
 
         it('should allow navigating down', async () => {
@@ -836,13 +838,14 @@ describe('IgxGrid - Keyboard navigation', () => {
     describe('Group By navigation ', () => {
         configureTestSuite();
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(DefaultGroupBYGridComponent);
             grid = fix.componentInstance.grid;
             fix.componentInstance.width = '600px';
             fix.componentInstance.height = '600px';
             grid.columnWidth = '100px';
+            setupGridScrollDetection(fix, grid);
             fix.detectChanges();
         });
 
