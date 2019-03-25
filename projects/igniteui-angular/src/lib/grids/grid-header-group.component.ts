@@ -208,6 +208,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
         event.preventDefault();
     }
 
+    @HostListener('click', ['$event'])
+    public onClick(event) {
+        // hack for fixing chrome sort issue #4376
+        this.column.headerCell.onClick(event);
+    }
+
     public ngDoCheck() {
         this.cdr.markForCheck();
     }
