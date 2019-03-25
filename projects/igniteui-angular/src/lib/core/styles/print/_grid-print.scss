@@ -3,37 +3,40 @@ $border-pin-color: #999;
 $print-background: #f9f9f9;
 
 @mixin igx-grid-print {
-    %form-group-display,
-    %cbx-display,
-    %radio-display,
-    %igx-grid__grouparea,
-    %tooltip-display,
-    %aside,
-    %overlay-display,
-    %igx-ripple-display,
-    %igx-slider-display,
-    %igx-snackbar-display,
-    %switch-display,
-    %time-picker-display,
-    %igx-toast-display,
-    %igx-tabs,
-    %igx-navbar-display,
-    %igx-button--flat,
-    %igx-button--raised,
-    %igx-button--fab,
-    %igx-button--icon,
-    %igx-button--disabled,
-    %grid-tbody-scrollbar,
-    %vhelper-display,
-    %igx-grid-paginator,
-    %igx-grid-toolbar__actions,
-    %grid__cbx-selection,
-    %igx-drop-area__icon,
-    %igx-drop-area__text,
-    %igx-grid__header-indentation,
-    %igx-grid__grouping-indicator,
-    %igx-grid__row-indentation {
-        display: none !important;
+    %grid-display {
+        %form-group-display,
+        %cbx-display,
+        %radio-display,
+        %igx-grid__grouparea,
+        %tooltip-display,
+        %aside,
+        %overlay-display,
+        %igx-ripple-display,
+        %igx-slider-display,
+        %igx-snackbar-display,
+        %switch-display,
+        %time-picker-display,
+        %igx-toast-display,
+        %igx-tabs,
+        %igx-navbar-display,
+        %igx-button--flat,
+        %igx-button--raised,
+        %igx-button--fab,
+        %igx-button--icon,
+        %igx-button--disabled,
+        %grid-tbody-scrollbar,
+        %vhelper-display,
+        %igx-grid-paginator,
+        %igx-grid-toolbar__actions,
+        %grid__cbx-selection,
+        %igx-drop-area__icon,
+        %igx-drop-area__text,
+        %igx-grid__header-indentation,
+        %igx-grid__grouping-indicator,
+        %igx-grid__row-indentation,
+        %igx-grid__hierarchical-expander {
+            display: none !important;
+        }
     }
 
     %igx-grid__grouping-indicator {
@@ -60,7 +63,6 @@ $print-background: #f9f9f9;
         border-color: $border-color !important;
     }
 
-
     %grid-display {
         igx-icon {
             color: #666 !important;
@@ -71,7 +73,6 @@ $print-background: #f9f9f9;
     %igx-grid-toolbar,
     %igx-grid__group-row,
     %grid-tfoot {
-        -webkit-print-color-adjust: exact;
         background: $print-background !important;
     }
 

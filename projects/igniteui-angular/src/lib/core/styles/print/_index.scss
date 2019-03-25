@@ -16,6 +16,7 @@
             color: #000 !important;
             box-shadow: none !important;
             text-shadow: none !important;
+            -webkit-print-color-adjust: exact;
         }
 
         a[href^='http:']::after {
