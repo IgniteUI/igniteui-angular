@@ -17,10 +17,22 @@ import {
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
+import { DisplayDensity } from '../core/density';
 
-// ====================== ITEM ================================
-// The `<igx-item>` component is a container intended for row items in
-// a `<igx-list>` container.
+/**
+ * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
+ *
+ * Example:
+ * ```html
+ * <igx-list>
+ *   <igx-list-item isHeader="true">Contacts</igx-list-item>
+ *   <igx-list-item *ngFor="let contact of contacts">
+ *     <span class="name">{{ contact.name }}</span>
+ *     <span class="phone">{{ contact.phone }}</span>
+ *   </igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Component({
     providers: [HammerGesturesManager],
     selector: 'igx-list-item',
@@ -136,7 +148,6 @@ export class IgxListItemComponent implements IListChild {
      * ```
      * @memberof IgxListItemComponent
      */
-    @HostBinding('class.igx-list__header')
     get headerStyle(): boolean {
         return this.isHeader;
     }
@@ -148,9 +159,21 @@ export class IgxListItemComponent implements IListChild {
      * ```
      * @memberof IgxListItemComponent
      */
-    @HostBinding('class.igx-list__item-base')
     get innerStyle(): boolean {
         return !this.isHeader;
+    }
+
+    /**
+     * Gets the currently applied class of the `list item` based on the display density of the `list`.
+     * ```typescript
+     * let hostClass =  this.listItem.hostClass;
+     * ```
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        const className = (this.isHeader) ? 'igx-list__header' : 'igx-list__item-base';
+        return this.getDensityClass(className);
     }
 
     /**
@@ -299,6 +322,20 @@ export class IgxListItemComponent implements IListChild {
         }
         if (this.rightPanningTemplateElement && this.rightPanningTemplateElement.nativeElement) {
             this.rightPanningTemplateElement.nativeElement.style.visibility = rightVisibility;
+        }
+    }
+
+    /**
+     *@hidden
+     */
+    private getDensityClass(baseStyleClass: string) {
+        switch (this.list.displayDensity) {
+            case DisplayDensity.cosy:
+                return `${baseStyleClass}--${DisplayDensity.cosy}`;
+            case DisplayDensity.compact:
+                return `${baseStyleClass}--${DisplayDensity.compact}`;
+            default:
+                return baseStyleClass;
         }
     }
 

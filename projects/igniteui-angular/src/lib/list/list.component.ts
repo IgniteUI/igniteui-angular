@@ -12,7 +12,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    Optional,
+    Inject
 } from '@angular/core';
 
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -24,7 +26,9 @@ import {
     IgxEmptyListTemplateDirective,
     IgxListPanState,
     IgxListItemLeftPanningTemplateDirective,
-    IgxListItemRightPanningTemplateDirective} from './list.common';
+    IgxListItemRightPanningTemplateDirective
+} from './list.common';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -68,9 +72,11 @@ export interface IListItemPanningEventArgs {
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
 })
-export class IgxListComponent implements IgxListBase {
+export class IgxListComponent extends IgxListBase {
 
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
     }
 
     /**
@@ -270,7 +276,6 @@ export class IgxListComponent implements IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @HostBinding('class.igx-list-empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
     }
@@ -282,9 +287,20 @@ export class IgxListComponent implements IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @HostBinding('class.igx-list')
     public get cssClass(): boolean {
         return this.children && this.children.length > 0;
+    }
+
+    /**
+     * Gets the currently applied class of the `list` based on its display density.
+     * ```typescript
+     * let hostClass =  this.list.hostClass;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        return (this.children && this.children.length > 0) ? this.getComponentDensityClass('igx-list') : 'igx-list-empty';
     }
 
     /**
