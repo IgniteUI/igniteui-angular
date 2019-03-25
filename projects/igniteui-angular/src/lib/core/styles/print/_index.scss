@@ -1,0 +1,33 @@
+@import 'grid-print';
+
+@mixin igx-print-layout {
+    @media print {
+        html,
+        body,
+        app-root {
+            min-height: 100vh;
+            min-width: 100vw;
+            margin: 0;
+            display: block;
+        }
+
+        * {
+            background: transparent !important;
+            color: #000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        a[href^='http:']::after {
+            content: '['attr(href)']';
+            color: blue;
+        }
+
+        .no-print,
+        igx-nav-drawer {
+            display: none!important;
+        }
+
+        @include igx-grid-print();
+    }
+}
