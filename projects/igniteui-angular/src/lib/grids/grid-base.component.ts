@@ -3984,9 +3984,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
-        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
         return columnWidth.toString();
     }
