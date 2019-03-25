@@ -185,8 +185,8 @@ describe('IgxGrid - Column Moving', () => {
 
 
             // step 3 - verify sorting is not broken
-            headers[0].triggerEventHandler('click', new Event('click'));
-            headers[0].triggerEventHandler('click', new Event('click'));
+            headers[0].parent.triggerEventHandler('click', new Event('click'));
+            headers[0].parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(6);

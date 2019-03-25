@@ -202,8 +202,8 @@ describe('IgxTreeGrid - Sorting', () => {
 
     describe('UI sorting', () => {
         it('should sort descending all treeGrid levels by column name through UI', () => {
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderGroupCell(fix, 'Name');
+            TreeGridFunctions.clickHeaderGroupCell(fix, 'Name');
             fix.detectChanges();
 
             // Verify first level records are desc sorted
@@ -223,7 +223,7 @@ describe('IgxTreeGrid - Sorting', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through UI', () => {
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            TreeGridFunctions.clickHeaderGroupCell(fix, 'Age');
             fix.detectChanges();
 
             // Verify first level records are asc sorted

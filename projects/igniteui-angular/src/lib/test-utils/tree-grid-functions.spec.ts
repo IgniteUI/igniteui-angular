@@ -76,6 +76,12 @@ export class TreeGridFunctions {
         return headerCell;
     }
 
+    public static getHeaderGroupCell(fix, columnKey) {
+        const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header-group'));
+        const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1)[0];
+        return headerCell;
+    }
+
     public static getHeaderCellMultiColHeaders(fix, columnKey) {
         const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));
         const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1).pop();
@@ -89,6 +95,11 @@ export class TreeGridFunctions {
 
     public static clickHeaderCell(fix, columnKey) {
         const cell = TreeGridFunctions.getHeaderCell(fix, columnKey);
+        cell.nativeElement.dispatchEvent(new Event('click'));
+    }
+
+    public static clickHeaderGroupCell(fix, columnKey) {
+        const cell = TreeGridFunctions.getHeaderGroupCell(fix, columnKey);
         cell.nativeElement.dispatchEvent(new Event('click'));
     }
 

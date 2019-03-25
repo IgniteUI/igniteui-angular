@@ -82,8 +82,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         expect(grid.columns[2].cells[0].value).toEqual('Brown');
 
-        headers[2].nativeElement.dispatchEvent(new Event('click'));
-        headers[2].nativeElement.dispatchEvent(new Event('click'));
+        headers[2].parent.nativeElement.dispatchEvent(new Event('click'));
+        headers[2].parent.nativeElement.dispatchEvent(new Event('click'));
         fixture.detectChanges();
 
         expect(grid.columns[2].cells[0].value).toEqual('Wilson');
@@ -174,8 +174,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[2].width).toEqual('250px');
         expect(grid.columns[2].cells[0].value).toEqual(254);
 
-        headers[2].nativeElement.dispatchEvent(new Event('click'));
-        headers[2].nativeElement.dispatchEvent(new Event('click'));
+        headers[2].parent.nativeElement.dispatchEvent(new Event('click'));
+        headers[2].parent.nativeElement.dispatchEvent(new Event('click'));
         fixture.detectChanges();
 
         expect(grid.columns[2].cells[0].value).toEqual(1000);
