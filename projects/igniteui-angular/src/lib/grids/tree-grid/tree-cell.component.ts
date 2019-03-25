@@ -57,9 +57,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      */
     public get hasChildren() {
         return this.grid.loadChildrenOnDemand ?
-            this.grid.hasChildrenKey ? this.row.rowData[this.grid.hasChildrenKey] :
-                !(this.grid.expansionStates.get(this.row.rowID) && (!this.row.treeRow.children || !this.row.treeRow.children.length)) :
-            (this.row.treeRow.children && this.row.treeRow.children.length > 0);
+            this.grid.expansionStates.has(this.row.rowID) ?
+                this.row.treeRow.children && this.row.treeRow.children.length :
+                this.grid.hasChildrenKey ?
+                    this.row.rowData[this.grid.hasChildrenKey] :
+                    true :
+            this.row.treeRow.children && this.row.treeRow.children.length;
     }
 
     /**
