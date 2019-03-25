@@ -528,7 +528,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(mockObj.stopPropagation).toHaveBeenCalled();
         });
 
-        it('should preserve updates after removing Filtering', () => {
+        it('should preserve updates after removing Filtering', fakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
@@ -553,7 +553,7 @@ describe('IgxTreeGrid - Integration', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(33);
 
-        });
+        }));
 
         it('should preserve updates after removing Sorting', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;

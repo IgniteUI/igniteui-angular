@@ -2,7 +2,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
-import { ComponentRef, ElementRef } from '@angular/core';
+import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
 
@@ -116,6 +116,7 @@ export interface OverlayInfo {
     closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
+    ngZone: NgZone;
 }
 
 /** @hidden @internal */
