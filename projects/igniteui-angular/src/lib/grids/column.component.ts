@@ -1457,7 +1457,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     get width() {
         let isChildrenWidthInPercent = false, width;
-        if (this.grid.enableMRL) {
+        if (this.grid && this.grid.enableMRL) {
             width = `${this.children.reduce((acc, val) => {
                 if (val.hidden) {
                     return acc;
