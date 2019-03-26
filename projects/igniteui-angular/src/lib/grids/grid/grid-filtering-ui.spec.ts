@@ -2474,6 +2474,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         // Enable resizing
         fix.componentInstance.resizable = true;
         fix.detectChanges();
+        grid.cdr.detectChanges();
 
         // Make 'ProductName' column smaller
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -2557,6 +2558,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         // Enable resizing
         grid.columns.forEach(col => col.resizable = true);
         fix.detectChanges();
+        grid.cdr.detectChanges();
 
         let colChips = GridFunctions.getFilterChipsForColumn('Downloads', fix);
         let colOperands = GridFunctions.getFilterOperandsForColumn('Downloads', fix);
