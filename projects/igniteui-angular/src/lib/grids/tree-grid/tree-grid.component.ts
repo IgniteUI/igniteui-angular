@@ -449,8 +449,33 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             }
             this.data.push(...children);
         } else if (this.childDataKey) {
-            const parent = this.records.get(parentID);
-            parent.data[this.childDataKey] = children;
+            let parent = this.records.get(parentID);
+            let parentData = parent.data;
+
+            if (this.transactions.enabled && this.transactions.getAggregatedChanges(true).length) {
+                const path = [];
+                while (parent) {
+                    path.push(parent.rowID);
+                    parent = parent.parent;
+                }
+
+                let collection = this.data;
+                let record: any;
+                for (let i = path.length - 1; i >= 0; i--) {
+                    const pid = path[i];
+                    record = collection.find(r => r[this.primaryKey] === pid);
+
+                    if (!record) {
+                        break;
+                    }
+                    collection = record[this.childDataKey];
+                }
+                if (record) {
+                    parentData = record;
+                }
+            }
+
+            parentData[this.childDataKey] = children;
         }
 
         this._pipeTrigger++;
