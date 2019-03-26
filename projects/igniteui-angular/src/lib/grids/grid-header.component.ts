@@ -119,6 +119,7 @@ export class IgxGridHeaderComponent implements DoCheck {
         this.cdr.markForCheck();
     }
 
+    @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
             event.stopPropagation();
