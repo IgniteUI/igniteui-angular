@@ -351,6 +351,7 @@ Here is a list of all public methods exposed by **IgxGridColumnComponent**:
 |`headerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column header.|
 |`footerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column footer.|
 |`inlineEditorTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied as a cell enters edit mode.|
+|`quickFilterTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the filter cell of the column.|
 
 
 ## Filtering Conditions
