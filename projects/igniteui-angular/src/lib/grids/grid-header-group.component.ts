@@ -39,6 +39,52 @@ const DEBOUNCE_TIME = 200;
 })
 export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterViewInit {
 
+    @HostBinding('style.-ms-grid-row-span')
+    public msGridRowSpan;
+
+    @HostBinding('style.-ms-grid-column-span')
+    public msGridColumnSpan;
+
+
+    @HostBinding('style.grid-row-end')
+    public _rowEnd;
+
+    get rowEnd() {
+        return this._rowEnd;
+    }
+
+    @Input()
+    set rowEnd(value: string) {
+        this._rowEnd = value;
+        if (value && value.indexOf('span') !== -1) {
+            this.msGridRowSpan = parseInt(value.replace('span', ''), 10);
+        }
+    }
+
+    @HostBinding('style.grid-column-end')
+    public _colEnd;
+
+    get colEnd() {
+        return this._colEnd;
+    }
+
+    @Input()
+    set colEnd(value: string) {
+        this._colEnd = value;
+        if (value && value.indexOf('span') !== -1) {
+            this.msGridColumnSpan = parseInt(value.replace('span', ''), 10);
+        }
+    }
+
+    @HostBinding('style.-ms-grid-row')
+    @HostBinding('style.grid-row-start')
+    @Input() rowStart: string;
+
+    @HostBinding('style.-ms-grid-column')
+    @HostBinding('style.grid-column-start')
+    @Input() colStart: string;
+
+
     /**
      * Gets the column of the header group.
      * @memberof IgxGridHeaderGroupComponent

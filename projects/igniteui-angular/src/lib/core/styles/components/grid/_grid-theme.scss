@@ -664,14 +664,14 @@
 
         .igx-grid__mrl_block {
             display: grid;
-            width: 100%;
+
+            %grid-thead-item {
+                display: flex;
+            }
 
             %grid-cell-header {
                 align-items: center;
-            }
-
-            %grid-cell-header-title {
-                align-self: auto;
+                flex-grow: 1;
             }
         }
     }

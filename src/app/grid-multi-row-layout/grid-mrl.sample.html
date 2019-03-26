@@ -2,7 +2,7 @@
     <app-page-header title="Grid MRL"></app-page-header>
     <section style="height: 800px" class="sample-content">
         <igx-grid [enableMRL]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact">
-            <igx-column-group [movable]="true" [pinned]="false" [width]="'500px'">
+            <igx-column-group [movable]="true" [pinned]="false">
                 <igx-column [rowStart]="1" [colStart]="1" [movable]="true" [pinned]="false" sortable="true" resizable="true" field="ContactName"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="2" [movable]="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="3" [movable]="true" sortable="true" resizable="true" field="Country"></igx-column>

@@ -2,20 +2,20 @@
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-group igx-grid__mrl_block">
         <ng-container *ngFor="let child of column.children" >
-            <igx-grid-header [gridID]="child.gridID"
+            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
                 [column]="child"
+                [gridID]="child.gridID"
+                [igxColumnMovingDrag]="child"
+                [dragGhostHost]="grid.outletDirective.nativeElement"
+                [attr.droppable]="true"
+                [igxColumnMovingDrop]="child"
+                [style.min-width.px]="child.width"
+                [style.flex-basis.px]="child.width"
                 [rowStart]="child.rowStart"
                 [rowEnd]="child.rowEnd"
                 [colStart]="child.colStart"
                 [colEnd]="child.colEnd">
-            </igx-grid-header>
-            <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="child" [attr.draggable]="false"></igx-grid-filtering-cell>
-            <span *ngIf="!child.columnGroup" class="igx-grid__th-resize-handle"
-                [attr.draggable]="false" #resizeHandle
-                [style.cursor]="colResizingService.resizeCursor"
-                (mouseover)="onResizeAreaMouseOver()"
-                (dblclick)="onResizeAreaDoubleClick()">
-            </span>
+            </igx-grid-header-group>
         </ng-container>
     </div>
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
