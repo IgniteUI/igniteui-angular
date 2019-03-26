@@ -205,7 +205,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[1].context.column.field).toEqual('ID');
     }));
 
-    it('should allow filter pinned columns', () => {
+    it('should allow filter pinned columns', fakeAsync(() => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
         fix.detectChanges();
 
@@ -224,7 +224,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         expect(grid.getCellByColumn(1, 'ID').value).toEqual(3);
-    });
+    }));
 
     it('should allow sorting pinned columns', () => {
         const fix = TestBed.createComponent(GridFeaturesComponent);

@@ -530,7 +530,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 });
             });
             this.expressionsList = new Array<ExpressionUI>();
-            this.filteringService.filter(this.column.field, filterTree);
+            this.filteringService.filterInternal(this.column.field, filterTree);
         } else {
             this.filteringService.clearFilter(this.column.field);
         }

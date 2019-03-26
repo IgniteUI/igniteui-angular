@@ -76,7 +76,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(9), rows[9], 0);
         });
 
-        it('should persist the indentation after filtering', () => {
+        it('should persist the indentation after filtering', fakeAsync(() => {
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
@@ -90,7 +90,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 0);
-        });
+        }));
 
         it('should persist the indentation on all pages when using paging', () => {
             treeGrid.paging = true;
@@ -227,7 +227,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(7), rows[7], 1);
         });
 
-        it('should persist the indentation after filtering', () => {
+        it('should persist the indentation after filtering', fakeAsync(() => {
 
             treeGrid.filter('Age', 35, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
@@ -242,7 +242,7 @@ describe('IgxTreeGrid - Indentation', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(3), rows[3], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 1);
-        });
+        }));
 
         it('should persist the indentation on all pages when using paging', () => {
             treeGrid.paging = true;
