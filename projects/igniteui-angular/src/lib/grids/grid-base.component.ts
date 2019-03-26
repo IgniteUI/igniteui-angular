@@ -3343,20 +3343,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
-
-        if (conditionOrExpressionTree) {
-            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
-        } else {
-            const expressionsTreeForColumn = this._filteringExpressionsTree.find(name);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(this.id, name, value, expressionsTreeForColumn, filteringIgnoreCase);
-            } else {
-                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(this.id, name, value, expressionForColumn.condition, filteringIgnoreCase);
-            }
-        }
+        this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
     }
 
     /**
@@ -3370,7 +3357,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public filterGlobal(value: any, condition?, ignoreCase?) {
-        this.gridAPI.filter_global(this.id, value, condition, ignoreCase);
+        this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
 
     /**
@@ -3426,14 +3413,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public clearFilter(name?: string) {
-        if (name) {
-            const column = this.gridAPI.get_column_by_name(this.id, name);
-            if (!column) {
-                return;
-            }
-        }
-
-        this.gridAPI.clear_filter(this.id, name);
+        this.filteringService.clearFilter(name);
     }
 
     /**
@@ -3885,9 +3865,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
-        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
         return columnWidth.toString();
     }
