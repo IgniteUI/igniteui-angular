@@ -72,7 +72,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const grid = this.get(id);
 
         if (row.expanded === expanded ||
-            ((!row.children || !row.children.length) && !grid.loadChildrenOnDemand)) {
+            ((!row.children || !row.children.length) && (!grid.loadChildrenOnDemand ||
+            (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
             return;
         }
 
