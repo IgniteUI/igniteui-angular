@@ -633,34 +633,6 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._bodyTemplate;
     }
     /**
-     * Returns a reference to the `quickFilterTemplate`.
-     * ```typescript
-     * let quickFilterTemplate = this.column.quickFilterTemplate;
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    @Input('quickFilterTemplate')
-    get quickFilterTemplate(): TemplateRef<any> {
-        return this._quickFilterTemplate;
-    }
-    /**
-     * Sets the quick filter template.
-     * ```html
-     * <ng-template #quickFilterTemplate IgxQuickFilterTemplate let-column="column">
-     *    <input (input)="onInput()">
-     * </ng-template>
-     * ```
-     * ```typescript
-     * @ViewChild("'quickFilterTemplate'", {read: TemplateRef })
-     * public quickFilterTemplate: TemplateRef<any>;
-     * this.column.quickFilterTemplate = this.quickFilterTemplate;
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    set quickFilterTemplate(template: TemplateRef<any>) {
-        this._quickFilterTemplate = template;
-    }
-    /**
      * Sets the body template.
      * ```html
      * <ng-template #bodyTemplate igxCell let-val>
@@ -745,6 +717,34 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.grid) {
             this.grid.cdr.markForCheck();
         }
+    }
+    /**
+     * Returns a reference to the `quickFilterTemplate`.
+     * ```typescript
+     * let quickFilterTemplate = this.column.quickFilterTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input('quickFilterTemplate')
+    get quickFilterTemplate(): TemplateRef<any> {
+        return this._quickFilterTemplate;
+    }
+    /**
+     * Sets the quick filter template.
+     * ```html
+     * <ng-template #quickFilterTemplate IgxQuickFilterTemplate let-column="column">
+     *    <input (input)="onInput()">
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'quickFilterTemplate'", {read: TemplateRef })
+     * public quickFilterTemplate: TemplateRef<any>;
+     * this.column.quickFilterTemplate = this.quickFilterTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set quickFilterTemplate(template: TemplateRef<any>) {
+        this._quickFilterTemplate = template;
     }
     /**
      * Gets the cells of the column.
