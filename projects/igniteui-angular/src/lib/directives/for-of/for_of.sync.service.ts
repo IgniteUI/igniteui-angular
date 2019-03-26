@@ -24,4 +24,11 @@ export class IgxForOfSyncService {
     public set chunkSize(value: Map<string, Map<number, number>>) {
         this._chunkSize = value;
     }
+
+    public reset() {
+        this._sizesCache = new Map<string, number[]>([['vertical', []], ['horizontal', []]]);
+        this._chunkSize = new Map<string, Map<number, number>>([
+            ['horizontal', new Map<number, number>([[0, 0]])],
+            ['vertical', new Map<number, number>([[0, 0]])]]);
+    }
 }

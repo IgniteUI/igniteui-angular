@@ -1396,6 +1396,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
+                this.syncService.reset();
                 this._updateSizeCache(changes);
                 this._applyChanges();
                 this.cdr.markForCheck();
