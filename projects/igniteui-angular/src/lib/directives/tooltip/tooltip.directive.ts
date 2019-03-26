@@ -274,7 +274,16 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('click')
     public onClick() {
-        return;
+        if (!this.target.collapsed) {
+            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            this.onTooltipHide.emit(hidingArgs);
+
+            if (hidingArgs.cancel) {
+                return;
+            }
+
+            this.target.forceClose(this.mergedOverlaySettings);
+        }
     }
 
     /**
