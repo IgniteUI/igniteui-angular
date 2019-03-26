@@ -23,11 +23,10 @@
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <igx-grid-header [igxColumnMovingDrag]="column" [dragGhostHost]="column.grid.igxFilteringOverlayOutlet" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.gridID" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
-    <span *ngIf="!column.columnGroup" class="igx-grid__th-resize-handle"
-            [attr.draggable]="false" #resizeHandle
-            [style.cursor]="colResizingService.resizeCursor"
-            (mouseover)="onResizeAreaMouseOver()"
-            (dblclick)="onResizeAreaDoubleClick()">
+    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid__th-resize-handle"
+          [igxResizeHandle]="column"
+          [attr.draggable]="false"
+          [style.cursor]="colResizingService.resizeCursor">
     </span>
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
 </ng-container>
