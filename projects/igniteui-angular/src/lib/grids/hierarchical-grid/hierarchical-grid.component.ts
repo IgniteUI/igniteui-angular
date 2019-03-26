@@ -392,18 +392,35 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     ngAfterContentInit() {
-        const nestedColumns = this.allLayoutList.map((layout) => {
-            layout.rootGrid = this;
+        this.updateColumnList();
+        super.ngAfterContentInit();
+    }
+
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        this.updateColumnList();
+        super.onColumnsChanged(change);
+    }
+
+    private updateColumnList() {
+        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
+        const nestedColumns = childLayouts.map((layout) => {
+            if (!layout.rootGrid && !this.parent) {
+                // If the layout doesn't have rootGrid set and this is the root, set it
+                layout.rootGrid = this;
+            }
             return layout.columnList.toArray();
         });
         const colsArray = [].concat.apply([], nestedColumns);
+        const colLength = this.columnList.length;
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => {
                 return colsArray.indexOf(item) === -1;
             });
             this.columnList.reset(topCols);
+            if (this.columnList.length !== colLength) {
+                this.calculateGridSizes();
+            }
         }
-        super.ngAfterContentInit();
     }
 
     /**
@@ -569,8 +586,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const cachedData = this.childGridTemplates.get(key);
             cachedData.owner = args.owner;
 
-            this.childLayoutKeys.forEach((layoutKey) => {
-                const relatedGrid = this.hgridAPI.getChildGridByID(layoutKey, args.context.$implicit.rowID);
+            this.childLayoutList.forEach((layout) => {
+                const relatedGrid = this.hgridAPI.getChildGridByID(layout.id, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
                     relatedGrid.reflow();

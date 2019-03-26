@@ -14,34 +14,51 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
     }
 
     getChildGrid(path: Array<IPathSegment>) {
+        let childGrid;
         const currPath = path;
-        let grid;
         const pathElem = currPath.shift();
-        const childrenForLayout = this.layoutChildGrids.get(pathElem.rowIslandKey);
+        const ownerGrid = this.state.values().next().value as IgxHierarchicalGridComponent;
+        const targetLayout = ownerGrid.childLayoutList.find(layout => layout.key === pathElem.rowIslandKey);
+        const childrenForLayout = this.layoutChildGrids.get(targetLayout.id);
         if (childrenForLayout) {
-            const childGrid = childrenForLayout.get(pathElem.rowID);
+            const grid = childrenForLayout.get(pathElem.rowID);
             if (currPath.length === 0) {
-                grid = childGrid;
+                childGrid = grid;
             } else {
-                grid = childGrid.hgridAPI.getChildGrid(currPath);
+                childGrid = grid.hgridAPI.getChildGrid(currPath);
             }
         }
-        return grid;
+        return childGrid;
     }
 
     getChildGrids(inDepth?: boolean) {
-        const allChildren = [];
-        this.layoutChildGrids.forEach((layoutMap) => {
-            layoutMap.forEach((grid) => {
-                allChildren.push(grid);
-                if (inDepth) {
-                    const children = grid.hgridAPI.getChildGrids(inDepth);
-                    children.forEach((item) => {
-                        allChildren.push(item);
-                    });
-                }
+        let allChildren = [];
+        const ownerGrid = this.state.values().next().value as IgxHierarchicalGridComponent;
+        if ((!ownerGrid.parent && inDepth) || (ownerGrid.parent && !inDepth)) {
+            // For the root grid we already has all children stored and for others they would only have immediate children.
+            this.layouts.forEach((layout) => {
+                allChildren = allChildren.concat(this.getChildGridsForRowIsland(layout.id));
             });
-        });
+        } else if (!ownerGrid.parent) {
+            // For immediate children of the root we need to know its layouts since he has everything
+            ownerGrid.childLayoutList.forEach((layout) => {
+                allChildren = allChildren.concat(this.getChildGridsForRowIsland(layout.id));
+            });
+        } else {
+            // For other children they need to traverse to get all children in depth.
+            this.layoutChildGrids.forEach((layoutMap) => {
+                layoutMap.forEach((grid) => {
+                    allChildren.push(grid);
+                    if (inDepth) {
+                        const children = grid.hgridAPI.getChildGrids(inDepth);
+                        children.forEach((item) => {
+                            allChildren.push(item);
+                        });
+                    }
+                });
+            });
+        }
+
         return allChildren;
     }
 
@@ -58,11 +75,11 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return rowID;
     }
 
-    registerChildGrid(parentRowID: string|object, layoutKey: string, grid: IgxHierarchicalGridComponent) {
-        let childrenForLayout = this.layoutChildGrids.get(layoutKey);
+    registerChildGrid(parentRowID: string|object, layoutID: string, grid: IgxHierarchicalGridComponent) {
+        let childrenForLayout = this.layoutChildGrids.get(layoutID);
         if (!childrenForLayout) {
-            this.layoutChildGrids.set(layoutKey, new Map<any, IgxHierarchicalGridComponent>());
-            childrenForLayout = this.layoutChildGrids.get(layoutKey);
+            this.layoutChildGrids.set(layoutID, new Map<any, IgxHierarchicalGridComponent>());
+            childrenForLayout = this.layoutChildGrids.get(layoutID);
         }
         childrenForLayout.set(parentRowID, grid);
     }
@@ -71,8 +88,8 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
       return this.layouts.get(id);
     }
 
-    getChildGridsForRowIsland(layoutKey): IgxHierarchicalGridComponent[] {
-        const childrenForLayout = this.layoutChildGrids.get(layoutKey);
+    getChildGridsForRowIsland(layoutID): IgxHierarchicalGridComponent[] {
+        const childrenForLayout = this.layoutChildGrids.get(layoutID);
         const children = [];
         if (childrenForLayout) {
             childrenForLayout.forEach((child) => {
@@ -82,8 +99,8 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return children;
     }
 
-    getChildGridByID(layoutKey, rowID) {
-        const childrenForLayout = this.layoutChildGrids.get(layoutKey);
+    getChildGridByID(layoutID, rowID) {
+        const childrenForLayout = this.layoutChildGrids.get(layoutID);
         return childrenForLayout.get(rowID);
     }
 }
