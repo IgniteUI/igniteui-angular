@@ -659,7 +659,7 @@ describe('IgxGrid - GroupBy', () => {
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         // click header
-        headers[0].parent.triggerEventHandler('click', new Event('click'));
+        headers[0].triggerEventHandler('click', new Event('click'));
         tick();
         fix.detectChanges();
 
@@ -667,14 +667,14 @@ describe('IgxGrid - GroupBy', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
         // click header again
-        headers[0].parent.triggerEventHandler('click', new Event('click'));
+        headers[0].triggerEventHandler('click', new Event('click'));
         tick();
         fix.detectChanges();
 
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
 
         // click header again
-        headers[0].parent.triggerEventHandler('click', new Event('click'));
+        headers[0].triggerEventHandler('click', new Event('click'));
         tick();
         fix.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);

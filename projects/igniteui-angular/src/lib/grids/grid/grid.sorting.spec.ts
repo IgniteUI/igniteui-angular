@@ -237,7 +237,7 @@ describe('IgxGrid - Grid Sorting', () => {
     // UI Tests
 
     it('Should sort grid ascending by clicking once on first header cell UI', () => {
-        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header-group'));
+        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
         clickCurrentRow(firstHeaderCell);
         fixture.detectChanges();
@@ -258,7 +258,7 @@ describe('IgxGrid - Grid Sorting', () => {
     });
 
     it('Should sort grid descending by clicking twice on header cell UI', () => {
-        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header-group'));
+        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
         clickCurrentRow(firstHeaderCell);
         fixture.detectChanges();
