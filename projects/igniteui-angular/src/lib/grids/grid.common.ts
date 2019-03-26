@@ -15,18 +15,114 @@ import {
     PipeTransform,
     Renderer2,
     TemplateRef,
-    LOCALE_ID
+    LOCALE_ID,
+    AfterViewInit
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
-import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEBOUNCE_TIME = 200;
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxResizeHandle]'
+})
+export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
+
+    /**
+     * @hidden
+     */
+    @Input('igxResizeHandle')
+    public column: IgxColumnComponent;
+
+    /**
+     * @hidden
+     */
+    private _dblClick = false;
+
+    /**
+     * @hidden
+     */
+    private destroy$ = new Subject<boolean>();
+
+    constructor(private zone: NgZone,
+               private element: ElementRef,
+               public colResizingService: IgxColumnResizingService) { }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        if (!this.column.columnGroup && this.column.resizable) {
+            this.zone.runOutsideAngular(() => {
+                fromEvent(this.element.nativeElement, 'mousedown').pipe(
+                    debounceTime(DEBOUNCE_TIME),
+                    takeUntil(this.destroy$)
+                ).subscribe((event) => {
+
+                    if (this._dblClick) {
+                        this._dblClick = false;
+                        return;
+                    }
+
+                    this._onResizeAreaMouseDown(event);
+                    this.column.grid.resizeLine.resizer.onMousedown(event);
+                });
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseover')
+    public onMouseOver() {
+        this.colResizingService.resizeCursor = 'col-resize';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('dblclick')
+    public onDoubleClick() {
+        this._dblClick = true;
+        this.colResizingService.column = this.column;
+        this.colResizingService.autosizeColumnOnDblClick();
+    }
+
+    /**
+     * @hidden
+     */
+    private _onResizeAreaMouseDown(event) {
+        if (event.button === 0) {
+            this.colResizingService.column = this.column;
+            this.colResizingService.isColumnResizing = true;
+            this.colResizingService.startResizePos = event.clientX;
+            this.colResizingService.showResizer = true;
+            this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+
+
 /**
  * @hidden
  */
@@ -123,6 +219,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
         this.resize.next(event);
     }
+}
+
+@Directive({
+    selector: '[igxFilterCellTemplate]'
+})
+export class IgxFilterCellTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
