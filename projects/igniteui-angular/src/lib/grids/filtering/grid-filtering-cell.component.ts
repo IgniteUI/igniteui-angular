@@ -148,9 +148,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             return null;
         }
 
-        if (this.column.quickFilterTemplate) {
-            this.currentTemplate = this.column.quickFilterTemplate;
-            return this.column.quickFilterTemplate;
+        if (this.column.filterCellTemplate) {
+            this.currentTemplate = this.column.filterCellTemplate;
+            return this.column.filterCellTemplate;
         }
 
         const expressionTree = this.column.filteringExpressionsTree;

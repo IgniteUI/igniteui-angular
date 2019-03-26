@@ -1,5 +1,12 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, DataType, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxStringFilteringOperand, IgxColumnComponent } from 'igniteui-angular';
+import { 
+    IgxGridComponent,
+    DataType,
+    IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxColumnComponent
+} from 'igniteui-angular';
 
 @Component({
     providers: [],

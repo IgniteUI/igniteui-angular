@@ -19,7 +19,7 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
-    IgxQuickFilterTemplateDirective
+    IgxFilterCellTemplateDirective
 } from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
@@ -719,32 +719,32 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
-     * Returns a reference to the `quickFilterTemplate`.
+     * Returns a reference to the `filterCellTemplate`.
      * ```typescript
-     * let quickFilterTemplate = this.column.quickFilterTemplate;
+     * let filterCellTemplate = this.column.filterCellTemplate;
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input('quickFilterTemplate')
-    get quickFilterTemplate(): TemplateRef<any> {
-        return this._quickFilterTemplate;
+    @Input('filterCellTemplate')
+    get filterCellTemplate(): TemplateRef<any> {
+        return this._filterCellTemplate;
     }
     /**
      * Sets the quick filter template.
      * ```html
-     * <ng-template #quickFilterTemplate IgxQuickFilterTemplate let-column="column">
+     * <ng-template #filterCellTemplate IgxFilterCellTemplate let-column="column">
      *    <input (input)="onInput()">
      * </ng-template>
      * ```
      * ```typescript
-     * @ViewChild("'quickFilterTemplate'", {read: TemplateRef })
-     * public quickFilterTemplate: TemplateRef<any>;
-     * this.column.quickFilterTemplate = this.quickFilterTemplate;
+     * @ViewChild("'filterCellTemplate'", {read: TemplateRef })
+     * public filterCellTemplate: TemplateRef<any>;
+     * this.column.filterCellTemplate = this.filterCellTemplate;
      * ```
      * @memberof IgxColumnComponent
      */
-    set quickFilterTemplate(template: TemplateRef<any>) {
-        this._quickFilterTemplate = template;
+    set filterCellTemplate(template: TemplateRef<any>) {
+        this._filterCellTemplate = template;
     }
     /**
      * Gets the cells of the column.
@@ -902,7 +902,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _quickFilterTemplate: TemplateRef<any>;
+    protected _filterCellTemplate: TemplateRef<any>;
     /**
      *@hidden
      */
@@ -970,8 +970,8 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxQuickFilterTemplateDirective, { read: IgxQuickFilterTemplateDirective })
-    public quickFilterTemplateDirective: IgxQuickFilterTemplateDirective;
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
+    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
     /**
@@ -987,8 +987,8 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
         }
-        if (this.quickFilterTemplateDirective) {
-            this._quickFilterTemplate = this.quickFilterTemplateDirective.template;
+        if (this.filterCellTemplateDirective) {
+            this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
         if (!this.summaries) {
             switch (this.dataType) {

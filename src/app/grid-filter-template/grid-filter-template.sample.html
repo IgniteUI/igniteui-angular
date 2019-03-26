@@ -28,11 +28,11 @@
                                                     [minWidth]="c.minWidth"
                                                     [maxWidth]="c.maxWidth"
                                                     [dataType]="c.type"
-                                                    [quickFilterTemplate]="filterTemplate">
+                                                    [filterCellTemplate]="filterTemplate">
 
                 </igx-column>
             </igx-grid>
-            <ng-template #filterTemplate igxQuickFilterTemplate let-column="column">
+            <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
                 <igx-input-group class="filter-input" type="box" [displayDensity]="'compact'">
                     <igx-prefix>
                         <igx-icon>search</igx-icon>
