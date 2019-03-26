@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+# 7.2.3
+### Improvements
+- `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
+
 # 7.2.2
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 

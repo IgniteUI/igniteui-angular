@@ -1027,7 +1027,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
-        const args = { column: this, insertAtIndex: index, columnIsPinned: true };
+        const args = { column: this, insertAtIndex: index, isPinned: true };
         grid.onColumnPinning.emit(args);
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
@@ -1104,7 +1104,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.reinitPinStates();
 
         const insertAtIndex = grid._unpinnedColumns.indexOf(this);
-        const args = { column: this, insertAtIndex, columnIsPinned: false };
+        const args = { column: this, insertAtIndex, isPinned: false };
         grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();

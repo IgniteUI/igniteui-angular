@@ -167,14 +167,14 @@ describe('Column Pinning UI', () => {
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('ReleaseDate');
             expect(currentArgs.insertAtIndex).toBe(0);
-            expect(currentArgs.columnIsPinned).toBe(true);
+            expect(currentArgs.isPinned).toBe(true);
 
             GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(currentArgs.insertAtIndex).toBe(1);
-            expect(currentArgs.columnIsPinned).toBe(true);
+            expect(currentArgs.isPinned).toBe(true);
 
             GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
 
@@ -182,21 +182,21 @@ describe('Column Pinning UI', () => {
             expect(counter).toBe(3);
             expect(currentArgs.column.field).toBe('ReleaseDate');
             expect(currentArgs.insertAtIndex).toBe(3);
-            expect(currentArgs.columnIsPinned).toBe(false);
+            expect(currentArgs.isPinned).toBe(false);
 
             GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(4);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(currentArgs.insertAtIndex).toBe(2);
-            expect(currentArgs.columnIsPinned).toBe(false);
+            expect(currentArgs.isPinned).toBe(false);
 
             GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).click();
 
             expect(counter).toBe(5);
             expect(currentArgs.column.field).toBe('ProductName');
             expect(currentArgs.insertAtIndex).toBe(0);
-            expect(currentArgs.columnIsPinned).toBe(true);
+            expect(currentArgs.isPinned).toBe(true);
         }));
 
         it('onColumnPinning event should fire when pinning and unpining using api', async(() => {
@@ -211,7 +211,7 @@ describe('Column Pinning UI', () => {
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('ID');
             expect(currentArgs.insertAtIndex).toBe(0);
-            expect(currentArgs.columnIsPinned).toBe(true);
+            expect(currentArgs.isPinned).toBe(true);
 
             // onColumnPinning should not be fired if column is already pinned
             grid.columns[0].pin();
@@ -221,7 +221,7 @@ describe('Column Pinning UI', () => {
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('ID');
             expect(currentArgs.insertAtIndex).toBe(0);
-            expect(currentArgs.columnIsPinned).toBe(false);
+            expect(currentArgs.isPinned).toBe(false);
         }));
 
         it('doesn\'t pin columns if unpinned area width will become less than the defined minimum.', async(() => {
