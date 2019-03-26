@@ -8,6 +8,7 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { IgxGridBaseComponent } from '../grids/index';
+import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
@@ -16,6 +17,20 @@ const DEBOUNCETIME = 50;
 export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
     grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
+}
+
+export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) {
+    this.setupGridScrollDetection(fixture, hierarchicalGrid);
+
+    const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
+    existingChildren.forEach(child =>  setupGridScrollDetection(fixture, child));
+
+    const layouts = hierarchicalGrid.allLayoutList.toArray();
+    layouts.forEach((layout) => {
+        layout.onGridCreated.subscribe(evt => {
+            this.setupGridScrollDetection(fixture, evt.grid);
+        });
+    });
 }
 
 export class HelperUtils {
