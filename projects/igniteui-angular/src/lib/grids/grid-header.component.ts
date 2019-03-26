@@ -157,6 +157,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         }
     }
 
+    @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
             event.stopPropagation();
