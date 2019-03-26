@@ -148,6 +148,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             return null;
         }
 
+        if (this.column.filterCellTemplate) {
+            this.currentTemplate = this.column.filterCellTemplate;
+            return this.column.filterCellTemplate;
+        }
+
         const expressionTree = this.column.filteringExpressionsTree;
         if (!expressionTree || expressionTree.filteringOperands.length === 0) {
             this.currentTemplate = this.emptyFilter;
@@ -161,6 +166,16 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
         this.currentTemplate = this.defaultFilter;
         return this.defaultFilter;
+    }
+
+    /**
+     * Gets the context passed to the filter template.
+     * @memberof IgxGridFilteringCellComponent
+     */
+    get context() {
+        return {
+            column: this.column
+        };
     }
 
     /**
