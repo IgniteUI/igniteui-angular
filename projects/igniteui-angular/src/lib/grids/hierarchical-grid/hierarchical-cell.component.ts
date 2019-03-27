@@ -81,9 +81,22 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
                 state.push({ rowID: this.row.rowID });
                 grid.hierarchicalState = [...state];
             }
+            if (expand || collapse) {
+                const rowID = this.cellID.rowID;
+                grid.cdr.detectChanges();
+                this.persistFocusedCell(rowID);
+            }
             return;
         }
         super.dispatchEvent(event);
+    }
+    protected persistFocusedCell(rowID) {
+        requestAnimationFrame(() => {
+            const cell = this.gridAPI.get_cell_by_key(this.grid.id, rowID, this.column.field);
+            if (cell) {
+                cell.nativeElement.focus();
+            }
+        });
     }
 
     protected _clearCellSelection() {
