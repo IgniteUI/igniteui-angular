@@ -252,12 +252,17 @@ export class IgxGridSelectionService {
         this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
 
-        this._ranges.add(JSON.stringify({
-            rowStart: node.row,
-            rowEnd: node.row,
-            columnStart: node.column,
-            columnEnd: node.column
-        }));
+        this._ranges.add(JSON.stringify(this.generateRange(node)));
+    }
+
+    remove(node: ISelectionNode): void {
+        if (this.selection.has(node.row)) {
+            this.selection.get(node.row).delete(node.column);
+        }
+        if (this.isActiveNode(node)) {
+            this.activeElement = null;
+        }
+        this._ranges.delete(JSON.stringify(this.generateRange(node)));
     }
 
     isInMap(node: ISelectionNode): boolean {

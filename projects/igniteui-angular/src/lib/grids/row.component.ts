@@ -177,7 +177,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.crudService.row; // this.gridAPI.get_edit_row_state(this.gridID);
+            const editRowState = this.crudService.row;
             return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;

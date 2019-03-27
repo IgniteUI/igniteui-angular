@@ -50,13 +50,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @ViewChild('defaultContentElement', { read: ElementRef })
     public defaultContentElement: ElementRef;
 
-    /**
-     * @hidden
-     */
-    protected resolveStyleClasses(): string {
-        return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
-    }
-
 
     /**
      * @hidden

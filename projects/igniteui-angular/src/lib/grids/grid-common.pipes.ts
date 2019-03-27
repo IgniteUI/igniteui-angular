@@ -4,6 +4,29 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
 
+@Pipe({
+    name: 'igxCellStyles'
+})
+export class IgxGridCellStylesPipe implements PipeTransform {
+
+    transform(cssClasses: any, _value: any, data: any, field: string): string {
+        if (!cssClasses) {
+            return '';
+        }
+
+        const result = [];
+
+        Object.entries(cssClasses).forEach(([cssClass, callbackOrValue]) => {
+            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field) : callbackOrValue;
+            if (apply) {
+                result.push(cssClass);
+            }
+        });
+
+        return result.join(' ');
+    }
+}
+
 /**
  * @hidden
  * @internal

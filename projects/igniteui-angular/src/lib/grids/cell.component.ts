@@ -18,17 +18,10 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { getNodeSizeViaRange } from '../core/utils';
+import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
-
-// TODO: Move into core utils
-const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-                                'home', 'end', 'space', 'spacebar', ' ']);
-const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
-const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -284,11 +277,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.grid.cdr.markForCheck();
     }
 
+    @Input()
+    @HostBinding('class.igx-grid__td--pinned-last')
+    lastPinned = false;
+
     /**
      * @hidden
      * @internal
      */
     @Input()
+    @HostBinding('class.igx-grid__td--editing')
     editMode = false;
 
     /**
@@ -332,14 +330,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
- * @hidden
- */
-    @HostBinding('style.min-height.px')
-    get minHeight() {
-        return this.grid ? this.grid.rowHeight : 32;
-    }
-
-    /**
      * Returns a string containing the grid `id` and the column `field` concatenated by "_".
      * ```typescript
      * let describedBy = this.cell.describedBy;
@@ -349,18 +339,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('attr.aria-describedby')
     get describedby(): string {
         return `${this.row.gridID}_${this.column.field}`;
-    }
-
-    /**
-     * Gets the style classes of the cell.
-     * ```typescript
-     * let cellStyleClasses = this.cell.styleClasses.
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @HostBinding('class')
-    get styleClasses(): string {
-        return this.resolveStyleClasses();
     }
 
     /**
@@ -377,49 +355,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     width = '';
 
     /**
-     * Gets whether the cell is stored in a pinned column.
-     * ```typescript
-     * let isPinned = this.cell.isPinned;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get isPinned() {
-        return this.column.pinned;
-    }
-
-    /**
-     * Gets whether the cell is stored in the last column in the pinned area.
-     * ```typescript
-     * let isLastPinned = this.cell.isLastPinned;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get isLastPinned() {
-        const pinnedCols = this.grid.pinnedColumns;
-        return pinnedCols[pinnedCols.length - 1] === this.column;
-    }
-
-    /**
-     * Gets whether the cell is stored in the last column in the unpinned area.
-     * ```typescript
-     * let isLastUnpinned = this.cell.isLastUnpinned;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
-        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    }
-
-    /**
      * Gets whether the cell is selected.
      * ```typescript
      * let isSelected = this.cell.selected;
      * ```
      * @memberof IgxGridCellComponent
      */
+    @HostBinding('attr.aria-selected')
+    @HostBinding('class.igx-grid__td--selected')
     get selected() {
-        return this.isSelected = this.isCellSelected();
+        return this.isCellSelected();
     }
 
     /**
@@ -429,11 +374,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('attr.aria-selected')
     set selected(val: boolean) {
-        this.isSelected = val;
+        const node = this.selectionNode;
+        val ? this.selectionService.add(node) : this.selectionService.remove(node);
     }
 
+    @HostBinding('class.igx-grid__td--edited')
     get dirty() {
         if (this.grid.rowEditable) {
             const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
@@ -508,8 +454,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public isInCompositionMode = false;
+
+    @HostBinding('class.igx-grid__td--active')
     public focused = false;
-    protected isSelected = false;
+
 
     constructor(
         protected selectionService: IgxGridSelectionService,
@@ -921,40 +869,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected resolveStyleClasses(): string {
-        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
-
-        if (this.column.cellClasses) {
-            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
-                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
-                if (value) {
-                    defaultClasses.push(name);
-                }
-            }, this);
-        }
-
-        const classList = {
-            'igx-grid__td--active': this.focused,
-            'igx-grid__td--number':  this.gridAPI.should_apply_number_style(this.column),
-            'igx-grid__td--editing': this.editMode,
-            'igx-grid__td--pinned': this.column.pinned,
-            'igx-grid__td--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected,
-            'igx-grid__td--edited': this.dirty
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
     }
 
     /**
