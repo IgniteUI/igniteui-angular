@@ -738,6 +738,10 @@ export class IgxTimePickerComponent implements
                 takeUntil(this._destroy$)
             ).subscribe((res) => this.onKeydown(res));
         }
+
+        if (this.container && this.group) {
+            this.container.nativeElement.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
+        }
     }
 
     /**
