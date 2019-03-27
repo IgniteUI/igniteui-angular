@@ -509,13 +509,17 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(147);
 
             // set new filtering
             treeGrid.clearFilter('ProductName');
             treeGrid.filter('ID', '8', IgxStringFilteringOperand.instance().condition('startsWith'), true);
             fix.detectChanges();
 
-            expect(treeGrid.selectedCells.length).toBe(0);
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
+            expect(treeGrid.selectedCells[0].value).toBe(847);
         }));
 
         it('should persist selection after scrolling', async () => {
