@@ -330,11 +330,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextFilterableIndex = cols.indexOf(column) + 1;
         if (nextFilterableIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
             // next is not filter cell
-            const hasRows = this.grid.rowList.toArray().length !== 0;
+            const dataRows = this.grid.rowList.toArray();
+            const hasRows = dataRows.length !== 0;
             const summaryRows = this.grid.summariesRowList.toArray();
             const hasSummaries = summaryRows.length > 0 && summaryRows[0].summaryCells.length > 0;
             if (hasRows) {
-                super.navigateNextFilterCell(column, eventArgs);
+                this.focusNextRow(dataRows[0].nativeElement, 0, this.grid, false);
             } else if (hasSummaries) {
                 this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid, true);
             } else {
