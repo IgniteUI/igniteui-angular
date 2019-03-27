@@ -79,8 +79,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static min(data: any[]): number {
-        if (!data.filter(clear).length) { return; }
-        return data.length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : 0;
+        return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : 0;
     }
     /**
      * Returns the maximum numeric value in the provided data records.
@@ -91,8 +90,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static max(data: any[]): number {
-        if (!data.filter(clear).length) { return; }
-        return data.length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : 0;
+        return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : 0;
     }
     /**
      * Returns the sum of the numeric values in the provided data records.
@@ -103,8 +101,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static sum(data: any[]): number {
-        if (!data.filter(clear).length) { return; }
-        return data.length ? data.filter(clear).reduce((a, b) => +a + +b) : 0;
+        return data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0;
     }
     /**
      * Returns the average numeric value in the data provided data records.
@@ -115,8 +112,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static average(data: any[]): number {
-        if (!data.filter(clear).length) { return; }
-        return data.length ? this.sum(data) / this.count(data) : 0;
+        return data.length && data.filter(clear).length ? this.sum(data) / this.count(data) : 0;
     }
     /**
      * Executes the static methods and returns `IgxSummaryResult[]`.
@@ -189,8 +185,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public static latest(data: any[]) {
-        if (!data.filter(clear).length) { return; }
-        return first(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf()));
+        return  data.filter(clear).length ?
+            first(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
     /**
      * Returns the earliest date value in the data records.
@@ -201,8 +197,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public static earliest(data: any[]) {
-        if (!data.filter(clear).length) { return; }
-        return last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf()));
+        return data.filter(clear).length ?
+            last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
     /**
      * Executes the static methods and returns `IgxSummaryResult[]`.
