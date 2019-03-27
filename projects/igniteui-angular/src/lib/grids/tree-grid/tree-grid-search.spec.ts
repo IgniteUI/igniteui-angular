@@ -11,6 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -308,6 +309,7 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.expansionDepth = 0;
             treeGrid.height = '400px';
             treeGrid.columns[3].hasSummary = false;
+            setupGridScrollDetection(fix, treeGrid);
             fix.detectChanges();
             await wait(16);
         });
