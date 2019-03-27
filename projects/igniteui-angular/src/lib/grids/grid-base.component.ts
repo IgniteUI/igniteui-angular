@@ -1686,14 +1686,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('igxRowEditingOuterOverlayOutlet', { read: IgxOverlayOutletDirective })
-    private rowEditingOuterOutletDirective: IgxOverlayOutletDirective;
+    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
+    public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
      */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    private rowEditingOutletDirective: IgxOverlayOutletDirective;
+    public get rowOutletDirective() {
+        return this.rowEditingOutletDirective;
+    }
+
+    public get parentRowOutletDirective() {
+        return null;
+    }
 
     /**
      * @hidden
@@ -2392,7 +2397,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowEditingOutletDirective,
+        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -4745,7 +4750,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
-        this.rowEditSettings.outlet = useOuter ? this.rowEditingOuterOutletDirective : this.rowEditingOutletDirective;
+        this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         // this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
         const targetRow = this.gridAPI.get_row_by_key(this.id, rowID);
