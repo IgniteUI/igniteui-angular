@@ -178,8 +178,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected hScroll;
     protected func;
-    private _sizesCache: number[] = [];
-    private _chunkSize = 0;
+    protected _sizesCache: number[] = [];
     protected vh: ComponentRef<VirtualHelperComponent>;
     protected hvh: ComponentRef<HVirtualHelperComponent>;
     protected _differ: IterableDiffer<T> | null = null;
@@ -193,13 +192,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
     protected set sizesCache(value: number[]) {
         this._sizesCache = value;
-    }
-
-    protected get chunkSize(): number {
-        return this._chunkSize;
-    }
-    protected set chunkSize(value: number) {
-        this._chunkSize = value;
     }
 
     private get _isScrolledToBottom() {
@@ -297,13 +289,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForOf && this.igxForOf.length) {
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
-            totalSize = this.sizesCache.length ? this.sizesCache[this.sizesCache.length - 1] :
-                this.initSizesCache(this.igxForOf);
+            totalSize = this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
             if (this.hScroll) {
                 this.state.startIndex = this.getIndexAt(this.hScroll.scrollLeft, this.sizesCache, 0);
             }
-            this.state.chunkSize = this.chunkSize = this.chunkSize || this._calculateChunkSize();
+            this.state.chunkSize = this._calculateChunkSize();
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -991,10 +982,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
         }
     }
+
     /**
      * @hidden
      */
-    protected _calcMaxChunkSize() {
+    protected _calcMaxChunkSize(): number {
         let i = 0;
         let length = 0;
         let maxLength = 0;
@@ -1236,6 +1228,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     ngOnInit() {
+        this.syncService.setMaster(this);
         super.ngOnInit();
         this.removeScrollEventListeners();
     }
@@ -1266,21 +1259,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected get sizesCache(): number[] {
-        return this.syncService.sizesCache.get(this.igxForScrollOrientation);
+        if (this.syncService.isMaster(this)) {
+            return this._sizesCache;
+        }
+        return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
     protected set sizesCache(value: number[]) {
-        this.syncService.sizesCache.set(this.igxForScrollOrientation, value);
-    }
-
-    protected get chunkSize(): number {
-        return this.syncService.chunkSize
-            .get(this.igxForScrollOrientation)
-            .get(this.igxForContainerSize);
-    }
-    protected set chunkSize(value: number) {
-        this.syncService.chunkSize
-            .get(this.igxForScrollOrientation)
-            .set(this.igxForContainerSize, value);
+        this._sizesCache = value;
     }
 
     protected get itemsDimension() {
@@ -1303,6 +1288,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected initSizesCache(items: any[]): number {
+        if (!this.syncService.isMaster(this)) {
+            const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
+            return masterSizesCache[masterSizesCache.length - 1];
+        }
         let totalSize = 0;
         let size = 0;
         let i = 0;
@@ -1396,7 +1385,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                this.syncService.reset();
                 this._updateSizeCache(changes);
                 this._applyChanges();
                 this.cdr.markForCheck();
@@ -1507,20 +1495,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this._updateViews(prevChunkSize);
     }
 
-    protected applyChunkSizeChange() {
-        const chunkSize = this.chunkSize = this.chunkSize || (this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) :
-            this._calculateChunkSize());
-        if (chunkSize > this.state.chunkSize) {
-            const diff = chunkSize - this.state.chunkSize;
-            for (let i = 0; i < diff; i++) {
-                this.addLastElem();
-            }
-        } else if (chunkSize < this.state.chunkSize) {
-            const diff = this.state.chunkSize - chunkSize;
-            for (let i = 0; i < diff; i++) {
-                this.removeLastElem();
-            }
+    /**
+     * @hidden
+     */
+    protected _calcMaxChunkSize(): number {
+        if (this.syncService.isMaster(this)) {
+            return super._calcMaxChunkSize();
         }
+        return this.syncService.chunkSize(this.igxForScrollOrientation);
     }
 }
 

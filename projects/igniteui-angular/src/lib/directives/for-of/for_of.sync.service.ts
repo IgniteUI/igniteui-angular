@@ -1,34 +1,41 @@
 import { Injectable } from '@angular/core';
+import { IgxGridForOfDirective } from './for_of.directive';
 
 @Injectable({
     providedIn: 'root',
 })
 export class IgxForOfSyncService {
 
-    protected _sizesCache: Map<string, number[]> = new Map<string, number[]>([['vertical', []], ['horizontal', []]]);
-    protected _chunkSize: Map<string, Map<number, number>> = new Map<string, Map<number, number>>([
-        ['horizontal', new Map<number, number>([[0, 0]])],
-        ['vertical', new Map<number, number>([[0, 0]])]]
-    );
+    private _master: Map<string, IgxGridForOfDirective<any>> =
+        new Map<string, IgxGridForOfDirective<any>>([
+            ['horizontal', null],
+            ['vertical', null]
+        ]);
 
-    public get sizesCache(): Map<string, number[]> {
-        return this._sizesCache;
-    }
-    public set sizesCache(value: Map<string, number[]>) {
-        this._sizesCache = value;
-    }
-
-    public get chunkSize(): Map<string, Map<number, number>> {
-        return this._chunkSize;
-    }
-    public set chunkSize(value: Map<string, Map<number, number>>) {
-        this._chunkSize = value;
+    /**
+     * @hidden
+     */
+    public isMaster(directive: IgxGridForOfDirective<any>): boolean {
+        return this._master[directive.igxForScrollOrientation] === directive;
     }
 
-    public reset() {
-        this._sizesCache = new Map<string, number[]>([['vertical', []], ['horizontal', []]]);
-        this._chunkSize = new Map<string, Map<number, number>>([
-            ['horizontal', new Map<number, number>([[0, 0]])],
-            ['vertical', new Map<number, number>([[0, 0]])]]);
+    public setMaster(directive: IgxGridForOfDirective<any>) {
+        if (!this._master[directive.igxForScrollOrientation]) {
+            this._master[directive.igxForScrollOrientation] = directive;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public sizesCache(dir: string): number[] {
+        return this._master[dir].sizesCache;
+    }
+
+    /**
+     * @hidden
+     */
+    public chunkSize(dir: string): number {
+        return this._master[dir].state.chunkSize;
     }
 }
