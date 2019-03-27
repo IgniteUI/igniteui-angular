@@ -525,17 +525,11 @@
     $indicator-icon-width: rem(24px);
     $grouping-padding-right: rem(12px);
 
-    @media print  {
+    @media print {
         $grid-header-padding: (
             comfortable: 0 rem(12px),
             cosy: 0 rem(12px),
             compact: 0 rem(12px)
-        );
-
-        $grid-header-height: (
-            comfortable: rem(32px),
-            cosy: rem(32px),
-            compact: rem(32px)
         );
 
         $drop-area-height: (
