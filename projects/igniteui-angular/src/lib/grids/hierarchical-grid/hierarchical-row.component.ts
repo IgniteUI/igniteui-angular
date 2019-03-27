@@ -14,13 +14,14 @@ import { IgxRowComponent } from '../row.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) } ]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }, IgxForOfSyncService]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
     /**
