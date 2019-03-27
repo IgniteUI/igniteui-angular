@@ -3865,9 +3865,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
-        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+        const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
         return columnWidth.toString();
     }
@@ -4457,9 +4457,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const unpinnedColumns = [];
         const newUnpinnedCols = [];
 
-        if (this.calcWidth === 0) {
-            this.calculateGridWidth();
-        }
+        this.calculateGridWidth();
         // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
