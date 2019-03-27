@@ -170,18 +170,20 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
     });
 
-    it('change paging pages per page API', fakeAsync(() => {
+    it('change paging pages per page API', (async () => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
-        const grid = fix.componentInstance.grid;
-        grid.paging = true;
-        grid.perPage = 2;
-        grid.height = '300px';
-        tick();
-        fix.detectChanges();
-        grid.page = 1;
         fix.detectChanges();
 
-        const vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        const grid = fix.componentInstance.grid;
+        grid.height = '300px';
+        grid.paging = true;
+        grid.perPage = 2;
+        await wait();
+        fix.detectChanges();
+
+        grid.page = 1;
+        await wait();
+        fix.detectChanges();
 
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(2, 'Invalid page size');
@@ -190,25 +192,33 @@ describe('IgxGrid - Grid Paging', () => {
         // Change page size to be 5
         spyOn(grid.onPagingDone, 'emit');
         grid.perPage = 5;
+        await wait();
         fix.detectChanges();
+        let vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
-        expect(vScrollBar.children[0].style.height).toEqual('250px');
+        expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
+        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(255);
 
         // Change page size to be 33
         grid.perPage = 33;
+        await wait();
         fix.detectChanges();
-        // onPagingDone should be emited only if we have a change in the page number
+        vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        // onPagingDone should be emitted only if we have a change in the page number
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
-        expect(vScrollBar.children[0].style.height).toEqual('500px');
+        expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
+        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(506);
 
         // Change page size to be negative
         grid.perPage = -7;
+        await wait();
         fix.detectChanges();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
-        expect(vScrollBar.children[0].style.height).toEqual('500px');
+        expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
+        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(506);
     }));
 
     it('change paging with button', () => {
