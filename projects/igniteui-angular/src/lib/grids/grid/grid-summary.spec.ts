@@ -27,7 +27,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../grid-base.component';
-import { DataType } from '../../data-operations/data-util';
 
 describe('IgxGrid - Summaries', () => {
     configureTestSuite();
