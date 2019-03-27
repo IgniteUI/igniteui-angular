@@ -3,13 +3,14 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
-    providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent)}]
+    providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent)}, IgxForOfSyncService]
 })
 export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
     constructor(
