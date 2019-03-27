@@ -1,6 +1,10 @@
 <ng-container *ngIf="grid.enableMRL && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <div class="igx-grid__thead-group igx-grid__mrl_block">
+    <div class="igx-grid__thead-group igx-grid__mrl_block"
+     [ngStyle]="{'grid-template-rows':column.getGridTemplate(true),
+     'grid-template-column':column.getGridTemplate(false),
+     '-ms-grid-rows':column.getGridTemplate(true, true),
+     '-ms-grid-columns':column.getGridTemplate(false, true)}">
         <ng-container *ngFor="let child of column.children" >
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
                 [column]="child"
@@ -10,11 +14,7 @@
                 [attr.droppable]="true"
                 [igxColumnMovingDrop]="child"
                 [style.min-width.px]="child.width"
-                [style.flex-basis.px]="child.width"
-                [rowStart]="child.rowStart"
-                [rowEnd]="child.rowEnd"
-                [colStart]="child.colStart"
-                [colEnd]="child.colEnd">
+                [style.flex-basis.px]="child.width">
             </igx-grid-header-group>
         </ng-container>
     </div>

@@ -1831,7 +1831,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.enableMRL ?
-                this.columnList.reduce((acc, col) => Math.max(acc, parseInt(col.rowStart, 10)), 0) :
+                this.columnList.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
                 this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
@@ -3828,7 +3828,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
         const columnsToSize = this.enableMRL ?
-            visibleChildColumns.reduce((acc, col) => Math.max(acc, parseInt(col.colStart, 10)), 1) :
+            visibleChildColumns.reduce((acc, col) => Math.max(acc, col.colStart), 1) :
             visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths

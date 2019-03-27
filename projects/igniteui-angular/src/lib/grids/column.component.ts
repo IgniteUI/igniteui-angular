@@ -800,11 +800,35 @@ export class IgxColumnComponent implements AfterContentInit {
 
         return pinnedCols.indexOf(this) === pinnedCols.length - 1;
     }
+    public msGridRowSpan;
+    public msGridColumnSpan;
 
-    @Input() rowEnd: string;
-    @Input() colEnd: string;
-    @Input() rowStart: string;
-    @Input() colStart: string;
+    public _rowEnd;
+    get rowEnd() {
+        return this._rowEnd;
+    }
+    @Input()
+    set rowEnd(value: string) {
+        this._rowEnd = value;
+        if (value && value.indexOf('span') !== -1) {
+            this.msGridRowSpan = parseInt(value.replace('span', ''), 10);
+        }
+    }
+
+    public _colEnd;
+    get colEnd() {
+        return this._colEnd;
+    }
+    @Input()
+    set colEnd(value: string) {
+        this._colEnd = value;
+        if (value && value.indexOf('span') !== -1) {
+            this.msGridColumnSpan = parseInt(value.replace('span', ''), 10);
+        }
+    }
+
+    @Input() rowStart: number;
+    @Input() colStart: number;
 
     /**
      * hidden
@@ -981,6 +1005,21 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+
+    /**
+     * @hidden
+     */
+    getGridTemplate(isRow, isIE) {
+        const itemAccum = isRow ?
+            (acc, val) => Math.max(val.rowStart + (val.msGridRowSpan || 0) - 1, acc) :
+            (acc, val) => Math.max(val.colStart + (val.msGridColumnSpan || 0) - 1, acc);
+        const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
+
+        return isIE ?
+            `(1fr)[${templateItems}]` :
+            `repeat(${templateItems},1fr)`;
+    }
+
     /**
      * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
@@ -1465,7 +1504,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                     isChildrenWidthInPercent = true;
                 }
-                if (parseInt(val.rowStart, 10) !== 1) {
+                if (val.rowStart !== 1) {
                     return acc;
                 }
                 return acc + parseInt(val.width, 10);
