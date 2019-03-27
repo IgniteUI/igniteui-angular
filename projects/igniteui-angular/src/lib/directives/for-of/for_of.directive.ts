@@ -1008,8 +1008,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    private _calcHeight(): number {
-        let height = this.initSizesCache(this.igxForOf);
+    protected _calcHeight(): number {
+        let height;
+        if (this.heightCache) {
+            height = this.heightCache.reduce((acc, val) => acc + val, 0);
+        } else {
+            height = this.initSizesCache(this.igxForOf);
+        }
         this._virtHeight = height;
         if (height > this._maxHeight) {
             this._virtHeightRatio = height / this._maxHeight;
