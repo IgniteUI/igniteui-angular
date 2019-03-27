@@ -18,7 +18,8 @@ import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxFilterCellTemplateDirective
 } from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
@@ -697,6 +698,34 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
+     * Returns a reference to the `filterCellTemplate`.
+     * ```typescript
+     * let filterCellTemplate = this.column.filterCellTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input('filterCellTemplate')
+    get filterCellTemplate(): TemplateRef<any> {
+        return this._filterCellTemplate;
+    }
+    /**
+     * Sets the quick filter template.
+     * ```html
+     * <ng-template #filterCellTemplate IgxFilterCellTemplate let-column="column">
+     *    <input (input)="onInput()">
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'filterCellTemplate'", {read: TemplateRef })
+     * public filterCellTemplate: TemplateRef<any>;
+     * this.column.filterCellTemplate = this.filterCellTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set filterCellTemplate(template: TemplateRef<any>) {
+        this._filterCellTemplate = template;
+    }
+    /**
      * Gets the cells of the column.
      * ```typescript
      * let columnCells =  this.column.cells;
@@ -856,6 +885,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _filterCellTemplate: TemplateRef<any>;
+    /**
+     *@hidden
+     */
     protected _summaries = null;
     /**
      *@hidden
@@ -914,6 +947,11 @@ export class IgxColumnComponent implements AfterContentInit {
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     private _vIndex = NaN;
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
+    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
 
@@ -937,6 +975,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
+        }
+        if (this.filterCellTemplateDirective) {
+            this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
         if (!this.summaries) {
             switch (this.dataType) {

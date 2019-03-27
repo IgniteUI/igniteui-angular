@@ -4705,10 +4705,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const unpinnedColumns = [];
         const newUnpinnedCols = [];
 
-        if (this.calcWidth === 0) {
-            this.calculateGridWidth();
-            this.resetCaches();
-        }
+        this.calculateGridWidth();
+        this.resetCaches();
         // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {

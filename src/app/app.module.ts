@@ -86,6 +86,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 
 
 
@@ -166,7 +167,8 @@ const components = [
     GridColumnPercentageWidthsSampleComponent,
     CalendarViewsSampleComponent,
     GridSearchBoxComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    GridFilterTemplateSampleComponent
 ];
 
 @NgModule({

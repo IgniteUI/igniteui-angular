@@ -480,6 +480,34 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(parentRow.expanded).toBe(true);
     });
 
+    it('should retain focused cell when expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', (async () => {
+        // scroll to last row
+        const lastDataIndex = hierarchicalGrid.verticalScrollContainer.igxForOf.length - 2;
+        hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
+        await wait(100);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
+        await wait(100);
+        fixture.detectChanges();
+
+        let parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
+        parentCell.nativeElement.focus();
+        fixture.detectChanges();
+         // collapse
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
+        expect(parentCell.focused).toBeTruthy();
+
+        // expand
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
+        expect(parentCell.focused).toBeTruthy();
+    }));
+
     it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
         expect(parentRow.expanded).toBe(true);
