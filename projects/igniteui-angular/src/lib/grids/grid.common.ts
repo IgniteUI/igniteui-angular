@@ -337,9 +337,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     protected createDragGhost(event) {
-        const index = this.column.grid.hasMovableColumns ? 1 : 0;
-
-        super.createDragGhost(event, this.element.nativeElement.children[index]);
+        super.createDragGhost(event);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -441,13 +439,14 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
             const pos = clientRect.left + clientRect.width / 2;
+            const parent = this.elementRef.nativeElement.parentElement;
 
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.firstElementChild;
             } else {
                 this._dropPos = DropPosition.AfterDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.lastElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.lastElementChild;
             }
 
             if (this.cms.icon.innerText !== 'block') {
