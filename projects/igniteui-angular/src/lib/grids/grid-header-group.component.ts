@@ -8,8 +8,7 @@ import {
     forwardRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    DoCheck,
-    HostListener
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
