@@ -64,6 +64,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public row: any;
 
     /**
+     * Gets the data of the row of the cell.
+     * ```typescript
+     * let rowData = this.cell.rowData;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @Input()
+    public rowData: any;
+
+    /**
      * Sets/gets the template of the cell.
      * ```html
      * <ng-template #cellTemplate igxCell let-value>
@@ -233,7 +243,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public get cellID() {
         const primaryKey = this.grid.primaryKey;
-        const rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
+        const rowID = primaryKey ? this.rowData[primaryKey] : this.rowData;
         return { rowID, columnID: this.columnIndex, rowIndex: this.rowIndex };
     }
 
