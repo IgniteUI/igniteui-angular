@@ -825,7 +825,6 @@ export class IgxGridCellComponent implements OnInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
-                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
