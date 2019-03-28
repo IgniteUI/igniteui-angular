@@ -619,15 +619,6 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    get dropDownWidth(): any {
-        if (this.group) {
-            return this.group.element.nativeElement.getBoundingClientRect().width;
-        }
-    }
-
-    /**
-     * @hidden
-     */
     get validMinuteEntries(): any[] {
         const minuteEntries = [];
         for (let i = 0; i < 60; i++) {
@@ -737,6 +728,10 @@ export class IgxTimePickerComponent implements
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((res) => this.onKeydown(res));
+        }
+
+        if (this.container && this.group) {
+            this.container.nativeElement.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
         }
     }
 
