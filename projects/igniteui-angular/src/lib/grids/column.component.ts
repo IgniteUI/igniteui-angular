@@ -1011,13 +1011,13 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     getGridTemplate(isRow, isIE) {
         const itemAccum = isRow ?
-            (acc, val) => Math.max(val.rowStart + (val.msGridRowSpan || 0) - 1, acc) :
-            (acc, val) => Math.max(val.colStart + (val.msGridColumnSpan || 0) - 1, acc);
+            (acc, val) => Math.max(val.rowStart + (val.msGridRowSpan || 1) - 1, acc) :
+            (acc, val) => Math.max(val.colStart + (val.msGridColumnSpan || 1) - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
 
         return isIE ?
-            `(1fr)[${templateItems}]` :
-            `repeat(${templateItems},1fr)`;
+            `(auto)[${templateItems}]` :
+            `repeat(${templateItems},auto)`;
     }
 
     /**
@@ -1287,7 +1287,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.grid.enableMRL && this.rowEnd && this.rowEnd.indexOf('span') !== -1) {
+        if (this.grid.enableMRL && this.rowEnd && this.rowEnd.indexOf('span') !== -1 && !this.widthSetByUser) {
             return '';
         }
 
@@ -1507,7 +1507,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 if (val.rowStart !== 1) {
                     return acc;
                 }
-                return acc + parseInt(val.width, 10);
+                return acc + parseInt(val.calcWidth, 10);
             }, 0)}`;
         } else {
             width = `${this.children.reduce((acc, val) => {
