@@ -30,6 +30,8 @@ import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+import { first } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -1204,9 +1206,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return this.igxForOf;
     }
 
+    protected combined: Observable<any>;
+
     ngOnInit() {
         super.ngOnInit();
         this.removeScrollEventListeners();
+        if (this.igxForScrollOrientation === 'vertical') {
+            this.combined = combineLatest([this._zone.onStable, this.onDataChanged]);
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -1347,9 +1354,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
+                if (this.combined) {
+                    this.combined.pipe(first()).subscribe(() => this._updateScrollOffset());
+                }
                 this._updateSizeCache(changes);
                 this._applyChanges();
-                this.cdr.markForCheck();
                 this._updateScrollOffset();
                 this.onDataChanged.emit();
             }
