@@ -1262,19 +1262,23 @@ describe('IgxGrid - Column Moving', () => {
         }));
 
         it('MCH - should pin only top level columns.', (async() => {
-
             fixture.componentInstance.isPinned = true;
+            await wait();
             fixture.detectChanges();
 
             // step 2 - try pinning a sub level simple column
             let header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 75);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 81);
-            await wait(50);
+            await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 30, 50);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointerup', header, 30, 50);
+            await wait();
             fixture.detectChanges();
 
             let columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
@@ -1285,12 +1289,15 @@ describe('IgxGrid - Column Moving', () => {
             header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 25);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 30, 50);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointerup', header, 30, 50);
-            await wait();
+            await wait(30);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', header, 40, 50);
+            await wait(30);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', header, 40, 50);
+            await wait(30);
             fixture.detectChanges();
 
             columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));

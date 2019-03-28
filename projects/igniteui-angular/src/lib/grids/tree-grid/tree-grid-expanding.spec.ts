@@ -9,6 +9,7 @@ import {
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Expanding / Collapsing', () => {
     configureTestSuite();
@@ -218,17 +219,24 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             expect(rows.length).toBe(4, 'root level row collapsing problem');
         });
 
-        it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', () => {
+        it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', async () => {
             treeGrid.perPage = 50;
+            await wait();
+            fix.detectChanges();
 
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
 
             treeGrid.expandAll();
+            await wait();
+            fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(12);
+            expect(rows.length).toBeGreaterThan(10);
+            expect(rows.length).toBeLessThan(14);
 
             treeGrid.collapseAll();
+            await wait();
+            fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
         });

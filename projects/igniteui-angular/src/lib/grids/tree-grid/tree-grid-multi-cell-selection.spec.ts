@@ -53,8 +53,6 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         });
 
         it('Should not change selection when expand collapse row with keyboard', (async () => {
-            const startCell = treeGrid.getCellByColumn(4, 'ID');
-            const endCell = treeGrid.getCellByColumn(5, 'ID');
             const expectedData1 = [
                 { ID: 19 },
                 { ID: 15 }
@@ -68,6 +66,8 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             await wait(30);
             fix.detectChanges();
 
+            let startCell = treeGrid.getCellByColumn(10, 'ID');
+            const endCell = treeGrid.getCellByColumn(11, 'ID');
             await HelperUtils.selectCellsRange(fix, startCell, endCell);
 
             expect(startCell.focused).toBe(true);
@@ -84,10 +84,12 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData2);
 
+            startCell = treeGrid.getCellByColumn(10, 'ID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', startCell.nativeElement, true, true);
             await wait(30);
             fix.detectChanges();
 
+            startCell = treeGrid.getCellByColumn(10, 'ID');
             expect(startCell.focused).toBe(true);
             HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
             HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
