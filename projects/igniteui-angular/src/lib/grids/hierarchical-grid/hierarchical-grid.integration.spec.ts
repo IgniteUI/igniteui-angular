@@ -542,24 +542,26 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 20;
             hierarchicalGrid.reflow();
+            await wait();
             fixture.detectChanges();
             expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
             hierarchicalGrid.perPage = 5;
+            await wait(30);
             fixture.detectChanges();
 
-            await wait(30);
             expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
 
             // expand first
             hierarchicalGrid.getRowByKey('0').nativeElement.children[0].click();
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
+
             expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
 
             // scroll bottom
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
 
             // check last row is loaded and is in view
             let rows = hierarchicalGrid.rowList.toArray();
@@ -570,11 +572,11 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
 
             hierarchicalGrid.getRowByKey('1').nativeElement.children[0].click();
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
 
             // check last row is loaded and is in view
             rows = hierarchicalGrid.rowList.toArray();
@@ -585,11 +587,11 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
 
             hierarchicalGrid.getRowByKey('2').nativeElement.children[0].click();
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
 
             // check last row is loaded and is in view
             rows = hierarchicalGrid.rowList.toArray();
@@ -600,11 +602,11 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
 
             hierarchicalGrid.getRowByKey('3').nativeElement.children[0].click();
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
 
             // check last row is loaded and is in view
             rows = hierarchicalGrid.rowList.toArray();
@@ -615,11 +617,11 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.rowData).toBe(fixture.componentInstance.data[4]);
 
             hierarchicalGrid.getRowByKey('4').nativeElement.children[0].click();
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            fixture.detectChanges();
             await wait(30);
+            fixture.detectChanges();
 
             // check last row is loaded and is in view
             rows = hierarchicalGrid.rowList.toArray();
