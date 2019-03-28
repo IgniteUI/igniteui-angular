@@ -4,7 +4,6 @@ $print-background: #eee;
 
 @mixin igx-grid-print {
     %igx-grid__grouparea,
-    %igx-grid-paginator,
     %igx-grid-toolbar__actions,
     %igx-drop-area__icon,
     %igx-drop-area__text,
@@ -18,17 +17,16 @@ $print-background: #eee;
         display: none !important;
     }
 
-
-    %igx-grid__grouping-indicator {
-        igx-icon {
-            display: none !important;
-        }
-    }
-
-    %igx-grid__filtering-cell {
-        height: 0 !important;
-        border-right: none !important;
-    }
+    //%igx-grid__grouping-indicator {
+    //    igx-icon {
+    //        display: none !important;
+    //    }
+    //}
+    //
+    //%igx-grid__filtering-cell {
+    //    height: 0 !important;
+    //    border-right: none !important;
+    //}
 
     %grid-tfoot,
     %igx-grid__grouparea,
@@ -40,12 +38,6 @@ $print-background: #eee;
     %grid-row,
     %grid-thead {
         border-color: $border-color !important;
-    }
-
-    %grid-display {
-        igx-icon {
-            color: #666 !important;
-        }
     }
 
     %grid-thead,
