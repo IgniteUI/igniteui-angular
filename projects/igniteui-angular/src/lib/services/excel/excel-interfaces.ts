@@ -1,4 +1,4 @@
-import * as JSZip from 'jszip/dist/jszip';
+import * as JSZip from 'jszip';
 
 import {
     ExcelFileTypes,
