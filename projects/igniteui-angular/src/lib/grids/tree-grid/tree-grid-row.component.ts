@@ -5,12 +5,11 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 @Component({
     selector: 'igx-tree-grid-row',
     templateUrl: 'tree-grid-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }, IgxForOfSyncService]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
 export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
     constructor(

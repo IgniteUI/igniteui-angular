@@ -12,15 +12,13 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { DisplayDensity } from '../../core/density';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-summary-row',
-    templateUrl: './summary-row.component.html',
-    providers: [IgxForOfSyncService]
+    templateUrl: './summary-row.component.html'
 })
 export class IgxSummaryRowComponent implements DoCheck  {
 
