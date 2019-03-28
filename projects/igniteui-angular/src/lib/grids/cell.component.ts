@@ -718,6 +718,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
+        if (event.altKey) {
+            this.handleAlt(key);
+            return;
+        }
+
         this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
 
 
@@ -739,11 +744,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             event.stopPropagation();
-        }
-
-        if (event.altKey) {
-            this.handleAlt(key);
-            return;
         }
 
         const args = { cell: this, groupRow: null, event: event, cancel: false };

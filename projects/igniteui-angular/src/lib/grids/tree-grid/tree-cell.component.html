@@ -27,7 +27,7 @@
     <ng-container *ngIf="level > 0">
         <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{level}}"></div>
     </ng-container>
-    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
+    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>

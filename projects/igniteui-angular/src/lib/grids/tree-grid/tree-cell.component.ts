@@ -41,6 +41,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @Input()
     level = 0;
 
+    /**
+     * @hidden
+     */
+    @Input()
+    showIndicator = false;
+
     @ViewChild('indicator', { read: ElementRef })
     public indicator: ElementRef;
 
