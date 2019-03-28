@@ -1,12 +1,12 @@
-import * as JSZip from 'jszip/dist/jszip';
+import * as JSZip from 'jszip';
 import { ExcelFileTypes } from './excel-enums';
 import { JSZipFiles } from './jszip-helper.spec';
 
 export class JSZipWrapper {
     private _zip: JSZip;
-    private _filesAndFolders: JSZip.ZipObject[];
+    private _filesAndFolders: string[];
     private _fileContent = '';
-    private _files: any[];
+    private _files: {[key: string]: JSZip.JSZipObject};
     private _filesContent: IFileContent[] = [];
     private _hasValues = true;
 
@@ -19,24 +19,22 @@ export class JSZipWrapper {
     }
 
     private createFilesAndFolders() {
-        this._filesAndFolders = Object.keys(this._files).map((f: JSZip.ZipObject) => {
-            return f;
-        });
+        this._filesAndFolders = Object.keys(this._files).map(f => f);
     }
 
-    get templateFilesAndFolders(): JSZip.ZipObject[] {
+    get templateFilesAndFolders(): string[] {
         return this._filesAndFolders.filter((name) => JSZipFiles.templatesNames.indexOf(name) !== -1);
     }
 
-    get dataFilesAndFolders(): JSZip.ZipObject[] {
+    get dataFilesAndFolders(): string[] {
         return this._filesAndFolders.filter((name) => JSZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
     }
 
-    get dataFilesOnly(): JSZip.ZipObject[] {
+    get dataFilesOnly(): string[] {
         return this.getFiles(this.dataFilesAndFolders);
     }
 
-    get templateFilesOnly(): JSZip.ZipObject[] {
+    get templateFilesOnly(): string[] {
         return this.getFiles(this.templateFilesAndFolders);
     }
 
@@ -44,7 +42,7 @@ export class JSZipWrapper {
         return this._hasValues;
     }
 
-    private getFiles(collection: JSZip.ZipObject[]) {
+    private getFiles(collection: string[]) {
         return collection.filter((f) => this._files[f].dir === false);
     }
 
@@ -54,14 +52,14 @@ export class JSZipWrapper {
             return 'Zip file not found!';
         }
 
-        await this._files[fileName].async('string')
+        await this._files[fileName].async('text')
         .then((txt) => {
                 this._fileContent = txt;
         });
     }
 
     /* Reads all files and stores their contents in this._filesContent. */
-    private async readFiles(files: any[]) {
+    private async readFiles(files: string[]) {
         // const self = this;
         this._filesContent = [];
         for (const file of files) {
@@ -137,19 +135,6 @@ export class JSZipWrapper {
 
         await this.readDataFiles().then(() => {
             result = this.compareFiles(this.dataFilesContent, expectedData);
-            expect(result.areEqual).toBe(true, msg + result.differences);
-        });
-    }
-
-    /* Verifies the contents of all files and asserts the result.
-    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyFilesContent(expectedData: IFileContent[], message = '') {
-        // const self = this;
-        let result;
-        const msg = (message !== '') ? message + '\r\n' : '';
-
-        await this.readFiles(this._files).then(() => {
-            result = this.compareFiles(this._filesContent, expectedData);
             expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
