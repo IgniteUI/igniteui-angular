@@ -204,6 +204,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
     private _locale = null;
+    private _observer: MutationObserver;
     private _destroyed = false;
     /**
      * An accessor that sets the resource strings.
@@ -2668,19 +2669,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // In order to prevent that add a mutation observer that watches if we have been added.
         if (!this.isAttachedToDom) {
             const config = { childList: true, subtree: true };
-            let observer: MutationObserver = null;
             const callback = (mutationsList) => {
                 const childListHasChanged = mutationsList.filter((mutation) => {
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
-                                this.reflow();
-                                observer.disconnect();
-                            }
+                    this.reflow();
+                    this._observer.disconnect();
+                    this._observer = null;
+                }
             };
 
-            observer = new MutationObserver(callback);
-            observer.observe(this.document.body, config);
+            this._observer = new MutationObserver(callback);
+            this._observer.observe(this.document.body, config);
         }
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
@@ -2731,6 +2732,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
             vertScrDC.removeEventListener('wheel', () => { this.wheelHandler(); });
         });
+        if (this._observer) {
+            this._observer.disconnect();
+        }
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;
