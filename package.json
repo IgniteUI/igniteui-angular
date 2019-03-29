@@ -46,7 +46,6 @@
     "@angular/router": "^7.0.3",
     "@types/hammerjs": "^2.0.36",
     "@types/jszip": "^3.1.5",
-    "@types/source-map": "^0.5.2",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.7",
     "hammerjs": "^2.0.8",
