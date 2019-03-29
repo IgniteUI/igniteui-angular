@@ -438,8 +438,6 @@ describe('IgxDatePicker', () => {
 
     it('#3595 - Should be able to change month', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
-        fixture.componentInstance.datePicker.value = new Date(2019, 2, 10);
-        tick(300);
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -450,14 +448,14 @@ describe('IgxDatePicker', () => {
 
         let month = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[0];
         month.dispatchEvent(new Event('click'));
-        tick(200);
+        tick();
         fixture.detectChanges();
 
-        const firstMonth = document.getElementsByClassName('igx-calendar__month')[0];
+        const firstMonth = document.getElementsByClassName('igx-calendar__month')[1];
         const expectedResult = (firstMonth as HTMLElement).innerText;
 
         firstMonth.dispatchEvent(new Event('click'));
-        tick(200);
+        tick();
         fixture.detectChanges();
 
         month = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[0];
