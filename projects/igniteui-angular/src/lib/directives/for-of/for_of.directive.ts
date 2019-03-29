@@ -1206,14 +1206,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return this.igxForOf;
     }
 
-    protected combined: Observable<any>;
-
     ngOnInit() {
         super.ngOnInit();
         this.removeScrollEventListeners();
-        if (this.igxForScrollOrientation === 'vertical') {
-            this.combined = combineLatest([this._zone.onStable, this.onDataChanged]);
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -1298,11 +1293,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
+        if (Math.abs(diff) > 0) {
             requestAnimationFrame(() => {
                 this.recalcUpdateSizes();
                 const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-                scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+                if (scr.scrollTop !== 0) {
+                    scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+                } else {
+                    this._updateScrollOffset();
+                }
             });
         }
     }
@@ -1353,9 +1352,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 //  re-init cache.
                 if (!this.igxForOf) {
                     return;
-                }
-                if (this.combined) {
-                    this.combined.pipe(first()).subscribe(() => this._updateScrollOffset());
                 }
                 this._updateSizeCache(changes);
                 this._applyChanges();
