@@ -588,6 +588,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return column.dataType === DataType.Number;
     }
 
+    public get_data(id: string): any[] {
+        const grid = this.get(id);
+        const data = grid.data ? grid.data : [];
+        return data;
+    }
+
     public get_all_data(id: string, includeTransactions = false): any[] {
         const grid = this.get(id);
         let data = grid.data ? grid.data : [];
