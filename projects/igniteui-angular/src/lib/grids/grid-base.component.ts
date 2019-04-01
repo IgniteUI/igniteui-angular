@@ -3760,15 +3760,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupAreaHeight = this.getGroupAreaHeight();
         let gridHeight;
 
-        if (!this.isAttachedToDom) {
-            return null;
-        }
-
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
-            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
-        } else {
+                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            } else {
                 return this.defaultTargetBodyHeight;
             }
         } else {
@@ -4053,7 +4049,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected autogenerateColumns() {
-        const data = this.gridAPI.get_all_data(this.id);
+        const data = this.gridAPI.get_data(this.id);
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];
