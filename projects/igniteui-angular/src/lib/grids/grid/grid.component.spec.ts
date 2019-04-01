@@ -921,7 +921,7 @@ describe('IgxGrid Component Tests', () => {
                 }
             });
 
-        it('Should render date and number values based on default formatting', () => {
+        it('Should render date and number values based on default formatting', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             fixture.componentInstance.grid.height = null;
             fixture.detectChanges();
@@ -964,7 +964,7 @@ describe('IgxGrid Component Tests', () => {
                     expect(earliestValue).toBe('May 17, 1990');
                 }
             });
-        });
+        }));
 
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
