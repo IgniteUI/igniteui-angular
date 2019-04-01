@@ -47,7 +47,13 @@ let NEXT_ID = 0;
 @Component({
     providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
-    templateUrl: 'navigation-drawer.component.html'
+    templateUrl: 'navigation-drawer.component.html',
+    styles: [`
+        :host {
+            display: block;
+            height: 100%;
+        }
+    `]
 })
 export class IgxNavigationDrawerComponent implements
     IToggleView,
@@ -289,7 +295,7 @@ export class IgxNavigationDrawerComponent implements
     /** @hidden */
     @HostBinding('style.order')
     get isPinnedRight() {
-        return this.pin && this.position === 'right' ?  '1' : '0';
+        return this.pin && this.position === 'right' ? '1' : '0';
     }
 
     private _gesturesAttached = false;
@@ -306,9 +312,9 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('overlay') private _overlay: ElementRef;
     @ViewChild('dummy') private _styleDummy: ElementRef;
 
-   /**
-     * @hidden
-     */
+    /**
+      * @hidden
+      */
     get drawer() {
         return this._drawer.nativeElement;
     }

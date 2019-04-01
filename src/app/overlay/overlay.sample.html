@@ -58,6 +58,13 @@
                 <igx-switch class="settings" [(ngModel)]="modal" name="modal" [value]="modal"
                     (change)="onSwitchChange($event)">Modal</igx-switch>
             </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="useOutlet" name="outlet" [value]="useOutlet"
+                    (change)="onSwitchChange($event)">Open in outlet</igx-switch>
+            </div>
+        </div>
+        <div #outlet class="outlet column">
+            Outlet
         </div>
         <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
