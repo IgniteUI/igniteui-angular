@@ -7,10 +7,7 @@
 
 /// Generates a dark calendar schema.
 /// @type {Map}
-/// @prop {Color} content-background [#222] - The main content background color.
 /// @requires extend
 /// @requires $_light-calendar
 /// @see $default-palette
-$_dark-calendar: extend($_light-calendar, (
-    content-background: #222
-));
+$_dark-calendar: extend($_light-calendar, ());

@@ -180,9 +180,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.customDialog.expressionsList = this.expressionsList;
         this.populateColumnData();
 
-        const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
-        if (se) {
-            this.excelStyleSorting.selectButton(se.dir);
+        if (this.excelStyleSorting) {
+            const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
+            if (se) {
+                this.excelStyleSorting.selectButton(se.dir);
+            }
         }
 
         requestAnimationFrame(() => {
@@ -528,7 +530,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 });
             });
             this.expressionsList = new Array<ExpressionUI>();
-            this.filteringService.filter(this.column.field, filterTree);
+            this.filteringService.filterInternal(this.column.field, filterTree);
         } else {
             this.filteringService.clearFilter(this.column.field);
         }
