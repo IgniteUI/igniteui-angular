@@ -524,7 +524,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges {
         }
         this._clearCellSelection();
         this._saveCellSelection();
-        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
+        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.indexOf(this.row.rowData) !== -1 :
+                                        this.grid.dataRowList.map(r => r.rowID).indexOf(this.cellID.rowID) !== -1;
         if (hasFilteredResults) {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
@@ -842,7 +843,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
-                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
