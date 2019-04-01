@@ -99,6 +99,27 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
+    it('Should trigger onDoubleClick event', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.columns[0].editable = true;
+        fix.detectChanges();
+
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'index');
+
+        spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(fix.componentInstance.eventCounter).toBe(1);
+
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(fix.componentInstance.eventCounter).toBe(2);
+    });
+
     it('Should trigger onContextMenu event when right click into cell', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -142,6 +163,31 @@ describe('IgxGrid - Cell component', () => {
         expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
+
+    it('Should not revert cell\' value when onDoubleClick while in editMode', (async () => {
+        const fix = TestBed.createComponent(CellEditingTestComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'fullName');
+
+        expect(firstCell.nativeElement.textContent).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeFalsy();
+
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        const editCell = cellElem.query(By.css('input'));
+        expect(editCell.nativeElement.value).toBe('John Brown');
+        expect(firstCell.inEditMode).toBeTruthy();
+
+        UIInteractions.sendInput(editCell, 'test');
+        fix.detectChanges();
+        cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
+        fix.detectChanges();
+        expect(editCell.nativeElement.value).toBe('test');
+        expect(firstCell.inEditMode).toBeTruthy();
+    }));
 
     describe('Cell Editing', () => {
         configureTestSuite();
@@ -751,8 +797,8 @@ describe('IgxGrid - Cell component', () => {
     it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
-         const grid = fixture.componentInstance.grid;
-         const columns: IgxColumnComponent[] = grid.columnList.toArray();
+        const grid = fixture.componentInstance.grid;
+        const columns: IgxColumnComponent[] = grid.columnList.toArray();
         expect(columns[0].editable).toBeFalsy();
         expect(columns[1].editable).toBeFalsy();
         expect(columns[2].editable).toBeTruthy();
@@ -783,7 +829,7 @@ export class DefaultGridComponent {
 
     public selectedCell: IgxGridCellComponent;
     public clickedCell: IgxGridCellComponent;
-
+    public eventCounter = 0;
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
@@ -799,8 +845,10 @@ export class DefaultGridComponent {
         this.clickedCell = evt.cell;
     }
 
+
     public doubleClick(evt) {
         this.clickedCell = evt.cell;
+        this.eventCounter++;
     }
 }
 
@@ -1041,8 +1089,8 @@ export class ConditionalCellStyleTestComponent implements OnInit {
     `
 })
 export class ColumnEditablePropertyTestComponent {
-     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-     public data = [
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    public data = [
         { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
         { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
@@ -1064,7 +1112,7 @@ export class ColumnEditablePropertyTestComponent {
 })
 export class GridColumnWidthsComponent {
     public static COLUMN_WIDTH;
-     @ViewChild('grid', { read: IgxGridComponent })
+    @ViewChild('grid', { read: IgxGridComponent })
     public instance: IgxGridComponent;
     public data;
     public columns;

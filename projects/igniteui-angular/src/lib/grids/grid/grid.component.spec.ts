@@ -49,7 +49,8 @@ describe('IgxGrid Component Tests', () => {
                 declarations: [
                     IgxGridTestComponent,
                     IgxGridMarkupDeclarationComponent,
-                    IgxGridRemoteVirtualizationComponent
+                    IgxGridRemoteVirtualizationComponent,
+                    IgxGridEmptyMessage100PercentComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -271,12 +272,17 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
 
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columns;
@@ -284,19 +290,35 @@ describe('IgxGrid Component Tests', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
             tick(100);
 
+            expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
+        }));
+
+        it('should render empty message when grid height is 100%', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridEmptyMessage100PercentComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
+
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(0);
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
     });
@@ -3220,6 +3242,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(500);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -3240,6 +3263,8 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid2;
             const tab = fix.componentInstance.tabs;
+
+            expect(grid.calcHeight).toBe(300);
             tab.tabs.toArray()[1].select();
             await wait(100);
             fix.detectChanges();
@@ -3279,6 +3304,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(200);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
@@ -3288,7 +3314,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator'));
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
     });
@@ -3503,6 +3529,21 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     ];
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `<div>
+        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name"></igx-column>
+        </igx-grid>
+        </div>
+    `
+})
+export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
+    public data = [];
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
 }
 
 @Injectable()
@@ -3884,13 +3925,13 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     `
 })
 export class IgxGridInsideIgxTabsComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid2', { read: IgxGridComponent })
     public grid2: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid3', { read: IgxGridComponent })
     public grid3: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid4', { read: IgxGridComponent })
     public grid4: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid5', { read: IgxGridComponent })
     public grid5: IgxGridComponent;
     @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
     public tabs: IgxTabsComponent;

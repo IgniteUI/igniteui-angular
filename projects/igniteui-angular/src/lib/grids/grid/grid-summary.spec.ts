@@ -24,8 +24,9 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
+import { GridSummaryCalculationMode } from '../grid-base.component';
 
 describe('IgxGrid - Summaries', () => {
     configureTestSuite();
@@ -683,6 +684,62 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 4,
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             });
+
+            it('CRUD: Apply filter and update cell', () => {
+                grid.filter('ProductName', 'ch', IgxStringFilteringOperand.instance().condition('contains'));
+                fix.detectChanges();
+
+                let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+                HelperUtils.verifyColumnSummaries(summaryRow, 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '52', '20,000', '29,810', '7,452.5']);
+
+                const cell = grid.getCellByColumn(2, 'ProductName');
+                cell.update('Teatime Cocoa Biscuits');
+                fix.detectChanges();
+
+                summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+                HelperUtils.verifyColumnSummaries(summaryRow, 3,
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
+            });
+        });
+
+        it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', () => {
+            const fixture = TestBed.createComponent(SummariesGroupByWithScrollsComponent);
+            fixture.detectChanges();
+            const grid = fixture.componentInstance.grid;
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fixture.detectChanges();
+
+            grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
+            fixture.detectChanges();
+
+            grid.getColumnByName('ID').hasSummary = true;
+            fixture.detectChanges();
+
+            let summaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[0];
+            HelperUtils.verifyColumnSummaries(summaryRow, 0,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '12', '101', '113', '56.5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+
+            grid.updateCell(19, 101, 'ParentID');
+            fixture.detectChanges();
+
+            summaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[1];
+            HelperUtils.verifyColumnSummaries(summaryRow, 0,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '12', '12', '12', '12']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
+
+            const secondSummaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[0];
+            HelperUtils.verifyColumnSummaries(secondSummaryRow, 0,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
+            HelperUtils.verifyColumnSummaries(secondSummaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '19', '38', '19']);
         });
 
         it('MCH - verify summaries when there are grouped columns', (async () => {
