@@ -133,13 +133,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        return this.column.isLastPinned;
     }
 
     /**
@@ -162,12 +156,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get hasLastPinnedChildColumn(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-        if (this.column.allChildren) {
-            return this.column.allChildren.some((child) => {
-                return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
-            });
-        }
+        return this.column.allChildren.some(child => child.isLastPinned);
     }
 
     /**

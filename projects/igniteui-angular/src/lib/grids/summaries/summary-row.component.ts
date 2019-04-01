@@ -1,10 +1,15 @@
-import { Component, Input,
-    ViewChildren, QueryList,
-    HostBinding, ViewChild,
+import {
+    Component,
+    Input,
+    ViewChildren,
+    QueryList,
+    HostBinding,
+    ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    DoCheck} from '@angular/core';
+    DoCheck
+} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
@@ -59,12 +64,13 @@ export class IgxSummaryRowComponent implements DoCheck  {
                 public cdr: ChangeDetectorRef) {}
 
     public ngDoCheck() {
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 
     public get grid() {
         return this.gridAPI.grid;
     }
+
     public get nativeElement() {
         return this.element.nativeElement;
     }

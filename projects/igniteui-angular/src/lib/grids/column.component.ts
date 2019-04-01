@@ -811,13 +811,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this) === pinnedCols.length - 1;
+        return this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
 
     /**
