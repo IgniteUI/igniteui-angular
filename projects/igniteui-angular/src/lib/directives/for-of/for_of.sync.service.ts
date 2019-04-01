@@ -6,11 +6,11 @@ import { IgxGridForOfDirective } from './for_of.directive';
 })
 export class IgxForOfSyncService {
 
-    private _master: Map<string, IgxGridForOfDirective<any>> =
-        new Map<string, IgxGridForOfDirective<any>>([
-            ['horizontal', null],
-            ['vertical', null]
-        ]);
+    private _master: Map<string, IgxGridForOfDirective<any>>;
+
+    constructor() {
+        this.resetMaster();
+    }
 
     /**
      * @hidden
@@ -19,10 +19,23 @@ export class IgxForOfSyncService {
         return this._master[directive.igxForScrollOrientation] === directive;
     }
 
+    /**
+     * @hidden
+     */
     public setMaster(directive: IgxGridForOfDirective<any>) {
         if (!this._master[directive.igxForScrollOrientation]) {
             this._master[directive.igxForScrollOrientation] = directive;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public resetMaster() {
+        this._master = new Map<string, IgxGridForOfDirective<any>>([
+            ['horizontal', null],
+            ['vertical', null]
+        ]);
     }
 
     /**
