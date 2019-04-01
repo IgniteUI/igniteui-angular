@@ -2460,7 +2460,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        private navigation: IgxGridNavigationService,
+        public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
