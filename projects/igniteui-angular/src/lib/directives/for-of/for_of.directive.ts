@@ -1235,6 +1235,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     ngOnChanges(changes: SimpleChanges) {
         const forOf = 'igxGridForOf';
+        this.syncService.setMaster(this);
         if (forOf in changes) {
             const value = changes[forOf].currentValue;
             if (!this._differ && value) {
