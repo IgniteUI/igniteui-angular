@@ -111,6 +111,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs {
 export interface IPinColumnEventArgs {
     column: IgxColumnComponent;
     insertAtIndex: number;
+    isPinned: boolean;
 }
 
 export interface IPageEventArgs {
