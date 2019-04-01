@@ -787,7 +787,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
+        if (this.groupingExpressions && this.groupingExpressions.length
+            && typeof(row) !== 'number') {
             const groupByRecords = this.getGroupByRecords();
             const rowIndex = this.filteredSortedData.indexOf(row);
             const groupByRecord = groupByRecords[rowIndex];
@@ -798,7 +799,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             const index = filteredGroupByRecords.indexOf(groupByRecord);
             for (let ind = 0; ind < index; ind++) {
                 if (!this.isExpandedGroup(filteredGroupByRecords[ind])) {
-                    console.log(filteredGroupByRecords[ind].records.length);
                     scrollIndex -= filteredGroupByRecords[ind].records.length;
                 }
             }
