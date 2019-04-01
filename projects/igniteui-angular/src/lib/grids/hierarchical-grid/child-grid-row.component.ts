@@ -168,12 +168,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this.hGrid.createColumnsList(this.layout.childColumns.toArray());
         }
         const layouts = this.hGrid.childLayoutList.toArray();
-        layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
-        this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.id, this.hGrid);
-        if (this.parentGrid.parent) {
-            // If the parent is not the root, we need to save it in the root for the layouts to access its children.
-            this.hGrid.rootGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.id, this.hGrid);
-        }
+        layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
+        this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
+        this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
         this.hGrid.cdr.detectChanges();
     }

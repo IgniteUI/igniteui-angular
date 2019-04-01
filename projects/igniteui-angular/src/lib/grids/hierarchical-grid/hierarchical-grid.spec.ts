@@ -184,8 +184,8 @@ describe('Basic IgxHierarchicalGrid', () => {
         ]);
         expect(grandChildGrid).not.toBeNull();
 
-        const rowIsland1 = hierarchicalGrid.hgridAPI.getLayout('igx-row-island-childData');
-        const rowIsland2 = hierarchicalGrid.hgridAPI.getLayout('igx-row-island-childData-childData');
+        const rowIsland1 = hierarchicalGrid.hgridAPI.getChildRowIsland('childData');
+        const rowIsland2 = hierarchicalGrid.allLayoutList.find(layout => layout.id === 'igx-row-island-childData-childData');
         expect(rowIsland1.key).toBe('childData');
         expect(rowIsland2.key).toBe('childData');
     });
