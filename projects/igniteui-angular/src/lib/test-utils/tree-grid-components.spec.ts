@@ -630,4 +630,11 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
             done(children);
         }, 1000);
     }
+    <igx-tree-grid #treeGrid [data]="data" [autoGenerate]="true" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridAutoGenerateComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
 }

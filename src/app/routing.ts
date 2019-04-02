@@ -66,6 +66,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 
 const appRoutes = [
     {
@@ -257,6 +258,10 @@ const appRoutes = [
     {
         path: 'grid',
         component: GridSampleComponent
+    },
+    {
+        path: 'gridFilterTemplate',
+        component: GridFilterTemplateSampleComponent
     },
     {
         path: 'gridColumnMoving',
