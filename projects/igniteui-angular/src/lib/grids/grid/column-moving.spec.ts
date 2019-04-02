@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -49,11 +49,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should be able to reorder columns programmatically.', (() => {
             let columnsList = grid.columnList.toArray();
@@ -497,11 +497,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should reorder movable columns with templated headers.', (async() => {
             fixture.componentInstance.isResizable = true;
@@ -533,11 +533,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -944,11 +944,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async() => {
 

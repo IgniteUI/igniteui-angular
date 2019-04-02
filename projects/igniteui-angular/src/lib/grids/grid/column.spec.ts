@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -147,7 +147,7 @@ describe('IgxGrid - Column properties', () => {
         expect(headers[1].nativeElement.textContent).toMatch('ID');
     });
 
-    it('should support adding and removing columns through a declared iterable', () => {
+    it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
@@ -166,7 +166,7 @@ describe('IgxGrid - Column properties', () => {
 
         expect(grid.columnList.length).toEqual(2);
         expect(grid.columnList.last.field).toMatch('Name');
-    });
+    }));
 
     it('should apply columnWidth on columns that don\'t have explicit width', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);

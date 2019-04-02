@@ -430,7 +430,7 @@ describe('IgxGrid - Row Selection', () => {
 
     // API Methods
 
-    it('Simple row selection', () => {
+    it('Simple row selection', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
 
@@ -451,7 +451,7 @@ describe('IgxGrid - Row Selection', () => {
 
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('Should be able to select/deselect rows programatically', fakeAsync(() => {
         const fix = TestBed.createComponent(SelectionComponent);
@@ -711,7 +711,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
     }));
 
-    it('Clicking any other cell is not selecting the row', () => {
+    it('Clicking any other cell is not selecting the row', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
 
@@ -728,9 +728,9 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
-    });
+    }));
 
-    it('Clicking any other cell is not deselecting the row', () => {
+    it('Clicking any other cell is not deselecting the row', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
 
@@ -754,9 +754,9 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeTruthy();
-    });
+    }));
 
-    it('ARIA support', () => {
+    it('ARIA support', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
 
@@ -782,7 +782,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRow.getAttribute('aria-selected')).toMatch('false');
         expect(headerCheckboxElement.getAttribute('aria-checked')).toMatch('false');
         expect(headerCheckboxElement.getAttribute('aria-label')).toMatch('Select all');
-    });
+    }));
 
     it('Summaries integration', () => {
         const fixture = TestBed.createComponent(GridSummaryComponent);
@@ -859,7 +859,8 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.selectedRows()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
 
-    it('Should be able to programatically select all rows and keep the header checkbox intact,  #1298', () => {
+    it('Should be able to programatically select all rows and keep the header checkbox intact,  #1298',
+    fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fixture.detectChanges();
 
@@ -885,9 +886,9 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRow.isSelected).toBeTruthy();
         expect(thirdRow.isSelected).toBeTruthy();
         expect(headerCheckboxElement.classList.contains('igx-checkbox--checked')).toBeTruthy();
-    });
+    }));
 
-    it('Should be able to programatically get a collection of all selected rows', () => {
+    it('Should be able to programatically get a collection of all selected rows', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
 
@@ -914,7 +915,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
         expect(grid.selectedRows()).toEqual([]);
-    });
+    }));
 
     it('Should properly check the header checkbox state when filtering, #2469', fakeAsync(() => {
         const fixture = TestBed.createComponent(GridWithSelectionFilteringComponent);
@@ -937,7 +938,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
     }));
 
-    it('Hide row checkboxes, when all columns are hidden', (async () => {
+    it('Hide row checkboxes, when all columns are hidden', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;

@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../column-pinning.component';
@@ -43,13 +43,13 @@ describe('Column Pinning UI', () => {
     }));
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnPinningTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-pinning'));
-        });
+        }));
 
         afterAll(() => {
             UIInteractions.clearOverlay();
@@ -229,7 +229,7 @@ describe('Column Pinning UI', () => {
             verifyColumnIsPinned(grid.columns[1], true, 1);
         }));
 
-        it('- should size cells correctly when there is a large pinned templated column', () => {
+        it('- should size cells correctly when there is a large pinned templated column', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnPinningWithTemplateTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -239,12 +239,12 @@ describe('Column Pinning UI', () => {
             cells.forEach((cell) => {
                 expect(cell.nativeElement.offsetHeight).toBe(100);
             });
-        });
+        }));
 
     });
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnGroupsPinningTestComponent);
             fix.showInline = false;
             fix.showPinningInline = true;
@@ -252,7 +252,7 @@ describe('Column Pinning UI', () => {
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-pinning'));
-        });
+        }));
 
         it('shows only top level columns.', () => {
             const columnItems = columnChooser.columnItems;

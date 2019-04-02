@@ -1390,12 +1390,12 @@ describe('IgxGrid Component Tests', () => {
             let fixture;
             let grid;
 
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
                 setupGridScrollDetection(fixture, grid);
-            });
+            }));
             it(`Should jump from first editable columns to overlay buttons`, (async () => {
                 const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
@@ -2273,7 +2273,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(rowEditingBannerElement).toBeTruthy(); // banner is still present in grid template, just not visible
             }));
 
-            it(`Should exit edit mode when edited row is being deleted`, () => {
+            it(`Should exit edit mode when edited row is being deleted`, fakeAsync(/** height/width setter rAF */() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -2288,7 +2288,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
                 expect(grid.endEdit).toHaveBeenCalledTimes(1);
                 expect(grid.endEdit).toHaveBeenCalledWith(true);
-            });
+            }));
         });
 
         describe('Row Editing - Filtering', () => {

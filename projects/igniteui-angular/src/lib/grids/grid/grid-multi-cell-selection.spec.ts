@@ -29,12 +29,12 @@ describe('IgxGrid - Multi Cell selection', () => {
         let grid;
         let detect;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
-        });
+        }));
 
         it('Should be able to select a range with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -351,11 +351,11 @@ describe('IgxGrid - Multi Cell selection', () => {
         let fix;
         let grid;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        });
+        }));
 
         it('Should select a single cell', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -735,13 +735,13 @@ describe('IgxGrid - Multi Cell selection', () => {
         let grid;
         let detect;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
-        });
+        }));
 
         it('Should be able to select a with arrow keys and holding Shift', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
@@ -1459,13 +1459,13 @@ describe('IgxGrid - Multi Cell selection', () => {
         let grid;
         let detect;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
-        });
+        }));
 
 
         it('Sorting: selection should not change when sorting is performed', () => {
@@ -2510,11 +2510,11 @@ describe('IgxGrid - Multi Cell selection', () => {
         let fix;
         let grid;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        });
+        }));
 
         it('CRUD: selected range should not change when delete row', () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };

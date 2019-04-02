@@ -107,7 +107,7 @@ describe('IgxGrid - Summaries', () => {
             expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeDefined();
         }));
 
-        it('should have correct summaries when there are null and undefined values', () => {
+        it('should have correct summaries when there are null and undefined values', fakeAsync(/** height/width setter rAF */() => {
             const fixture = TestBed.createComponent(FilteringComponent);
             fixture.detectChanges();
 
@@ -126,7 +126,7 @@ describe('IgxGrid - Summaries', () => {
             const earliest = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).toLocaleString('us', options);
             const latest = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).toLocaleString('us', options);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['8', earliest, latest]);
-        });
+        }));
 
         it('should properly render custom summaries', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomSummariesComponent);
@@ -260,7 +260,7 @@ describe('IgxGrid - Summaries', () => {
             }
         }));
 
-        it('Last column summary cell should be aligned according to its data cells', ((() => {
+        it('Last column summary cell should be aligned according to its data cells', fakeAsync(/** height/width setter rAF */() => {
             const fixture = TestBed.createComponent(SummaryColumnsWithSpecificWidthsComponent);
             fixture.detectChanges();
 
@@ -278,7 +278,7 @@ describe('IgxGrid - Summaries', () => {
                 'summary cell and data cell are not left aligned');
             expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
                 'summary cell and data cell are not right aligned');
-        })));
+        }));
 
         describe('', () => {
             let fix;
@@ -1028,11 +1028,11 @@ describe('IgxGrid - Summaries', () => {
     describe('CRUD with transactions: ', () => {
         let fix;
         let grid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        });
+        }));
 
         it('Add row', () => {
             let newRow = {
@@ -1604,7 +1604,7 @@ describe('IgxGrid - Summaries', () => {
     describe('Grouping tests: ', () => {
         let fix;
         let grid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1612,7 +1612,7 @@ describe('IgxGrid - Summaries', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
-        });
+        }));
 
         it('should render correct summaries when there is grouped colomn', () => {
             verifyBaseSummaries(fix);

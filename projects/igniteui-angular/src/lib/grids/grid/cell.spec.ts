@@ -180,6 +180,8 @@ describe('IgxGrid - Cell component', () => {
 
         expect(document.activeElement).toEqual(document.body);
 
+        // height/width setter rAF
+        await wait(16);
     }));
 
     it('Should not revert cell\' value when onDoubleClick while in editMode', (async () => {
@@ -465,14 +467,14 @@ describe('IgxGrid - Cell component', () => {
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
-            beforeEach(async() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(CellEditingScrollTestComponent);
                 fixture.detectChanges();
 
                 grid = fixture.componentInstance.grid;
-            });
+            }));
 
-            it('edit mode - leaves edit mode on blur', () => {
+            it('edit mode - leaves edit mode on blur', fakeAsync(/** height/width setter rAF */() => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
                 const cell = grid.getCellByColumn(0, 'firstName');
                 const button = fixture.debugElement.query(By.css('.btnTest'));
@@ -490,9 +492,9 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
 
                 expect(cell.inEditMode).toBe(true);
-            });
+            }));
 
-            it('edit mode - exit edit mode and submit when pin/unpin unpin column', () => {
+            it('edit mode - exit edit mode and submit when pin/unpin unpin column', fakeAsync(/** height/width setter rAF */() => {
                 let cell = grid.getCellByColumn(0, 'firstName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -521,7 +523,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
-            });
+            }));
 
 
             it('edit mode - leaves cell in edit mode on scroll', (async () => {
@@ -746,7 +748,8 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('should not make last column smaller when vertical scrollbar is on the right of last cell', () => {
+    it('should not make last column smaller when vertical scrollbar is on the right of last cell',
+    fakeAsync(/** height/width setter rAF */() => {
         GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
         const fix = TestBed.createComponent(GridColumnWidthsComponent);
         fix.detectChanges();
@@ -756,7 +759,7 @@ describe('IgxGrid - Cell component', () => {
         lastColumnCells.forEach(function (item) {
             expect(item.width).toEqual('30px');
         });
-    });
+    }));
 
     it('should not make last column smaller when vertical scrollbar is on the left of last cell', async () => {
         GridColumnWidthsComponent.COLUMN_WIDTH = '500px';
