@@ -27,8 +27,8 @@
         @extend %igx-card--outlined !optional;
     }
 
-    @include m(vertical) {
-        @extend %igx-card--vertical !optional;
+    @include m(horizontal) {
+        @extend %igx-card--horizontal !optional;
     }
 }
 
