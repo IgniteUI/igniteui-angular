@@ -1022,10 +1022,24 @@ export class IgxColumnComponent implements AfterContentInit {
             (acc, val) => Math.max(val.rowStart + (val.msGridRowSpan || 1) - 1, acc) :
             (acc, val) => Math.max(val.colStart + (val.msGridColumnSpan || 1) - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
-
+        const generatedSizes = !isRow ? this.generateColumnSizes(this.children) : null;
         return isIE ?
-            `(auto)[${templateItems}]` :
-            `repeat(${templateItems},auto)`;
+        generatedSizes || `(auto)[${templateItems}]` :
+            generatedSizes || `repeat(${templateItems},auto)`;
+    }
+
+    protected generateColumnSizes(children) {
+        const res = [];
+        children.forEach(col => {
+            const actualWidth = parseInt(col.calcWidth, 10) + 'px';
+            if (col.colStart && res[col.colStart - 1] === undefined) {
+                res[col.colStart - 1] = { colEnd: col.msGridColumnSpan || 1,
+                     width: actualWidth  };
+            } else if (col.colStart && res[col.colStart - 1].colEnd > col.msGridColumnSpan && col.widthSetByUser) {
+                res[col.colStart - 1] = { colEnd: col.msGridColumnSpan || 1, width: actualWidth };
+            }
+        });
+        return res.map(item => item.width).join(' ');
     }
 
     /**
@@ -1295,7 +1309,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.grid.enableMRL && this.rowEnd && this.rowEnd.indexOf('span') !== -1 && !this.widthSetByUser) {
+        if (this.grid.enableMRL) {
             return '';
         }
 
@@ -1517,6 +1531,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 }
                 return acc + parseInt(val.calcWidth, 10);
             }, 0)}`;
+            return width;
         } else {
             width = `${this.children.reduce((acc, val) => {
                 if (val.hidden) {

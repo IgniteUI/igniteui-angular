@@ -3861,7 +3861,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
         const columnsToSize = this.enableMRL ?
-            visibleChildColumns.reduce((acc, col) => Math.max(acc, col.colStart), 1) :
+            visibleChildColumns.reduce((acc, col) => Math.max(acc, col.colStart), 1) - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths

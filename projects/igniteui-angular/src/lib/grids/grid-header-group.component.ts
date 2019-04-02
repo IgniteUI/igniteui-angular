@@ -118,7 +118,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.grid.getHeaderGroupWidth(this.column);
+        if (!this.grid.enableMRL) {
+            return this.grid.getHeaderGroupWidth(this.column);
+        } else {
+            return '';
+        }
     }
 
     /**
