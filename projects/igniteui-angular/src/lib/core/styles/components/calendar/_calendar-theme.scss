@@ -112,15 +112,21 @@
     );
 
     @if not($content-text-color) and $content-background {
-        $content-text-color: text-contrast($content-background);
+        @if type-of($content-background) == 'color' {
+            $content-text-color: text-contrast($content-background);
+        }
     }
 
     @if not($weekend-text-color) and $content-background {
-        $weekend-text-color: rgba($content-text-color, .7);
+        @if type-of($content-background) == 'color' {
+            $weekend-text-color: rgba($content-text-color, .7);
+        }
     }
 
     @if not($inactive-text-color) and $content-background {
-        $inactive-text-color: rgba($content-text-color, .5);
+        @if type-of($content-background) == 'color' {
+            $inactive-text-color: rgba($content-text-color, .5);
+        }
     }
 
     @if not($picker-arrow-color) and $content-background {
@@ -128,7 +134,9 @@
     }
 
     @if not($picker-arrow-hover-color) and $header-background {
-        $picker-arrow-hover-color: $header-background;
+        @if type-of($header-background) == 'color' {
+            $picker-arrow-hover-color: $header-background;
+        }
     }
 
     @if not($picker-text-color) and $content-background {
@@ -152,7 +160,9 @@
     }
 
     @if not($date-hover-background) and $content-background {
-        $date-hover-background: rgba(text-contrast($content-background), .12);
+        @if type-of($content-background) == 'color' {
+            $date-hover-background: rgba(text-contrast($content-background), .12);
+        }
     }
 
     @if not($date-current-text-color) and $header-background {
@@ -160,7 +170,9 @@
     }
 
     @if not($date-special-background) and $content-background {
-        $date-special-background: rgba(text-contrast($content-background), .04);
+        @if type-of($content-background) == 'color' {
+            $date-special-background: rgba(text-contrast($content-background), .04);
+        }
     }
 
     @if not($date-special-text-color) and $date-special-background {
@@ -172,7 +184,9 @@
     }
 
     @if not($month-hover-text-color) and $month-hover-background {
-        $month-hover-text-color: text-contrast($month-hover-background);
+        @if type-of($month-hover-text-color) == 'color' {
+            $month-hover-text-color: text-contrast($month-hover-background);
+        }
     }
 
     @if not($year-current-text-color) and $header-background {
@@ -180,7 +194,9 @@
     }
 
     @if not($month-current-text-color) and $header-background {
-        $month-current-text-color: $header-background;
+        @if $header-background == 'color' {
+            $month-current-text-color: $header-background;
+        }
     }
 
     @return extend($theme, (
@@ -268,7 +284,7 @@
     }
 
     %cal-header-display {
-        background-color: --var($theme, 'header-background');
+        background: --var($theme, 'header-background');
         color: --var($theme, 'header-text-color');
         padding: $cal-header-padding;
     }
@@ -413,7 +429,7 @@
         color: --var($theme, 'month-hover-text-color');
 
         &::after {
-            background-color: --var($theme, 'month-hover-background');
+            background: --var($theme, 'month-hover-background');
         }
     }
 
@@ -425,6 +441,7 @@
         justify-content: center;
         align-items: center;
         height: $cal-value-month-height;
+        z-index: 1;
 
         &::after {
             position: absolute;
@@ -434,9 +451,10 @@
             right: 0;
             transform: translateY(-50%);
             height: 48px;
-            background-color: transparent;
+            background: transparent;
             border-radius: rem(20px);
             transition: background-color .15s ease-out;
+            z-index: -1;
         }
     }
 
@@ -452,7 +470,7 @@
     %cal-value--selected {
         position: relative;
         color: --var($theme, 'date-selected-text-color');
-        background-color: --var($theme, 'date-selected-background') !important;
+        background: --var($theme, 'date-selected-background') !important;
         font-weight: $cal-value-fw !important;
     }
 
@@ -462,7 +480,7 @@
     }
 
     %cal-value--hover {
-        background-color: --var($theme, 'date-hover-background');
+        background: --var($theme, 'date-hover-background');
     }
 }
 

@@ -15,6 +15,7 @@
             [attr.aria-expanded]="!this.collapsed"
             [attr.aria-owns]="this.listId"
             [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
+            (blur)="onBlur()"
             />
         <ng-container ngProjectAs="igx-suffix">
                 <ng-content select="igx-suffix,[igxSuffix]"></ng-content>

@@ -337,6 +337,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             if (emittedArgs.oldValue !== undefined
                 && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
             const rowValue = this.get_all_data(id, grid.transactions.enabled)[rowIndex];
+            if (grid.hasSummarizedColumns) {
+                grid.summaryService.clearSummaryCache(emittedArgs);
+            }
             this.updateData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field) {
                 if (currentGridEditState.isRowSelected) {
@@ -500,7 +503,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-        } else {
+        } else if (!fieldName) {
             filteringState.filteringOperands = [];
         }
 
@@ -583,6 +586,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number;
+    }
+
+    public get_data(id: string): any[] {
+        const grid = this.get(id);
+        const data = grid.data ? grid.data : [];
+        return data;
     }
 
     public get_all_data(id: string, includeTransactions = false): any[] {

@@ -15,18 +15,114 @@ import {
     PipeTransform,
     Renderer2,
     TemplateRef,
-    LOCALE_ID
+    LOCALE_ID,
+    AfterViewInit
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
-import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
+import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
-import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEBOUNCE_TIME = 200;
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxResizeHandle]'
+})
+export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
+
+    /**
+     * @hidden
+     */
+    @Input('igxResizeHandle')
+    public column: IgxColumnComponent;
+
+    /**
+     * @hidden
+     */
+    private _dblClick = false;
+
+    /**
+     * @hidden
+     */
+    private destroy$ = new Subject<boolean>();
+
+    constructor(private zone: NgZone,
+               private element: ElementRef,
+               public colResizingService: IgxColumnResizingService) { }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        if (!this.column.columnGroup && this.column.resizable) {
+            this.zone.runOutsideAngular(() => {
+                fromEvent(this.element.nativeElement, 'mousedown').pipe(
+                    debounceTime(DEBOUNCE_TIME),
+                    takeUntil(this.destroy$)
+                ).subscribe((event) => {
+
+                    if (this._dblClick) {
+                        this._dblClick = false;
+                        return;
+                    }
+
+                    this._onResizeAreaMouseDown(event);
+                    this.column.grid.resizeLine.resizer.onMousedown(event);
+                });
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseover')
+    public onMouseOver() {
+        this.colResizingService.resizeCursor = 'col-resize';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('dblclick')
+    public onDoubleClick() {
+        this._dblClick = true;
+        this.colResizingService.column = this.column;
+        this.colResizingService.autosizeColumnOnDblClick();
+    }
+
+    /**
+     * @hidden
+     */
+    private _onResizeAreaMouseDown(event) {
+        if (event.button === 0) {
+            this.colResizingService.column = this.column;
+            this.colResizingService.isColumnResizing = true;
+            this.colResizingService.startResizePos = event.clientX;
+            this.colResizingService.showResizer = true;
+            this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+
+
 /**
  * @hidden
  */
@@ -40,9 +136,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     @Input()
     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
-
-    @Input()
-    public resizeEndTimeout = 0;
 
     @Output()
     public resizeEnd = new Subject<any>();
@@ -77,8 +170,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
             if (left > max) {
                 this.left = max;
-            } else if (left > max) {
-                this.left = left;
             }
         });
 
@@ -86,9 +177,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, 'mousedown').pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onMousedown(res));
-
             fromEvent(this.document.defaultView, 'mousemove').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy)
@@ -101,32 +189,43 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
     }
 
     public set left(val) {
         requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
     }
 
+    public set top(val) {
+        requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+    }
+
     onMouseup(event) {
-        setTimeout(() => {
-            this.resizeEnd.next(event);
-            this.resizeEnd.complete();
-        }, this.resizeEndTimeout);
+        this.resizeEnd.next(event);
+        this.resizeEnd.complete();
     }
 
     onMousedown(event) {
-        this.resizeStart.next(event);
         event.preventDefault();
+        const parent = this.element.nativeElement.parentElement.parentElement;
 
-        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
-        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
+        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
+        this.top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
+
+        this.resizeStart.next(event);
     }
 
     onMousemove(event) {
-        this.resize.next(event);
         event.preventDefault();
+        this.resize.next(event);
     }
+}
+
+@Directive({
+    selector: '[igxFilterCellTemplate]'
+})
+export class IgxFilterCellTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -341,9 +440,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     protected createDragGhost(event) {
-        const index = this.column.grid.hasMovableColumns ? 1 : 0;
-
-        super.createDragGhost(event, this.element.nativeElement.children[index]);
+        super.createDragGhost(event);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -449,12 +546,13 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
             const pos = clientRect.left + clientRect.width / 2;
 
+            const parent = this.elementRef.nativeElement.parentElement;
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.firstElementChild;
             } else {
                 this._dropPos = DropPosition.AfterDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.lastElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.lastElementChild;
             }
 
             if (this.cms.icon.innerText !== 'block') {

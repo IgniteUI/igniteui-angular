@@ -334,7 +334,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(document.querySelectorAll('igx-grid-filtering-row').length).toEqual(2);
         }));
 
-        it('should not lose child grid states after filtering in parent grid.', () => {
+        it('should not lose child grid states after filtering in parent grid.', fakeAsync(() => {
             // expand 1st row
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -353,9 +353,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
             fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
             expect(fChildCell.selected).toBe(true);
-        });
+        }));
 
-        it('should retain selected row when filtering', () => {
+        it('should retain selected row when filtering', fakeAsync(() => {
             hierarchicalGrid.rowSelectable = true;
             fixture.detectChanges();
 
@@ -372,9 +372,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
             const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
             expect(headerCheckbox.indeterminate).toBeTruthy();
-        });
+        }));
 
-        it('should show empty filter message when there are no records matching the filter', () => {
+        it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
             fixture.componentInstance.data = [];
             fixture.detectChanges();
 
@@ -387,7 +387,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.filter('ID', '123450', IgxStringFilteringOperand.instance().condition('contains'), true);
             fixture.detectChanges();
             expect(gridBody.nativeElement.innerText).toMatch(hierarchicalGrid.emptyFilteredGridMessage);
-        });
+        }));
 
         it('should apply classes to the header when filter row is visible', () => {
             hierarchicalGrid.rowSelectable = true;

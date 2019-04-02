@@ -9,7 +9,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    ElementRef
+    ElementRef,
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -169,6 +170,22 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
+    get height() {
+        return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event): void {
+        // hack for preventing text selection in IE and Edge while dragging the resizer
+        event.preventDefault();
+    }
+
     public ngDoCheck() {
         this.cdr.markForCheck();
     }
@@ -178,44 +195,4 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseOver() {
-        if (this.column.resizable) {
-            this.colResizingService.resizeCursor = 'col-resize';
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseDown(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.showResizer = true;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-        } else {
-            this.colResizingService.resizeCursor = null;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public autosizeColumnOnDblClick(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.autosizeColumnOnDblClick();
-         }
-    }
-
-    /**
-     * @hidden
-     */
-    get height() {
-        return this.element.nativeElement.getBoundingClientRect().height;
-    }
 }

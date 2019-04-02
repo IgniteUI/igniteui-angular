@@ -43,7 +43,8 @@ export enum Direction { NONE, NEXT, PREV }
     templateUrl: 'carousel.component.html',
     styles: [`
     :host {
-        outline-style: none
+        display: block;
+        outline-style: none;
     }`]
 })
 
