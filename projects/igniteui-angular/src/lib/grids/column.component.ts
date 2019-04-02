@@ -1068,7 +1068,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
-        const args = { column: this, insertAtIndex: index };
+        const args = { column: this, insertAtIndex: index, isPinned: true };
         grid.onColumnPinning.emit(args);
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
@@ -1128,6 +1128,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pinned = false;
 
         const targetColumn = grid._unpinnedColumns[index];
+
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
@@ -1143,9 +1144,14 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.reinitPinStates();
 
+        const insertAtIndex = grid._unpinnedColumns.indexOf(this);
+        const args = { column: this, insertAtIndex, isPinned: false };
+        grid.onColumnPinning.emit(args);
+
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
+
         return true;
     }
     /**
