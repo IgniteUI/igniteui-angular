@@ -6,12 +6,11 @@ import { IFilteringExpression } from '../data-operations/filtering-expression.in
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs, IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { ISortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxCell, IgxRow } from '../core/grid-selection';
 /**
  *@hidden
@@ -155,6 +154,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
+        this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selection.is_item_selected(this.grid.id, cell.id.rowID)) {
@@ -426,10 +426,21 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return column.dataType === DataType.Number;
     }
 
+    public get_data(): any[] {
+        const grid = this.grid;
+        const data = grid.data ? grid.data : [];
+        return data;
+    }
+
     public get_all_data(includeTransactions = false): any[] {
         const grid = this.grid;
-        const data = includeTransactions ? grid.dataWithAddedInTransactionRows : grid.data;
-        return data ? data : [];
+        let data = grid.data ? grid.data : [];
+        data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
+        return data;
+    }
+
+    public get_filtered_data(): any[] {
+        return this.grid.filteredData;
     }
 
     protected getSortStrategyPerColumn(fieldName: string) {

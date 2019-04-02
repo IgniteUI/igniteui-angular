@@ -598,3 +598,14 @@ export class IgxTreeGridFKeySelectionWithTransactionComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" [autoGenerate]="true" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridAutoGenerateComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+}

@@ -112,6 +112,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs {
 export interface IPinColumnEventArgs {
     column: IgxColumnComponent;
     insertAtIndex: number;
+    isPinned: boolean;
 }
 
 export interface IPageEventArgs {
@@ -2487,7 +2488,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
-        private navigation: IgxGridNavigationService,
+        public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
@@ -4177,7 +4178,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected autogenerateColumns() {
-        const data = this.gridAPI.get_all_data();
+        const data = this.gridAPI.get_data();
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];

@@ -39,6 +39,12 @@ export class IgxGridSummaryService {
         }
         if (args.rowID !== undefined && args.rowID !== null) {
             const columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
+            const isGroupedColumn = this.grid.groupingExpressions &&
+                    this.grid.groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
+            if (columnName && isGroupedColumn) {
+                this.removeSummaries(args.rowID);
+                return;
+            }
             this.removeSummaries(args.rowID, columnName);
         }
     }
@@ -171,7 +177,7 @@ export class IgxGridSummaryService {
         const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
         let id = '{ ';
         groupingExpressions.forEach(expr => {
-                id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;
+            id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;
                 summaryIDs.push(id.concat(' }'));
                 id += ', ';
         });
