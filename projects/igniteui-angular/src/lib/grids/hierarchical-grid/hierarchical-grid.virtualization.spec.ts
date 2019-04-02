@@ -80,6 +80,8 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         await wait();
 
         expect(elem.scrollTop).toBe(400);
+        /** row toggle rAF */
+        await wait(3 * 16);
     });
 
     it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
