@@ -1,0 +1,47 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+%igx-divider-display {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, .12);
+}
+
+%igx-divider--dashed {
+    background: linear-gradient(to right, rgba(255, 255, 255, .12) 50%, transparent 50%);
+    background-size: 10px 1px; /* dash size */
+}
+
+%igx-divider--vertical {
+    display: inline-block;
+    width: 1px;
+    min-width: 1px;
+    height: auto;
+}
+
+%igx-divider--vertical-dashed {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, .12) 50%, transparent 50%);
+    background-size: 1px 10px; /* dash size */
+}
+
+@include b(igx-divider) {
+    @extend %igx-divider-display !optional;
+
+    @include m(dashed) {
+        @extend %igx-divider--dashed !optional;
+    }
+
+    @include m(vertical) {
+        @extend %igx-divider--vertical !optional;
+    }
+
+    @include mx(vertical, dashed) {
+        @extend %igx-divider--vertical-dashed !optional;
+    }
+}
