@@ -77,6 +77,12 @@ export class CardSampleComponent {
             subtitle: 'January 30, 2017',
             title: 'Rupert Stadler'
         }),
+        cardFactory({
+            title: 'Rozes',
+            subtitle: 'Under the Grave (2016)',
+            imageUrl: 'assets/images/card/media/roses.jpg',
+            icons: ['skip_previous', 'play_arrow', 'skip_next']
+        }),
         cardFactory({})
     ];
 }

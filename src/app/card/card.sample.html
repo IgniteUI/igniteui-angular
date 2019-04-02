@@ -6,27 +6,83 @@
     <div class="sample-content">
         <!--New York City Card Begins-->
         <article class="sample-column card-wrapper">
-            <igx-card class="my-cool-card">
-                <div style="overflow: hidden">
-                    <img width="100%" height="100%" [src]="cards[0].imageUrl">
-                </div>
+            <igx-card class="my-cool-card" type="outlined">
+
                 <igx-card-header>
-                    <h3 class="igx-card-header__title">{{ cards[0].title }}</h3>
-                    <h5 class="igx-card-header__subtitle">{{ cards[0].subtitle }}</h5>
+                    <igx-avatar [src]="cards[6].avatarUrl" roundShape="true"></igx-avatar>
+                    <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
+                    <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
                 </igx-card-header>
+
+                <igx-card-media>
+                    <img [src]="cards[0].imageUrl">
+                </igx-card-media>
+
                 <igx-card-content>
-                    <p class="igx-card-content__text">{{ cards[0].content }}</p>
+                    <p>{{ cards[0].content }}</p>
                 </igx-card-content>
+
                 <igx-card-actions>
-                    <div class="igx-card-actions__igroup--end">
-                        <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
-                            <igx-icon fontSet="material">{{icon}}</igx-icon>
-                        </span>
-                    </div>
+                    <button igxButton igxRipple>Read More</button>
+                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
+                        <igx-icon fontSet="material">{{icon}}</igx-icon>
+                    </span>
                 </igx-card-actions>
+
             </igx-card>
         </article>
         <!--New York City Card End-->
+
+        <!--Album Pattern Start-->
+        <article class="sample-column card-wrapper">
+            <igx-card type="outlined">
+                <igx-card-header>
+                    <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
+                    <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
+                    <igx-card-media width="64px" height="64px">
+                        <img [src]="cards[7].imageUrl">
+                    </igx-card-media>
+                </igx-card-header>
+
+                <igx-divider offset="16px"></igx-divider>
+
+                <igx-card-actions layout="spread">
+                    <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true">
+                        <igx-icon>{{icon}}</igx-icon>
+                    </button>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <!--Album Pattern End-->
+
+        <!--Album Pattern Start-->
+        <article class="sample-column card-wrapper">
+            <igx-card type="outlined" [vertical]="true">
+                <igx-card-actions layout="spread">
+                    <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true" >
+                        <igx-icon>{{icon}}</igx-icon>
+                    </button>
+                </igx-card-actions>
+
+                <igx-divider type="vertical" offset="16px"></igx-divider>
+
+                <div style="display: flex; flex-flow: column nowrap">
+                    <igx-card-header igxLayout igxLayoutReverse="true">
+                        <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
+                        <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
+                    </igx-card-header>
+
+                    <igx-card-content>
+                        <p>New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean.</p>
+                    </igx-card-content>
+                </div>
+
+                <igx-card-media width="120px" height="100%">
+                    <img [src]="cards[7].imageUrl">
+                </igx-card-media>
+            </igx-card>
+        </article>
+        <!--Album Pattern End-->
 
         <!--Incepient Dawn Card Begins-->
         <article class="sample-column card-wrapper">
