@@ -407,13 +407,13 @@ describe('IgxTreeGrid - Selection', () => {
 
     describe('Cell Selection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             fix.detectChanges();
-        });
+        }));
 
         it('should return the correct type of cell when clicking on a cells', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
