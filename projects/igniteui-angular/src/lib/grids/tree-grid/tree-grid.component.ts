@@ -35,6 +35,7 @@ import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { first } from 'rxjs/operators';
 
 let NEXT_ID = 0;
 
@@ -484,13 +485,37 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
-        const rowID = this._gridAPI.get_row_id(this.id, rowData);
-        const record = this.processedRecords.get(rowID);
-        this._gridAPI.expand_path_to_record(this.id, record);
-        const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
+        let delayScrolling = false;
+        let record: ITreeGridRecord;
 
-        super.scrollTo(rowIndex, column);
+        if (typeof(row) !== 'number') {
+            const rowData = row;
+            const rowID = this._gridAPI.get_row_id(this.id, rowData);
+            record = this.processedRecords.get(rowID);
+            this._gridAPI.expand_path_to_record(this.id, record);
+
+            if (this.paging) {
+                const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
+                const page = Math.floor(rowIndex / this.perPage);
+
+                if (this.page !== page) {
+                    delayScrolling = true;
+                    this.page = page;
+                }
+            }
+        }
+
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer,
+                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer,
+                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+        }
+
+        this.scrollToHorizontally(column);
     }
 
     /**

@@ -792,80 +792,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             const groupByRecords = this.getGroupByRecords();
             const rowIndex = this.filteredSortedData.indexOf(row);
             const groupByRecord = groupByRecords[rowIndex];
-            const incrementData = this.getGroupIncrementData();
-
-            let scrollIndex = incrementData[rowIndex] + rowIndex;
-            const filteredGroupByRecords = this.filterGroupByRecords(groupByRecords);
-            const index = filteredGroupByRecords.indexOf(groupByRecord);
-            for (let ind = 0; ind < index; ind++) {
-                if (!this.isExpandedGroup(filteredGroupByRecords[ind])) {
-                    scrollIndex -= filteredGroupByRecords[ind].records.length;
-                }
-            }
 
             if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
                 this.toggleGroup(groupByRecord);
             }
-
-            row = scrollIndex;
         }
 
         super.scrollTo(row, column);
-    }
-
-    protected filterGroupByRecords(groupRecords: IGroupByRecord[]): IGroupByRecord[] {
-        const result: IGroupByRecord[] = [];
-        if (groupRecords.length) {
-            result.push(groupRecords[0]);
-            for (let i = 1; i < groupRecords.length; i++) {
-                if (result.findIndex(item => item.value === groupRecords[i].value) === -1) {
-                    result.push(groupRecords[i]);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    protected getGroupIncrementData(): number[] {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
-            const groupsRecords = this.getGroupByRecords();
-            const groupByIncrements = [];
-            const values = [];
-
-            let prevHierarchy = null;
-            let increment = 0;
-
-            groupsRecords.forEach((gbr) => {
-                if (values.indexOf(gbr) === -1) {
-                    let levelIncrement = 1;
-
-                    if (prevHierarchy !== null) {
-                        levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
-                    } else {
-                        // This is the first level we stumble upon, so we haven't accounted for any of its parents
-                        levelIncrement += gbr.level;
-                    }
-
-                    increment += levelIncrement;
-                    prevHierarchy = gbr;
-                    values.push(gbr);
-                }
-
-                groupByIncrements.push(increment);
-            });
-            return groupByIncrements;
-        } else {
-            return null;
-        }
-    }
-
-    private getLevelIncrement(currentIncrement, currentHierarchy, prevHierarchy) {
-        if (currentHierarchy !== prevHierarchy && !!prevHierarchy && !!currentHierarchy) {
-            return this.getLevelIncrement(++currentIncrement, currentHierarchy.groupParent, prevHierarchy.groupParent);
-        } else {
-            return currentIncrement;
-        }
     }
 
     /**
