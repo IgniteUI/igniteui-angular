@@ -7,7 +7,7 @@
     </ng-container>
 </span>
 <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
-    <igx-icon
+    <igx-icon [attr.draggable]="false"
         class="sort-icon"
         *ngIf="column.sortable"
         (click)="onSortingIconClick($event)">
