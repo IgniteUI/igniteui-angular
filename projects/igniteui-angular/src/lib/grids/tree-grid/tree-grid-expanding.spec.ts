@@ -30,11 +30,11 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -433,13 +433,13 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.expansionDepth = 0;
             fix.detectChanges();
-        });
+        }));
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -840,11 +840,11 @@ describe('Row editing expanding/collapsing', () => {
             .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-    });
+    }));
 
     it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
         const rows = TreeGridFunctions.getAllRows(fix);

@@ -706,7 +706,7 @@ describe('IgxGrid - Summaries', () => {
 
         });
 
-        it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', () => {
+        it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', fakeAsync(/** height/width setter rAF */() => {
             const fixture = TestBed.createComponent(SummariesGroupByWithScrollsComponent);
             fixture.detectChanges();
             const grid = fixture.componentInstance.grid;
@@ -741,7 +741,7 @@ describe('IgxGrid - Summaries', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
             HelperUtils.verifyColumnSummaries(secondSummaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '19', '38', '19']);
-        });
+        }));
 
         it('MCH - verify summaries when there are grouped columns', (async () => {
             const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);

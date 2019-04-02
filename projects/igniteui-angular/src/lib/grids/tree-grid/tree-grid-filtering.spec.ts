@@ -24,11 +24,11 @@ describe('IgxTreeGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;
-    });
+    }));
 
     it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
         for (let i = 0; i < 5; i++) {
@@ -275,11 +275,11 @@ describe('IgxTreeGrid - Filtering actions', () => {
 
     describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should remove a filtered parent row from the filtered list', fakeAsync(() => {
             const newCellValue = 'John McJohn';
