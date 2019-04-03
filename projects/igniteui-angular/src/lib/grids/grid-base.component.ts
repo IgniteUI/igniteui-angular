@@ -556,8 +556,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.reflow();
-                this.cdr.markForCheck();
+                if (!this._destroyed) {
+                    this.reflow();
+                    this.cdr.markForCheck();
+                }
             });
         }
     }
@@ -590,7 +592,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // Calling reflow(), because the width calculation
                 // might make the horizontal scrollbar appear/disappear.
                 // This will change the height, which should be recalculated.
-                this.reflow();
+                if (!this._destroyed) {
+                    this.reflow();
+                }
             });
         }
     }
