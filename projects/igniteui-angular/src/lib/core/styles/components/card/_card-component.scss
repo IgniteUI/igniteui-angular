@@ -117,11 +117,6 @@
         @extend %igx-card-actions--vertical !optional;
 
         @include e(icons) {
-            $this: bem--selector-to-string(&);
-            @each $selector in $this {
-                @debug #{$selector};
-            }
-
             @extend %igx-card-actions__icons--vertical !optional;
         }
 
