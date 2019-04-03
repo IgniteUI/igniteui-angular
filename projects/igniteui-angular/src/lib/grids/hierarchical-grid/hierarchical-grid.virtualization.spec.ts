@@ -84,7 +84,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         await wait(3 * 16);
     });
 
-    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
+    xit('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();

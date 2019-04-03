@@ -1727,7 +1727,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual([]);
         });
 
-        it('Resizing: selected range should not change on resizing', fakeAsync(() => {
+        xit('Resizing: selected range should not change on resizing', fakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
