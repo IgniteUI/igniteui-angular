@@ -212,11 +212,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (!endIsVisible && !rowIsVisible) {
                 this.scrollGrid(this.grid.parent, diffBottom, () => super.onKeydownEnd(rowIndex));
             } else if (!topVisible) {
-            const scrGrid = this.grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ? this.grid :
-             this.getNextScrollable(this.grid).grid;
-            const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
-            this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
-            this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
+                const scrGrid = this.grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ? this.grid :
+                this.getNextScrollable(this.grid).grid;
+                const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
+                this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
+                this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
             } else {
                 super.onKeydownEnd(rowIndex, isSummary);
             }
