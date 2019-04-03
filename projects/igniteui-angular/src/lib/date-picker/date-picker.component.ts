@@ -383,6 +383,15 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         }
         return '';
     }
+    /**
+     *@hidden
+     * Convert the value to an ISO string to ensure the date pipe can handle it in IE11.
+     * Used in the template for record filtering.
+     * Issue #4434.
+     */
+    public get displayDataISO() {
+        return (this.value) ? this.value.toISOString() : '';
+    }
 
     /**
      *@hidden
@@ -648,7 +657,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         return {
             value: this.value,
             displayData: this.displayData,
-            openDialog: () => { this.openDialog(); }
+            openDialog: () => { this.openDialog(); },
+            displayDataISO: this.displayDataISO
         };
     }
 
