@@ -29,6 +29,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxOverlayService } from '../../services/index';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -63,7 +64,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService, IgxColumnResizingService
+        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
