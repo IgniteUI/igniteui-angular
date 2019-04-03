@@ -163,7 +163,7 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        flex-basis: 100%;
+        flex: 1 0 auto;
         width: 100%;
         padding: $card-heading-padding;
         color: --var($theme, 'header-text-color');
@@ -224,7 +224,8 @@
     }
 
     %igx-card-content {
-        flex-basis: 100%;
+        width: 100%;
+        flex: 1 0 auto;
         padding: $card-content-padding;
         color: --var($theme, 'content-text-color');
     }
