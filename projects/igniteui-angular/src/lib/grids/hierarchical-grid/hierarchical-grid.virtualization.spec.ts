@@ -83,7 +83,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(elem.scrollTop).toBe(400);
     });
 
-    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async () => {
+    xit('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async () => {
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
