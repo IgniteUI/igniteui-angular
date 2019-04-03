@@ -27,6 +27,7 @@ import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEBOUNCE_TIME = 200;
@@ -631,6 +632,12 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
+
+@Directive({
+    selector: '[igxGridBody]',
+    providers: [IgxForOfSyncService]
+})
+export class IgxGridBodyDirective {}
 
 /**
  *@hidden

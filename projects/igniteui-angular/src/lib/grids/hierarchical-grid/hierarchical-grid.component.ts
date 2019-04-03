@@ -39,6 +39,7 @@ import { IgxTemplateOutletDirective } from '../../directives/template-outlet/tem
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -58,7 +59,8 @@ export interface HierarchicalStateRecord {
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,
-        IgxHierarchicalGridNavigationService
+        IgxHierarchicalGridNavigationService,
+        IgxForOfSyncService
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
