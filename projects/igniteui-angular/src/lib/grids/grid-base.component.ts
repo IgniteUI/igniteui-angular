@@ -2501,6 +2501,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     _setupServices() {
+        this.gridAPI.grid = this;
         this.crudService.grid = this;
         this.navigation.grid = this;
         this.filteringService.grid = this;
@@ -2544,7 +2545,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngOnInit() {
-        this.gridAPI.grid = this;
         this._setupServices();
         this._setupListeners();
         this.columnListDiffer = this.differs.find([]).create(null);
@@ -2570,29 +2570,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         .subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.columnListDiffer.diff(change);
             if (diff) {
+                let added = false;
+                let removed = false;
 
                 this.initColumns(this.columnList);
 
+
                 diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    this.onColumnInit.emit(record.item);
+                    added = true;
+                });
+
+                diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    // Clear Filtering
+                    this.gridAPI.clear_filter(record.item.field);
+
+                    // Clear Sorting
+                    this.gridAPI.clear_sort(record.item.field);
+                    removed = true;
+                });
+
+                this.resetCaches();
+
+                if (added || removed) {
                     this.summaryService.clearSummaryCache();
                     this.calculateGridSizes();
-                    this.onColumnInit.emit(record.item);
-                });
-
-                requestAnimationFrame(() => {
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        // Recalculate Summaries
-                        this.summaryService.clearSummaryCache();
-                        this.calculateGridSizes();
-
-                        // Clear Filtering
-                        this.gridAPI.clear_filter(record.item.field);
-
-                        // Clear Sorting
-                        this.gridAPI.clear_sort(record.item.field);
-                    });
-                });
-                this.resetCaches();
+                }
             }
             this.markForCheck();
         });

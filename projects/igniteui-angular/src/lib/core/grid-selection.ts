@@ -407,6 +407,14 @@ export class IgxGridSelectionService {
             return false;
         }
         this.clearTextSelection();
+
+        // If the users triggers a drag-like event by first clicking outside the grid cells
+        // and then enters in the grid body we may not have a initial pointer starting node.
+        // Assume the first pointerenter node is where we start.
+        if (!this.pointerState.node) {
+            this.pointerState.node = node;
+        }
+
         this.pointerState.ctrl ? this.blah(node, this.pointerState) :
             this.dragSelect(node, this.pointerState);
         return true;
