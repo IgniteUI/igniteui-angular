@@ -20,7 +20,7 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) } ]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
     /**
