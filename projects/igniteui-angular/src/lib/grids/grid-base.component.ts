@@ -4106,7 +4106,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let width = isPercentage ?
             this.calcWidth :
             parseInt(this._width, 10);
-        if (this.hasVerticalSroll() && !isPercentage) {
+
+        // in case grid width is not yet available return default value.
+        if (!width) {
+            return NaN;
+        }
+        if (this.hasVerticalSroll()) {
             width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);

@@ -9,6 +9,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
+import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Virtualization', () => {
     configureTestSuite();
@@ -82,47 +83,45 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(elem.scrollTop).toBe(400);
     });
 
-    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
+    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async () => {
+        setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const childCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
+        const childCell =  childGrid.getCellByColumn(0, 'ID');
         childCell.nativeElement.focus();
-        tick(10);
+        fixture.detectChanges();
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
             fieldName: 'ProductName',
-            searchVal: 'Product: A4',
+            searchVal: 'Product: A0',
             condition: IgxStringFilteringOperand.instance().condition('startsWith')
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         childGrid.filter('ProductName', null, filteringExpressionsTree);
-        tick();
+        await wait();
         fixture.detectChanges();
         expect(childGrid.rowList.length).toEqual(1);
-        expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
+        expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
 
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
         const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
         // scroll down
         elem.scrollTop = 1000;
-        fixture.detectChanges();
-        fixture.componentRef.hostView.detectChanges();
-        tick();
+        await wait();
+
 
         // scroll to top
         elem.scrollTop = 0;
-        fixture.detectChanges();
-        fixture.componentRef.hostView.detectChanges();
-        tick();
+        await wait();
 
         expect(childGrid.rowList.length).toEqual(1);
-        expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
-    }));
+        expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
+    });
 
     it('should render correct data for child grid after scrolling and start index changes.', async() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];

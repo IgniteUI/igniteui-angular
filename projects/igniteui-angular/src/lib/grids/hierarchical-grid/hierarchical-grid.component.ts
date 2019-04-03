@@ -27,7 +27,7 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
 import { IGridDataBindable, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
@@ -282,6 +282,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
     private scrollLeft = 0;
+    private _viewInitPased = false;
 
     constructor(
         public selectionService: IgxGridSelectionService,
@@ -388,6 +389,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+
+
+        this._viewInitPased = true;
     }
 
     public get outletDirective() {
@@ -438,7 +442,25 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @memberof IgxHierarchicalGridComponent
      */
     public getPinnedWidth(takeHidden = false) {
-        return super.getPinnedWidth(takeHidden) + this.headerHierarchyExpander.nativeElement.clientWidth;
+        if (!this._viewInitPased) {
+            return NaN;
+        }
+        let width = super.getPinnedWidth(takeHidden);
+        if (this.hasExpandableChildren) {
+            width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
+        }
+        return width;
+    }
+
+    private getDefaultExpanderWidth(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 57;
+            case DisplayDensity.compact:
+                return 49;
+            default:
+                return 72;
+        }
     }
 
     /**
