@@ -68,7 +68,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // headers are aligned to cells
         verifyHeadersAreAligned(headerCells, firstRowCells);
 
-        verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups)
+        verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
         // the last cell is spaned as much as the first 3 cells
         const firstThreeCellsWidth = firstRowCells[0].nativeElement.offsetWidth +
