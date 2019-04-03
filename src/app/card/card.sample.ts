@@ -35,6 +35,7 @@ export class CardSampleComponent {
             Hudson River meets the Atlantic Ocean. At its core is Manhattan,
             a densely populated borough that’s among the world’s major commercial,
             financial and cultural centers.`,
+            avatarUrl: 'assets/images/card/avatars/statue_of_liberty.jpg',
             icons: ['favorite', 'bookmark', 'share'],
             imageUrl: 'assets/images/card/media/ny.jpg',
             subtitle: 'City in New York',

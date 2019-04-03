@@ -7,22 +7,21 @@
         <!--New York City Card Begins-->
         <article class="sample-column card-wrapper">
             <igx-card class="my-cool-card" type="outlined">
-
-                <igx-card-header>
-                    <igx-avatar [src]="cards[6].avatarUrl" roundShape="true"></igx-avatar>
-                    <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
-                    <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
-                </igx-card-header>
-
                 <igx-card-media>
                     <img [src]="cards[0].imageUrl">
                 </igx-card-media>
+
+                <igx-card-header [vertical]="false">
+                    <igx-avatar [src]="cards[0].avatarUrl" roundShape="true"></igx-avatar>
+                    <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
+                    <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
+                </igx-card-header>
 
                 <igx-card-content>
                     <p>{{ cards[0].content }}</p>
                 </igx-card-content>
 
-                <igx-card-actions [reverse]="true">
+                <igx-card-actions [reverse]="false">
                     <button igxButton igxRipple>Read More</button>
                     <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
                         <igx-icon fontSet="material">{{icon}}</igx-icon>
