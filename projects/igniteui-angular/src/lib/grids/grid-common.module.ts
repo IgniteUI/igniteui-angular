@@ -31,6 +31,7 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
+    IgxGridBodyDirective,
     IgxColumnMovingService,
     IgxFilterCellTemplateDirective,
     IgxResizeHandleDirective
@@ -84,6 +85,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxResizeHandleDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
+        IgxGridBodyDirective,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxSummaryDataPipe,
@@ -116,6 +118,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
+        IgxGridBodyDirective,
         IgxRowComponent,
         IgxSummaryDataPipe,
         IgxButtonModule,
