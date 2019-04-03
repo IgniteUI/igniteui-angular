@@ -57,7 +57,7 @@ describe('IgxGrid - multi-row-layout', () => {
         });
     }
 
-    it('should initialize a grid with column groups', () => {
+    fit('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -75,8 +75,8 @@ describe('IgxGrid - multi-row-layout', () => {
              firstRowCells[1].nativeElement.offsetWidth +
              firstRowCells[2].nativeElement.offsetWidth;
         const lastCellWidth = firstRowCells[3].nativeElement.offsetWidth;
-        // expect(2 * firstRowCells[0].nativeElement.offsetHeight).toEqual(firstRowCells[3].nativeElement.offsetHeight);
-        // the height of the last cell should be twice as big as the
+        expect(2 * firstRowCells[0].nativeElement.offsetHeight).toEqual(firstRowCells[3].nativeElement.offsetHeight);
+        //the height of the last cell should be twice as big as the
     });
 
     it('should not throw error when layout is incomplete', () => {});

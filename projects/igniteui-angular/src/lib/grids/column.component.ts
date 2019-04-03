@@ -1012,8 +1012,8 @@ export class IgxColumnComponent implements AfterContentInit {
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
         const generatedSizes = !isRow ? this.generateColumnSizes(this.children) : null;
         return isIE ?
-        generatedSizes || `(auto)[${templateItems}]` :
-            generatedSizes || `repeat(${templateItems},auto)`;
+        generatedSizes || `(1fr)[${templateItems}]` :
+            generatedSizes || `repeat(${templateItems},1fr)`;
     }
 
     protected generateColumnSizes(children) {
