@@ -32,6 +32,31 @@ describe('IgxGrid - multi-row-layout', () => {
         }).compileComponents();
     }));
 
+    function verifyHeadersAreAligned(headerCells, rowCells) {
+        for (let i; i < headerCells.length; i++) {
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
+                .toBe(rowCells[i].nativeElement.offsetWidth);
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
+                .toBe(rowCells[i].nativeElement.offsetHeight);
+        }
+    }
+
+    function verifyDOMMatchesSettings(row, colSettings) {
+       // TODO - generic function that checks if DOM is rendered correctly based on the column settings
+        const firstRowCells = row.cells.toArray();
+        colSettings.forEach(groupSetting => {
+            // check group has rendered block
+            groupSetting.columns.forEach(cols => {
+                // check widths for columns that have col span
+                // check heights for cols that have row span
+                // check cols with same colStart start from same left
+                // check cols with same rowStart start from same top
+                // check that cols with same colStart+colSpan end at the same right
+                // check that rows with same rowStart+rowSpan end at the same bottom
+            });
+        });
+    }
+
     it('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
@@ -41,12 +66,9 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        for (let i; i < headerCells.length; i++) {
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
-                .toBe(firstRowCells[i].nativeElement.offsetWidth);
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
-                .toBe(firstRowCells[i].nativeElement.offsetHeight);
-        }
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups)
 
         // the last cell is spaned as much as the first 3 cells
         const firstThreeCellsWidth = firstRowCells[0].nativeElement.offsetWidth +
@@ -56,17 +78,21 @@ describe('IgxGrid - multi-row-layout', () => {
         // expect(2 * firstRowCells[0].nativeElement.offsetHeight).toEqual(firstRowCells[3].nativeElement.offsetHeight);
         // the height of the last cell should be twice as big as the
     });
+
+    it('should not throw error when layout is incomplete', () => {});
+    it('should initialize correctly when no widths are set.', () => {});
+    it('should initialize correctly when widths are set in px.', () => {});
+    it('should initialize correctly when widths are set in %.', () => {});
+
 });
 
 @Component({
     template: `
     <igx-grid #grid [data]="data" [enableMRL]="true" height="500px">
-        <igx-column-group>
-            <igx-column [rowStart]="1" [colStart]="1" field="ID"></igx-column>
-            <igx-column [rowStart]="1" [colStart]="2" filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
-            <igx-column [rowStart]="1" [colStart]="3" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
-            <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 3'" [rowEnd]="'span 2'"
-             filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
+        <igx-column-group *ngFor='let group of colGroups'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-group>
     </igx-grid>
     `
@@ -74,6 +100,16 @@ describe('IgxGrid - multi-row-layout', () => {
 export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
-
+    colGroups = [
+        {
+            group: 'group1',
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1},
+                { field: 'CompanyName', rowStart: 1, colStart: 2},
+                { field: 'ContactName', rowStart: 1, colStart: 3},
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+            ]
+        }
+    ];
     data = SampleTestData.contactInfoDataFull();
 }
