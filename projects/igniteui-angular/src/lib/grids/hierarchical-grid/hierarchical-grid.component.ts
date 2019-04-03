@@ -19,7 +19,8 @@ import {
     AfterViewInit,
     AfterContentInit,
     Optional,
-    OnInit
+    OnInit,
+    OnDestroy
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -59,7 +60,7 @@ export interface HierarchicalStateRecord {
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
+    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
     private _overlayIDs = [];
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -404,6 +405,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.columnList.reset(topCols);
         }
         super.ngAfterContentInit();
+    }
+
+    ngOnDestroy() {
+        if (!this.parent) {
+            this.hgridAPI.getChildGrids(true).forEach((grid) => {
+                if (!grid.childRow.cdr.destroyed) {
+                    grid.childRow.cdr.destroy();
+                }
+            });
+        }
+        super.ngOnDestroy();
     }
 
     /**

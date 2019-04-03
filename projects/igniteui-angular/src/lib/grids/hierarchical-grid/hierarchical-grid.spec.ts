@@ -463,6 +463,32 @@ describe('IgxHierarchicalGrid Row Islands', () => {
          hVirt = childGrid.getRowByIndex(0).virtDirRow;
          expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
     });
+
+    it('should destroy cached instances of child grids when root grid is destroyed', (async () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        const children = hierarchicalGrid.hgridAPI.getChildGrids(true);
+        expect(children.length).toBe(2);
+        const child1 = children[0];
+        const child2 = children[1];
+        expect(child1._destroyed).toBeFalsy();
+        expect(child2._destroyed).toBeFalsy();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+
+        // check that we have child is not destroyed
+        expect(child1._destroyed).toBeFalsy();
+        expect(child2._destroyed).toBeFalsy();
+
+        // destroy hgrid
+        fixture.destroy();
+
+        expect(child1._destroyed).toBeTruthy();
+        expect(child2._destroyed).toBeTruthy();
+    }));
 });
 
 describe('IgxHierarchicalGrid Remote Scenarios', () => {
