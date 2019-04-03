@@ -203,10 +203,11 @@ export class IgxCardComponent {
      * An @Input property that sets the value of the `role` attribute of the card.
      * By default the value is set to `group`.
      * ```html
-     * <igx-card role="footer"></igx-card>
+     * <igx-card role="group"></igx-card>
      * ```
      */
     @HostBinding('attr.role')
+    @Input()
     public role = 'group';
 
     /**
