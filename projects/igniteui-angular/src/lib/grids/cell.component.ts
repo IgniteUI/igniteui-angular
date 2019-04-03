@@ -337,13 +337,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges {
     }
 
     @HostBinding('style.-ms-grid-row-span')
-    get msGridRowSpan() {
-        return this.column.msGridColumnSpan;
+    get gridRowSpan() {
+        return this.column.gridRowSpan;
     }
 
     @HostBinding('style.-ms-grid-column-span')
-    get msGridColumnSpan() {
-        return this.column.msGridColumnSpan;
+    get gridColumnSpan() {
+        return this.column.gridColumnSpan;
     }
 
 

@@ -3,14 +3,15 @@
     <section style="height: 800px" class="sample-content">
         <igx-grid [enableMRL]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'100%'">
             <igx-column-group [movable]="false" [pinned]="false">
-                <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" resizable="true" field="ContactName" [width]='"50%x"'></igx-column>
-                <igx-column [rowStart]="1" [colStart]="2" [movable]="false" sortable="true" resizable="true" field="ContactTitle" [width]='"20%"'></igx-column>
-                <igx-column [rowStart]="1" [colStart]="3" [movable]="false" sortable="true" resizable="true" field="Country" [width]='"15%"'></igx-column>
-                <igx-column [rowStart]="1" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Phone" ></igx-column>
-
-                <igx-column [rowStart]="2" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="City"></igx-column>
-                <igx-column [rowStart]="3" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Address"></igx-column>
-                <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="'span 2'" [colEnd]="'span 3'" [movable]="false" [filterable]="false" sortable="true" resizable="true"  field="CompanyName"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="1" [colEnd]="'span 4'" field="ContactName"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="5" field="ContactTitle"></igx-column>
+                <igx-column [rowStart]="1" [colStart]="6" field="Country"></igx-column>
+                <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Phone"></igx-column>
+                <igx-column [rowStart]="2" [colStart]="3" [colEnd]="'span 2'" field="City"></igx-column>
+                <igx-column [rowStart]="2" [colStart]="5" [colEnd]="'span 2'" field="Address"></igx-column>
+                <igx-column [rowStart]="3" [colStart]="1" sortable="true" resizable="true"  field="CompanyName"></igx-column>
+                <igx-column [rowStart]="3" [colStart]="2"  field="PostalCode"></igx-column>
+                <igx-column [rowStart]="3" [colStart]="3" [colEnd]="'span 4'" field="Fax"></igx-column>
             </igx-column-group>
             <!-- <igx-column-group [movable]="false" [pinned]="false">
                 <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" resizable="true" field="ContactName" [width]='"50%"'></igx-column>

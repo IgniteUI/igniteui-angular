@@ -40,13 +40,13 @@ const DEBOUNCE_TIME = 200;
 export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterViewInit {
 
     @HostBinding('style.-ms-grid-row-span')
-    get msGridRowSpan() {
-        return this.column.msGridColumnSpan;
+    get gridRowSpan() {
+        return this.column.gridColumnSpan;
     }
 
     @HostBinding('style.-ms-grid-column-span')
-    get msGridColumnSpan() {
-        return this.column.msGridColumnSpan;
+    get gridColumnSpan() {
+        return this.column.gridColumnSpan;
     }
 
 

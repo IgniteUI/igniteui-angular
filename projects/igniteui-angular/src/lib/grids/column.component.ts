@@ -808,32 +808,20 @@ export class IgxColumnComponent implements AfterContentInit {
 
         return pinnedCols.indexOf(this) === pinnedCols.length - 1;
     }
-    public msGridRowSpan;
-    public msGridColumnSpan;
-
-    public _rowEnd;
-    get rowEnd() {
-        return this._rowEnd;
+    get gridRowSpan() {
+        return (this.rowEnd && this.rowEnd.indexOf('span') !== -1) ?
+            parseInt(this.rowEnd.replace('span', ''), 10) : 1;
     }
-    @Input()
-    set rowEnd(value: string) {
-        this._rowEnd = value;
-        if (value && value.indexOf('span') !== -1) {
-            this.msGridRowSpan = parseInt(value.replace('span', ''), 10);
-        }
+    get gridColumnSpan() {
+        return (this.colEnd && this.colEnd.indexOf('span') !== -1) ?
+            parseInt(this.colEnd.replace('span', ''), 10) : 1;
     }
 
-    public _colEnd;
-    get colEnd() {
-        return this._colEnd;
-    }
     @Input()
-    set colEnd(value: string) {
-        this._colEnd = value;
-        if (value && value.indexOf('span') !== -1) {
-            this.msGridColumnSpan = parseInt(value.replace('span', ''), 10);
-        }
-    }
+    public rowEnd: string;
+
+    @Input()
+    public colEnd: string;
 
     @Input() rowStart: number;
     @Input() colStart: number;
@@ -1019,8 +1007,8 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     getGridTemplate(isRow, isIE) {
         const itemAccum = isRow ?
-            (acc, val) => Math.max(val.rowStart + (val.msGridRowSpan || 1) - 1, acc) :
-            (acc, val) => Math.max(val.colStart + (val.msGridColumnSpan || 1) - 1, acc);
+            (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
+            (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
         const generatedSizes = !isRow ? this.generateColumnSizes(this.children) : null;
         return isIE ?
@@ -1029,17 +1017,36 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     protected generateColumnSizes(children) {
-        const res = [];
+        const columnSizes = [];
+        // find the smallest col spans
         children.forEach(col => {
-            const actualWidth = parseInt(col.calcWidth, 10) + 'px';
-            if (col.colStart && res[col.colStart - 1] === undefined) {
-                res[col.colStart - 1] = { colEnd: col.msGridColumnSpan || 1,
-                     width: actualWidth  };
-            } else if (col.colStart && res[col.colStart - 1].colEnd > col.msGridColumnSpan && col.widthSetByUser) {
-                res[col.colStart - 1] = { colEnd: col.msGridColumnSpan || 1, width: actualWidth };
+            const actualWidth = parseFloat(col.calcWidth) + 'px';
+            if (col.colStart && columnSizes[col.colStart - 1] === undefined) {
+                columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
+                     width: actualWidth, widthSetByUser: col.widthSetByUser };
+            } else if (col.colStart && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan &&
+                (col.widthSetByUser || !columnSizes[col.colStart - 1].widthSetByUser)) {
+                columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
+                    width: actualWidth, widthSetByUser: col.widthSetByUser };
             }
         });
-        return res.map(item => item.width).join(' ');
+
+        // fill the gaps if there are any
+        let result = '';
+        for (let i = 0; i < columnSizes.length; i++) {
+            if (columnSizes[i] && columnSizes[i].colSpan !== 1) {
+                for (let j = 0; j < columnSizes[i].colSpan; j++) {
+                    result += ' ' +
+                    (columnSizes[i].widthSetByUser ?
+                        parseFloat(columnSizes[i].width) / columnSizes[i].colSpan + 'px' :
+                        columnSizes[i].width);
+                }
+                i += columnSizes[i].colSpan - 1;
+            } else if (columnSizes[i]) {
+                result += ' ' + columnSizes[i].width;
+            }
+        }
+        return result.trim();
     }
 
     /**
