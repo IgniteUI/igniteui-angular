@@ -21,7 +21,6 @@ import {
     SimpleChanges,
     TemplateRef,
     TrackByFunction,
-    ViewChild,
     ViewContainerRef,
     ViewRef
 } from '@angular/core';
@@ -1014,9 +1013,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (i === this.igxForOf.length - 1) {
                     // reached end without exceeding
                     // include prev items until size is filled or first item is reached.
-                    let prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
+                    let curItem = dimension === 'height' ? arr[0].value : arr[0];
+                    let prevIndex = this.igxForOf.indexOf(curItem) - 1;
                     while (prevIndex >= 0 && sum <= availableSize) {
-                        prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
+                        curItem = dimension === 'height' ? arr[0].value : arr[0];
+                        prevIndex = this.igxForOf.indexOf(curItem) - 1;
                         const prevItem = this.igxForOf[prevIndex];
                         const prevSize = dimension === 'height' ?
                             this.heightCache[prevIndex] :
@@ -1330,11 +1331,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
+        if (Math.abs(diff) > 0) {
             requestAnimationFrame(() => {
                 this.recalcUpdateSizes();
                 const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-                scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+                if (scr.scrollTop !== 0) {
+                    scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+                } else {
+                    this._updateScrollOffset();
+                }
             });
         }
     }
@@ -1392,7 +1397,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.syncService.setMaster(this);
                 this._updateSizeCache(changes);
                 this._applyChanges();
-                this.cdr.markForCheck();
                 this._updateScrollOffset();
                 this.onDataChanged.emit();
             }

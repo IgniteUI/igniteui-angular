@@ -8,6 +8,8 @@
             <igx-grid
                 #grid1
                 [data]="data"
+                displayDensity='cosy'
+                [showToolbar]="true" [columnHiding]="true"
                 [allowFiltering]="true"
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
@@ -28,16 +30,18 @@
                                                     [filterable]="c.filterable"
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
-                                                    [hasSummary]="c.summary"
-                                                    [minWidth]="c.minWidth"
-                                                    [maxWidth]="c.maxWidth"
+                                                    [hasSummary]="false"
                                                     [dataType]="c.type">
                 </igx-column>
             </igx-grid>
+            Drag mode: {{ grid1.selectionService.dragMode }}
             <div class="sample-buttons">
-                <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
+                <button igxButton (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select 💯 cells</button>
+                <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
+                <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
+                <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
+                <button (click)="grid1.crudService.commit()">Update cell in edit mode</button>
             </div>
         </div>
     </div>
