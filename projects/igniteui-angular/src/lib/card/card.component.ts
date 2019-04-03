@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Directive, HostBinding, Input, NgModule } from '@angular/core';
+import { Component, Directive, HostBinding, Optional, Inject, Input, NgModule, OnInit } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
 
 let NEXT_ID = 0;
@@ -132,47 +132,6 @@ export class IgxCardContentDirective {
     public cssClass = 'igx-card-content';
 }
 
-enum IgxCardActionsLayout {
-    DEFAULT = 'default',
-    SPREAD = 'spread',
-    REVERSE = 'reverse'
-}
-
-/**
- * IgxCardActions is container for the card actions.
- */
-@Component({
-    // tslint:disable-next-line:directive-selector
-    selector: 'igx-card-actions',
-    templateUrl: 'card.actions.html'
-})
-export class IgxCardActionsComponent {
-    /**
-     * An @Input property that sets the layout style of the actions.
-     * By default icons and icon buttons, as well as regular buttons
-     * are split into two containers, which are then positioned on both ends
-     * of the card-actions area.
-     * You can spread the elements in those groups so they are positioned equally
-     * from one another.
-     * ```html
-     * <igx-card-actions layout="spread"></igx-card-actions>
-     * ```
-     */
-    @HostBinding('class.igx-card-actions')
-    @Input()
-    public layout: IgxCardActionsLayout | string = 'default';
-
-    @HostBinding('class.igx-card-actions--spread')
-    get isSpreadLayout() {
-        return this.layout === IgxCardActionsLayout.SPREAD;
-    }
-
-    @HostBinding('class.igx-card-actions--reverse')
-    get isReverseLayout() {
-        return this.layout === IgxCardActionsLayout.REVERSE;
-    }
-}
-
 /**
  * IgxCardFooter is container for the card footer
  */
@@ -281,6 +240,68 @@ export class IgxCardComponent {
     @HostBinding('class.igx-card--horizontal')
     @Input()
     public horizontal = false;
+}
+
+enum IgxCardActionsLayout {
+    DEFAULT = 'default',
+    JUSTIFY = 'justify',
+}
+
+/**
+ * IgxCardActions is container for the card actions.
+ */
+@Component({
+    // tslint:disable-next-line:directive-selector
+    selector: 'igx-card-actions',
+    templateUrl: 'card.actions.html'
+})
+export class IgxCardActionsComponent implements OnInit {
+    /**
+     * An @Input property that sets the layout style of the actions.
+     * By default icons and icon buttons, as well as regular buttons
+     * are split into two containers, which are then positioned on both ends
+     * of the card-actions area.
+     * You can justify the elements in those groups so they are positioned equally
+     * from one another taking up all the space available along the card actions axis.
+     * ```html
+     * <igx-card-actions layout="justify"></igx-card-actions>
+     * ```
+     */
+    constructor(@Optional() @Inject(IgxCardComponent) private card: IgxCardComponent) { }
+
+    @HostBinding('class.igx-card-actions')
+    @Input()
+    public layout: IgxCardActionsLayout | string = 'default';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-card-actions--vertical')
+    public vertical = false;
+
+    @HostBinding('class.igx-card-actions--justify')
+    get isSpreadLayout() {
+        return this.layout === IgxCardActionsLayout.JUSTIFY;
+    }
+
+    /**
+     * An @Input property that sets order of the buttons the actions area.
+     * By default all icons/icon buttons are placed at the end of the action
+     * area. Any regular buttons(flat, raised) will appear before the icons/icon buttons
+     * placed in the actions area.
+     * If you want to reverse their positions so that icons appear first, use the `reverse`
+     * attribute.
+     * ```html
+     * <igx-card-actions [reverse]="true"></igx-card-actions>
+     * ```
+     */
+    @HostBinding('class.igx-card-actions--reverse')
+    @Input()
+    public reverse = false;
+
+    ngOnInit() {
+        this.vertical = this.card.horizontal;
+    }
 }
 
 /**

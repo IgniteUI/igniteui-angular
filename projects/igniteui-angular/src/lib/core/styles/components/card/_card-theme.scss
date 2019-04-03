@@ -157,24 +157,6 @@
 
     %igx-card--horizontal {
         flex-wrap: nowrap;
-
-        %igx-card-actions {
-            flex-direction: column;
-
-            [igxButton] ~ [igxButton] {
-                margin-left: 0;
-            }
-        }
-
-        %igx-card-actions__icons,
-        %igx-card_actions__buttons {
-            flex-direction: column;
-        }
-
-        %igx-card-actions__icons {
-            margin-top: auto;
-            margin-left: initial;
-        }
     }
 
     %igx-card-header {
@@ -202,46 +184,15 @@
             margin-right: 0;
             margin-bottom: rem(16px);
         }
-
-        // %igx-card-header-title,
-        // %igx-card-header-subtitle {
-        //     text-align: center;
-        // }
     }
 
     %igx-card-header--compact {
         padding: $card-heading-compact-padding;
     }
 
-    // %igx-card-header-main {
-    //     display: flex;
-    //     flex-flow: row nowrap;
-    //     align-items: center;
-    //     flex: 0 1 auto;
-    //     overflow: hidden;
-    // }
-
-    // %igx-card-header-main--vertical {
-    //     flex-flow: column;
-    //     justify-content: center;
-    //     align-items: center;
-    //     flex-basis: 100%;
-
-    //     %igx-card-header-title,
-    //     %igx-card-header-subtitle {
-    //         text-align: center;
-    //     }
-
-    // }
-
     %igx-card-header-thumbnail {
         align-self: flex-start;
         margin-right: rem(16px);
-
-        [dir='rtl'] & {
-            margin-right: 0;
-            margin-left: rem(16px);
-        }
 
         &:empty {
             display: none;
@@ -313,6 +264,10 @@
         }
     }
 
+    %igx-card-actions--vertical {
+        flex-direction: column;
+    }
+
     %igx-card-actions__icons {
         display: flex;
         align-items: center;
@@ -335,14 +290,48 @@
         }
     }
 
-    %igx-card-actions__buttons--spread,
-    %igx-card-actions__icons--spread {
+    %igx-card-actions__buttons--justify,
+    %igx-card-actions__icons--justify {
         justify-content: space-around;
         flex-grow: 1;
 
         &:empty {
             display: none;
         }
+    }
+
+    %igx-card-actions__icons--vertical,
+    %igx-card_actions__buttons--vertical {
+        flex-direction: column;
+
+        [igxButton] ~ [igxButton] {
+            margin-left: 0;
+        }
+    }
+
+    %igx-card-actions__icons--vertical {
+        margin-top: auto;
+        margin-left: 0;
+    }
+
+    %igx-card-actions__icons--reverse {
+        order: 0;
+        margin-left: 0;
+    }
+
+    %igx-card-actions__buttons--reverse {
+        order: 1;
+        margin-left: auto;
+    }
+
+    %igx-card-actions__icons--vertical-reverse {
+        margin: 0;
+        margin-bottom: auto;
+    }
+
+    %igx-card-actions__buttons--vertical-reverse {
+        margin: 0;
+        margin-top: auto;
     }
 
     %igx-card-actions-bgroup {

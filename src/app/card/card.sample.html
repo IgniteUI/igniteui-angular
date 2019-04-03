@@ -22,7 +22,7 @@
                     <p>{{ cards[0].content }}</p>
                 </igx-card-content>
 
-                <igx-card-actions>
+                <igx-card-actions [reverse]="true">
                     <button igxButton igxRipple>Read More</button>
                     <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
                         <igx-icon fontSet="material">{{icon}}</igx-icon>
@@ -46,7 +46,7 @@
 
                 <igx-divider offset="16px"></igx-divider>
 
-                <igx-card-actions layout="spread">
+                <igx-card-actions layout="justify">
                     <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true">
                         <igx-icon>{{icon}}</igx-icon>
                     </button>
@@ -58,7 +58,8 @@
         <!--Album Pattern Start-->
         <article class="sample-column card-wrapper">
             <igx-card type="outlined" [horizontal]="true">
-                <igx-card-actions layout="spread">
+
+                <igx-card-actions layout="justify" [reverse]="false">
                     <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true" >
                         <igx-icon>{{icon}}</igx-icon>
                     </button>
@@ -66,7 +67,7 @@
 
                 <igx-divider type="vertical" offset="16px"></igx-divider>
 
-                <div style="display: flex; flex-flow: column nowrap">
+                <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
                     <igx-card-header igxLayout igxLayoutReverse="true">
                         <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
                         <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
@@ -77,7 +78,7 @@
                     </igx-card-content>
                 </div>
 
-                <igx-card-media width="120px" height="100%">
+                <igx-card-media width="120px">
                     <img [src]="cards[7].imageUrl">
                 </igx-card-media>
             </igx-card>
