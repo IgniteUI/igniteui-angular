@@ -29,10 +29,22 @@ export class IgxDividerDirective {
 
 
     /**
-     * @hidden
+     * An @Input property that sets the value of `offset` attribute.
+     * If not provided it will be set to 0.
+     * ```html
+     * <igx-divider offset="16px"></igx-divider>
+     * ```
      */
     @Input('offset')
     private _offset = '0';
+
+    /**
+     * An @Input property that sets the value of `role` attribute.
+     * If not the default value of `separator` will be used.
+     */
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'separator';
 
     /**
      * Sets the type of the divider. The default value
