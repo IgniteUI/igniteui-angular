@@ -5,26 +5,27 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridWrappedInContComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridWrappedInContComponent, IgxTreeGridAutoGenerateComponent } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid Component Tests', () => {
+    configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
+    let fix;
+    let grid: IgxTreeGridComponent;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridWrappedInContComponent,
+                IgxTreeGridAutoGenerateComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxTreeGridModule]
+        }).compileComponents();
+    }));
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
-        configureTestSuite();
-        let fix;
-        let grid: IgxTreeGridComponent;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxTreeGridWrappedInContComponent
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxTreeGridModule]
-            }).compileComponents();
-        }));
 
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
@@ -103,6 +104,20 @@ describe('IgxTreeGrid Component Tests', () => {
             expect(horizontalScroll.style.width).toBe('785px');
             expect(horizontalScroll.children[0].style.width).toBe('980px');
         });
+    });
+
+    describe('Auto-generated columns', () => {
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
+            grid = fix.componentInstance.treeGrid;
+        }));
+
+        it('should auto-generate columns', fakeAsync(/** height/width setter rAF */() => {
+            fix.detectChanges();
+            const expectedColumns = ['ID', 'ParentID', 'Name', 'JobTitle', 'Age'];
+
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
+        }));
     });
 
 });

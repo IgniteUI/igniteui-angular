@@ -24,6 +24,7 @@ import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -79,6 +80,8 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     protected _expandChildren = false;
 
     constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -95,6 +98,8 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -157,7 +162,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        (<IgxColumnGroupComponent>ref.instance).gridID = this.id;
+        (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -172,7 +177,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        (<IgxColumnComponent>ref.instance).gridID = this.id;
+        (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 
