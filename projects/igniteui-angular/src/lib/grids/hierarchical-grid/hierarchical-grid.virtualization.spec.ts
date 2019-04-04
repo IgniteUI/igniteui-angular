@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
@@ -8,6 +8,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
+import { first, delay } from 'rxjs/operators';
 
 describe('IgxHierarchicalGrid Virtualization', () => {
     configureTestSuite();
@@ -40,16 +41,17 @@ describe('IgxHierarchicalGrid Virtualization', () => {
 
         // scroll down
         elem.scrollTop = 1000;
+        await wait(100);
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait(100);
         expect(firstRow.expanded).toBeFalsy();
 
         // scroll to top
         elem.scrollTop = 0;
+        await wait(100);
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait(100);
+
         expect(firstRow.expanded).toBeTruthy();
     });
 
@@ -78,9 +80,11 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         await wait();
 
         expect(elem.scrollTop).toBe(400);
+        /** row toggle rAF */
+        await wait(3 * 16);
     });
 
-    it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async() => {
+    xit('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', fakeAsync(() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
@@ -89,7 +93,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
         childCell.nativeElement.focus();
-        await wait(10);
+        tick(10);
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
@@ -99,7 +103,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         };
         filteringExpressionsTree.filteringOperands.push(expression);
         childGrid.filter('ProductName', null, filteringExpressionsTree);
-        await wait();
+        tick();
         fixture.detectChanges();
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
@@ -110,17 +114,18 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         elem.scrollTop = 1000;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        tick();
 
         // scroll to top
         elem.scrollTop = 0;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        tick();
 
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.rowList.toArray()[0].cells.toArray()[0].selected).toBeTruthy();
-    });
+    }));
+
     it('should render correct data for child grid after scrolling and start index changes.', async() => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
@@ -276,6 +281,49 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         .not.toBe(-1);
     });
 
+    it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async() => {
+
+        fixture.componentInstance.data = [
+            {ID: 0, ChildLevels: 3,  ProductName: 'Product: A0 '},
+            {ID: 1, ChildLevels: 3,  ProductName: 'Product: A0 '},
+            {ID: 2, ChildLevels: 2,  ProductName: 'Product: A0 ' ,
+             childData: [
+                 { ID: 1, ChildLevels: 2,  ProductName: 'Product: A1',
+                 childData: fixture.componentInstance.generateData(100, 0)
+                }
+             ]
+            }];
+        fixture.detectChanges();
+
+        let scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(scrHeight).toBe(0);
+
+        hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollNext();
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+
+        // expand
+        childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+
+        // collapse
+        childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
+        await wait(100);
+        fixture.detectChanges();
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+    });
+
     it('should update context information correctly for child grid container after scrolling',  async() => {
         // expand 3rd row
         const row = hierarchicalGrid.dataRowList.toArray()[3];
@@ -295,6 +343,74 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(childRowComponent.index).toBe(4);
     });
 
+    it('should update scrollbar when expanding a row with data loaded after initial view initialization',  async(done) => {
+        fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
+        fixture.detectChanges();
+
+        fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
+            async(args) => {
+                args.grid.data = fixture.componentInstance.generateData(10, 0);
+                await wait(200);
+                fixture.detectChanges();
+
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(1184);
+                done();
+            }
+        );
+
+
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(500);
+
+        // expand 1st row
+        const row = hierarchicalGrid.dataRowList.toArray()[0];
+        row.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(550);
+    });
+});
+
+describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridNoScrollTestComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async(done) => {
+        const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);
+        fixture.detectChanges();
+
+        const hierarchicalGrid = fixture.componentInstance.hgrid;
+        fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
+            async(args) => {
+                args.grid.data = fixture.componentInstance.generateData(10, 0);
+                await wait(200);
+                fixture.detectChanges();
+
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeFalsy();
+                expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);
+                done();
+            }
+        );
+
+        const initialBodyWidth = hierarchicalGrid.tbody.nativeElement.offsetWidth;
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
+
+        // expand 1st row
+        const row = hierarchicalGrid.dataRowList.toArray()[0];
+        row.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
+        expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
+    });
 });
 
 @Component({
@@ -331,5 +447,22 @@ export class IgxHierarchicalGridTestBaseComponent {
             'Col2': i, 'Col3': i, childData: children, childData2: children });
         }
         return prods;
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID">
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]="true" #rowIsland>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridNoScrollTestComponent extends IgxHierarchicalGridTestBaseComponent {
+    constructor() {
+        super();
+        this.data = this.generateData(3, 0);
     }
 }

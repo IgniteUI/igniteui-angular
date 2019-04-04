@@ -1,12 +1,11 @@
 import { DebugElement } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
 import { IgxColumnGroupComponent } from '../column.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import {
     MovableColumnsComponent,
@@ -18,7 +17,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Column Moving', () => {
     configureTestSuite();
@@ -50,11 +49,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should be able to reorder columns programmatically.', (() => {
             let columnsList = grid.columnList.toArray();
@@ -172,15 +171,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
             UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
-            await wait();
+            await wait(250);
             fixture.detectChanges();
 
-            const resizer = headers[0].parent.nativeElement.children[2].children[0];
+            const resizer = fixture.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
-            await wait();
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
-            await wait();
             fixture.detectChanges();
 
             expect(grid.columns[0].width).toEqual('250px');
@@ -454,12 +451,12 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
 
             // step 3 - navigate right and verify cell selection is updated
-            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
         }));
 
         it('Should not break KB after columns are reordered - selection does not belong to the moved column.', (async() => {
@@ -500,11 +497,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should reorder movable columns with templated headers.', (async() => {
             fixture.componentInstance.isResizable = true;
@@ -536,11 +533,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -656,7 +653,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[0].field).toEqual('CompanyName');
             expect(columnsList[1].field).toEqual('ContactName');
             expect(columnsList[2].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID')).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'CompanyName').selected).toBeTruthy();
 
             // step 3 - move another column and verify selection is preserved
             headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -675,7 +672,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[0].field).toEqual('ContactName');
             expect(columnsList[1].field).toEqual('CompanyName');
             expect(columnsList[2].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID')).toBeTruthy();
+            expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
         }));
 
         it('Should preserve cell selection after columns are reordered - horizontal scrolling.', (async() => {
@@ -683,9 +680,11 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - select a visible cell from the 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
+
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
             // step 2 - reorder that column among columns that are currently out of view
             // and verify selection is preserved
@@ -704,7 +703,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
         }));
 
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
@@ -715,44 +714,47 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - scroll down vertically and select a cell that was initially out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            await wait(50);
+            await wait(100);
             fixture.detectChanges();
 
-            const cell = grid.columnList.toArray()[9].cells[4];
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            const cell = grid.getCellByColumn(25, 'Phone');
+            const selectedData = [{ Phone: '40.32.21.21'}];
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
+
             expect(cell.selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            expect(grid.getSelectedData()).toEqual(selectedData);
 
             // step 3 - scroll up vertically so that the selected cell becomes out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
             await wait(50);
             fixture.detectChanges();
 
-            // step 4 - reorder that column among columns that are currently out of view
+            // step 4 - reorder that "Phone" column
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
-            await wait(50);
+            await wait(100);
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
-            await wait(1500);
+            await wait(100);
             fixture.detectChanges();
 
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 30);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 30);
-            await wait();
+            await wait(50);
             fixture.detectChanges();
 
             // step 5 - verify selection is preserved
-            expect(grid.columnList.toArray()[6].cells[4].selected).toBeFalsy();
-
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            await wait(50);
+            await wait(100);
             fixture.detectChanges();
-            expect(grid.columnList.toArray()[4].cells[4].selected).toBeTruthy();
+
+            const newSelectedData = [{Country: 'France'}];
+            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
         it('Should affect all pages when columns are reordered and paging is enabled.', (async() => {
@@ -942,11 +944,11 @@ describe('IgxGrid - Column Moving', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async() => {
 
@@ -1229,9 +1231,10 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait();
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
+
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
 
             // step 2 - reorder the parent column and verify selection is preserved
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
@@ -1245,31 +1248,37 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
+            expect(grid.getSelectedData()).toEqual([{CompanyName: 'Alfreds Futterkiste' }]);
 
             // step 3 - navigate right and verify cell selection is updated
-            const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+            const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
-            expect(grid.getCellByColumn(0, 'ContactTitle').selected).toBeTruthy();
+            HelperUtils.verifySelectedRange(grid, 0, 0, 3, 3);
+            expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
         }));
 
         it('MCH - should pin only top level columns.', (async() => {
-
             fixture.componentInstance.isPinned = true;
+            await wait();
             fixture.detectChanges();
 
             // step 2 - try pinning a sub level simple column
             let header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 75);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 81);
-            await wait(50);
+            await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 30, 50);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointerup', header, 30, 50);
+            await wait();
             fixture.detectChanges();
 
             let columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
@@ -1280,12 +1289,15 @@ describe('IgxGrid - Column Moving', () => {
             header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 25);
             await wait();
+            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 30, 50);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointerup', header, 30, 50);
-            await wait();
+            await wait(30);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', header, 40, 50);
+            await wait(30);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', header, 40, 50);
+            await wait(30);
             fixture.detectChanges();
 
             columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));

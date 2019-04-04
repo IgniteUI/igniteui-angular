@@ -199,7 +199,7 @@ myComponent.select.toggleIconTemplate = myCustomTemplate;
 * Closing events are emitted on item click.
 * Opening/closing events are emitted on toggle button click.
 * Opening/closing events are triggered on key interaction.
-* Closing events are emitted on clicking outside the component.
+* Closing events are emitted on clicking outside the component(input blur).
 * When dropdown list is opened, items are navigable with Home, End and arrow keys.
 * When dropdown list is opened, items are navigable with Up/Down arrow keys until there are list items and selection is not wrapped. 
 * When dropdown list is opened, navigation with Up/Down arrow starts from the selected item if any or first list item otherwise.

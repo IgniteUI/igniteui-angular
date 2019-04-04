@@ -19,7 +19,6 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
-
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
@@ -107,10 +106,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         return this.sortDirection !== SortingDirection.None;
     }
 
-    get dragged() {
-        return this.column === this.column.grid.draggedColumn;
-    }
-
     get filterIconClassName() {
         return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
@@ -179,11 +174,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     protected getSortDirection() {
-        const expr = this.gridAPI.get(this.gridID).sortingExpressions.find((x) => x.fieldName === this.column.field);
+        const expr = this.gridAPI.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
     }
 

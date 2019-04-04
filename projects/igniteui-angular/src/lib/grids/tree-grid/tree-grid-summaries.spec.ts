@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
 import {
@@ -10,7 +10,7 @@ import {
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
@@ -39,11 +39,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('should render summaries for all the rows when have parentKey', () => {
             verifyTreeBaseSummaries(fix);
@@ -358,7 +359,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
         });
 
-        it('Filtering: should render correct summaries when filter and found only children', () => {
+        it('Filtering: should render correct summaries when filter and found only children', fakeAsync(() => {
             treeGrid.filter('ID', 12, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -370,18 +371,18 @@ describe('IgxTreeGrid - Summaries', () => {
 
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             verifySummaryIsEmpty(summaryRow);
-        });
+        }));
 
-        it('Filtering: should render correct summaries when filter and no results are found', () => {
+        it('Filtering: should render correct summaries when filter and no results are found', fakeAsync(() => {
             treeGrid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             verifySummaryIsEmpty(summaryRow);
-        });
+        }));
 
-        it('Filtering: should render correct summaries when filter', () => {
+        it('Filtering: should render correct summaries when filter', fakeAsync(() => {
             treeGrid.filter('ID', 17, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -401,7 +402,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '61', '61', '61', '61']);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Feb 1, 2010', 'Feb 1, 2010']);
-        });
+        }));
 
         it('Paging: should render correct summaries when paging is enable and position is bottom', () => {
             treeGrid.paging = true;
@@ -509,6 +510,30 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['4', 'Jul 19, 2009', 'Apr 3, 2019']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
+
+            verifyTreeBaseSummaries(fix);
+        });
+
+        it('CRUD: add child row whick contains null or undefined values', () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 777,
+                ParentID: 475,
+                Name: 'New Employee',
+                HireDate: undefined,
+                Age: null
+            };
+            expect(() => {
+            treeGrid.addRow(newRow);
+            fix.detectChanges();
+            }).not.toThrow();
+
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', '', '']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '0', '0', '0', '0']);
 
             verifyTreeBaseSummaries(fix);
         });
@@ -653,11 +678,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('CRUD with transactions', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('Delete root node', () => {
             treeGrid.toggleRow(847);
@@ -1167,11 +1193,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('Keyboard Navigation', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyScroliingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('should be able to select root summaries with arrow keys', async () => {
             HelperUtils.focusSummaryCell(fix, 0, 0);
@@ -1503,7 +1530,7 @@ describe('IgxTreeGrid - Summaries', () => {
         });
     });
 
-    it('should render correct custom summaries', () => {
+    it('should render correct custom summaries', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(IgxTreeGridCustomSummariesComponent);
         fix.detectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
@@ -1520,9 +1547,9 @@ describe('IgxTreeGrid - Summaries', () => {
 
         summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
         HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['4', '207', '51.75']);
-    });
+    }));
 
-    it('should render summaries for all the rows', () => {
+    it('should render summaries for all the rows', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesComponent);
         fix.detectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
@@ -1545,7 +1572,7 @@ describe('IgxTreeGrid - Summaries', () => {
         verifyTreeBaseSummaries(fix);
         verifySummaryForRow663(fix, 5);
         verifySummaryForRow847(fix, 6);
-    });
+    }));
 
     it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);

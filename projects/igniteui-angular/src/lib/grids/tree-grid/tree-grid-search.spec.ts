@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -11,6 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -33,14 +34,14 @@ describe('IgxTreeGrid - search API', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
-        });
+        }));
 
         it('Search highlights should work within tree cell', () => {
             let actualCount = treeGrid.findNext('ev');
@@ -109,12 +110,12 @@ describe('IgxTreeGrid - search API', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('Search highlights should work for tree cells', () => {
             treeGrid.findNext('1');
@@ -148,7 +149,7 @@ describe('IgxTreeGrid - search API', () => {
             verifySearchResult(fixNativeElement, 7, 1, actualCount);
         });
 
-        it('Should update search highlights when filtering', () => {
+        it('Should update search highlights when filtering', fakeAsync(() => {
             treeGrid.findNext('Software Developer');
 
             verifySearchResult(fixNativeElement, 3, 0);
@@ -158,9 +159,9 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 2, 0);
-        });
+        }));
 
-        it('Should update search highlights when clearing filter', () => {
+        it('Should update search highlights when clearing filter', fakeAsync(() => {
             // Apply filter
             treeGrid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
@@ -174,7 +175,7 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 3, 0);
-        });
+        }));
 
         it('Should update search highlights when sorting', () => {
             treeGrid.findNext('er');
@@ -308,6 +309,7 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.expansionDepth = 0;
             treeGrid.height = '400px';
             treeGrid.columns[3].hasSummary = false;
+            setupGridScrollDetection(fix, treeGrid);
             fix.detectChanges();
             await wait(16);
         });

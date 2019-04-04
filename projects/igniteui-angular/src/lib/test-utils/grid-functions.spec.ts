@@ -470,4 +470,28 @@ export class GridFunctions {
         const columnHeader = this.getColumnHeader(columnField, fix);
         return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_INDICATOR));
     }
+
+    public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
+        const input =
+            customMenu.children[1].children[expressionIndex].children[2].querySelector('.igx-input-group__bundle-main').children[0];
+        input.value = value;
+        input.dispatchEvent(new Event('keydown'));
+        input.dispatchEvent(new Event('input'));
+        input.dispatchEvent(new Event('keyup'));
+        fix.detectChanges();
+    }
+
+    public static setOperatorESF(customMenu, grid, expressionIndex: number, itemIndex: number, fix: ComponentFixture<any>) {
+        const input =
+            customMenu.children[1].children[expressionIndex].children[1].querySelector('.igx-input-group__bundle-main').children[0];
+        input.click();
+        fix.detectChanges();
+
+        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list')[expressionIndex + 1];
+        const operator = operators.children[itemIndex].children[0];
+
+        operator.click();
+        tick();
+        fix.detectChanges();
+    }
 }

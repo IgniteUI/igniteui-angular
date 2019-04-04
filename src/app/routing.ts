@@ -65,6 +65,7 @@ import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sa
 import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 
 const appRoutes = [
     {
@@ -256,6 +257,10 @@ const appRoutes = [
     {
         path: 'grid',
         component: GridSampleComponent
+    },
+    {
+        path: 'gridFilterTemplate',
+        component: GridFilterTemplateSampleComponent
     },
     {
         path: 'gridColumnMoving',

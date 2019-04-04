@@ -84,10 +84,10 @@
     @if not($hover-background) and $background {
         $luminance: luminance($background);
 
-        @if $luminance + .05 < .5 {
-            $hover-background: lighten($background, 14%);
+        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+            $hover-background: lighten-color($background, 14%);
         } @else {
-            $hover-background: darken($background, 4%);
+            $hover-background: darken-color($background, 4%);
         }
     }
 
@@ -98,10 +98,10 @@
     @if not($focus-background) and $background {
         $luminance: luminance($background);
 
-        @if $luminance + .05 < .5 {
-            $focus-background: lighten($background, 22%);
+        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+            $focus-background: lighten-color($background, 22%);
         } @else {
-            $focus-background: darken($background, 8%);
+            $focus-background: darken-color($background, 8%);
         }
     }
 
@@ -112,10 +112,10 @@
     @if not($selected-background) and $background {
         $luminance: luminance($background);
 
-        @if $luminance + .05 < .5 {
-            $selected-background: lighten($background, 22%);
+        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+            $selected-background: lighten-color($background, 22%);
         } @else {
-            $selected-background: darken($background, 8%);
+            $selected-background: darken-color($background, 8%);
         }
     }
 
@@ -134,10 +134,10 @@
     @if not($focus-selected-background) and $selected-background {
         $luminance: luminance($selected-background);
 
-        @if $luminance + .05 < .5 {
-            $focus-selected-background: lighten($background, 32%);
+        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+            $focus-selected-background: lighten-color($background, 32%);
         } @else {
-            $focus-selected-background: darken($background, 16%);
+            $focus-selected-background: darken-color($background, 16%);
         }
     }
 
