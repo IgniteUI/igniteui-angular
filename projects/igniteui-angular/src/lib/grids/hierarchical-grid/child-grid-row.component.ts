@@ -153,6 +153,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
+        this.hGrid.childRow =  this;
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,
