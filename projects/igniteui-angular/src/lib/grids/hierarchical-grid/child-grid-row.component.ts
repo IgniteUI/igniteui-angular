@@ -109,8 +109,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
+    // TODO: Refactor
     get parentGrid(): any/* TODO: IgxHierarchicalGridComponent*/ {
-        return this.gridAPI.get(this.parentGridID);
+        return this.gridAPI.grid;
     }
 
     @HostBinding('attr.data-level')
@@ -174,12 +175,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
-    public notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
 
     private _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {

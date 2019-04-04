@@ -200,10 +200,10 @@ export class IgxGridNavigationService {
         if (this.grid.pinnedColumns.length || this.displayContainerScrollLeft === 0) {
             firstCell.focus({ preventScroll: true });
         } else {
+            this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    this.grid.nativeElement.focus({ preventScroll: true });
                     firstCell = rowElement.querySelector(cellSelector);
                     firstCell.focus({ preventScroll: true });
                 });
@@ -221,10 +221,10 @@ export class IgxGridNavigationService {
             const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
             allCells[allCells.length - 1].focus({ preventScroll: true });
         } else {
+            this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    this.grid.nativeElement.focus({ preventScroll: true });
                     const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
                     allCells[allCells.length - 1].focus({ preventScroll: true });
                 });

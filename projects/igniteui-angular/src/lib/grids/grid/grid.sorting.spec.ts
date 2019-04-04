@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
@@ -320,7 +320,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
-    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', () => {
+    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
         grid.allowFiltering = true;
         fixture.detectChanges();
 
@@ -351,7 +351,7 @@ describe('IgxGrid - Grid Sorting', () => {
         fixture.detectChanges();
 
         expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
-    });
+    }));
 
 
     it(`Should allow sorting using a custom Sorting Strategy.`, () => {

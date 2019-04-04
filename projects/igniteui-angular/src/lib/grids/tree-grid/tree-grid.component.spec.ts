@@ -112,12 +112,12 @@ describe('IgxTreeGrid Component Tests', () => {
             grid = fix.componentInstance.treeGrid;
         }));
 
-        it('should auto-generate columns', () => {
+        it('should auto-generate columns', fakeAsync(/** height/width setter rAF */() => {
             fix.detectChanges();
             const expectedColumns = ['ID', 'ParentID', 'Name', 'JobTitle', 'Age'];
 
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
-        });
+        }));
     });
 
 });
