@@ -10,7 +10,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown(inputGroupPrefix)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -33,8 +33,9 @@
             (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp($event)"/>
-            <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
-                <igx-icon>clear</igx-icon>
+            <igx-suffix *ngIf="value || value === 0" >
+                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="commitInput()" tabindex="0">done</igx-icon>
+                <igx-icon (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">clear</igx-icon>
             </igx-suffix>
     </igx-input-group>
 </ng-template>
