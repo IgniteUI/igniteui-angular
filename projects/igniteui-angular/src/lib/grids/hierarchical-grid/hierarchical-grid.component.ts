@@ -284,7 +284,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
     private scrollLeft = 0;
-    private _viewInitPased = false;
 
     constructor(
         public selectionService: IgxGridSelectionService,
