@@ -7,11 +7,10 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray } from '../../core/utils';
-import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
@@ -19,14 +18,15 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -58,10 +58,10 @@ export interface IGroupingDoneEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, IgxGridSummaryService,
+    providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService, IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService, IgxColumnResizingService
+        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -105,11 +105,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         return this._id;
     }
     public set id(value: string) {
-        if (this._id !== value) {
-            const oldId = this._id;
-            this._id = value;
-            this._gridAPI.reset(oldId, this._id);
-        }
+        this._id = value;
     }
 
     /**
@@ -167,6 +163,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _filteredData = null;
 
     constructor(
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
@@ -183,7 +181,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+            super(selectionService,
+                  crudService, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                   filteringService, overlayService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
@@ -220,11 +219,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
-        if (this._gridAPI.get(this.id)) {
+        if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
-            this._gridAPI.arrange_sorting_expressions(this.id);
+            this._gridAPI.arrange_sorting_expressions();
             this.cdr.markForCheck();
         } else {
             // setter called before grid is registered in grid API service
@@ -518,11 +517,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.endEdit(true);
-        this._gridAPI.submit_value(this.id);
+        this._gridAPI.submit_value();
         if (expression instanceof Array) {
-            this._gridAPI.groupBy_multiple(this.id, expression);
+            this._gridAPI.groupBy_multiple(expression);
         } else {
-            this._gridAPI.groupBy(this.id, expression);
+            this._gridAPI.groupBy(expression);
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
@@ -539,7 +538,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *
      */
     public clearGrouping(name?: string | Array<string>): void {
-        this._gridAPI.clear_groupby(this.id, name);
+        this._gridAPI.clear_groupby(name);
         this.calculateGridSizes();
     }
 
@@ -623,21 +622,21 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
-        return this._gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
+        return this._gridAPI.groupBy_get_expanded_for_group(groupRow);
     }
 
     /**
      * @hidden
      */
     protected _toggleGroup(groupRow: IGroupByRecord) {
-        this._gridAPI.groupBy_toggle_group(this.id, groupRow);
+        this._gridAPI.groupBy_toggle_group(groupRow);
     }
 
     /**
      * @hidden
      */
     protected _applyGrouping() {
-        this._gridAPI.sort_multiple(this.id, this._groupingExpressions);
+        this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
     /**
@@ -824,13 +823,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this._groupRowTemplate = this.groupTemplate.template;
         }
         super.ngAfterContentInit();
+
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
     }
 
     public ngOnInit() {
-        this._gridAPI.register(this);
         super.ngOnInit();
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
             this.endEdit(true);
@@ -855,4 +854,23 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
+    getSelectedData(): any[] {
+        if (this.groupingExpressions.length) {
+            const source = [];
+
+            const process = (record) => {
+                if (record.expression || record.summaries) {
+                    source.push(null);
+                    return;
+                }
+                source.push(record);
+
+            };
+
+            this.verticalScrollContainer.igxForOf.forEach(process);
+            return this.extractDataFromSelection(source);
+        } else {
+            return super.getSelectedData();
+        }
+    }
 }

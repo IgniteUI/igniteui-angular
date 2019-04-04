@@ -10,10 +10,7 @@ import {
     ChangeDetectorRef,
     DoCheck,
     ElementRef,
-    OnDestroy,
-    AfterViewInit,
-    HostListener,
-    NgZone
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -22,11 +19,8 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { Subject, fromEvent, Subscription } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
 
 const Z_INDEX = 9999;
-const DEBOUNCE_TIME = 200;
 
 /**
  * @hidden
@@ -37,7 +31,7 @@ const DEBOUNCE_TIME = 200;
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html'
 })
-export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterViewInit {
+export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the column of the header group.
@@ -64,12 +58,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      */
     @ViewChild(IgxGridFilteringCellComponent)
     public filterCell: IgxGridFilteringCellComponent;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('resizeHandle')
-    public resizeHandle: ElementRef;
 
     /**
      * @hidden
@@ -129,7 +117,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -145,13 +133,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        return this.column.isLastPinned;
     }
 
     /**
@@ -174,12 +156,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
      * @hidden
      */
     get hasLastPinnedChildColumn(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-        if (this.column.allChildren) {
-            return this.column.allChildren.some((child) => {
-                return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
-            });
-        }
+        return this.column.allChildren.some(child => child.isLastPinned);
     }
 
     /**
@@ -188,16 +165,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;
     }
-
-    /**
-     * @hidden
-     */
-    private destroy$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    private _dblClick = false;
 
     /**
      * @hidden
@@ -212,74 +179,9 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
         this.cdr.markForCheck();
     }
 
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        if (!this.column.columnGroup) {
-            this.zone.runOutsideAngular(() => {
-                fromEvent(this.resizeHandle.nativeElement, 'mousedown').pipe(
-                    debounceTime(DEBOUNCE_TIME),
-                    takeUntil(this.destroy$)
-                ).subscribe((event) => {
-
-                    if (this._dblClick) {
-                        this._dblClick = false;
-                        return;
-                    }
-
-                    this._onResizeAreaMouseDown(event);
-                    this.grid.resizeLine.resizer.onMousedown(event);
-                });
-            });
-        }
-    }
-
     constructor(private cdr: ChangeDetectorRef,
-                private zone: NgZone,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaDoubleClick() {
-        this._dblClick = true;
-        this.colResizingService.column = this.column;
-        this.colResizingService.autosizeColumnOnDblClick();
-    }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseOver() {
-        if (this.column.resizable) {
-            this.colResizingService.resizeCursor = 'col-resize';
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    private _onResizeAreaMouseDown(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-            this.colResizingService.showResizer = true;
-            this.grid.cdr.detectChanges();
-        } else {
-            this.colResizingService.resizeCursor = null;
-        }
-    }
 }

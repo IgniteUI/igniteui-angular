@@ -14,10 +14,11 @@ import {
     PipeTransform,
     Renderer2,
     TemplateRef,
-    LOCALE_ID
+    LOCALE_ID,
+    AfterViewInit
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
-import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -25,8 +26,104 @@ import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { KEYS } from '../core/utils';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEBOUNCE_TIME = 200;
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxResizeHandle]'
+})
+export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
+
+    /**
+     * @hidden
+     */
+    @Input('igxResizeHandle')
+    public column: IgxColumnComponent;
+
+    /**
+     * @hidden
+     */
+    private _dblClick = false;
+
+    /**
+     * @hidden
+     */
+    private destroy$ = new Subject<boolean>();
+
+    constructor(private zone: NgZone,
+               private element: ElementRef,
+               public colResizingService: IgxColumnResizingService) { }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        if (!this.column.columnGroup && this.column.resizable) {
+            this.zone.runOutsideAngular(() => {
+                fromEvent(this.element.nativeElement, 'mousedown').pipe(
+                    debounceTime(DEBOUNCE_TIME),
+                    takeUntil(this.destroy$)
+                ).subscribe((event) => {
+
+                    if (this._dblClick) {
+                        this._dblClick = false;
+                        return;
+                    }
+
+                    this._onResizeAreaMouseDown(event);
+                    this.column.grid.resizeLine.resizer.onMousedown(event);
+                });
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseover')
+    public onMouseOver() {
+        this.colResizingService.resizeCursor = 'col-resize';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('dblclick')
+    public onDoubleClick() {
+        this._dblClick = true;
+        this.colResizingService.column = this.column;
+        this.colResizingService.autosizeColumnOnDblClick();
+    }
+
+    /**
+     * @hidden
+     */
+    private _onResizeAreaMouseDown(event) {
+        if (event.button === 0) {
+            this.colResizingService.column = this.column;
+            this.colResizingService.isColumnResizing = true;
+            this.colResizingService.startResizePos = event.clientX;
+            this.colResizingService.showResizer = true;
+            this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+
+
 /**
  * @hidden
  */
@@ -126,6 +223,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 }
 
 @Directive({
+    selector: '[igxFilterCellTemplate]'
+})
+export class IgxFilterCellTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
     selector: '[igxCell]'
 })
 export class IgxCellTemplateDirective {
@@ -172,17 +276,6 @@ export class IgxColumnMovingService {
 
     public cancelDrop: boolean;
     public isColumnMoving: boolean;
-
-    public selection: {
-        column: IgxColumnComponent,
-        rowID: any
-    };
-
-    public activeElement: {
-        tag: string,
-        column: IgxColumnComponent,
-        rowIndex: number
-    };
 
     get column(): IgxColumnComponent {
         return this._column;
@@ -279,28 +372,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
-        if (currSelection) {
-            this.cms.selection = {
-                column: this.column.grid.columnList.toArray()[currSelection.columnID],
-                rowID: currSelection.rowID
-            };
-        }
-        // tslint:disable-next-line:no-bitwise
-        if (document.activeElement.compareDocumentPosition(this.column.grid.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS) {
-            if (parseInt(document.activeElement.getAttribute('data-visibleIndex'), 10) !== this.column.visibleIndex) {
-                (document.activeElement as HTMLElement).blur();
-                return;
-            }
-            this.cms.activeElement = {
-                tag: document.activeElement.tagName.toLowerCase() === 'igx-grid-summary-cell' ?
-                        document.activeElement.tagName.toLowerCase() : '',
-                column: this.column,
-                rowIndex: parseInt(document.activeElement.getAttribute('data-rowindex'), 10)
-            };
-            (document.activeElement as HTMLElement).blur();
-        }
-
         const args = {
             source: this.column
         };
@@ -349,9 +420,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     }
 
     protected createDragGhost(event) {
-        const index = this.column.grid.hasMovableColumns ? 1 : 0;
-
-        super.createDragGhost(event, this.element.nativeElement.children[index]);
+        super.createDragGhost(event);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -464,12 +533,13 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
             const pos = clientRect.left + clientRect.width / 2;
 
+            const parent = this.elementRef.nativeElement.parentElement;
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.firstElementChild;
             } else {
                 this._dropPos = DropPosition.AfterDropTarget;
-                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.lastElementChild;
+                this._lastDropIndicator = this._dropIndicator = parent.lastElementChild;
             }
 
             if (this.cms.icon.innerText !== 'block') {
@@ -514,7 +584,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if (this.horizontalScroll) {
                 this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
-                interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
+                interval(100).pipe(takeUntil(this._dragLeave)).subscribe(() => {
+                    this.cms.column.grid.wheelHandler();
                     event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
                         this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
                 });
@@ -545,7 +616,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             return;
         }
 
-        if (this.cms.column.grid.id !== this.column.grid.id) {
+        if (this.column && (this.cms.column.grid.id !== this.column.grid.id)) {
             return;
         }
 
@@ -575,25 +646,17 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
-            if (this.cms.selection && this.cms.selection.column) {
-                this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
-                    rowID: this.cms.selection.rowID,
-                    columnID: this.column.grid.columnList.toArray().indexOf(this.cms.selection.column)
-                }]));
-            }
-            if (this.cms.activeElement) {
-                const gridEl = this.column.grid.nativeElement;
-                const activeEl = gridEl.querySelector(`${this.cms.activeElement.tag}[data-rowindex="${this.cms.activeElement.rowIndex}"]` +
-                    `[data-visibleIndex="${this.cms.activeElement.column.visibleIndex}"]`);
-                if (activeEl) { activeEl.focus(); }
-                this.cms.activeElement = null;
-            }
-
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         }
     }
 }
+
+@Directive({
+    selector: '[igxGridBody]',
+    providers: [IgxForOfSyncService]
+})
+export class IgxGridBodyDirective {}
 
 /**
  *@hidden
