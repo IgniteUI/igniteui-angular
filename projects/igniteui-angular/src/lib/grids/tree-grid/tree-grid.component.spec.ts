@@ -76,7 +76,7 @@ describe('IgxTreeGrid Component Tests', () => {
                 expect(grid.rowList.length).toEqual(6);
         }));
 
-        it(`should render 11 records if height is 100% and parent container\'s height is unset and
+        it(`should render 12 records if height is 100% and parent container\'s height is unset and
             display density is changed`, fakeAsync(() => {
                 grid.height = '100%';
                 fix.componentInstance.density = DisplayDensity.compact;
@@ -85,10 +85,9 @@ describe('IgxTreeGrid Component Tests', () => {
                 const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
-                expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThan(330);
+                expect(defaultHeightNum).toBe(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-                expect(grid.rowList.length).toEqual(11);
+                expect(grid.rowList.length).toEqual(12);
         }));
 
         it('should display horizontal scroll bar when column width is set in %', async() => {
