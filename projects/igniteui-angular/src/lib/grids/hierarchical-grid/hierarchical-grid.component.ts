@@ -28,7 +28,7 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
 import { IGridDataBindable, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
@@ -333,7 +333,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
         this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective) {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+                this._overlayIDs.indexOf(event.id) < 0) {
                 this._overlayIDs.push(event.id);
             }
         });
@@ -452,7 +453,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @memberof IgxHierarchicalGridComponent
      */
     public getPinnedWidth(takeHidden = false) {
-        return super.getPinnedWidth(takeHidden) + this.headerHierarchyExpander.nativeElement.clientWidth;
+        let width = super.getPinnedWidth(takeHidden);
+        if (this.hasExpandableChildren) {
+            width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
+        }
+        return width;
+    }
+
+     private getDefaultExpanderWidth(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 57;
+            case DisplayDensity.compact:
+                return 49;
+            default:
+                return 72;
+        }
     }
 
     /**
