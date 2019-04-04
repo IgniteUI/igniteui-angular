@@ -855,7 +855,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     private toggleThumbLabel() {
-        this.showThumbsLabels();
+        this.showThumbsLabels(null);
         this.hideThumbsLabels();
     }
 
@@ -1010,10 +1010,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     private getLabelValues(value) {
-        if (!value) {
-            return value;
-        }
-
         if (this.isRange) {
             return {
                 left: this.stepLabels[value.lower],
