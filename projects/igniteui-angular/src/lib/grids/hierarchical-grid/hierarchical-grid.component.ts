@@ -332,7 +332,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
         this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective) {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+                this._overlayIDs.indexOf(event.id) < 0) {
                 this._overlayIDs.push(event.id);
             }
         });
