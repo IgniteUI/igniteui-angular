@@ -857,18 +857,18 @@ describe('IgxGrid Component Tests', () => {
 
         it(`should render 10 records if height is 100% and parent container\'s height is unset and
             display density is changed`, fakeAsync(() => {
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
-            fix.componentInstance.density = DisplayDensity.compact;
-            tick();
-            fix.detectChanges();
-            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(320);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
+                fix.componentInstance.density = DisplayDensity.compact;
+                tick();
+                fix.detectChanges();
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(330);
+                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+                expect(fix.componentInstance.grid.rowList.length).toEqual(11);
         }));
 
         it(`should render grid with correct height when parent container\'s height is set
@@ -3483,6 +3483,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(510);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -3542,6 +3543,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(204);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
