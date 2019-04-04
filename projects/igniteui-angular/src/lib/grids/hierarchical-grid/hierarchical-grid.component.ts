@@ -28,7 +28,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IGridDataBindable, } from '../grid';
+import { IGridDataBindable, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -36,6 +36,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil, filter } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
@@ -52,6 +53,8 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
@@ -283,6 +286,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollLeft = 0;
 
     constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
@@ -300,6 +305,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -322,7 +329,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     ngOnInit() {
-        this.hgridAPI.register(this);
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
         this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
