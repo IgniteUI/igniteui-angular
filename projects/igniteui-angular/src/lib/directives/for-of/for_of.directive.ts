@@ -798,7 +798,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
     */
     protected getContextIndex(input) {
-        return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input): this.igxForOf.indexOf(input);
+        return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input) : this.igxForOf.indexOf(input);
     }
 
     /**
