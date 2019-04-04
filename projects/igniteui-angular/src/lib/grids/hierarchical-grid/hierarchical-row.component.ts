@@ -14,6 +14,7 @@ import { IgxRowComponent } from '../row.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,8 +77,8 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         if (this.added) {
             return;
         }
-        const grid = this.gridAPI.get(this.grid.id);
-        const state = this.gridAPI.get(this.grid.id).hierarchicalState;
+        const grid = this.gridAPI.grid;
+        const state = this.gridAPI.grid.hierarchicalState;
         if (!this.expanded) {
             state.push({ rowID: this.rowID });
             grid.hierarchicalState = [...state];
@@ -93,9 +94,11 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
+        public crudService: IgxGridCRUDService,
+        public selectionService: IgxGridSelectionService,
         private hselection: IgxHierarchicalSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
-            super(gridAPI, hselection, element, cdr);
+            super(gridAPI, crudService, selectionService, hselection, element, cdr);
         }
 }

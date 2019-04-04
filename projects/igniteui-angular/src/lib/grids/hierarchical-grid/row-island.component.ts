@@ -32,6 +32,8 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+
 import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../grid';
@@ -179,10 +181,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
      * @hidden
      */
     public rootGrid = null;
+    readonly data: any[];
+    readonly filteredData: any[];
     private layout_id = `igx-row-island-`;
     private isInit = false;
 
     constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -200,6 +206,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService) {
         super(
+            selectionService,
+            crudService,
             gridAPI,
             selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
