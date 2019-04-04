@@ -15,7 +15,8 @@ import {
     Renderer2,
     TemplateRef,
     LOCALE_ID,
-    AfterViewInit
+    AfterViewInit,
+    HostListener
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
