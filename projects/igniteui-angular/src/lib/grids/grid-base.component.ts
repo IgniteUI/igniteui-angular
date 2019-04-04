@@ -830,8 +830,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
-
-            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this.calcHeight) {
+                this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            }
             if (this._ngAfterViewInitPassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
