@@ -744,7 +744,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             expect(nextCell.rowIndex).toBe(2);
         }));
 
-        xit('should allow navigating up from parent into nested child grid', (async () => {
+        it('should allow navigating up from parent into nested child grid', (async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
             await wait(100);
             fixture.detectChanges();
@@ -776,12 +776,6 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             expect(lastCell.focused).toBe(true);
             expect(lastCell.rowIndex).toBe(4);
 
-        }));
-
-        xit('ViewDestroyedError: Attempt to use a destroyed view trigger', (async () => {
-            // Repro for leftover un-destroyed grid views (leaked resize handler):
-            // fit this and the test above
-            window.dispatchEvent(new Event('resize'));
         }));
 });
 

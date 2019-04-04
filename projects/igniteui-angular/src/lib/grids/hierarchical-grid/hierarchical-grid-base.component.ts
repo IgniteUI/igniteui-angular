@@ -25,6 +25,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -70,6 +71,11 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
+
+    /**
+     * @hidden
+    */
+    public childRow: IgxChildGridRowComponent;
 
     protected _expandChildren = false;
 
