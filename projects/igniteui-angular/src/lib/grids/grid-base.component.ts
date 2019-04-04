@@ -2571,38 +2571,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.columnList.changes
         .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => {
-            const diff = this.columnListDiffer.diff(change);
-            if (diff) {
-                let added = false;
-                let removed = false;
-
-                this.initColumns(this.columnList);
-
-
-                diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    this.onColumnInit.emit(record.item);
-                    added = true;
-                });
-
-                diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    // Clear Filtering
-                    this.gridAPI.clear_filter(record.item.field);
-
-                    // Clear Sorting
-                    this.gridAPI.clear_sort(record.item.field);
-                    removed = true;
-                });
-
-                this.resetCaches();
-
-                if (added || removed) {
-                    this.summaryService.clearSummaryCache();
-                    this.calculateGridSizes();
-                }
-            }
-            this.markForCheck();
-        });
+        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
@@ -4041,6 +4010,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
         this.verticalScrollContainer.igxForOf.length > 0 &&
         isScrollable);
+    }
+
+    /**
+     * @hidden
+     */
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        const diff = this.columnListDiffer.diff(change);
+        if (diff) {
+            let added = false;
+            let removed = false;
+
+            this.initColumns(this.columnList);
+
+
+            diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                this.onColumnInit.emit(record.item);
+                added = true;
+            });
+
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Filtering
+                this.gridAPI.clear_filter(record.item.field);
+
+                // Clear Sorting
+                this.gridAPI.clear_sort(record.item.field);
+                removed = true;
+            });
+
+            this.resetCaches();
+
+            if (added || removed) {
+                this.summaryService.clearSummaryCache();
+                this.calculateGridSizes();
+            }
+        }
+        this.markForCheck();
     }
 
     /**
