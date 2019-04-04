@@ -159,7 +159,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get grid(): IgxGridBaseComponent {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
