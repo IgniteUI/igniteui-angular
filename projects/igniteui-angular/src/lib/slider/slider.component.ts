@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, Component, ElementRef, EventEmitter,
     forwardRef, HostBinding, Input, NgModule, OnInit, Output, Renderer2,
-    ViewChild
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -28,9 +29,14 @@ export interface IRangeSliderValue {
     upper: number;
 }
 
+export interface IRangeSliderValueLabel {
+    left: string;
+    right: string;
+}
+
 export interface ISliderValueChangeEventArgs {
-    oldValue: number | IRangeSliderValue;
-    value: number | IRangeSliderValue;
+    oldValue: number | string | IRangeSliderValue | IRangeSliderValueLabel;
+    value: number | string | IRangeSliderValue | IRangeSliderValueLabel;
 }
 
 const noop = () => {
@@ -64,6 +70,9 @@ let NEXT_ID = 0;
     `]
 })
 export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit {
+
+    private _step = 1;
+    private _oldValue;
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -117,6 +126,10 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @Input()
     public thumbLabelVisibilityDuration = 750;
 
+
+    @Input()
+    public stepLabels: [] = [];
+
     /**
      * An @Input property that sets the incremental/decremental step of the value when dragging the thumb.
      * The default step is 1, and step should not be less or equal than 0.
@@ -125,7 +138,17 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * ```
      */
     @Input()
-    public step = 1;
+    public set step(step: number) {
+        this._step = step;
+    }
+
+    public get step() {
+        if (this.stepLabels.length > 0) {
+            return 1;
+        }
+
+        return this._step;
+    }
 
     /**
      * This event is emitted when user has stopped interacting the thumb and value is changed.
@@ -162,7 +185,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
 
     @ViewChild('thumbTo')
     private thumbTo: ElementRef;
-
 
     // Measures & Coordinates
     private width = 0;
@@ -220,6 +242,10 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * ```
      */
     public get maxValue(): number {
+        if (this.labelsViewEnabled) {
+            return this.stepLabels.length - 1;
+        }
+
         return this._maxValue;
     }
 
@@ -255,6 +281,10 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *```
      */
     public get minValue(): number {
+        if (this.labelsViewEnabled) {
+            return 0;
+        }
+
         return this._minValue;
     }
 
@@ -429,7 +459,10 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *}
      *```
      */
-    public get value(): number | IRangeSliderValue {
+    public get value(): number | string | IRangeSliderValue | IRangeSliderValueLabel {
+        // if (this.labelsViewEnabled) {
+        //     return this.getLabelValues(this.lowerValue, this.upperValue);
+        // }
         if (this.isRange) {
             return {
                 lower: this.snapValueToStep(this.lowerValue),
@@ -459,7 +492,11 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * ```
      */
     @Input()
-    public set value(value: number | IRangeSliderValue) {
+    public set value(value: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
+        if (this.labelsViewEnabled) {
+            value = this.getLabelIndexes(value);
+        }
+
         if (!this.isRange) {
             this.upperValue = this.snapValueToStep(value as number);
         } else {
@@ -474,6 +511,28 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
+    }
+
+    public get labelsViewEnabled() {
+        return !!this.stepLabels.length;
+    }
+
+    public get lowerLabel() {
+        return this.labelsViewEnabled ?
+            this.stepLabels[this.lowerValue] :
+            this.lowerValue;
+    }
+
+    public get upperLabel() {
+        return this.labelsViewEnabled ?
+            this.stepLabels[this.upperValue] :
+            this.upperValue;
+    }
+
+    public get valueLabel() {
+        return this.labelsViewEnabled ?
+            this.stepLabels[this.upperValue] :
+            this.value;
     }
 
     /**
@@ -520,7 +579,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     public ngAfterViewInit() {
         this.hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval();
+        this.setTickInterval(this.stepLabels.length);
     }
 
     /**
@@ -552,7 +611,11 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     /**
      * @hidden
      */
-    public showThumbsLabels() {
+    public showThumbsLabels(evt) {
+        if (evt) {
+            this._oldValue = this.value;
+        }
+
         if (this.disabled) {
             return;
         }
@@ -589,7 +652,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      */
     public onPanEnd($event) {
         this.hideThumbsLabels();
-        this.emitValueChanged(null);
+        if (this.hasValueChanged(this._oldValue)) {
+            this.emitValueChanged(this._oldValue);
+        }
     }
     /**
      *
@@ -621,7 +686,8 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             return;
         }
 
-        const value = this.value;
+        // const value = this.value;
+        this._oldValue = this.value;
 
         if (this.isRange) {
             if (this.activeHandle === SliderHandle.FROM) {
@@ -653,25 +719,25 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             this.value = this.value as number + incrementSign * this.step;
         }
 
-        if (this.hasValueChanged(value)) {
-            this.emitValueChanged(value);
+        if (this.hasValueChanged(this._oldValue)) {
+            this.emitValueChanged(this._oldValue);
         }
 
-        this.showThumbsLabels();
+        this.showThumbsLabels(null);
     }
     /**
      *
      * @hidden
      */
     public onTap($event) {
-        const value = this.value;
+        // const value = this.value;
+        this._oldValue = this.value;
         this.update($event);
 
-        if (this.hasValueChanged(value)) {
-            this.emitValueChanged(value);
+        if (this.hasValueChanged(this._oldValue)) {
+            this.emitValueChanged(this._oldValue);
         }
     }
-
     /**
      *
      * @hidden
@@ -829,12 +895,18 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         }
     }
 
-    private setTickInterval() {
+    private setTickInterval(stepLabels) {
         if (this.isContinuous) {
             return;
         }
 
-        const interval = this.step > 1 ? this.step : null;
+        let interval;
+        if (stepLabels) {
+            // Calc ticks depending on the labels length;
+            interval = ((100 / (stepLabels - 1) * 10)) / 10;
+        } else {
+            interval = this.step > 1 ? this.step : null;
+        }
         this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
     }
 
@@ -919,6 +991,39 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             this.track.nativeElement.style.width = `${positionGap * 100}%`;
         }
     }
+
+    private getLabelIndexes(value: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
+        if (typeof value === 'string' && !this.isRange) {
+            return this.stepLabels.findIndex(e => e === value);
+        }
+
+        const left = (value as IRangeSliderValueLabel).left;
+        const right = (value as IRangeSliderValueLabel).right;
+        if (left || right) {
+            return {
+                lower: left ? this.stepLabels.findIndex(e => e === left) : 0,
+                upper: right ? this.stepLabels.findIndex(e => e === right) : this.stepLabels.length - 1
+            }
+        }
+
+        return value;
+    }
+
+    private getLabelValues(value) {
+        if (!value) {
+            return value;
+        }
+
+        if (this.isRange) {
+            return {
+                left: this.stepLabels[value.lower],
+                right: this.stepLabels[value.upper]
+            };
+        }
+
+        return this.stepLabels[value];
+    }
+
     private hasValueChanged(oldValue) {
         const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
         const isRangeWithOneDifferentValue: boolean = this.isRange &&
@@ -928,8 +1033,15 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
-    private emitValueChanged(oldValue: number | IRangeSliderValue) {
-        this.onValueChange.emit({ oldValue, value: this.value });
+    private emitValueChanged(oldValueRef: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
+        let oldVal = oldValueRef, newVal = this.value;
+
+        if (this.labelsViewEnabled) {
+            oldVal = this.getLabelValues(oldValueRef);
+            newVal = this.getLabelValues(this.value);
+        }
+
+        this.onValueChange.emit({ oldValue: oldVal, value: newVal });
     }
 }
 
