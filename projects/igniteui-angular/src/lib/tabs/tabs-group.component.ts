@@ -13,6 +13,7 @@ import {
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'igx-tabs-group',
@@ -58,6 +59,12 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(RouterLink)
+    public routerLinkDirective: RouterLink;
 
     constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
     }
@@ -160,7 +167,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 200): void {
+    public select(focusDelay = 200, updateRoute: boolean = true): void {
         if (this.disabled || this.isSelected) {
             return;
         }
@@ -174,6 +181,10 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
             }, focusDelay);
         }
         this.handleSelection();
+        if (updateRoute && this.routerLinkDirective) {
+            console.log('@@ tabs-group: navigating to ' + this.routerLinkDirective.urlTree.toString());
+            this.routerLinkDirective.onClick();
+        }
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 
