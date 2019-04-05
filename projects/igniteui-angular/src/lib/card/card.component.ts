@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Directive, HostBinding, Optional, Inject, Input, NgModule, OnInit } from '@angular/core';
+import { Component, Directive, HostBinding, Optional, Inject, Input, NgModule, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
 
 let NEXT_ID = 0;
@@ -48,7 +48,7 @@ export class IgxCardMediaDirective {
  */
 @Component({
     selector: 'igx-card-header',
-    templateUrl: 'card.header.html'
+    templateUrl: 'card-header.component.html'
 })
 export class IgxCardHeaderComponent {
     /**
@@ -174,7 +174,7 @@ export class IgxCardFooterDirective {
  * ```
  */
 
-enum IgxCardType {
+export enum IgxCardType {
     DEFAULT = 'default',
     OUTLINED = 'outlined'
 }
@@ -243,7 +243,7 @@ export class IgxCardComponent {
     public horizontal = false;
 }
 
-enum IgxCardActionsLayout {
+export enum IgxCardActionsLayout {
     DEFAULT = 'default',
     JUSTIFY = 'justify',
 }
@@ -254,9 +254,13 @@ enum IgxCardActionsLayout {
 @Component({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-card-actions',
-    templateUrl: 'card.actions.html'
+    templateUrl: 'card-actions.component.html'
 })
-export class IgxCardActionsComponent implements OnInit {
+export class IgxCardActionsComponent implements OnInit, OnChanges {
+    private isVerticalSet = false;
+
+    constructor(@Optional() @Inject(IgxCardComponent) private card: IgxCardComponent) { }
+
     /**
      * An @Input property that sets the layout style of the actions.
      * By default icons and icon buttons, as well as regular buttons
@@ -268,20 +272,24 @@ export class IgxCardActionsComponent implements OnInit {
      * <igx-card-actions layout="justify"></igx-card-actions>
      * ```
      */
-    constructor(@Optional() @Inject(IgxCardComponent) private card: IgxCardComponent) { }
-
     @HostBinding('class.igx-card-actions')
     @Input()
     public layout: IgxCardActionsLayout | string = 'default';
 
     /**
-     * @hidden
+     * An @Input property that sets the vertical attribute of the actions.
+     * When set to `true` the actions will be layed out vertically.
      */
     @HostBinding('class.igx-card-actions--vertical')
+    @Input()
     public vertical = false;
 
+    /**
+     * A getter that returns `true` when the layout has been
+     * set to `justify`.
+     */
     @HostBinding('class.igx-card-actions--justify')
-    get isSpreadLayout() {
+    get isJustifyLayout() {
         return this.layout === IgxCardActionsLayout.JUSTIFY;
     }
 
@@ -300,8 +308,16 @@ export class IgxCardActionsComponent implements OnInit {
     @Input()
     public reverse = false;
 
+    ngOnChanges(changes: SimpleChanges) {
+        for (const prop in changes) {
+            if (prop === 'vertical') {
+                this.isVerticalSet = true;
+            }
+        }
+    }
+
     ngOnInit() {
-        this.vertical = this.card.horizontal;
+        this.vertical = !this.isVerticalSet && this.card.horizontal;
     }
 }
 
