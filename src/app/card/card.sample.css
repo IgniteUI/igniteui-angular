@@ -168,26 +168,8 @@
     color: #fad024;
 }
 
-.show .w_more {
-    display: none
-}
+.rain {
 
-.w_less {
- display: none;
-}
-
-.show .w_less {
-    display: block
-}
-
-.sample-row {
-    display: flex;
-    justify-content: space-around;
-}
-
-.sample-col {
-    max-width: 32%;
-    min-width: 320px;
 }
 
 .grid-container {
@@ -198,5 +180,6 @@
 }
 
 .grid-container--fit {
+    /*grid-template-columns: 1fr, 1fr, 1fr, 1fr;*/
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 }

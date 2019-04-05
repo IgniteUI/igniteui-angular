@@ -63,13 +63,13 @@
 
                     <div class="w_details">
                         <div class="w_details__item">
-                            <img class="igx-icon w_details__icon" [src]="details[0].iconURL">
-                            <span class="w_details__value">{{details[0].wValue}}</span>
+                            <igx-icon class="w_details__icon" fontSet="weather-icons" [name]="details[0].icon"></igx-icon>
+                            <span class="w_details__value">{{details[0].value}}</span>
                             <span class="w_details__label">{{details[0].label}}</span>
                         </div>
                         <div class="w_details__item">
-                            <img class="igx-icon w_details__icon"  [src]="details[1].iconURL">
-                            <span class="w_details__value">{{details[1].wValue}}</span>
+                            <igx-icon class="w_details__icon" fontSet="weather-icons" [name]="details[1].icon"></igx-icon>
+                            <span class="w_details__value">{{details[1].value}}</span>
                             <span class="w_details__label">{{details[1].label}}</span>
                         </div>
                     </div>
@@ -86,27 +86,31 @@
                     </div>
                 </igx-card-content>
 
-                <igx-list>
-                    <igx-list-item *ngFor="let day of days;">
-                        <div class="item-container">
-                            <span class="day">{{ day.day }}</span>
-                            <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
-                                <igx-icon>{{day.icon}}</igx-icon>
-                            </span>
-                            <span class="degree">
-                                <span>{{ day.degreesHeight}}</span>
-                                /
-                                <span>{{day.degreesLow}}</span>
-                            </span>
-                        </div>
-                    </igx-list-item>
-                </igx-list>
+                <igx-expansion-panel>
+                    <igx-expansion-panel-body>
+                        <igx-list>
+                            <igx-list-item *ngFor="let day of days;">
+                                <div class="item-container">
+                                    <span class="day">{{ day.day }}</span>
+                                    <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
+                                        <igx-icon>{{day.icon}}</igx-icon>
+                                    </span>
+                                    <span class="degree">
+                                        <span>{{ day.tempHeight}}</span>
+                                        /
+                                        <span>{{day.tempLow}}</span>
+                                    </span>
+                                </div>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-expansion-panel-body>
+                </igx-expansion-panel>
 
                 <igx-divider></igx-divider>
 
                 <igx-card-actions>
                     <div class="igx-card-actions__bgroup">
-                        <button igxButton igxRipple>{{cards[9].buttons}}</button>
+                        <button (click)="toggleDetails()" igxButton igxRipple>{{cards[9].buttons}}</button>
                     </div>
                 </igx-card-actions>
             </igx-card>

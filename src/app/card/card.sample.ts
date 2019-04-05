@@ -1,5 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxCardComponent, IgxCardActionsComponent } from 'igniteui-angular';
+import {
+    IgxCardComponent,
+    IgxCardActionsComponent,
+    IgxToggleDirective,
+    IgxExpansionPanelModule,
+    IgxExpansionPanelComponent
+} from 'igniteui-angular';
 
 export interface ICard {
     title: string;
@@ -17,13 +23,13 @@ export interface Ilist {
     isSunny: boolean;
     day: string;
     icon: string;
-    degreesHeight: string;
-    degreesLow: string;
+    tempHeight: string;
+    tempLow: string;
 }
 
 export interface Idetails {
-    wValue: string;
-    iconURL: string;
+    value: string;
+    icon: string;
     label: string;
 }
 
@@ -46,15 +52,15 @@ function listFactory(params: any): Ilist {
         isSunny: params.isSunny || '',
         day: params.day || 'day of the week',
         icon: params.icon || 'wb_cloudy',
-        degreesHeight: params.degreesHeight || '°C',
-        degreesLow: params.degreesLow || '°C',
+        tempHeight: params.tempHeight || '°C',
+        tempLow: params.tempLow || '°C',
     };
 }
 
 function detailsFactory(params: any): Idetails {
     return {
-        wValue: params.wValue || '',
-        iconURL: params.iconURL || '',
+        value: params.value || '',
+        icon: params.icon || '',
         label: params.label || '',
     };
 }
@@ -68,15 +74,22 @@ export class CardSampleComponent {
     public horizontal = false;
     public volume = 10;
 
+    @ViewChild(IgxExpansionPanelComponent)
+    public panel: IgxExpansionPanelComponent;
+
+    public toggleDetails() {
+        this.panel.toggle();
+    }
+
     details = [
         detailsFactory({
-            wValue: '12%',
-            iconURL: 'assets/images/card/media/rain.svg',
+            value: '12%',
+            icon: 'rain',
             label: 'Participation',
         }),
         detailsFactory({
-            wValue: '23 km/h',
-            iconURL: 'assets/images/card/media/breeze.svg',
+            value: '23 km/h',
+            icon: 'breeze',
             label: 'Wind',
         })
     ];
@@ -85,40 +98,40 @@ export class CardSampleComponent {
         listFactory({
             day: 'Tuesday',
             icon: 'wb_cloudy',
-            degreesHeight: '18°',
-            degreesLow: '11°',
+            tempHeight: '18°',
+            tempLow: '11°',
         }),
         listFactory({
             day: 'Wednesday',
             icon: 'wb_cloudy',
-            degreesHeight: '16°',
-            degreesLow: '10°',
+            tempHeight: '16°',
+            tempLow: '10°',
         }),
         listFactory({
             isSunny: 'true',
             day: 'Thursday',
             icon: 'wb_sunny',
-            degreesHeight: '22°',
-            degreesLow: '12°',
+            tempHeight: '22°',
+            tempLow: '12°',
         }),
         listFactory({
             day: 'Friday',
             icon: 'wb_cloudy',
-            degreesHeight: '28°',
-            degreesLow: '17°',
+            tempHeight: '28°',
+            tempLow: '17°',
         }),
         listFactory({
             day: 'Saturday',
             icon: 'wb_cloudy',
-            degreesHeight: '21°',
-            degreesLow: '16°',
+            tempHeight: '21°',
+            tempLow: '16°',
         }),
         listFactory({
             isSunny: 'true',
             day: 'Sunday',
             icon: 'wb_sunny',
-            degreesHeight: '29°',
-            degreesLow: '20°',
+            tempHeight: '29°',
+            tempLow: '20°',
         }),
     ];
 
@@ -191,12 +204,8 @@ export class CardSampleComponent {
             subtitle: 'Mon 12:30 PM, Mostly sunny',
             content: `37`,
             unit: '°C',
-            buttons: ['Show less'],
+            buttons: ['Details'],
         }),
         cardFactory({})
     ];
-
-    toggleHorizontal() {
-        this.horizontal = !this.horizontal;
-    }
 }
