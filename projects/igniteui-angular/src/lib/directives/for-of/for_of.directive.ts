@@ -1398,7 +1398,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                if (!this.igxForOf.length) {
+                if (!this.igxForOf.length &&
+                    this.igxForScrollOrientation === "vertical") {
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);
