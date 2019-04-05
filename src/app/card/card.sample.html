@@ -3,6 +3,8 @@
         A placeholder for images, text, icons and buttons that provide information on a single subject. The card is usually composed
         of a header, a content body and an action section.
     </app-page-header>
+    <button igxButton (click)="toggleHorizontal()">Rotate Card</button>
+
     <div class="sample-content">
         <!--New York City Card Begins-->
         <article class="sample-column card-wrapper">
@@ -21,7 +23,7 @@
                     <p>{{ cards[0].content }}</p>
                 </igx-card-content>
 
-                <igx-card-actions [reverse]="false">
+                <igx-card-actions [reverse]="false" #actions>
                     <button igxButton igxRipple>Read More</button>
                     <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
                         <igx-icon fontSet="material">{{icon}}</igx-icon>
@@ -34,7 +36,7 @@
 
         <!--Album Pattern Start-->
         <article class="sample-column card-wrapper">
-            <igx-card type="outlined">
+            <igx-card type="outlined" [horizontal]="horizontal">
                 <igx-card-header>
                     <h5 igxCardHeaderTitle>{{cards[7].title}}</h5>
                     <h5 igxCardHeaderSubtitle>{{cards[7].subtitle}}</h5>
@@ -43,9 +45,9 @@
                     </igx-card-media>
                 </igx-card-header>
 
-                <igx-divider offset="16px"></igx-divider>
+                <igx-divider type="dashed" [middle]="true" [vertical]="horizontal" inset="16px"></igx-divider>
 
-                <igx-card-actions layout="justify">
+                <igx-card-actions layout="justify" [vertical]="horizontal">
                     <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true">
                         <igx-icon>{{icon}}</igx-icon>
                     </button>
@@ -64,7 +66,7 @@
                     </button>
                 </igx-card-actions>
 
-                <igx-divider type="vertical" offset="16px"></igx-divider>
+                <igx-divider [middle]="true" [vertical]="true" inset="16px"></igx-divider>
 
                 <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
                     <igx-card-header>

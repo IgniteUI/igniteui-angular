@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { IgxCardComponent, IgxCardActionsComponent } from 'igniteui-angular';
 
 export interface ICard {
     title: string;
@@ -28,6 +29,7 @@ function cardFactory(params: any): ICard {
     templateUrl: 'card.sample.html'
 })
 export class CardSampleComponent {
+    public horizontal = false;
 
     cards = [
         cardFactory({
@@ -86,4 +88,8 @@ export class CardSampleComponent {
         }),
         cardFactory({})
     ];
+
+    toggleHorizontal() {
+        this.horizontal = !this.horizontal;
+    }
 }
