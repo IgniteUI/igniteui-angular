@@ -185,37 +185,25 @@
 
         <!--Melo Di Card Begins-->
         <article class="sample-column card-wrapper">
-            <igx-card>
-                <img height="130px" class="igx-card__media--right" [src]="cards[4].imageUrl">
-                <div>
-                    <igx-card-header class="compact">
+            <igx-card [horizontal]="true">
+
+                <div style="display: flex; flex-direction: column; flex: 1 1 auto">
+                    <igx-card-header>
                         <igx-avatar [src]="cards[4].avatarUrl" roundShape="true"></igx-avatar>
-                        <div class="igx-card-header__tgroup">
-                            <h3 class="igx-card-header__title--small">{{ cards[4].title }}</h3>
-                            <h5 class="igx-card-header__subtitle">{{ cards[4].subtitle }}</h5>
-                        </div>
+                        <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
+                        <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
                     </igx-card-header>
-                    <igx-card-actions>
-                        <div class="igx-card-actions__bgroup">
-                            <button igxButton igxRipple *ngFor="let button of cards[4].buttons">{{ button }}</button>
-                        </div>
+
+                    <igx-card-actions [vertical]="false">
+                        <button igxButton igxRipple *ngFor="let button of cards[4].buttons">{{ button }}</button>
                     </igx-card-actions>
                 </div>
+
+                <igx-card-media width="96px">
+                    <img [src]="cards[4].imageUrl">
+                </igx-card-media>
             </igx-card>
         </article>
         <!--Melo Di Card Ends-->
-
-        <!--Cards Column 1 Begins-->
-        <!--<section class="cards-column">
-    </section>-->
-        <!--Cards Column 1 Ends-->
-        <!--Cards Column 2 Begins-->
-        <!--<section class="cards-column">
-    </section>-->
-        <!--Cards Column 2 Ends-->
-        <!--Cards Column 3 Begins-->
-        <!--<section class="cards-column">
-    </section>-->
-        <!--Cards Column 3 Ends-->
     </div>
 </div>
