@@ -2,8 +2,7 @@ import { Directive, HostBinding, NgModule, Input } from '@angular/core';
 
 export enum IgxDividerType {
     DEFAULT = 'default',
-    INSET = 'inset',
-    VERTICAL = 'vertical',
+    DASHED = 'dashed'
 }
 
 let NEXT_ID = 0;
@@ -29,14 +28,14 @@ export class IgxDividerDirective {
 
 
     /**
-     * An @Input property that sets the value of `offset` attribute.
-     * If not provided it will be set to 0.
+     * An @Input property that sets the value of the `inset` attribute.
+     * If not provided it will be set to `'0'`.
      * ```html
-     * <igx-divider offset="16px"></igx-divider>
+     * <igx-divider inset="16px"></igx-divider>
      * ```
      */
-    @Input('offset')
-    private _offset = '0';
+    @Input('inset')
+    private _inset = '0';
 
     /**
      * An @Input property that sets the value of `role` attribute.
@@ -48,38 +47,34 @@ export class IgxDividerDirective {
 
     /**
      * Sets the type of the divider. The default value
-     * is `default`. The divider can also be `inset` or `vertical`;
+     * is `default`. The divider can also be `dashed`;
      * ```html
-     * <igx-divider type="vertical"></igx-divider>
+     * <igx-divider type="dashed"></igx-divider>
      * ```
      */
     @HostBinding('class.igx-divider')
     @Input()
     public type: IgxDividerType | string = IgxDividerType.DEFAULT;
 
-    /**
-     * Makes the divider dashed when set to `true`.
-     * ```html
-     * <igx-divider [dashed]="true"></igx-divider>
-     * ```
-     */
     @HostBinding('class.igx-divider--dashed')
-    @Input()
-    public dashed = false;
-
-    /**
-     * Returns true if the type of the divider is `inset`;
-     * ```typescript
-     * const isInset = this.divider.isInset;
-     * ```
-     */
-    @HostBinding('class.igx-divider--inset')
-    get isInset() {
-        return this.type === IgxDividerType.INSET;
+    get isDashed() {
+        return this.type === IgxDividerType.DASHED;
     }
 
     /**
-     * Returns true if the type of the divider is `default`;
+     * An @Input that sets the `middle` attribute of the divider.
+     * If set to `true` and an `inset` value has been provided,
+     * the divider will start shrinking from both ends.
+     * ```html
+     * <igx-divider [middle]="true"></igx-divider>
+     * ```
+     */
+    @HostBinding('class.igx-divider--inset')
+    @Input()
+    public middle = false;
+
+    /**
+     * A getter that returns `true` if the type of the divider is `default`;
      * ```typescript
      * const isDefault = this.divider.isDefault;
      * ```
@@ -89,51 +84,49 @@ export class IgxDividerDirective {
     }
 
     /**
-     * Returns true if the type of the divider is `vertical`;
-     * ```typescript
-     * const isVertical = this.divider.isVertical;
+     * An @Input that sets the vertical attribute of the divider.
+     * ```html
+     * <igx-divider [vertical]="true"></igx-divider>
      * ```
      */
     @HostBinding('class.igx-divider--vertical')
-    get isVertical() {
-        return this.type === IgxDividerType.VERTICAL;
-    }
+    @Input()
+    public vertical = false;
 
     /**
-     * Sets the offset of the divider from the side(s).
-     * If the divider type is inset, it will offset the
-     * divider on both sides.
+     * Sets the inset of the divider from the side(s).
+     * If the divider attribute `middle` is set to `true`,
+     * it will inset the divider on both sides.
      * ```typescript
-     * this.divider.offset = '32px';
+     * this.divider.inset = '32px';
      * ```
      */
     @HostBinding('style.margin')
-    set offset(value: string) {
-        this._offset = value;
+    set inset(value: string) {
+        this._inset = value;
     }
 
     /**
-     * Gets the current divider offset.
+     * Gets the current divider inset in terms of
+     * margin representation as applied to the divider.
      * ```typescript
-     * const offset = this.divider.offset;
+     * const inset = this.divider.inset;
      * ```
      */
-    get offset() {
+    get inset() {
         const baseMargin = '0';
 
-        if (this.isDefault) {
-            return `${baseMargin} ${this._offset}`;
+        if (this.middle) {
+            if (this.vertical) {
+                return `${this._inset} ${baseMargin}`;
+            }
+            return `${baseMargin} ${this._inset}`;
+        } else {
+            if (this.vertical) {
+                return `${this._inset} ${baseMargin} 0 ${baseMargin}`;
+            }
+            return `${baseMargin} 0 ${baseMargin} ${this._inset}`;
         }
-
-        if (this.isInset) {
-            return `${baseMargin} 0 ${baseMargin} ${this._offset}`;
-        }
-
-        if (this.isVertical) {
-            return `${this._offset} ${baseMargin}`;
-        }
-
-        return `${baseMargin} 0`;
     }
 }
 
