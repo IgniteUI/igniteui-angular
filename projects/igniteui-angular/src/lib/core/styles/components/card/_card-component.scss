@@ -103,16 +103,6 @@
         @extend %igx-card-actions-bgroup !optional;
     }
 
-    @include m(reverse) {
-        @include e(icons) {
-            @extend %igx-card-actions__icons--reverse !optional;
-        }
-
-        @include e(buttons) {
-            @extend %igx-card-actions__buttons--reverse !optional;
-        }
-    }
-
     @include m(vertical) {
         @extend %igx-card-actions--vertical !optional;
 
@@ -122,6 +112,16 @@
 
         @include e(buttons) {
             @extend %igx-card-actions__buttons--vertical !optional;
+        }
+    }
+
+    @include m(reverse) {
+        @include e(icons) {
+            @extend %igx-card-actions__icons--reverse !optional;
+        }
+
+        @include e(buttons) {
+            @extend %igx-card-actions__buttons--reverse !optional;
         }
     }
 

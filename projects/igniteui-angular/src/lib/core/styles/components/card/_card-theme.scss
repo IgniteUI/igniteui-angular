@@ -132,7 +132,7 @@
 
     %igx-card-display {
         display: flex;
-        flex-flow: row wrap;
+        flex-direction: column;
         box-shadow: --var($theme, 'resting-shadow');
         overflow: hidden;
         border-radius: --var($theme, 'border-radius');
@@ -156,14 +156,14 @@
 
 
     %igx-card--horizontal {
-        flex-wrap: nowrap;
+        flex-direction: row;
     }
 
     %igx-card-header {
         display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        flex: 1 0 auto;
+        flex: 1 1 auto;
+        flex-flow: row wrap;
+        align-content: flex-start;
         width: 100%;
         padding: $card-heading-padding;
         color: --var($theme, 'header-text-color');
@@ -205,6 +205,7 @@
         flex-flow: column nowrap;
         overflow: hidden;
         flex: 1 1 auto;
+        justify-content: center;
 
         &:empty {
             display: none;
@@ -257,7 +258,7 @@
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        flex: 1 0 auto;
+        flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
 
@@ -303,7 +304,7 @@
     }
 
     %igx-card-actions__icons--vertical,
-    %igx-card_actions__buttons--vertical {
+    %igx-card-actions__buttons--vertical {
         flex-direction: column;
 
         [igxButton] ~ [igxButton] {
