@@ -35,6 +35,11 @@ export class IgxListItemComponent implements IListChild {
     private _panState: IgxListPanState = IgxListPanState.NONE;
 
     /**
+     * @hidden
+     */
+    private _index: number = null;
+
+    /**
      *@hidden
      */
     private panOffset = 0;
@@ -320,8 +325,20 @@ export class IgxListItemComponent implements IListChild {
      * ```
      * @memberof IgxListItemComponent
      */
+    @Input()
     public get index(): number {
-        return this.list.children.toArray().indexOf(this);
+        return this._index !== null ? this._index : this.list.children.toArray().indexOf(this);
+    }
+
+    /**
+     * Sets the `index` of the `list item`.
+     * ```typescript
+     * this.listItem.index = index;
+     * ```
+     * @memberof IgxListItemComponent
+     */
+    public set index(value: number) {
+        this._index = value;
     }
 
     /**
