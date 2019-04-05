@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, Component, ElementRef, EventEmitter,
-    forwardRef, HostBinding, Input, NgModule, OnInit, Output, Renderer2,
+    HostBinding, Input, NgModule, OnInit, Output, Renderer2,
     ViewChild,
-    TemplateRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -459,10 +458,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *}
      *```
      */
-    public get value(): number | string | IRangeSliderValue | IRangeSliderValueLabel {
-        // if (this.labelsViewEnabled) {
-        //     return this.getLabelValues(this.lowerValue, this.upperValue);
-        // }
+    public get value(): number | IRangeSliderValue {
         if (this.isRange) {
             return {
                 lower: this.snapValueToStep(this.lowerValue),
@@ -476,11 +472,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
 
     /**
      * Sets the slider value.
-     * If the slider is of type SLIDER the argument is number. By default if no value is set the default value is
-     * same as lower upper bound.
-     * If the slider type is RANGE the the argument is object containing lower and upper properties for the values.
-     * By default if no value is set the default value is for lower value it is the same as lower bound and if no
-     * value is set for the upper value it is the same as the upper bound.
+     * If the slider is of type SLIDER the argument is number. By default the @value gets the @lowerBound value.
+     * If the slider type is RANGE the argument represents an object of lower and upper properties.
+     * By default the object lower and upper properties are associated with the @lowerBound and @upperBound property values.
      * ```typescript
      *rangeValue = {
      *   lower: 30,
@@ -492,11 +486,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * ```
      */
     @Input()
-    public set value(value: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
-        if (this.labelsViewEnabled) {
-            value = this.getLabelIndexes(value);
-        }
-
+    public set value(value: number | IRangeSliderValue) {
         if (!this.isRange) {
             this.upperValue = this.snapValueToStep(value as number);
         } else {
@@ -506,33 +496,115 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
                 this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).lower);
         }
 
-        this._onChangeCallback(this.value);
+        this.labelsViewEnabled ?
+            this._onChangeCallback(this.getLabelValues(this.value)):
+            this._onChangeCallback(this.value);
 
         if (this.hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
     }
 
-    public get labelsViewEnabled() {
-        return !!this.stepLabels.length;
-    }
-
-    public get lowerLabel() {
+    /**
+     *Returns the left label value of the `IgxSliderComponent`.
+     *```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * public leftLabel(){
+     *    let sliderLeftLabel = this.slider.leftLabel;
+     * }
+     *```
+     */
+    public get leftLabel() {
         return this.labelsViewEnabled ?
             this.stepLabels[this.lowerValue] :
             this.lowerValue;
     }
 
-    public get upperLabel() {
+    /**
+     *Returns the right label value of the `IgxSliderComponent`.
+     *```typescript
+     * @ViewChild("slider")
+     * public slider: IgxSliderComponent;
+     * public rightLabel(){
+     *    let sliderRightLabel = this.slider.rightLabel;
+     * }
+     *```
+     */
+    public get rightLabel() {
         return this.labelsViewEnabled ?
             this.stepLabels[this.upperValue] :
             this.upperValue;
     }
 
-    public get valueLabel() {
-        return this.labelsViewEnabled ?
-            this.stepLabels[this.upperValue] :
-            this.value;
+    /**
+     * Sets the slider label.
+     * If the slider is of type SLIDER the argument is number or string. By default the value takes to @lowerValue
+     * or the first element of the @stepLabels collection.
+     * If the slider type is RANGE the value represents an object of lower/upper or left/right properties.
+     * By default the @value takes the @lowerValue / @upperValue valeus or first and last element of the @stepLabels collection.
+     * ```typescript
+     * rangeValue = {
+     *   lower: 30,
+     *   upper: 60
+     *};
+     *
+     * labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+     * labelsRange = {
+     *  left: 'Tuesday',
+     *  right: 'Friday'
+     * }
+     * ```
+     * ```html
+     * <igx-slider [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="56" [maxValue]="256">
+     *
+     * ```html
+     * <igx-slider [type]="sliderType" [label]="labelsRange" [stepLabels]="labels">
+     * ```
+     */
+    @Input()
+    public set label(value: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
+        if (!value) {
+            return;
+        }
+
+        this.value = this.getLabelIndexes(value);
+    }
+
+    /**
+     * Returns the slider label value. If the slider is of type SLIDER the returned value is number or string.
+     * If the slider type is RANGE the returned value represents an object of lower/upper or left/right properties as values.
+     *```typescript
+     *@ViewChild("slider2")
+     *public slider: IgxSliderComponent;
+     *public sliderValue(){
+     *    let sliderLabel = this.slider.label;
+     *}
+     *```
+     */
+    public get label(): number | string | IRangeSliderValue | IRangeSliderValueLabel {
+        if (this.labelsViewEnabled) {
+            if (this.isRange) {
+                const lower = (this.value as IRangeSliderValue).lower;
+                const upper = (this.value as IRangeSliderValue).upper;
+                return {
+                    left: this.stepLabels[lower],
+                    right: this.stepLabels[upper]
+                };
+            }
+
+            return this.stepLabels[this.upperValue];
+        }
+
+        return this.value;
+    }
+
+
+    /**
+     * Returns if the label view is enabled. This is determined by the length of the @stepLabels collection.;
+     */
+    public get labelsViewEnabled() {
+        return !!this.stepLabels.length;
     }
 
     /**
@@ -586,7 +658,11 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * @hidden
      */
     public writeValue(value: any): void {
-        this.value = value;
+        if (!this.labelsViewEnabled && typeof value === 'string') {
+            value = parseInt(value);
+        }
+
+        this.label = value;
     }
 
     /**
@@ -992,24 +1068,24 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         }
     }
 
-    private getLabelIndexes(value: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
+    private getLabelIndexes(value: number | string | IRangeSliderValue | IRangeSliderValueLabel): number | IRangeSliderValue {
         if (typeof value === 'string' && !this.isRange) {
             return this.stepLabels.findIndex(e => e === value);
         }
 
         const left = (value as IRangeSliderValueLabel).left;
         const right = (value as IRangeSliderValueLabel).right;
-        if (left || right) {
+        if (this.isRange && (left || right)) {
             return {
                 lower: left ? this.stepLabels.findIndex(e => e === left) : 0,
                 upper: right ? this.stepLabels.findIndex(e => e === right) : this.stepLabels.length - 1
             }
         }
 
-        return value;
+        return this.isRange ? (value as IRangeSliderValue) : +value;
     }
 
-    private getLabelValues(value) {
+    private getLabelValues(value): string | IRangeSliderValueLabel {
         if (this.isRange) {
             return {
                 left: this.stepLabels[value.lower],
@@ -1030,14 +1106,14 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     private emitValueChanged(oldValueRef: number | string | IRangeSliderValue | IRangeSliderValueLabel) {
-        let oldVal = oldValueRef, newVal = this.value;
-
         if (this.labelsViewEnabled) {
-            oldVal = this.getLabelValues(oldValueRef);
-            newVal = this.getLabelValues(this.value);
+            const oldVal = this.getLabelValues(oldValueRef),
+                newVal = this.getLabelValues(this.value);
+            this.onValueChange.emit({oldValue: oldVal, value: newVal});
+        } else {
+            this.onValueChange.emit({ oldValue: oldValueRef, value: this.value });
         }
 
-        this.onValueChange.emit({ oldValue: oldVal, value: newVal });
     }
 }
 
