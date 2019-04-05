@@ -49,9 +49,16 @@ export class IgxCardMediaDirective {
      * <igx-card-media height="50%"></igx-card-media>
      * ```
      */
-    @Input()
     @HostBinding('style.height')
+    @Input()
     public height = 'auto';
+
+    /**
+     * An @Input property that sets the `role` attribute of the media container.
+     */
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'img';
 }
 
 /**
