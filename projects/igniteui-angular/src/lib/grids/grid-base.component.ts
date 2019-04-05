@@ -2847,6 +2847,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
+        if (this.enableMRL) {
+            return '';
+        }
         const colWidth = column.width;
         const minWidth = this.defaultHeaderGroupMinWidth;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
@@ -3858,10 +3861,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
+        const blockColumns = this.visibleColumns.filter(c => c.columnGroup);
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
         const columnsToSize = this.enableMRL ?
-            visibleChildColumns.reduce((acc, col) => Math.max(acc, col.colStart), 1) - columnsWithSetWidths.length :
+            this.getPossibleBlocksWidth(blockColumns) - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths
@@ -3879,6 +3883,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
 
         return columnWidth.toString();
+    }
+
+    private getPossibleBlocksWidth(blocks) {
+        const maxColSpanPerBlock = (max, child) => Math.max(max, child.colStart);
+        const sumMaximalColSpans = (acc, col) => acc + col.children.reduce(maxColSpanPerBlock, 1);
+        return blocks.reduce(sumMaximalColSpans, 0);
     }
 
     /**
