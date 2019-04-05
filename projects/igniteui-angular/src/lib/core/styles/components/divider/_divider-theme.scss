@@ -40,8 +40,6 @@
 @mixin igx-divider($theme) {
     @include igx-root-css-vars($theme);
 
-    @debug $theme;
-
     %igx-divider-display {
         display: block;
         width: 100%;
