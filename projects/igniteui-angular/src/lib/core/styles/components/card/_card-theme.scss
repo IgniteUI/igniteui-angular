@@ -227,7 +227,7 @@
 
     %igx-card-content {
         width: 100%;
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         padding: $card-content-padding;
         color: --var($theme, 'content-text-color');
     }
@@ -308,6 +308,7 @@
 
         [igxButton] ~ [igxButton] {
             margin-left: 0;
+            margin-top: rem(8px);
         }
     }
 

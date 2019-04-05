@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Directive, HostBinding, Optional, Inject, Input, NgModule, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Directive,
+    HostBinding,
+    Optional,
+    Inject,
+    Input,
+    NgModule,
+    OnInit,
+    OnChanges,
+    SimpleChanges
+} from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
 
 let NEXT_ID = 0;
@@ -259,7 +270,7 @@ export enum IgxCardActionsLayout {
 export class IgxCardActionsComponent implements OnInit, OnChanges {
     private isVerticalSet = false;
 
-    constructor(@Optional() @Inject(IgxCardComponent) private card: IgxCardComponent) { }
+    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
     /**
      * An @Input property that sets the layout style of the actions.
@@ -282,7 +293,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      */
     @HostBinding('class.igx-card-actions--vertical')
     @Input()
-    public vertical = false;
+    public vertical: boolean;
 
     /**
      * A getter that returns `true` when the layout has been
