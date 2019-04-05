@@ -64,7 +64,7 @@
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index" #virtDirRemote>
-                <div style='height:50px;'>{{item.ProductID}} : {{item.ProductName}}</div>
+                <div style='height:50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}</div>
                 </ng-template>
             </div>
     </article>
