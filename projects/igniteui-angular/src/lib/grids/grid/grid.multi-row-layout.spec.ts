@@ -44,20 +44,48 @@ describe('IgxGrid - multi-row-layout', () => {
     function verifyDOMMatchesSettings(row, colSettings) {
        // TODO - generic function that checks if DOM is rendered correctly based on the column settings
         const firstRowCells = row.cells.toArray();
-        colSettings.forEach(groupSetting => {
+        const rowElem = row.nativeElement;
+        const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl_block');
+
+        colSettings.forEach((groupSetting, index) => {
             // check group has rendered block
-            groupSetting.columns.forEach(cols => {
-                // check widths for columns that have col span
-                // check heights for cols that have row span
-                // check cols with same colStart start from same left
-                // check cols with same rowStart start from same top
-                // check that cols with same colStart+colSpan end at the same right
-                // check that rows with same rowStart+rowSpan end at the same bottom
+            const groupBlock = mrlBlocks[index];
+            const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
+            expect(groupBlock).not.toBeNull();
+            groupSetting.columns.forEach((col, colIndex) => {
+                const cell = cellsFromBlock[colIndex];
+                const cellElem = cell.nativeElement;
+                 // check correct attributes are applied
+                expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
+                expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
+                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd || '');
+                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd || '');
+
+                // check width
+                const expectedWidth = parseFloat(cell.column.calcWidth) * cell.gridColumnSpan;
+                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                // check height
+                const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
+                expect(cellElem.clientHeight).toBe(expectedHeight);
+
+                 // check offset left
+                const acc = (acc, cell) => {
+                    if (cell.column.colStart <  col.colStart && cell.column.rowStart === col.rowStart) {
+                        return acc += parseFloat(cell.column.calcWidth);
+                    } else {
+                        return acc;
+                    }
+                };
+                const expectedLeft = cellsFromBlock.reduce(acc, 0);
+                expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
+                // check offsetTop
+                const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
+                expect(cellElem.offsetTop).toBe(expectedTop);
             });
         });
     }
 
-    fit('should initialize a grid with column groups', () => {
+    it('should initialize a grid with 1 column group', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -76,11 +104,51 @@ describe('IgxGrid - multi-row-layout', () => {
              firstRowCells[2].nativeElement.offsetWidth;
         const lastCellWidth = firstRowCells[3].nativeElement.offsetWidth;
         expect(2 * firstRowCells[0].nativeElement.offsetHeight).toEqual(firstRowCells[3].nativeElement.offsetHeight);
-        //the height of the last cell should be twice as big as the
+        expect(firstThreeCellsWidth).toEqual(lastCellWidth);
+    });
+
+    it('should initialize grid with 2 column groups', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.componentInstance.colGroups.push({
+            group: 'group2',
+            columns: [
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'CompanyName', rowStart: 1, colStart: 1},
+                { field: 'PostalCode', rowStart: 1, colStart: 2},
+                { field: 'Fax', rowStart: 1, colStart: 3}
+            ]
+        });
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+
+         // headers are aligned to cells
+         verifyHeadersAreAligned(headerCells, firstRowCells);
+
+         verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups);
     });
 
     it('should not throw error when layout is incomplete', () => {});
-    it('should initialize correctly when no widths are set.', () => {});
+    fit('should initialize correctly when no column widths are set.', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.componentInstance.width = '617px';
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        // col span is 3 => columns should have grid width - scrollbarWitdh/3 width
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBeCloseTo(200);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBeCloseTo(200);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBeCloseTo(200);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBeCloseTo(200 * 3);
+
+        const firstRowCells = grid.rowList.first.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+    });
     it('should initialize correctly when widths are set in px.', () => {});
     it('should initialize correctly when widths are set in %.', () => {});
 
@@ -88,7 +156,7 @@ describe('IgxGrid - multi-row-layout', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [enableMRL]="true" height="500px">
+    <igx-grid #grid [data]="data" [enableMRL]="true" height="500px" [width]='width'>
         <igx-column-group *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -100,6 +168,7 @@ describe('IgxGrid - multi-row-layout', () => {
 export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
+    width;
     colGroups = [
         {
             group: 'group1',
