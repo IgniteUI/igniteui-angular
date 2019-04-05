@@ -7,19 +7,55 @@ export interface ICard {
     content: string;
     imageUrl: string;
     avatarUrl: string;
+    unit: string;
     buttons: string[];
+    chip: string[];
     icons: string[];
+}
+
+export interface Ilist {
+    isSunny: boolean;
+    day: string;
+    icon: string;
+    degreesHeight: string;
+    degreesLow: string;
+}
+
+export interface Idetails {
+    wValue: string;
+    iconURL: string;
+    label: string;
 }
 
 function cardFactory(params: any): ICard {
     return {
         title: params.title || 'Card Title',
         subtitle: params.subtitle || 'Card Subtitle',
+        unit: params.unit || '°C',
         content: params.content || 'Some card content should be place here.',
         imageUrl: params.imageUrl || 'images/card/media/placeholder.jpg',
         avatarUrl: params.avatarUrl || 'images/card/avatars/rupert_stadler.jpg',
         buttons: params.buttons || ['ACTION1', 'ACTION2'],
+        chip: params.chip || ['ACTION1', 'ACTION2', 'ACTION3'],
         icons: params.icons || ['favorite', 'bookmark', 'share']
+    };
+}
+
+function listFactory(params: any): Ilist {
+    return {
+        isSunny: params.isSunny || '',
+        day: params.day || 'day of the week',
+        icon: params.icon || 'wb_cloudy',
+        degreesHeight: params.degreesHeight || '°C',
+        degreesLow: params.degreesLow || '°C',
+    };
+}
+
+function detailsFactory(params: any): Idetails {
+    return {
+        wValue: params.wValue || '',
+        iconURL: params.iconURL || '',
+        label: params.label || '',
     };
 }
 
@@ -30,6 +66,61 @@ function cardFactory(params: any): ICard {
 })
 export class CardSampleComponent {
     public horizontal = false;
+    public volume = 10;
+
+    details = [
+        detailsFactory({
+            wValue: '12%',
+            iconURL: 'assets/images/card/media/rain.svg',
+            label: 'Participation',
+        }),
+        detailsFactory({
+            wValue: '23 km/h',
+            iconURL: 'assets/images/card/media/breeze.svg',
+            label: 'Wind',
+        })
+    ];
+
+    days = [
+        listFactory({
+            day: 'Tuesday',
+            icon: 'wb_cloudy',
+            degreesHeight: '18°',
+            degreesLow: '11°',
+        }),
+        listFactory({
+            day: 'Wednesday',
+            icon: 'wb_cloudy',
+            degreesHeight: '16°',
+            degreesLow: '10°',
+        }),
+        listFactory({
+            isSunny: 'true',
+            day: 'Thursday',
+            icon: 'wb_sunny',
+            degreesHeight: '22°',
+            degreesLow: '12°',
+        }),
+        listFactory({
+            day: 'Friday',
+            icon: 'wb_cloudy',
+            degreesHeight: '28°',
+            degreesLow: '17°',
+        }),
+        listFactory({
+            day: 'Saturday',
+            icon: 'wb_cloudy',
+            degreesHeight: '21°',
+            degreesLow: '16°',
+        }),
+        listFactory({
+            isSunny: 'true',
+            day: 'Sunday',
+            icon: 'wb_sunny',
+            degreesHeight: '29°',
+            degreesLow: '20°',
+        }),
+    ];
 
     cards = [
         cardFactory({
@@ -85,6 +176,22 @@ export class CardSampleComponent {
             subtitle: 'Under the Grave (2016)',
             imageUrl: 'assets/images/card/media/roses.jpg',
             icons: ['skip_previous', 'play_arrow', 'skip_next']
+        }),
+        cardFactory({
+            imageUrl: 'assets/images/card/media/cofe.jpg',
+            title: 'Cafe Badilico',
+            subtitle: '$ - Italian, Cafe',
+            content: `Small plates, salads & sandwiches setting with 12 indoor seats plus patio seating.`,
+            buttons: ['RESERVE'],
+            chip: ['5:30', '7:30', '8:00', '9:00']
+        }),
+        cardFactory({
+            imageUrl: 'assets/images/card/media/weather.png',
+            title: 'Sofia - Bulgaria',
+            subtitle: 'Mon 12:30 PM, Mostly sunny',
+            content: `37`,
+            unit: '°C',
+            buttons: ['Show less'],
         }),
         cardFactory({})
     ];
