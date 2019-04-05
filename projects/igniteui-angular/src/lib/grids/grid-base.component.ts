@@ -560,8 +560,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.reflow();
-                this.cdr.markForCheck();
+                if (!this._destroyed) {
+                    this.reflow();
+                    this.cdr.markForCheck();
+                }
             });
         }
     }
@@ -594,7 +596,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // Calling reflow(), because the width calculation
                 // might make the horizontal scrollbar appear/disappear.
                 // This will change the height, which should be recalculated.
-                this.reflow();
+                if (!this._destroyed) {
+                    this.reflow();
+                }
             });
         }
     }
@@ -830,8 +834,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
-
-            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this.calcHeight) {
+                this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            }
             if (this._ngAfterViewInitPassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
@@ -2567,38 +2572,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.columnList.changes
         .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => {
-            const diff = this.columnListDiffer.diff(change);
-            if (diff) {
-                let added = false;
-                let removed = false;
-
-                this.initColumns(this.columnList);
-
-
-                diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    this.onColumnInit.emit(record.item);
-                    added = true;
-                });
-
-                diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    // Clear Filtering
-                    this.gridAPI.clear_filter(record.item.field);
-
-                    // Clear Sorting
-                    this.gridAPI.clear_sort(record.item.field);
-                    removed = true;
-                });
-
-                this.resetCaches();
-
-                if (added || removed) {
-                    this.summaryService.clearSummaryCache();
-                    this.calculateGridSizes();
-                }
-            }
-            this.markForCheck();
-        });
+        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
@@ -4037,6 +4011,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
         this.verticalScrollContainer.igxForOf.length > 0 &&
         isScrollable);
+    }
+
+    /**
+     * @hidden
+     */
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        const diff = this.columnListDiffer.diff(change);
+        if (diff) {
+            let added = false;
+            let removed = false;
+
+            this.initColumns(this.columnList);
+
+
+            diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                this.onColumnInit.emit(record.item);
+                added = true;
+            });
+
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Filtering
+                this.gridAPI.clear_filter(record.item.field);
+
+                // Clear Sorting
+                this.gridAPI.clear_sort(record.item.field);
+                removed = true;
+            });
+
+            this.resetCaches();
+
+            if (added || removed) {
+                this.summaryService.clearSummaryCache();
+                this.calculateGridSizes();
+            }
+        }
+        this.markForCheck();
     }
 
     /**
