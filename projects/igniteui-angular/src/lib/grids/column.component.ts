@@ -1533,6 +1533,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                     isChildrenWidthInPercent = true;
                 }
+                // TODO: refactor, should get the maximal widht from the layout of the block, not using the first row with
                 if (val.rowStart !== 1) {
                     return acc;
                 }

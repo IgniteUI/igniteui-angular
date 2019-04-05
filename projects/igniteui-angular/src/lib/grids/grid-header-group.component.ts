@@ -41,7 +41,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
 
     @HostBinding('style.-ms-grid-row-span')
     get gridRowSpan() {
-        return this.column.gridColumnSpan;
+        return this.column.gridRowSpan;
     }
 
     @HostBinding('style.-ms-grid-column-span')
@@ -118,11 +118,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck, OnDestroy, AfterVie
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
-        if (!this.grid.enableMRL) {
-            return this.grid.getHeaderGroupWidth(this.column);
-        } else {
-            return '';
-        }
+        return this.grid.getHeaderGroupWidth(this.column);
     }
 
     /**
