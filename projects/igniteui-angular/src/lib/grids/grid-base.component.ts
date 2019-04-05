@@ -26,7 +26,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil, first, filter } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -207,6 +207,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     private _destroyed = false;
+    private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -2430,9 +2431,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.disableTransitions = false;
         });
 
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
+        this.hideOverlays();
     }
 
     private horizontalScrollHandler(event) {
@@ -2448,22 +2447,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
         });
 
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
+        this.hideOverlays();
     }
 
-    private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu')[0];
-        if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('id'));
-            if (overlay) {
-                const animation = overlay.settings.positionStrategy.settings.closeAnimation;
-                overlay.settings.positionStrategy.settings.closeAnimation = null;
-                this.overlayService.hide(overlay.id);
-                overlay.settings.positionStrategy.settings.closeAnimation = animation;
-            }
-        }
+    private hideOverlays() {
+        this.overlayIDs.forEach(overlayID => {
+            this.overlayService.hide(overlayID);
+            // blur in case some editor somewhere decides to move focus back
+            this.overlayService.onClosed.pipe(
+                filter(o => o.id === overlayID),
+                takeUntil(this.destroy$)).subscribe(() => {
+                    this.nativeElement.focus();
+                });
+        });
     }
 
     private keydownHandler(event) {
@@ -2543,6 +2539,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
+
+        this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+                this.overlayIDs.indexOf(event.id) < 0) {
+                this.overlayIDs.push(event.id);
+            }
+        });
+        this.overlayService.onClosed.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            const ind = this.overlayIDs.indexOf(event.id);
+            if (ind !== -1) {
+                this.overlayIDs.splice(ind, 1);
+            }
+        });
     }
 
     // TODO: Refactor
