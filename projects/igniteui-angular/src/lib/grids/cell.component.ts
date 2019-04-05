@@ -22,6 +22,7 @@ import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -269,6 +270,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
+    @DeprecateProperty(`'inEditMode' is deprecated\nUse 'editMode' to get the current state and 'setEditMode(boolean)' as a setter`)
     get inEditMode(): boolean {
         return this.editMode;
     }
