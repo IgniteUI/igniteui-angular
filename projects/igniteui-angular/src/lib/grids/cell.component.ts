@@ -18,10 +18,11 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS } from '../core/utils';
+import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -259,41 +260,35 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets whether the cell is in edit mode.
+     * @deprecated
+     * Use `cell.editMode` as a getter and
+     * `cell.setEditMode(true | false)` to start/exit edit mode.
+     *
+     * Gets/sets whether the cell is in edit mode.
      * ```typescript
      * let isCellInEditMode = this.cell.inEditMode;
      * ```
      * @memberof IgxGridCellComponent
      */
-
-     // TODO: Deprecate
-    /**
-     * @deprecated
-     */
+    @DeprecateProperty(`'inEditMode' is deprecated\nUse 'editMode' to get the current state and 'setEditMode(boolean)' as a setter`)
     get inEditMode(): boolean {
         return this.editMode;
     }
 
     set inEditMode(value: boolean) {
-        if (this.row.deleted) {
-            return;
-        }
-        if (this.editable && value) {
-            this.gridAPI.submit_value();
-            this.crudService.begin(this);
-        } else {
-            this.gridAPI.escape_editMode();
-        }
-        this.grid.cdr.markForCheck();
+        this.setEditMode(value);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @Input()
     @HostBinding('class.igx-grid__td--pinned-last')
     lastPinned = false;
 
     /**
-     * @hidden
-     * @internal
+     * Returns whether the cell is in edit mode.
      */
     @Input()
     @HostBinding('class.igx-grid__td--editing')
@@ -403,39 +398,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         return false;
     }
-    @ViewChild('defaultCell', { read: TemplateRef })
-    protected defaultCellTemplate: TemplateRef<any>;
-
-    @ViewChild('inlineEditor', { read: TemplateRef })
-    protected inlineEditorTemplate: TemplateRef<any>;
-
-    private _highlight: IgxTextHighlightDirective;
-
-    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
-    protected set highlight(value: IgxTextHighlightDirective) {
-        this._highlight = value;
-
-        if (this._highlight && this.grid.lastSearchInfo.searchText) {
-            this._highlight.highlight(this.grid.lastSearchInfo.searchText,
-                this.grid.lastSearchInfo.caseSensitive,
-                this.grid.lastSearchInfo.exactMatch);
-            this._highlight.activateIfNecessary();
-        }
-    }
-
-    protected get highlight() {
-        return this._highlight;
-    }
-
-    protected get selectionNode(): ISelectionNode {
-        return { row: this.rowIndex, column: this.visibleColumnIndex };
-    }
 
     /**
      * Sets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
      * ```typescript
-     * let isLastPinned = this.cell.isLastPinned;
+     * this.cell.editValue = value;
      * ```
      * @memberof IgxGridCellComponent
      */
@@ -459,14 +427,52 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    /**
+     * Returns whether the cell is editable.
+     */
     get editable(): boolean {
         return this.column.editable;
     }
 
-    public isInCompositionMode = false;
-
+    /**
+     * @hidden
+     * @internal
+     */
     @HostBinding('class.igx-grid__td--active')
     public focused = false;
+
+    @ViewChild('defaultCell', { read: TemplateRef })
+    protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild('inlineEditor', { read: TemplateRef })
+    protected inlineEditorTemplate: TemplateRef<any>;
+
+    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
+    protected set highlight(value: IgxTextHighlightDirective) {
+        this._highlight = value;
+
+        if (this._highlight && this.grid.lastSearchInfo.searchText) {
+            this._highlight.highlight(this.grid.lastSearchInfo.searchText,
+                this.grid.lastSearchInfo.caseSensitive,
+                this.grid.lastSearchInfo.exactMatch);
+            this._highlight.activateIfNecessary();
+        }
+    }
+
+    protected get highlight() {
+        return this._highlight;
+    }
+
+    protected get selectionNode(): ISelectionNode {
+        return { row: this.rowIndex, column: this.visibleColumnIndex };
+    }
+
+    protected isInCompositionMode = false;
+    protected compositionStartHandler;
+    protected compositionEndHandler;
+    protected focusHandlerIE;
+    protected focusOut;
+    private _highlight: IgxTextHighlightDirective;
 
 
     constructor(
@@ -479,22 +485,53 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected zone: NgZone) { }
 
 
+    /**
+     * @hidden
+     * @internal
+     */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.nativeElement.addEventListener('pointerenter', this.pointerenter);
             this.nativeElement.addEventListener('pointerup', this.pointerup);
+
+            // IE 11 workarounds
+            if (isIE()) {
+                // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
+                this.compositionStartHandler = this.nativeElement
+                    .addEventListener('compositionstart', () => this.isInCompositionMode = true);
+                this.compositionEndHandler = this.nativeElement.addEventListener('compositionend', () => this.isInCompositionMode = false);
+
+                // https://stackoverflow.com/q/51404782
+                this.focusHandlerIE = this.nativeElement.addEventListener('focusin', (e: FocusEvent) => this.onFocus(e));
+                this.focusOut = this.nativeElement.addEventListener('focusout', () => this.onBlur());
+            }
         });
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
             this.nativeElement.removeEventListener('pointerup', this.pointerup);
+
+            if (isIE()) {
+                this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
+                this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
+                this.nativeElement.removeEventListener('focusin', this.focusHandlerIE);
+                this.nativeElement.removeEventListener('focusout', this.focusOut);
+            }
         });
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     _updateCRUDStatus() {
         if (this.editable && this.crudService.inEditMode && !this.row.deleted) {
             this.gridAPI.update_cell(this.crudService.cell, this.crudService.cell.editValue);
@@ -533,7 +570,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.value && !changes.value.firstChange) {
@@ -543,6 +581,26 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
             }
         }
+    }
+
+    /**
+     * Starts/ends edit mode for the cell.
+     *
+     * ```typescript
+     * cell.setEditMode(true);
+     * ```
+     */
+    setEditMode(value: boolean): void {
+        if (this.row.deleted) {
+            return;
+        }
+        if (this.editable && value) {
+            this.gridAPI.submit_value();
+            this.crudService.begin(this);
+        } else {
+            this.gridAPI.escape_editMode();
+        }
+        this.grid.cdr.markForCheck();
     }
 
     /**
@@ -663,7 +721,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.row.focused = false;
     }
 
-    protected handleAlt(key: string) {
+    protected handleAlt(key: string, event: KeyboardEvent) {
         if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
             const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
@@ -719,7 +777,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (event.altKey) {
-            this.handleAlt(key);
+            this.handleAlt(key, event);
             return;
         }
 
@@ -839,6 +897,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public onKeydownExitEditMode() {
+        if (this.isInCompositionMode) {
+            return;
+        }
+
         if (this.editMode) {
             const v = this.crudService.cell;
             const args = {
