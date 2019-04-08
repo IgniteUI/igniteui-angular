@@ -1,5 +1,5 @@
 # igx-card
---------
+
 A walk-through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)
 
 **igx-card** is a sheet of material that serves as an entry point to more detailed information. The cards in Ignite UI for Angular can be composed using the `igx-card-media`, `igx-card-header`, `igx-card-content`, and `igx-card-actions` components and directives. Those card elements ensure aesthetically pleasing design that conforms to the Material Design guidelines.
