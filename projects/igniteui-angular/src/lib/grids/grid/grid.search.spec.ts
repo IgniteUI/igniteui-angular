@@ -1234,6 +1234,41 @@ describe('IgxGrid - search API', () => {
             expect(spans.length).toBe(5);
         });
 
+        it('Should be able to search when grouping is enabled', async () => {
+            grid.height = '400px';
+            await wait();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'JobTitle',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            grid.findNext('Casey');
+            await wait();
+            fix.detectChanges();
+
+            let row = grid.getRowByIndex(17);
+            let spans = row.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(1);
+
+            grid.toggleAllGroupRows();
+            (grid as any).scrollTo(0, 0);
+            grid.toggleGroup(grid.groupsRecords[0]);
+            grid.toggleGroup(grid.groupsRecords[1]);
+            await wait();
+            fix.detectChanges();
+
+            grid.findNext('Casey');
+            await wait();
+            fix.detectChanges();
+
+            row = grid.getRowByIndex(11);
+            spans = row.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(1);
+        });
+
 
         it('Should be able to properly handle navigating through collapsed rows with paging', async () => {
             grid.groupBy({
