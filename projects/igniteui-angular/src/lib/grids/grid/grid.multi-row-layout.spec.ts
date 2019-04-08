@@ -131,7 +131,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('should not throw error when layout is incomplete', () => {});
-    fit('should initialize correctly when no column widths are set.', () => {
+    it('should initialize correctly when no column widths are set.', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.componentInstance.width = '617px';
         fixture.detectChanges();
