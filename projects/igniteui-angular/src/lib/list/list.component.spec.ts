@@ -19,14 +19,6 @@ const LIST_CSS_CLASS = 'igx-list';
 const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
 const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
-const LIST_ITEM_BASE_CSS_CLASS = 'igx-list__item-base';
-const LIST_ITEM_BASE_COMPACT_DENSITY_CSS_CLASS = 'igx-list__item-base--compact';
-const LIST_ITEM_BASE_COSY_DENSITY_CSS_CLASS = 'igx-list__item-base--cosy';
-
-const LIST_ITEM_HEADER_CSS_CLASS = 'igx-list__header';
-const LIST_ITEM_HEADER_COMPACT_DENSITY_CSS_CLASS = 'igx-list__header--compact';
-const LIST_ITEM_HEADER_COSY_DENSITY_CSS_CLASS = 'igx-list__header--cosy';
-
 describe('List', () => {
     configureTestSuite();
     beforeEach(async(() => {
@@ -642,19 +634,19 @@ describe('List', () => {
 
         const list = fixture.componentInstance.list as IgxListComponent;
         const domList = fixture.debugElement.query(By.css('igx-list'));
-        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.comfortable);
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
 
         list.displayDensity = DisplayDensity.compact;
         fixture.detectChanges();
-        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.compact);
+        verifyDisplayDensity(list, domList, DisplayDensity.compact);
 
         list.displayDensity = DisplayDensity.cosy;
         fixture.detectChanges();
-        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.cosy);
+        verifyDisplayDensity(list, domList, DisplayDensity.cosy);
 
         list.displayDensity = DisplayDensity.comfortable;
         fixture.detectChanges();
-        verifyDisplayDensity(list, domList, 3, 2, DisplayDensity.comfortable);
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
     });
 
     it('should emit onDensityChanged with proper event arguments', () => {
@@ -775,26 +767,18 @@ describe('List', () => {
      * Verifies the display density of the IgxList and its items by providing the IgxListComponent, the list DebugElement,
      * the expected items and headers count and the expected DisplayDensity enumeration value.
     */
-    function verifyDisplayDensity(listComp, listDebugEl, expectedItemsCount, expectdHeadersCount, expectedDisplayDensity: DisplayDensity) {
+    function verifyDisplayDensity(listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) {
         let expectedListDensityClass;
-        let expectedListItemBaseClass;
-        let expectedListItemHeaderClass;
 
         switch (expectedDisplayDensity) {
             case DisplayDensity.compact: {
                 expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS;
-                expectedListItemBaseClass = LIST_ITEM_BASE_COMPACT_DENSITY_CSS_CLASS;
-                expectedListItemHeaderClass = LIST_ITEM_HEADER_COMPACT_DENSITY_CSS_CLASS;
             } break;
             case DisplayDensity.cosy: {
                 expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS;
-                expectedListItemBaseClass = LIST_ITEM_BASE_COSY_DENSITY_CSS_CLASS;
-                expectedListItemHeaderClass = LIST_ITEM_HEADER_COSY_DENSITY_CSS_CLASS;
             } break;
             default: {
                 expectedListDensityClass = LIST_CSS_CLASS;
-                expectedListItemBaseClass = LIST_ITEM_BASE_CSS_CLASS;
-                expectedListItemHeaderClass = LIST_ITEM_HEADER_CSS_CLASS;
             } break;
         }
 
@@ -802,19 +786,5 @@ describe('List', () => {
         expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
         expect(listComp.hostClass).toBe(expectedListDensityClass);
         expect(listComp.displayDensity).toBe(expectedDisplayDensity);
-
-        // Verify list items display density.
-        const listDomItems = listDebugEl.queryAll(By.css('.' + expectedListItemBaseClass));
-        expect(listDomItems.length).toBe(expectedItemsCount, `Incorrect count of ${expectedListItemBaseClass} items.`);
-        for (const listItem of listComp.items) {
-            expect(listItem.hostClass).toBe(expectedListItemBaseClass);
-        }
-
-        // Verify list headers display density.
-        const listDomHeaders = listDebugEl.queryAll(By.css('.' + expectedListItemHeaderClass));
-        expect(listDomHeaders.length).toBe(expectdHeadersCount, `Incorrect count of ${expectedListItemHeaderClass} items.`);
-        for (const listItem of listComp.headers) {
-            expect(listItem.hostClass).toBe(expectedListItemHeaderClass);
-        }
     }
 });
