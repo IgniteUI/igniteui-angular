@@ -784,7 +784,23 @@ describe('List', () => {
 
         // Verify list display density.
         expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
-        expect(listComp.hostClass).toBe(expectedListDensityClass);
         expect(listComp.displayDensity).toBe(expectedDisplayDensity);
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(true);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+            case DisplayDensity.cosy: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(true);
+            } break;
+            default: {
+                expect(listComp.cssClass).toBe(true);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+        }
     }
 });

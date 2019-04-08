@@ -28,7 +28,7 @@ import {
     IgxListItemLeftPanningTemplateDirective,
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -276,31 +276,33 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
+    @HostBinding('class.igx-list-empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
     }
 
     /**
-     * Returns boolean indicating if the list has a `cssClass` attribute.
-     * ```typescript
-     * let hasCssClass =  this.list.cssClass;
-     * ```
-     * @memberof IgxListComponent
+     * @hidden
      */
+    @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return this.children && this.children.length > 0;
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
     }
 
     /**
-     * Gets the currently applied class of the `list` based on its display density.
-     * ```typescript
-     * let hostClass =  this.list.hostClass;
-     * ```
-     * @memberof IgxListComponent
+     * @hidden
      */
-    @HostBinding('attr.class')
-    get hostClass(): string {
-        return (this.children && this.children.length > 0) ? this.getComponentDensityClass('igx-list') : 'igx-list-empty';
+    @HostBinding('class.igx-list--compact')
+    public get cssClassCompact(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--cosy')
+    public get cssClassCosy(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
