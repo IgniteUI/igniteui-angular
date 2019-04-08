@@ -42,7 +42,6 @@ describe('IgxGrid - multi-row-layout', () => {
     }
 
     function verifyDOMMatchesSettings(row, colSettings) {
-       // TODO - generic function that checks if DOM is rendered correctly based on the column settings
         const firstRowCells = row.cells.toArray();
         const rowElem = row.nativeElement;
         const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl_block');
@@ -62,7 +61,15 @@ describe('IgxGrid - multi-row-layout', () => {
                 expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd || '');
 
                 // check width
-                const expectedWidth = parseFloat(cell.column.calcWidth) * cell.gridColumnSpan;
+                let sum = 0;
+                if (cell.gridColumnSpan > 1) {
+                    for (let i =  col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
+                        const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
+                        const col2 = row.grid.getColumnByName(colData ? colData.field : '');
+                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                    }
+                }
+                const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
                 expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
                 // check height
                 const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
@@ -71,7 +78,7 @@ describe('IgxGrid - multi-row-layout', () => {
                  // check offset left
                 const acc = (accum, c) => {
                     if (c.column.colStart <  col.colStart && c.column.rowStart === col.rowStart) {
-                        return accum += parseFloat(c.column.calcWidth);
+                        return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
                     } else {
                         return accum;
                     }
@@ -132,25 +139,276 @@ describe('IgxGrid - multi-row-layout', () => {
 
     it('should not throw error when layout is incomplete', () => {});
     it('should initialize correctly when no column widths are set.', () => {
+        // test with single group
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.componentInstance.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         // col span is 3 => columns should have grid width - scrollbarWitdh/3 width
-        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBeCloseTo(200);
-        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBeCloseTo(200);
-        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBeCloseTo(200);
-        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBeCloseTo(200 * 3);
+        // check columns
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(200 * 3);
 
-        const firstRowCells = grid.rowList.first.cells.toArray();
-        const headerCells = grid.headerGroups.first.children.toArray();
+        // check group blocks
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(200 * 3);
+        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+
+        let firstRowCells = grid.rowList.first.cells.toArray();
+        let headerCells = grid.headerGroups.first.children.toArray();
         verifyHeadersAreAligned(headerCells, firstRowCells);
 
         verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
+        // test with 2 groups
+        fixture.componentInstance.colGroups.push({
+            group: 'group2',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Region', rowStart: 3, colStart: 1},
+                { field: 'PostalCode', rowStart: 3, colStart: 2},
+                { field: 'Fax', rowStart: 3, colStart: 3}
+            ]
+        });
+        fixture.componentInstance.width = '917px';
+        fixture.detectChanges();
+
+        // col span is 6 => columns should have grid width - scrollbarWitdh/6 width
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(150 * 3);
+
+        expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'PostalCode').nativeElement.offsetWidth).toBe(150);
+        expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(150 * 3);
+
+         // check group blocks
+         groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(150 * 3);
+         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(150 * 3);
+         expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(50 * 3);
+
+        firstRowCells = grid.rowList.first.cells.toArray();
+        headerCells = grid.headerGroups.first.children.toArray();
+
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+         // test with 3 groups
+         fixture.componentInstance.colGroups.push({
+            group: 'group3',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 'span 2', rowEnd: 'span 3'}
+            ]
+        });
+        fixture.detectChanges();
+
+        // col span is 8 => min-width exceeded should use 136px
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(136 * 3);
+
+        expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'PostalCode').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(136 * 3);
+
+        expect(grid.getCellByColumn(0, 'Phone').nativeElement.offsetWidth).toBe(136 * 2);
+
+        // check group blocks
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(136 * 3);
+        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+        expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(136 * 3);
+        expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(50 * 3);
+        expect(groupHeaderBlocks[2].nativeElement.clientWidth).toBe(136 * 2);
+        // the following throws error because last colgroup row span in header does not fill content
+        // expect(groupHeaderBlocks[2].nativeElement.clientHeight).toBe(50 * 3);
+
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
-    it('should initialize correctly when widths are set in px.', () => {});
-    it('should initialize correctly when widths are set in %.', () => {});
+    it('should initialize correctly when widths are set in px.', () => {
+        // test with single group - all cols with colspan 1 have width
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, width: '100px'},
+                { field: 'CompanyName', rowStart: 1, colStart: 2, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 3, width: '300px'},
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+            ]
+        }];
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        // check columns
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(100);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(300);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
+
+        // check group blocks
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
+
+        let firstRowCells = grid.rowList.first.cells.toArray();
+        let headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+
+        // test with 2 groups - only 2 columns with colspan1 have width
+        fixture.componentInstance.colGroups.push({
+            group: 'group2',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Region', rowStart: 3, colStart: 1, width: '100px'},
+                { field: 'PostalCode', rowStart: 3, colStart: 2},
+                { field: 'Fax', rowStart: 3, colStart: 3, width: '200px'}
+            ]
+        });
+        fixture.componentInstance.width = '1117px';
+        fixture.detectChanges();
+
+        // first group takes 600px, 500px left for second group
+         // check columns
+         expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(100);
+         expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
+         expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(300);
+         expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
+
+         expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(500);
+         expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(100);
+         // postal code has no width - auto width should be assigned based on available space.
+         expect(grid.getCellByColumn(0, 'PostalCode').nativeElement.offsetWidth).toBe(200);
+         expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(200);
+
+         // check group blocks
+         groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(500);
+
+         firstRowCells = grid.rowList.first.cells.toArray();
+         headerCells = grid.headerGroups.first.children.toArray();
+         verifyHeadersAreAligned(headerCells, firstRowCells);
+         verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+        // test with 3 groups - only parent has width
+        fixture.componentInstance.colGroups.push({
+            group: 'group3',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 'span 2', width: '500px'},
+                { field: 'Phone1', rowStart: 2, colStart: 1, colEnd : 'span 1', rowSpan: 'span 2'},
+                { field: 'Phone2', rowStart: 2, colStart: 2, colEnd : 'span 1', rowSpan: 'span 2'}
+            ]
+        });
+        fixture.componentInstance.width = '1617px';
+        fixture.detectChanges();
+
+        // check columns
+        expect(grid.getCellByColumn(0, 'Phone').nativeElement.offsetWidth).toBe(500);
+        expect(grid.getCellByColumn(0, 'Phone1').nativeElement.offsetWidth).toBe(250);
+        expect(grid.getCellByColumn(0, 'Phone2').nativeElement.offsetWidth).toBe(250);
+
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[2].nativeElement.clientWidth).toBe(500);
+
+        firstRowCells = grid.rowList.first.cells.toArray();
+        headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+    });
+    it('should initialize correctly when widths are set in %.', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const grid = fixture.componentInstance.grid;
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, width: '10%'},
+                { field: 'CompanyName', rowStart: 1, colStart: 2, width: '20%'},
+                { field: 'ContactName', rowStart: 1, colStart: 3, width: '30%'},
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+            ]
+        }];
+        fixture.componentInstance.width = '1017px';
+        fixture.detectChanges();
+
+        // check columns
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(100);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(300);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
+
+          // check group blocks
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
+
+        let firstRowCells = grid.rowList.first.cells.toArray();
+        let headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+        fixture.componentInstance.colGroups.push({
+            group: 'group2',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Region', rowStart: 3, colStart: 1, width: '10%'},
+                { field: 'PostalCode', rowStart: 3, colStart: 2},
+                { field: 'Fax', rowStart: 3, colStart: 3, width: '20%'}
+            ]
+        });
+        fixture.detectChanges();
+
+        // check columns
+        expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(100 + 200 + 136);
+        expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(100);
+        expect(grid.getCellByColumn(0, 'PostalCode').nativeElement.offsetWidth).toBe(136);
+        expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(200);
+
+        // check group blocks
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(436);
+
+        firstRowCells = grid.rowList.first.cells.toArray();
+        headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1},
+                { field: 'CompanyName', rowStart: 1, colStart: 2},
+                { field: 'ContactName', rowStart: 1, colStart: 3},
+                { field: 'Country', rowStart: 2, colStart: 1, colEnd : 'span 2'},
+                { field: 'Region', rowStart: 2, colStart: 3},
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3', width: '60%'},
+            ]
+        }];
+        fixture.detectChanges();
+
+        // check columns
+        expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetWidth).toBe(200);
+        expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
+        expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(400);
+        expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(200);
+
+        // check group blocks
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
+
+        firstRowCells = grid.rowList.first.cells.toArray();
+        headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+    });
 
 });
 
@@ -169,15 +427,16 @@ export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
     width;
+    cols: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1},
+        { field: 'CompanyName', rowStart: 1, colStart: 2},
+        { field: 'ContactName', rowStart: 1, colStart: 3},
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+    ];
     colGroups = [
         {
             group: 'group1',
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1},
-                { field: 'CompanyName', rowStart: 1, colStart: 2},
-                { field: 'ContactName', rowStart: 1, colStart: 3},
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
-            ]
+            columns: this.cols
         }
     ];
     data = SampleTestData.contactInfoDataFull();
