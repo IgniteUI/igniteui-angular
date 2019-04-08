@@ -181,6 +181,8 @@
         }
 
         %igx-card-header-thumbnail {
+            display: flex;
+            justify-content: center;
             align-self: unset;
             margin-right: 0;
             margin-bottom: rem(16px);
