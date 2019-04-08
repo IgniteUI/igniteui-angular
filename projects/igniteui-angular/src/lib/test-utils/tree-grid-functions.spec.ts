@@ -239,6 +239,11 @@ export class TreeGridFunctions {
         expect(igxIcon.nativeElement.textContent).toEqual('expand_less');
     }
 
+    public static verifyTreeRowExpandIndicatorVisibility(treeRowDOM, visibility = 'visible') {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
+        expect(indicatorDiv.nativeElement.style.visibility).toBe(visibility);
+    }
+
     public static verifyTreeRowIconPosition(treeRowDOM, indentationLevel) {
         const treeCell = TreeGridFunctions.getTreeCell(treeRowDOM);
         const treeCellPaddingLeft = parseInt(window.getComputedStyle(<HTMLElement>treeCell.nativeElement).paddingLeft, 10);

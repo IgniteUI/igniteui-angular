@@ -200,10 +200,10 @@ export class IgxGridNavigationService {
         if (this.grid.pinnedColumns.length || this.displayContainerScrollLeft === 0) {
             firstCell.focus({ preventScroll: true });
         } else {
+            this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    this.grid.nativeElement.focus({ preventScroll: true });
                     firstCell = rowElement.querySelector(cellSelector);
                     firstCell.focus({ preventScroll: true });
                 });
@@ -221,10 +221,10 @@ export class IgxGridNavigationService {
             const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
             allCells[allCells.length - 1].focus({ preventScroll: true });
         } else {
+            this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    this.grid.nativeElement.focus({ preventScroll: true });
                     const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
                     allCells[allCells.length - 1].focus({ preventScroll: true });
                 });
@@ -299,21 +299,7 @@ export class IgxGridNavigationService {
     }
 
     protected focusPreviousElement(currentRowEl, visibleColumnIndex) {
-        if (currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
-            currentRowEl.previousElementSibling.focus();
-        } else {
-            const isSummaryRow = currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-summary-row';
-            if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
-                const cellSelector = this.getCellSelector(visibleColumnIndex, isSummaryRow);
-                const cell = currentRowEl.previousElementSibling
-                    .querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                cell.focus();
-                return;
-            }
-            this.grid.nativeElement.focus({ preventScroll: true });
-            this.performHorizontalScrollToCell(parseInt(
-                currentRowEl.previousElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex, isSummaryRow);
-        }
+        this.focusElem(currentRowEl.previousElementSibling, visibleColumnIndex);
     }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
@@ -327,39 +313,38 @@ export class IgxGridNavigationService {
             containerHeight + rowHeight;
         this.grid.nativeElement.focus({ preventScroll: true });
         if (containerHeight && containerHeight < targetEndTopOffset) {
-            this.grid.verticalScrollContainer.scrollTo(currentRowIndex + 1);
+            const nextIndex = currentRowIndex + 1;
+            this.grid.verticalScrollContainer.scrollTo(nextIndex);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const tag = rowElement.tagName.toLowerCase();
-                    const rowSelector = this.getRowSelector();
-                    if (tag === rowSelector || tag === 'igx-grid-summary-row') {
-                        rowElement = this.getRowByIndex(currentRowIndex, tag);
-                    } else {
-                        rowElement = this.grid.nativeElement.querySelector(
-                            `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
-                    }
-                    this.focusNextElement(rowElement, visibleColumnIndex);
+                    rowElement = this.getNextRowByIndex(nextIndex);
+                    this.focusElem(rowElement, visibleColumnIndex);
                 });
         } else {
             this.focusNextElement(rowElement, visibleColumnIndex);
         }
     }
 
-    protected focusNextElement(rowElement, visibleColumnIndex) {
-        if (rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
-            rowElement.nextElementSibling.focus();
+    protected focusElem(rowElement, visibleColumnIndex) {
+        if (rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+            rowElement.focus();
         } else {
-            const isSummaryRow = rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-summary-row';
+            const isSummaryRow = rowElement.tagName.toLowerCase() === 'igx-grid-summary-row';
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
                 const cellSelector = this.getCellSelector(visibleColumnIndex, isSummaryRow);
-                const cell = rowElement.nextElementSibling.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
+                const cell = rowElement.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                 cell.focus();
                 return cell;
             }
+            this.grid.nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(parseInt(
-                rowElement.nextElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex, isSummaryRow);
+            rowElement.getAttribute('data-rowindex'), 10), visibleColumnIndex, isSummaryRow);
         }
+    }
+
+    protected focusNextElement(rowElement, visibleColumnIndex) {
+        return  this.focusElem(rowElement.nextElementSibling, visibleColumnIndex);
     }
 
     public goToFirstCell() {
@@ -571,6 +556,11 @@ export class IgxGridNavigationService {
     protected getRowByIndex(index, selector = this.getRowSelector()) {
         return this.grid.nativeElement.querySelector(
                 `${selector}[data-rowindex="${index}"]`);
+    }
+
+    protected getNextRowByIndex(nextIndex) {
+        return this.grid.tbody.nativeElement.querySelector(
+            `[data-rowindex="${nextIndex}"]`);
     }
 
     private getAllRows() {
