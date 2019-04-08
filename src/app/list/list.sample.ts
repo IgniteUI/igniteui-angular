@@ -28,7 +28,7 @@ export class ListSampleComponent implements OnInit {
     options: object = {};
     fruitsFilteredItemsCount = undefined;
     
-    density = '';
+    density = 'comfortable';
     displayDensities;
 
     navItems: object[] = [{

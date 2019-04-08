@@ -40,7 +40,7 @@
                 <input #searchContacts igxInput type="text" placeholder="Search Contacts" [(ngModel)]="search1" />
             </igx-input-group>
 
-            <div class="list-sample">
+            <div class="list-sample-density">
                 <igx-list #contactsList [displayDensity]="density">
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
