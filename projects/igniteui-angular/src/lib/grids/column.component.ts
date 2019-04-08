@@ -845,13 +845,52 @@ export class IgxColumnComponent implements AfterContentInit {
             parseInt(this.colEnd.replace('span', ''), 10) : 1;
     }
 
+    /**
+     * Row index where the current field should end.
+     * It can be applied as `span n` to specify that the current field is spanning on `n` rows.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [rowEnd]="'span 2'"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input()
     public rowEnd: string;
 
+    /**
+     * Column index where the current field should end.
+     * It can be applied as `span n` to specify that the current field is spanning on `n` columns.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [colEnd]="'span 2'"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input()
     public colEnd: string;
 
+    /**
+     * Row index from which the field is starting.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [rowStart]="1"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input() rowStart: number;
+
+    /**
+     * Column index from which the field is starting.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [colStart]="1"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input() colStart: number;
 
     /**
@@ -1046,22 +1085,22 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    getGridTemplate(isRow, isIE) {
+    getGridTemplate(isRow, isIE): string {
         const itemAccum = isRow ?
             (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
             (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
-        const generatedSizes = !isRow ? this.generateColumnSizes(this.children) : null;
+        const generatedSizes = !isRow ? this.getColumnSizes(this.children) : null;
         return isIE ?
         generatedSizes || `(1fr)[${templateItems}]` :
             generatedSizes || `repeat(${templateItems},1fr)`;
     }
 
-    protected generateColumnSizes(children) {
+    protected getColumnSizes(children): string {
         const columnSizes = [];
         // find the smallest col spans
         children.forEach(col => {
-            const actualWidth = parseFloat(col.calcWidth) + 'px';
+            const actualWidth = parseInt(col.calcWidth, 10) + 'px';
             if (col.colStart && columnSizes[col.colStart - 1] === undefined) {
                 columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
                      width: actualWidth, widthSetByUser: col.widthSetByUser };
@@ -1079,7 +1118,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (let j = 0; j < columnSizes[i].colSpan; j++) {
                     result += ' ' +
                     (columnSizes[i].widthSetByUser ?
-                        parseFloat(columnSizes[i].width) / columnSizes[i].colSpan + 'px' :
+                        parseInt(columnSizes[i].width, 10) / columnSizes[i].colSpan + 'px' :
                         columnSizes[i].width);
                 }
                 i += columnSizes[i].colSpan - 1;
