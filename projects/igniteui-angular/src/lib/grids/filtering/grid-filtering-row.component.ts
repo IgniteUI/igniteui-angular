@@ -410,7 +410,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for focusout on the input group.
      */
     public onInputGroupFocusout() {
-        setTimeout(() => {
+        if (!this.value && this.value !== 0) {
+            return;
+        }
+        requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement)) &&
                 this.dropDownConditions.collapsed) {
