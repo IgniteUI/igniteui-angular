@@ -69,11 +69,11 @@ describe('IgxGrid - multi-row-layout', () => {
                 expect(cellElem.clientHeight).toBe(expectedHeight);
 
                  // check offset left
-                const acc = (acc, cell) => {
-                    if (cell.column.colStart <  col.colStart && cell.column.rowStart === col.rowStart) {
-                        return acc += parseFloat(cell.column.calcWidth);
+                const acc = (accum, c) => {
+                    if (c.column.colStart <  col.colStart && c.column.rowStart === col.rowStart) {
+                        return accum += parseFloat(c.column.calcWidth);
                     } else {
-                        return acc;
+                        return accum;
                     }
                 };
                 const expectedLeft = cellsFromBlock.reduce(acc, 0);
