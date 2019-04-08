@@ -25,6 +25,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -45,12 +46,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
 
     @Input()
     public expandChildren: boolean;
-
-    /**
-     * @hidden
-     */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
-    public childColumns = new QueryList<IgxColumnComponent>();
 
     /**
      * @hidden
@@ -76,6 +71,11 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
+
+    /**
+     * @hidden
+    */
+    public childRow: IgxChildGridRowComponent;
 
     protected _expandChildren = false;
 
@@ -181,8 +181,8 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         return ref;
     }
 
-    protected getGridsForIsland(islandKey: string) {
-        return this.hgridAPI.getChildGridsForRowIsland(islandKey);
+    protected getGridsForIsland(rowIslandID: string) {
+        return this.hgridAPI.getChildGridsForRowIsland(rowIslandID);
     }
 
     protected getChildGrid(path: Array<IPathSegment>) {
