@@ -139,6 +139,11 @@ export class AppComponent implements OnInit {
             name: 'Grid MRL'
         },
         {
+            link: '/gridFilterTemplate',
+            icon: 'view_column',
+            name: 'Grid Filter Template'
+        },
+        {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'

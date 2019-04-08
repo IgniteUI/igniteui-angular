@@ -88,6 +88,7 @@ import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.compon
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 
 
 
@@ -169,7 +170,8 @@ const components = [
     GridColumnPercentageWidthsSampleComponent,
     CalendarViewsSampleComponent,
     GridSearchBoxComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    GridFilterTemplateSampleComponent
 ];
 
 @NgModule({
