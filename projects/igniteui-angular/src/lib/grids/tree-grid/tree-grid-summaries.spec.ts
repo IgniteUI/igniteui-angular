@@ -10,7 +10,7 @@ import {
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
@@ -39,11 +39,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('should render summaries for all the rows when have parentKey', () => {
             verifyTreeBaseSummaries(fix);
@@ -677,11 +678,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('CRUD with transactions', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('Delete root node', () => {
             treeGrid.toggleRow(847);
@@ -1191,11 +1193,12 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('Keyboard Navigation', () => {
         let fix;
         let treeGrid;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyScroliingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+            setupGridScrollDetection(fix, treeGrid);
+        }));
 
         it('should be able to select root summaries with arrow keys', async () => {
             HelperUtils.focusSummaryCell(fix, 0, 0);
@@ -1527,7 +1530,7 @@ describe('IgxTreeGrid - Summaries', () => {
         });
     });
 
-    it('should render correct custom summaries', () => {
+    it('should render correct custom summaries', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(IgxTreeGridCustomSummariesComponent);
         fix.detectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
@@ -1544,9 +1547,9 @@ describe('IgxTreeGrid - Summaries', () => {
 
         summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
         HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['4', '207', '51.75']);
-    });
+    }));
 
-    it('should render summaries for all the rows', () => {
+    it('should render summaries for all the rows', fakeAsync(/** height/width setter rAF */() => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesComponent);
         fix.detectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
@@ -1569,13 +1572,14 @@ describe('IgxTreeGrid - Summaries', () => {
         verifyTreeBaseSummaries(fix);
         verifySummaryForRow663(fix, 5);
         verifySummaryForRow847(fix, 6);
-    });
+    }));
 
     it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
+        const treeGrid = fix.componentInstance.treeGrid;
+        setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
         await wait(16);
-        const treeGrid = fix.componentInstance.treeGrid;
 
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();

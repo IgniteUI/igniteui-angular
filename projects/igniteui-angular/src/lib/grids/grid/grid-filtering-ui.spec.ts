@@ -1661,7 +1661,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(idCellChips.length).toBe(1);
         }));
 
-    it('should render correct input and dropdown in filter row for different column types', () => {
+    it('should render correct input and dropdown in filter row for different column types', fakeAsync(/** showHideArrowButtons rAF */() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1714,7 +1714,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         close = filterUIRow.queryAll(By.css('button'))[1];
         close.nativeElement.click();
         fix.detectChanges();
-    });
+    }));
 
     it('should apply  multiple conditions to grid immediately while the filter row is still open', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -2249,7 +2249,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
     }));
 
-    it('should position filter row and chips correctly when grid has column groups and one is hidden.', () => {
+    it('should position filter row and chips correctly when grid has column groups and one is hidden.',
+    fakeAsync(/** showHideArrowButtons rAF */() => {
         const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
         fix.detectChanges();
 
@@ -2294,7 +2295,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         const prodNameChipContent = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
         expect(prodNameChipContent.nativeElement.textContent.trim()).toEqual('Ignite');
-    });
+    }));
 
     // Filtering + Moving
     it('should move chip under the correct column when column is moved and filter row should open for correct column.', fakeAsync(() => {

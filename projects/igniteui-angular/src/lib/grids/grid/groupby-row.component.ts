@@ -8,11 +8,10 @@ import {
     Input,
     ViewChild,
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { first } from 'rxjs/operators';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +22,7 @@ import { first } from 'rxjs/operators';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        private selection: IgxSelectionAPIService,
+        private gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
@@ -40,6 +39,7 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    @Input()
     protected isFocused = false;
 
     /**
@@ -180,10 +180,13 @@ export class IgxGridGroupByRowComponent {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
+        // TODO: Refactor
         event.preventDefault();
         event.stopPropagation();
         const alt = event.altKey;
         const key = event.key.toLowerCase();
+        const selection = this.gridSelection;
+        selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
 
@@ -199,9 +202,8 @@ export class IgxGridGroupByRowComponent {
         if (args.cancel) {
             return;
         }
-        const colIndex = this._getSelectedColIndex() || 0;
-        const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
-            this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
+
+        const visibleColumnIndex = selection.activeElement ? selection.activeElement.column : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':
@@ -237,7 +239,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -245,13 +247,6 @@ export class IgxGridGroupByRowComponent {
      */
     get dataType(): any {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
-    }
-
-    private _getSelectedColIndex() {
-        const cell = this.selection.first_item(this.gridID + '-cell');
-        if (cell) {
-            return cell.columnID;
-        }
     }
 
     private isKeySupportedInGroupRow(key) {

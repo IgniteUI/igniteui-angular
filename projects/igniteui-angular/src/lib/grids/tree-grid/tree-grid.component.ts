@@ -26,20 +26,19 @@ import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService, HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
+import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridNavigationService } from '../grid-navigation.service';
-import { mergeObjects } from '../../core/utils';
-import { IgxHierarchicalTransactionService } from '../../services';
+import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
-import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { mergeObjects } from '../../core/utils';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
-import { takeUntil } from 'rxjs/operators';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -64,8 +63,10 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxTreeGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
+    providers: [
+        IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
+        { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
@@ -85,11 +86,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         return this._id;
     }
     public set id(value: string) {
-        if (this._id !== value) {
-            const oldId = this._id;
-            this._id = value;
-            this._gridAPI.reset(oldId, this._id);
-        }
+        this._id = value;
     }
 
     /**
@@ -373,6 +370,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     private _filteredData = null;
 
     constructor(
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
@@ -389,7 +388,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+            super(selectionService, crudService, gridAPI, selection,
+                _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
@@ -398,7 +398,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @hidden
      */
     public ngOnInit() {
-        this._gridAPI.register(this);
         super.ngOnInit();
 
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
@@ -431,7 +430,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                     requestAnimationFrame(() => {
                         const cellID = this.selection.first_item(`${this.id}-cell`);
                         if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(this.id, cellID.rowIndex, cellID.columnID);
+                            const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
@@ -501,7 +500,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public expandRow(rowID: any) {
-        this._gridAPI.expand_row(this.id, rowID);
+        this._gridAPI.expand_row(rowID);
     }
 
     /**
@@ -513,7 +512,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public collapseRow(rowID: any) {
-        this._gridAPI.collapse_row(this.id, rowID);
+        this._gridAPI.collapse_row(rowID);
     }
 
     /**
@@ -525,7 +524,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     public toggleRow(rowID: any) {
-        this._gridAPI.toggle_row_expansion(this.id, rowID);
+        this._gridAPI.toggle_row_expansion(rowID);
     }
 
     /**
@@ -617,7 +616,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        this._gridAPI.deleteRowById(this.id, rowId);
+        this._gridAPI.deleteRowById(rowId);
 
     }
 
@@ -638,13 +637,37 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
-        const rowID = this._gridAPI.get_row_id(this.id, rowData);
-        const record = this.processedRecords.get(rowID);
-        this._gridAPI.expand_path_to_record(this.id, record);
-        const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
+        let delayScrolling = false;
+        let record: ITreeGridRecord;
 
-        super.scrollTo(rowIndex, column);
+        if (typeof(row) !== 'number') {
+            const rowData = row;
+            const rowID = this._gridAPI.get_row_id(rowData);
+            record = this.processedRecords.get(rowID);
+            this._gridAPI.expand_path_to_record(record);
+
+            if (this.paging) {
+                const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
+                const page = Math.floor(rowIndex / this.perPage);
+
+                if (this.page !== page) {
+                    delayScrolling = true;
+                    this.page = page;
+                }
+            }
+        }
+
+        if (delayScrolling) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.scrollDirective(this.verticalScrollContainer,
+                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+            });
+        } else {
+            this.scrollDirective(this.verticalScrollContainer,
+                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+        }
+
+        this.scrollToHorizontally(column);
     }
 
     /**
@@ -656,6 +679,21 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             index: rowIndex,
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
+    }
+
+    getSelectedData(): any[] {
+        const source = [];
+
+        const process = (record) => {
+            if (record.summaries) {
+                source.push(null);
+                return;
+            }
+            source.push(record.data);
+        };
+
+        this.verticalScrollContainer.igxForOf.forEach(process);
+        return this.extractDataFromSelection(source);
     }
 
     /**

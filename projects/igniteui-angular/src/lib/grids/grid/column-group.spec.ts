@@ -47,7 +47,7 @@ describe('IgxGrid - multi-column headers', () => {
         }).compileComponents();
     }));
 
-    it('should initialize a grid with column groups', () => {
+    it('should initialize a grid with column groups', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -56,7 +56,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
         expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
-    });
+    }));
 
     it('column hiding - parent level', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
@@ -162,7 +162,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'General Information').hidden).toEqual(false);
     }));
 
-    it('Width should be correct. Column group with column. No width.', () => {
+    it('Width should be correct. Column group with column. No width.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         fixture.detectChanges();
 
@@ -172,7 +172,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(parseInt(locationColGroup.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
         const cityColumn = grid.getColumnByName('City');
         expect(parseInt(cityColumn.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
-    });
+    }));
 
     it('Width should be correct. Column group with column. Width in px.', fakeAsync(() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
@@ -208,7 +208,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(gridWidthInPx.toString());
     }));
 
-    it('Width should be correct. Column group with column. Column width in px.', () => {
+    it('Width should be correct. Column group with column. Column width in px.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const gridColWidth = '200px';
         const gridColWidthPx = parseInt(gridColWidth, 10);
@@ -221,9 +221,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(locationColGroup.width).toBe(gridColWidthPx.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with column. Column width in percent.', () => {
+    it('Width should be correct. Column group with column. Column width in percent.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const gridColWidth = '50%';
         const componentInstance = fixture.componentInstance;
@@ -235,9 +235,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(locationColGroup.width).toBe(gridColWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with column. Column with width in px.', () => {
+    it('Width should be correct. Column group with column. Column with width in px.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const columnWidth = '200px';
         const columnWidthPx = parseInt(columnWidth, 10);
@@ -250,9 +250,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(locationColGroup.width).toBe(columnWidthPx.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with column. Column with width in percent.', () => {
+    it('Width should be correct. Column group with column. Column with width in percent.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const columnWidth = '50%';
         const componentInstance = fixture.componentInstance;
@@ -264,9 +264,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(locationColGroup.width).toBe(columnWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with three columns. No width.', () => {
+    it('Width should be correct. Column group with three columns. No width.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         fixture.detectChanges();
 
@@ -282,7 +282,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(colWidth.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(colWidth.toString());
-    });
+    }));
 
     it('Width should be correct. Column group with three columns. Width in px.', fakeAsync(() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
@@ -326,7 +326,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(colWidth.toString());
     }));
 
-    it('Width should be correct. Column group with three columns. Column width in px.', () => {
+    it('Width should be correct. Column group with three columns. Column width in px.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridColWidth = '200px';
         const componentInstance = fixture.componentInstance;
@@ -343,9 +343,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(gridColWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
-    });
+    }));
 
-    it('Width should be correct. Colum group with three columns. Column width in percent.', () => {
+    it('Width should be correct. Colum group with three columns. Column width in percent.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridColWidth = '20%';
         const groupWidth = '60%';
@@ -362,9 +362,10 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(gridColWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with three columns. Columns with width in px.', () => {
+    it('Width should be correct. Column group with three columns. Columns with width in px.',
+    fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const columnWidth = '200px';
         const componentInstance = fixture.componentInstance;
@@ -381,9 +382,10 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(columnWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
-    });
+    }));
 
-    it('Width should be correct. Column group with three columns. Columns with width in percent.', () => {
+    it('Width should be correct. Column group with three columns. Columns with width in percent.',
+    fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const columnWidth = '20%';
         const groupWidth = '60%';
@@ -400,7 +402,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(columnWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
-    });
+    }));
 
     it('API method level should return correct values', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
@@ -820,7 +822,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(contactTitle.pinned).toBeTruthy();
     }));
 
-    it('Should not allow moving group to another level via API.', () => {
+    it('Should not allow moving group to another level via API.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -878,7 +880,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Maria Anders');
         expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Alfreds Futterkiste');
         expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
-    });
+    }));
 
     it('Should move column group correctly. One level column groups.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
@@ -1216,7 +1218,7 @@ describe('IgxGrid - multi-column headers', () => {
     }));
 
 
-    it('grouping - verify grouping when there are grouped columns', () => {
+    it('grouping - verify grouping when there are grouped columns', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1247,9 +1249,9 @@ describe('IgxGrid - multi-column headers', () => {
         const firstGroupedRow = groupRows[0].groupRow;
         expect(firstGroupedRow.value).toEqual('Sales Representative');
         expect(firstGroupedRow.records.length).toEqual(4);
-    });
+    }));
 
-    it('Should not render empty column group.', () => {
+    it('Should not render empty column group.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(EmptyColGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1258,9 +1260,9 @@ describe('IgxGrid - multi-column headers', () => {
         const emptyColGroup = fixture.debugElement.query(By.css('.emptyColGroup'));
         expect(parseInt(ci.emptyColGroup.width, 10)).toBe(0);
         expect(emptyColGroup).toBe(null);
-    });
+    }));
 
-    it('Should render headers correctly when having a column per group.', () => {
+    it('Should render headers correctly when having a column per group.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneColPerGroupGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1304,15 +1306,16 @@ describe('IgxGrid - multi-column headers', () => {
 
         testColumnHeaderRendering(faxCol, parseInt(ci.faxColWidth, 10),
             grid.defaultRowHeight, ci.faxColTitle);
-    });
+    }));
 
-    it('Should render headers correctly when having nested column groups.', () => {
+    it('Should render headers correctly when having nested column groups.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         NestedColGroupsTests.testHeadersRendering(fixture);
-    });
+    }));
 
-    it('Should render headers correctly when having nested column groups with huge header text.', () => {
+    it('Should render headers correctly when having nested column groups with huge header text.',
+    fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1331,9 +1334,9 @@ describe('IgxGrid - multi-column headers', () => {
         ci.grid.cdr.markForCheck();
         fixture.detectChanges();
         NestedColGroupsTests.testHeadersRendering(fixture);
-    });
+    }));
 
-    it('Should emit "columnInit" event when having multi-column headers.', () => {
+    it('Should emit "columnInit" event when having multi-column headers.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         const ci = fixture.componentInstance;
         const grid = ci.grid;
@@ -1344,9 +1347,9 @@ describe('IgxGrid - multi-column headers', () => {
         const colGroupsCount = 3;
 
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount + colGroupsCount);
-    });
+    }));
 
-    it('Should fire "columnInit" event when adding a multi-column header.', () => {
+    it('Should fire "columnInit" event when adding a multi-column header.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(DynamicGridComponent);
         const ci = fixture.componentInstance;
         const grid = ci.grid;
@@ -1357,14 +1360,15 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const colsCount = 2; // 1 col group and 1 col
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
-    });
+    }));
 
-    it('Should not throw exception if multi-column header columns width is set as number', () => {
+    it('Should not throw exception if multi-column header columns width is set as number',
+    fakeAsync(/** height/width setter rAF */() => {
         expect(() => {
             const fixture = TestBed.createComponent(NumberColWidthGridComponent);
             fixture.detectChanges();
         }).not.toThrow();
-    });
+    }));
 });
 
 @Component({
