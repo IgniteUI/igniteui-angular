@@ -34,6 +34,6 @@ import { NoOpScrollStrategy } from "./scroll/NoOpScrollStrategy";
 
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
-|initialize       | Initialize the strategy. Should be called once                                  |document, overlayService, id|
+|initialize       | Initialize the strategy. Should be called once                  |document, overlayService, id|
 |attach           | Attaches the strategy                                                           |-           |
 |detach           | Detaches the strategy                                                           |-           |

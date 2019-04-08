@@ -1058,7 +1058,7 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, () => {
+            disapear and the new value should not persist onto the next row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.componentInstance.initColumnsRows(5, 5);
                 fix.detectChanges();
@@ -1076,7 +1076,7 @@ describe('IgxGrid Component Tests', () => {
                 const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
-            });
+            }));
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
@@ -3440,6 +3440,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(500);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -3460,6 +3461,8 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid2;
             const tab = fix.componentInstance.tabs;
+
+            expect(grid.calcHeight).toBe(300);
             tab.tabs.toArray()[1].select();
             await wait(100);
             fix.detectChanges();
@@ -3499,6 +3502,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(200);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
@@ -3508,7 +3512,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator'));
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
     });
@@ -4138,13 +4142,13 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     `
 })
 export class IgxGridInsideIgxTabsComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid2', { read: IgxGridComponent })
     public grid2: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid3', { read: IgxGridComponent })
     public grid3: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid4', { read: IgxGridComponent })
     public grid4: IgxGridComponent;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild('grid5', { read: IgxGridComponent })
     public grid5: IgxGridComponent;
     @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
     public tabs: IgxTabsComponent;
