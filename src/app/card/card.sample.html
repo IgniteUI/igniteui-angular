@@ -134,10 +134,10 @@
                     <p>{{ cards[0].content }}</p>
                 </igx-card-content>
 
-                <igx-card-actions [reverse]="false">
+                <igx-card-actions>
                     <button igxButton igxRipple>Read More</button>
                     <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
-                        <igx-icon fontSet="material">{{icon}}</igx-icon>
+                        <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </igx-card-actions>
 
@@ -173,7 +173,7 @@
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--start">
                         <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[5].icons">
-                            <igx-icon fontSet="material">{{icon}}</igx-icon>
+                            <igx-icon>{{icon}}</igx-icon>
                         </span>
                     </div>
                     <div class="igx-card-actions__bgroup">
@@ -200,7 +200,7 @@
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--start">
                         <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[6].icons">
-                            <igx-icon fontSet="material">{{icon}}</igx-icon>
+                            <igx-icon>{{icon}}</igx-icon>
                         </span>
                     </div>
                     <div class="igx-card-actions__bgroup">
@@ -220,7 +220,7 @@
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--end">
                         <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[1].icons">
-                            <igx-icon fontSet="material">{{icon}}</igx-icon>
+                            <igx-icon>{{icon}}</igx-icon>
                         </span>
                     </div>
                 </igx-card-actions>
@@ -254,13 +254,13 @@
         <article>
             <igx-card type="outlined" [horizontal]="true">
 
-                <igx-card-actions layout="justify" [reverse]="false">
+                <igx-card-actions layout="justify">
                     <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true" >
                         <igx-icon>{{icon}}</igx-icon>
                     </button>
                 </igx-card-actions>
 
-                <igx-divider [middle]="true" [vertical]="true" inset="16px"></igx-divider>
+                <igx-divider [middle]="true" [vertical]="true"></igx-divider>
 
                 <div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%">
                     <igx-card-header>
