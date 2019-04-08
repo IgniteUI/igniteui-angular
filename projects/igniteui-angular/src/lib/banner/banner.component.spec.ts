@@ -475,23 +475,15 @@ describe('igxBanner', () => {
 
             // banner > banner__message > banner__text > ng-content (which is igx-card host) > wrapper div with card class
             const card = panelBody.querySelector('igx-card').children[0];
-            expect(card.attributes.getNamedItem('class').nodeValue).toContain('igx-card');
-            expect(card.attributes.getNamedItem('role').nodeValue).toEqual('group');
             expect(card.childElementCount).toEqual(2);
 
             const cardHeader = card.children[0];
             expect(cardHeader.childElementCount).toEqual(2);
 
             const avatar = cardHeader.children[0];
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--rounded');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--small');
-            expect(avatar.attributes.getNamedItem('role').nodeValue).toEqual('img');
-            expect(avatar.attributes.getNamedItem('aria-label').nodeValue).toEqual('avatar');
             expect(avatar.childElementCount).toEqual(1);
 
             const avatarImage = avatar.children[0];
-            expect(avatarImage.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar__image');
             expect(avatarImage.childElementCount).toEqual(0);
 
             const headerGroup = cardHeader.children[1];
