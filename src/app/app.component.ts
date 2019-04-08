@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/virtual-dropdown',
-            icon: 'fastfood',
+            icon: 'horizontal_split',
             name: 'DropDown - Virtual'
         },
         {

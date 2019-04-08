@@ -17,14 +17,12 @@
     <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Toggle Local</button>
     <igx-drop-down #dropdown2>
       <div class="drop-down-virtual-wrapper">
-        <ng-template igxFor let-item let-index="index" [igxForOf]="localItems" [igxForScrollOrientation]="'vertical'"
-          [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight">
-          <igx-drop-down-item [value]="item" [isHeader]="index % 7 === 0" role="option"
+          <igx-drop-down-item *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;" 
+          [value]="item" [isHeader]="index % 7 === 0" role="option"
             [disabled]="index > 53 && index < 57"
             [index]="index">
             {{ item.name }}
           </igx-drop-down-item>
-        </ng-template>
       </div>
     </igx-drop-down>
   </div>
