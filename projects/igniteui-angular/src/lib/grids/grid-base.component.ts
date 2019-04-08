@@ -4788,13 +4788,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
-        let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         let delayScrolling = false;
 
-        if (this.paging) {
+        if (this.paging && typeof(row) !== 'number') {
+            const rowIndex = this.filteredSortedData.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - page * this.perPage;
 
             if (this.page !== page) {
                 delayScrolling = true;
@@ -4804,15 +4802,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
-                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+                this.scrollDirective(this.verticalScrollContainer,
+                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
             });
         } else {
-            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            this.scrollDirective(this.verticalScrollContainer,
+                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
         }
 
+        this.scrollToHorizontally(column);
+    }
+
+    /**
+     * @hidden
+     */
+    protected scrollToHorizontally(column: any | number) {
+        let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
-
         if (this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
                 columnIndex -= this.pinnedColumns.length;
@@ -4823,7 +4830,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
+    /**
+     * @hidden
+     */
+    protected scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
         }
