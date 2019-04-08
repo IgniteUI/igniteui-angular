@@ -423,7 +423,8 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        let clear = filterUIRow.query(By.css('igx-suffix'));
+        let suffix = filterUIRow.query(By.css('igx-suffix'));
+        let clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // clear input value
@@ -540,7 +541,8 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        clear = filterUIRow.query(By.css('igx-suffix'));
+        suffix = filterUIRow.query(By.css('igx-suffix'));
+        clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -1528,11 +1530,12 @@ describe('IgxGrid - Filtering actions', () => {
         sendInput(input, filterValue, fix);
 
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const clearSuffix = inputGroup.query(By.css('igx-suffix'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const clearIcon = suffix.queryAll(By.css('igx-icon'))[1];
 
         spyOn(grid.onFilteringDone, 'emit');
 
-        clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
+        clearIcon.nativeElement.dispatchEvent(new MouseEvent('click'));
         GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         tick(100);
         fix.detectChanges();
@@ -1886,7 +1889,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             input.nativeElement.dispatchEvent(new Event('input'));
             fix.detectChanges();
 
-            const clearButton = filterUIRow.query(By.css('igx-suffix'));
+            const suffix = filterUIRow.query(By.css('igx-suffix'));
+            const clearButton = suffix.queryAll(By.css('igx-icon'))[1];
 
             clearButton.nativeElement.click();
 
