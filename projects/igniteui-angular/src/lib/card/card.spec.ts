@@ -18,8 +18,10 @@ import {
 
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Card', () => {
+    configureTestSuite();
     const baseClass = 'igx-card';
 
     const classes = {
