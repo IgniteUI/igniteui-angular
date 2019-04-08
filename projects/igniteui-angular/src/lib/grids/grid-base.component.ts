@@ -2450,7 +2450,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.hideOverlays();
     }
 
-    private hideOverlays() {
+    /**
+    * @hidden
+    * @internal
+    */
+    public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.hide(overlayID);
             // blur in case some editor somewhere decides to move focus back

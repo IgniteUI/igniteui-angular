@@ -665,11 +665,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.scrollTop = event.target.scrollTop;
     }
 
+    public onContainerScroll() {
+        this.hideOverlays();
+    }
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
     }
-
 
     private updateParentSizes() {
         let currGrid = this.parent;
