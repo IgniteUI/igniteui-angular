@@ -56,13 +56,13 @@ describe('Column Hiding UI', () => {
     });
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
         afterEach(() => {
             columnChooser.onColumnVisibilityChanged.unsubscribe();
         });
@@ -737,7 +737,7 @@ describe('Column Hiding UI', () => {
     });
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnGroupsHidingTestComponent);
             fix.detectChanges();
             fix.componentInstance.hasGroupColumns = true;
@@ -746,7 +746,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
 
         it('indents columns according to their level.', () => {
             const items = columnChooser.columnItems;
@@ -942,7 +942,7 @@ describe('Column Hiding UI', () => {
 
     describe('toolbar button', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -955,7 +955,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
 
         it('is shown when columnHiding is true and hidden - when false.', () => {
             expect(grid.toolbar.columnHidingUI).toBeDefined();
