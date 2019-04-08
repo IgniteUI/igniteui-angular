@@ -12,7 +12,7 @@
                 <input #searchBox1 igxInput type="text" placeholder="Search List" [(ngModel)]="search2" />
             </igx-input-group>
 
-            <div class="list-sample">                
+            <div class="list-sample">
                 <igx-list #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
                     <igx-list-item>Red Delicious</igx-list-item>

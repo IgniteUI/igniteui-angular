@@ -17,7 +17,6 @@ import {
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
-import { DisplayDensity } from '../core/density';
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
