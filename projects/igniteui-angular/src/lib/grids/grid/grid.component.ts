@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
+import {
+    Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
+} from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -71,7 +73,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    protected _groupingExpressions: IGroupingExpression [] = [];
+    protected _groupingExpressions: IGroupingExpression[] = [];
     /**
      * @hidden
      */
@@ -649,7 +651,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
     * @hidden
     */
-   public getContext(rowData, rowIndex): any {
+    public getContext(rowData, rowIndex): any {
         return {
             $implicit: rowData,
             index: rowIndex,
@@ -660,7 +662,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
     * @hidden
     */
-   public get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
@@ -783,8 +785,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    protected scrollTo( row: any | number, column: any | number): void {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
+    protected scrollTo(row: any | number, column: any | number): void {
+        if (this.groupingExpressions && this.groupingExpressions.length
+            && typeof(row) !== 'number') {
             const groupByRecords = this.getGroupByRecords();
             const rowIndex = this.filteredSortedData.indexOf(row);
             const groupByRecord = groupByRecords[rowIndex];
@@ -831,7 +834,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.endEdit(true);
             this.summaryService.updateSummaryCache(args);
         });

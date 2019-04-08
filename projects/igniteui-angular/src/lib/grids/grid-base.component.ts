@@ -560,8 +560,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.reflow();
-                this.cdr.markForCheck();
+                if (!this._destroyed) {
+                    this.reflow();
+                    this.cdr.markForCheck();
+                }
             });
         }
     }
@@ -594,7 +596,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // Calling reflow(), because the width calculation
                 // might make the horizontal scrollbar appear/disappear.
                 // This will change the height, which should be recalculated.
-                this.reflow();
+                if (!this._destroyed) {
+                    this.reflow();
+                }
             });
         }
     }
@@ -830,8 +834,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
-
-            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this.calcHeight) {
+                this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            }
             if (this._ngAfterViewInitPassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
@@ -2567,38 +2572,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.columnList.changes
         .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => {
-            const diff = this.columnListDiffer.diff(change);
-            if (diff) {
-                let added = false;
-                let removed = false;
-
-                this.initColumns(this.columnList);
-
-
-                diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    this.onColumnInit.emit(record.item);
-                    added = true;
-                });
-
-                diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    // Clear Filtering
-                    this.gridAPI.clear_filter(record.item.field);
-
-                    // Clear Sorting
-                    this.gridAPI.clear_sort(record.item.field);
-                    removed = true;
-                });
-
-                this.resetCaches();
-
-                if (added || removed) {
-                    this.summaryService.clearSummaryCache();
-                    this.calculateGridSizes();
-                }
-            }
-            this.markForCheck();
-        });
+        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
@@ -4042,6 +4016,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        const diff = this.columnListDiffer.diff(change);
+        if (diff) {
+            let added = false;
+            let removed = false;
+
+            this.initColumns(this.columnList);
+
+
+            diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                this.onColumnInit.emit(record.item);
+                added = true;
+            });
+
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Filtering
+                this.gridAPI.clear_filter(record.item.field);
+
+                // Clear Sorting
+                this.gridAPI.clear_sort(record.item.field);
+                removed = true;
+            });
+
+            this.resetCaches();
+
+            if (added || removed) {
+                this.summaryService.clearSummaryCache();
+                this.calculateGridSizes();
+            }
+        }
+        this.markForCheck();
+    }
+
+    /**
+     * @hidden
+     */
     protected calculateGridSizes() {
         /*
             TODO: (R.K.) This layered lasagne should be refactored
@@ -4769,13 +4779,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
-        let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         let delayScrolling = false;
 
-        if (this.paging) {
+        if (this.paging && typeof(row) !== 'number') {
+            const rowIndex = this.filteredSortedData.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
-            rowIndex = rowIndex - page * this.perPage;
 
             if (this.page !== page) {
                 delayScrolling = true;
@@ -4785,15 +4793,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
-                this.scrollDirective(this.verticalScrollContainer, rowIndex);
+                this.scrollDirective(this.verticalScrollContainer,
+                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
             });
         } else {
-            this.scrollDirective(this.verticalScrollContainer, rowIndex);
+            this.scrollDirective(this.verticalScrollContainer,
+                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
         }
 
+        this.scrollToHorizontally(column);
+    }
+
+    /**
+     * @hidden
+     */
+    protected scrollToHorizontally(column: any | number) {
+        let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
-
         if (this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
                 columnIndex -= this.pinnedColumns.length;
@@ -4804,7 +4821,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
+    /**
+     * @hidden
+     */
+    protected scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
         }

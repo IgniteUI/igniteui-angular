@@ -153,6 +153,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
+        this.hGrid.childRow =  this;
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,
@@ -169,8 +170,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this.hGrid.createColumnsList(this.layout.childColumns.toArray());
         }
         const layouts = this.hGrid.childLayoutList.toArray();
-        layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
+        layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
+        this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
         this.hGrid.cdr.detectChanges();
     }
