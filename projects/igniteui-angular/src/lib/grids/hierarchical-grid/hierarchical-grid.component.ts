@@ -399,7 +399,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     public get parentRowOutletDirective() {
-        return this.rootGrid.rowEditingOutletDirective;
+        return this === this.rootGrid ? null : this.rootGrid.rowEditingOutletDirective;
     }
 
     /**
