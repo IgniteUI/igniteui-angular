@@ -17,12 +17,12 @@
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxGridColumnType, IgxGridRowType, IgxGridTreeRowType, IgxGridType, IgxGridCellType } from './grid-types';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -42,7 +42,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, IgxGridCellType {
 
     /**
      * Gets the column of the cell.
@@ -52,7 +52,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     /**
      * Gets the row of the cell.
@@ -62,7 +62,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public row: any;
+    public row: IgxGridRowType | IgxGridTreeRowType;
 
     /**
      * Gets the data of the row of the cell.
@@ -186,8 +186,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get gridID(): any {
-        return this.row.gridID;
+    get gridID(): string {
+        return this.grid.id;
     }
 
     /**
@@ -197,7 +197,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get grid(): any {
+    get grid(): IgxGridType {
         return this.gridAPI.grid;
     }
 
@@ -723,12 +723,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
+            const row = this.row as IgxGridTreeRowType;
+            const collapse = row.expanded && ROW_COLLAPSE_KEYS.has(key);
+            const expand = !row.expanded && ROW_EXPAND_KEYS.has(key);
             if (collapse) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                (this.gridAPI as any).trigger_row_expansion_toggle(row.treeRow, !row.expanded, event, this.visibleColumnIndex);
             } else if (expand) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                (this.gridAPI as any).trigger_row_expansion_toggle(row.treeRow, !row.expanded, event, this.visibleColumnIndex);
             }
         }
     }

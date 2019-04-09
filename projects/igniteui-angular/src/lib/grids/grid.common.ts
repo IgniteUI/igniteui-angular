@@ -20,7 +20,6 @@ import {
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
@@ -29,6 +28,7 @@ import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { KEYS } from '../core/utils';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
+import { IgxGridColumnType } from './grid-types';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEBOUNCE_TIME = 200;
@@ -45,7 +45,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
      * @hidden
      */
     @Input('igxResizeHandle')
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     /**
      * @hidden
@@ -273,15 +273,15 @@ export class IgxCellEditorTemplateDirective {
 })
 export class IgxColumnMovingService {
     private _icon: any;
-    private _column: IgxColumnComponent;
+    private _column: IgxGridColumnType;
 
     public cancelDrop: boolean;
     public isColumnMoving: boolean;
 
-    get column(): IgxColumnComponent {
+    get column(): IgxGridColumnType {
         return this._column;
     }
-    set column(val: IgxColumnComponent) {
+    set column(val: IgxGridColumnType) {
         if (val) {
             this._column = val;
         }
@@ -332,7 +332,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     }
 
     private subscription$: Subscription;
-    private _column: IgxColumnComponent;
+    private _column: IgxGridColumnType;
     private _ghostImageClass = 'igx-grid__drag-ghost-image';
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
@@ -481,16 +481,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
     @Input('igxColumnMovingDrop')
     set data(val: any) {
-        if (val instanceof IgxColumnComponent) {
-            this._column = val;
-        }
+        this._column = val;
 
         if (val instanceof IgxGridForOfDirective) {
             this._hVirtDir = val;
         }
     }
 
-    get column(): IgxColumnComponent {
+    get column(): IgxGridColumnType {
         return this._column;
     }
 
@@ -507,7 +505,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _dropPos: DropPosition;
     private _dropIndicator: any = null;
     private _lastDropIndicator: any = null;
-    private _column: IgxColumnComponent;
+    private _column: IgxGridColumnType;
     private _hVirtDir: IgxGridForOfDirective<any>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid__th-drop-indicator--active';

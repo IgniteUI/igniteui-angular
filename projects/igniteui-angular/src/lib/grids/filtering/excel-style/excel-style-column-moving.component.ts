@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
-import { IgxGridBaseComponent } from '../../grid-base.component';
+import { IgxGridColumnType, IgxGridType } from '../../grid-types';
 
 /**
  * @hidden
@@ -14,15 +13,15 @@ import { IgxGridBaseComponent } from '../../grid-base.component';
 export class IgxExcelStyleColumnMovingComponent {
 
     @Input()
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     @Input()
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridType;
 
     constructor() {}
 
     private get visibleColumns() {
-        return this.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+        return this.grid.visibleColumns.filter(col => !col.columnGroup);
     }
 
     get canNotMoveLeft() {
@@ -54,7 +53,7 @@ export class IgxExcelStyleColumnMovingComponent {
         this.grid.moveColumn(this.column, targetColumn, moveDirection);
     }
 
-    private findColumn(moveDirection: number, columns: IgxColumnComponent[]) {
+    private findColumn(moveDirection: number, columns: IgxGridColumnType[]) {
         let index = columns.indexOf(this.column);
         if (moveDirection === 0) {
             while (index > 0) {

@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IgxColumnComponent } from './column.component';
+import { IgxGridColumnType } from './grid-types';
 
 /** @hidden */
 @Injectable()
@@ -26,7 +26,7 @@ export class IgxColumnResizingService {
     /**
      * The column being resized.
      */
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     constructor(private zone: NgZone) { }
 
@@ -53,14 +53,14 @@ export class IgxColumnResizingService {
         let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
         minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
 
-        return this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width - minWidth;
+        return this.column.headerCell.nativeElement.getBoundingClientRect().width - minWidth;
     }
 
     /**
      * Returns the maximal possible width to which the column can be resized.
      */
     get restrictResizeMax(): number {
-        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
 
         if (this.column.pinned) {
             const pinnedMaxWidth = this.pinnedMaxWidth =
@@ -90,7 +90,7 @@ export class IgxColumnResizingService {
      * than the maximum allowed pinned area width (80% of the total grid width), autosizing will be deismissed.
      */
     public autosizeColumnOnDblClick() {
-        const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const currentColWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
 
         const size = this.column.getLargestCellWidth();
 
@@ -133,7 +133,7 @@ export class IgxColumnResizingService {
         let colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
         const colMaxWidth = this.column.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(this.column.maxWidth);
 
-        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
 
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
         colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;

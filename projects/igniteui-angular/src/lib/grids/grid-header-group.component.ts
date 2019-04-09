@@ -12,13 +12,13 @@ import {
     ElementRef,
     HostListener
 } from '@angular/core';
-import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridColumnType } from './grid-types';
 
 const Z_INDEX = 9999;
 
@@ -38,7 +38,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     /**
      * Gets the `id` of the grid in which the header group is stored.

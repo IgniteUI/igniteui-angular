@@ -16,10 +16,10 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
+import { IgxGridColumnType, IgxGridCellType, IgxGridRowType } from './grid-types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +27,7 @@ import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/gri
     selector: 'igx-row',
     templateUrl: './grid/grid-row.component.html'
 })
-export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {
+export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck, IgxGridRowType {
 
     private _rowData: any;
     /**
@@ -86,8 +86,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxGridCellComponent))
-    public cells: QueryList<IgxGridCellComponent>;
+    @ViewChildren(IgxGridCellComponent)
+    private _cells: QueryList<IgxGridCellComponent>;
+
+
+    get cells(): QueryList<IgxGridCellType> {
+        return this._cells as QueryList<IgxGridCellType>;
+    }
 
     /**
      * @hidden
@@ -111,21 +116,21 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    get columns(): IgxColumnComponent[] {
+    get columns(): IgxGridColumnType[] {
         return this.grid.visibleColumns;
     }
 
     /**
      * @hidden
      */
-    get pinnedColumns(): IgxColumnComponent[] {
+    get pinnedColumns(): IgxGridColumnType[] {
         return this.grid.pinnedColumns;
     }
 
     /**
      * @hidden
      */
-    get unpinnedColumns(): IgxColumnComponent[] {
+    get unpinnedColumns(): IgxGridColumnType[] {
         return this.grid.unpinnedColumns;
     }
 

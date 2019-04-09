@@ -7,6 +7,7 @@ import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridTreeRowType } from '../grid-types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,7 +62,8 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
      * @hidden
      */
     public get hasChildren() {
-        return this.row.treeRow.children && this.row.treeRow.children.length > 0;
+        const row = this.row as IgxGridTreeRowType;
+        return row.treeRow.children && row.treeRow.children.length > 0;
     }
 
     /**
@@ -76,7 +78,8 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        this.treeGridAPI.trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+        const row = this.row as IgxGridTreeRowType;
+        this.treeGridAPI.trigger_row_expansion_toggle(row.treeRow, !row.expanded, event, this.visibleColumnIndex);
     }
 
     /**

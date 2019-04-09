@@ -19,7 +19,6 @@ import {
     AbsoluteScrollStrategy
 } from '../../../services/index';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
-import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     IFilteringOperation,
     IgxStringFilteringOperand,
@@ -29,7 +28,7 @@ import {
 } from '../../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { cloneArray, KEYS } from '../../../core/utils';
+import { KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
@@ -37,7 +36,7 @@ import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxGridColumnType } from '../../grid-types';
 
 /**
  *@hidden
@@ -98,7 +97,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     protected columnMoving = new Subscription();
 
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
     public filteringService: IgxFilteringService;
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
@@ -200,7 +199,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         return 'igx-excel-filter__actions-clear--disabled';
     }
 
-    public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
+    public initialize(column: IgxGridColumnType, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.column = column;
         this.filteringService = filteringService;
@@ -319,7 +318,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     public populateColumnData() {
         let data = this.grid.filteredData;
         if (!data) {
-            data = this.column.gridAPI.get_all_data(this.grid.id);
+            data = this.grid.gridAPI.get_all_data(this.grid.id);
         }
 
         if (this.column.dataType === DataType.Date) {

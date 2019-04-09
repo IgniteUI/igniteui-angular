@@ -86,6 +86,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridColumnType, IgxGridHeaderGroupType, IgxGridHeaderType, IgxGridCellType, IgxGridType } from './grid-types';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1442,7 +1443,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
-    public columnList: QueryList<IgxColumnComponent>;
+    public columnList: QueryList<IgxGridColumnType>;
 
     /**
      *@hidden
@@ -1481,7 +1482,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get headerGroupsList(): IgxGridHeaderGroupComponent[] {
+    get headerGroupsList(): IgxGridHeaderGroupType[] {
         return this.headerGroups ? flatten(this.headerGroups.toArray()) : [];
     }
 
@@ -1492,8 +1493,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get headerCellList(): IgxGridHeaderComponent[] {
-        return this.headerGroupsList.map((headerGroup) => headerGroup.headerCell).filter((headerCell) => headerCell);
+    get headerCellList(): IgxGridHeaderType[] {
+        return this.headerGroupsList.map(headerGroup => headerGroup.headerCell).filter((headerCell) => headerCell);
     }
 
     /**
@@ -1504,7 +1505,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get filterCellList(): IgxGridFilteringCellComponent[] {
-        return this.headerGroupsList.map((headerGroup) => headerGroup.filterCell).filter((filterCell) => filterCell);
+        return this.headerGroupsList.map((headerGroup) => headerGroup.filterCell).filter(Boolean);
     }
 
     @ViewChildren('row')
@@ -2324,15 +2325,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _columns: IgxColumnComponent[] = [];
+    protected _columns: IgxGridColumnType[] = [];
     /**
      * @hidden
      */
-    protected _pinnedColumns: IgxColumnComponent[] = [];
+    protected _pinnedColumns: IgxGridColumnType[] = [];
     /**
      * @hidden
      */
-    protected _unpinnedColumns: IgxColumnComponent[] = [];
+    protected _unpinnedColumns: IgxGridColumnType[] = [];
     /**
      * @hidden
      */
@@ -2483,7 +2484,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
-        private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
@@ -2876,7 +2877,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get columns(): IgxColumnComponent[] {
+    get columns(): IgxGridColumnType[] {
         return this._columns;
     }
 
@@ -2887,7 +2888,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get pinnedColumns(): IgxColumnComponent[] {
+    get pinnedColumns(): IgxGridColumnType[] {
         if (this._pinnedVisible.length) {
             return this._pinnedVisible;
         }
@@ -2902,7 +2903,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get unpinnedColumns(): IgxColumnComponent[] {
+    get unpinnedColumns(): IgxGridColumnType[] {
         if (this._unpinnedVisible.length) {
             return this._unpinnedVisible;
         }
@@ -2934,7 +2935,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param name
      * @memberof IgxGridBaseComponent
      */
-    public getColumnByName(name: string): IgxColumnComponent {
+    public getColumnByName(name: string): IgxGridColumnType {
         return this.columnList.find((col) => col.field === name);
     }
 
@@ -2970,7 +2971,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get visibleColumns(): IgxColumnComponent[] {
+    get visibleColumns(): IgxGridColumnType[] {
         if (this._visibleColumns.length) {
             return this._visibleColumns;
         }
@@ -2987,7 +2988,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param columnField
      * @memberof IgxGridBaseComponent
      */
-    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
+    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellType {
         const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
         if (columnId !== -1) {
             return this.gridAPI.get_cell_by_index(rowIndex, columnId);
@@ -3004,7 +3005,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param columnField
      * @memberof IgxGridBaseComponent
      */
-    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
+    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellType {
         return this.gridAPI.get_cell_by_key(rowSelector, columnField);
     }
 
@@ -3085,7 +3086,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
+    protected _moveColumns(from: IgxGridColumnType, to: IgxGridColumnType, pos: DropPosition) {
         const list = this.columnList.toArray();
         const fromIndex = list.indexOf(from);
         let toIndex = list.indexOf(to);
@@ -3128,7 +3129,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
+    protected _reorderPinnedColumns(from: IgxGridColumnType, to: IgxGridColumnType, position: DropPosition) {
         const pinned = this._pinnedColumns;
         let dropIndex = pinned.indexOf(to);
 
@@ -3150,7 +3151,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
+    protected _moveChildColumns(parent: IgxGridColumnType, from: IgxGridColumnType, to: IgxGridColumnType, pos: DropPosition) {
         const buffer = parent.children.toArray();
         const fromIndex = buffer.indexOf(from);
         let toIndex = buffer.indexOf(to);
@@ -3173,7 +3174,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	  * @memberof IgxGridBaseComponent
 	  */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
+    public moveColumn(column: IgxGridColumnType, dropTarget: IgxGridColumnType, pos: DropPosition = DropPosition.None) {
 
         let position = pos;
         const fromIndex = column.visibleIndex;
@@ -3567,8 +3568,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param index
      * @memberof IgxGridBaseComponent
      */
-    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
-        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
+    public pinColumn(columnName: string | IgxGridColumnType, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName as string);
         return col.pin(index);
     }
 
@@ -3581,8 +3582,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param index
      * @memberof IgxGridBaseComponent
      */
-    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
-        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
+    public unpinColumn(columnName: string | IgxGridColumnType, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName as string);
         return col.unpin(index);
     }
 
@@ -4224,11 +4225,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+    protected initColumns(collection: QueryList<IgxGridColumnType>, cb: Function = null) {
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
-        collection.forEach((column: IgxColumnComponent) => {
-            column.grid = this;
+        collection.forEach((column: IgxGridColumnType) => {
+            column.grid = this as IgxGridType;
             column.defaultWidth = this.columnWidth;
             this.setColumnEditState(column);
 
@@ -4241,7 +4242,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.reinitPinStates();
     }
 
-    private setColumnEditState(column: IgxColumnComponent) {
+    private setColumnEditState(column: IgxGridColumnType) {
         // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
         if (this.rowEditable && column.editable === null &&
             column.field && column.field !== this.primaryKey) {
@@ -4536,7 +4537,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     extractDataFromSelection(source: any[]): any[] {
-        let column: IgxColumnComponent;
+        let column: IgxGridColumnType;
         let record = {};
         const selectedData = [];
 

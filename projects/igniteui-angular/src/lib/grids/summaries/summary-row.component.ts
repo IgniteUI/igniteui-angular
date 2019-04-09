@@ -15,8 +15,8 @@ import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { IgxColumnComponent } from '../column.component';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxGridColumnType } from '../grid-types';
 
 
 @Component({
@@ -88,14 +88,14 @@ export class IgxSummaryRowComponent implements DoCheck  {
     /**
      * @hidden
      */
-    public get pinnedColumns(): IgxColumnComponent[] {
+    public get pinnedColumns(): IgxGridColumnType[] {
         return this.grid.pinnedColumns;
     }
 
     /**
      * @hidden
      */
-    public get unpinnedColumns(): IgxColumnComponent[] {
+    public get unpinnedColumns(): IgxGridColumnType[] {
         return this.grid.unpinnedColumns;
     }
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
+import { FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
+import { IgxGridColumnType, IgxGridType } from './grid-types';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -12,7 +12,7 @@ enum MoveDirection {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridType;
 
     get displayContainerWidth() {
         return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10);
@@ -72,7 +72,7 @@ export class IgxGridNavigationService {
         return this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(index);
     }
 
-    public get gridOrderedColumns(): IgxColumnComponent[] {
+    public get gridOrderedColumns(): IgxGridColumnType[] {
         return [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup);
     }
 
@@ -459,7 +459,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
+    public navigatePrevFilterCell(column: IgxGridColumnType, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
         const prevFilterableIndex = cols.indexOf(column) - 1;
         const visibleIndex = column.visibleIndex;
@@ -480,7 +480,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
+    public navigateNextFilterCell(column: IgxGridColumnType, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
         const nextFilterableIndex = cols.indexOf(column) + 1;
         if (nextFilterableIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
@@ -506,13 +506,13 @@ export class IgxGridNavigationService {
         }
     }
 
-    private getLastPinnedFilterableColumn(): IgxColumnComponent {
+    private getLastPinnedFilterableColumn(): IgxGridColumnType {
         const pinnedFilterableColums =
             this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable);
         return pinnedFilterableColums[pinnedFilterableColums.length - 1];
     }
 
-    private getFirstPinnedFilterableColumn(): IgxColumnComponent {
+    private getFirstPinnedFilterableColumn(): IgxGridColumnType {
         return this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable)[0];
     }
 

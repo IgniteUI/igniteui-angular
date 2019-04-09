@@ -20,7 +20,6 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -29,6 +28,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxGridColumnType } from '../grid-types';
 
 let NEXT_ID = 0;
 
@@ -37,8 +37,8 @@ export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
 }
 export interface IGroupingDoneEventArgs {
     expressions: Array<ISortingExpression> | ISortingExpression;
-    groupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
-    ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
+    groupedColumns: Array<IgxGridColumnType> | IgxGridColumnType;
+    ungroupedColumns: Array<IgxGridColumnType> | IgxGridColumnType;
 }
 
 /**
@@ -232,8 +232,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
         if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
-            const groupedCols: IgxColumnComponent[] = [];
-            const ungroupedCols: IgxColumnComponent[] = [];
+            const groupedCols: IgxGridColumnType[] = [];
+            const ungroupedCols: IgxGridColumnType[] = [];
             const groupedColsArr = newExpressions.filter((obj) => {
                 return !oldExpressions.some((obj2) => {
                     return obj.fieldName === obj2.fieldName;

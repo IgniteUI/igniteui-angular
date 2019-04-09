@@ -5,6 +5,7 @@ import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridTreeRowType, IgxHGridType } from '../grid-types';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +37,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     }
 
     private _getRootGrid() {
-        let currGrid = this.grid;
+        let currGrid = this.grid as IgxHGridType;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
         }
@@ -57,7 +58,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     _updateCellSelectionStatus() {
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
-        let parentGrid = this.grid;
+        let parentGrid = this.grid as IgxHGridType;
         let childGrid;
         // add highligh to the current grid
         if (this._rootGrid.id !== currentElement.id) {
@@ -82,8 +83,9 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         if (event.altKey) {
             const grid = this.gridAPI.grid;
             const state = this.gridAPI.grid.hierarchicalState;
-            const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
-            const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
+            const row = this.row as IgxGridTreeRowType;
+            const collapse = row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+            const expand = !row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
             if (collapse) {
                 grid.hierarchicalState = state.filter(v => {
                     return v.rowID !== this.row.rowID;

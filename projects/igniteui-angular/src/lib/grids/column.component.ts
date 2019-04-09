@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
 import { IgxRowComponent } from './row.component';
 import {
@@ -21,7 +20,6 @@ import {
     IgxCellTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './grid.common';
-import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { getNodeSizeViaRange, flatten } from '../core/utils';
 import {
@@ -32,9 +30,8 @@ import {
     IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxGridCellType, IgxGridHeaderGroupType, IgxGridHeaderType, IgxGridFilterCellType, IgxGridType } from './grid-types';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -599,7 +596,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridType;
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
@@ -732,7 +729,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    get cells(): IgxGridCellComponent[] {
+    get cells(): IgxGridCellType[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
             .map((row) => {
                 if (row.cells) {
@@ -1168,8 +1165,8 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    get headerCell(): IgxGridHeaderComponent {
-        return this.grid.headerCellList.find((header) => header.column === this);
+    get headerCell(): IgxGridHeaderType {
+        return this.grid.headerCellList.find(header => header.column.index === this.index);
     }
 
     /**
@@ -1180,16 +1177,16 @@ export class IgxColumnComponent implements AfterContentInit {
     * ```
     * @memberof IgxColumnComponent
     */
-    get filterCell(): IgxGridFilteringCellComponent {
-        return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
+    get filterCell(): IgxGridFilterCellType {
+        return this.grid.filterCellList.find(filterCell => filterCell.column.index === this.index);
     }
 
     /**
      * Returns a reference to the header group of the column.
      * @memberof IgxColumnComponent
      */
-    get headerGroup(): IgxGridHeaderGroupComponent {
-        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
+    get headerGroup(): IgxGridHeaderGroupType {
+        return this.grid.headerGroupsList.find(headerGroup => headerGroup.column.index === this.index);
     }
 
     /**
@@ -1245,18 +1242,18 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.headerCell) {
             let headerCell;
-            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+            if (this.headerTemplate && this.headerCell.nativeElement.children[0].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.nativeElement.children[0].children)
                     .map((child) => getNodeSizeViaRange(range, child)));
             } else {
-                headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+                headerCell = getNodeSizeViaRange(range, this.headerCell.nativeElement.children[0]);
             }
 
             if (this.sortable || this.filterable) {
-                headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
+                headerCell += this.headerCell.nativeElement.children[1].getBoundingClientRect().width;
             }
 
-            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.nativeElement);
             const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
                 parseFloat(headerStyle.borderRightWidth);
             largest.set(headerCell, headerPadding);
@@ -1416,7 +1413,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    get cells(): IgxGridCellComponent[] {
+    get cells(): IgxGridCellType[] {
         return [];
     }
     /**

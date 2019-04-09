@@ -16,7 +16,6 @@ import {
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
@@ -29,6 +28,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../animations/main';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
+import { IgxGridColumnType } from './grid-types';
 
 /**
  * @hidden
@@ -47,7 +47,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     private _destroy$ = new Subject<boolean>();
 
     @Input()
-    public column: IgxColumnComponent;
+    public column: IgxGridColumnType;
 
     @Input()
     public gridID: string;
@@ -127,7 +127,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef,
+        private elementRef: ElementRef,
         public zone: NgZone,
         private _filteringService: IgxFilteringService,
         private _moduleRef: NgModuleRef<any>,
@@ -136,6 +136,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
     public ngOnInit() {
         this.initFilteringSettings();
+    }
+
+    get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     public ngDoCheck() {
