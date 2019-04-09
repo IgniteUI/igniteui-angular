@@ -2457,6 +2457,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.hide(overlayID);
+            this.overlayService.onClosed.pipe(
+                filter(o => o.id === overlayID),
+                takeUntil(this.destroy$)).subscribe(() => {
+                    this.nativeElement.focus();
+                });
         });
     }
 
@@ -2548,8 +2553,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const ind = this.overlayIDs.indexOf(event.id);
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
-                // blur in case some editor somewhere decides to move focus back
-                this.nativeElement.focus();
             }
         });
     }
