@@ -377,9 +377,9 @@
     $button-icon-padding: 0;
 
     $button-padding: (
-        comfortable: rem(9px, 16px) rem(16px, 16px), // 36px
-        cosy: rem(6px, 16px) rem(16px, 16px), // (36 + 24) / 2 = 30px
-        compact: rem(3px, 16px) rem(16px, 16px) // 24px
+        comfortable: rem(9px, 16px) rem(16px, 16px),
+        cosy: rem(6px, 16px) rem(16px, 16px),
+        compact: rem(3px, 16px) rem(16px, 16px)
     );
     $button-size: (
         comfortable: rem(36px),
@@ -387,9 +387,9 @@
         compact: rem(24px)
     );
     $button-floating-padding: (
-        comfortable: rem(15px), // 56px
-        cosy: rem(11px), // (56px + 40px) / 2 = 48px
-        compact: rem(7px) // 40px
+        comfortable: rem(15px),
+        cosy: rem(11px),
+        compact: rem(7px)
     );
 
     $button-floating-size: (
