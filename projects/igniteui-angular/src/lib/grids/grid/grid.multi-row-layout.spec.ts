@@ -137,7 +137,53 @@ describe('IgxGrid - multi-row-layout', () => {
          verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups);
     });
 
-    it('should not throw error when layout is incomplete', () => {});
+    it('should not throw error when layout is incomplete and should render valid mrl block styles', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 3', rowEnd: 'span 1'},
+                { field: 'CompanyName', rowStart: 1, colStart: 1},
+                { field: 'PostalCode', rowStart: 1, colStart: 2},
+                // { field: 'Fax', rowStart: 1, colStart: 3},
+                { field: 'Country', rowStart: 3, colStart: 1},
+                // { field: 'Region', rowStart: 3, colStart: 2},
+                { field: 'Phone', rowStart: 3, colStart: 3}
+            ]
+        }];
+        fixture.componentInstance.width = '617px';
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+        // headers are aligned to cells
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        // verify block style
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
+
+        // creating an incomplete layout 2
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'CompanyName', rowStart: 3, colStart: 1},
+                // { field: 'PostalCode', rowStart: 1, colStart: 2},
+                { field: 'Fax', rowStart: 3, colStart: 3}
+            ]
+        }];
+        fixture.componentInstance.width = '617px';
+        fixture.detectChanges();
+
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
+
+    });
     it('should initialize correctly when no column widths are set.', () => {
         // test with single group
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
