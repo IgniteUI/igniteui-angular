@@ -17,7 +17,7 @@ import { wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
 
-fdescribe('List', () => {
+describe('List', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
