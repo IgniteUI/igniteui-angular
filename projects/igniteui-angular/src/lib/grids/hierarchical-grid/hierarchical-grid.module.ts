@@ -11,6 +11,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
+import { IgxRowIslandAPIService } from './row-island-api.service';
 
 /**
  * @hidden
@@ -40,6 +41,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
     IgxGridModule
   ],
   providers: [
+    IgxRowIslandAPIService,
     IgxHierarchicalSelectionAPIService
   ]
 })
