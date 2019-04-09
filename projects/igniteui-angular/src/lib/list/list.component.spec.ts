@@ -9,7 +9,8 @@ import {
     EmptyListComponent, CustomEmptyListComponent,
     ListLoadingComponent, ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
-    TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+    TwoHeadersListComponent, TwoHeadersListNoPanningComponent
+} from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 
@@ -90,7 +91,7 @@ describe('List', () => {
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
         expect(item.element.offsetLeft).toBe(testLeft);
-     });
+    });
 
     it('should calculate properly item index', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
@@ -714,10 +715,10 @@ describe('List', () => {
         const itemWidth = elementRefObject.nativeElement.offsetWidth;
 
         elementRefObject.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         elementRefObject.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
         elementRefObject.triggerEventHandler('panend', null);
         return new Promise((resolve, reject) => {
@@ -734,10 +735,10 @@ describe('List', () => {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
         itemNativeElement.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         itemNativeElement.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
     }
 
@@ -764,22 +765,16 @@ describe('List', () => {
     }
 
     /**
-     * Verifies the display density of the IgxList and its items by providing the IgxListComponent, the list DebugElement,
-     * the expected items and headers count and the expected DisplayDensity enumeration value.
+     * Verifies the display density of the IgxList by providing the IgxListComponent,
+     * the list DebugElement and the expected DisplayDensity enumeration value.
     */
     function verifyDisplayDensity(listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) {
         let expectedListDensityClass;
 
         switch (expectedDisplayDensity) {
-            case DisplayDensity.compact: {
-                expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS;
-            } break;
-            case DisplayDensity.cosy: {
-                expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS;
-            } break;
-            default: {
-                expectedListDensityClass = LIST_CSS_CLASS;
-            } break;
+            case DisplayDensity.compact: expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS; break;
+            case DisplayDensity.cosy: expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS; break;
+            default: expectedListDensityClass = LIST_CSS_CLASS; break;
         }
 
         // Verify list display density.
