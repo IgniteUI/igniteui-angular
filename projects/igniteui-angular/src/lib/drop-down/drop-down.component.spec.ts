@@ -12,6 +12,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
+import { IgxForOfDirective, IgxForOfModule } from '../directives/for-of/for_of.directive';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -40,13 +41,15 @@ describe('IgxDropDown ', () => {
                 IgxDropDownSelectComponent,
                 DropDownWithMaxHeightComponent,
                 DropDownWithUnusedMaxHeightComponent,
-                GroupDropDownComponent
+                GroupDropDownComponent,
+                VirtualizedDropDownComponent
             ],
             imports: [
                 IgxDropDownModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
-                IgxTabsModule
+                IgxTabsModule,
+                IgxForOfModule
             ]
         })
             .compileComponents();
@@ -63,8 +66,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -143,8 +146,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -207,8 +210,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             button.click();
             tick();
@@ -529,8 +532,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'arrowdown',
                 code: 'arrowdown',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -632,8 +635,8 @@ describe('IgxDropDown ', () => {
             currentItem.triggerEventHandler('keydown', {
                 key: 'Home',
                 code: 'Home',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             });
             tick();
 
@@ -652,8 +655,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'end',
                 code: 'end',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -692,8 +695,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'ArrowDown',
                 code: 'ArrowDown',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -780,8 +783,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -821,8 +824,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'enter',
                 code: 'enter',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             const igxDropDown = fixture.componentInstance.dropdownScroll;
@@ -1334,6 +1337,71 @@ describe('IgxDropDown ', () => {
             }
         }));
     });
+
+    describe('Virtualized DropDown tests', () => {
+        configureTestSuite();
+        it('Should properly display items when virtualized', fakeAsync(() => {
+            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            expect(dropdown).toBeDefined();
+            expect(fixture.componentInstance.dropdownItems.length).toEqual(11);
+            expect(fixture.componentInstance.items.length).toEqual(2000);
+            dropdown.toggle();
+            tick();
+            expect(fixture.componentInstance.dropdownItems.length).toEqual(11);
+            expect(fixture.componentInstance.dropdownItems.first.element.nativeElement.textContent.trim()).toEqual('Item 1');
+            expect(fixture.componentInstance.dropdownItems.last.element.nativeElement.textContent.trim()).toEqual('Item 11');
+        }));
+        it('Should properly scroll when virtualized', async(() => {
+            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            const button = fixture.componentInstance.toggleButton;
+            const scroll = fixture.componentInstance.virtualScroll;
+            expect(dropdown).toBeDefined();
+            dropdown.toggle();
+            fixture.detectChanges();
+            let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
+            let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
+            expect(lastItemElement.textContent.trim()).toEqual('Item 11');
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1');
+            scroll.getVerticalScroll().scrollTop = scroll.getVerticalScroll().scrollHeight;
+            setTimeout(() => {
+                fixture.detectChanges();
+                firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
+                lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
+                expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
+                expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
+            }, 200);
+        }));
+        it('Should properly handle keyboard navigation when virtualized', async(() => {
+            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            const button = fixture.componentInstance.toggleButton;
+            const scroll = fixture.componentInstance.virtualScroll;
+            const items = fixture.componentInstance.dropdownItems;
+            expect(dropdown).toBeDefined();
+            dropdown.toggle();
+            fixture.detectChanges();
+            dropdown.navigateFirst();
+            expect(scroll.state.startIndex).toEqual(0);
+            expect(items.first.focused).toEqual(true);
+            dropdown.navigateLast();
+            setTimeout(() => {
+                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+                expect(items.last.focused).toEqual(true);
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+                expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
+                dropdown.focusedItem = items.toArray()[2];
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+            }, 200);
+        }));
+        xit('Should properly preserve selection when scrolled', () => { });
+        xit('Should properly render both small and large amounts of data', () => { });
+    });
 });
 
 @Component({
@@ -1806,7 +1874,7 @@ class DropDownWithValuesComponent {
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
+class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent { }
 
 @Component({
     template: `
@@ -1816,7 +1884,7 @@ class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {}
+class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent { }
 
 @Component({
     template: `
@@ -1850,4 +1918,47 @@ class GroupDropDownComponent {
             }
         }
     }
+}
+
+@Component({
+    template: `
+        <button igxButton #toggleButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Virtual</button>
+        <igx-drop-down #dropdown>
+            <div class="wrapping-div">
+                <igx-drop-down-item
+                *igxFor="let item of items; index as index;
+                scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+                [value]="item" role="option"
+                [disabled]="index > 53 && index < 57"
+                [index]="index">
+                    {{ item.name }}
+                </igx-drop-down-item>
+            </div>
+        </igx-drop-down>
+    `,
+    styles: [`
+    .wrapping-div {
+        overflow: hidden;
+        height: 420px;
+    }
+    `]
+})
+class VirtualizedDropDownComponent {
+    @ViewChild('toggleButton', { read: ElementRef })
+    public toggleButton: ElementRef;
+    @ViewChild(IgxDropDownComponent)
+    public dropdown: IgxDropDownComponent;
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
+    public virtualScroll: IgxForOfDirective<any>;
+    @ViewChildren(IgxDropDownItemComponent)
+    public dropdownItems: QueryList<IgxDropDownItemComponent>;
+    public items = [];
+    constructor() {
+        this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
+            name: `Item ${i + 1}`,
+            id: i
+        }));
+    }
+    public itemsMaxHeight = 420;
+    public itemHeight = 42;
 }
