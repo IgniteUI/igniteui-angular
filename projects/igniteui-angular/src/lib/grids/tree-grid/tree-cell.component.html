@@ -30,7 +30,7 @@
     <div #indicator
          *ngIf="!isLoading"
          class="igx-grid__tree-grouping-indicator"
-         [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
+         [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>

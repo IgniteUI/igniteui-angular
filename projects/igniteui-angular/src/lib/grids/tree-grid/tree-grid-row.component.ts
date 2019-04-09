@@ -88,6 +88,19 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     /**
      * @hidden
      */
+    public get showIndicator() {
+        return this.grid.loadChildrenOnDemand ?
+            this.grid.expansionStates.has(this.rowID) ?
+                this.treeRow.children && this.treeRow.children.length :
+                this.grid.hasChildrenKey ?
+                    this.rowData[this.grid.hasChildrenKey] :
+                    true :
+            this.treeRow.children && this.treeRow.children.length;
+    }
+
+    /**
+     * @hidden
+     */
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';

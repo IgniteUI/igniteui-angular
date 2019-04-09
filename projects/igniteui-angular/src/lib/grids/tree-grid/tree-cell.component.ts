@@ -65,19 +65,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     /**
      * @hidden
      */
-    public get hasChildren() {
-        return this.grid.loadChildrenOnDemand ?
-            this.grid.expansionStates.has(this.row.rowID) ?
-                this.row.treeRow.children && this.row.treeRow.children.length :
-                this.grid.hasChildrenKey ?
-                    this.row.rowData[this.grid.hasChildrenKey] :
-                    true :
-            this.row.treeRow.children && this.row.treeRow.children.length;
-    }
-
-    /**
-     * @hidden
-     */
     ngOnInit() {
         super.ngOnInit();
     }
