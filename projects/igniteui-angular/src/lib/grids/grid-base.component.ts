@@ -1708,6 +1708,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowEditingOutletDirective;
     }
 
+    /**
+     * @hidden
+     */
     public get parentRowOutletDirective() {
         return null;
     }
