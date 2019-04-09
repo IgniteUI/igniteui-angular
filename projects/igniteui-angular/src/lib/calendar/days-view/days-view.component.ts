@@ -15,7 +15,7 @@ import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
-import { IgxCalendarBase } from '../calendar-base';
+import { IgxCalendarBase, ScrollMonth } from '../calendar-base';
 
 let NEXT_ID = 0;
 
@@ -232,6 +232,10 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             } else if (this.callback && (event.toState === 'next' || event.toState === 'prev')) {
                 this.callback(this.dates, this.nextDate);
             }
+        }
+
+        if (this.monthScrollDirection !== ScrollMonth.NONE) {
+            this.scrollMonth$.next();
         }
     }
 
