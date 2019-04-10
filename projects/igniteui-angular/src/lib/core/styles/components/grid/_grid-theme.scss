@@ -1857,6 +1857,10 @@
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
         }
+
+        igx-suffix > igx-icon + igx-icon {
+            margin-left: rem(4px);
+        }
     }
 
     %igx-grid__filtering-row-main {
