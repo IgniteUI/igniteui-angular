@@ -1411,7 +1411,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxColumnComponent` moving ends.
-     * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
+     * Returns the source and target `IgxColumnComponent` objects.
      * ```typescript
      * movingEnds(event: IColumnMovingEndEventArgs){
      *     const movingEnds = event;
