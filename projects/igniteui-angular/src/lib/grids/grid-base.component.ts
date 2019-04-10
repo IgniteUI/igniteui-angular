@@ -3883,7 +3883,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private getPossibleBlocksWidth(blocks) {
-        const maxColSpanPerBlock = (max, child) => Math.max(max, child.colStart);
+        const maxColSpanPerBlock = (max, child) => Math.max(max, child.gridColumnSpan);
         const sumMaximalColSpans = (acc, col) => acc + col.children.reduce(maxColSpanPerBlock, 1);
         return blocks.reduce(sumMaximalColSpans, 0);
     }

@@ -1103,7 +1103,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const actualWidth = parseInt(col.calcWidth, 10) + 'px';
             if (col.colStart && columnSizes[col.colStart - 1] === undefined) {
                 columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
-                     width: actualWidth, widthSetByUser: col.widthSetByUser };
+                    width: actualWidth, widthSetByUser: col.widthSetByUser };
             } else if (col.colStart && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan &&
                 (col.widthSetByUser || !columnSizes[col.colStart - 1].widthSetByUser)) {
                 columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
@@ -1125,6 +1125,8 @@ export class IgxColumnComponent implements AfterContentInit {
                 i += columnSizes[i].colSpan - 1;
             } else if (columnSizes[i]) {
                 result.push(columnSizes[i].width);
+            } else {
+                result.push(this.grid.getPossibleColumnWidth() + 'px');
             }
         }
         return result;
