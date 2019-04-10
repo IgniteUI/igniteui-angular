@@ -222,13 +222,21 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     /**
      * Select an item by index
-     * @param index of the item to select
+     * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        const newSelection = this.items[index];
+        let newSelection: IgxDropDownItemBase | { value: any, index: number};
+        if (this.virtDir) {
+            newSelection = {
+                value: this.virtDir.igxForOf[index],
+                index
+            };
+        } else {
+            newSelection = this.items[index];
+        }
         this.selectItem(newSelection);
     }
 
@@ -455,7 +463,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBase | { value: any, index: any }, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
@@ -463,7 +471,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (newSelection === null) {
             return;
         }
-        if (newSelection.isHeader) {
+        if (newSelection instanceof IgxDropDownItemBase && newSelection.isHeader) {
             return;
         }
         if (this.virtDir) {
@@ -477,11 +485,13 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
         if (!args.cancel) {
             this.selection.set(this.id, new Set([newSelection]));
-            if (oldSelection) {
-                oldSelection.selected = false;
-            }
-            if (newSelection) {
-                newSelection.selected = true;
+            if (!this.virtDir) {
+                if (oldSelection) {
+                    (oldSelection as IgxDropDownItemBase).selected = false;
+                }
+                if (newSelection) {
+                    (newSelection as IgxDropDownItemBase).selected = true;
+                }
             }
             if (event) {
                 this.toggleDirective.close();
