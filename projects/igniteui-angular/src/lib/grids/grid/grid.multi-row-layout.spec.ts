@@ -670,6 +670,55 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
 
+    it('vertical virtualization should work as expected when there are multi-row layouts.', async() => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const grid = fixture.componentInstance.grid;
+        fixture.componentInstance.colGroups = [{
+            group: 'group4',
+            // total rowspan 3
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
+                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
+                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                { field: 'Region', rowStart: 2, colStart: 1},
+                { field: 'City', rowStart: 2, colStart: 2},
+                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+            ]
+        }];
+        fixture.detectChanges();
+
+        expect(grid.hasVerticalSroll()).toBeTruthy();
+
+        const verticalVirt = grid.verticalScrollContainer;
+
+        // scroll to bottom
+        const lastIndex = grid.data.length - 1;
+        verticalVirt.scrollTo(lastIndex);
+        await wait(100);
+        verticalVirt.scrollTo(lastIndex);
+        await wait(100);
+        fixture.detectChanges();
+
+        const dataRows = grid.dataRowList.toArray();
+        const lastRow = dataRows[dataRows.length - 1];
+
+        // check correct last row is rendered and is last in view
+        expect(lastRow.dataRowIndex).toBe(lastIndex);
+        expect(lastRow.rowData).toBe(grid.data[lastIndex]);
+
+        // last in tbody
+        expect(lastRow.element.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
+
+        // check size is correct
+        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(151);
+
+        // check DOM
+        const lastRowCells = lastRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, lastRowCells);
+        verifyDOMMatchesSettings(lastRow, fixture.componentInstance.colGroups);
+    });
+
 });
 
 @Component({
