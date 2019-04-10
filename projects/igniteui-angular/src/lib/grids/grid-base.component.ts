@@ -94,7 +94,7 @@ const FILTER_ROW_HEIGHT = 50;
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
 // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
-// but in the same time we need to set row editing overlay outlet before opening the outlet itself.
+// but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
