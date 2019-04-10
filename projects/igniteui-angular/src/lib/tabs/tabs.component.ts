@@ -178,11 +178,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _navigationEndSubscription: Subscription;
-
-    /**
-     * @hidden
-     */
     @HostBinding('attr.class')
     public get class() {
         const defaultStyle = `igx-tabs`;
@@ -274,26 +269,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
-        this._navigationEndSubscription = this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd)).subscribe((args) => {
-                console.log('@@ IgxTabsComponent: navigation detected to ' + this.router.url);
-                const groupsArray = this.groups.toArray();
-                for (let i = 0; i < groupsArray.length; i++) {
-                    console.log('@@ comparing ' + this.router.url + ' and ' + groupsArray[i].routerLinkDirective.urlTree.toString());
-                    if (groupsArray[i].routerLinkDirective &&
-                        this.router.url.startsWith(groupsArray[i].routerLinkDirective.urlTree.toString())) {
-                        requestAnimationFrame(() => {
-                            console.log('@@ trying to navigato to index ' + i);
-                            this.selectGroupByIndex(i, false);
-                        });
-                        break;
-                    }
-                }
-                this._navigationEndSubscription.unsubscribe();
-            }
-        );
-        console.log('@@ IgxTabsComponent: setting group');
-        this.setSelectedGroup();
+        // initially do not navigate to the route set on the tabs-groups to keep the url set by the user
+        this.setSelectedGroup(false);
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
@@ -308,13 +285,25 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    private setSelectedGroup(): void {
+    private setSelectedGroup(navigateToRoute: boolean = true): void {
         requestAnimationFrame(() => {
+            if (!navigateToRoute) {
+                navigateToRoute = true;
+                const groupsArray = this.groups.toArray();
+                for (let i = 0; i < groupsArray.length; i++) {
+                    if (groupsArray[i].routerLinkDirective &&
+                        this.router.url.startsWith(groupsArray[i].routerLinkDirective.urlTree.toString())) {
+                        this._selectedIndex = i;
+                        navigateToRoute = false;
+                        break;
+                    }
+                }
+            }
             if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
                 // if nothing is selected - select the first tabs group
-                this.selectGroupByIndex(0);
+                this.selectGroupByIndex(0, navigateToRoute);
             } else {
-                this.selectGroupByIndex(this.selectedIndex);
+                this.selectGroupByIndex(this.selectedIndex, navigateToRoute);
             }
         });
     }
@@ -333,12 +322,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }, 0);
     }
 
-    private selectGroupByIndex(selectedIndex: number, updateRoute: boolean = true): void {
+    private selectGroupByIndex(selectedIndex: number, navigateToRoute: boolean = true): void {
         const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
         const group = selectableGroups[selectedIndex];
 
         if (group) {
-            group.select(0, updateRoute);
+            group.select(0, navigateToRoute);
         }
     }
 

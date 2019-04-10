@@ -167,7 +167,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 200, updateRoute: boolean = true): void {
+    public select(focusDelay = 200, navigateToRoute: boolean = true): void {
         if (this.disabled || this.isSelected) {
             return;
         }
@@ -181,8 +181,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
             }, focusDelay);
         }
         this.handleSelection();
-        if (updateRoute && this.routerLinkDirective) {
-            console.log('@@ tabs-group: navigating to ' + this.routerLinkDirective.urlTree.toString());
+        if (navigateToRoute && this.routerLinkDirective) {
             this.routerLinkDirective.onClick();
         }
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
