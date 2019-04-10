@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -645,7 +645,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.canUndo).toBe(false);
         }));
 
-        it('Editing a cell is possible with Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
+        it('Editing a cell is possible with Hierarchical DS', fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -654,12 +654,14 @@ describe('IgxTreeGrid - Integration', () => {
             const targetCell = treeGrid.getCellByColumn(3, 'Age');
             targetCell.inEditMode = true;
             targetCell.update('333');
+            flush();
             fix.detectChanges();
 
             //  ged DONE button and click it
             const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
             const doneButtonElement = rowEditingBannerElement.lastElementChild;
             doneButtonElement.dispatchEvent(new Event('click'));
+            flush();
             fix.detectChanges();
 
             // Verify the value is updated and the correct style is applied before committing
@@ -681,6 +683,7 @@ describe('IgxTreeGrid - Integration', () => {
             const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
             newTargetCell.inEditMode = true;
             newTargetCell.update('666');
+            flush();
             fix.detectChanges();
 
             expect(newTargetCell.value).toBe(666);
