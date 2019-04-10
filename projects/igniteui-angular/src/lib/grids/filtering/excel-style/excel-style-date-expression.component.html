@@ -33,10 +33,9 @@
     />
 </igx-input-group>
 
-<igx-date-picker #datePicker [outlet]="grid.outletDirective" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
+<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
-        <igx-input-group #inputGroupDateValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
-            <igx-icon igxPreffix>calendar</igx-icon>
+        <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
             <input #input
                     igxInput
                     tabindex="0"
