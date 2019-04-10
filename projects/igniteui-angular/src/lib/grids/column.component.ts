@@ -1090,13 +1090,13 @@ export class IgxColumnComponent implements AfterContentInit {
             (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
             (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
-        const generatedSizes = !isRow ? this.getColumnSizes(this.children) : null;
+        const generatedSizes = !isRow ? this.getColumnSizesString(this.children) : null;
         return isIE ?
         generatedSizes || `(1fr)[${templateItems}]` :
             generatedSizes || `repeat(${templateItems},1fr)`;
     }
 
-    protected getColumnSizes(children): string {
+    protected getChildColumnSizes(children): Array<any> {
         const columnSizes = [];
         // find the smallest col spans
         children.forEach(col => {
@@ -1112,21 +1112,27 @@ export class IgxColumnComponent implements AfterContentInit {
         });
 
         // fill the gaps if there are any
-        let result = '';
+        const result = [];
         for (let i = 0; i < columnSizes.length; i++) {
             if (columnSizes[i] && columnSizes[i].colSpan !== 1) {
                 for (let j = 0; j < columnSizes[i].colSpan; j++) {
-                    result += ' ' +
+                    result.push(
                     (columnSizes[i].widthSetByUser ?
                         parseInt(columnSizes[i].width, 10) / columnSizes[i].colSpan + 'px' :
-                        columnSizes[i].width);
+                        columnSizes[i].width)
+                    );
                 }
                 i += columnSizes[i].colSpan - 1;
             } else if (columnSizes[i]) {
-                result += ' ' + columnSizes[i].width;
+                result.push(columnSizes[i].width);
             }
         }
-        return result.trim();
+        return result;
+    }
+
+    protected getColumnSizesString(children): string {
+       const res = this.getChildColumnSizes(children);
+       return res.join(' ');
     }
 
     /**
@@ -1612,19 +1618,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     get width() {
         let isChildrenWidthInPercent = false, width;
         if (this.grid && this.grid.enableMRL) {
-            width = `${this.children.reduce((acc, val) => {
-                if (val.hidden) {
-                    return acc;
-                }
-                if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                    isChildrenWidthInPercent = true;
-                }
-                // TODO: refactor, should get the maximal widht from the layout of the block, not using the first row with
-                if (val.rowStart !== 1) {
-                    return acc;
-                }
-                return acc + parseInt(val.calcWidth, 10);
-            }, 0)}`;
+            width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
             return width;
         } else {
             width = `${this.children.reduce((acc, val) => {
