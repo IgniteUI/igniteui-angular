@@ -3669,8 +3669,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public hasColumnLayouts() {
-        return this.columnList.some(col => col.columnLayout);
+    public get hasColumnLayouts() {
+        return !!this.columnList.some(col => col.columnLayout);
     }
 
     /**

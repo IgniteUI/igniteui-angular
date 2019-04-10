@@ -1419,7 +1419,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.parent.columnLayout) {
+        if (this.parent && this.parent.columnLayout) {
             return '';
         }
 
