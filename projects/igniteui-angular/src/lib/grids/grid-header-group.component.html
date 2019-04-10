@@ -1,4 +1,4 @@
-<ng-container *ngIf="grid.enableMRL && column.columnGroup">
+<ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-group igx-grid__mrl_block"
      [ngStyle]="{'grid-template-rows':column.getGridTemplate(true, false),
@@ -19,9 +19,9 @@
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
 </ng-container>
 
-<ng-container *ngIf="!grid.enableMRL && column.columnGroup">
+<ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <div class="igx-grid__thead-title" 
+    <div class="igx-grid__thead-title"
         [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}"
         [igxColumnMovingDrag]="column"
         [dragGhostHost]="grid.outletDirective.nativeElement"

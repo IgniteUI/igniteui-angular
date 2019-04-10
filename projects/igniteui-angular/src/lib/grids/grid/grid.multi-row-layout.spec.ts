@@ -3,7 +3,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -23,7 +23,8 @@ describe('IgxGrid - multi-row-layout', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                ColumnGroupTestComponent
+                ColumnLayoutTestComponent,
+                ColumnLayoutAndGroupsTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -93,7 +94,7 @@ describe('IgxGrid - multi-row-layout', () => {
     }
 
     it('should initialize a grid with 1 column group', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -115,7 +116,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('should initialize grid with 2 column groups', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups.push({
             group: 'group2',
             columns: [
@@ -138,7 +139,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('should not throw error when layout is incomplete and should render valid mrl block styles', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         // creating an incomplete layout
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -186,7 +187,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
     it('should initialize correctly when no column widths are set.', () => {
         // test with single group
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -282,7 +283,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
     it('should initialize correctly when widths are set in px.', () => {
         // test with single group - all cols with colspan 1 have width
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
@@ -370,7 +371,7 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyHeadersAreAligned(headerCells, firstRowCells);
     });
     it('should initialize correctly when widths are set in %.', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -457,7 +458,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('should use columns with the smallest col spans when determining the column group’s column widths.', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.componentInstance.colGroups = [{
             group: 'group2',
             columns: [
@@ -489,10 +490,28 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('100px 200px 100px');
     });
 
+    it('should disregard column groups if multi-column layouts are also defined.', () => {
+        const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        // check grid's columns collection
+        // 5 in total
+        expect(grid.columnList.toArray().length).toBe(5);
+        // 1 column layout
+        expect(grid.columnList.filter(x => x.columnLayout).length).toBe(1);
+        // 4 normal columns
+        expect(grid.columnList.filter(x => !x.columnLayout && ! x.columnGroup).length).toBe(4);
+
+        // check header
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
+        expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(4);
+    });
+
     // Virtualization
 
     it('should apply horizontal virtualization based on the group blocks.', async() => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         const uniqueGroups = [
             {
@@ -551,7 +570,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // check chunk size is correct
         expect(horizontalVirtualization.state.chunkSize).toBe(3);
         // check passed instances to igxFor are the groups
-        expect(horizontalVirtualization.igxForOf[0] instanceof IgxColumnGroupComponent).toBeTruthy();
+        expect(horizontalVirtualization.igxForOf[0] instanceof IgxColumnLayoutComponent).toBeTruthy();
         // check their sizes are correct
         expect(horizontalVirtualization.getSizeAt(0)).toBe(3 * 200);
         expect(horizontalVirtualization.getSizeAt(1)).toBe(2 * 200);
@@ -587,7 +606,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('should apply horizontal virtualization correctly for widths in px, % and no-width columns.', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         // test with px
         fixture.componentInstance.colGroups = [{
@@ -671,7 +690,7 @@ describe('IgxGrid - multi-row-layout', () => {
     });
 
     it('vertical virtualization should work as expected when there are multi-row layouts.', async() => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
             group: 'group4',
@@ -723,16 +742,16 @@ describe('IgxGrid - multi-row-layout', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [enableMRL]="true" height="500px" [width]='width'>
-        <igx-column-group *ngFor='let group of colGroups'>
+    <igx-grid #grid [data]="data" height="500px" [width]='width'>
+        <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-group>
+        </igx-column-layout>
     </igx-grid>
     `
 })
-export class ColumnGroupTestComponent {
+export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
     width;
@@ -749,4 +768,26 @@ export class ColumnGroupTestComponent {
         }
     ];
     data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" [width]='width'>
+        <igx-column-group header="General Information">
+        <igx-column field="CompanyName"></igx-column>
+            <igx-column-group [movable]="true" header="Person Details">
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-layout *ngFor='let group of colGroups'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
+
 }

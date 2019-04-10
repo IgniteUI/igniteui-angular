@@ -927,11 +927,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * A property to enable Multi Row Layout.
-     */
-    @Input() enableMRL: boolean;
-
-    /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1884,7 +1879,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.enableMRL ?
+            this._maxLevelHeaderDepth = this.hasColumnLayouts ?
                 this.columnList.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
                 this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -2848,7 +2843,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
-        if (this.enableMRL) {
+        if (this.hasColumnLayouts) {
             return '';
         }
         const colWidth = column.width;
@@ -3667,6 +3662,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get hasColumnGroups(): boolean {
         return this.columnList.some(col => col.columnGroup);
     }
+    /**
+     * Returns if the `IgxGridComponent` has column layouts for multi-row layout definition.
+     * ```typescript
+     * const layoutGrid = this.grid.hasColumnLayouts;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public hasColumnLayouts() {
+        return this.columnList.some(col => col.columnLayout);
+    }
 
     /**
      * Returns an array of the selected `IgxGridCellComponent`s.
@@ -3861,7 +3866,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const blockColumns = this.visibleColumns.filter(c => c.columnGroup);
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
-        const columnsToSize = this.enableMRL ?
+        const columnsToSize = this.hasColumnLayouts ?
             this.getPossibleBlocksWidth(blockColumns) - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
 
@@ -4099,6 +4104,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
+        if (this.hasColumnLayouts && this.hasColumnGroups) {
+            // invalid configuration - multi-row and column groups
+            // remove column groups
+            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || (col.parent && col.parent.columnLayout));
+            this.columnList.reset(columnLayoutColumns);
+        }
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;

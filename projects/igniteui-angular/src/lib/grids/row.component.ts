@@ -319,7 +319,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     notGroups(arr) {
-        return this.grid.enableMRL ? arr.filter(c => c.columnGroup) : arr.filter(c => !c.columnGroup);
+        return this.grid.hasColumnLayouts ? arr.filter(c => c.columnGroup) : arr.filter(c => !c.columnGroup);
     }
 
     /**

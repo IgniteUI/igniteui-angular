@@ -7,7 +7,7 @@
     </div>
 </ng-container>
 
-<ng-container *ngIf="!grid.enableMRL">
+<ng-container *ngIf="!grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
         <igx-grid-cell *ngFor="let col of notGroups(pinnedColumns)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
     </ng-container>
@@ -16,7 +16,7 @@
     </ng-template>
 </ng-container>
 
-<ng-container *ngIf="grid.enableMRL">
+<ng-container *ngIf="grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
         <div *ngFor="let col of notGroups(pinnedColumns)" class="igx-grid__mrl_block"
         [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),

@@ -798,6 +798,17 @@ export class IgxColumnComponent implements AfterContentInit {
         return false;
     }
     /**
+     * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayout() {
+        return false;
+    }
+
+    /**
      * Returns the children columns collection.
      * Returns an empty array if the column does not contain children columns.
      * ```typescript
@@ -1410,7 +1421,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.grid.enableMRL) {
+        if (this.parent.columnLayout) {
             return '';
         }
 
@@ -1611,6 +1622,16 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return true;
     }
     /**
+     * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayout() {
+        return false;
+    }
+    /**
      * Gets the width of the column group.
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
@@ -1619,20 +1640,15 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     get width() {
         let isChildrenWidthInPercent = false, width;
-        if (this.grid && this.grid.enableMRL) {
-            width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
-            return width;
-        } else {
-            width = `${this.children.reduce((acc, val) => {
-                if (val.hidden) {
-                    return acc;
-                }
-                if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                    isChildrenWidthInPercent = true;
-                }
-                return acc + parseInt(val.width, 10);
-            }, 0)}`;
-        }
+        width = `${this.children.reduce((acc, val) => {
+            if (val.hidden) {
+                return acc;
+            }
+            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
+                   isChildrenWidthInPercent = true;
+            }
+            return acc + parseInt(val.width, 10);
+        }, 0)}`;
         return isChildrenWidthInPercent ? width + '%' : width;
     }
 
@@ -1642,4 +1658,32 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
     }
+}
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
+    selector: 'igx-column-layout',
+    template: ``
+})
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
+    /**
+     * Gets the width of the column layout.
+     * ```typescript
+     * let columnGroupWidth = this.columnGroup.width;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    get width() {
+        const width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
+        return width;
+    }
+
+    set width(val) { }
+
+
+    get columnLayout() {
+        return true;
+    }
+
 }
