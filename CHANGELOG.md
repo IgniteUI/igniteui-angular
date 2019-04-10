@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+# 7.2.5
+- `igxDrop` 
+    - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
+
 # 7.2.3
 - `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
 - `igxGrid`
