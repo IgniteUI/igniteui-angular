@@ -4921,7 +4921,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     openRowOverlay(id) {
+        // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
+        // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should show above header.
+        // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
+        // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height.
         this.configureRowEditingOverlay(id, this.rowList.length <= 2);
+
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this._wheelListener = this.rowEditingWheelHandler.bind(this);
