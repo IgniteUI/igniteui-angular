@@ -4104,6 +4104,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
+        if (this.hasColumnLayouts && this.hasColumnGroups) {
+            // invalid configuration - multi-row and column groups
+            // remove column groups
+            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || (col.parent && col.parent.columnLayout));
+            this.columnList.reset(columnLayoutColumns);
+        }
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
