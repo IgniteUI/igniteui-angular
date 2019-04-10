@@ -3,15 +3,19 @@
     <span>{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
-<ng-template let-result #defaultMonth>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
-        class="igx-calendar-picker__date">
-        {{ formattedMonth(viewDate) }}
-    </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
-        class="igx-calendar-picker__date">
-        {{ formattedYear(viewDate) }}
-    </span>
+<ng-template let-result #defaultMonth >
+    <ng-container *ngFor="let view of dayViews; let i of index;">
+        <div>
+            <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
+                class="igx-calendar-picker__date">
+                {{ formattedMonth(view.viewDate) }}
+            </span>
+            <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
+                class="igx-calendar-picker__date">
+                {{ formattedYear(view.viewDate) }}
+            </span>
+        </div>
+    </ng-container>
 </ng-template>
 
 <div *ngIf="selection === 'single' && hasHeader" class="igx-calendar__header">
@@ -29,7 +33,7 @@
             (click)="previousMonth()">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div>
+        <div style="display: contents">
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
@@ -38,20 +42,22 @@
         </div>
     </div>
 
-    <igx-days-view [changeDaysView]="true" #days
-                   [animationAction]="monthAction"
-                   [locale]="locale"
-                   [value]="value"
-                   [viewDate]="viewDate"
-                   [weekStart]="weekStart"
-                   [formatOptions]="formatOptions"
-                   [formatViews]="formatViews"
-                   [selection]="selection"
-                   [disabledDates]="disabledDates"
-                   [specialDates]="specialDates"
-                   (onViewChanged)="viewChanged($event)"
-                   (onDateSelection)="childClicked($event)">
-    </igx-days-view>
+    <div style="display: flex">
+        <igx-days-view *ngFor="let view of dayViews; let i of index;" [changeDaysView]="true" #days
+                [animationAction]="view.monthAction"
+                [locale]="view.locale"
+                [value]="view.value"
+                [viewDate]="view.viewDate"
+                [weekStart]="view.weekStart"
+                [formatOptions]="view.formatOptions"
+                [formatViews]="view.formatViews"
+                [selection]="view.selection"
+                [disabledDates]="view.disabledDates"
+                [specialDates]="view.specialDates"
+                (onViewChanged)="viewChanged($event)"
+                (onDateSelection)="childClicked($event)">
+        </igx-days-view>
+    </div>
 </div>
 
 <igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months 
@@ -67,5 +73,5 @@
                 [locale]="locale"
                 [formatView]="formatViews.year"
                 [yearFormat]="formatOptions.year" 
-                (onSelection)="changeYear($event)">
+                (onSelection)="changeYear($event, dayViews)">
 </igx-years-view>

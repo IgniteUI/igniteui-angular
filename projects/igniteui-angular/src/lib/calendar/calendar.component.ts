@@ -21,8 +21,23 @@ import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
+import { DateRangeDescriptor } from '../core/dates';
 
 let NEXT_ID = 0;
+
+export interface IDayView {
+    changeDaysView: boolean;
+    animationAction: string;
+    locale: string;
+    value: Date | Date[];
+    viewDate: Date;
+    weekStart: number;
+    formatOptions: object;
+    formatViews: object;
+    selection: string;
+    disabledDates: DateRangeDescriptor[];
+    specialDates: DateRangeDescriptor[];
+}
 
 /**
  * **Ignite UI for Angular Calendar** -
@@ -89,6 +104,34 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     @Input()
     public vertical = false;
+
+    /**
+     * Sets/gets the number of dayViews duisplayed.
+     * Default value is `1`.
+     * ```html
+     * <igx-calendar [vertical] = "true" [daysViewNumber]="2"></igx-calendar>
+     * ```
+     * ```typescript
+     * let daysViewsDisplayed = this.calendar.daysViewNumber;
+     * ```
+     */
+    @Input()
+    get daysViewNumber() {
+        return this._daysViewNumber;
+    }
+
+    set daysViewNumber(val: number) {
+        this._daysViewNumber = val;
+
+        for (let i = 1; i < val; i++) {
+            const dayView = Object.assign({}, this.defaultDayView);
+            dayView.value = null;
+            const nextMonthDate = new Date(dayView.viewDate);
+            nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
+            dayView.viewDate = nextMonthDate;
+            this.dayViews.push(dayView);
+        }
+    }
 
     /**
      * The default `tabindex` attribute for the component.
@@ -274,6 +317,33 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     private _monthAction = '';
 
     /**
+     *@hidden
+     */
+    private _daysViewNumber = 1;
+
+    /**
+     *@hidden
+    */
+    private defaultDayView: IDayView = {
+        changeDaysView: true,
+        animationAction: this._monthAction,
+        locale: this.locale,
+        value: this.value,
+        viewDate: this.viewDate,
+        weekStart: this.weekStart,
+        formatOptions: this.formatOptions,
+        formatViews: this.formatViews,
+        selection: this.selection,
+        disabledDates: this.disabledDates,
+        specialDates: this.specialDates
+    };
+
+    /**
+     *@hidden
+     */
+    private dayViews: Array<IDayView> = [this.defaultDayView];
+
+    /**
      * Returns the locale representation of the month in the month view if enabled,
      * otherwise returns the default `Date.getMonth()` value.
      *
@@ -291,6 +361,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     public previousMonth(isKeydownTrigger: boolean = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
+        this.dayViews.forEach((val, index) => {
+            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', -1);
+        });
         this._monthAction = 'prev';
 
         if (this.daysView) {
@@ -315,6 +388,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     public nextMonth(isKeydownTrigger: boolean = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
+        this.dayViews.forEach((val, index) => {
+            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', 1);
+        });
         this._monthAction = 'next';
 
         if (this.daysView) {
@@ -401,6 +477,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     public changeMonth(event: Date) {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
+        this.dayViews.forEach((val, index) => {
+            val.viewDate.setMonth(event.getMonth() + index);
+        });
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
