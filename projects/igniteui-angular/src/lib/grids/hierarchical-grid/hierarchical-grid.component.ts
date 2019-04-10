@@ -389,7 +389,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     ngAfterContentInit() {
-        this.updateColumnList();
+        this.updateColumnList(false);
         super.ngAfterContentInit();
     }
 
@@ -398,7 +398,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super.onColumnsChanged(change);
     }
 
-    private updateColumnList() {
+    private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => {
             if (!layout.rootGrid && !this.parent) {
@@ -414,7 +414,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 return colsArray.indexOf(item) === -1;
             });
             this.columnList.reset(topCols);
-            if (this.columnList.length !== colLength) {
+            if (recalcColSizes && this.columnList.length !== colLength) {
                 this.calculateGridSizes();
             }
         }
