@@ -525,56 +525,6 @@
     $indicator-icon-width: rem(24px);
     $grouping-padding-right: rem(12px);
 
-    @media print {
-        $grid-header-padding: (
-            comfortable: 0 rem(12px),
-            cosy: 0 rem(12px),
-            compact: 0 rem(12px)
-        );
-
-        $drop-area-height: (
-            comfortable: rem(24px),
-            cosy: rem(24px),
-            compact: rem(24px)
-        );
-
-        $drop-area-padding: (
-            comfortable: 0 rem(6px),
-            cosy: 0 rem(6px),
-            compact: 0 rem(6px)
-        );
-
-        $grid-cell-padding: (
-            comfortable: 0 rem(12px),
-            cosy: 0 rem(12px),
-            compact: 0 rem(12px)
-        );
-
-        $hierarchical-grid-indent: (
-            comfortable: rem(12px),
-            cosy: rem(12px),
-            compact: rem(12px)
-        );
-
-        $grouparea-padding: (
-            comfortable: rem(4px) rem(12px),
-            cosy: rem(4px) rem(12px),
-            compact: rem(4px) rem(12px)
-        );
-
-        $grouparea-min-height: (
-            comfortable: rem(41px),
-            cosy: rem(41px),
-            compact: rem(41px)
-        );
-
-        $grid-grouping-indicator-padding: (
-            comfortable: rem(12px),
-            cosy: rem(12px),
-            compact: rem(12px)
-        );
-    }
-
     %grid-display {
         position: relative;
         display: grid;
@@ -1047,10 +997,6 @@
 
     %grid-cell--pinned-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
-
-        @media print {
-            border-right-color: #999!important;
-        }
 
         &%grid-cell--editing {
             border-right: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
