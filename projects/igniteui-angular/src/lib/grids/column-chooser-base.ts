@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, HostBinding, Input, OnDestroy } from '@angular/core';
-import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -9,6 +8,25 @@ import { ColumnChooserItemBase } from './column-chooser-item-base';
 export enum ColumnDisplayOrder {
     Alphabetical = 'Alphabetical',
     DisplayOrder = 'DisplayOrder'
+}
+
+class CustomFilteringStrategy extends FilteringStrategy {
+    public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
+        const res: ColumnChooserItemBase[] = [];
+        data.forEach((item: ColumnChooserItemBase) => {
+            if (this.matchRecord(item, expressionsTree.filteringOperands[0] as IFilteringExpression)) {
+                res.push(item);
+            } else if (item.column.columnGroup) {
+                if (item.column.allChildren.findIndex((child) =>
+                    this.matchRecord(child, expressionsTree.filteringOperands[1] as IFilteringExpression) ||
+                    this.matchRecord(child, expressionsTree.filteringOperands[2] as IFilteringExpression)) > -1) {
+                    res.push(item);
+                }
+            }
+        });
+
+        return res;
+    }
 }
 
 /** @hidden */
@@ -292,21 +310,4 @@ export abstract class ColumnChooserBase implements OnDestroy {
     }
 }
 
-class CustomFilteringStrategy extends FilteringStrategy {
-    public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
-        const res: ColumnChooserItemBase[] = [];
-        data.forEach((item: ColumnChooserItemBase) => {
-            if (this.matchRecord(item, expressionsTree.filteringOperands[0] as IFilteringExpression)) {
-                res.push(item);
-            } else if (item.column.columnGroup) {
-                if (item.column.allChildren.findIndex((child) =>
-                    this.matchRecord(child, expressionsTree.filteringOperands[1] as IFilteringExpression) ||
-                    this.matchRecord(child, expressionsTree.filteringOperands[2] as IFilteringExpression)) > -1) {
-                    res.push(item);
-                }
-            }
-        });
 
-        return res;
-    }
-}
