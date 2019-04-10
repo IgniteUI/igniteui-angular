@@ -15,7 +15,8 @@ import {
     forwardRef,
     Optional,
     OnInit,
-    TemplateRef
+    TemplateRef,
+    QueryList
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -35,6 +36,7 @@ import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnComponent } from '../column.component';
 
 let NEXT_ID = 0;
 
@@ -523,5 +525,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
+    }
+
+    /**
+     * @hidden
+    */
+   protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - tree grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
     }
 }
