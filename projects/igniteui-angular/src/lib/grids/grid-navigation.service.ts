@@ -10,7 +10,7 @@ import { ISelectionNode } from '../core/grid-selection';
 enum MoveDirection {
     LEFT = 'left',
     RIGHT = 'right'
-};
+}
 
 /** @hidden */
 @Injectable()
@@ -609,7 +609,7 @@ export class IgxGridNavigationService {
     }
 
     private focusGridWithoutScrolling() {
-        if(isIE() && (<IgxHierarchicalGridComponent>this.grid).parent) {
+        if (isIE() && (<IgxHierarchicalGridComponent>this.grid).parent) {
             (<IgxHierarchicalGridComponent>this.grid).parent.nativeElement.focus();
         } else {
             this.grid.nativeElement.focus({ preventScroll: true });
