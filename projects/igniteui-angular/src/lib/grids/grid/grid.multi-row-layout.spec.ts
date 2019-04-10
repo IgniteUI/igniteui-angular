@@ -3,7 +3,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -551,7 +551,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // check chunk size is correct
         expect(horizontalVirtualization.state.chunkSize).toBe(3);
         // check passed instances to igxFor are the groups
-        expect(horizontalVirtualization.igxForOf[0] instanceof IgxColumnGroupComponent).toBeTruthy();
+        expect(horizontalVirtualization.igxForOf[0] instanceof IgxColumnLayoutComponent).toBeTruthy();
         // check their sizes are correct
         expect(horizontalVirtualization.getSizeAt(0)).toBe(3 * 200);
         expect(horizontalVirtualization.getSizeAt(1)).toBe(2 * 200);
@@ -723,12 +723,12 @@ describe('IgxGrid - multi-row-layout', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [enableMRL]="true" height="500px" [width]='width'>
-        <igx-column-group *ngFor='let group of colGroups'>
+    <igx-grid #grid [data]="data" height="500px" [width]='width'>
+        <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
-        </igx-column-group>
+        </igx-column-layout>
     </igx-grid>
     `
 })
