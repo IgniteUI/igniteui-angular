@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDetectionStrategy, NgZone, OnInit, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -6,22 +6,46 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid-cell',
     templateUrl: 'tree-cell.component.html'
 })
-export class IgxTreeGridCellComponent extends IgxGridCellComponent {
+export class IgxTreeGridCellComponent extends IgxGridCellComponent implements OnInit {
     private treeGridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    constructor(
+                selectionService: IgxGridSelectionService,
+                crudService: IgxGridCRUDService,
+                gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 selection: IgxSelectionAPIService,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
+                protected zone: NgZone,
                 @Inject(DOCUMENT) public document) {
-        super(gridAPI, selection, cdr, element);
+        super(selectionService, crudService, gridAPI, selection, cdr, element, zone);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    expanded = false;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    level = 0;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    showIndicator = false;
 
     @ViewChild('indicator', { read: ElementRef })
     public indicator: ElementRef;
@@ -32,19 +56,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     @ViewChild('defaultContentElement', { read: ElementRef })
     public defaultContentElement: ElementRef;
 
-    /**
-     * @hidden
-     */
-    protected resolveStyleClasses(): string {
-        return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
-    }
-
-    /**
-     * @hidden
-     */
-    public get indentation() {
-        return this.row.treeRow.level;
-    }
 
     /**
      * @hidden
@@ -56,8 +67,8 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     /**
      * @hidden
      */
-    get expanded(): boolean {
-        return this.row.expanded;
+    ngOnInit() {
+        super.ngOnInit();
     }
 
     /**
@@ -65,14 +76,14 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        this.treeGridAPI.trigger_row_expansion_toggle(this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+        this.treeGridAPI.trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
     }
 
     /**
      * @hidden
      */
     public onIndicatorFocus() {
-        this.gridAPI.submit_value(this.gridID);
+        this.gridAPI.submit_value();
         this.nativeElement.focus();
     }
 

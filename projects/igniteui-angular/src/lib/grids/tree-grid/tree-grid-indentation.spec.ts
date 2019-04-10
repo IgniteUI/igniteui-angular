@@ -31,11 +31,11 @@ describe('IgxTreeGrid - Indentation', () => {
 
     describe('Child Collection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should have the tree-cell as a first cell on every row', () => {
             // Verify all rows are present
@@ -187,11 +187,11 @@ describe('IgxTreeGrid - Indentation', () => {
 
     describe('Primary/Foreign key', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should have the tree-cell as a first cell on every row', () => {
             // Verify all rows are present

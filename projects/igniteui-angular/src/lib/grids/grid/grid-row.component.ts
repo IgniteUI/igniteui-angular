@@ -3,6 +3,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,10 +15,12 @@ import { IgxSelectionAPIService } from '../../core/selection';
 export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridComponent>,
+        public crudService: IgxGridCRUDService,
+        public selectionService: IgxGridSelectionService,
         selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
             // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-            super(gridAPI, selection, element, cdr);
+            super(gridAPI, crudService, selectionService, selection, element, cdr);
         }
 }

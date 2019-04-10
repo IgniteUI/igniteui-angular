@@ -259,3 +259,9 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     /** Browser event */
     event?: Event;
 }
+
+export const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
+                                'home', 'end', 'space', 'spacebar', ' ']);
+export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
+export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);

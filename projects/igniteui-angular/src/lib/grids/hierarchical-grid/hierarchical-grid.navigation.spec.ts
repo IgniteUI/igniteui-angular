@@ -8,6 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
@@ -27,6 +28,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
     }));
 
     // simple tests
@@ -351,17 +353,13 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     it('when navigating up from parent into child should scroll child grid to bottom and start navigation from last row.', (async () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
-        ri.cdr.detectChanges();
-        hierarchicalGrid.cdr.detectChanges();
         fixture.detectChanges();
         await wait(100);
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        hierarchicalGrid.cdr.detectChanges();
-        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
 
-        const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
+        const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
         parentCell.nativeElement.focus();
         fixture.detectChanges();
         const keyboardEvent = new KeyboardEvent('keydown', {
@@ -531,7 +529,9 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         // set first child to not have data
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         child1.data = [];
-        child1.cdr.detectChanges();
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
 
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
         const parentCell = parentRow.cells.toArray()[0];
@@ -543,7 +543,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
 
         // second data row in parent should be focused
-        const parentRow2 = hierarchicalGrid.dataRowList.toArray()[1];
+        const parentRow2 = hierarchicalGrid.getRowByIndex(2);
         const parentCell2 = parentRow2.cells.toArray()[0];
 
         expect(parentCell2.selected).toBeTruthy();
@@ -668,6 +668,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
+            setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         }));
 
         // complex tests
@@ -796,6 +797,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
     }));
     it('should allow navigating up/down between sibling child grids.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
@@ -935,6 +937,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
     }));
 
     it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', (async () => {
