@@ -32,7 +32,7 @@ export class IgxDragCustomEventDetails {
 }
 
 export class IgxDropEnterEventArgs {
-    /**
+        /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
      */
@@ -543,8 +543,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
         const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
 
-        this._dragOffsetX = (this._startX - this.element.nativeElement.getBoundingClientRect().left) + marginLeft;
-        this._dragOffsetY = (this._startY - this.element.nativeElement.getBoundingClientRect().top) + marginTop;
+        this._dragOffsetX =
+            (this._startX - this.element.nativeElement.getBoundingClientRect().left - this.getWindowScrollLeft()) + marginLeft;
+        this._dragOffsetY =
+            (this._startY - this.element.nativeElement.getBoundingClientRect().top - this.getWindowScrollTop()) + marginTop;
         this._dragStartX = this._startX - this._dragOffsetX;
         this._dragStartY = this._startY - this._dragOffsetY;
 
@@ -810,8 +812,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             // Take margins becuase getBoundingClientRect() doesn't include margins
             const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
             const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
-            const newPosX = this.element.nativeElement.getBoundingClientRect().left;
-            const newPosY = this.element.nativeElement.getBoundingClientRect().top;
+            const newPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+            const newPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
 
             this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
             this.left = newPosX - marginLeft;
@@ -870,6 +872,14 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         dragLeaveEvent.initCustomEvent(eventName, false, false, eventArgs);
         target.dispatchEvent(dragLeaveEvent);
         // Othersie can be used `target.dispatchEvent(new CustomEvent(eventName, eventArgs));`
+    }
+
+    protected getWindowScrollTop() {
+        return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
+    }
+
+    protected getWindowScrollLeft() {
+        return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
     }
 }
 
@@ -976,8 +986,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      */
     public onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
         this.dragover = true;
-        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + window.scrollX;
-        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + window.scrollY;
+        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
         const offsetX = event.detail.pageX - elementPosX;
         const offsetY = event.detail.pageY - elementPosY;
         const eventArgs: IgxDropEnterEventArgs = {
@@ -1002,8 +1012,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      */
     public onDragLeave(event) {
         this.dragover = false;
-        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + window.scrollX;
-        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + window.scrollY;
+        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
         const offsetX = event.detail.pageX - elementPosX;
         const offsetY = event.detail.pageY - elementPosY;
         const eventArgs: IgxDropLeaveEventArgs = {
@@ -1028,8 +1038,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      */
     @HostListener('igxDrop', ['$event'])
     public onDragDrop(event) {
-        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + window.scrollX;
-        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + window.scrollY;
+        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
         const offsetX = event.detail.pageX - elementPosX;
         const offsetY = event.detail.pageY - elementPosY;
         const args: IgxDropEventArgs = {
@@ -1053,6 +1063,14 @@ export class IgxDropDirective implements OnInit, OnDestroy {
                 event.detail.owner.dropFinished();
             }, 0);
         }
+    }
+
+    protected getWindowScrollTop() {
+        return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
+    }
+
+    protected getWindowScrollLeft() {
+        return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
     }
 }
 
