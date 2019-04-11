@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxListComponent } from '../list';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 @Component({
     template: `<div #wrapper>
@@ -130,4 +131,42 @@ export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
     </div>`
 })
 export class ListWithPanningTemplatesComponent extends ListWithPanningComponent {
+}
+
+@Component({
+    template: `<igx-list #forOfList>
+        <div [style.height]="'240px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+            <igx-list-item
+                [index]="i"
+                *igxFor="let item of data; index as i; scrollOrientation : 'vertical'; containerSize: '240px'; itemSize: '48px'">
+                <div class="item-container">
+                    <span>{{ item.key }}</span>&nbsp;
+                    <span>{{ item.name }}</span>
+                </div>
+            </igx-list-item>
+        </div>
+    </igx-list>`,
+    styles: [`.item-container { display: flex; }`]
+})
+export class ListWithIgxForAndScrollingComponent {
+    @ViewChild('forOfList', { read: IgxListComponent })
+    public forOfList: IgxListComponent;
+
+    @ViewChild(IgxForOfDirective)
+    public igxFor: IgxForOfDirective<any>;
+
+    public data = [
+        { key: 1, name: 'John' },
+        { key: 2, name: 'Brian' },
+        { key: 3, name: 'Christian' },
+        { key: 4, name: 'Mark' },
+        { key: 5, name: 'William' },
+        { key: 6, name: 'Dave' },
+        { key: 7, name: 'Riley' },
+        { key: 8, name: 'Terrance' },
+        { key: 9, name: 'Erick' },
+        { key: 10, name: 'Victor' },
+        { key: 11, name: 'Rick' },
+        { key: 12, name: 'Stefan' }
+    ];
 }
