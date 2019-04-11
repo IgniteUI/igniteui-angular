@@ -81,6 +81,8 @@ export class DataUtil {
         let i = 0, j;
         let pointer: IGroupByRecord;
         let expanded: boolean;
+        // empty the array without changing reference
+        groupsRecords.splice(0, groupsRecords.length);
         for (i = 0; i < metadata.length;) {
             chain = [metadata[i]];
             pointer = metadata[i].groupParent;
