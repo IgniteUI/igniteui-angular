@@ -1615,6 +1615,21 @@ describe('IgxGrid - Filtering actions', () => {
         expect(selectedItem.nativeElement.textContent).toMatch('Starts With');
         expect(input.nativeElement.value).toMatch('Ignite');
     }));
+
+    it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const datePicker = filterUIRow.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
+
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
