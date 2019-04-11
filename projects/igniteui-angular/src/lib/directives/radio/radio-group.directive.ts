@@ -170,8 +170,8 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    @HostBinding('style.display')
-    public displayStyle = 'block';
+    @HostBinding('class.igx-radio-group')
+    public cssClass = 'igx-radio-group';
 
     /**
      *@hidden

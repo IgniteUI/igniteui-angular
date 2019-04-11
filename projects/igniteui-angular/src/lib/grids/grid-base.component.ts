@@ -1212,7 +1212,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Emitted when a grid column is initialized. Returns the column object.
      * ```html
-     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"</igx-grid>
+     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"></igx-grid>
      * ```
      * ```typescript
      * initColumns(event: IgxColumnComponent) {
