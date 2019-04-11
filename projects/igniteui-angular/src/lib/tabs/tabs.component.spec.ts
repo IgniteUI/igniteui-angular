@@ -6,12 +6,14 @@ import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 
 describe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
+            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
+                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent],
             imports: [IgxTabsModule, NoopAnimationsModule]
         })
             .compileComponents();
@@ -353,6 +355,25 @@ describe('IgxTabs', () => {
         expect(tabs.selectedTabItem).toBe(tabsItems[2]);
         expect(tabs.selectedTabItem.relatedGroup.label).toBe('Tab 3');
     }));
+
+    it('should apply custom css style to tabs and tabs groups', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TabsTestCustomStylesComponent);
+        tick(100);
+        fixture.detectChanges();
+
+        const tabsDomElement = document.getElementsByClassName('igx-tabs')[0];
+        expect(tabsDomElement.classList.length).toEqual(2);
+        expect(tabsDomElement.classList.contains('tabsClass')).toBeTruthy();
+
+        const tabsGroupsDomElement = document.getElementsByClassName('igx-tabs__group');
+
+        expect(tabsGroupsDomElement.length).toEqual(2);
+        expect(tabsGroupsDomElement[0].classList.length).toBe(2);
+        expect(tabsGroupsDomElement[0].classList.contains('groupClass')).toBeTruthy();
+
+        expect(tabsGroupsDomElement[1].classList.length).toBe(1);
+        expect(tabsGroupsDomElement[1].classList.contains('groupClass')).toBeFalsy();
+    }));
 });
 
 @Component({
@@ -499,4 +520,20 @@ class TabsTestSelectedTabComponent {
                 { name: 'Tab 4' }
             ];
     }
+}
+
+@Component({
+    template:
+        `
+        <igx-tabs class="tabsClass">
+            <igx-tabs-group class="groupClass" label="Tab1">
+                Content 1
+            </igx-tabs-group>
+            <igx-tabs-group label="Tab2">
+                Content 2
+            </igx-tabs-group>
+        </igx-tabs>
+        `
+})
+class TabsTestCustomStylesComponent {
 }
