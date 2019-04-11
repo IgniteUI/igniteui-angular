@@ -2,6 +2,23 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+# 7.2.5
+- `IgxList`
+    - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
+    ```html
+        <igx-list>
+            <div [style.height]="'480px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item [index]="i" *igxFor="let item of data; index as i; scrollOrientation: 'vertical'; containerSize: '480px'; itemSize: '48px'">
+                    <div>{{ item.key }}</div>
+                    <div class="contact__info">
+                        <span class="name">{{item.name}}</span>
+                    </div>
+                </igx-list-item>
+            </div>
+        </igx-list>
+    ```
+    - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed.
+
 # 7.2.3
 - `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
 - `igxGrid`
