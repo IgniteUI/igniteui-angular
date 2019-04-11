@@ -18,6 +18,7 @@ All notable changes for each version of this project will be documented in this 
         </igx-list>
     ```
     - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed.
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
 
 # 7.2.3
 - `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
