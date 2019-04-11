@@ -8,9 +8,12 @@ import {
     ListWithHeaderComponent, ListWithPanningComponent,
     EmptyListComponent, CustomEmptyListComponent,
     ListLoadingComponent, ListWithPanningTemplatesComponent,
-    ListCustomLoadingComponent,
-    TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+    ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent,
+    TwoHeadersListComponent, TwoHeadersListNoPanningComponent
+} from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
 
@@ -27,9 +30,10 @@ describe('List', () => {
                 ListWithPanningComponent,
                 TwoHeadersListComponent,
                 TwoHeadersListNoPanningComponent,
-                ListWithPanningTemplatesComponent
+                ListWithPanningTemplatesComponent,
+                ListWithIgxForAndScrollingComponent
             ],
-            imports: [IgxListModule]
+            imports: [IgxListModule, IgxForOfModule]
         }).compileComponents();
     }));
 
@@ -85,7 +89,7 @@ describe('List', () => {
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
         expect(item.element.offsetLeft).toBe(testLeft);
-     });
+    });
 
     it('should calculate properly item index', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
@@ -623,6 +627,34 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
+    it('should allow setting the index of list items', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.igxFor.scrollTo(6);
+        await wait(50);
+        fixture.detectChanges();
+        const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const len = items.length;
+        expect(items[0].nativeElement.textContent).toContain('3');
+        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(2);
+        expect(items[len - 1].nativeElement.textContent).toContain('8');
+        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(7);
+    }));
+
+    it('should return items as they appear in the list with virtualization', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.igxFor.scrollTo(6);
+        await wait(50);
+        fixture.detectChanges();
+        const dItems = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const pItems = fixture.componentInstance.forOfList.items;
+        const len = dItems.length;
+        for (let i = 0; i < len; i++) {
+            expect(dItems[i].nativeElement).toEqual(pItems[i].element);
+        }
+    }));
+
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
             deltaX: itemWidth * 0.6,
@@ -660,10 +692,10 @@ describe('List', () => {
         const itemWidth = elementRefObject.nativeElement.offsetWidth;
 
         elementRefObject.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         elementRefObject.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
         elementRefObject.triggerEventHandler('panend', null);
         return new Promise((resolve, reject) => {
@@ -680,10 +712,10 @@ describe('List', () => {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
         itemNativeElement.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         itemNativeElement.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
     }
 
