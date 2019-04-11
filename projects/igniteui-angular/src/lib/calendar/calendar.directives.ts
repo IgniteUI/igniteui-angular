@@ -12,8 +12,16 @@ import {
     Input,
     Output,
     TemplateRef,
-    ElementRef
+    ElementRef,
+    AfterViewInit,
+    OnDestroy,
+    Inject
 } from '@angular/core';
+import { fromEvent, Subject, interval } from 'rxjs';
+import { takeUntil, debounce } from 'rxjs/operators';
+import { ScrollMonth } from './calendar-base';
+import { KEYS } from '../core/utils';
+import { IGX_CALENDAR_COMPONENT, IgxCalendarComponentBase } from './calendar';
 
 /**
  * @hidden
@@ -118,4 +126,80 @@ export class IgxCalendarHeaderTemplateDirective {
 })
 export class IgxCalendarSubheaderTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
+    selector: '[igxCalendarScrollMonth]'
+})
+export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
+
+    @Input('igxCalendarScrollMonth')
+    public scrollMonth: ScrollMonth;
+
+    private keyDown$ = new Subject();
+    private destroy$ = new Subject<boolean>();
+
+    constructor(@Inject(IGX_CALENDAR_COMPONENT) private calendar: IgxCalendarComponentBase, private element: ElementRef) { }
+
+    public ngAfterViewInit() {
+
+        this.keyDown$.pipe(
+            debounce(() => interval(150)),
+            takeUntil(this.destroy$)
+        ).subscribe(() => {
+            switch (this.scrollMonth) {
+                case ScrollMonth.PREV:
+                this.calendar.startPrevMonthScroll(true);
+                    break;
+                case ScrollMonth.NEXT:
+                this.calendar.startNextMonthScroll(true);
+                    break;
+                case ScrollMonth.NONE:
+                default:
+                    break;
+            }
+        });
+
+        fromEvent(this.element.nativeElement, 'keyup').pipe(
+            debounce(() => interval(150)),
+            takeUntil(this.destroy$)
+        ).subscribe((event: KeyboardEvent) => {
+            this.calendar.stopPrevNextMonthScroll(event);
+        });
+    }
+
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event: KeyboardEvent) {
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.keyDown$.next();
+        }
+    }
+
+    @HostListener('mousedown')
+    public onMouseDown() {
+        switch (this.scrollMonth) {
+            case ScrollMonth.PREV:
+            this.calendar.startPrevMonthScroll();
+                break;
+            case ScrollMonth.NEXT:
+            this.calendar.startNextMonthScroll();
+                break;
+            case ScrollMonth.NONE:
+            default:
+                break;
+        }
+    }
+
+    @HostListener('mouseup', ['$event'])
+    public onMouseUp(event: MouseEvent) {
+        this.calendar.stopPrevNextMonthScroll(event);
+    }
 }

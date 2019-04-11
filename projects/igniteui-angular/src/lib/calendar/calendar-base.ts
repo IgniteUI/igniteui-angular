@@ -299,7 +299,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public monthScrollDirection: ScrollMonth;
+    public monthScrollDirection = ScrollMonth.NONE;
 
     /**
      *@hidden

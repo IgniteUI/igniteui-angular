@@ -17,7 +17,7 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { KEYS } from '../core/utils';
-import { ICalendarDate, monthRange } from './calendar';
+import { ICalendarDate, monthRange, IGX_CALENDAR_COMPONENT } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
@@ -45,6 +45,10 @@ let NEXT_ID = 0;
         {
             multi: true,
             provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarComponent
+        },
+        {
+            provide: IGX_CALENDAR_COMPONENT,
             useExisting: IgxCalendarComponent
         }
     ],
@@ -280,12 +284,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.startMonthScroll$.pipe(
             takeUntil(this.stopMonthScroll$),
             switchMap(() => this.daysView.scrollMonth$.pipe(
                 skipLast(1),
-                debounce(() => interval(200)),
+                debounce(() => interval(250)),
                 takeUntil(this.stopMonthScroll$)
             ))).subscribe(() => {
                 switch (this.daysView.monthScrollDirection) {
@@ -318,7 +322,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public previousMonth(isKeydownTrigger: boolean = false) {
+    public previousMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
         this._monthAction = 'prev';
 
@@ -330,33 +334,33 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public previousMonthKB(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            event.stopPropagation();
+    public nextMonth(isKeydownTrigger = false) {
+        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
+        this._monthAction = 'next';
 
-            this.previousMonth(true);
+        if (this.daysView) {
+            this.daysView.isKeydownTrigger = isKeydownTrigger;
         }
     }
 
     /**
      * @hidden
      */
-    public startPrevMonthScroll() {
+    public startPrevMonthScroll(isKeydownTrigger = false) {
         this.startMonthScroll$.next();
         this.daysView.monthScrollDirection = ScrollMonth.PREV;
 
-        this.previousMonth();
+        this.previousMonth(isKeydownTrigger);
     }
 
     /**
      * @hidden
      */
-    public startNextMonthScroll() {
+    public startNextMonthScroll(isKeydownTrigger = false) {
         this.startMonthScroll$.next();
         this.daysView.monthScrollDirection = ScrollMonth.NEXT;
 
-        this.nextMonth();
+        this.nextMonth(isKeydownTrigger);
     }
 
     /**
@@ -371,30 +375,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         this.daysView.monthScrollDirection = ScrollMonth.NONE;
 
         event.target.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    public nextMonth(isKeydownTrigger: boolean = false) {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
-        this._monthAction = 'next';
-
-        if (this.daysView) {
-            this.daysView.isKeydownTrigger = isKeydownTrigger;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public nextMonthKB(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            this.nextMonth(true);
-        }
     }
 
     /**
