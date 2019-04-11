@@ -742,7 +742,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleEnd(ctrl: boolean) {
-        this.nativeElement.blur();
         if (ctrl) {
             this.grid.navigation.goToLastCell();
         } else {
@@ -751,7 +750,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleHome(ctrl: boolean) {
-        this.nativeElement.blur();
         if (ctrl) {
             this.grid.navigation.goToFirstCell();
         } else {
