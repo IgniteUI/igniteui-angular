@@ -1,0 +1,25 @@
+<div class="sample-wrapper">
+    <app-page-header title="Tabbar">
+        Allows the user to navigate between different content displayed in one view. Supports routing.
+    </app-page-header>
+    <div class="sample-content">
+        <article class="sample-column">
+            <div class="tabbar-wrapper" #tabbarEl>
+                <div>
+                    <router-outlet></router-outlet>
+                </div>
+                <igx-bottom-nav>
+                    <igx-tab-panel #tab1 label="Tab 1" routerLink='/bottom-navigation-routing/view1'>
+                        Content in tab # 1
+                    </igx-tab-panel>
+                    <igx-tab-panel #tab2 label="Tab 2" routerLink='/bottom-navigation-routing/view2'>
+                        Content in tab # 2
+                    </igx-tab-panel>
+                    <igx-tab-panel #tab3 label="Tab 3" routerLink='/bottom-navigation-routing/view3'>
+                        Content in tab # 3
+                    </igx-tab-panel>
+                </igx-bottom-nav>
+            </div>
+        </article>
+    </div>
+</div>

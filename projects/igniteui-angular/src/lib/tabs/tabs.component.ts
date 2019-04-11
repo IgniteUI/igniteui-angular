@@ -321,7 +321,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }, 0);
     }
 
-    private selectGroupByIndex(selectedIndex: number, navigateToRoute: boolean = true): void {
+    private selectGroupByIndex(selectedIndex: number, navigateToRoute = true): void {
         const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
         const group = selectableGroups[selectedIndex];
 

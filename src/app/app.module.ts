@@ -87,8 +87,11 @@ import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.compon
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
-
-
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
+import { RoutingView1Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { RoutingView2Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { RoutingView3Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 
 const components = [
     AppComponent,
@@ -129,7 +132,12 @@ const components = [
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
+    BottomNavRoutingSampleComponent,
+    RoutingView1Component,
+    RoutingView2Component,
+    RoutingView3Component,
     TabsSampleComponent,
+    TabsRoutingSampleComponent,
     TimePickerSampleComponent,
     ToastSampleComponent,
     VirtualForSampleComponent,
@@ -196,6 +204,11 @@ const components = [
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [
+        RoutingView1Component,
+        RoutingView2Component,
+        RoutingView3Component,
+    ]
 })
 export class AppModule { }

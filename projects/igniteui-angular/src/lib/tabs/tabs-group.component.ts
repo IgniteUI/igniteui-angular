@@ -167,7 +167,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 200, navigateToRoute: boolean = true): void {
+    public select(focusDelay = 200, navigateToRoute = true): void {
         if (this.disabled || this.isSelected) {
             return;
         }

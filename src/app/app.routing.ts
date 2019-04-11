@@ -25,6 +25,7 @@ import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
 import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bottomnav.sample';
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
@@ -52,6 +53,10 @@ import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { RoutingView1Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { RoutingView2Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { RoutingView3Component } from './bottomnav-routing/bottomnav-routing.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 
 const appRoutes = [
     {
@@ -185,8 +190,26 @@ const appRoutes = [
         component: BottomNavSampleComponent
     },
     {
+        path: 'bottom-navigation-routing',
+        component: BottomNavRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: RoutingView1Component },
+            { path: 'view2', component: RoutingView2Component },
+            { path: 'view3', component: RoutingView3Component }
+        ]
+    },
+    {
         path: 'tabs',
         component: TabsSampleComponent
+    },
+    {
+        path: 'tabs-routing',
+        component: TabsRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: RoutingView1Component },
+            { path: 'view2', component: RoutingView2Component },
+            { path: 'view3', component: RoutingView3Component }
+        ]
     },
     {
         path: 'timePicker',
