@@ -770,7 +770,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const embView = this._embeddedViews.shift();
             const cntx = embView.context;
             cntx.$implicit = input;
-            cntx.index = this.igxForOf.indexOf(input);
+            cntx.index = this.getContextIndex(input);
             const view: ViewRef = this.dc.instance._vcr.detach(0);
             this.dc.instance._vcr.insert(view);
             this._embeddedViews.push(embView);
@@ -787,11 +787,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const embView = this._embeddedViews.pop();
             const cntx = embView.context;
             cntx.$implicit = input;
-            cntx.index = this.igxForOf.indexOf(input);
+            cntx.index = this.getContextIndex(input);
             const view: ViewRef = this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
             this.dc.instance._vcr.insert(view, 0);
             this._embeddedViews.unshift(embView);
         }
+    }
+
+    /**
+     * @hidden
+    */
+    protected getContextIndex(input) {
+        return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input) : this.igxForOf.indexOf(input);
     }
 
     /**
@@ -806,7 +813,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const embView = this._embeddedViews[j++];
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
-            cntx.index = this.igxForOf.indexOf(input);
+            cntx.index = this.getContextIndex(input);
         }
     }
 
@@ -877,7 +884,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const embView = embeddedViewCopy.shift();
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
-                cntx.index = this.igxForOf.indexOf(input);
+                cntx.index = this.getContextIndex(input);
             }
             this.dc.changeDetectorRef.detectChanges();
             if (prevChunkSize !== this.state.chunkSize) {
@@ -1391,7 +1398,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                if (!this.igxForOf.length) {
+                /* we need to reset the master dir if all rows are removed
+                (e.g. because of filtering); if all columns are hidden, rows are
+                still rendered empty, so we should not reset master */
+                if (!this.igxForOf.length &&
+                    this.igxForScrollOrientation === 'vertical') {
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);
@@ -1485,7 +1496,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const embView = embeddedViewCopy.shift();
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
-                cntx.index = this.igxForOf.indexOf(input);
+                cntx.index = this.getContextIndex(input);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.onChunkLoad.emit(this.state);
