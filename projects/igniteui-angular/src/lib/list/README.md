@@ -152,15 +152,14 @@ All list items implement `IListChild`.
 
 | Name | Description |
 | :--- | :--- |
+| index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
-
 
 ### Properties
 
 | Name | Description |
 | :--- | :--- |
-| index  | The index of item in children collection  |
 | panState  | Gets the item's pan state  |
 | list  | Gets the list that is associated with the item  |
 | role  | Gets the role of the item within its respective list - _separator_ if isHeader is true and _listitem_ otherwise   |

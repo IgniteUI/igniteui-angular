@@ -267,6 +267,39 @@ function testGroupBy() {
             expect(group2.records).toEqual(grouped.data.slice(0, 3));
             expect(group3.records).toEqual(grouped.data.slice(3, 5));
         });
+
+        it('provides groupsRecords array', () => {
+            const groupRecords = [];
+            // sort
+            let res = DataUtil.sort(data, [expr]);
+            // first group pipe
+            let gres = DataUtil.group(res, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(gres, state, groupRecords);
+            expect(groupRecords.length).toEqual(2);
+            expect(groupRecords[0].records.length).toEqual(3);
+            expect(groupRecords[1].records.length).toEqual(2);
+            expect(groupRecords[0].groups).not.toBeDefined();
+            expect(groupRecords[1].groups).not.toBeDefined();
+            const expr2 = {
+                fieldName: 'string',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            };
+            state.expressions.push(expr2);
+            // sort
+            const sorted = DataUtil.sort(data, [expr, expr2]);
+            // first group pipe
+            gres = DataUtil.group(sorted, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(gres, state, groupRecords);
+            expect(groupRecords.length).toEqual(2);
+            expect(groupRecords[0].records.length).toEqual(3);
+            expect(groupRecords[1].records.length).toEqual(2);
+            expect(groupRecords[0].groups.length).toEqual(3);
+            expect(groupRecords[1].groups.length).toEqual(2);
+        });
     });
 }
 /* //Test sorting */
