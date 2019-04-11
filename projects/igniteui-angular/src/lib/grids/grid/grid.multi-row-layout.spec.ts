@@ -153,7 +153,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Phone', rowStart: 3, colStart: 3}
             ]
         }];
-        fixture.componentInstance.width = '617px';
+        fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -177,7 +177,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3}
             ]
         }];
-        fixture.componentInstance.width = '617px';
+        fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
         groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
@@ -188,7 +188,7 @@ describe('IgxGrid - multi-row-layout', () => {
     it('should initialize correctly when no column widths are set.', () => {
         // test with single group
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        fixture.componentInstance.width = '617px';
+        fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         // col span is 3 => columns should have grid width - scrollbarWitdh/3 width
@@ -219,7 +219,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3}
             ]
         });
-        fixture.componentInstance.width = '917px';
+        fixture.componentInstance.grid.width = '917px';
         fixture.detectChanges();
 
         // col span is 6 => columns should have grid width - scrollbarWitdh/6 width
@@ -321,7 +321,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3, width: '200px'}
             ]
         });
-        fixture.componentInstance.width = '1117px';
+        fixture.componentInstance.grid.width = '1117px';
         fixture.detectChanges();
 
         // first group takes 600px, 500px left for second group
@@ -355,7 +355,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Phone2', rowStart: 2, colStart: 2, colEnd : 'span 1', rowSpan: 'span 2'}
             ]
         });
-        fixture.componentInstance.width = '1617px';
+        fixture.componentInstance.grid.width = '1617px';
         fixture.detectChanges();
 
         // check columns
@@ -382,7 +382,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
             ]
         }];
-        fixture.componentInstance.width = '1017px';
+        fixture.componentInstance.grid.width = '1017px';
         fixture.detectChanges();
 
         // check columns
@@ -559,7 +559,7 @@ describe('IgxGrid - multi-row-layout', () => {
             fixture.componentInstance.colGroups = fixture.componentInstance.colGroups.concat(uniqueGroups);
         }
         grid.columnWidth = '200px';
-        fixture.componentInstance.width = '600px';
+        fixture.componentInstance.grid.width = '600px';
         fixture.detectChanges();
 
         // 12 groups in total
@@ -619,7 +619,7 @@ describe('IgxGrid - multi-row-layout', () => {
                     { field: 'City', rowStart: 3, colStart: 3, width: '200px'}
                 ]
             }];
-        fixture.componentInstance.width = '617px';
+        fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
         const horizontalVirtualization = grid.rowList.first.virtDirRow;
@@ -742,7 +742,7 @@ describe('IgxGrid - multi-row-layout', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" [width]='width'>
+    <igx-grid #grid [data]="data" height="500px">
         <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -754,7 +754,6 @@ describe('IgxGrid - multi-row-layout', () => {
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
-    width;
     cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
@@ -772,7 +771,7 @@ export class ColumnLayoutTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" [width]='width'>
+    <igx-grid #grid [data]="data" height="500px">
         <igx-column-group header="General Information">
         <igx-column field="CompanyName"></igx-column>
             <igx-column-group [movable]="true" header="Person Details">
