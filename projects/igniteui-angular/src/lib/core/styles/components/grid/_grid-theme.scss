@@ -665,15 +665,8 @@
         .igx-grid__mrl_block {
             display: grid;
 
-            .igx-grid__td {
-                border-top: $grid-header-border;
-                border-right: $grid-header-border;
-                border-left: $grid-header-border;
-            }
-
             %grid-thead-item {
                 display: flex;
-                border-top: $grid-header-border;
             }
 
             %grid-cell-header {
