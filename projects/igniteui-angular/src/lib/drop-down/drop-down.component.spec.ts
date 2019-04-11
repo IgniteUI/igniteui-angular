@@ -1338,12 +1338,18 @@ describe('IgxDropDown ', () => {
         }));
     });
 
-    describe('Virtualized DropDown tests', () => {
+    fdescribe('Virtualized DropDown tests', () => {
         configureTestSuite();
-        it('Should properly display items when virtualized', fakeAsync(() => {
-            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+        let fixture, button, dropdown, scroll, items;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(VirtualizedDropDownComponent);
             fixture.detectChanges();
-            const dropdown = fixture.componentInstance.dropdown;
+            dropdown = fixture.componentInstance.dropdown;
+            button = fixture.componentInstance.toggleButton;
+            scroll = fixture.componentInstance.virtualScroll;
+            items = fixture.componentInstance.dropdownItems;
+        });
+        it('Should properly display items when virtualized', fakeAsync(() => {
             expect(dropdown).toBeDefined();
             expect(fixture.componentInstance.dropdownItems.length).toEqual(11);
             expect(fixture.componentInstance.items.length).toEqual(2000);
@@ -1354,11 +1360,6 @@ describe('IgxDropDown ', () => {
             expect(fixture.componentInstance.dropdownItems.last.element.nativeElement.textContent.trim()).toEqual('Item 11');
         }));
         it('Should properly scroll when virtualized', async(() => {
-            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
-            fixture.detectChanges();
-            const dropdown = fixture.componentInstance.dropdown;
-            const button = fixture.componentInstance.toggleButton;
-            const scroll = fixture.componentInstance.virtualScroll;
             expect(dropdown).toBeDefined();
             dropdown.toggle();
             fixture.detectChanges();
@@ -1376,12 +1377,6 @@ describe('IgxDropDown ', () => {
             }, 200);
         }));
         it('Should properly handle keyboard navigation when virtualized', async(() => {
-            const fixture = TestBed.createComponent(VirtualizedDropDownComponent);
-            fixture.detectChanges();
-            const dropdown = fixture.componentInstance.dropdown;
-            const button = fixture.componentInstance.toggleButton;
-            const scroll = fixture.componentInstance.virtualScroll;
-            const items = fixture.componentInstance.dropdownItems;
             expect(dropdown).toBeDefined();
             dropdown.toggle();
             fixture.detectChanges();
@@ -1392,15 +1387,56 @@ describe('IgxDropDown ', () => {
             setTimeout(() => {
                 expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
                 expect(items.last.focused).toEqual(true);
-                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
                 expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
                 expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
                 dropdown.focusedItem = items.toArray()[2];
-                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             }, 200);
         }));
-        xit('Should properly preserve selection when scrolled', () => { });
-        xit('Should properly render both small and large amounts of data', () => { });
+        it('Should properly preserve selection when scrolled', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 });
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual({ value: fixture.componentInstance.items[5], index: 5 });
+            expect(items.toArray()[5].selected).toEqual(true);
+            scroll.scrollTo(412);
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(items.toArray()[5].selected).toEqual(false);
+                expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(0);
+                scroll.scrollTo(0);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    expect(items.toArray()[5].selected).toEqual(true);
+                    expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(1);
+                    done();
+                }, 200);
+            }, 200);
+        });
+        it('Should properly select items both inside and outside of the virtual view', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            let selectedItem = { value: fixture.componentInstance.items[5], index: 5 };
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual(selectedItem);
+            expect(items.toArray()[5].selected).toEqual(true);
+            selectedItem = { value: fixture.componentInstance.items[412], index: 412 };
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual(selectedItem);
+            expect(items.toArray()[5].selected).toEqual(false);
+            scroll.scrollTo(412);
+            setTimeout(() => {
+                fixture.detectChanges();
+                const selectedEntry = items.find(e => e.value === selectedItem.value && e.index === selectedItem.index);
+                expect(selectedEntry).toBeTruthy();
+                expect(selectedEntry.selected).toBeTruthy();
+                done();
+            }, 200);
+        });
     });
 });
 
