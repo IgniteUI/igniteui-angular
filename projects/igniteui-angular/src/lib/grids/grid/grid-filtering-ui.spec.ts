@@ -1505,6 +1505,21 @@ describe('IgxGrid - Filtering actions', () => {
         expect(selectedItem.nativeElement.textContent).toMatch('Starts With');
         expect(input.nativeElement.value).toMatch('Ignite');
     }));
+
+    it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const datePicker = filterUIRow.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
+
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
@@ -1514,11 +1529,14 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent
+                IgxGridFilteringMCHComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule
+            ]
         }).compileComponents();
     }));
 
@@ -2604,11 +2622,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFilteringComponent
+                IgxGridFilteringComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule]
         })
             .compileComponents();
     }));
@@ -3203,6 +3223,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
 
         expect(grid.filteredData).toBeNull();
+    }));
+
+    it('Should use dropdown mode for the datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
+        fix.detectChanges();
+
+        const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
+        const datePicker = dateExpression.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 });
 
