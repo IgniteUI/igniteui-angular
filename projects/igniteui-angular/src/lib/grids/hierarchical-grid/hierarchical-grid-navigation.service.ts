@@ -4,6 +4,7 @@ import { first } from 'rxjs/operators';
 import { FilterMode } from '../grid-base.component';
 import { IgxColumnComponent } from '../../grids/column.component';
 import { ISelectionNode } from '../../core/grid-selection';
+import { isIE } from '../../core/utils';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
@@ -199,6 +200,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
+    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false) {
+        super.onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary, this.getFocusableGrid());
+    }
+
+    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false) {
+        super.onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary, this.getFocusableGrid());
+    }
+
+    public onKeydownHome(rowIndex, isSummary = false) {
+        super.onKeydownHome(rowIndex, isSummary, this.getFocusableGrid());
+    }
+
     public onKeydownEnd(rowIndex, isSummary = false) {
         if (this.grid.parent && !isSummary) {
             // handle scenario where last child row might not be in view
@@ -223,10 +236,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
                 this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
             } else {
-                super.onKeydownEnd(rowIndex, isSummary);
+                super.onKeydownEnd(rowIndex, isSummary, this.getFocusableGrid());
             }
         } else {
-            super.onKeydownEnd(rowIndex, isSummary);
+            super.onKeydownEnd(rowIndex, isSummary, this.getFocusableGrid());
         }
 
     }
@@ -413,6 +426,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.performShiftTabKey(currentRowEl, selectedNode);
         }
+    }
+
+    private getFocusableGrid() {
+        return (isIE() && this.grid.rootGrid) ? this.grid.rootGrid : this.grid;
     }
 
     private getLastGridElem(trContainer) {
