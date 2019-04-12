@@ -109,17 +109,6 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
     }
 
-    public pinGroup() {
-        const t = this.grid.getColumnByName('ContactTitle');
-        t.pinned = !t.pinned;
-    }
-
-    public hideGroup() {
-        const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
-        col.hidden = !col.hidden;
-        this.grid.getColumnByName('CompanyName').hidden = true;
-        console.log(this.grid.getColumnByName('CompanyName').parent);
-    }
 
     public get layoutRowStyle() {
         let style = '';
@@ -224,7 +213,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         return result;
     }
 
-    public doMagic() {
+    public rerenderGrid() {
         this.renderGrid = false;
 
         // Flatten the current collection for the grid.
