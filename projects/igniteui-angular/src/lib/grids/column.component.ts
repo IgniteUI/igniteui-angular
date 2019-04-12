@@ -837,9 +837,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * Row index where the current field should end.
      * It can be applied as `span n` to specify that the current field is spanning on `n` rows.
      * ```html
-     * <igx-column-group>
-     *   <igx-column [rowEnd]="'span 2'"></igx-column>
-     * </igx-column-group>
+     * <igx-column-layout>
+     *   <igx-column [rowEnd]="'span 2'" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -850,9 +850,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * Column index where the current field should end.
      * It can be applied as `span n` to specify that the current field is spanning on `n` columns.
      * ```html
-     * <igx-column-group>
-     *   <igx-column [colEnd]="'span 2'"></igx-column>
-     * </igx-column-group>
+     * <igx-column-layout>
+     *   <igx-column [colEnd]="'span 2'" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -862,9 +862,9 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Row index from which the field is starting.
      * ```html
-     * <igx-column-group>
-     *   <igx-column [rowStart]="1"></igx-column>
-     * </igx-column-group>
+     * <igx-column-layout>
+     *   <igx-column [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -873,9 +873,9 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Column index from which the field is starting.
      * ```html
-     * <igx-column-group>
-     *   <igx-column [colStart]="1"></igx-column>
-     * </igx-column-group>
+     * <igx-column-layout>
+     *   <igx-column [colStart]="1" [rowStart]="1"></igx-column>
+     * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
