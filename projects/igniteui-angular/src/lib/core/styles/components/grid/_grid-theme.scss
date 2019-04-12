@@ -674,6 +674,7 @@
                 flex-grow: 1;
                 border-bottom: $grid-header-border;
             }
+
             %grid-cell-display {
                 border-right: 1px solid --var($theme, 'row-border-color');
                 border-bottom: 1px solid --var($theme, 'row-border-color');
