@@ -336,6 +336,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
+        const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${mrlClass}`.trim();
     }
 }

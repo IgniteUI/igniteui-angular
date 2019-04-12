@@ -23,9 +23,4 @@ export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
             // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
             super(gridAPI, crudService, selectionService, selection, element, cdr);
         }
-
-        @HostBinding('class.igx-grid__tr--mrl')
-        get hasColumnLayouts(): boolean {
-            return this.grid.hasColumnLayouts;
-        }
 }
