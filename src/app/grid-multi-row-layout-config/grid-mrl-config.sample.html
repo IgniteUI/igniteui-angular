@@ -39,7 +39,7 @@
                             [ngStyle]="{'grid-row-start': col.rowStart, 'grid-column-start': col.colStart, 'grid-column-end': col.colStart + col.colSpan, 'grid-row-end': col.rowStart + col.rowSpan}"
                             igxDrop (onDrop)="onColDropped($event, rowIndex, colIndex)"
                                 (click)="clickCell(gridCell, rowIndex, colIndex)" (blur)="onBlur($event, rowIndex, colIndex)" (keyup)="onCellKey($event, rowIndex, colIndex)">
-                            <div style="margin: 3px;">{{col.key}}</div>
+                            <div class="textWrapper">{{col.key}}</div>
                             <ng-container *ngIf="this.collection[rowIndex][colIndex].selected">
                                 <span #resizeHandleRight class="resizerLeft" 
                                     (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"

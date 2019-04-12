@@ -32,6 +32,11 @@
     user-select: none;
 }
 
+.textWrapper {
+    margin: 6px;
+    align-self: flex-end;
+}
+
 .resizerLeft {
     position: absolute;
     width: 5px;
