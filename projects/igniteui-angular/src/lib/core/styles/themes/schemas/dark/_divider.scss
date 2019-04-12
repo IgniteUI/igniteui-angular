@@ -1,0 +1,13 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark divider schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_light-divider
+/// @see $default-palette
+$_dark-divider: extend($_light-divider, ());
