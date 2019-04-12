@@ -11,7 +11,7 @@
                     <!-- <router-outlet *ngIf="tab1.isSelected"></router-outlet> -->
                     Content in tab # 1
                 </igx-tabs-group>
-                <igx-tabs-group #tab2 label="Tab 2" icon="folder" routerLink="/tabs-routing/view2">
+                <igx-tabs-group #tab2 label="Tab 2" icon="folder" [routerLink]="['/tabs-routing', 'view2']">
                     <!-- <router-outlet *ngIf="tab2.isSelected"></router-outlet> -->
                     Content in tab # 2
                 </igx-tabs-group>
