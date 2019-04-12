@@ -228,7 +228,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        let newSelection: IgxDropDownItemBase | { value: any, index: number};
+        let newSelection: IgxDropDownItemBase | { value: any, index: number };
         if (this.virtDir) {
             newSelection = {
                 value: this.virtDir.igxForOf[index],
@@ -290,9 +290,13 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @hidden @internal
      */
     updateScrollPosition() {
-        if (this.virtDir) {
-            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+        if (!this.selectedItem) {
+            return;
         }
+        let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
+        const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
+        targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
+        this.virtDir.getVerticalScroll().scrollTop = targetScroll;
     }
 
     /**
@@ -428,7 +432,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigateLast() {
         if (this.virtDir) {
-            this.navigateItem(this.virtDir.igxForOf.length - 1);
+            this.navigateItem(this.virtDir.totalItemCount ? this.virtDir.totalItemCount - 1 : this.virtDir.igxForOf.length - 1);
         } else {
             super.navigateLast();
         }

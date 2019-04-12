@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
-import { IgxForOfDirective, IForOfState } from 'igniteui-angular';
+import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxToastPosition } from 'igniteui-angular';
 
 interface DataItem {
   name: string;
@@ -13,16 +13,19 @@ interface DataItem {
   styleUrls: ['./drop-down-virtual.component.scss']
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
-  @ViewChild(`asyncFor`, { read: IgxForOfDirective })
-  private igxForOf: IgxForOfDirective<any>;
+  @ViewChild('loadingToast', { read: IgxToastComponent})
+  public loadingToast: IgxToastComponent;
+  @ViewChild('dropdown', { read: IgxDropDownComponent })
+  public remoteDropDown: IgxDropDownComponent;
   public itemsAsync: Observable<any[]>;
   public localItems: DataItem[];
   public totalItemCount = 0;
   public prevRequest: any;
   public startIndex = 0;
+  public itemHeight = 48;
+  public itemsMaxHeight = 480;
 
   constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
-    this.itemsAsync = this.remoteService.remoteData;
     this.remoteService.urlBuilder = (state) => {
       const chunkSize = state.chunkSize || 10;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
@@ -33,32 +36,37 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  public itemHeight = 48;
-  public itemsMaxHeight = 480;
-
   public getIndex(index: number) {
     return this.startIndex + index;
   }
-  public dataLoading(evt: IForOfState) {
-    if (this.prevRequest) {
-      this.prevRequest.unsubscribe();
-    }
-    this.startIndex = this.igxForOf.state.startIndex;
-    this.prevRequest = this.remoteService.getData(
-      evt,
-      (data) => {
-        this.igxForOf.totalItemCount = data['@odata.count'];
-        this.cdr.detectChanges();
-      });
-  }
 
-  ngOnInit() {
+  public ngOnInit() {
+    this.itemsAsync = this.remoteService.remoteData;
+}
 
-  }
-
-  ngAfterViewInit() {
-    this.remoteService.getData(this.igxForOf.state, (result) => {
-      this.igxForOf.totalItemCount = result['@odata.count'];
+public ngAfterViewInit() {
+    this.remoteService.getData(this.remoteDropDown.virtDir.state, (data) => {
+        this.remoteDropDown.virtDir.totalItemCount = data['@odata.count'];
+        this.remoteDropDown.virtDir.igxForItemSize = this.itemHeight;
     });
-  }
+}
+
+public dataLoading(evt: IForOfState) {
+  console.log(evt);
+    if (this.prevRequest) {
+        this.prevRequest.unsubscribe();
+    }
+    this.loadingToast.message = 'Loading Remote Data...';
+    this.loadingToast.position = IgxToastPosition.Middle;
+    this.loadingToast.autoHide = false;
+    this.loadingToast.show();
+    this.cdr.detectChanges();
+    this.prevRequest = this.remoteService.getData(
+        evt,
+        (data) => {
+          this.remoteDropDown.virtDir.totalItemCount = data['@odata.count'];
+          this.loadingToast.hide();
+          this.cdr.detectChanges();
+    });
+}
 }

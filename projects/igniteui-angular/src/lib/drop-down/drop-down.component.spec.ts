@@ -1340,7 +1340,7 @@ describe('IgxDropDown ', () => {
 
     fdescribe('Virtualized DropDown tests', () => {
         configureTestSuite();
-        let fixture, button, dropdown, scroll, items;
+        let fixture, button, dropdown: IgxDropDownComponent, scroll, items;
         beforeEach(() => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
             fixture.detectChanges();
@@ -1436,6 +1436,26 @@ describe('IgxDropDown ', () => {
                 expect(selectedEntry.selected).toBeTruthy();
                 done();
             }, 200);
+        });
+        it('Should properly scroll selected item into view when virtualized', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            const selectedItem = { value: fixture.componentInstance.items[1000], index: 1000 };
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            dropdown.toggle();
+            setTimeout(() => {
+                dropdown.toggle();
+                setTimeout(() => {
+                    const itemsInView = dropdown.virtDir.igxForContainerSize / dropdown.virtDir.igxForItemSize;
+                    const expectedScroll = dropdown.virtDir.getScrollForIndex(selectedItem.index)
+                     - (itemsInView / 2 - 1) * dropdown.virtDir.igxForItemSize;
+                    const acceptableDelta = dropdown.virtDir.igxForItemSize;
+                    const scrollTop = dropdown.virtDir.getVerticalScroll().scrollTop;
+                    expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
+                    done();
+                }, 100);
+            }, 100);
         });
     });
 });
