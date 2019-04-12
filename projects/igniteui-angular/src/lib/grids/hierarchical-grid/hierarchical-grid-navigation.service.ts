@@ -200,18 +200,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false) {
-        super.onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary, this.getFocusableGrid());
-    }
-
-    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false) {
-        super.onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary, this.getFocusableGrid());
-    }
-
-    public onKeydownHome(rowIndex, isSummary = false) {
-        super.onKeydownHome(rowIndex, isSummary, this.getFocusableGrid());
-    }
-
     public onKeydownEnd(rowIndex, isSummary = false) {
         if (this.grid.parent && !isSummary) {
             // handle scenario where last child row might not be in view
@@ -236,10 +224,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
                 this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
             } else {
-                super.onKeydownEnd(rowIndex, isSummary, this.getFocusableGrid());
+                super.onKeydownEnd(rowIndex, isSummary);
             }
         } else {
-            super.onKeydownEnd(rowIndex, isSummary, this.getFocusableGrid());
+            super.onKeydownEnd(rowIndex, isSummary);
         }
 
     }
@@ -428,7 +416,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    private getFocusableGrid() {
+    public getFocusableGrid() {
         return (isIE() && this.grid.rootGrid) ? this.grid.rootGrid : this.grid;
     }
 
