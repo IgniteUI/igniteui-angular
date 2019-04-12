@@ -332,6 +332,10 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`groupable`|boolean| Determines whether the column may be grouped via the UI.|
 |`disableHiding`|boolean| Enables/disables hiding for the column, default value is `false`.|
 |`disablePinning`|boolean| Enables/disables pinning for the column, default value is `false`.|
+|`rowStart`|number|Row index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`colStart`|number|Column index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`rowEnd`|string|Row index where the current field should end(can use `span n` to specify that the current field is spanning on `n` rows). Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`colEnd`|string|Column index where the current field should end(can use span n to specify that the current field is spanning on n columns). Only applies when the columns are within `IgxColumnLayoutComponent`.|
 
 
 ### Methods

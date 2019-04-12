@@ -2,13 +2,27 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-# 7.2.3
+# 7.3.0
+ - `igxGridComponent` now supports Multi Row Layout. It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+    - `rowStart`
+    - `colStart`
+    - `rowEnd`
+    - `colEnd`
+    ```html
+    <igx-column-layout>
+        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Address"></igx-column>
+    </igx-column-layout>
+    ```
+
+## 7.2.3
 - `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
 - `igxGrid`
     - `igxFilterCellTemplate` directive added that allows retemplating of the filter cell.
     - `IgxColumnComponent` now has `filterCellTemplate` property that can be used to retemplate the filter cell.
 
-# 7.2.2
+## 7.2.2
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
