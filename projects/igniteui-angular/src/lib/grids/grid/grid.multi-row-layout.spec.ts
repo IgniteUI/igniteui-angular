@@ -457,6 +457,30 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyHeadersAreAligned(headerCells, firstRowCells);
         verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
+    it('should initialize correctly when grid width is in % and no widths are set for columns.', () => {
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        const grid = fixture.componentInstance.grid;
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1 },
+                { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 1, colStart: 3, colEnd : 'span 2' },
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+            ]
+        }];
+        fixture.componentInstance.grid.width = '100%';
+        fixture.detectChanges();
+
+          // check group blocks
+        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(groupHeaderBlocks[0].nativeElement.parentNode.clientWidth);
+
+        const firstRowCells = grid.rowList.first.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+    });
 
     it('should use columns with the smallest col spans when determining the column group’s column widths.', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
