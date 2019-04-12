@@ -277,8 +277,10 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public pointerMoveResizeLeft(event, cellRef, rowIndex, colIndex) {
         if (this.dragStarted) {
             const curDistance = this.dragStartX - event.pageX;
+            const minIncrease = -this.curResizedCell.colSpan;
             const maxIncrease = colIndex;
             this.colSpanIncrease = Math.min(Math.round(curDistance / 136), maxIncrease);
+            this.colSpanIncrease = Math.max(this.colSpanIncrease, minIncrease);
             this.resizeWidth = this.resizeInitialWidth + this.colSpanIncrease * 136;
             this.resizeLeft = cellRef.offsetLeft - this.colSpanIncrease * 136;
         }
