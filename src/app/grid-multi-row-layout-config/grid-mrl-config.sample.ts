@@ -216,6 +216,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.collection.forEach((row) => {
             row.forEach((col) => {
                 const newCol = { ...col };
+                delete newCol.selected;
                 result.push(newCol);
             });
         });
