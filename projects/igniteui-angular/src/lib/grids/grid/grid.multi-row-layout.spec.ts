@@ -74,7 +74,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
                 // check height
                 const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
-                expect(cellElem.clientHeight).toBe(expectedHeight);
+                expect(cellElem.offsetHeight).toBe(expectedHeight);
 
                  // check offset left
                 const acc = (accum, c) => {
@@ -201,7 +201,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // check group blocks
         let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(200 * 3);
-        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
 
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
@@ -236,9 +236,9 @@ describe('IgxGrid - multi-row-layout', () => {
          // check group blocks
          groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
          expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(150 * 3);
-         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
          expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(150 * 3);
-         expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(50 * 3);
+         expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(51 * 3);
 
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
@@ -271,9 +271,9 @@ describe('IgxGrid - multi-row-layout', () => {
         // check group blocks
         groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(136 * 3);
-        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(50 * 3);
+        expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(136 * 3);
-        expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(50 * 3);
+        expect(groupHeaderBlocks[1].nativeElement.clientHeight).toBe(51 * 3);
         expect(groupHeaderBlocks[2].nativeElement.clientWidth).toBe(136 * 2);
         // the following throws error because last colgroup row span in header does not fill content
         // expect(groupHeaderBlocks[2].nativeElement.clientHeight).toBe(50 * 3);

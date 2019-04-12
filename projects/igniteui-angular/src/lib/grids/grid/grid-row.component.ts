@@ -1,4 +1,4 @@
-import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { GridBaseAPIService } from '../api.service';
@@ -19,5 +19,10 @@ export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
         public cdr: ChangeDetectorRef) {
             // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
             super(gridAPI, selection, element, cdr);
+        }
+
+        @HostBinding('class.igx-grid__tr--mrl')
+        get hasColumnLayouts(): boolean {
+            return this.grid.hasColumnLayouts;
         }
 }
