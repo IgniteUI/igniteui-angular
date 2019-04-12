@@ -1,9 +1,9 @@
-import { Component, DebugElement, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChildren, QueryList, ViewChild, ElementRef } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDragDropModule, IgxDragDirective, IgxDropDirective } from './dragdrop.directive';
-import { UIInteractions} from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 @Component({
@@ -32,7 +32,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
     `],
     template: `
         <h3>Draggable elements:</h3>
-        <div class="container">
+        <div #container class="container">
             <div id="firstDrag" class="dragElem" [igxDrag]="{ key: 1 }">Drag 1</div>
             <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }">Drag 2</div>
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }">Drag 3</div>
@@ -48,6 +48,9 @@ class TestDragDropComponent {
 
     @ViewChild('dropArea', { read: IgxDropDirective })
     public dropArea: IgxDropDirective;
+
+    @ViewChild('container', { read: ElementRef })
+    public container: ElementRef;
 }
 
 describe('IgxDrag/IgxDrop', () => {
@@ -160,6 +163,95 @@ describe('IgxDrag/IgxDrop', () => {
 
             expect(firstDrag.dragStart.emit).toHaveBeenCalled();
             expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
+
+            done();
+        });
+    });
+
+    it('should trigger onEnter, onDrop and onLeave events when element is dropped inside igxDrop element', (done) => {
+        const fix = TestBed.createComponent(TestDragDropComponent);
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingTop = firstElement.getBoundingClientRect().top;
+        const startingLeft = firstElement.getBoundingClientRect().left;
+        const startingBottom = firstElement.getBoundingClientRect().bottom;
+        const startingRight = firstElement.getBoundingClientRect().right;
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaTop = dropArea.element.nativeElement.getBoundingClientRect().top;
+        const dropAreaLeft = dropArea.element.nativeElement.getBoundingClientRect().left;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        spyOn(dropArea.onEnter, 'emit');
+        spyOn(dropArea.onLeave, 'emit');
+        spyOn(dropArea.onDrop, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
+        expect(dropArea.element.nativeElement.children.length).toEqual(0);
+        fix.whenStable().then(async() => {
+            fix.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+
+            await wait();
+            return fix.whenStable();
+        }).then(async () => {
+            fix.detectChanges();
+
+            const event =
+                UIInteractions.simulatePointerEvent('pointermove', firstDrag['_dragGhost'], dropAreaLeft  + 100, dropAreaTop  + 5);
+
+
+            expect(dropArea.onEnter.emit).toHaveBeenCalledWith({
+                originalEvent: event,
+                owner: dropArea,
+                drag: firstDrag,
+                dragData: firstDrag.data,
+                startX: startingX,
+                startY: startingY,
+                pageX:  dropAreaLeft  + 100,
+                pageY: dropAreaTop  + 5,
+                offsetX: 100,
+                offsetY: 5
+            });
+
+            await wait();
+            return fix.whenStable();
+        }).then(async() => {
+            fix.detectChanges();
+
+            // We need to trigger the pointerup on the dragGhost because this is the element we move and is under the mouse
+            const eventUp = UIInteractions.simulatePointerEvent('pointerup', firstDrag['_dragGhost'], dropAreaLeft + 100, dropAreaTop + 20);
+            await wait();
+
+            expect(dropArea.onDrop.emit).toHaveBeenCalledWith({
+                originalEvent: eventUp,
+                owner: dropArea,
+                drag: firstDrag,
+                offsetX: 100,
+                offsetY: 20,
+                cancel: false
+            });
+            expect(dropArea.onLeave.emit).toHaveBeenCalledWith({
+                originalEvent: eventUp,
+                owner: dropArea,
+                drag: firstDrag,
+                dragData: firstDrag.data,
+                startX: startingX,
+                startY: startingY,
+                pageX:  dropAreaLeft  + 100,
+                pageY: dropAreaTop  + 20,
+                offsetX: 100,
+                offsetY: 20
+            });
+            expect(fix.componentInstance.container.nativeElement.children.length).toEqual(2);
+            expect(dropArea.element.nativeElement.children.length).toEqual(1);
 
             done();
         });
