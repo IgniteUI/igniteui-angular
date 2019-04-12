@@ -100,7 +100,7 @@ export class IgxGridNavigationService {
             `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
     }
 
-    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false, focusElement = this.grid) {
+    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
@@ -109,7 +109,7 @@ export class IgxGridNavigationService {
                 if (this.isColumnLeftFullyVisible(visibleColumnIndex + 1)) {
                     element.nextElementSibling.firstElementChild.focus({ preventScroll: true });
                 } else {
-                    focusElement.nativeElement.focus({ preventScroll: true });
+                    this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
                     this.grid.parentVirtDir.onChunkLoad
                         .pipe(first())
                         .subscribe(() => {
@@ -121,12 +121,12 @@ export class IgxGridNavigationService {
                 element.nextElementSibling.focus({ preventScroll: true });
             }
         } else {
-            focusElement.nativeElement.focus({ preventScroll: true });
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1, isSummary);
         }
     }
 
-    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, focusElement = this.grid) {
+    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false) {
         if (visibleColumnIndex === 0) {
             return;
         }
@@ -134,7 +134,7 @@ export class IgxGridNavigationService {
         if (!element.previousElementSibling && this.grid.pinnedColumns.length && index === - 1) {
             element.parentNode.previousElementSibling.focus({ preventScroll: true });
         } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
-            focusElement.nativeElement.focus({ preventScroll: true });
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1, isSummary);
         } else {
             element.previousElementSibling.focus({ preventScroll: true });
@@ -190,7 +190,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public onKeydownHome(rowIndex, isSummary = false, focusElement = this.grid) {
+    public onKeydownHome(rowIndex, isSummary = false) {
         const rowList = isSummary ? this.grid.summariesRowList : this.grid.dataRowList;
         let rowElement = rowList.find((row) => row.index === rowIndex);
         const cellSelector = this.getCellSelector(0, isSummary);
@@ -200,7 +200,7 @@ export class IgxGridNavigationService {
         if (this.grid.pinnedColumns.length || this.displayContainerScrollLeft === 0) {
             firstCell.focus({ preventScroll: true });
         } else {
-            focusElement.nativeElement.focus({ preventScroll: true });
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -211,7 +211,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public onKeydownEnd(rowIndex, isSummary = false, focusElement = this.grid) {
+    public onKeydownEnd(rowIndex, isSummary = false) {
         const index = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
         const rowList = isSummary ? this.grid.summariesRowList : this.grid.dataRowList;
         let rowElement = rowList.find((row) => row.index === rowIndex);
@@ -221,7 +221,7 @@ export class IgxGridNavigationService {
             const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
             allCells[allCells.length - 1].focus({ preventScroll: true });
         } else {
-            focusElement.nativeElement.focus({ preventScroll: true });
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -552,6 +552,10 @@ export class IgxGridNavigationService {
                 this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus({ preventScroll: true });
             });
         this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+    }
+
+    protected getFocusableGrid() {
+        return this.grid;
     }
 
     protected getRowByIndex(index, selector = this.getRowSelector()) {
