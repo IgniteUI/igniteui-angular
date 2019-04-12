@@ -56,6 +56,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -143,6 +144,7 @@ const components = [
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
+    GridRowDraggableComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,

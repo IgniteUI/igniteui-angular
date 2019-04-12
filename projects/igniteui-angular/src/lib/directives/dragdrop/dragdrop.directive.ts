@@ -396,7 +396,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             } else if (this.touchEventsEnabled) {
-                // We don't have pointer events and touch events. Use then mouse events.
                 fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 

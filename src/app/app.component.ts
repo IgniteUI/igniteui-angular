@@ -189,6 +189,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Selection'
         },
         {
+            link: '/gridRowDraggable',
+            icon: 'view_column',
+            name: 'Grid Row Drag/Drop'
+        },
+        {
             link: '/gridSummary',
             icon: 'view_column',
             name: 'Grid Summary'

@@ -159,6 +159,20 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return false;
     }
 
+    /**
+     * @hidden
+     */
+    public get rowDraggable(): boolean {
+        return this.grid.rowDraggable;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showRowDraggable(): boolean {
+        return this.grid.showRowDraggable;
+    }
+
     /** @hidden */
     public get added(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);

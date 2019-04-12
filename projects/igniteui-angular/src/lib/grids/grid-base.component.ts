@@ -508,6 +508,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    @WatchChanges()
+    @Input()
+    get rowDraggable(): boolean {
+        return this._rowDraggable;
+    }
+
+    /**
+     * Sets whether rows can be moved.
+     * ```html
+     * <igx-grid #grid [showToolbar]="true" [rowDraggable]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set rowDraggable(val: boolean) {
+        this._rowDraggable = val;
+    }
+
+
     /**
  * Sets whether the `IgxGridRowComponent` is editable.
  * By default it is set to false.
@@ -2316,6 +2334,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _rowDraggable = false;
+    /**
+     * @hidden
+     */
     protected _pipeTrigger = 0;
     /**
      * @hidden
@@ -3080,6 +3102,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     get showRowCheckboxes(): boolean {
         return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+    }
+
+    get showRowDraggable(): boolean {
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
 
     /**
