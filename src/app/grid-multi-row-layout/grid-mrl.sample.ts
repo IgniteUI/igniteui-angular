@@ -5,11 +5,22 @@ import { IgxGridComponent } from 'igniteui-angular';
     selector: 'app-grid-mrl-sample',
     templateUrl: 'grid-mrl.sample.html'
 })
-export class GridMRLSampleComponent implements AfterViewInit {
-
-    @ViewChild('grid', { read: IgxGridComponent })
+export class GridMRLSampleComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
-
+    width = null;
+    cols: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1},
+        { field: 'CompanyName', rowStart: 1, colStart: 2},
+        { field: 'ContactName', rowStart: 1, colStart: 3},
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+    ];
+    colGroups = [
+        {
+            group: 'group1',
+            columns: this.cols
+        }
+    ];
     data = [
         // tslint:disable:max-line-length
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -40,21 +51,4 @@ export class GridMRLSampleComponent implements AfterViewInit {
         { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
         { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
     ];
-    // tslint:enable:max-line-length
-
-    pinGroup() {
-        const t = this.grid.getColumnByName('ContactTitle');
-        t.pinned = !t.pinned;
-    }
-
-    hideGroup() {
-        const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
-        col.hidden = !col.hidden;
-        this.grid.getColumnByName('CompanyName').hidden = true;
-        console.log(this.grid.getColumnByName('CompanyName').parent);
-    }
-
-    ngAfterViewInit() {
-        // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
-    }
 }

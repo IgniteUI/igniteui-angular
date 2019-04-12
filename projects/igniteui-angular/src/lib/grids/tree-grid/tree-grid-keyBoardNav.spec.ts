@@ -5,6 +5,7 @@ import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } fr
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
@@ -159,6 +160,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetection(fix, treeGrid);
         });
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {

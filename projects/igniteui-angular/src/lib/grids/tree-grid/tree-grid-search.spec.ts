@@ -11,6 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -33,14 +34,14 @@ describe('IgxTreeGrid - search API', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
-        });
+        }));
 
         it('Search highlights should work within tree cell', () => {
             let actualCount = treeGrid.findNext('ev');
@@ -109,12 +110,12 @@ describe('IgxTreeGrid - search API', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('Search highlights should work for tree cells', () => {
             treeGrid.findNext('1');
@@ -308,6 +309,7 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.expansionDepth = 0;
             treeGrid.height = '400px';
             treeGrid.columns[3].hasSummary = false;
+            setupGridScrollDetection(fix, treeGrid);
             fix.detectChanges();
             await wait(16);
         });
