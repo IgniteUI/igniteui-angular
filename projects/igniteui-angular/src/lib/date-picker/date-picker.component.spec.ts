@@ -47,7 +47,6 @@ describe('IgxDatePicker', () => {
         it('Initialize a datepicker component', () => {
              expect(fixture.componentInstance).toBeDefined();
             expect(datePicker.displayData).toBe('');
-            expect(datePicker.displayDataISO).toBe('');
         });
 
         it('Initialize a datepicker component with id', () => {
@@ -246,7 +245,6 @@ describe('IgxDatePicker', () => {
         const dateConvertedToDeLocale = fixture.componentInstance.date.toLocaleDateString('de-DE');
 
         expect(datePicker.displayData).toBe(dateConvertedToDeLocale);
-        expect(datePicker.displayDataISO).toBe(fixture.componentInstance.date.toISOString());
     });
 
     it('Datepicker custom formatter', () => {
@@ -261,7 +259,6 @@ describe('IgxDatePicker', () => {
         const formattedDate = compInstance.customFormatter(date);
 
         expect(inputTarget.value).toEqual(formattedDate);
-        expect(datePicker.displayDataISO).toBe(date.toISOString());
     });
 
     it('Value should respond when is bound through ngModel and selection through selectDate method is made.', fakeAsync(() => {
