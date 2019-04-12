@@ -42,13 +42,14 @@
 <ng-template #defaultDateUI>
     <igx-date-picker
         tabindex="0"
+        mode="dropdown"
         [value]="value"
         [outlet]="filteringService.grid.outletDirective"
         [locale]="filteringService.grid.locale"
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+            <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown(inputGroupPrefix)"
