@@ -1018,7 +1018,7 @@
             --var($theme, 'header-border-style')
             --var($theme, 'header-border-color');
         background: inherit;
-        z-index: 1;
+        z-index: 4;
     }
 
     %grid__cbx-selection--cosy {
@@ -1511,7 +1511,7 @@
         position: relative;
         padding-right: $grouping-padding-right;
         background: --var($theme, 'header-background');
-        z-index: 1;
+        z-index: 4;
     }
 
     %igx-grid__group-expand-btn {
