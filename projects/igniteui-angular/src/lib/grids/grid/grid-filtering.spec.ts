@@ -1,4 +1,3 @@
-import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,9 +11,10 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxFilteringOperand,
     IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -30,12 +30,14 @@ describe('IgxGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    it('should correctly filter by \'string\' filtering conditions', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+    let fix, grid;
+    beforeEach(fakeAsync(() => {
+        fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
+        grid = fix.componentInstance.grid;
+    }));
 
-        const grid = fix.componentInstance.grid;
-
+    it('should correctly filter by \'string\' filtering conditions', fakeAsync(() => {
         // Contains filter
         grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
@@ -126,11 +128,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly filter by \'number\' filtering conditions', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         // DoesNotEqual filter
         grid.filter('Downloads', 254, IgxNumberFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
@@ -202,11 +199,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly filter by \'boolean\' filtering conditions', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         // Empty filter
         grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('empty'));
         fix.detectChanges();
@@ -250,12 +242,8 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly filter by \'date\' filtering conditions', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-        const cal = fix.componentInstance.timeGenerator;
-        const today = fix.componentInstance.today;
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.today;
 
         // Fill expected results based on the current date
         fillExpectedResults(grid, cal, today);
@@ -370,10 +358,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
             { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
@@ -398,11 +382,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly apply global filtering', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
         fix.detectChanges();
@@ -412,26 +391,21 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should render chip when filtering using the API.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxGridFilteringComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.grid;
-
-        const firstHeaderCell = fixture.debugElement.query(By.css('.header-release-date'));
+        const firstHeaderCell = fix.debugElement.query(By.css('.header-release-date'));
         let filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
         expect(filteringChips.length).toEqual(1);
         let chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
         expect(chipContent).toEqual('Filter');
 
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
-        fixture.detectChanges();
+        fix.detectChanges();
         filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
         expect(filteringChips.length).toEqual(1);
         chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
         expect(chipContent).not.toEqual('Filter');
 
         grid.clearFilter('ReleaseDate');
-        fixture.detectChanges();
+        fix.detectChanges();
         filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
         expect(filteringChips.length).toEqual(1);
         chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
@@ -439,11 +413,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should correctly apply two conditions to two columns at once.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         colDownloadsExprTree.filteringOperands = [
             { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
@@ -473,11 +442,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should correctly apply two conditions to number column.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         const expression = {
             fieldName: 'Downloads',
@@ -500,11 +464,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should correctly apply two conditions to string column.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
              fieldName: 'ProductName',
@@ -527,10 +486,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should correctly apply two conditions to date column.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
         const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
@@ -555,11 +510,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should correctly update summary.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
         const expression = {
@@ -581,124 +531,9 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
         expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
     }));
 });
-
-export class CustomFilter extends IgxFilteringOperand {
-    private static _instance: CustomFilter;
-
-    private constructor () {
-        super();
-        this.operations = [{
-            name: 'custom',
-            isUnary: false,
-            logic: (target: string): boolean => {
-                return target === 'custom';
-            },
-            iconName: 'custom'
-        }];
-    }
-
-    public static instance(): CustomFilter {
-        return this._instance || (this._instance = new this());
-    }
-}
-
-@Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
-        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
-        <igx-column width="100px" [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column width="100px" [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column width="100px" [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
-            [filterable]="true" dataType="date">
-        </igx-column>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
-            dataType="string" [filters]="customFilter">
-        </igx-column>
-    </igx-grid>`
-})
-export class IgxGridFilteringComponent {
-
-    public timeGenerator: Calendar = new Calendar();
-    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-
-    public customFilter = CustomFilter;
-
-    public data = [
-        {
-            Downloads: 254,
-            ID: 1,
-            ProductName: 'Ignite UI for JavaScript',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 15),
-            Released: false,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 127,
-            ID: 2,
-            ProductName: 'NetAdvantage',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', -1),
-            Released: true,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 20,
-            ID: 3,
-            ProductName: 'Ignite UI for Angular',
-            ReleaseDate: null,
-            Released: null,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: null,
-            ID: 4,
-            ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', -1),
-            Released: true,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 100,
-            ID: 5,
-            ProductName: '',
-            ReleaseDate: undefined,
-            Released: false,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 702,
-            ID: 6,
-            ProductName: 'Some other item with Script',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 1),
-            Released: null,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 0,
-            ID: 7,
-            ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', 1),
-            Released: true,
-            AnotherField: 'a'
-        },
-        {
-            Downloads: 1000,
-            ID: 8,
-            ProductName: null,
-            ReleaseDate: this.today,
-            Released: undefined,
-            AnotherField: 'custom'
-        }
-    ];
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-}
 
 const expectedResults = [];
 
