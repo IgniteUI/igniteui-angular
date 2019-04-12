@@ -167,7 +167,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        return this.column.isLastPinned;
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    @HostBinding('style.display')
+    get hasColumnLayouts(): string {
+        return this.grid.hasColumnLayouts ? 'flex' : '';
     }
 
     /**

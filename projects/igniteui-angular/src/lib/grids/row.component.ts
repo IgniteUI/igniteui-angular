@@ -309,6 +309,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /**
      * @hidden
+    */
+    get hasLastPinnedChildColumn(): boolean {
+        return this.columns.some(child => child.isLastPinned);
+    }
+
+    /**
+     * @hidden
      */
     public ngDoCheck() {
         this.isSelected = this.rowSelectable ?
