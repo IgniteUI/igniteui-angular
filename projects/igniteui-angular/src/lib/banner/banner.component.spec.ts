@@ -472,46 +472,6 @@ describe('igxBanner', () => {
             expect(panelBody.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_EXPANSION_PANEL_BODY);
             expect(panelBody.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(panelBody.childElementCount).toEqual(1);
-
-            // banner > banner__message > banner__text > ng-content (which is igx-card host) > wrapper div with card class
-            const card = panelBody.querySelector('igx-card').children[0];
-            expect(card.attributes.getNamedItem('class').nodeValue).toContain('igx-card');
-            expect(card.attributes.getNamedItem('role').nodeValue).toEqual('group');
-            expect(card.childElementCount).toEqual(2);
-
-            const cardHeader = card.children[0];
-            expect(cardHeader.childElementCount).toEqual(2);
-
-            const avatar = cardHeader.children[0];
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--rounded');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--small');
-            expect(avatar.attributes.getNamedItem('role').nodeValue).toEqual('img');
-            expect(avatar.attributes.getNamedItem('aria-label').nodeValue).toEqual('avatar');
-            expect(avatar.childElementCount).toEqual(1);
-
-            const avatarImage = avatar.children[0];
-            expect(avatarImage.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar__image');
-            expect(avatarImage.childElementCount).toEqual(0);
-
-            const headerGroup = cardHeader.children[1];
-            expect(headerGroup.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__tgroup');
-            expect(headerGroup.childElementCount).toEqual(2);
-
-            const headerTitle = headerGroup.children[0];
-            expect(headerTitle.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__title--small');
-            expect(headerTitle.innerHTML).toEqual('Brad Stanley');
-            expect(headerTitle.childElementCount).toEqual(0);
-
-            const headerSubtitle = headerGroup.children[1];
-            expect(headerSubtitle.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__subtitle');
-            expect(headerSubtitle.innerHTML).toEqual('Audi AG');
-            expect(headerSubtitle.childElementCount).toEqual(0);
-
-            const cardContent = card.children[1].firstElementChild;
-            expect(cardContent.attributes.getNamedItem('class').nodeValue).toContain('igx-card-content__text');
-            expect(cardContent.innerHTML).toEqual('Brad Stanley has requested to follow you.');
-            expect(cardContent.childElementCount).toEqual(0);
         }));
 
         it('Should apply the appropriate display style to the banner host', fakeAsync(() => {

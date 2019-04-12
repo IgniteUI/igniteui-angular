@@ -1,0 +1,17 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light divider schema.
+/// @type {Map}
+///
+/// @property {Map} color [igx-color: ('grays', 300)] - The color used for the divider.
+///
+/// @see $default-palette
+$_light-divider: (
+    color: (
+        igx-color: ('grays', 300)
+    )
+);
