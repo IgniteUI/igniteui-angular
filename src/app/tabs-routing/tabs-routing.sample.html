@@ -8,15 +8,19 @@
         <div class="items-wrapper__item">
             <igx-tabs>
                 <igx-tabs-group #tab1 label="Tab 1" icon="folder" routerLink="/tabs-routing/view1">
-                    <router-outlet *ngIf="tab1.isSelected"></router-outlet>
+                    <!-- <router-outlet *ngIf="tab1.isSelected"></router-outlet> -->
+                    Content in tab # 1
                 </igx-tabs-group>
                 <igx-tabs-group #tab2 label="Tab 2" icon="folder" routerLink="/tabs-routing/view2">
-                    <router-outlet *ngIf="tab2.isSelected"></router-outlet>
+                    <!-- <router-outlet *ngIf="tab2.isSelected"></router-outlet> -->
+                    Content in tab # 2
                 </igx-tabs-group>
                 <igx-tabs-group #tab3 label="Tab 3" icon="folder" routerLink="/tabs-routing/view3">
-                    <router-outlet *ngIf="tab3.isSelected"></router-outlet>
+                    <!-- <router-outlet *ngIf="tab3.isSelected"></router-outlet> -->
+                    Content in tab # 3
                 </igx-tabs-group>
             </igx-tabs>
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>

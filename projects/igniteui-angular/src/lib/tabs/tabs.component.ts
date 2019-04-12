@@ -284,7 +284,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    private setSelectedGroup(navigateToRoute: boolean = true): void {
+    private setSelectedGroup(navigateToRoute = true): void {
         requestAnimationFrame(() => {
             if (!navigateToRoute) {
                 navigateToRoute = true;
