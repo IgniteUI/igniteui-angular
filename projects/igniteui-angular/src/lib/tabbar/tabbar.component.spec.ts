@@ -1,5 +1,6 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBottomNavComponent,
          IgxBottomNavModule,
@@ -14,7 +15,7 @@ describe('TabBar', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
-            imports: [IgxBottomNavModule]
+            imports: [IgxBottomNavModule, RouterTestingModule]
         })
             .compileComponents();
     }));

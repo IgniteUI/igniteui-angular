@@ -1,5 +1,6 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
@@ -12,7 +13,7 @@ describe('IgxTabs', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
-            imports: [IgxTabsModule, NoopAnimationsModule]
+            imports: [IgxTabsModule, NoopAnimationsModule, RouterTestingModule]
         })
             .compileComponents();
     }));
