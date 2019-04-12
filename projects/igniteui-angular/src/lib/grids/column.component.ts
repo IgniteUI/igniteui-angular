@@ -286,23 +286,31 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set width(value: string) {
         if (value) {
+            this._calcWidth = null;
             this.widthSetByUser = true;
             this._width = value;
         }
     }
 
     public get calcWidth(): any {
+        if (this._calcWidth !== null) {
+            return this._calcWidth;
+        }
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+            this._calcWidth = parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
         } else if (!colWidth) {
             // no width
-            return this.defaultWidth || this.grid.getPossibleColumnWidth();
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
-            return this.width;
+            this._calcWidth = this.width;
         }
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
+
+    private _calcWidth = null;
+    public calcPixelWidth: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
