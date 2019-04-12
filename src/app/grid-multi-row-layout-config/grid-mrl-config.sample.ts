@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { IgxGridComponent, IgxDropEventArgs, IgxDialogComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxDropEventArgs, IgxDialogComponent, IgxDropEnterEventArgs, IgxDropLeaveEventArgs } from 'igniteui-angular';
 
 class ColumnConfig {
     key: string;
@@ -9,6 +9,7 @@ class ColumnConfig {
     colSpan: number;
     rowSpan: number;
     selected: boolean;
+    hovered: boolean;
 }
 
 @Component({
@@ -194,6 +195,14 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.colsWidth = event.target.value;
     }
 
+    public onColEnter(event: IgxDropEnterEventArgs, rowIndex, colIndex) {
+        this.collection[rowIndex][colIndex].hovered = true;
+    }
+
+    public onColLeave(event: IgxDropLeaveEventArgs, rowIndex, colIndex) {
+        this.collection[rowIndex][colIndex].hovered = false;
+    }
+
     public onColDropped(event: IgxDropEventArgs, rowIndex, colIndex) {
         event.cancel = true;
         this.collection[rowIndex][colIndex].key = event.drag.data.key;
@@ -205,7 +214,10 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.collection.forEach((row) => {
             row.forEach((col) => {
                 const newCol = { ...col };
+                delete newCol.width;
+                delete newCol.hovered;
                 delete newCol.selected;
+
                 result.push(newCol);
             });
         });
@@ -347,7 +359,8 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
                         colStart: this.curResizedCell.colStart + this.curResizedCell.colSpan - i - 1,
                         colSpan: 1,
                         rowSpan: 1,
-                        selected: false
+                        selected: false,
+                        hovered: false
                     });
                 }
 
@@ -491,7 +504,8 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
                                 colStart: curCellEnd,
                                 colSpan: 1,
                                 rowSpan: 1,
-                                selected: false
+                                selected: false,
+                                hovered: false
                             });
                         }
                     } else if (curCellStart < resizedCellEnd && curCellEnd > resizedCellEnd && curCell.rowSpan > 1) {
@@ -536,7 +550,8 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
                         colStart: this.curResizedCell.colStart + j,
                         colSpan: 1,
                         rowSpan: 1,
-                        selected: false
+                        selected: false,
+                        hovered: false
                     });
                 }
             }
