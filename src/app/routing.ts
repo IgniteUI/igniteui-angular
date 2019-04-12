@@ -67,6 +67,7 @@ import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
+import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 
 const appRoutes = [
     {
@@ -310,6 +311,10 @@ const appRoutes = [
     {
         path: 'gridMRL',
         component: GridMRLSampleComponent
+    },
+    {
+        path: 'gridMRLConfig',
+        component: GridMRLConfigSampleComponent
     },
     {
         path: 'gridGroupBy',
