@@ -19,7 +19,8 @@ All notable changes for each version of this project will be documented in this 
             </div>
         </igx-list>
     ```
-    - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed. 
+    - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed.
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
 - `IgxCard` - The card component has been refactored. It now includes several new supporting components/directives:
     - `igxCardHeaderTitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card title;
     - `igxCardHeaderSubtitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card subtitle;
