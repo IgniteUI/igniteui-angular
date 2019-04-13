@@ -51,7 +51,8 @@ import { IgxListModule } from '../../../list/list.component';
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleDateExpressionComponent
     ],
     imports: [
         CommonModule,
