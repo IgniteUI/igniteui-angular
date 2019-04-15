@@ -9,7 +9,8 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
-/// @param {Color} $background [null]- The card background color.
+/// @param {Color} $background [null] - The card background color.
+/// @param {Color} $outline-color [null] - The color of the outline for outlined type cards.
 /// @param {Color} $header-text-color [null] - The text color of the card title.
 /// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
 /// @param {Color} $content-text-color [null] - The text color of the card content.
@@ -42,6 +43,7 @@
 
     $border-radius: null,
     $background: null,
+    $outline-color: null,
     $header-text-color: null,
     $subtitle-text-color: null,
     $content-text-color: null,
@@ -93,6 +95,7 @@
         name: $name,
         palette: $palette,
         background: $background,
+        outline-color: $outline-color,
         border-radius: $border-radius,
         header-text-color: $header-text-color,
         subtitle-text-color: $subtitle-text-color,
@@ -117,7 +120,7 @@
     $card-content-fz: em(14px, 16px);
     $card-content-lh: (20px, 16px);
 
-    $card-heading-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
+    $card-heading-padding: em(16px, 16px);
     $card-heading-compact-padding: em(16px, 16px);
     $card-heading-margin: 0;
     $card-content-padding: em(16px, 16px);
@@ -129,7 +132,7 @@
 
     %igx-card-display {
         display: flex;
-        flex-flow: row wrap;
+        flex-direction: column;
         box-shadow: --var($theme, 'resting-shadow');
         overflow: hidden;
         border-radius: --var($theme, 'border-radius');
@@ -142,22 +145,77 @@
         }
     }
 
+    %igx-card--outlined {
+        box-shadow: none;
+        border: 1px solid --var($theme, 'outline-color');
+
+        &:hover {
+            box-shadow: none;
+        }
+    }
+
+
+    %igx-card--horizontal {
+        flex-direction: row;
+    }
+
     %igx-card-header {
         display: flex;
+        flex: 1 1 auto;
         flex-flow: row wrap;
-        align-items: center;
-        flex-basis: 100%;
+        align-content: flex-start;
+        width: 100%;
         padding: $card-heading-padding;
         color: --var($theme, 'header-text-color');
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-card-header--vertical {
+        flex-flow: column nowrap;
+
+        %igx-card-header-titles {
+            text-align: center;
+        }
+
+        %igx-card-header-thumbnail {
+            display: flex;
+            justify-content: center;
+            align-self: unset;
+            margin-right: 0;
+            margin-bottom: rem(16px);
+        }
     }
 
     %igx-card-header--compact {
         padding: $card-heading-compact-padding;
     }
 
+    %igx-card-header-thumbnail {
+        align-self: flex-start;
+        margin-right: rem(16px);
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-card-header-titles {
+        display: flex;
+        flex-flow: column nowrap;
+        overflow: hidden;
+        flex: 1 1 auto;
+        justify-content: center;
+
+        &:empty {
+            display: none;
+        }
+    }
+
     %igx-card-header-title {
         margin: $card-heading-margin;
-        flex-basis: 100%;
     }
 
     %igx-card-header-subtitle {
@@ -170,7 +228,8 @@
     }
 
     %igx-card-content {
-        flex-basis: 100%;
+        width: 100%;
+        flex: 1 1 auto;
         padding: $card-content-padding;
         color: --var($theme, 'content-text-color');
     }
@@ -180,9 +239,14 @@
     }
 
     %igx-card-media {
-        width: auto;
-        margin-right: auto;
-        order: -1;
+        display: block;
+        overflow: hidden;
+
+        > * {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     %igx-card-media--right {
@@ -194,10 +258,85 @@
     %igx-card-actions {
         display: flex;
         flex-flow: row wrap;
-        flex: 1 0 auto;
+        justify-content: space-between;
+        flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
-        max-height: 56px;
+
+        [igxButton] ~ [igxButton] {
+            margin-left: rem(8px);
+        }
+    }
+
+    %igx-card-actions--vertical {
+        flex-direction: column;
+    }
+
+    %igx-card-actions__icons {
+        display: flex;
+        align-items: center;
+        order: 1;
+        color: --var($theme, 'actions-text-color');
+        margin-left: auto;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-card-actions__buttons {
+        display: flex;
+        align-items: center;
+        order: 0;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-card-actions__buttons--justify,
+    %igx-card-actions__icons--justify {
+        justify-content: space-around;
+        flex-grow: 1;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-card-actions__icons--vertical,
+    %igx-card-actions__buttons--vertical {
+        flex-direction: column;
+
+        [igxButton] ~ [igxButton] {
+            margin-left: 0;
+            margin-top: rem(8px);
+        }
+    }
+
+    %igx-card-actions__icons--vertical {
+        margin-top: auto;
+        margin-left: 0;
+    }
+
+    %igx-card-actions__icons--reverse {
+        order: 0;
+        margin-left: 0;
+    }
+
+    %igx-card-actions__buttons--reverse {
+        order: 1;
+        margin-left: auto;
+    }
+
+    %igx-card-actions__icons--vertical-reverse {
+        margin: 0;
+        margin-bottom: auto;
+    }
+
+    %igx-card-actions__buttons--vertical-reverse {
+        margin: 0;
+        margin-top: auto;
     }
 
     %igx-card-actions-bgroup {
@@ -235,7 +374,7 @@
 /// @param {Map} $categories [(title: 'h5', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-card-typography($type-scale, $categories: (
-    title: 'h5',
+    title: 'h6',
     title-small: 'subtitle-2',
     subtitle: 'subtitle-2',
     content: 'body-2')
@@ -264,7 +403,8 @@
             }
         }
 
-        %igx-card-content-text {
+        %igx-card-content,
+        %igx-card-content > p {
             @include igx-type-style($type-scale, $content) {
                 margin: 0;
             }
