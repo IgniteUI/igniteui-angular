@@ -36,7 +36,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 
 import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
-import { IgxColumnComponent } from '../grid';
+import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
