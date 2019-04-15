@@ -90,6 +90,20 @@ export class IgxListComponent extends IgxListBase {
     public children: QueryList<IgxListItemComponent>;
 
     /**
+     * @hidden
+     * @internal
+     */
+    protected get sortedChildren(): IgxListItemComponent[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => {
+                    return a.index - b.index;
+                });
+        }
+        return null;
+    }
+
+    /**
      * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `false`.
      * ```typescript
      * let emptyTemplate = this.list.emptyListTemplate;
@@ -315,7 +329,7 @@ export class IgxListComponent extends IgxListBase {
     public get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
-            for (const child of this.children.toArray()) {
+            for (const child of this.sortedChildren) {
                 if (!child.isHeader) {
                     items.push(child);
                 }
