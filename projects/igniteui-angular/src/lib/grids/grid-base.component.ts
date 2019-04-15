@@ -90,6 +90,13 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
 
+// By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
+// In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
+// Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
+// More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
+// but in the same time we need to set row editing overlay outlet before opening the overlay itself.
+const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
+
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 export interface IGridCellEventArgs {
@@ -1205,7 +1212,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Emitted when a grid column is initialized. Returns the column object.
      * ```html
-     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"</igx-grid>
+     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"></igx-grid>
      * ```
      * ```typescript
      * initColumns(event: IgxColumnComponent) {
@@ -1404,7 +1411,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxColumnComponent` moving ends.
-     * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
+     * Returns the source and target `IgxColumnComponent` objects.
      * ```typescript
      * movingEnds(event: IColumnMovingEndEventArgs){
      *     const movingEnds = event;
@@ -1700,7 +1707,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    private rowEditingOutletDirective: IgxOverlayOutletDirective;
+    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    public get rowOutletDirective() {
+        return this.rowEditingOutletDirective;
+    }
+
+    /**
+     * @hidden
+     */
+    public get parentRowOutletDirective() {
+        return null;
+    }
 
     /**
      * @hidden
@@ -2411,7 +2432,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowEditingOutletDirective,
+        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -4919,7 +4940,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     openRowOverlay(id) {
-        this.configureRowEditingOverlay(id);
+        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this._wheelListener = this.rowEditingWheelHandler.bind(this);
@@ -4964,8 +4986,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private configureRowEditingOverlay(rowID: any) {
-        this.rowEditSettings.outlet = this.rowEditingOutletDirective;
+    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+        this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const targetRow = this.gridAPI.get_row_by_key(rowID);
         if (!targetRow) {
