@@ -1,5 +1,7 @@
 # igx-slider
 
+### The latest version of the SPEC could be found in the [Wiki](https://github.com/IgniteUI/igniteui-angular/wiki/igxSlider-Specification).
+
 The slider component allows users to select a value in certain range or select a range of values. 
 Based on its configuration it's a slider or range slider.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider.html)
