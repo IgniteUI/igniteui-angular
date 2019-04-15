@@ -99,6 +99,102 @@ let NEXT_ID = 0;
     `]
 })
 export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit {
+
+    // Measures & Coordinates
+    private width = 0;
+    private xOffset = 0;
+    private xPointer = 0;
+    private pPointer = 0;
+
+    // Limit handle travel zone
+    private pMin = 0;
+    private pMax = 1;
+
+    // From/upperValue in percent values
+    private hasViewInit = false;
+    private timer;
+    private _minValue = 0;
+    private _maxValue = 100;
+    private _lowerBound?: number;
+    private _upperBound?: number;
+    private _lowerValue: number;
+    private _upperValue: number;
+    private _trackUpperBound: boolean;
+    private _trackLowerBound: boolean;
+    private _isCountinuous = false;
+    private _disabled = false;
+    private _step = 1;
+    private _oldValue;
+
+    private _onChangeCallback: (_: any) => void = noop;
+    private _onTouchedCallback: () => void = noop;
+
+    private activeHandle: SliderHandle = SliderHandle.TO;
+
+    @ViewChild('slider')
+    private slider: ElementRef;
+
+    @ViewChild('track')
+    private track: ElementRef;
+
+    @ViewChild('ticks')
+    private ticks: ElementRef;
+
+    @ViewChild('thumbFrom')
+    private thumbFrom: ElementRef;
+
+    @ViewChild('thumbTo')
+    private thumbTo: ElementRef;
+
+    /**
+     * @hidden
+     */
+    public isActiveLabel = false;
+
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef })
+    public thumbFromTemplateRef: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef })
+    public thumbToTemplateRef: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.role`)
+    public role = 'slider';
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.aria-valuemin`)
+    public get valuemin() {
+        return this.minValue;
+    };
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.aria-valuemax`)
+    public get valuemax() {
+        return this.maxValue;
+    };
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.aria-readonly`)
+    public get readonly(){
+        return this.disabled;
+    };
+
+
     /**
      * An @Input property that sets the value of the `id` attribute.
      * If not provided it will be automatically generated.
@@ -109,25 +205,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @HostBinding('attr.id')
     @Input()
     public id = `igx-slider-${NEXT_ID++}`;
-    /**
-     *An @Input property that disables or enables UI interaction.
-     *```html
-     *<igx-slider #slider [disabled]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
-     *```
-     */
-    @Input()
-    public disabled: boolean;
-
-    /**
-     * An @Input property that marks the `IgxSliderComponent` as continuous.
-     * By default is considered that the `IgxSliderComponent` is discrete.
-     * Discrete `IgxSliderComponent` does not have ticks and does not shows bubble labels for values.
-     * ```html
-     * <igx-slider #slider [isContinuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
-     * ```
-     */
-    @Input()
-    public isContinuous = false;
 
     /**
      * An @Input property that sets the type of the `IgxSliderComponent`. The slider can be SliderType.SLIDER(default) or SliderType.RANGE.
@@ -151,8 +228,31 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     public thumbLabelVisibilityDuration = 750;
 
 
+    /**
+     * Enables `lableView`, by accepting a collection of literal values with more than one element.
+     * Each element will be equally spread over the slider and it will serve as a thumb label.
+     * Once the property is set, it will precendence over {@link maxValue}, {@link minValue}, {@link step}.
+     * This means that the manipulation for those properties won't be allowed.
+     */
     @Input()
-    public stepLabels: [] = [];
+    public labels: [] = [];
+
+    /**
+     * Returns the template context corresponding
+     * to {@link IgxThumbFromTemplateDirective} and {@link IgxThumbToTemplateDirective} templates.
+     *
+     * return {
+     *  $implicit: {@link value},
+     *  labels: {@link labels}
+     * }
+     * ```
+     */
+    public get context(): any {
+        return {
+            $implicit: this.value,
+            labels: this.labels
+        };
+    }
 
     /**
      * An @Input property that sets the incremental/decremental step of the value when dragging the thumb.
@@ -166,99 +266,78 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         this._step = step;
     }
 
+    /**
+     * Returns the incremental/decremental dragging step of the {@link IgxSliderComponent}.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let step = this.slider.step;
+     * }
+     * ```
+     */
     public get step() {
-        if (this.stepLabels.length > 0) {
-            return 1;
+        return this.labelsViewEnabled ? 1 : this._step;
+    }
+
+    /**
+     * Returns if the {@link IgxSliderComponent} is disabled.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let isDisabled = this.slider.disabled;
+     * }
+     * ```
+     */
+    @Input()
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    /**
+     *An @Input property that disables or enables UI interaction.
+     *```html
+     *<igx-slider #slider [disabled]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     *```
+     */
+    public set disabled(disable: boolean) {
+        this._disabled = disable;
+    }
+
+    /**
+     * Returns if the {@link IgxSliderComponent} is set as continuous.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let continuous = this.slider.isCountinuous;
+     * }
+     * ```
+     */
+    @Input()
+    public get isContinuous(): boolean {
+        return this._isCountinuous;
+    }
+
+    /**
+     * An @Input property that marks the {@link IgxSliderComponent} as continuous.
+     * By default is considered that the {@link IgxSliderComponent} is discrete.
+     * Discrete {@link IgxSliderComponent} does not have ticks and does not shows bubble labels for values.
+     * ```html
+     * <igx-slider #slider [isContinuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * ```
+     */
+    public set isContinuous(continuous: boolean) {
+        if (this.labelsViewEnabled) {
+            return;
         }
 
-        return this._step;
+        this._isCountinuous = continuous;
     }
 
     /**
-     * This event is emitted when user has stopped interacting the thumb and value is changed.
-     * ```typescript
-     * public change(event){
-     *    alert("The value has been changed!");
-     *}
-     * ```
-     * ```html
-     * <igx-slider (onValueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
-     * ```
-     */
-    @Output()
-    public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
-
-    /**
-     * @hidden
-     */
-    public isActiveLabel = false;
-
-    private activeHandle: SliderHandle = SliderHandle.TO;
-
-    @ViewChild('slider')
-    private slider: ElementRef;
-
-    @ViewChild('track')
-    private track: ElementRef;
-
-    @ViewChild('ticks')
-    private ticks: ElementRef;
-
-    @ViewChild('thumbFrom')
-    private thumbFrom: ElementRef;
-
-    @ViewChild('thumbTo')
-    private thumbTo: ElementRef;
-
-    // Measures & Coordinates
-    private width = 0;
-    private xOffset = 0;
-    private xPointer = 0;
-    private pPointer = 0;
-
-    // Limit handle travel zone
-    private pMin = 0;
-    private pMax = 1;
-
-    // From/upperValue in percent values
-    private hasViewInit = false;
-    private timer;
-    private _minValue = 0;
-    private _maxValue = 100;
-    private _lowerBound?: number;
-    private _upperBound?: number;
-    private _lowerValue: number;
-    private _upperValue: number;
-    private _trackUpperBound: boolean;
-    private _trackLowerBound: boolean;
-    private _step = 1;
-    private _oldValue;
-
-    private _onChangeCallback: (_: any) => void = noop;
-    private _onTouchedCallback: () => void = noop;
-
-    constructor(private renderer: Renderer2) {
-    }
-
-    /**
-     *Returns whether the `IgxSliderComponent` type is RANGE.
-     *```typescript
-     *@ViewChild("slider")
-     *public slider: IgxSliderComponent;
-     *ngAfterViewInit(){
-     *    let sliderRange = this.slider.isRange;
-     *}
-     * ```
-     */
-    public get isRange(): boolean {
-        const isRange: boolean = this.type === SliderType.RANGE;
-
-        return isRange;
-    }
-
-
-    /**
-     * Returns the maximum value for the `IgxSliderComponent`.
+     * Returns the maximum value for the {@link IgxSliderComponent}.
      * ```typescript
      *@ViewChild("slider")
      *public slider: IgxSliderComponent;
@@ -268,11 +347,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * ```
      */
     public get maxValue(): number {
-        if (this.labelsViewEnabled) {
-            return this.stepLabels.length - 1;
-        }
-
-        return this._maxValue;
+        return this.labelsViewEnabled ?
+            this.labels.length - 1 :
+            this._maxValue;
     }
 
     /**
@@ -407,6 +484,96 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     /**
+     * Returns the slider value. If the slider is of type {@link SliderType.SLIDER} the returned value is number.
+     * If the slider type is {@link SliderType.RANGE} the returned value represents an object of {@link lowerValue} and {@link upperValue}.
+     *```typescript
+     *@ViewChild("slider2")
+     *public slider: IgxSliderComponent;
+     *public sliderValue(event){
+     *    let sliderVal = this.slider.value;
+     *}
+     *```
+     */
+    public get value(): number | IRangeSliderValue {
+        if (this.isRange) {
+            return {
+                lower: this.snapValueToStep(this.lowerValue),
+                upper: this.snapValueToStep(this.upperValue)
+            };
+        } else {
+            const val = this.snapValueToStep(this.upperValue);
+            return val;
+        }
+    }
+
+    /**
+     * Sets the slider value.
+     * If the slider is of type {@link SliderType.SLIDER} the argument is number. By default the {@link value} gets the {@link lowerBound}.
+     * If the slider type is {@link SliderType.RANGE} the argument
+     * represents an object of {@link lowerValue} and {@link upperValue} properties.
+     * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
+     * ```typescript
+     *rangeValue = {
+     *   lower: 30,
+     *   upper: 60
+     *};
+     * ```
+     * ```html
+     * <igx-slider [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="56" [maxValue]="256">
+     * ```
+     */
+    @Input()
+    public set value(value: number | IRangeSliderValue) {
+        if (!this.isRange) {
+            this.upperValue = this.snapValueToStep(value as number);
+        } else {
+            this.upperValue =
+                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).upper);
+            this.lowerValue =
+                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).lower);
+        }
+
+        this._onChangeCallback(this.value);
+
+        if (this.hasViewInit) {
+            this.positionHandlesAndUpdateTrack();
+        }
+    }
+
+    /**
+     * This event is emitted when user has stopped interacting the thumb and value is changed.
+     * ```typescript
+     * public change(event){
+     *    alert("The value has been changed!");
+     *}
+     * ```
+     * ```html
+     * <igx-slider (onValueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
+     */
+    @Output()
+    public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
+
+
+    constructor(private renderer: Renderer2) {}
+
+    /**
+     *Returns whether the `IgxSliderComponent` type is RANGE.
+     *```typescript
+     *@ViewChild("slider")
+     *public slider: IgxSliderComponent;
+     *ngAfterViewInit(){
+     *    let sliderRange = this.slider.isRange;
+     *}
+     * ```
+     */
+    public get isRange(): boolean {
+        const isRange: boolean = this.type === SliderType.RANGE;
+
+        return isRange;
+    }
+
+    /**
      * Returns the lower value of the `IgxSliderComponent`.
      * ```typescript
      * @ViewChild("slider")
@@ -475,65 +642,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     /**
-     * Returns the slider value. If the slider is of type {@link SliderType.SLIDER} the returned value is number.
-     * If the slider type is {@link SliderType.RANGE} the returned value represents an object of {@link lowerValue} and {@link upperValue}.
-     *```typescript
-     *@ViewChild("slider2")
-     *public slider: IgxSliderComponent;
-     *public sliderValue(event){
-     *    let sliderVal = this.slider.value;
-     *}
-     *```
-     */
-    public get value(): number | IRangeSliderValue {
-        if (this.isRange) {
-            return {
-                lower: this.snapValueToStep(this.lowerValue),
-                upper: this.snapValueToStep(this.upperValue)
-            };
-        } else {
-            const val = this.snapValueToStep(this.upperValue);
-            return val;
-        }
-    }
-
-    /**
-     * Sets the slider value.
-     * If the slider is of type {@link SliderType.SLIDER} the argument is number. By default the {@link value} gets the {@link lowerBound}.
-     * If the slider type is {@link SliderType.RANGE} the argument
-     * represents an object of {@link lowerValue} and {@link upperValue} properties.
-     * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
-     * ```typescript
-     *rangeValue = {
-     *   lower: 30,
-     *   upper: 60
-     *};
-     * ```
-     * ```html
-     * <igx-slider [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="56" [maxValue]="256">
-     * ```
-     */
-    @Input()
-    public set value(value: number | IRangeSliderValue) {
-        if (!this.isRange) {
-            this.upperValue = this.snapValueToStep(value as number);
-        } else {
-            this.upperValue =
-                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).upper);
-            this.lowerValue =
-                this.snapValueToStep((value as IRangeSliderValue) == null ? null : (value as IRangeSliderValue).lower);
-        }
-
-        // this.labelsViewEnabled ?
-        //     this._onChangeCallback(this.getLabelValues(this.value)):
-        this._onChangeCallback(this.value);
-
-        if (this.hasViewInit) {
-            this.positionHandlesAndUpdateTrack();
-        }
-    }
-
-    /**
      * Returns the value corresponding the lower label.
      *```typescript
      * @ViewChild("slider")
@@ -543,7 +651,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      */
     public get lowerLabel() {
         return this.labelsViewEnabled ?
-            this.stepLabels[this.lowerValue] :
+            this.labels[this.lowerValue] :
             this.lowerValue;
     }
 
@@ -557,13 +665,13 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      */
     public get upperLabel() {
         return this.labelsViewEnabled ?
-            this.stepLabels[this.upperValue] :
+            this.labels[this.upperValue] :
             this.upperValue;
     }
 
     /**
      * Returns if label view is enabled.
-     * If the {@link stepLabels} is set, the view is automatically activated.
+     * If the {@link labels} is set, the view is automatically activated.
      *```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -571,36 +679,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *```
      */
     public get labelsViewEnabled() {
-        return !!this.stepLabels.length;
-    }
-
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef })
-    public thumbFromTemplateRef: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef })
-    public thumbToTemplateRef: TemplateRef<any>;
-
-    /**
-     * Returns the template context corresponding
-     * to {@link IgxThumbFromTemplateDirective} and {@link IgxThumbToTemplateDirective} templates.
-     *
-     * return {
-     *  $implicit: {@link value},
-     *  labels: {@link stepLabels}
-     * }
-     * ```
-     */
-    public get context(): any {
-        return {
-            $implicit: this.value,
-            labels: this.stepLabels
-        };
+        return this.labels && this.labels.length > 1;
     }
 
     /**
@@ -647,7 +726,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     public ngAfterViewInit() {
         this.hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(this.stepLabels.length);
+        this.setTickInterval(this.labels);
     }
 
     /**
@@ -970,15 +1049,15 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         }
     }
 
-    private setTickInterval(stepLabels) {
+    private setTickInterval(labels) {
         if (this.isContinuous) {
             return;
         }
 
         let interval;
-        if (stepLabels) {
+        if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
-            interval = ((100 / (stepLabels - 1) * 10)) / 10;
+            interval = ((100 / (labels.length - 1) * 10)) / 10;
         } else {
             interval = this.step > 1 ? this.step : null;
         }
