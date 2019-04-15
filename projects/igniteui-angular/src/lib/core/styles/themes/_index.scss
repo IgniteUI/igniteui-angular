@@ -22,6 +22,7 @@
 @import '../components/combo/combo-theme';
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
+@import '../components/divider/divider-theme';
 @import '../components/drop-down/drop-down-theme';
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/grid-theme';
@@ -170,6 +171,10 @@
 
     @if not(index($exclude, 'igx-dialog')) {
         @include igx-dialog(igx-dialog-theme($palette, $schema));
+    }
+
+    @if not(index($exclude, 'igx-divider')) {
+        @include igx-divider(igx-divider-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-drop-down')) {

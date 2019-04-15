@@ -18,6 +18,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './divider';
 @import './drop-down';
 @import './expansion-panel';
 @import './grid';
@@ -58,6 +59,7 @@
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
+/// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
 /// @property {Map} igx-grid [$_light-grid]
@@ -98,6 +100,7 @@ $light-schema: (
     igx-column-hiding: $_light-column-hiding,
     igx-combo: $_light-combo,
     igx-dialog: $_light-dialog,
+    igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
     igx-grid: $_light-grid,
