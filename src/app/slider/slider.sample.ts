@@ -23,5 +23,10 @@ export class SliderSampleComponent {
         upper: 60
     };
 
+    rangeLabel = {
+        lower: 2,
+        upper: 5
+    };
+
     task: Task = new Task('Implement new app', 30);
 }
