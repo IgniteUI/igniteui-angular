@@ -13,6 +13,7 @@ class Task {
 
 @Component({
     selector: 'app-slider-sample',
+    styleUrls: ['slider.sample.scss'],
     templateUrl: 'slider.sample.html'
 })
 export class SliderSampleComponent {
