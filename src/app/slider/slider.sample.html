@@ -22,10 +22,10 @@
                 <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeLabel"
                     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
                     <ng-template igxSliderThumbFrom let-value let-labels="labels">
-                        <div>{{ labels[value.lower] }}</div>
+                        <span class="ellipsis">{{ labels[value.lower] }}</span>
                     </ng-template>
                     <ng-template igxSliderThumbTo let-value let-labels="labels">
-                        <div>{{ labels[value.upper] }}</div>
+                        <span class="ellipsis">{{ labels[value.upper] }}</span>
                     </ng-template>
                 </igx-slider>
             </article>
