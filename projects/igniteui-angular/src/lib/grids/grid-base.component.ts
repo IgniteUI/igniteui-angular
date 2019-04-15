@@ -26,7 +26,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil, first, filter } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -89,6 +89,13 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
+
+// By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
+// In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
+// Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
+// More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
+// but in the same time we need to set row editing overlay outlet before opening the overlay itself.
+const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -207,6 +214,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     private _destroyed = false;
+    private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -1204,7 +1212,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Emitted when a grid column is initialized. Returns the column object.
      * ```html
-     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"</igx-grid>
+     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"></igx-grid>
      * ```
      * ```typescript
      * initColumns(event: IgxColumnComponent) {
@@ -1403,7 +1411,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxColumnComponent` moving ends.
-     * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
+     * Returns the source and target `IgxColumnComponent` objects.
      * ```typescript
      * movingEnds(event: IColumnMovingEndEventArgs){
      *     const movingEnds = event;
@@ -1699,7 +1707,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    private rowEditingOutletDirective: IgxOverlayOutletDirective;
+    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    public get rowOutletDirective() {
+        return this.rowEditingOutletDirective;
+    }
+
+    /**
+     * @hidden
+     */
+    public get parentRowOutletDirective() {
+        return null;
+    }
 
     /**
      * @hidden
@@ -2412,7 +2434,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
-        outlet: this.rowEditingOutletDirective,
+        outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
 
@@ -2432,9 +2454,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.disableTransitions = false;
         });
 
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
+        this.hideOverlays();
     }
 
     private horizontalScrollHandler(event) {
@@ -2450,22 +2470,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
         });
 
-        if (this.allowFiltering && this.filterMode === FilterMode.excelStyleFilter) {
-            this.closeExcelStyleDialog();
-        }
+        this.hideOverlays();
     }
 
-    private closeExcelStyleDialog() {
-        const excelStyleMenu = this.outlet.nativeElement.getElementsByClassName('igx-excel-filter__menu')[0];
-        if (excelStyleMenu) {
-            const overlay = this.overlayService.getOverlayById(excelStyleMenu.getAttribute('id'));
-            if (overlay) {
-                const animation = overlay.settings.positionStrategy.settings.closeAnimation;
-                overlay.settings.positionStrategy.settings.closeAnimation = null;
-                this.overlayService.hide(overlay.id);
-                overlay.settings.positionStrategy.settings.closeAnimation = animation;
-            }
-        }
+    /**
+    * @hidden
+    * @internal
+    */
+    public hideOverlays() {
+        this.overlayIDs.forEach(overlayID => {
+            this.overlayService.hide(overlayID);
+            this.overlayService.onClosed.pipe(
+                filter(o => o.id === overlayID),
+                takeUntil(this.destroy$)).subscribe(() => {
+                    this.nativeElement.focus();
+                });
+        });
     }
 
     private keydownHandler(event) {
@@ -2545,6 +2565,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
+
+        this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+                this.overlayIDs.indexOf(event.id) < 0) {
+                this.overlayIDs.push(event.id);
+            }
+        });
+        this.overlayService.onClosed.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            const ind = this.overlayIDs.indexOf(event.id);
+            if (ind !== -1) {
+                this.overlayIDs.splice(ind, 1);
+            }
+        });
     }
 
     // TODO: Refactor
@@ -4937,7 +4970,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     openRowOverlay(id) {
-        this.configureRowEditingOverlay(id);
+        this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
+
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this._wheelListener = this.rowEditingWheelHandler.bind(this);
@@ -4982,8 +5016,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private configureRowEditingOverlay(rowID: any) {
-        this.rowEditSettings.outlet = this.rowEditingOutletDirective;
+    private configureRowEditingOverlay(rowID: any, useOuter = false) {
+        this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const targetRow = this.gridAPI.get_row_by_key(rowID);
         if (!targetRow) {
