@@ -176,7 +176,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @HostBinding(`attr.aria-valuemin`)
     public get valuemin() {
         return this.minValue;
-    };
+    }
 
     /**
      * @hidden
@@ -184,15 +184,15 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @HostBinding(`attr.aria-valuemax`)
     public get valuemax() {
         return this.maxValue;
-    };
+    }
 
     /**
      * @hidden
      */
     @HostBinding(`attr.aria-readonly`)
-    public get readonly(){
+    public get readonly() {
         return this.disabled;
-    };
+    }
 
 
     /**
