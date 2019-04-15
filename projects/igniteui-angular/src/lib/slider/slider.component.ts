@@ -22,7 +22,7 @@ import { EditorProvider } from '../core/edit-provider';
  * @context {@link IgxSliderComponent.context}
  */
 @Directive({
-    selector: '[igxSliderthumbFrom]'
+    selector: '[igxSliderThumbFrom]'
 })
 export class IgxThumbFromTemplateDirective {}
 
