@@ -14,14 +14,11 @@ import {
     TemplateRef,
     ElementRef,
     AfterViewInit,
-    OnDestroy,
-    Inject
+    OnDestroy
 } from '@angular/core';
 import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce } from 'rxjs/operators';
-import { ScrollMonth } from './calendar-base';
 import { KEYS } from '../core/utils';
-import { IGX_CALENDAR_COMPONENT, IgxCalendarComponentBase } from './calendar';
 
 /**
  * @hidden
@@ -133,13 +130,16 @@ export class IgxCalendarSubheaderTemplateDirective {
 })
 export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
 
-    @Input('igxCalendarScrollMonth')
-    public scrollMonth: ScrollMonth;
+    @Input()
+    public sartScrollFn: (keydown?: boolean) => {};
+
+    @Input()
+    public stopScrollFn: (event: any) => {};
 
     private keyDown$ = new Subject();
     private destroy$ = new Subject<boolean>();
 
-    constructor(@Inject(IGX_CALENDAR_COMPONENT) private calendar: IgxCalendarComponentBase, private element: ElementRef) { }
+    constructor(private element: ElementRef) { }
 
     public ngAfterViewInit() {
 
@@ -147,24 +147,14 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
             debounce(() => interval(150)),
             takeUntil(this.destroy$)
         ).subscribe(() => {
-            switch (this.scrollMonth) {
-                case ScrollMonth.PREV:
-                this.calendar.startPrevMonthScroll(true);
-                    break;
-                case ScrollMonth.NEXT:
-                this.calendar.startNextMonthScroll(true);
-                    break;
-                case ScrollMonth.NONE:
-                default:
-                    break;
-            }
+            this.sartScrollFn(true);
         });
 
         fromEvent(this.element.nativeElement, 'keyup').pipe(
             debounce(() => interval(150)),
             takeUntil(this.destroy$)
         ).subscribe((event: KeyboardEvent) => {
-            this.calendar.stopPrevNextMonthScroll(event);
+            this.stopScrollFn(event);
         });
     }
 
@@ -185,21 +175,11 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
 
     @HostListener('mousedown')
     public onMouseDown() {
-        switch (this.scrollMonth) {
-            case ScrollMonth.PREV:
-            this.calendar.startPrevMonthScroll();
-                break;
-            case ScrollMonth.NEXT:
-            this.calendar.startNextMonthScroll();
-                break;
-            case ScrollMonth.NONE:
-            default:
-                break;
-        }
+        this.sartScrollFn();
     }
 
     @HostListener('mouseup', ['$event'])
     public onMouseUp(event: MouseEvent) {
-        this.calendar.stopPrevNextMonthScroll(event);
+        this.stopScrollFn(event);
     }
 }

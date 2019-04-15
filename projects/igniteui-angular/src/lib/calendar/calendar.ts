@@ -347,11 +347,3 @@ export class Calendar {
     }
 }
 
-export const IGX_CALENDAR_COMPONENT = 'IgxCalendarComponentToken';
-
-export interface IgxCalendarComponentBase {
-    startPrevMonthScroll(value?: boolean);
-    startNextMonthScroll(value?: boolean);
-    stopPrevNextMonthScroll(event: any);
-}
-

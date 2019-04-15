@@ -234,7 +234,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             }
         }
 
-        if (this.monthScrollDirection !== ScrollMonth.NONE) {
+        if (isLast && this.monthScrollDirection !== ScrollMonth.NONE) {
             this.scrollMonth$.next();
         }
     }

@@ -17,7 +17,7 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { KEYS } from '../core/utils';
-import { ICalendarDate, monthRange, IGX_CALENDAR_COMPONENT } from './calendar';
+import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
@@ -45,10 +45,6 @@ let NEXT_ID = 0;
         {
             multi: true,
             provide: NG_VALUE_ACCESSOR,
-            useExisting: IgxCalendarComponent
-        },
-        {
-            provide: IGX_CALENDAR_COMPONENT,
             useExisting: IgxCalendarComponent
         }
     ],
@@ -346,7 +342,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public startPrevMonthScroll(isKeydownTrigger = false) {
+    public startPrevMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
         this.daysView.monthScrollDirection = ScrollMonth.PREV;
 
@@ -356,7 +352,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public startNextMonthScroll(isKeydownTrigger = false) {
+    public startNextMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
         this.daysView.monthScrollDirection = ScrollMonth.NEXT;
 
@@ -366,7 +362,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public stopPrevNextMonthScroll(event) {
+    public stopMonthScroll = (event) => {
         event.stopPropagation();
 
         this.daysView.stopMonthScroll$.next(true);
@@ -642,7 +638,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @HostListener('document:mouseup', ['$event'])
     public onMouseUp(event: KeyboardEvent) {
         if (this.daysView.monthScrollDirection !== ScrollMonth.NONE) {
-            this.stopPrevNextMonthScroll(event);
+            this.stopMonthScroll(event);
         }
     }
 
