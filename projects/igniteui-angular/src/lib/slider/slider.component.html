@@ -1,5 +1,11 @@
-<div class="igx-slider" [class.igx-slider--disabled]="disabled" #slider (panstart)="showThumbsLabels($event)" (panend)="onPanEnd($event)"
-    (pan)="update($event)" (tap)="onTap($event)">
+<div
+    #slider
+    class="igx-slider"
+    [class.igx-slider--disabled]="disabled"
+    (panstart)="showThumbsLabels($event)"
+    (panend)="onPanEnd($event)"
+    (pan)="update($event)"
+    (tap)="onTap($event)">
     <div class="igx-slider__track">
         <div #track class="igx-slider__track-fill"></div>
         <div #ticks class="igx-slider__track-ticks"></div>
