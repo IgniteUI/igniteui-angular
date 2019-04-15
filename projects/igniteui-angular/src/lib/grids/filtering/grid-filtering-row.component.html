@@ -34,7 +34,7 @@
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp($event)"/>
             <igx-suffix *ngIf="value || value === 0" >
-                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="commitInput()" tabindex="0">done</igx-icon>
+                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
                 <igx-icon (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">clear</igx-icon>
             </igx-suffix>
     </igx-input-group>

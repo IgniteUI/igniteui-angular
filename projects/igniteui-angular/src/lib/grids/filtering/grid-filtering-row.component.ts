@@ -403,7 +403,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
             eventArgs.preventDefault();
             this.commitInput();
+            this.input.nativeElement.focus();
         }
+    }
+
+    /**
+     * Event handler for click on commit button.
+     */
+    public onCommitClick() {
+        this.commitInput();
+        this.input.nativeElement.focus();
     }
 
     /**
