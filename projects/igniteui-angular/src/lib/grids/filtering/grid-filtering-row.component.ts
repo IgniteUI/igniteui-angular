@@ -393,7 +393,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
             eventArgs.preventDefault();
             this.clearInput();
+            this.input.nativeElement.focus();
         }
+    }
+
+    /**
+     * Event handler for click on clear button.
+     */
+    public onClearClick() {
+        this.clearInput();
+        this.input.nativeElement.focus();
     }
 
     /**
