@@ -21,6 +21,12 @@
                 <h4 class="sample-title">Range label slider</h4>
                 <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeLabel"
                     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
+                    <ng-template igxSliderThumbFrom let-value let-labels="labels">
+                        <div>{{ labels[value.lower] }}</div>
+                    </ng-template>
+                    <ng-template igxSliderThumbTo let-value let-labels="labels">
+                        <div>{{ labels[value.upper] }}</div>
+                    </ng-template>
                 </igx-slider>
             </article>
         </div>
