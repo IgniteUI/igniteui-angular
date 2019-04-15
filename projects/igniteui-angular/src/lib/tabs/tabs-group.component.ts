@@ -144,7 +144,9 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
 
         if (this.isSelected) {
+            const tabItem = this.relatedTab.nativeTabItem.nativeElement;
             this.transformContentAnimation(0);
+            this.transformIndicatorAnimation(tabItem);
         }
     }
 
@@ -194,14 +196,17 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
         }
 
         this.transformContentAnimation(0.2);
-
-        this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
-        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
+        this.transformIndicatorAnimation(tabElement);
     }
 
     private transformContentAnimation(duration: number): void {
         const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
         this._tabs.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
         this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+    }
+
+    private transformIndicatorAnimation(element: HTMLElement): void {
+        this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
     }
 }
