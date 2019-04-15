@@ -27,7 +27,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
 
   constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
     this.remoteService.urlBuilder = (state) => {
-      const chunkSize = state.chunkSize || 10;
+      const chunkSize = state.chunkSize || 11;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
     this.localItems = Array.apply(null, {length: 2000}).map((e, i) => ({
