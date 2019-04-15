@@ -96,3 +96,7 @@
         }
     }
 }
+
+@include b(igx-radio-group) {
+    display: block;
+}
