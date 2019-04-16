@@ -14,10 +14,11 @@ import {
     TemplateRef,
     ElementRef,
     AfterViewInit,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import { fromEvent, Subject, interval } from 'rxjs';
-import { takeUntil, debounce } from 'rxjs/operators';
+import { takeUntil, debounce, tap } from 'rxjs/operators';
 import { KEYS } from '../core/utils';
 
 /**
@@ -136,41 +137,36 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     @Input()
     public stopScrollFn: (event: any) => {};
 
-    private keyDown$ = new Subject();
     private destroy$ = new Subject<boolean>();
 
-    constructor(private element: ElementRef) { }
+    constructor(private element: ElementRef, private zone: NgZone) { }
 
     public ngAfterViewInit() {
 
-        this.keyDown$.pipe(
-            debounce(() => interval(150)),
-            takeUntil(this.destroy$)
-        ).subscribe(() => {
-            this.sartScrollFn(true);
-        });
-
         fromEvent(this.element.nativeElement, 'keyup').pipe(
-            debounce(() => interval(150)),
+            debounce(() => interval(100)),
             takeUntil(this.destroy$)
         ).subscribe((event: KeyboardEvent) => {
             this.stopScrollFn(event);
         });
+
+        this.zone.runOutsideAngular(() => {
+            fromEvent(this.element.nativeElement, 'keydown').pipe(
+                tap((event: KeyboardEvent) => event.preventDefault()),
+                debounce(() => interval(100)),
+                takeUntil(this.destroy$)
+            ).subscribe((event: KeyboardEvent) => {
+                if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+                    this.zone.run(() => this.sartScrollFn(true));
+                }
+            });
+        });
+
     }
 
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event: KeyboardEvent) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            this.keyDown$.next();
-        }
     }
 
     @HostListener('mousedown')
