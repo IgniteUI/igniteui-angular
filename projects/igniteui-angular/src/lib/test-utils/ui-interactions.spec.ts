@@ -91,6 +91,7 @@ export class UIInteractions {
         Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
         Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
         element.dispatchEvent(pointerEvent);
+        return pointerEvent;
     }
 
     public static simulatePointerOverCellEvent(eventName: string, element, shift = false, ctrl = false) {
