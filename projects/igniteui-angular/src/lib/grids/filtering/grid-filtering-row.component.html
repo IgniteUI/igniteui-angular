@@ -41,7 +41,7 @@
 
 <ng-template #defaultDateUI>
     <igx-date-picker tabindex="0" [(ngModel)]="value" [locale]="filteringService.grid.locale" (onClose)="datePickerClose()">
-        <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
+        <ng-template igxDatePickerTemplate let-openDialog="openDialog">
             <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
@@ -56,7 +56,7 @@
                        (click)="openDatePicker(openDialog)"
                        [placeholder]="placeholder"
                        autocomplete="off"
-                       [value]="displayData | date"
+                       [value]="value | igxdate: filteringService.grid.locale"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
                 <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">

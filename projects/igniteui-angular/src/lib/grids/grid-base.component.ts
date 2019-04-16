@@ -3751,13 +3751,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupAreaHeight = this.getGroupAreaHeight();
         let gridHeight;
 
-        if (!this.isAttachedToDom) {
-            return null;
-        }
-
         if (this.isPercentHeight) {
             /*height in %*/
-            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
+                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+            } else {
+                return this.defaultTargetBodyHeight;
+            }
         } else {
             gridHeight = parseInt(this._height, 10);
         }

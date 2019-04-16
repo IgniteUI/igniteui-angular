@@ -1,17 +1,17 @@
 <ng-container *ngIf="column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-title"
-        [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}">{{ column.header }}</div>
+        [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}"
+        [igxColumnMovingDrag]="column"
+        [attr.droppable]="true"
+        [igxColumnMovingDrop]="column">{{ column.header }}</div>
     <div class="igx-grid__thead-group">
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
                                 [column]="child"
                                 [gridID]="child.gridID"
-                                [igxColumnMovingDrag]="child"
-                                [attr.droppable]="true"
-                                [igxColumnMovingDrop]="child"
-                                [style.min-width.px]="child.width"
-                                [style.flex-basis.px]="child.width">
+                                [style.min-width.px]="grid.getHeaderGroupWidth(child)"
+                                [style.flex-basis.px]="grid.getHeaderGroupWidth(child)">
             </igx-grid-header-group>
         </ng-container>
     </div>
@@ -20,7 +20,7 @@
 
 <ng-container *ngIf="!column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <igx-grid-header [gridID]="column.gridID" [column]="column"></igx-grid-header>
+    <igx-grid-header  [igxColumnMovingDrag]="column" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.gridID" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup" class="igx-grid__th-resize-handle"
             [attr.draggable]="false"
