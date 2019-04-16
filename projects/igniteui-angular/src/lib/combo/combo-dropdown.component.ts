@@ -159,8 +159,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 
-    protected scrollToItem() {
-    }
     /**
      * @hidden @internal
      */

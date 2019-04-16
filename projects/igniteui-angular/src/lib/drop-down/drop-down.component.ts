@@ -10,7 +10,6 @@ import {
     OnDestroy,
     ViewChild,
     ContentChild,
-    Optional,
     AfterViewInit
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -179,7 +178,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Optional() protected overlay?: IgxOverlayService) {
+        protected overlay?: IgxOverlayService) {
         super(elementRef, cdr);
     }
 
@@ -228,12 +227,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        let newSelection: IgxDropDownItemBase | { value: any, index: number };
+        let newSelection: IgxDropDownItemBase;
         if (this.virtDir) {
             newSelection = {
                 value: this.virtDir.igxForOf[index],
                 index
-            };
+            } as IgxDropDownItemBase;
         } else {
             newSelection = this.items[index];
         }
@@ -467,7 +466,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public selectItem(newSelection?: IgxDropDownItemBase | { value: any, index: any }, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
@@ -482,7 +481,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             newSelection = {
                 value: newSelection.value,
                 index: newSelection.index
-            } as any;
+            } as IgxDropDownItemBase;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);

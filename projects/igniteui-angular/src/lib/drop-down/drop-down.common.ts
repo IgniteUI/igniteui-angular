@@ -22,8 +22,8 @@ export enum DropDownActionKey {
  * @export
  */
 export interface ISelectionEventArgs extends CancelableEventArgs {
-    oldSelection: IgxDropDownItemBase | { value: any, index: number };
-    newSelection: IgxDropDownItemBase | { value: any, index: number };
+    oldSelection: IgxDropDownItemBase;
+    newSelection: IgxDropDownItemBase;
 }
 
 /**
