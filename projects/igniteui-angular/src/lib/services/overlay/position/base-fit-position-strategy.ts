@@ -15,47 +15,21 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         this.settings = Object.assign({}, this.settings, this._initialSettings);
         const elementRect: ClientRect = contentElement.getBoundingClientRect();
         const viewPort: ClientRect = getViewportRect(document);
-        if (this.shouldFitHorizontal(this.settings, elementRect, viewPort)) {
+        if (this.shouldFitHorizontal(elementRect, viewPort)) {
             this.fitHorizontal(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
 
-        if (this.shouldFitVertical(this.settings, elementRect, viewPort)) {
+        if (this.shouldFitVertical(elementRect, viewPort)) {
             this.fitVertical(contentElement, this.settings, elementRect, viewPort, this.settings.minSize);
         }
     }
 
-    protected shouldFitHorizontal(settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect): boolean {
-        switch (settings.horizontalDirection) {
-            case HorizontalAlignment.Left:
-                if (innerRect.left < outerRect.left) {
-                    return true;
-                }
-                break;
-            case HorizontalAlignment.Right:
-                if (innerRect.right > outerRect.right) {
-                    return true;
-                }
-                break;
-        }
-
-        return false;
+    protected shouldFitHorizontal(innerRect: ClientRect, outerRect: ClientRect): boolean {
+        return innerRect.left < outerRect.left || outerRect.right < innerRect.right;
     }
 
-    protected shouldFitVertical(settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect): boolean {
-        switch (settings.verticalDirection) {
-            case VerticalAlignment.Top:
-                if (innerRect.top < outerRect.top) {
-                    return true;
-                }
-                break;
-            case VerticalAlignment.Bottom:
-                if (innerRect.bottom > outerRect.bottom) {
-                    return true;
-                }
-                break;
-        }
-
-        return false;
+    protected shouldFitVertical(innerRect: ClientRect, outerRect: ClientRect): boolean {
+        return innerRect.top < outerRect.top || outerRect.bottom < innerRect.bottom;
     }
 
     protected abstract fitHorizontal(
