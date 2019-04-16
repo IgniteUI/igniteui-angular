@@ -466,7 +466,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBase | { value: any, index: any }, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
@@ -483,7 +483,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
                 index: newSelection.index
             } as IgxDropDownItemBase;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        const args: ISelectionEventArgs = { oldSelection, newSelection: (newSelection as IgxDropDownItemBase), cancel: false };
         this.onSelection.emit(args);
 
         if (!args.cancel) {

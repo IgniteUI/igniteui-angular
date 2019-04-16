@@ -139,7 +139,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * Sets/gets if the given item is focused
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemFocused = mySelectedItem.isFocused;
+     *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
@@ -149,7 +149,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
 
     /**
      * ```html
-     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{!item.isFocused}}>
+     *  <igx-drop-down-item *ngFor="let item of items" focused={{!item.focused}}>
      *      <div>
      *          {{item.field}}
      *      </div>
