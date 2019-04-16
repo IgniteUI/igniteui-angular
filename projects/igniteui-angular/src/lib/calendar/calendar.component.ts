@@ -163,6 +163,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
+    @ViewChild('prev')
+    public prevBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('next')
+    public nextBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
     get isYearView(): boolean {
         return this.activeView === CalendarView.YEAR;
     }
@@ -368,9 +380,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         this.daysView.stopMonthScroll$.next(true);
         this.daysView.stopMonthScroll$.complete();
 
-        this.daysView.monthScrollDirection = ScrollMonth.NONE;
 
-        event.target.focus();
+        if  (this.daysView.monthScrollDirection === ScrollMonth.PREV) {
+            this.prevBtn.nativeElement.focus();
+        } else if (this.daysView.monthScrollDirection === ScrollMonth.NEXT) {
+            this.nextBtn.nativeElement.focus();
+        }
+
+        this.daysView.monthScrollDirection = ScrollMonth.NONE;
     }
 
     /**

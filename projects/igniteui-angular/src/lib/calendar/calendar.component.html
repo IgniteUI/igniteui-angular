@@ -25,7 +25,7 @@
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
-        <div tabindex="0" class="igx-calendar-picker__prev" 
+        <div tabindex="0" class="igx-calendar-picker__prev" #prev
             igxCalendarScrollMonth [sartScrollFn]="startPrevMonthScroll" [stopScrollFn]="stopMonthScroll">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
@@ -33,7 +33,7 @@
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next"
+        <div tabindex="0" class="igx-calendar-picker__next" #next
             igxCalendarScrollMonth [sartScrollFn]="startNextMonthScroll" [stopScrollFn]="stopMonthScroll">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
