@@ -152,7 +152,11 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
 
         this.zone.runOutsideAngular(() => {
             fromEvent(this.element.nativeElement, 'keydown').pipe(
-                tap((event: KeyboardEvent) => event.preventDefault()),
+                tap((event: KeyboardEvent) => {
+                    if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+                        event.preventDefault();
+                    }
+                }),
                 debounce(() => interval(100)),
                 takeUntil(this.destroy$)
             ).subscribe((event: KeyboardEvent) => {
