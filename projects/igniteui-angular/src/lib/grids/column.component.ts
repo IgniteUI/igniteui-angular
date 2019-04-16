@@ -201,6 +201,10 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
             }
+
+            if (this.parent && this.parent.columnLayout && this.parent.hidden !== value) {
+                this.parent.hidden = value;
+            }
         }
     }
     /**
@@ -1644,7 +1648,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -1662,6 +1666,41 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
 
     get columnLayout() {
         return true;
+    }
+
+    /**
+     * Gets whether the column layout is hidden.
+     * ```typescript
+     * let isHidden = this.columnGroup.hidden;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    get hidden() {
+        return this._hidden;
+    }
+    /**
+     * Sets the column layout hidden property.
+     * ```typescript
+     * <igx-column-layout [hidden] = "true"></igx-column->
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    set hidden(value: boolean) {
+        this._hidden = value;
+        this.children.forEach(child => child.hidden = value);
+    }
+
+    /**
+     *@hidden
+    */
+    ngAfterContentInit() {
+        super.ngAfterContentInit();
+        if (!this.hidden) {
+            this.hidden = this.allChildren.some(x => x.hidden);
+        } else {
+            this.children.forEach(child => child.hidden = this.hidden);
+        }
     }
 
 }
