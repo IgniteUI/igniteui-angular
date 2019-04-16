@@ -1,13 +1,13 @@
 <div  class="sample-wrapper">
     <app-page-header title="Grid MRL"></app-page-header>
     <section style="height: 800px" class="sample-content">
-        <igx-grid [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'100%'">
-            <igx-column-layout [movable]="false" [pinned]="true">
+        <igx-grid [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnPinning]='true'>
+            <igx-column-layout [movable]="false" [pinned]="true" header='ContactName 1, ContactName 2'>
                     <igx-column [rowStart]="1" [colStart]="1" field="ContactName" [pinned]="false"></igx-column>
                     <igx-column [rowStart]="1" [colStart]="2" [rowEnd]='"span 2"' field="ContactName" [pinned]="false"></igx-column>
                     <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [pinned]="false"></igx-column>
             </igx-column-layout>
-            <igx-column-layout [movable]="false" [pinned]="false">
+            <igx-column-layout [movable]="false" [pinned]="false" header='group 2' >
                 <igx-column [rowStart]="1" [colStart]="1" [colEnd]="'span 4'" field="ContactName" resizable="true"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="5" field="ContactTitle" resizable="true"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="6" field="Country" resizable="true"></igx-column>

@@ -6,9 +6,10 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './grid.module';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
-import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
+import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from './../column.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - multi-row-layout Integration - ', () => {
     configureTestSuite();
@@ -287,6 +288,102 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(lastCell.nativeElement.getBoundingClientRect().right - 1)
             .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
+
+        it('UI - pinned columns count and drop-down items text in pinnig toolbar should be correct when group is pinned. ', () => {
+            // enable toolbar for pinning
+            grid.showToolbar = true;
+            grid.columnPinning = true;
+            fixture.detectChanges();
+            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
+            const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
+            const pinningButtonLabel = pinningButton.query(By.css('span'));
+            pinningButtonLabel.nativeElement.click();
+            fixture.detectChanges();
+            // should show count for actual igxColumns displayed in the pinned area
+            expect(parseInt(pinningButtonLabel.nativeElement.textContent.trim(), 10)).toBe(4);
+            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
+            const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
+            // should show 2 checkboxes - one for each group
+            expect(checkboxes.length).toBe(2);
+            expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
+            expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
+
+            // verify checked state
+            expect(checkboxes[0].componentInstance.checked).toBeTruthy();
+            expect(checkboxes[1].componentInstance.checked).toBeFalsy();
+        });
+
+        it('UI - toggling column checkbox checked state successfully changes the column\'s pinned state. ', async(() => {
+            grid.showToolbar = true;
+            grid.columnPinning = true;
+            const uniqueGroups = [
+                {
+                group: 'group1',
+                // total colspan 3
+                columns: [
+                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                    { field: 'County', rowStart: 3, colStart: 1},
+                    { field: 'Region', rowStart: 3, colStart: 2},
+                    { field: 'City', rowStart: 3, colStart: 3}
+                ]
+            },
+            {
+                group: 'group2',
+                  // total colspan 2
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1},
+                    { field: 'Address', rowStart: 1, colStart: 2},
+                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 2', rowEnd: 'span 2'}
+                ]
+            },
+            {
+                group: 'group3',
+                // total colspan 1
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1},
+                    { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 'span 2'}
+                ]
+            },
+            {
+                group: 'group4',
+                // total colspan 4
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
+                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
+                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                    { field: 'Region', rowStart: 2, colStart: 1},
+                    { field: 'City', rowStart: 2, colStart: 2},
+                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                ]
+            }
+            ];
+            fixture.componentInstance.colGroups = uniqueGroups;
+            grid.columnWidth = '200px';
+            fixture.componentInstance.grid.width = '1000px';
+            fixture.detectChanges();
+            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
+            const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
+            pinningButton.nativeElement.click();
+            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
+
+            const verifyCheckbox = HelperUtils.verifyCheckbox;
+            const checkbox = HelperUtils.getCheckboxInput('group1', columnChooserElement, fixture);
+            verifyCheckbox('group1', false, false, columnChooserElement, fixture);
+
+            const column = grid.getColumnByName('group1');
+            expect(column.pinned).toBeFalsy();
+
+            checkbox.click();
+
+            expect(checkbox.checked).toBe(true);
+            expect(column.pinned).toBeTruthy();
+
+            checkbox.click();
+
+            expect(checkbox.checked).toBe(false);
+            expect(column.pinned).toBeFalsy();
+        }));
+
     });
 });
 
