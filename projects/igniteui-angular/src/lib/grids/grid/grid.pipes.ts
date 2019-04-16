@@ -56,11 +56,13 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, pipeTrigger: number): IGroupByResult {
+        id: string, groupsRecords: any[], pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
+        // empty the array without changing reference
+        groupsRecords.splice(0, groupsRecords.length);
 
         if (!state.expressions.length) {
             return {
@@ -72,7 +74,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
         state.expansion = grid.groupingExpansionState;
         state.defaultExpanded = grid.groupsExpanded;
 
-        return DataUtil.group(cloneArray(collection), state);
+        return DataUtil.group(cloneArray(collection), state, groupsRecords);
     }
 }
 
@@ -92,7 +94,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 
     public transform(collection: IGroupByResult, expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, groupsRecords: any[], pipeTrigger: number): any[] {
+        id: string, pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
@@ -108,7 +110,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
         return DataUtil.restoreGroups({
             data: cloneArray(collection.data),
             metadata: cloneArray(collection.metadata)
-        }, state, groupsRecords);
+        }, state);
     }
 }
 
