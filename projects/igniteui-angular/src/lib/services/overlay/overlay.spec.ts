@@ -175,7 +175,7 @@ function getOverlayWrapperLocation(
         } else {
             if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
                 location.y = targetRect.bottom;
-            } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle){
+            } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
                 location.y = targetRect.top + targetRect.height / 2;
             } else {
                 location.y = targetRect.top;
@@ -184,7 +184,7 @@ function getOverlayWrapperLocation(
     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
         if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
             location.y = targetRect.bottom - wrapperRect.height;
-        } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle){
+        } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
             location.y = targetRect.bottom - targetRect.height / 2 - wrapperRect.height;
     } else {
             location.y = targetRect.top - wrapperRect.height;
