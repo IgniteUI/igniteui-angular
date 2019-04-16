@@ -9,6 +9,7 @@ import {
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
+import { IgxDividerModule } from '../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -186,6 +187,7 @@ const components = [
         IgxHierarchicalGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
+        IgxDividerModule,
         SharedModule,
         routing
     ],

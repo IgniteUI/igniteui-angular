@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, NgModule, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,6 +31,8 @@ import { FilterMode } from '../tree-grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
+import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
+import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -1615,6 +1617,21 @@ describe('IgxGrid - Filtering actions', () => {
         expect(selectedItem.nativeElement.textContent).toMatch('Starts With');
         expect(input.nativeElement.value).toMatch('Ignite');
     }));
+
+    it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const datePicker = filterUIRow.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
+
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
@@ -1624,11 +1641,14 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent
+                IgxGridFilteringMCHComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule
+            ]
         }).compileComponents();
     }));
 
@@ -2794,11 +2814,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFilteringComponent
+                IgxGridFilteringComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule]
         })
             .compileComponents();
     }));
@@ -3435,6 +3457,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         expect(grid.filteredData).toBeNull();
     }));
+
+    it('Should use dropdown mode for the datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
+        fix.detectChanges();
+
+        const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
+        const datePicker = dateExpression.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -3597,6 +3629,56 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {
         this.grid.cdr.markForCheck();
     }
  }
+
+@Component({
+    template:
+    `
+    <igx-grid #grid1 [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-excel-style-date-expression *ngIf="grid1.columns.length > 0"
+                                     [column]="grid1.columns[4]"
+                                     [grid]="grid1"
+                                     [expressionUI]="exprUI"
+                                     [expressionsList]="exprList">
+    </igx-excel-style-date-expression>`
+})
+export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringComponent implements AfterViewInit {
+    exprUI: ExpressionUI;
+    exprList: Array<ExpressionUI>;
+
+    constructor(private cd: ChangeDetectorRef) {
+        super();
+
+        this.exprUI = new ExpressionUI();
+        this.exprUI.expression = {
+            fieldName: 'ReleaseDate',
+            condition: {
+                name: 'equals',
+                isUnary: false,
+                iconName: 'equals',
+                logic: (target: Date, searchVal: Date) => {
+                    return true;
+                }
+            },
+        };
+
+        this.exprList = [ this.exprUI ];
+    }
+
+    ngAfterViewInit() {
+        this.cd.detectChanges();
+    }
+}
 
 const expectedResults = [];
 

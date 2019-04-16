@@ -202,19 +202,21 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const diffBottom =
             childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
             const row = this.grid.getRowByIndex(rowIndex).element.nativeElement;
+            const rowBottom = row.getBoundingClientRect().bottom;
+            const rowIsVisible = rowBottom <= this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
             const gridTop = this._getMaxTop(this.grid);
             const diffTop = row.getBoundingClientRect().bottom -
             row.offsetHeight - gridTop;
             const endIsVisible = diffBottom <= 0;
             const topVisible = diffTop >= 0;
-            if (!endIsVisible) {
+            if (!endIsVisible && !rowIsVisible) {
                 this.scrollGrid(this.grid.parent, diffBottom, () => super.onKeydownEnd(rowIndex));
             } else if (!topVisible) {
-            const scrGrid = this.grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ? this.grid :
-             this.getNextScrollable(this.grid).grid;
-            const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
-            this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
-            this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
+                const scrGrid = this.grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ? this.grid :
+                this.getNextScrollable(this.grid).grid;
+                const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
+                this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
+                this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
             } else {
                 super.onKeydownEnd(rowIndex, isSummary);
             }
