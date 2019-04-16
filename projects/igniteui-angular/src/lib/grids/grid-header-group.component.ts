@@ -34,23 +34,23 @@ const Z_INDEX = 9999;
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.-ms-grid-row-span')
-    get gridRowSpan() {
+    get gridRowSpan(): number {
         return this.column.gridRowSpan;
     }
 
     @HostBinding('style.-ms-grid-column-span')
-    get gridColumnSpan() {
+    get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
 
 
     @HostBinding('style.grid-row-end')
-    get rowEnd() {
+    get rowEnd(): number {
         return this.column.rowEnd;
     }
 
     @HostBinding('style.grid-column-end')
-    get colEnd(): string {
+    get colEnd(): number {
         return this.column.colEnd;
     }
 

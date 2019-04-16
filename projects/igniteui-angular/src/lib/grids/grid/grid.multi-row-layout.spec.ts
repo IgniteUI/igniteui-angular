@@ -58,8 +58,8 @@ describe('IgxGrid - multi-row-layout', () => {
                  // check correct attributes are applied
                 expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
                 expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
-                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd || '');
-                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd || '');
+                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
 
                 // check width
                 let sum = 0;
@@ -120,7 +120,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups.push({
             group: 'group2',
             columns: [
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 4, rowEnd: 4},
                 { field: 'CompanyName', rowStart: 1, colStart: 1},
                 { field: 'PostalCode', rowStart: 1, colStart: 2},
                 { field: 'Fax', rowStart: 1, colStart: 3}
@@ -144,7 +144,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 3', rowEnd: 'span 1'},
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'CompanyName', rowStart: 1, colStart: 1},
                 { field: 'PostalCode', rowStart: 1, colStart: 2},
                 // { field: 'Fax', rowStart: 1, colStart: 3},
@@ -171,7 +171,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'CompanyName', rowStart: 3, colStart: 1},
                 // { field: 'PostalCode', rowStart: 1, colStart: 2},
                 { field: 'Fax', rowStart: 3, colStart: 3}
@@ -213,7 +213,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups.push({
             group: 'group2',
             columns: [
-                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'Region', rowStart: 3, colStart: 1},
                 { field: 'PostalCode', rowStart: 3, colStart: 2},
                 { field: 'Fax', rowStart: 3, colStart: 3}
@@ -250,7 +250,7 @@ describe('IgxGrid - multi-row-layout', () => {
          fixture.componentInstance.colGroups.push({
             group: 'group3',
             columns: [
-                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 'span 2', rowEnd: 'span 3'}
+                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 3, rowEnd: 4}
             ]
         });
         fixture.detectChanges();
@@ -290,7 +290,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ID', rowStart: 1, colStart: 1, width: '100px'},
                 { field: 'CompanyName', rowStart: 1, colStart: 2, width: '200px'},
                 { field: 'ContactName', rowStart: 1, colStart: 3, width: '300px'},
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd : 4},
             ]
         }];
         fixture.detectChanges();
@@ -315,7 +315,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups.push({
             group: 'group2',
             columns: [
-                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'Region', rowStart: 3, colStart: 1, width: '100px'},
                 { field: 'PostalCode', rowStart: 3, colStart: 2},
                 { field: 'Fax', rowStart: 3, colStart: 3, width: '200px'}
@@ -351,9 +351,9 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups.push({
             group: 'group3',
             columns: [
-                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 'span 2', width: '500px'},
-                { field: 'Phone1', rowStart: 2, colStart: 1, colEnd : 'span 1', rowSpan: 'span 2'},
-                { field: 'Phone2', rowStart: 2, colStart: 2, colEnd : 'span 1', rowSpan: 'span 2'}
+                { field: 'Phone', rowStart: 1, colStart: 1, colEnd : 3, width: '500px'},
+                { field: 'Phone1', rowStart: 2, colStart: 1, colEnd : 2, rowSpan: 'span 2'},
+                { field: 'Phone2', rowStart: 2, colStart: 2, colEnd : 3, rowSpan: 'span 2'}
             ]
         });
         fixture.componentInstance.grid.width = '1617px';
@@ -380,7 +380,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ID', rowStart: 1, colStart: 1, width: '10%'},
                 { field: 'CompanyName', rowStart: 1, colStart: 2, width: '20%'},
                 { field: 'ContactName', rowStart: 1, colStart: 3, width: '30%'},
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd : 4},
             ]
         }];
         fixture.componentInstance.grid.width = '1017px';
@@ -404,7 +404,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups.push({
             group: 'group2',
             columns: [
-                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'Region', rowStart: 3, colStart: 1, width: '10%'},
                 { field: 'PostalCode', rowStart: 3, colStart: 2},
                 { field: 'Fax', rowStart: 3, colStart: 3, width: '20%'}
@@ -433,9 +433,9 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ID', rowStart: 1, colStart: 1},
                 { field: 'CompanyName', rowStart: 1, colStart: 2},
                 { field: 'ContactName', rowStart: 1, colStart: 3},
-                { field: 'Country', rowStart: 2, colStart: 1, colEnd : 'span 2'},
+                { field: 'Country', rowStart: 2, colStart: 1, colEnd : 3},
                 { field: 'Region', rowStart: 2, colStart: 3},
-                { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3', width: '60%'},
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 5, colEnd : 4, width: '60%'},
             ]
         }];
         fixture.detectChanges();
@@ -465,8 +465,8 @@ describe('IgxGrid - multi-row-layout', () => {
             columns: [
                 { field: 'ID', rowStart: 1, colStart: 1 },
                 { field: 'CompanyName', rowStart: 1, colStart: 2 },
-                { field: 'ContactName', rowStart: 1, colStart: 3, colEnd : 'span 2' },
-                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+                { field: 'ContactName', rowStart: 1, colStart: 3, colEnd : 5 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 3, colEnd : 4},
             ]
         }];
         fixture.componentInstance.grid.width = '100%';
@@ -487,7 +487,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group2',
             columns: [
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2', width: '500px'},
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 4, rowEnd: 4, width: '500px'},
                 { field: 'CompanyName', rowStart: 1, colStart: 1, width: '100px'},
                 { field: 'PostalCode', rowStart: 1, colStart: 2, width: '200px'},
                 { field: 'Fax', rowStart: 1, colStart: 3, width: '100px'}
@@ -502,7 +502,7 @@ describe('IgxGrid - multi-row-layout', () => {
           fixture.componentInstance.colGroups = [{
               group: 'group2',
               columns: [
-                  { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 1', width: '500px'},
+                  { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 2, width: '500px'},
                   { field: 'CompanyName', rowStart: 2, colStart: 1, width: '100px'},
                   { field: 'PostalCode', rowStart: 2, colStart: 2, width: '200px'},
                   { field: 'Fax', rowStart: 2, colStart: 3, width: '100px'}
@@ -547,7 +547,7 @@ describe('IgxGrid - multi-row-layout', () => {
             group: 'group2',
               // group with total row span 2
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 1'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 2},
                 { field: 'CompanyName', rowStart: 2, colStart: 1},
                 { field: 'PostalCode', rowStart: 2, colStart: 2},
                 { field: 'Fax', rowStart: 2, colStart: 3}
@@ -583,7 +583,7 @@ describe('IgxGrid - multi-row-layout', () => {
             group: 'group1',
             // total colspan 3
             columns: [
-                { field: 'Address', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                { field: 'Address', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                 { field: 'County', rowStart: 3, colStart: 1},
                 { field: 'Region', rowStart: 3, colStart: 2},
                 { field: 'City', rowStart: 3, colStart: 3}
@@ -595,7 +595,7 @@ describe('IgxGrid - multi-row-layout', () => {
             columns: [
                 { field: 'CompanyName', rowStart: 1, colStart: 1},
                 { field: 'Address', rowStart: 1, colStart: 2},
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 2', rowEnd: 'span 2'}
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 3, rowEnd: 4}
             ]
         },
         {
@@ -603,19 +603,19 @@ describe('IgxGrid - multi-row-layout', () => {
               // total colspan 1
             columns: [
                 { field: 'Phone', rowStart: 1, colStart: 1},
-                { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 'span 2'}
+                { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 4}
             ]
         },
         {
             group: 'group4',
             // total colspan 4
             columns: [
-                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
-                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
-                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3},
+                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3},
+                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4},
                 { field: 'Region', rowStart: 2, colStart: 1},
                 { field: 'City', rowStart: 2, colStart: 2},
-                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4},
             ]
         }
         ];
@@ -678,7 +678,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 group: 'group1',
                 // total colspan 3
                 columns: [
-                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                     { field: 'County', rowStart: 3, colStart: 1, width: '200px'},
                     { field: 'Region', rowStart: 3, colStart: 2 , width: '300px'},
                     { field: 'City', rowStart: 3, colStart: 3, width: '200px'}
@@ -707,7 +707,7 @@ describe('IgxGrid - multi-row-layout', () => {
             columns: [
                 { field: 'CompanyName', rowStart: 1, colStart: 1, width: '20%'},
                 { field: 'Address1', rowStart: 1, colStart: 2, width: '30%'},
-                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 2', rowEnd: 'span 2'}
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 3, rowEnd: 4}
             ]
         });
         fixture.detectChanges();
@@ -729,12 +729,12 @@ describe('IgxGrid - multi-row-layout', () => {
             group: 'group4',
             // total colspan 4
             columns: [
-                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
-                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
-                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3},
+                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3},
+                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4},
                 { field: 'Region', rowStart: 2, colStart: 1},
                 { field: 'City', rowStart: 2, colStart: 2},
-                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4},
             ]
         });
 
@@ -761,12 +761,12 @@ describe('IgxGrid - multi-row-layout', () => {
             group: 'group4',
             // total rowspan 3
             columns: [
-                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
-                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
-                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3},
+                { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3},
+                { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4},
                 { field: 'Region', rowStart: 2, colStart: 1},
                 { field: 'City', rowStart: 2, colStart: 2},
-                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4},
             ]
         }];
         fixture.detectChanges();
@@ -823,7 +823,7 @@ export class ColumnLayoutTestComponent {
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
         { field: 'ContactName', rowStart: 1, colStart: 3},
-        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd : 4},
     ];
     colGroups = [
         {
