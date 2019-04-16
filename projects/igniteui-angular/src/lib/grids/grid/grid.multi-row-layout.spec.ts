@@ -736,7 +736,7 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(lastRow.element.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
         // check size is correct
-        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(151);
+        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(150);
 
         // check DOM
         const lastRowCells = lastRow.cells.toArray();
