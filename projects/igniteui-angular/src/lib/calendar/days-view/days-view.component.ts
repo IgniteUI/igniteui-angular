@@ -224,6 +224,10 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public animationDone(event, isLast: boolean) {
         if (isLast) {
+            if (this.monthScrollDirection !== ScrollMonth.NONE) {
+                this.scrollMonth$.next();
+            }
+
             const date = this.dates.find((d) => d.selected);
             if (date && !this.isKeydownTrigger) {
                 setTimeout(() => {
@@ -232,10 +236,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             } else if (this.callback && (event.toState === 'next' || event.toState === 'prev')) {
                 this.callback(this.dates, this.nextDate);
             }
-        }
-
-        if (isLast && this.monthScrollDirection !== ScrollMonth.NONE) {
-            this.scrollMonth$.next();
         }
     }
 

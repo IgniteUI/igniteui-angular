@@ -346,4 +346,3 @@ export class Calendar {
         return date.getFullYear() > year;
     }
 }
-
