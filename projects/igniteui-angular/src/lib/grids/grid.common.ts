@@ -652,7 +652,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
-
 @Directive({
     selector: '[igxGridBody]',
     providers: [IgxForOfSyncService]

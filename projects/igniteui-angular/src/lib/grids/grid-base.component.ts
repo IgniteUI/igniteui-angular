@@ -177,6 +177,10 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
+export interface IRowDragStartEventArgs {
+    source: IgxRowComponent<any>;
+}
+
 export enum GridSummaryPosition {
     top = 'top',
     bottom = 'bottom'
@@ -1449,6 +1453,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+     /**
+     * Emitted when start dragging a row.
+     * Return the dragged row.
+        */
+    @Output()
+    public onDragStart = new EventEmitter<IRowDragStartEventArgs>();
 
     /**
      * @hidden

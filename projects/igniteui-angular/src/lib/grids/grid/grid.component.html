@@ -91,9 +91,7 @@
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row *ngIf="rowDraggable" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row [igxDrag]>
-                </igx-grid-row>
-                <igx-grid-row *ngIf="!rowDraggable" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>

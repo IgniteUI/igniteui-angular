@@ -26,11 +26,8 @@ export class GridRowDraggableComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    handleRowSelection(args) {
-        const targetCell = args.cell as IgxGridCellComponent;
-        if  (!this.selection) {
-            this.grid1.selectRows([targetCell.row.rowID], true);
-        }
+    handleRowDrag(args) {
+        console.log('RowDrag started!');
     }
 
     toggle() {
