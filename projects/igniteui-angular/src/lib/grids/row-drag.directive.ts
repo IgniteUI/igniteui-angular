@@ -1,6 +1,8 @@
 import { Directive, Input, OnDestroy, NgModule, Output, EventEmitter } from '@angular/core';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IRowDragStartEventArgs } from './grid-base.component';
+import { KEYS } from '../core/utils';
+import { fromEvent, Subscription } from 'rxjs';
 
 /**
  * @hidden
@@ -10,6 +12,7 @@ import { IRowDragStartEventArgs } from './grid-base.component';
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private _row;
+    private subscription$: Subscription;
 
     @Input('igxRowDrag')
     set data(val) {
@@ -29,6 +32,12 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         };
 
         this.row.grid.onDragStart.emit(args);
+
+        this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+            if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+                this.onPointerUp(event);
+            }
+        });
     }
 
     protected createDragGhost(event) {
