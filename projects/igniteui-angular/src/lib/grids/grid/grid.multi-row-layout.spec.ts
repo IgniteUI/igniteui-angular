@@ -475,6 +475,46 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(4);
     });
 
+    it('should render correct heights when groups have different total row span', () => {
+        const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
+        const grid = fixture.componentInstance.grid;
+        fixture.componentInstance.colGroups = [
+            {
+                group: 'group1',
+                // group with total row span 1
+                columns: [
+                    { field: 'Fax', rowStart: 1, colStart: 1}
+                ]
+            }, {
+            group: 'group2',
+              // group with total row span 2
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 1'},
+                { field: 'CompanyName', rowStart: 2, colStart: 1},
+                { field: 'PostalCode', rowStart: 2, colStart: 2},
+                { field: 'Fax', rowStart: 2, colStart: 3}
+            ]
+        }];
+        fixture.detectChanges();
+
+        // check first group has height of 3 row spans in header and rows
+
+         // check group block and column header height
+         const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+         expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+         expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+
+         expect(groupHeaderBlocks[1].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+
+         // check cell height in row
+         const firstCell = grid.getCellByColumn(0, 'Fax').nativeElement;
+         expect(firstCell.offsetHeight)
+         .toEqual(
+             grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight +
+             grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetHeight
+            );
+    });
+
     // Virtualization
 
     it('should apply horizontal virtualization based on the group blocks.', async() => {

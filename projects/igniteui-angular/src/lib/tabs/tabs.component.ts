@@ -77,6 +77,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public tabsType: string | TabsType = 'contentfit';
 
     /**
+    * @hidden
+    */
+    @Input()
+    public class = '';
+
+    /**
      * Emitted when a tab item is deselected.
      * ```html
      * <igx-tabs (onTabItemDeselected)="itemDeselected($event)">
@@ -177,7 +183,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     @HostBinding('attr.class')
-    public get class() {
+    public get cssClass() {
         const defaultStyle = `igx-tabs`;
         const fixedStyle = `igx-tabs--fixed`;
         const iconStyle = `igx-tabs--icons`;
@@ -199,7 +205,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             css = `${css} ${iconStyle}`;
         }
 
-        return css;
+        return `${css} ${this.class}`;
     }
 
     /**

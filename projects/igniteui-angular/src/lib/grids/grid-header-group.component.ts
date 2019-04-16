@@ -175,6 +175,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.grid.hasColumnLayouts && this.column.children ? 'flex' : '';
     }
 
+    @HostBinding('style.display')
+    get groupDisplayStyle(): string {
+        return this.grid.hasColumnLayouts && this.column.children ? 'flex' : '';
+    }
+
     /**
      * Gets whether the header group is stored in a pinned column.
      * @memberof IgxGridHeaderGroupComponent
