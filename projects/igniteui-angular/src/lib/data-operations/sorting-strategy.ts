@@ -130,7 +130,7 @@ export class IgxSorting {
         return data;
     }
     protected groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
-        parent: IGroupByRecord, metadata: IGroupByRecord[], groupsRecords: any[]): T[] {
+        parent: IGroupByRecord, metadata: IGroupByRecord[], groupsRecords: any[] = []): T[] {
         let i = 0;
         let result = [];
         while (i < data.length) {
