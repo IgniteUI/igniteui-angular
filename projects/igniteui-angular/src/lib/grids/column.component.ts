@@ -1652,7 +1652,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
      * ```
-     * @memberof IgxColumnGroupComponent
+     * @memberof IgxColumnLayoutComponent
      */
     get width() {
         const width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
@@ -1666,4 +1666,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
         return true;
     }
 
+    /**
+     * Gets whether the group contains the last pinned child column of the column layout.
+     * ```typescript
+     * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
+     * ```
+     * @memberof IgxColumnLayoutComponent
+     */
+    get hasLastPinnedChildColumn() {
+        return this.children.some(child => child.isLastPinned);
+    }
 }
