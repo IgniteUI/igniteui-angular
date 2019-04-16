@@ -85,7 +85,7 @@ The `igx-drop-down` supports the use of `IgxForOf` directive for displaying very
 ### Properly configure the template
 Configure the drop-down to use `*igxFor` instead of `ngFor`. Some additional configuration must be passed:
  - scrollOrientation - should be `'vertical'`
- - containerSize - should be set to the height that the items contain will have, as `number`. E.g. `public itemsMaxHeight = 480;`
+ - containerSize - should be set to the height that the items container will have, as `number`. E.g. `public itemsMaxHeight = 480;`
  - itemSize - should be set to the height of the **smallest** item that the list will have, as `number`. E.g. `public itemHeight = 32;`
 ```html
     <igx-drop-down>
