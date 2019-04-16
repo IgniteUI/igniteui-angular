@@ -920,7 +920,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    children;
+    children: QueryList<IgxColumnComponent>;
     /**
      *@hidden
      */
@@ -1074,7 +1074,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    /**
+        /**
      * @hidden
      */
     getGridTemplate(isRow, isIE): string {
