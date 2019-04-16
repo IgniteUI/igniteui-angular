@@ -91,7 +91,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigateNext() {
-        if (this._virtualFocusedIndex === this.virtDir.igxForOf.length - 1) {
+        const lastIndex = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.virtDir.igxForOf.length - 1;
+        if (this._virtualFocusedIndex === lastIndex) {
             this.focusAddItemButton();
         } else {
             super.navigateNext();

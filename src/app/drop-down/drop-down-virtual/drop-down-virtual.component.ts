@@ -23,11 +23,11 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public prevRequest: any;
   public startIndex = 0;
   public itemHeight = 48;
-  public itemsMaxHeight = 480;
+  public itemsMaxHeight = 320;
 
   constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
     this.remoteService.urlBuilder = (state) => {
-      const chunkSize = state.chunkSize || 11;
+      const chunkSize = state.chunkSize || Math.floor(this.itemsMaxHeight / this.itemHeight) + 1;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
     this.localItems = Array.apply(null, {length: 2000}).map((e, i) => ({
