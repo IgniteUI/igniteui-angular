@@ -1338,7 +1338,7 @@ describe('IgxDropDown ', () => {
         }));
     });
 
-    fdescribe('Virtualized DropDown tests', () => {
+    describe('Virtualized DropDown tests', () => {
         configureTestSuite();
         let fixture, button, dropdown: IgxDropDownComponent, scroll, items;
         beforeEach(() => {
