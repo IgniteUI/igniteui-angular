@@ -2,8 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.2.6
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label. 
+
 ## 7.2.5
-- `igxDrop` 
+- `igxDrop`
     - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
 - `IgxList`
     - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
