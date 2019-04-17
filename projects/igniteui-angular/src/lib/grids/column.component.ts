@@ -293,7 +293,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public get calcWidth(): any {
-        if (this._calcWidth !== null) {
+        if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
             return this._calcWidth;
         }
         const colWidth = this.width;
