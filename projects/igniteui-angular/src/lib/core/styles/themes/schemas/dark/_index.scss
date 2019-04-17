@@ -17,6 +17,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './divider';
 @import './drop-down';
 @import './expansion-panel';
 @import './grid';
@@ -57,6 +58,7 @@
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
 /// @property {Map} igx-combo [$_dark-combo]
 /// @property {Map} igx-dialog [$_dark-dialog]
+/// @property {Map} igx-divider [$_dark-divider]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} igx-grid [$_dark-grid]
@@ -97,6 +99,7 @@ $dark-schema: (
     igx-column-hiding: $_dark-column-hiding,
     igx-combo: $_dark-combo,
     igx-dialog: $_dark-dialog,
+    igx-divider: $_dark-divider,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
     igx-grid: $_dark-grid,

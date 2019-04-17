@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
     OnInit, ViewChild, ViewChildren, QueryList, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1187,22 +1187,27 @@ describe('IgxGrid Component Tests', () => {
                 const row = grid.getRowByIndex(0);
 
                 rv.nativeElement.dispatchEvent(new Event('focus'));
+                flush();
                 fix.detectChanges();
-                tick();
 
                 rv.triggerEventHandler('dblclick', {});
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
-                tick();
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(false);
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-                tick();
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
-                tick();
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(false);
 
                 // UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
@@ -1236,6 +1241,8 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 cellDom.dispatchEvent(new Event('dblclick'));
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(true);
 
                 let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, cancel: false };
@@ -1244,7 +1251,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDom, true);
-                tick();
+                flush();
+                fix.detectChanges();
 
                 expect(row.inEditMode).toBe(false);
                 cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: cell.value, cancel: false };
@@ -1254,14 +1262,16 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 
                 cellDom.dispatchEvent(new Event('dblclick'));
-                tick();
+                flush();
+                fix.detectChanges();
                 expect(row.inEditMode).toBe(true);
 
                 const newCellValue = 'Aaaaa';
                 cellInput = cellDom.querySelector('[igxinput]');
                 cellInput.value = newCellValue;
                 cellInput.dispatchEvent(new Event('input'));
-                tick();
+                flush();
+                fix.detectChanges();
 
                 cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: newCellValue, cancel: false };
                 rowArgs = {
@@ -1269,7 +1279,8 @@ describe('IgxGrid Component Tests', () => {
                     newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }), cancel: false
                 };
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom, true);
-                tick();
+                flush();
+                fix.detectChanges();
 
                 expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
                 expect(grid.onRowEdit.emit).toHaveBeenCalledWith(rowArgs);
@@ -2273,7 +2284,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(rowEditingBannerElement).toBeTruthy(); // banner is still present in grid template, just not visible
             }));
 
-            it(`Should exit edit mode when edited row is being deleted`, fakeAsync(/** height/width setter rAF */() => {
+            it(`Should exit edit mode when edited row is being deleted`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -2281,9 +2292,11 @@ describe('IgxGrid Component Tests', () => {
                 const targetCell = grid.getCellByKey(0, 'Downloads');
                 spyOn(grid, 'endEdit').and.callThrough();
                 targetCell.inEditMode = true;
+                flush();
                 fixture.detectChanges();
                 expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
                 row.delete();
+                flush();
                 fixture.detectChanges();
                 expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
                 expect(grid.endEdit).toHaveBeenCalledTimes(1);
@@ -2304,10 +2317,11 @@ describe('IgxGrid Component Tests', () => {
 
                 const targetCell = grid.getCellByColumn(0, targetColumnName);
                 targetCell.inEditMode = true;
+                flush();
 
                 // search if the targeted column contains the keyword, ignoring case
                 grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), false);
-                tick();
+                flush();
                 fix.detectChanges();
 
                 expect(grid.endEdit).toHaveBeenCalled();
