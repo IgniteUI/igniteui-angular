@@ -14,6 +14,7 @@ import {
     HostListener,
     Input,
     NgModule,
+    OnDestroy,
     Output,
     QueryList,
     TemplateRef,
@@ -66,7 +67,7 @@ export class IgxTabTemplateDirective {
         }
     `]
 })
-export class IgxBottomNavComponent implements AfterViewInit {
+export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Gets the `IgxTabComponent` elements in the tab bar component.
@@ -172,30 +173,42 @@ export class IgxBottomNavComponent implements AfterViewInit {
      */
     public ngAfterViewInit() {
         // initial selection
-        this._navigationEndSubscription = this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd)).subscribe((args) => {
-                const panelsArray = this.panels.toArray();
-                for (let i = 0; i < panelsArray.length; i++) {
-                    if (panelsArray[i].routerLinkDirective &&
-                        this.router.url.startsWith(panelsArray[i].routerLinkDirective.urlTree.toString())) {
-                        panelsArray[i].selectAndUpdateRoute(false);
-                        break;
-                    }
-                }
-                this._navigationEndSubscription.unsubscribe();
-            }
-        );
-
         setTimeout(() => {
+            this.navigationEndHandler(this);
             if (this.selectedIndex === -1) {
                 const selectablePanels = this.panels.filter((p) => !p.disabled);
                 const panel = selectablePanels[0];
-
                 if (panel) {
                     panel.select();
                 }
             }
+            this._navigationEndSubscription = this.router.events.pipe(
+                filter(event => event instanceof NavigationEnd)).subscribe(() => {
+                    this.navigationEndHandler(this);
+                }
+            );
         }, 0);
+    }
+
+    /**
+     *@hidden
+     */
+    public navigationEndHandler(bottomNavControl: IgxBottomNavComponent) {
+        const panelsArray = bottomNavControl.panels.toArray();
+        for (let i = 0; i < panelsArray.length; i++) {
+            if (panelsArray[i].routerLinkDirective &&
+                bottomNavControl.router.url.startsWith(panelsArray[i].routerLinkDirective.urlTree.toString())) {
+                panelsArray[i]._selectAndEmitEvent();
+                break;
+            }
+        }
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnDestroy() {
+        this._navigationEndSubscription.unsubscribe();
     }
 
     /**
@@ -413,20 +426,21 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
      * @memberof IgxTabPanelComponent
      */
     public select() {
-        this.selectAndUpdateRoute(true);
+        if (this.disabled || this._tabBar.selectedIndex === this.index) {
+            return;
+        }
+        if (this.routerLinkDirective) {
+            this.routerLinkDirective.onClick();
+        } else {
+            this._selectAndEmitEvent();
+        }
     }
 
     /**
      *@hidden
      */
-    public selectAndUpdateRoute(updateRoute: boolean) {
-        if (this.disabled || this._tabBar.selectedIndex === this.index) {
-            return;
-        }
+    public _selectAndEmitEvent() {
         this.isSelected = true;
-        if (updateRoute && this.routerLinkDirective) {
-            this.routerLinkDirective.onClick();
-        }
         this._tabBar.onTabSelected.emit({ tab: this._tabBar.tabs.toArray()[this.index], panel: this });
     }
 }
