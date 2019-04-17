@@ -290,6 +290,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     updateScrollPosition() {
         if (!this.selectedItem) {
+            this.virtDir.scrollTo(0);
             return;
         }
         let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
@@ -308,6 +309,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
         if (!this.virtDir && this.selectedItem) {
             this.scrollToItem(this.selectedItem);
+        }
+        if (this.virtDir) {
+            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
         }
     }
 

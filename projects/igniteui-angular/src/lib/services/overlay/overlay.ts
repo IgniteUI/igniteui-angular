@@ -292,6 +292,7 @@ export class IgxOverlayService implements OnDestroy {
         } else {
             //  to eliminate flickering show the element just before onOpened fire
             info.elementRef.nativeElement.parentElement.style.visibility = '';
+            this.onAnimation.emit({ id: info.id, animationPlayer: null, animationType: null });
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
         }
     }

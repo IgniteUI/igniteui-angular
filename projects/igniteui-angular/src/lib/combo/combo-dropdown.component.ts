@@ -163,14 +163,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden @internal
      */
-    onToggleClosing(e: CancelableBrowserEventArgs) {
-        super.onToggleClosing(e);
-        this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public onItemActionKey(key: DropDownActionKey) {
         switch (key) {
             case DropDownActionKey.ENTER:
