@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, NgModule, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,6 +31,8 @@ import { FilterMode } from '../tree-grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
+import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
+import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -423,7 +425,8 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        let clear = filterUIRow.query(By.css('igx-suffix'));
+        let suffix = filterUIRow.query(By.css('igx-suffix'));
+        let clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // clear input value
@@ -540,7 +543,8 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        clear = filterUIRow.query(By.css('igx-suffix'));
+        suffix = filterUIRow.query(By.css('igx-suffix'));
+        clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -1528,11 +1532,12 @@ describe('IgxGrid - Filtering actions', () => {
         sendInput(input, filterValue, fix);
 
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const clearSuffix = inputGroup.query(By.css('igx-suffix'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const clearIcon = suffix.queryAll(By.css('igx-icon'))[1];
 
         spyOn(grid.onFilteringDone, 'emit');
 
-        clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
+        clearIcon.nativeElement.dispatchEvent(new MouseEvent('click'));
         GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         tick(100);
         fix.detectChanges();
@@ -1615,6 +1620,75 @@ describe('IgxGrid - Filtering actions', () => {
         expect(selectedItem.nativeElement.textContent).toMatch('Starts With');
         expect(input.nativeElement.value).toMatch('Ignite');
     }));
+
+    it('Should complete the filter when clicking the commit icon', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filterValue = 'an';
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        tick();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const commitIcon = suffix.queryAll(By.css('igx-icon'))[0];
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        commitIcon.nativeElement.dispatchEvent(new MouseEvent('click'));
+        tick(100);
+        fix.detectChanges();
+
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    }));
+
+    it('Should complete the filter when clicking the focusing out the input', async () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filterValue = 'an';
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        const editingButtons = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingButtons.queryAll(By.css('button'))[0];
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        reset.nativeElement.focus();
+        inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
+        fix.detectChanges();
+        await wait(16);
+
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    });
+
+    it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const datePicker = filterUIRow.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
@@ -1624,11 +1698,14 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent
+                IgxGridFilteringMCHComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule
+            ]
         }).compileComponents();
     }));
 
@@ -1886,7 +1963,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             input.nativeElement.dispatchEvent(new Event('input'));
             fix.detectChanges();
 
-            const clearButton = filterUIRow.query(By.css('igx-suffix'));
+            const suffix = filterUIRow.query(By.css('igx-suffix'));
+            const clearButton = suffix.queryAll(By.css('igx-icon'))[1];
 
             clearButton.nativeElement.click();
 
@@ -2794,11 +2872,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFilteringComponent
+                IgxGridFilteringComponent,
+                IgxTestExcelFilteringDatePickerComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxGridExcelStyleFilteringModule]
         })
             .compileComponents();
     }));
@@ -3435,6 +3515,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         expect(grid.filteredData).toBeNull();
     }));
+
+    it('Should use dropdown mode for the datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
+        fix.detectChanges();
+
+        const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
+        const datePicker = dateExpression.query(By.css('igx-date-picker'));
+        expect(datePicker.componentInstance.mode).toBe('dropdown');
+        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -3597,6 +3687,56 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {
         this.grid.cdr.markForCheck();
     }
  }
+
+@Component({
+    template:
+    `
+    <igx-grid #grid1 [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-excel-style-date-expression *ngIf="grid1.columns.length > 0"
+                                     [column]="grid1.columns[4]"
+                                     [grid]="grid1"
+                                     [expressionUI]="exprUI"
+                                     [expressionsList]="exprList">
+    </igx-excel-style-date-expression>`
+})
+export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringComponent implements AfterViewInit {
+    exprUI: ExpressionUI;
+    exprList: Array<ExpressionUI>;
+
+    constructor(private cd: ChangeDetectorRef) {
+        super();
+
+        this.exprUI = new ExpressionUI();
+        this.exprUI.expression = {
+            fieldName: 'ReleaseDate',
+            condition: {
+                name: 'equals',
+                isUnary: false,
+                iconName: 'equals',
+                logic: (target: Date, searchVal: Date) => {
+                    return true;
+                }
+            },
+        };
+
+        this.exprList = [ this.exprUI ];
+    }
+
+    ngAfterViewInit() {
+        this.cd.detectChanges();
+    }
+}
 
 const expectedResults = [];
 
