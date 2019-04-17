@@ -12,7 +12,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    Optional,
+    Inject
 } from '@angular/core';
 
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -24,7 +26,9 @@ import {
     IgxEmptyListTemplateDirective,
     IgxListPanState,
     IgxListItemLeftPanningTemplateDirective,
-    IgxListItemRightPanningTemplateDirective} from './list.common';
+    IgxListItemRightPanningTemplateDirective
+} from './list.common';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -68,9 +72,11 @@ export interface IListItemPanningEventArgs {
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
 })
-export class IgxListComponent implements IgxListBase {
+export class IgxListComponent extends IgxListBase {
 
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
     }
 
     /**
@@ -290,15 +296,27 @@ export class IgxListComponent implements IgxListBase {
     }
 
     /**
-     * Returns boolean indicating if the list has a `cssClass` attribute.
-     * ```typescript
-     * let hasCssClass =  this.list.cssClass;
-     * ```
-     * @memberof IgxListComponent
+     * @hidden
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return this.children && this.children.length > 0;
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--compact')
+    public get cssClassCompact(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--cosy')
+    public get cssClassCosy(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
