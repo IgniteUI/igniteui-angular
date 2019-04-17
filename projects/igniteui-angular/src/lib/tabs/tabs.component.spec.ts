@@ -20,7 +20,7 @@ describe('IgxTabs', () => {
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule,
-                BrowserAnimationsModule, NoopAnimationsModule, RouterTestingModule]
+                BrowserAnimationsModule, RouterTestingModule]
         })
         .compileComponents();
     }));

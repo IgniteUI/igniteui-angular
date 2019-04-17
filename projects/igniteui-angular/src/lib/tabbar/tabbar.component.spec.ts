@@ -15,10 +15,9 @@ import { RoutingViewComponentsModule,
          RoutingView1Component,
          RoutingView2Component,
          RoutingView3Component } from './routing-view-components';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 
-fdescribe('TabBar', () => {
+describe('TabBar', () => {
     configureTestSuite();
     beforeEach(async(() => {
 
@@ -165,7 +164,7 @@ fdescribe('TabBar', () => {
         tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
     });
 
-    fit('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
+    it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
 
         const router = TestBed.get(Router);
         const location = TestBed.get(Location);
@@ -191,7 +190,7 @@ fdescribe('TabBar', () => {
         expect(location.path()).toBe('/view1');
     }));
 
-    fit('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
+    it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
 
         const router = TestBed.get(Router);
         const location = TestBed.get(Location);
@@ -232,9 +231,6 @@ fdescribe('TabBar', () => {
         expect(bottomNav.tabs.toArray()[0].isSelected).toBe(true);
 
     }));
-
-
-
 });
 
 @Component({
@@ -342,13 +338,6 @@ class TemplatedTabBarTestComponent {
     @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
     @ViewChild('wrapperDiv') public wrapperDiv: any;
 }
-
-
-
-
-
-
-
 
 @Component({
     template: `
