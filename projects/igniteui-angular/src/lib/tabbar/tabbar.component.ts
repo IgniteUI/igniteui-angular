@@ -18,7 +18,6 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild,
     ViewChildren
 } from '@angular/core';
 import { IgxBadgeModule } from '../badge/badge.component';
@@ -165,7 +164,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      */
     private _navigationEndSubscription: Subscription;
 
-    constructor(private _element: ElementRef, private router: Router) {
+    constructor(private router: Router) {
     }
 
     /**
@@ -193,11 +192,11 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     /**
      *@hidden
      */
-    public navigationEndHandler(bottomNavControl: IgxBottomNavComponent) {
-        const panelsArray = bottomNavControl.panels.toArray();
+    public navigationEndHandler(bottomNavComponent: IgxBottomNavComponent) {
+        const panelsArray = bottomNavComponent.panels.toArray();
         for (let i = 0; i < panelsArray.length; i++) {
             if (panelsArray[i].routerLinkDirective &&
-                bottomNavControl.router.url.startsWith(panelsArray[i].routerLinkDirective.urlTree.toString())) {
+                bottomNavComponent.router.url.startsWith(panelsArray[i].routerLinkDirective.urlTree.toString())) {
                 panelsArray[i]._selectAndEmitEvent();
                 break;
             }
@@ -208,7 +207,9 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      *@hidden
      */
     public ngOnDestroy() {
-        this._navigationEndSubscription.unsubscribe();
+        if (this._navigationEndSubscription) {
+            this._navigationEndSubscription.unsubscribe();
+        }
     }
 
     /**
