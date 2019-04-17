@@ -10,7 +10,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown(inputGroupPrefix)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -33,22 +33,24 @@
             (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp($event)"/>
-            <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
-                <igx-icon>clear</igx-icon>
+            <igx-suffix *ngIf="value || value === 0" >
+                <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
+                <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
             </igx-suffix>
     </igx-input-group>
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-date-picker 
+    <igx-date-picker
         tabindex="0"
+        mode="dropdown"
         [value]="value"
         [outlet]="filteringService.grid.outletDirective"
         [locale]="filteringService.grid.locale"
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
-        <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
-            <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+        <ng-template igxDatePickerTemplate let-openDialog="openDialog">
+            <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown(inputGroupPrefix)"
@@ -62,7 +64,7 @@
                        (click)="openDatePicker(openDialog)"
                        [placeholder]="placeholder"
                        autocomplete="off"
-                       [value]="displayData | date"
+                       [value]="value | igxdate: filteringService.grid.locale"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
                 <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
