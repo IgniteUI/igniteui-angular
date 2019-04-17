@@ -5,6 +5,8 @@ All notable changes for each version of this project will be documented in this 
 ## 7.3.0
 ### Features
 - `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
+- `IgxListComponent`
+    - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 
 ## 7.2.5
 - `igxDrop` 
