@@ -5,17 +5,21 @@
     <div class="sample-content">
         <article class="sample-column">
             <div class="tabbar-wrapper" #tabbarEl>
+                Programmatically change URL:<br>
+                <button (click)="navigateUrl1()">/bottom-navigation-routing/view1</button><br>
+                <button (click)="navigateUrl2()">/bottom-navigation-routing/view2</button><br>
+                <button (click)="navigateUrl3()">/bottom-navigation-routing/view3</button><br>
                 <div>
                     <router-outlet></router-outlet>
                 </div>
                 <igx-bottom-nav>
-                    <igx-tab-panel #tab1 label="Tab 1" routerLink='/bottom-navigation-routing/view1'>
+                    <igx-tab-panel #tab1 label="Tab 1" routerLink="/bottom-navigation-routing/view1">
                         Content in tab # 1
                     </igx-tab-panel>
                     <igx-tab-panel #tab2 label="Tab 2" [routerLink]="['/bottom-navigation-routing', 'view2']">
                         Content in tab # 2
                     </igx-tab-panel>
-                    <igx-tab-panel #tab3 label="Tab 3" routerLink='/bottom-navigation-routing/view3'>
+                    <igx-tab-panel #tab3 label="Tab 3" routerLink="/bottom-navigation-routing/view3">
                         Content in tab # 3
                     </igx-tab-panel>
                 </igx-bottom-nav>

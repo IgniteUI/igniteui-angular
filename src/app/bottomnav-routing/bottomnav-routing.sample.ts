@@ -1,11 +1,26 @@
 import { Component } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-bottomnav-routing-sample',
     styleUrls: ['bottomnav-routing.sample.css'],
     templateUrl: 'bottomnav-routing.sample.html'
 })
 export class BottomNavRoutingSampleComponent {
+
+    constructor(private router: Router) {
+    }
+
+    public navigateUrl1() {
+        this.router.navigateByUrl('/bottom-navigation-routing/view1');
+    }
+
+    public navigateUrl2() {
+        this.router.navigateByUrl('/bottom-navigation-routing/view2');
+    }
+
+    public navigateUrl3() {
+        this.router.navigateByUrl('/bottom-navigation-routing/view3');
+    }
 }
 
 @Component({
