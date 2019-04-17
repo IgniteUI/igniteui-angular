@@ -3,6 +3,7 @@ import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
+import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
 
 /**
  * @hidden
@@ -11,7 +12,7 @@ import { fromEvent, Subscription } from 'rxjs';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
-    private _row;
+    private _row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
 
     @Input('igxRowDrag')
@@ -57,7 +58,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
 
     protected createDragGhost(event) {
-        super.createDragGhost(event);
+        super.createDragGhost(event, this._row.nativeElement);
     }
 
     private _unsubscribe() {

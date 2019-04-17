@@ -178,11 +178,11 @@ export interface IGridDataBindable {
 }
 
 export interface IRowDragStartEventArgs {
-    source: IgxRowComponent<any>;
+    source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
 export interface IRowDragEndEventArgs extends CancelableEventArgs {
-    source: IgxRowComponent<any>;
+    source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
 export enum GridSummaryPosition {
