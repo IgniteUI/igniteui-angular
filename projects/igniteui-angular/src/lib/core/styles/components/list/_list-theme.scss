@@ -109,9 +109,23 @@
 
     // @debug $theme;
 
-    $list-item-height: rem(48px);
-    $list-item-padding: rem(8px) rem(16px);
-    $list-empty-padding: rem(16px);
+    $list-item-height: (
+        comfortable: rem(48px),
+        cosy: rem(32px),
+        compact: rem(24px)
+    );
+
+    $list-empty-padding: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $list-item-padding: (
+        comfortable: rem(8px) rem(16px),
+        cosy: rem(4px) rem(8px),
+        compact: rem(2px) rem(4px)
+    );
 
     %igx-list {
         position: relative;
@@ -137,8 +151,16 @@
     %igx-list-empty-message {
         text-align: center;
         color: --var($theme, 'item-text-color');
-        padding: $list-empty-padding;
+        padding: map-get($list-empty-padding, 'comfortable');
         z-index: 1;
+    }
+
+    %igx-list-empty-message--cosy{
+        padding: map-get($list-empty-padding, 'cosy');
+    }
+
+    %igx-list-empty-message--compact{
+        padding: map-get($list-empty-padding, 'compact');
     }
 
     %igx-list-header {
@@ -146,8 +168,16 @@
         align-items: center;
         color: --var($theme, 'header-text-color');
         background: --var($theme, 'header-background');
-        padding: $list-item-padding;
+        padding: map-get($list-item-padding, 'comfortable');
         user-select: none;
+    }
+
+    %igx-list-header--cosy {
+        padding: map-get($list-item-padding, 'cosy');
+    }
+
+    %igx-list-header--compact {
+        padding: map-get($list-item-padding, 'compact');
     }
 
     %igx-list-item-base {
@@ -169,12 +199,22 @@
         position: relative;
         flex-flow: column wrap;
         justify-content: center;
-        padding: $list-item-padding;
-        min-height: $list-item-height;
+        padding: map-get($list-item-padding, 'comfortable');
+        min-height: map-get($list-item-height, 'comfortable');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
         z-index: 2;
         border-radius: --var($theme, 'item-border-radius');
+    }
+
+    %igx-list-item-content--compact {
+        padding: map-get($list-item-padding, 'compact');
+        min-height: map-get($list-item-height, 'compact');
+    }
+
+    %igx-list-item-content--cosy {
+        padding: map-get($list-item-padding, 'cosy');
+        min-height: map-get($list-item-height, 'cosy');
     }
 
     %igx-list-item-content--active {
