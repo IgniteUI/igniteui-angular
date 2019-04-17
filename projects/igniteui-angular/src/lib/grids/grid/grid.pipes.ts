@@ -61,10 +61,10 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
-        // empty the array without changing reference
-        groupsRecords.splice(0, groupsRecords.length);
 
         if (!state.expressions.length) {
+            // empty the array without changing reference
+            groupsRecords.splice(0, groupsRecords.length);
             return {
                 data: collection,
                 metadata: collection

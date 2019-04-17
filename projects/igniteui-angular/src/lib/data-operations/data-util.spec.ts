@@ -279,8 +279,8 @@ function testGroupBy() {
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
-            expect(groupRecords[0].groups).not.toBeDefined();
-            expect(groupRecords[1].groups).not.toBeDefined();
+            expect(groupRecords[0].groups.length).toEqual(0);
+            expect(groupRecords[1].groups.length).toEqual(0);
             const expr2 = {
                 fieldName: 'string',
                 dir: SortingDirection.Asc,
