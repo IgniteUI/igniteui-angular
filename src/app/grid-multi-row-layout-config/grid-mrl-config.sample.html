@@ -76,7 +76,7 @@
         <igx-grid *ngIf="renderGrid" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'800px'">
             <igx-column-layout [movable]="false" [pinned]="false">
                 <igx-column *ngFor="let col of gridCollection" [field]="col.key" sortable="true" resizable="true"
-                    [rowStart]="col.rowStart" [rowEnd]="'span ' + col.rowSpan" [colStart]="col.colStart" [colEnd]="'span ' + col.colSpan" ></igx-column>
+                    [rowStart]="col.rowStart" [rowEnd]="col.rowStart + col.rowSpan" [colStart]="col.colStart" [colEnd]="col.colStart + col.colSpan" ></igx-column>
             </igx-column-layout>
             <!-- <igx-column-group [movable]="false" [pinned]="false">
                 <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" resizable="true" field="ContactName" [width]='"50%"'></igx-column>
@@ -86,7 +86,7 @@
 
                 <igx-column [rowStart]="2" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="City"></igx-column>
                 <igx-column [rowStart]="3" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Address"></igx-column>
-                <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="'span 2'" [colEnd]="'span 3'" [movable]="false" [filterable]="false" sortable="true" resizable="true"  field="CompanyName"></igx-column>
+                <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="4" [colEnd]="4" [movable]="false" [filterable]="false" sortable="true" resizable="true"  field="CompanyName"></igx-column>
             </igx-column-group> -->
         </igx-grid>
 
