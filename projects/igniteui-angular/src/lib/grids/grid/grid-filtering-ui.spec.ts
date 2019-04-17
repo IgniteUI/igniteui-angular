@@ -3372,7 +3372,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(filterIcon).toBeDefined();
     }));
 
-    fit('Should filter grid via custom dialog.', fakeAsync(() => {
+    it('Should filter grid via custom dialog.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
