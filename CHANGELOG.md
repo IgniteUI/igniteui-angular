@@ -35,8 +35,6 @@ All notable changes for each version of this project will be documented in this 
     - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
     - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
 - New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
-- `IgxToggleDirective`
-    - when `show` and `hide` methods are called, `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the `overlay id` of the toggle component's instance.
 - `IgxDropDown`
     - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
     ```html

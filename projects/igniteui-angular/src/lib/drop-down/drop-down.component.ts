@@ -191,6 +191,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public open(overlaySettings?: OverlaySettings) {
         this.toggleDirective.open(overlaySettings);
+        this.updateScrollPosition();
     }
 
     /**
@@ -289,6 +290,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @hidden @internal
      */
     updateScrollPosition() {
+        if (!this.virtDir) {
+            return;
+        }
         if (!this.selectedItem) {
             this.virtDir.scrollTo(0);
             return;
@@ -401,14 +405,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     ngAfterViewInit() {
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 32;
-
-            if (this.overlay) {
-                this.toggleDirective.onAnimation.pipe(filter(e => e.animationType === 'open'),
-                    takeUntil(this.destroy$))
-                    .subscribe(() => {
-                        this.updateScrollPosition();
-                    });
-            }
         }
     }
 

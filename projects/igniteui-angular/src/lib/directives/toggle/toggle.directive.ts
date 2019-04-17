@@ -115,25 +115,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
-    private _overlayAnimationSub: Subscription;
 
-    /**
-     * Emitted when the toggled element's `open` or `close` animation is played
-     * Only emitted if the `open` or `close` animation **is not null**
-     * ```typescript
-     *  onAnimation(event: OverlayAnimationEventArgs) {
-     *      // Do something
-     *  }
-     * ```
-     * ```html
-     * <div
-     *  igxToggle
-     *  (onAnimation)="onAnimation($event)">
-     * </div>
-     * ```
-     */
-    @Output()
-    public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
     /**
      * @hidden
      */
@@ -218,12 +200,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-
-        this._overlayAnimationSub = this.overlayService.onAnimation
-        .pipe(...this._overlaySubFilter)
-        .subscribe((event: OverlayAnimationEventArgs) => {
-            this.onAnimation.emit(event);
-        });
 
         this.overlayService.show(this._overlayId, overlaySettings);
 
@@ -341,7 +317,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.clearSubscription(this._overlayOpenedSub);
         this.clearSubscription(this._overlayClosingSub);
         this.clearSubscription(this._overlayClosedSub);
-        this.clearSubscription(this._overlayAnimationSub);
     }
 
     private clearSubscription(subscription: Subscription) {

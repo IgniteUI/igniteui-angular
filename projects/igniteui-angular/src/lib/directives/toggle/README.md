@@ -42,7 +42,7 @@ handlers when the toggle is opened and respectively closed.
 | `onOpened` | `void` | Emits an event after the toggle container is opened. |
 | `onClosing` | `void` | Emits an event before the toggle container is closed. |
 | `onClosed` | `void` | Emits an event after the toggle container is closed. |
-| `onAnimation` | `void` | Emits an before when the element is attached to the overlay, before animations start playing (if any). If the element has animations defined, emits the animation player as well |
+
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
