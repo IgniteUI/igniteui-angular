@@ -66,7 +66,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const flippedDirection = (-1) * (settings.verticalDirection + 1);
 
         const topBorder = targetRect.bottom + flippedStartPoint * targetRect.height + flippedDirection * innerRect.height;
-        const bottomBorder = topBorder + innerRect.width;
+        const bottomBorder = topBorder + innerRect.height;
         return outerRect.top < topBorder && bottomBorder < outerRect.bottom;
     }
 
