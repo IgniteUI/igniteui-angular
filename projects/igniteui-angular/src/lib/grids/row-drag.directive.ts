@@ -1,6 +1,6 @@
 import { Directive, Input, OnDestroy, NgModule, Output, EventEmitter } from '@angular/core';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
-import { IRowDragStartEventArgs } from './grid-base.component';
+import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
 
@@ -31,7 +31,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             source: this.row
         };
 
-        this.row.grid.onDragStart.emit(args);
+        this.row.grid.onRowDragStart.emit(args);
 
         this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
             if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
@@ -40,8 +40,31 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         });
     }
 
+    public onPointerUp(event) {
+        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        this.zone.run(() => {
+            super.onPointerUp(event);
+
+            const args: IRowDragEndEventArgs = {
+                source: this.row,
+                cancel: false
+            };
+            this.row.grid.onRowDragEnd.emit(args);
+        });
+
+        this._unsubscribe();
+    }
+
+
     protected createDragGhost(event) {
         super.createDragGhost(event);
+    }
+
+    private _unsubscribe() {
+        if (this.subscription$) {
+            this.subscription$.unsubscribe();
+            this.subscription$ = null;
+        }
     }
 }
 

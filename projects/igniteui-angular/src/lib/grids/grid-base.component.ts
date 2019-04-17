@@ -181,6 +181,10 @@ export interface IRowDragStartEventArgs {
     source: IgxRowComponent<any>;
 }
 
+export interface IRowDragEndEventArgs extends CancelableEventArgs {
+    source: IgxRowComponent<any>;
+}
+
 export enum GridSummaryPosition {
     top = 'top',
     bottom = 'bottom'
@@ -1459,7 +1463,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Return the dragged row.
         */
     @Output()
-    public onDragStart = new EventEmitter<IRowDragStartEventArgs>();
+    public onRowDragStart = new EventEmitter<IRowDragStartEventArgs>();
+
+    /**
+     * Emitted when dropping a row.
+     * Return the dropped row.
+        */
+       @Output()
+       public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
      * @hidden

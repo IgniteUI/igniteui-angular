@@ -2,11 +2,12 @@
     <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
     <div class="separator"></div>
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
-            [rowSelectable]="selection" [rowDraggable]="dragdrop" (onDragStart)="handleRowDrag($event)"
-            [width]="'800px'" [height]="'600px'">
+            [rowSelectable]="selection" [rowDraggable]="dragdrop" (onRowDragStart)="handleRowDrag($event)"
+            (onRowDragEnd)="handleRowDrop($event)" [width]="'800px'" [height]="'600px'">
         <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
         <igx-column [field]="'ProductName'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
     </igx-grid>
     <div class="separator"></div>
 </div>
+<div class="dropable-area"></div>

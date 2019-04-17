@@ -30,6 +30,10 @@ export class GridRowDraggableComponent implements AfterViewInit {
         console.log('RowDrag started!');
     }
 
+    handleRowDrop(args) {
+        console.log('Row Drag End!');
+    }
+
     toggle() {
         const currentSelection = this.grid1.selectedRows();
         if (currentSelection !== undefined) {

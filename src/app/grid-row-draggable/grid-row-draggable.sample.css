@@ -11,3 +11,8 @@
     padding-bottom: 15px;
     box-shadow: 1px 1px #336caf;
 }
+.dropable-area {
+    height: 10%;
+    width: 10%;
+    background-color: chartreuse;
+}
