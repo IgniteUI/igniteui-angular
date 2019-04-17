@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
 
 @Component({
@@ -6,7 +6,10 @@ import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui
     styleUrls: ['list.sample.css'],
     templateUrl: 'list.sample.html'
 })
-export class ListSampleComponent {
+export class ListSampleComponent implements OnInit {
+    @ViewChild('contactsList')
+    contactsList: IgxListComponent;
+
     @ViewChild('fruitList')
     fruitList: IgxListComponent;
 
@@ -24,6 +27,9 @@ export class ListSampleComponent {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
+    
+    density = 'comfortable';
+    displayDensities;
 
     navItems: object[] = [{
         avatar: 'assets/images/avatar/1.jpg',
@@ -98,6 +104,18 @@ export class ListSampleComponent {
     }];
 
     fruits: Fruit[] = [];
+
+    public ngOnInit(): void {
+        this.displayDensities = [
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        ];
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
+    }
 
     get fo1() {
         const _fo = new IgxFilterOptions();
