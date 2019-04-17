@@ -24,6 +24,10 @@ import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-sel
     providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
+
+    @ViewChildren(IgxHierarchicalGridCellComponent)
+    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
+
     /**
      * The rendered cells in the row component.
      *
@@ -32,8 +36,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    public cells: QueryList<IgxHierarchicalGridCellComponent>;
+    public get cells(): QueryList<IgxHierarchicalGridCellComponent> {
+        return this._cells;
+    }
 
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef;

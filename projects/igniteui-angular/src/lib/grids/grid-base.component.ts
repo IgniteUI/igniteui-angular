@@ -52,7 +52,6 @@ import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -67,7 +66,6 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
@@ -86,7 +84,14 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
-import { IgxGridColumnType, IgxGridHeaderGroupType, IgxGridHeaderType, IgxGridCellType, IgxGridType } from './grid-types';
+import {
+    IgxGridColumnType,
+    IgxGridHeaderGroupType,
+    IgxGridHeaderType,
+    IgxGridCellType,
+    IgxGridType,
+    IgxGridFilterCellType
+} from './grid-types';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -163,8 +168,8 @@ export interface IColumnMovingEventArgs {
 }
 
 export interface IColumnMovingEndEventArgs {
-    source: IgxColumnComponent;
-    target: IgxColumnComponent;
+    source: IgxGridColumnType;
+    target: IgxGridColumnType;
 }
 
 export interface IFocusChangeEventArgs {
@@ -194,7 +199,7 @@ export enum FilterMode {
     excelStyleFilter = 'excelStyleFilter'
 }
 
-export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export abstract class IgxGridBaseComponent extends DisplayDensityBase implements IgxGridType, OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
 
     public get scrollWidth() {
@@ -1494,7 +1499,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get headerCellList(): IgxGridHeaderType[] {
-        return this.headerGroupsList.map(headerGroup => headerGroup.headerCell).filter((headerCell) => headerCell);
+        return this.headerGroupsList.map(headerGroup => headerGroup.headerCell).filter(Boolean);
     }
 
     /**
@@ -1504,8 +1509,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get filterCellList(): IgxGridFilteringCellComponent[] {
-        return this.headerGroupsList.map((headerGroup) => headerGroup.filterCell).filter(Boolean);
+    get filterCellList(): IgxGridFilterCellType[] {
+        return this.headerGroupsList.map(headerGroup => headerGroup.filterCell).filter(Boolean);
     }
 
     @ViewChildren('row')
@@ -3073,7 +3078,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
+            totalWidth += parseInt(cols[i].calcWidth as string, 10) || 0;
         }
         this._totalWidth = totalWidth;
         return totalWidth;

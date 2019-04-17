@@ -245,7 +245,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         const colsArray = [].concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => {
             return colsArray.indexOf(item) === -1;
-        });
+        }) as IgxColumnComponent[];
         this.childColumns.reset(topCols);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => { this.updateColumnList(); });
     }
@@ -306,7 +306,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
                 return true;
             }
             return false;
-        });
+        }) as IgxColumnComponent[];
         this.childColumns.reset(topCols);
 
         if (this.parentIsland) {

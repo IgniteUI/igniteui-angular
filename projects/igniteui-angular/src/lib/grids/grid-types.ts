@@ -87,13 +87,15 @@ export interface IgxGridHeaderGroupType {
     height: number;
     headerCell: IgxGridHeaderType;
     filterCell: IgxGridFilterCellType;
+    column: IgxGridColumnType;
 }
 
 export interface IgxGridHeaderType extends INativeElement {
-
+    column: IgxGridColumnType;
 }
 
 export interface IgxGridFilterCellType {
+    column: IgxGridColumnType;
     updateFilterCellArea(): void;
     focusChip(focsuFirst: boolean): void;
 }
@@ -120,6 +122,7 @@ export interface IgxGridColumnType {
     calcWidth: string | number;
     defaultWidth: string;
     defaultMinWidth: string;
+    widthSetByUser: boolean;
     maxWidth: string;
     minWidth: string;
     index: number;
@@ -134,13 +137,15 @@ export interface IgxGridColumnType {
     allChildren: IgxGridColumnType[];
     level: number;
     isLastPinned: boolean;
+    bodyTemplate: TemplateRef<any>;
+    headerTemplate: TemplateRef<any>;
+    filterCellTemplate: TemplateRef<any>;
     inlineEditorTemplate: TemplateRef<any>;
     headerGroup: IgxGridHeaderGroupType;
     headerCell: IgxGridHeaderType;
     filteringIgnoreCase: boolean;
     filters: IgxFilteringOperand;
     filterCell: IgxGridFilterCellType;
-    filterCellTemplate: TemplateRef<any>;
     filteringExpressionsTree: FilteringExpressionsTree;
     grid: IgxGridType;
     sortStrategy: ISortingStrategy;
@@ -173,6 +178,8 @@ export interface IgxGridType extends INativeElement {
     resourceStrings: IGridResourceStrings;
     sortingExpressions: ISortingExpression[];
 
+    firstEditableColumnIndex: number;
+    lastEditableColumnIndex: number;
 
 
     cdr: ChangeDetectorRef;
@@ -194,9 +201,9 @@ export interface IgxGridType extends INativeElement {
     summariesRowList: QueryList<any>;
     rowEditTabs: QueryList<IgxRowEditTabStopDirective>;
     // TODO: Type'em right. Need to change return signature in grid-base though.
-    headerCellList: QueryList<any>;
-    filterCellList: QueryList<any>;
-    headerGroupsList: QueryList<any>;
+    headerCellList: Array<IgxGridHeaderType>;
+    filterCellList: Array<IgxGridFilterCellType>;
+    headerGroupsList: Array<IgxGridHeaderGroupType>;
 
     outletDirective;
     headerContainer: IgxGridForOfDirective<any>;

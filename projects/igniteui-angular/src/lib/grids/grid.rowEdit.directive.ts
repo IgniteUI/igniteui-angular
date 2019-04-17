@@ -1,7 +1,7 @@
-import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { first, tap } from 'rxjs/operators';
+import { Directive, ElementRef, HostListener, QueryList } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridType } from './grid-types';
 
 /** @hidden */
 @Directive({
@@ -28,28 +28,29 @@ export class IgxRowEditActionsDirective { }
     selector: `[igxRowEditTabStop]`
 })
 export class IgxRowEditTabStopDirective {
-    private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
+
+    get grid(): IgxGridType {
+        return this.navigationService.grid;
+    }
+
+    get nativeElement(): HTMLElement {
+        return this.element.nativeElement;
+    }
+
+    private get tabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
 
-    private grid: IgxGridBaseComponent;
-    private navigationService: IgxGridNavigationService;
+    constructor(public element: ElementRef, private navigationService: IgxGridNavigationService) {}
 
-    constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) grid,
-        public element: ElementRef,
-        @Inject(forwardRef(() => IgxGridNavigationService)) navigationService) {
-            this.grid = grid;
-            this.navigationService = navigationService;
-            this.navigationService.grid = grid;
-        }
+
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
         event.stopPropagation();
-        if (this.allTabs.length > 1) {
-            if ((this.allTabs.last ===  this && !event.shiftKey) ||
-                (this.allTabs.first ===  this && event.shiftKey)
+        if (this.tabs.length > 1) {
+            if ((this.tabs.last ===  this && !event.shiftKey) ||
+                (this.tabs.first ===  this && event.shiftKey)
             ) {
                 this.move(event);
             }
@@ -57,11 +58,11 @@ export class IgxRowEditTabStopDirective {
             this.move(event);
         }
     }
-    private focusNextCell(rowIndex, cellIndex) {
-        const grid = this.grid as any;
-        grid.parentVirtDir.onChunkLoad.pipe(first(), tap(() => grid.markForCheck())).subscribe(() => {
-            grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
-        });
+
+    private focusNextCell(rowIndex: number, cellIndex: number): void {
+        this.grid.parentVirtDir.onChunkLoad.pipe(first()).subscribe(() =>
+            this.grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).nativeElement.focus()
+        );
     }
     private move(event: KeyboardEvent) {
         event.preventDefault();

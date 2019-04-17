@@ -6,6 +6,8 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
+import { IgxGridCellType } from '../grid-types';
 
 @Component({
     selector: 'igx-tree-grid-row',
@@ -25,6 +27,9 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     }
     private _treeRow: ITreeGridRecord;
 
+    @ViewChildren(IgxTreeGridCellComponent)
+    protected _cells: QueryList<IgxTreeGridCellComponent>;
+
     /**
      * The rendered cells in the row component.
      *
@@ -33,8 +38,9 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
      * const cells = row.cells;
      * ```
      */
-    @ViewChildren('treeCell')
-    public cells: QueryList<any>;
+    public get cells(): QueryList<IgxGridCellType> {
+        return this._cells;
+    }
 
     /**
      * The `ITreeGridRecord` passed to the row component.

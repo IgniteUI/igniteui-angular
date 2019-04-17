@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { IgxGridColumnType, IgxGridType } from './grid-types';
@@ -526,7 +525,7 @@ export class IgxGridNavigationService {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
                 return;
             }
-            if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
+            if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === 'quickFilter') {
                 this.moveFocusToFilterCell();
             } else {
                 this.navigateUp(currentRowEl, rowIndex,

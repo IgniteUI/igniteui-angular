@@ -8,7 +8,6 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { TreeGridFilteringStrategy } from '../grids/tree-grid/tree-grid.filtering.pipe';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
 import { ITreeGridRecord } from '../grids/tree-grid';
@@ -160,12 +159,12 @@ export class DataUtil {
         return state.strategy.filter(data, state.expressionsTree);
     }
 
-    public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
-        if (!state.strategy) {
-            state.strategy = new TreeGridFilteringStrategy();
-        }
-        return state.strategy.filter(data, state.expressionsTree);
-    }
+    // public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
+    //     if (!state.strategy) {
+    //         state.strategy = new TreeGridFilteringStrategy();
+    //     }
+    //     return state.strategy.filter(data, state.expressionsTree);
+    // }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];

@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -9,7 +8,6 @@ import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxDatePipeComponent } from '../grid.common';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
-import { GridBaseAPIService } from '../api.service';
 import { IgxGridColumnType, IgxGridType } from '../grid-types';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
@@ -49,7 +47,11 @@ export class IgxFilteringService implements OnDestroy {
 
     grid: IgxGridType;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
+    get gridAPI() {
+        return this.grid.gridAPI;
+    }
+
+    constructor(private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -90,7 +92,7 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.areEventsSubscribed) {
             this.areEventsSubscribed = true;
 
-            this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
+            this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 this.updateFilteringCell(eventArgs.column);
             });
 

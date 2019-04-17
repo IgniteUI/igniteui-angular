@@ -87,7 +87,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * ```
      */
     @ViewChildren(IgxGridCellComponent)
-    private _cells: QueryList<IgxGridCellComponent>;
+    protected _cells: QueryList<IgxGridCellComponent>;
 
 
     get cells(): QueryList<IgxGridCellType> {

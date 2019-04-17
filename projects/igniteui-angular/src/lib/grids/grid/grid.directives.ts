@@ -2,6 +2,7 @@ import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } fr
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { IgxColumnMovingDragDirective } from '../grid.common';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxGridType, IgxGridGroupType } from '../grid-types';
 
 /**
  * @hidden
@@ -37,7 +38,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
-        const grid = column.grid;
+        const grid = column.grid as IgxGridGroupType;
         const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
         if (column.groupable && !isGrouped && !column.columnGroup) {
             drag.icon.innerText = 'group_work';
@@ -65,7 +66,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             if (!this.columnBelongsToGrid(column)) {
                 return;
             }
-            const grid = column.grid;
+            const grid = column.grid as IgxGridGroupType;
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped && !column.columnGroup) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,

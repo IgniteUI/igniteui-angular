@@ -13,8 +13,6 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -117,7 +115,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
-        return this.gridAPI.grid;
+        return this.column.grid;
     }
 
     /**
@@ -180,7 +178,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     constructor(private cdr: ChangeDetectorRef,
-                public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
