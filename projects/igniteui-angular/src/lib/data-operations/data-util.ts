@@ -65,6 +65,7 @@ export class DataUtil {
 
     public static group<T>(data: T[], state: IGroupingState, groupsRecords: any[] = []): IGroupByResult {
         const grouping = new IgxGrouping();
+        groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state.expressions, groupsRecords);
     }
     public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
@@ -90,16 +91,6 @@ export class DataUtil {
                 pointer = pointer.groupParent;
             }
             for (j = chain.length - 1; j >= 0; j--) {
-            /*    if (!chain[j].level) {
-                    groupsRecords.push(chain[j]);
-                } else {
-                    const p = chain[j + 1] || added[added.length - 1];
-                    if (p['groups']) {
-                        p['groups'].push(chain[j]);
-                    } else {
-                        p['groups'] = [chain[j]];
-                    }
-                }   */
                 result.push(chain[j]);
                 added.unshift(chain[j]);
                 const hierarchy = this.getHierarchy(chain[j]);
