@@ -3372,7 +3372,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(filterIcon).toBeDefined();
     }));
 
-    it('Should filter grid via custom dialog.', fakeAsync(() => {
+    fit('Should filter grid via custom dialog.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
@@ -3401,13 +3401,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const customMenu = grid.nativeElement.querySelector('.igx-excel-filter__secondary');
 
         // set first expression's value
-        GridFunctions.setInputValueESF(customMenu, 0, 20, fix);
+        GridFunctions.setInputValueESF(customMenu, 0, 0, fix);
 
         // select second expression's operator
         GridFunctions.setOperatorESF(customMenu, grid, 1, 1, fix);
 
         // set second expression's value
-        GridFunctions.setInputValueESF(customMenu, 1, 0, fix);
+        GridFunctions.setInputValueESF(customMenu, 1, 20, fix);
 
         const applyButton = customMenu.querySelector('.igx-button--raised');
         applyButton.click();
