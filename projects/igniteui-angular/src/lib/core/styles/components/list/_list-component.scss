@@ -61,4 +61,36 @@
     @include e(empty, $m: custom) {
         @extend %igx-list-empty !optional;
     }
+
+    @include m(compact) {
+        @include e(empty) {
+            @include b(message) {
+                @extend %igx-list-empty-message--compact !optional;
+            }
+        }
+
+        @include e(item-content) {
+            @extend %igx-list-item-content--compact !optional;
+        }
+
+        @include e(header) {
+            @extend %igx-list-header--compact !optional;
+        }
+    }
+
+    @include m(cosy) {
+        @include e(empty) {
+            @include b(message) {
+                @extend %igx-list-empty-message--cosy !optional;
+            }
+        }
+
+        @include e(item-content) {
+            @extend %igx-list-item-content--cosy !optional;
+        }
+
+        @include e(header) {
+            @extend %igx-list-header--cosy !optional;
+        }
+    }
 }
