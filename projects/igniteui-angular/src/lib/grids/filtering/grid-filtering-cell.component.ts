@@ -17,7 +17,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxGridColumnType } from '../grid-types';
+import { IgxGridColumnType, IgxGridFilterCellType } from '../grid-types';
 
 /**
  * @hidden
@@ -28,7 +28,7 @@ import { IgxGridColumnType } from '../grid-types';
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html'
 })
-export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
+export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck, IgxGridFilterCellType {
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
     private currentTemplate = null;

@@ -5,7 +5,7 @@ import { IgxGridColumnType } from './grid-types';
 @Injectable()
 export class IgxColumnResizingService {
 
-    private pinnedMaxWidth: string;
+    private pinnedMaxWidth: string | number;
 
     /**
      *@hidden
@@ -63,15 +63,15 @@ export class IgxColumnResizingService {
         const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
 
         if (this.column.pinned) {
-            const pinnedMaxWidth = this.pinnedMaxWidth =
+            this.pinnedMaxWidth =
                 this.column.grid.calcPinnedContainerMaxWidth - this.column.grid.getPinnedWidth(true) + actualWidth;
 
-            if (this.column.maxWidth && parseFloat(this.column.maxWidth) < pinnedMaxWidth) {
+            if (this.column.maxWidth && parseFloat(this.column.maxWidth) < this.pinnedMaxWidth) {
                 this.pinnedMaxWidth = this.column.maxWidth;
 
                 return parseFloat(this.column.maxWidth) - actualWidth;
             } else {
-                return pinnedMaxWidth - actualWidth;
+                return this.pinnedMaxWidth - actualWidth;
             }
         } else {
             if (this.column.maxWidth) {
@@ -131,7 +131,7 @@ export class IgxColumnResizingService {
         const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
 
         let colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
-        const colMaxWidth = this.column.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(this.column.maxWidth);
+        const colMaxWidth = this.column.pinned ? parseFloat(this.pinnedMaxWidth as string) : parseFloat(this.column.maxWidth);
 
         const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
 

@@ -16,7 +16,7 @@ import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { IgxGridColumnType } from './grid-types';
+import { IgxGridColumnType, IgxGridHeaderGroupType } from './grid-types';
 
 const Z_INDEX = 9999;
 
@@ -29,7 +29,7 @@ const Z_INDEX = 9999;
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html'
 })
-export class IgxGridHeaderGroupComponent implements DoCheck {
+export class IgxGridHeaderGroupComponent implements DoCheck, IgxGridHeaderGroupType {
 
     /**
      * Gets the column of the header group.

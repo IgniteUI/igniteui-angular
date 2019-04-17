@@ -24,7 +24,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 
 
 interface INativeElement {
-    nativeElement;
+    nativeElement: HTMLElement;
 }
 
 export interface IgxGridCellType extends INativeElement {

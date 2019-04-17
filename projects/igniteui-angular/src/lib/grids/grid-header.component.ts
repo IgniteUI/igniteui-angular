@@ -28,7 +28,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../animations/main';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxGridColumnType } from './grid-types';
+import { IgxGridColumnType, IgxGridHeaderType } from './grid-types';
 
 /**
  * @hidden
@@ -39,7 +39,7 @@ import { IgxGridColumnType } from './grid-types';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
+export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy, IgxGridHeaderType {
 
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;

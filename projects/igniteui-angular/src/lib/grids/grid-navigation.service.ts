@@ -95,7 +95,7 @@ export class IgxGridNavigationService {
 
     public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary = false) {
         const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-        return this.grid.nativeElement.querySelector(
+        return this.grid.nativeElement.querySelector<HTMLElement>(
             `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
     }
 
@@ -235,7 +235,7 @@ export class IgxGridNavigationService {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollTop === 0) {
-            const cells = this.grid.nativeElement.querySelectorAll(
+            const cells = this.grid.nativeElement.querySelectorAll<HTMLElement>(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[0].focus();
         } else {
@@ -243,7 +243,7 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.scrollTo(0);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
-                    const cells = this.grid.nativeElement.querySelectorAll(
+                    const cells = this.grid.nativeElement.querySelectorAll<HTMLElement>(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) { cells[0].focus(); }
                 });
@@ -255,7 +255,7 @@ export class IgxGridNavigationService {
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            const cells = this.grid.nativeElement.querySelectorAll(
+            const cells = this.grid.nativeElement.querySelectorAll<HTMLElement>(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[cells.length - 1].focus();
         } else {
@@ -263,7 +263,7 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
-                    const cells = this.grid.nativeElement.querySelectorAll(
+                    const cells = this.grid.nativeElement.querySelectorAll<HTMLElement>(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) { cells[cells.length - 1].focus(); }
                 });
@@ -390,7 +390,7 @@ export class IgxGridNavigationService {
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
-            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+            const row = this.grid.nativeElement.querySelector<HTMLElement>(`[data-rowindex="${rowIndex}"]`);
             if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
                 row.focus();
                 return;
@@ -402,7 +402,7 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
-                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+                    const row = this.grid.nativeElement.querySelector<HTMLElement>(`[data-rowindex="${rowIndex}"]`);
                     if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
                         row.focus();
                         return;

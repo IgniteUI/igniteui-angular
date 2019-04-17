@@ -31,7 +31,14 @@ import {
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IgxGridCellType, IgxGridHeaderGroupType, IgxGridHeaderType, IgxGridFilterCellType, IgxGridType, IgxGridColumnType } from './grid-types';
+import {
+    IgxGridCellType,
+    IgxGridHeaderGroupType,
+    IgxGridHeaderType,
+    IgxGridFilterCellType,
+    IgxGridType,
+    IgxGridColumnType
+} from './grid-types';
 
 /**
  * **Ignite UI for Angular Column** -

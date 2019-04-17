@@ -199,8 +199,10 @@ export enum FilterMode {
     excelStyleFilter = 'excelStyleFilter'
 }
 
-export abstract class IgxGridBaseComponent extends DisplayDensityBase implements IgxGridType, OnInit, OnDestroy, AfterContentInit, AfterViewInit {
-    private _scrollWidth: number;
+export abstract class IgxGridBaseComponent extends DisplayDensityBase
+    implements IgxGridType, OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+
+        private _scrollWidth: number;
 
     public get scrollWidth() {
         return this._scrollWidth;
