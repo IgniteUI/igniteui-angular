@@ -314,6 +314,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridLoadOnDemand',
+            icon: 'view_column',
+            name: 'Tree Grid Load On Demand'
         }
     ];
 
