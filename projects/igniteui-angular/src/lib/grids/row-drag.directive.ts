@@ -44,6 +44,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     public onPointerUp(event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
+            this._clicked = false;
             super.onPointerUp(event);
 
             const args: IRowDragEndEventArgs = {
@@ -51,6 +52,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 cancel: false
             };
             this.row.grid.onRowDragEnd.emit(args);
+            this._dragGhost.parentNode.removeChild(this._dragGhost);
+            this._dragGhost = null;
         });
 
         this._unsubscribe();

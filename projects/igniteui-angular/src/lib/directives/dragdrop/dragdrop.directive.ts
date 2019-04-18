@@ -739,9 +739,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             if (this.hideBaseOnDrag) {
                 this.visible = true;
             }
-
-            // tslint:disable-next-line: no-debugger
-            debugger;
             this._dragGhost.parentNode.removeChild(this._dragGhost);
             this._dragGhost = null;
 
