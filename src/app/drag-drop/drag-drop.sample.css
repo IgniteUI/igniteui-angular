@@ -31,9 +31,8 @@
     display: flex;
     align-items: center;
     background-color: #c1c1c1;
-    background-image: url(http://globaltechled.com/wp-content/uploads/2014/11/Jail-Bars-1.png); 
     background-repeat: repeat-x;
-    background-size: 100px;
+    background-size: 190px;
 }
 
 .cageArea.dragOver {
