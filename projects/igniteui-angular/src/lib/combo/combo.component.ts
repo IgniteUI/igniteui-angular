@@ -151,11 +151,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.comboAPI.register(this);
     }
 
-    /**
-     * @hidden @internal
-     */
     @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
-    public virtDir: IgxForOfDirective<any>;
+    protected virtDir: IgxForOfDirective<any>;
 
     /**
      * @hidden @internal
