@@ -448,6 +448,11 @@ export class IgxGridNavigationService {
     }
 
     public moveFocusToFilterCell(toStart?: boolean) {
+        if (this.grid.filteringService.isFilterRowVisible) {
+            this.grid.filteringService.focusFilterRowCloseButton();
+            return;
+        }
+
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         const targetIndex = toStart ? 0 : columns.length - 1;
         const visibleIndex = columns[targetIndex].visibleIndex;

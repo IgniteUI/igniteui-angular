@@ -122,5 +122,5 @@
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
     <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">{{filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</button>
-    <button #closeButton igxButton igxRipple (click)="close()">{{filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</button>
+    <button #closeButton igxButton igxRipple (click)="close()" (keydown)="onCloseButtonKeyDown($event)">{{filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</button>
 </div>
