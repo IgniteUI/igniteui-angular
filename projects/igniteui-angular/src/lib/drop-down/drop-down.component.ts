@@ -147,8 +147,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
-    private get _focusedIndex() {
+    protected get _focusedIndex() {
         return this.selection.first_item(`${this.id}-active`) || -1;
+    }
+
+    protected set _focusedIndex(value: number) {
+        if (value === -1 || value === null || value === undefined) {
+            this.selection.clear(`${this.id}-active`);
+        } else {
+            this.selection.set(`${this.id}-active`, new Set([value]));
+        }
     }
 
     @Input()
@@ -290,7 +298,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             if (subRequired) {
                 this.virtDir.scrollTo(index);
             }
-            this.selection.set(`${this.id}-active`, new Set([index]));
+            this._focusedIndex = index;
             if (subRequired) {
                 this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                     this.skipHeader(direction);
