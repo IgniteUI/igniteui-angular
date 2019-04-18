@@ -961,8 +961,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public resetVisibleIndex() {
+    public resetCaches() {
         this._vIndex = NaN;
+        this._calcWidth = null;
+        this.calcPixelWidth = NaN;
     }
 
     /**
