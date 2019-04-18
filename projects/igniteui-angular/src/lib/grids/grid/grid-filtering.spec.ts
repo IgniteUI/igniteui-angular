@@ -589,7 +589,26 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
     }));
 
-    it('Should return generate the expressions UI list correctly.', fakeAsync(() => {
+    it('should correctly show and hide the "No records found." message.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.filter('ProductName', 'asdf', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fix.detectChanges();
+        let noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+        expect(grid.rowList.length).toEqual(0);
+        expect(noRecordsSpan).toBeTruthy();
+        expect(noRecordsSpan.nativeElement.innerText).toBe('No records found.');
+
+        grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        fix.detectChanges();
+        noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+        expect(grid.rowList.length).toEqual(8);
+        expect(noRecordsSpan).toBeFalsy();
+    }));
+
+    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
