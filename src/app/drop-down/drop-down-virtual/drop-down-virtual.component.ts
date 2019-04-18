@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
-import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxToastPosition } from 'igniteui-angular';
+import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxToastPosition, IgxForOfDirective } from 'igniteui-angular';
 
 interface DataItem {
   name: string;
@@ -15,6 +15,8 @@ interface DataItem {
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   @ViewChild('loadingToast', { read: IgxToastComponent})
   public loadingToast: IgxToastComponent;
+  @ViewChild('asyncFor', { read: IgxForOfDirective })
+  public remoteVirtDir: IgxForOfDirective<any>;
   @ViewChild('dropdown', { read: IgxDropDownComponent })
   public remoteDropDown: IgxDropDownComponent;
   public itemsAsync: Observable<any[]>;
@@ -45,9 +47,9 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
 }
 
 public ngAfterViewInit() {
-    this.remoteService.getData(this.remoteDropDown.virtDir.state, (data) => {
-        this.remoteDropDown.virtDir.totalItemCount = data['@odata.count'];
-        this.remoteDropDown.virtDir.igxForItemSize = this.itemHeight;
+    this.remoteService.getData(this.remoteVirtDir.state, (data) => {
+        this.remoteVirtDir.totalItemCount = data['@odata.count'];
+        this.remoteVirtDir.igxForItemSize = this.itemHeight;
     });
 }
 
@@ -64,7 +66,7 @@ public dataLoading(evt: IForOfState) {
     this.prevRequest = this.remoteService.getData(
         evt,
         (data) => {
-          this.remoteDropDown.virtDir.totalItemCount = data['@odata.count'];
+          this.remoteVirtDir.totalItemCount = data['@odata.count'];
           this.loadingToast.hide();
           this.cdr.detectChanges();
     });

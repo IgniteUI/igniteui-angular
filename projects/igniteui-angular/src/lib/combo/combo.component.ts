@@ -154,6 +154,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
+    public virtDir: IgxForOfDirective<any>;
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
     public dropdown: IgxComboDropDownComponent;
 
@@ -887,7 +893,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get virtualizationState(): IForOfState {
-        return this.dropdown.virtDir.state;
+        return this.virtDir.state;
     }
     /**
      * Sets the current state of the virtualized data.
@@ -898,7 +904,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set virtualizationState(state: IForOfState) {
-        this.dropdown.virtDir.state = state;
+        this.virtDir.state = state;
     }
 
     /**
@@ -910,7 +916,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get totalItemCount(): number {
-        return this.dropdown.virtDir.totalItemCount;
+        return this.virtDir.totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
@@ -921,7 +927,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set totalItemCount(count: number) {
-        this.dropdown.virtDir.totalItemCount = count;
+        this.virtDir.totalItemCount = count;
         this.cdr.detectChanges();
     }
 
@@ -1033,7 +1039,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleInputChange(event?: string) {
         let cdrFlag = false;
-        const vContainer = this.dropdown.virtDir;
+        const vContainer = this.virtDir;
         if (event !== undefined && this._prevInputValue === event) {
             // Nothing has changed
             return;

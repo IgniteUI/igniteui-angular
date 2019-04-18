@@ -1440,6 +1440,7 @@ describe('IgxDropDown ', () => {
         it('Should properly scroll selected item into view when virtualized', (done) => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
+            const virtualScroll = fixture.componentInstance.virtualScroll;
             const selectedItem = { value: fixture.componentInstance.items[1000], index: 1000 };
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
@@ -1447,11 +1448,11 @@ describe('IgxDropDown ', () => {
             setTimeout(() => {
                 dropdown.toggle();
                 setTimeout(() => {
-                    const itemsInView = dropdown.virtDir.igxForContainerSize / dropdown.virtDir.igxForItemSize;
-                    const expectedScroll = dropdown.virtDir.getScrollForIndex(selectedItem.index)
-                     - (itemsInView / 2 - 1) * dropdown.virtDir.igxForItemSize;
-                    const acceptableDelta = dropdown.virtDir.igxForItemSize;
-                    const scrollTop = dropdown.virtDir.getVerticalScroll().scrollTop;
+                    const itemsInView = virtualScroll.igxForContainerSize / virtualScroll.igxForItemSize;
+                    const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
+                     - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
+                    const acceptableDelta = virtualScroll.igxForItemSize;
+                    const scrollTop = virtualScroll.getVerticalScroll().scrollTop;
                     expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
                     done();
                 }, 100);

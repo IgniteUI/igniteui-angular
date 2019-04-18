@@ -72,7 +72,7 @@ export interface IDropDownList {
 export interface IDropDownBase extends IDropDownList, IToggleView {
     selectedItem: any;
     allowItemsFocus?: boolean;
-    virtDir?: IgxForOfDirective<any>;
+    virtDir?: any;
     virtualFocusIndex?: number;
     setSelectedItem(index: number): void;
     selectItem(item: IgxDropDownItemBase, event?: Event): void;

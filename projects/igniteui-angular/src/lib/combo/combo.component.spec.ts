@@ -254,7 +254,7 @@ describe('igxCombo', () => {
             expect(combo).toBeDefined();
             expect(dropdown).toBeDefined();
             expect(dropdown.focusedItem).toBeFalsy();
-            expect(dropdown.virtDir).toBeDefined();
+            expect(combo.virtDir).toBeDefined();
             expect(dropdown.focusedItem).toEqual(null);
             expect(combo.collapsed).toBeTruthy();
             combo.toggle();
@@ -266,7 +266,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.itemIndex).toEqual(0);
-            expect(dropdown.virtDir.state.startIndex).toEqual(0);
+            expect(combo.virtDir.state.startIndex).toEqual(0);
             dropdown.navigatePrev();
             tick();
             fix.detectChanges();
@@ -282,13 +282,13 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.itemIndex).toEqual(1);
-            expect(dropdown.virtDir.state.startIndex).toEqual(0);
+            expect(combo.virtDir.state.startIndex).toEqual(0);
             spyOn(dropdown, 'navigatePrev').and.callThrough();
             dropdown.navigatePrev();
             tick();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.itemIndex).toEqual(0);
-            expect(dropdown.virtDir.state.startIndex).toEqual(0);
+            expect(combo.virtDir.state.startIndex).toEqual(0);
             expect(dropdown.navigatePrev).toHaveBeenCalledTimes(1);
         }));
 
@@ -300,7 +300,7 @@ describe('igxCombo', () => {
             expect(combo).toBeDefined();
             expect(dropdown).toBeDefined();
             expect(dropdown.focusedItem).toBeFalsy();
-            expect(dropdown.virtDir).toBeDefined();
+            expect(combo.virtDir).toBeDefined();
             const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
             const virtualMockUP = spyOn<any>(dropdown, 'navigatePrev').and.callThrough();
             const virtualMockDOWN = spyOn<any>(dropdown, 'navigateNext').and.callThrough();
@@ -312,7 +312,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             // expect(mockObj.focus).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBeFalsy();
-            dropdown.virtDir.scrollTo(51);
+            combo.virtDir.scrollTo(51);
             await wait(30);
             fix.detectChanges();
             const lastItem = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM))[8].componentInstance;
@@ -343,7 +343,7 @@ describe('igxCombo', () => {
             dropdown.navigateNext();
             await wait(30);
             expect(virtualMockDOWN).toHaveBeenCalledTimes(2);
-            lastItem.value = dropdown.virtDir.igxForOf[dropdown.virtDir.igxForOf.length - 1];
+            lastItem.value = combo.virtDir.igxForOf[combo.virtDir.igxForOf.length - 1];
             lastItem.clicked(mockClick);
             await wait(30);
             fix.detectChanges();
@@ -352,7 +352,7 @@ describe('igxCombo', () => {
             expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
 
             // TEST move from first item
-            dropdown.virtDir.scrollTo(0);
+            combo.virtDir.scrollTo(0);
             await wait(30);
             fix.detectChanges();
             const firstItem = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM))[0].componentInstance;
@@ -674,7 +674,7 @@ describe('igxCombo', () => {
                         expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
-                        combo.dropdown.virtDir.scrollTo(10);
+                        combo.virtDir.scrollTo(10);
                         setTimeout(function () {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
@@ -727,7 +727,7 @@ describe('igxCombo', () => {
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                         expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
-                        combo.dropdown.virtDir.scrollTo(3);
+                        combo.virtDir.scrollTo(3);
                         setTimeout(function () {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
@@ -851,7 +851,7 @@ describe('igxCombo', () => {
                 expect(scrollbar.scrollTop).toEqual(0);
                 // Scroll to bottom;
                 dropdownContent.dispatchEvent(endEvent);
-                combo.dropdown.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                combo.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                     fixture.detectChanges();
 
                     // Content was scrolled to bottom
@@ -859,7 +859,7 @@ describe('igxCombo', () => {
 
                     // Scroll to top
                     dropdownContent.dispatchEvent(homeEvent);
-                    combo.dropdown.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    combo.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                         fixture.detectChanges();
                         dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
@@ -1475,7 +1475,7 @@ describe('igxCombo', () => {
                         expect(combo.selectedItems().length).toEqual(0);
                     });
                     scrollIndex += 10;
-                    combo.dropdown.virtDir.scrollTo(scrollIndex);
+                    combo.virtDir.scrollTo(scrollIndex);
                     if (scrollIndex < combo.data.length) {
                         selectGroupHeaders();
                     }
@@ -1722,7 +1722,7 @@ describe('igxCombo', () => {
                         expect(itemElement.classList.contains(expectedClass)).toBeTruthy();
                     });
                     scrollIndex += 10;
-                    combo.dropdown.virtDir.scrollTo(scrollIndex);
+                    combo.virtDir.scrollTo(scrollIndex);
                     if (scrollIndex < combo.data.length) {
                         checkGroupedItemsClass();
                     }
@@ -1968,12 +1968,12 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
-            let vContainerScrollHeight = combo.dropdown.virtDir.getVerticalScroll().scrollHeight;
-            expect(combo.dropdown.virtDir.getVerticalScroll().scrollTop).toEqual(0);
+            let vContainerScrollHeight = combo.virtDir.getVerticalScroll().scrollHeight;
+            expect(combo.virtDir.getVerticalScroll().scrollTop).toEqual(0);
             expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
-            combo.dropdown.virtDir.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+            combo.virtDir.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
             await wait(30);
-            expect(combo.dropdown.virtDir.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+            expect(combo.virtDir.getVerticalScroll().scrollTop).toBeGreaterThan(0);
             document.documentElement.dispatchEvent(new Event('click'));
             await wait(30);
             expect(combo.collapsed).toEqual(true);
@@ -1984,8 +1984,8 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
-            vContainerScrollHeight = combo.dropdown.virtDir.getVerticalScroll().scrollHeight;
-            expect(combo.dropdown.virtDir.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+            vContainerScrollHeight = combo.virtDir.getVerticalScroll().scrollHeight;
+            expect(combo.virtDir.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
         }));
         it('Should not display vertical scrollbar when items fit into the container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboScrollTestComponent);
@@ -2040,7 +2040,7 @@ describe('igxCombo', () => {
 
             const verifyComboData = function () {
                 fixture.detectChanges();
-                let ind = combo.dropdown.virtDir.state.startIndex;
+                let ind = combo.virtDir.state.startIndex;
                 for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
                     expect(combo.data[itemIndex].id).toEqual(ind);
                     expect(combo.data[itemIndex].product).toEqual('Product ' + ind);
@@ -2055,38 +2055,38 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
-            expect(combo.dropdown.virtDir.state.startIndex).toEqual(productIndex);
+            expect(combo.virtDir.state.startIndex).toEqual(productIndex);
             await wait(10);
 
             productIndex = 42;
-            combo.dropdown.virtDir.scrollTo(productIndex);
+            combo.virtDir.scrollTo(productIndex);
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
             // index is at bottom
-            expect(combo.dropdown.virtDir.state.startIndex + combo.dropdown.virtDir.state.chunkSize - 1)
+            expect(combo.virtDir.state.startIndex + combo.virtDir.state.chunkSize - 1)
                 .toEqual(productIndex);
             await wait(20);
 
             productIndex = 485;
-            combo.dropdown.virtDir.scrollTo(productIndex);
+            combo.virtDir.scrollTo(productIndex);
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
             // index is at bottom
-            expect(combo.dropdown.virtDir.state.startIndex + combo.dropdown.virtDir.state.chunkSize - 1)
+            expect(combo.virtDir.state.startIndex + combo.virtDir.state.chunkSize - 1)
                 .toEqual(productIndex);
             await wait(20);
 
             productIndex = 873;
-            combo.dropdown.virtDir.scrollTo(productIndex);
+            combo.virtDir.scrollTo(productIndex);
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
             await wait(20);
 
             productIndex = 649;
-            combo.dropdown.virtDir.scrollTo(productIndex);
+            combo.virtDir.scrollTo(productIndex);
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
@@ -2132,10 +2132,10 @@ describe('igxCombo', () => {
             expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
 
             setTimeout(() => {
-                combo.dropdown.virtDir.scrollTo(20);
+                combo.virtDir.scrollTo(20);
                 fixture.detectChanges();
                 setTimeout(() => {
-                    combo.dropdown.virtDir.scrollTo(0);
+                    combo.virtDir.scrollTo(0);
                     fixture.detectChanges();
                     expect(selItems.length).toEqual(3);
                     expect(selItems[0][combo.valueKey]).toEqual(dataItems[0][combo.valueKey]);
