@@ -56,13 +56,13 @@ describe('Column Hiding UI', () => {
     });
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
         afterEach(() => {
             columnChooser.onColumnVisibilityChanged.unsubscribe();
         });
@@ -699,13 +699,13 @@ describe('Column Hiding UI', () => {
         it('height can be controlled via columnsAreaMaxHeight input.', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
             expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
-            expect(columnChooserElement.nativeElement.offsetHeight).toBe(310);
+            expect(columnChooserElement.nativeElement.offsetHeight >= 310).toBe(true);
 
             columnChooser.columnsAreaMaxHeight = '150px';
             fix.detectChanges();
             const columnsAreaDiv = columnChooserElement.query(By.css('div.igx-column-hiding__columns'));
             expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
-            expect(columnChooserElement.nativeElement.offsetHeight).toBe(252);
+            expect(columnChooserElement.nativeElement.offsetHeight <= 255).toBe(true);
         });
 
         it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', async () => {
@@ -737,7 +737,7 @@ describe('Column Hiding UI', () => {
     });
 
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnGroupsHidingTestComponent);
             fix.detectChanges();
             fix.componentInstance.hasGroupColumns = true;
@@ -746,7 +746,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
 
         it('indents columns according to their level.', () => {
             const items = columnChooser.columnItems;
@@ -942,7 +942,7 @@ describe('Column Hiding UI', () => {
 
     describe('toolbar button', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -955,7 +955,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        });
+        }));
 
         it('is shown when columnHiding is true and hidden - when false.', () => {
             expect(grid.toolbar.columnHidingUI).toBeDefined();

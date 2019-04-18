@@ -535,6 +535,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         fixture.detectChanges();
 
         expect(column.width).toEqual('63px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should autosize pinned column programmatically.', async() => {
@@ -548,6 +551,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         fixture.detectChanges();
 
         expect(column.width).toEqual('95px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should autosize last pinned column programmatically.', async() => {
@@ -561,6 +567,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         fixture.detectChanges();
 
         expect(column.width).toEqual('92px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should autosize templated column programmatically.', async() => {
@@ -574,6 +583,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         fixture.detectChanges();
 
         expect(column.width).toEqual('89px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should autosize filterable/sortable/resizable/movable column programmatically.', async() => {
@@ -586,6 +598,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         fixture.detectChanges();
         expect(column.width).toEqual('119px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should autosize MCHs programmatically.', async() => {
@@ -619,6 +634,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         fixture.detectChanges();
         expect(column.width).toEqual('111px');
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should size headers correctly when column width is below the allowed minimum.', async() => {
@@ -640,6 +658,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
+
+        // height/width setter rAF
+        await wait(16);
     });
 
     it('should size headers correctly when column width is in %.', async() => {
@@ -665,6 +686,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+
+        // height/width setter rAF
+        await wait(16);
     });
 });
 

@@ -12,7 +12,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    Optional,
+    Inject
 } from '@angular/core';
 
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -24,7 +26,9 @@ import {
     IgxEmptyListTemplateDirective,
     IgxListPanState,
     IgxListItemLeftPanningTemplateDirective,
-    IgxListItemRightPanningTemplateDirective} from './list.common';
+    IgxListItemRightPanningTemplateDirective
+} from './list.common';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -68,9 +72,11 @@ export interface IListItemPanningEventArgs {
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
 })
-export class IgxListComponent implements IgxListBase {
+export class IgxListComponent extends IgxListBase {
 
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
     }
 
     /**
@@ -82,6 +88,20 @@ export class IgxListComponent implements IgxListBase {
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent))
     public children: QueryList<IgxListItemComponent>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected get sortedChildren(): IgxListItemComponent[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => {
+                    return a.index - b.index;
+                });
+        }
+        return null;
+    }
 
     /**
      * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `false`.
@@ -276,15 +296,27 @@ export class IgxListComponent implements IgxListBase {
     }
 
     /**
-     * Returns boolean indicating if the list has a `cssClass` attribute.
-     * ```typescript
-     * let hasCssClass =  this.list.cssClass;
-     * ```
-     * @memberof IgxListComponent
+     * @hidden
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return this.children && this.children.length > 0;
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--compact')
+    public get cssClassCompact(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--cosy')
+    public get cssClassCosy(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
@@ -297,7 +329,7 @@ export class IgxListComponent implements IgxListBase {
     public get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
-            for (const child of this.children.toArray()) {
+            for (const child of this.sortedChildren) {
                 if (!child.isHeader) {
                     items.push(child);
                 }
