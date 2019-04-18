@@ -44,6 +44,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _conditionsOverlaySettings: OverlaySettings = {
+        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -51,6 +52,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _operatorsOverlaySettings: OverlaySettings = {
+        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
