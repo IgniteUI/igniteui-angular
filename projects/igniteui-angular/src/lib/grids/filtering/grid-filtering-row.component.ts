@@ -136,7 +136,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected operand: ElementRef;
 
     @ViewChild('closeButton')
-    protected closeButton: ElementRef;
+    public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
@@ -623,6 +623,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                     Math.ceil(chipAraeChildren[count - 1].getBoundingClientRect().left) + 1;
                 this.transform(this.chipAreaScrollOffset);
             }
+        }
+    }
+
+    public onCloseButtonKeyDown(event: KeyboardEvent) {
+        if (event.key === KEYS.TAB && !event.shiftKey) {
+            this.filteringService.grid.navigation.goToFirstCell();
+            event.stopPropagation();
+            event.preventDefault();
         }
     }
 
