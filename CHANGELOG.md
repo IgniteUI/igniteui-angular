@@ -7,6 +7,19 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `IgxDropDown`
+    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    ```html
+    <igx-drop-down>
+        <div class="wrapping-div">
+            <igx-drop-down *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+            [value]="item" [index]="index"
+            >
+                {{ item.data }}
+            </igx-drop-down>
+        </div>
+    </igx-drop-down>
+    ```
 
 ## 7.2.5
 - `igxDrop` 
@@ -37,19 +50,6 @@ All notable changes for each version of this project will be documented in this 
     - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
     - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
 - New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
-- `IgxDropDown`
-    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
-    ```html
-    <igx-drop-down>
-        <div class="wrapping-div">
-            <igx-drop-down *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
-            [value]="item" [index]="index"
-            >
-                {{ item.data }}
-            </igx-drop-down>
-        </div>
-    </igx-drop-down>
-    ```
 
 ## 7.2.4
 ### New feature
