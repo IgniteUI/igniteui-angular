@@ -296,6 +296,15 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
             return this._calcWidth;
         }
+        this.cacheCalcWidth();
+        return this._calcWidth;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public cacheCalcWidth(): any {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
@@ -307,7 +316,6 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
-        return this._calcWidth;
     }
 
     private _calcWidth = null;
@@ -964,8 +972,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public resetCaches() {
         this._vIndex = NaN;
-        this._calcWidth = null;
-        this.calcPixelWidth = NaN;
+        this.cacheCalcWidth();
     }
 
     /**
