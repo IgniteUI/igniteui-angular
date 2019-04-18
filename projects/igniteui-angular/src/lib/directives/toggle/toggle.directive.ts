@@ -29,8 +29,7 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     protected _overlayId: string;
     private destroy$ = new Subject<boolean>();
-    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs | OverlayAnimationEventArgs>,
-        MonoTypeOperatorFunction<OverlayEventArgs | OverlayAnimationEventArgs>] = [
+    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
         filter(x => x.id === this._overlayId),
         takeUntil(this.destroy$)
     ];
