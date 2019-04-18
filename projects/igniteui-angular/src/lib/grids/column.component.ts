@@ -307,6 +307,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        return this._calcWidth;
     }
 
     private _calcWidth = null;
