@@ -579,8 +579,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @param node The Node object to be cloned.
      */
     protected createDragGhost(event, node: any = null) {
-        // tslint:disable-next-line: no-debugger
-        debugger;
         this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';
