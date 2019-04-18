@@ -29,11 +29,24 @@
     <ng-container *ngIf="level > 0">
         <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{level}}"></div>
     </ng-container>
-    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
+    <div #indicator
+         *ngIf="!isLoading"
+         class="igx-grid__tree-grouping-indicator"
+         [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
     </div>
+    <div *ngIf="isLoading"
+         (dblclick)="onLoadingDblClick($event)"
+         class="igx-grid__tree-loading-indicator">
+        <ng-container *ngTemplateOutlet="grid.rowLoadingIndicatorTemplate ? grid.rowLoadingIndicatorTemplate : defaultLoadingIndicatorTemplate">
+        </ng-container>
+    </div>
+    <ng-template #defaultLoadingIndicatorTemplate>
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </ng-template>
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>

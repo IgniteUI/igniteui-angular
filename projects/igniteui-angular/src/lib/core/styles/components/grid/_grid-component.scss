@@ -247,6 +247,11 @@
         @extend %igx-grid__tree-grouping-indicator !optional;
     }
 
+    @include e(tree-loading-indicator) {
+        @extend %igx-grid__tree-loading-indicator !optional;
+        @extend %igx-grid__tree-loading-indicator !optional;
+    }
+
     @include e(td, $m: edited) {
         @extend %igx-grid__td--edited !optional;
     }
