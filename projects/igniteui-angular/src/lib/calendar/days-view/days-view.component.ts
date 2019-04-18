@@ -326,8 +326,12 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         }
 
         if (this.changeDaysView && dates.indexOf(node) === 0) {
-            const dayItem = dates[dates.indexOf(node)];
-            this.nextDate = new Date(dayItem.date.date);
+            const dayItem = dates[0];
+            if (dayItem.isCurrentMonth) {
+                this.nextDate = this.calendarModel.timedelta(dayItem.date.date, 'day', -1);
+            } else {
+                this.nextDate = new Date(dayItem.date.date);
+            }
 
             this.isKeydownTrigger = true;
             this.animationAction = 'prev';
@@ -363,7 +367,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         }
 
         if (this.changeDaysView && dates.indexOf(node) === this.dates.length - 1) {
-            const dayItem = dates[dates.indexOf(node)];
+            const dayItem = dates[this.dates.length - 1];
             this.nextDate = new Date(dayItem.date.date);
 
             this.isKeydownTrigger = true;
