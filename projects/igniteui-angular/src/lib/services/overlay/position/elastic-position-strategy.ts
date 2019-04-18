@@ -1,6 +1,5 @@
-import { IPositionStrategy } from './IPositionStrategy';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
-import { Size, HorizontalAlignment, VerticalAlignment, PositionSettings } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings } from '../utilities';
 
 /**
  * Positions the element as in **Connected** positioning strategy and resize the element
@@ -9,46 +8,25 @@ import { Size, HorizontalAlignment, VerticalAlignment, PositionSettings } from '
 export class ElasticPositionStrategy extends BaseFitPositionStrategy {
     protected fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
         element.classList.add('igx-overlay__content--elastic');
-        let extend = 0;
-        switch (settings.horizontalDirection) {
-            case HorizontalAlignment.Left: {
-                extend = outerRect.left - innerRect.left;
-                if (extend > innerRect.width - this.settings.minSize.width) {
-                    extend = innerRect.width - this.settings.minSize.width;
-                }
-                break;
-            }
-            case HorizontalAlignment.Right: {
-                extend = innerRect.right - outerRect.right;
-                if (extend > innerRect.width - this.settings.minSize.width) {
-                    extend = innerRect.width - this.settings.minSize.width;
-                }
-                break;
-            }
-        }
+        const minExtend = innerRect.width - this.settings.minSize.width;
+        const leftExtend = Math.min(minExtend, outerRect.left - innerRect.left);
+        const rightExtend = Math.min(minExtend, innerRect.right - outerRect.right);
+        const extend = Math.max(leftExtend, rightExtend);
         element.style.width = `${innerRect.width - extend}px`;
+        if (leftExtend > 0 && settings.horizontalDirection === HorizontalAlignment.Center) {
+            element.style.left = '0';
+        }
     }
 
     protected fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect) {
         element.classList.add('igx-overlay__content--elastic');
-        let extend = 0;
-        switch (settings.verticalDirection) {
-            case VerticalAlignment.Top: {
-                extend = outerRect.top - innerRect.top;
-                if (extend > innerRect.height - this.settings.minSize.height) {
-                    extend = innerRect.height - this.settings.minSize.height;
-                }
-                break;
-            }
-            case VerticalAlignment.Bottom: {
-                extend = innerRect.bottom - outerRect.bottom;
-                if (extend > innerRect.height - this.settings.minSize.height) {
-                    extend = innerRect.height - this.settings.minSize.height;
-                }
-                break;
-            }
-        }
-
+        const minExtend = innerRect.height - this.settings.minSize.height;
+        const topExtend = Math.min(minExtend, outerRect.top - innerRect.top);
+        const bottomExtend = Math.min(minExtend, innerRect.bottom - outerRect.bottom);
+        const extend = Math.max(topExtend, bottomExtend);
         element.style.height = `${innerRect.height - extend}px`;
+        if (topExtend > 0 && settings.verticalDirection === VerticalAlignment.Middle) {
+            element.style.top = '0';
+        }
     }
 }
