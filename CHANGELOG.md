@@ -17,6 +17,8 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
+- `igxButton`
+    - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
 
 ## 7.2.5
 - `igxDrop` 
