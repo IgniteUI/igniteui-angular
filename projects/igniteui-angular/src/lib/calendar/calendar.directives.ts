@@ -155,6 +155,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
                 tap((event: KeyboardEvent) => {
                     if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
                         event.preventDefault();
+                        event.stopPropagation();
                     }
                 }),
                 debounce(() => interval(100)),

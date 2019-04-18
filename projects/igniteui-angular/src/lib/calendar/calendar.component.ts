@@ -293,11 +293,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      *@hidden
      */
     public ngAfterViewInit() {
+
         this.startMonthScroll$.pipe(
             takeUntil(this.stopMonthScroll$),
             switchMap(() => this.daysView.scrollMonth$.pipe(
                 skipLast(1),
-                debounce(() => interval(250)),
+                debounce(() => interval(300)),
                 takeUntil(this.stopMonthScroll$)
             ))).subscribe(() => {
                 switch (this.daysView.monthScrollDirection) {
@@ -654,7 +655,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     @HostListener('document:mouseup', ['$event'])
     public onMouseUp(event: KeyboardEvent) {
-        if (this.daysView.monthScrollDirection !== ScrollMonth.NONE) {
+        if (this.daysView && this.daysView.monthScrollDirection !== ScrollMonth.NONE) {
             this.stopMonthScroll(event);
         }
     }

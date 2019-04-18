@@ -118,14 +118,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public styleClass = true;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
      * @hidden
      */
     public get getCalendarMonth(): ICalendarDate[][] {
