@@ -2900,6 +2900,34 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         expect(dropdownList).toBeNull();
     }));
+
+    it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const cell = grid.getCellByColumn(0, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const closeButton = filterUIRow.queryAll(By.css('button'))[1];
+        expect(document.activeElement).toBe(closeButton.nativeElement);
+
+        closeButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        fix.detectChanges();
+        tick();
+        expect(document.activeElement).toBe(cell.nativeElement);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
