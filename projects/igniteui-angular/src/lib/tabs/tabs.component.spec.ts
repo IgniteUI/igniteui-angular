@@ -1,5 +1,7 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
@@ -12,15 +14,26 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { RoutingViewComponentsModule,
+         RoutingView1Component,
+         RoutingView2Component,
+         RoutingView3Component } from './routing-view-components';
 
 describe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
+
+        const testRoutes = [
+            { path: 'view1', component: RoutingView1Component },
+            { path: 'view2', component: RoutingView2Component },
+            { path: 'view3', component: RoutingView3Component }
+        ];
+
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
-                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component],
+                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule,
-                BrowserAnimationsModule, RouterTestingModule]
+                RoutingViewComponentsModule, BrowserAnimationsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
         .compileComponents();
     }));
@@ -399,6 +412,73 @@ describe('IgxTabs', () => {
         const indicator = dom.query(By.css('.igx-tabs__header-menu-item-indicator'));
         expect(indicator.nativeElement.style.width).toBe('90px');
     }));
+
+    fit('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
+
+        const router = TestBed.get(Router);
+        const location = TestBed.get(Location);
+        const fixture = TestBed.createComponent(TabsRoutingTestComponent);
+        const tabsComp = fixture.componentInstance.tabsComp;
+        fixture.detectChanges();
+
+        fixture.ngZone.run(() => { router.initialNavigation(); });
+
+        tick();
+        expect(location.path()).toBe('/view1');
+
+        fixture.ngZone.run(() => { tabsComp.tabs.toArray()[2].select(); });
+        tick();
+        expect(location.path()).toBe('/view3');
+
+        fixture.ngZone.run(() => { tabsComp.tabs.toArray()[1].select(); });
+        tick();
+        expect(location.path()).toBe('/view2');
+
+        fixture.ngZone.run(() => { tabsComp.tabs.toArray()[0].select(); });
+        tick();
+        expect(location.path()).toBe('/view1');
+    }));
+
+    fit('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
+
+        const router = TestBed.get(Router);
+        const location = TestBed.get(Location);
+        const fixture = TestBed.createComponent(TabsRoutingTestComponent);
+        const tabsComp = fixture.componentInstance.tabsComp;
+        fixture.detectChanges();
+
+        fixture.ngZone.run(() => { router.initialNavigation(); });
+        tick();
+        expect(location.path()).toBe('/view1');
+        expect(tabsComp.selectedIndex).toBe(0);
+        expect(tabsComp.groups.toArray()[0].isSelected).toBe(true);
+        expect(tabsComp.tabs.toArray()[0].isSelected).toBe(true);
+
+        fixture.ngZone.run(() => { router.navigate(['/view3']); });
+        tick();
+        expect(location.path()).toBe('/view3');
+        fixture.detectChanges();
+        expect(tabsComp.selectedIndex).toBe(2);
+        expect(tabsComp.groups.toArray()[2].isSelected).toBe(true);
+        expect(tabsComp.tabs.toArray()[2].isSelected).toBe(true);
+
+        fixture.ngZone.run(() => { router.navigate(['/view2']); });
+        tick();
+        expect(location.path()).toBe('/view2');
+        fixture.detectChanges();
+        expect(tabsComp.selectedIndex).toBe(1);
+        expect(tabsComp.groups.toArray()[1].isSelected).toBe(true);
+        expect(tabsComp.tabs.toArray()[1].isSelected).toBe(true);
+
+        fixture.ngZone.run(() => { router.navigate(['/view1']); });
+        tick();
+        expect(location.path()).toBe('/view1');
+        fixture.detectChanges();
+        expect(tabsComp.selectedIndex).toBe(0);
+        expect(tabsComp.groups.toArray()[0].isSelected).toBe(true);
+        expect(tabsComp.tabs.toArray()[0].isSelected).toBe(true);
+
+    }));
 });
 
 @Component({
@@ -585,4 +665,29 @@ class TabsTestCustomStylesComponent {
 })
 class TabsTestBug4420Component {
     @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tabs-group label="Tab 1" routerLink="/view1">
+                    Content in tab # 1
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 2" routerLink="/view2">
+                    Content in tab # 2
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 3" routerLink="/view3">
+                    Content in tab # 3
+                </igx-tabs-group>
+            </igx-tabs>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    `
+})
+class TabsRoutingTestComponent {
+    @ViewChild(IgxTabsComponent)
+    public tabsComp: IgxTabsComponent;
 }

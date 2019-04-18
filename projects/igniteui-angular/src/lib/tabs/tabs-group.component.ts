@@ -189,6 +189,9 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
         this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 
+    public _selectAndEmitEvent() {
+    }
+
     private handleSelection(): void {
         const tabElement = this.relatedTab.nativeTabItem.nativeElement;
 
