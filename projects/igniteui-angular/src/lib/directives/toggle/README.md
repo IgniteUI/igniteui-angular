@@ -42,7 +42,6 @@ handlers when the toggle is opened and respectively closed.
 | `onOpened` | `void` | Emits an event after the toggle container is opened. |
 | `onClosing` | `void` | Emits an event before the toggle container is closed. |
 | `onClosed` | `void` | Emits an event after the toggle container is closed. |
-
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|

@@ -14,7 +14,6 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxDropDownBase } from '../drop-down/drop-down.base';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';

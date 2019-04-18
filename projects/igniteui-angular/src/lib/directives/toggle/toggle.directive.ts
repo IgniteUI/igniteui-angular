@@ -18,7 +18,7 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
-import { OverlayClosingEventArgs, OverlayAnimationEventArgs } from '../../services/overlay/utilities';
+import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 
@@ -114,7 +114,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     private _collapsed = true;
-
     /**
      * @hidden
      */
@@ -198,10 +197,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        this.unsubscribe();
-
         this.overlayService.show(this._overlayId, overlaySettings);
 
+        this.unsubscribe();
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.onOpened.emit();
         });
@@ -225,7 +223,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
-
     }
 
     /**

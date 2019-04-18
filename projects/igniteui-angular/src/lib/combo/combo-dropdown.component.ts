@@ -1,11 +1,7 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren
 } from '@angular/core';
-import { takeUntil, take } from 'rxjs/operators';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { CancelableBrowserEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
-import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { DropDownActionKey } from '../drop-down/drop-down.common';

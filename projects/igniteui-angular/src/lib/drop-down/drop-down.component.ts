@@ -10,7 +10,9 @@ import {
     OnDestroy,
     ViewChild,
     ContentChild,
-    AfterViewInit
+    AfterViewInit,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -24,7 +26,7 @@ import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { OverlaySettings, IgxOverlayService } from '../services';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { take, takeUntil, filter } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 
 /**
@@ -68,6 +70,46 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
     public children: QueryList<IgxDropDownItemBase>;
+
+    /**
+     * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpening = new EventEmitter<CancelableEventArgs>();
+
+    /**
+     * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpened = new EventEmitter<void>();
+
+    /**
+     * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+
+    /**
+     * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosed = new EventEmitter<void>();
 
     /**
      * Gets/sets whether items take focus. Disabled by default.
