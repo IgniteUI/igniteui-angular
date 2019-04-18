@@ -19,7 +19,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get focused(): boolean {
-        const focusedState = this.dropDown.virtDir ? this.dropDown.virtualFocusIndex === this.index : this._focused;
+        const focusedState = this._index ? this._index === this.selection.first_item(`${this.dropDown.id}-active`) : this._focused;
         return !this.isHeader && !this.disabled && focusedState;
     }
 
@@ -33,8 +33,9 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get selected(): boolean {
-        if (this.dropDown.virtDir) {
-            return this.dropDown.selectedItem ? this.dropDown.selectedItem.index === this.index : false;
+        if (this._index) {
+            const item = this.dropDown.selectedItem;
+            return item ? item.index === this._index && this.itemID.value === this.value : false;
         }
         return this._selected;
     }
@@ -79,9 +80,6 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     }
 
     ngDoCheck(): void {
-        if (this.dropDown.virtDir) {
-            return;
-        }
         super.ngDoCheck();
     }
 }

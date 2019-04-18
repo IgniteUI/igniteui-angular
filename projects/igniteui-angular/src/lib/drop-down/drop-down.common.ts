@@ -71,9 +71,7 @@ export interface IDropDownBase extends IDropDownList, IToggleView {
     onClosing: EventEmitter<CancelableBrowserEventArgs>;
     onClosed: EventEmitter<void>;
     allowItemsFocus?: boolean;
-    virtDir?: any;
-    virtualFocusIndex?: number;
     setSelectedItem(index: number): void;
-    selectItem(item: IgxDropDownItemBase, event?: Event): void;
+    selectItem(item: IgxDropDownItemBase | { value: any, index: number }, event?: Event): void;
 }
 
