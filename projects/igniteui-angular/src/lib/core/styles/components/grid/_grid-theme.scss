@@ -900,6 +900,16 @@
         }
     }
 
+    %igx-grid__tree-loading-indicator {
+        width: rem(24px, 16px);
+        height: rem(24px, 16px);
+        margin-right: rem(8px, 16px);
+
+        %circular-outer {
+            stroke: --var($theme, 'expand-icon-color');
+        }
+    }
+
     %grid-cell-display {
         position: relative;
         display: flex;
@@ -1856,6 +1866,20 @@
 
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: igx-color($palette, 'secondary');
+                }
+
+                + igx-icon {
+                    margin-left: rem(4px);
+                }
+            }
         }
     }
 
