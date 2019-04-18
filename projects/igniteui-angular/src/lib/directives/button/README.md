@@ -8,12 +8,29 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 <target-element igxButton [...options]>Click me</target-element>
 ```
 
+## Display Density
+
+The button provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). We can set it by using the `displayDensity` input of the button.
+
+```html
+<target-element igxButton [displayDensity]="'compact'">Click me</target-element>
+```
+
+Or
+
+```typescript
+this.button.displayDensity = "compact";
+```
+
+> Note that the `icon` type button does not introduce visual changes for different display density values.
+
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `igxButton` |  string | Set the type of igxButton to be used. Default is set to flat. |
 | `igxButtonColor` |    string   |   Set the button text color. You can pass any CSS valid color value. |
 | `igxButtonBackground` | string | Set the button background color. You can pass any CSS valid color value. |
+| `displayDensity` | DisplayDensity | Determines the display density of the button. |
 
 # Button types
 | Name   | Description |
