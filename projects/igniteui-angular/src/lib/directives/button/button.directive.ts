@@ -1,9 +1,22 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, Input, Output, NgModule, Renderer2, HostListener } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    NgModule,
+    Renderer2,
+    HostListener,
+    Optional,
+    Inject
+} from '@angular/core';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 
 @Directive({
     selector: '[igxButton]'
 })
-export class IgxButtonDirective {
+export class IgxButtonDirective extends DisplayDensityBase {
     /**
      *@hidden
      */
@@ -25,7 +38,10 @@ export class IgxButtonDirective {
      */
     private _backgroundColor: string;
 
-    constructor(public element: ElementRef, private _renderer: Renderer2) { }
+    constructor(public element: ElementRef, private _renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
+        }
 
     /**
      * Returns the underlying DOM element
@@ -109,6 +125,40 @@ export class IgxButtonDirective {
         } else {
             this._renderer.removeClass(this.nativeElement, `${this._cssClass}--disabled`);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--cosy')
+    public get cssClassCosy(): boolean {
+        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+            this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--compact')
+    public get cssClassCompact(): boolean {
+        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+            this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--fab-cosy')
+    public get cssClassCosyFab(): boolean {
+        return this._type === 'fab' && this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--fab-compact')
+    public get cssClassCompactFab(): boolean {
+        return this._type === 'fab' && this.displayDensity === DisplayDensity.compact;
     }
 
     /**
