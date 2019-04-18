@@ -1694,6 +1694,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @ViewChild('headerDragContainer')
+    public headerDragContainer: ElementRef;
+
+    /**
+     * @hidden
+     */
     @ViewChild('headerGroupContainer')
     public headerGroupContainer: ElementRef;
 
@@ -2284,7 +2290,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public calcRowCheckboxWidth = 0;
+    public calcFixedWidth = 0;
     /**
      * @hidden
      */
@@ -2806,12 +2812,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    get headerCheckboxWidth() {
+    get headerFixedWidth() {
+        let width = 0;
         if (this.headerCheckboxContainer) {
-            return this.headerCheckboxContainer.nativeElement.clientWidth;
+            width += this.headerCheckboxContainer.nativeElement.clientWidth;
+        }
+        if (this.headerDragContainer) {
+            width += this.headerDragContainer.nativeElement.clientWidth;
         }
 
-        return 0;
+        return width;
     }
 
     /**
@@ -2910,7 +2920,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable ? this.calcRowCheckboxWidth : 0;
+        return this.rowSelectable ? this.calcFixedWidth : 0;
     }
 
     /**
@@ -4116,9 +4126,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         this.calculateGridHeight();
 
+        this.calcFixedWidth = 0;
         if (this.showRowCheckboxes) {
-            this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
+            this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
+
+        if (this.rowDraggable) {
+            this.calcFixedWidth += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
+        }
+
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
@@ -4151,7 +4167,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
         if (this.showRowCheckboxes) {
-            sum += this.calcRowCheckboxWidth;
+            sum += this.calcFixedWidth;
         }
 
         return sum;

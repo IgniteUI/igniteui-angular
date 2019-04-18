@@ -748,6 +748,17 @@
         }
     }
 
+    %igx-grid__tr--drag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: map-get($grid-cell-padding, 'comfortable');
+        padding-right: 0;
+        background: inherit;
+        z-index: 1;
+        cursor: move;
+    }
+
     %grid-row--odd {
         background: --var($theme, 'row-odd-background');
         color: --var($theme, 'row-odd-text-color');
