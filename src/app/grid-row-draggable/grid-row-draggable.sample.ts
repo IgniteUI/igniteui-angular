@@ -59,4 +59,10 @@ export class GridRowDraggableComponent implements AfterViewInit {
         }
         this.grid1.selectRows([1, 2, 5], false);
     }
+
+    public dragAreaEnter(args) {
+    }
+
+    public dragAreaLeave(args) {
+    }
 }
