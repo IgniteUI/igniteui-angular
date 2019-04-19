@@ -300,24 +300,6 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._calcWidth;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public cacheCalcWidth(): any {
-        const colWidth = this.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        if (isPercentageWidth) {
-            this._calcWidth = parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
-        } else if (!colWidth) {
-            // no width
-            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
-        } else {
-            this._calcWidth = this.width;
-        }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
-    }
-
     private _calcWidth = null;
     public calcPixelWidth: number;
 
@@ -1309,6 +1291,24 @@ export class IgxColumnComponent implements AfterContentInit {
         } else {
             return colWidth;
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected cacheCalcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            this._calcWidth = parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+        } else if (!colWidth) {
+            // no width
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            this._calcWidth = this.width;
+        }
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
 }
 

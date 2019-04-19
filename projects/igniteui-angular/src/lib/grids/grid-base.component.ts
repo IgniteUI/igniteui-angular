@@ -571,12 +571,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
-            requestAnimationFrame(() => {
-                if (!this._destroyed) {
-                    this.reflow();
-                    this.cdr.markForCheck();
-                }
-            });
+            if (this._ngAfterViewInitPassed) {
+                requestAnimationFrame(() => {
+                    if (!this._destroyed) {
+                        this.reflow();
+                        this.cdr.markForCheck();
+                    }
+                });
+            }
         }
     }
 
@@ -604,14 +606,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
-            requestAnimationFrame(() => {
-                // Calling reflow(), because the width calculation
-                // might make the horizontal scrollbar appear/disappear.
-                // This will change the height, which should be recalculated.
-                if (!this._destroyed) {
-                    this.reflow();
-                }
-            });
+            if (this._ngAfterViewInitPassed) {
+                requestAnimationFrame(() => {
+                    // Calling reflow(), because the width calculation
+                    // might make the horizontal scrollbar appear/disappear.
+                    // This will change the height, which should be recalculated.
+                    if (!this._destroyed) {
+                        this.reflow();
+                    }
+                });
+            }
         }
     }
 
