@@ -13,6 +13,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective, IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -1397,7 +1398,7 @@ describe('IgxDropDown ', () => {
         it('Should properly preserve selection when scrolled', (done) => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
-            dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 });
+            dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBase);
             fixture.detectChanges();
             expect(dropdown.selectedItem as any).toEqual({ value: fixture.componentInstance.items[5], index: 5 });
             expect(items.toArray()[5].selected).toEqual(true);
@@ -1418,12 +1419,12 @@ describe('IgxDropDown ', () => {
         it('Should properly select items both inside and outside of the virtual view', (done) => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
-            let selectedItem = { value: fixture.componentInstance.items[5], index: 5 };
+            let selectedItem = { value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBase;
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             expect(dropdown.selectedItem as any).toEqual(selectedItem);
             expect(items.toArray()[5].selected).toEqual(true);
-            selectedItem = { value: fixture.componentInstance.items[412], index: 412 };
+            selectedItem = { value: fixture.componentInstance.items[412], index: 412 } as IgxDropDownItemBase;
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             expect(dropdown.selectedItem as any).toEqual(selectedItem);
@@ -1441,7 +1442,7 @@ describe('IgxDropDown ', () => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
             const virtualScroll = fixture.componentInstance.virtualScroll;
-            const selectedItem = { value: fixture.componentInstance.items[1000], index: 1000 };
+            const selectedItem = { value: fixture.componentInstance.items[1000], index: 1000 } as IgxDropDownItemBase;
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             dropdown.toggle();
