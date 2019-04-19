@@ -74,6 +74,13 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
+    public navigateFirst() {
+        this.navigateItem(this.virtDir.igxForOf.findIndex(e => !e.isHeader));
+    }
+
+    /**
+     * @hidden
+     */
     public navigatePrev() {
         if (this._focusedIndex === 0 && this.virtDir.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
