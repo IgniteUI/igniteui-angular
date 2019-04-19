@@ -608,7 +608,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(noRecordsSpan).toBeFalsy();
     }));
 
-    fit('Should generate the expressions UI list correctly.', fakeAsync(() => {
+    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
