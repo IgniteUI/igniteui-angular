@@ -35,7 +35,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     get selected(): boolean {
         if (this._index) {
             const item = this.dropDown.selectedItem;
-            return item ? item.index === this._index && this.itemID.value === this.value : false;
+            return item ? item.index === this._index && item.value === this.value : false;
         }
         return this._selected;
     }
