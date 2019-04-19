@@ -2865,6 +2865,41 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         expect(sundayLabel.trim()).toEqual('So');
     }));
+
+    it('should open \'conditions dropdown\' on prefix click and should close it on second click', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        // Click filter chip to show filter row
+        stringCellChip.click();
+        tick(100);
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+        const prefix = inputgroup.query(By.css('igx-prefix'));
+
+        // Click prefix to open conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is opened
+        let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).not.toBeNull();
+
+        // Click prefix again to close conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is closed
+        dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).toBeNull();
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
@@ -3401,13 +3436,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const customMenu = grid.nativeElement.querySelector('.igx-excel-filter__secondary');
 
         // set first expression's value
-        GridFunctions.setInputValueESF(customMenu, 0, 20, fix);
+        GridFunctions.setInputValueESF(customMenu, 0, 0, fix);
 
         // select second expression's operator
         GridFunctions.setOperatorESF(customMenu, grid, 1, 1, fix);
 
         // set second expression's value
-        GridFunctions.setInputValueESF(customMenu, 1, 0, fix);
+        GridFunctions.setInputValueESF(customMenu, 1, 20, fix);
 
         const applyButton = customMenu.querySelector('.igx-button--raised');
         applyButton.click();
