@@ -23,6 +23,10 @@ All notable changes for each version of this project will be documented in this 
     </igx-drop-down>
     ```
 
+## 7.2.6
+- `igxGrid`
+    - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
+
 ## 7.2.5
 - `igxDrop` 
     - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
