@@ -166,13 +166,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return this.grid.rowDrag;
     }
 
-    /**
-     * @hidden
-     */
-    public get showRowDrag(): boolean {
-        return this.grid.showRowDrag;
-    }
-
     /** @hidden */
     public get added(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);
@@ -186,6 +179,21 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /** @hidden */
     public get deleted(): boolean {
         return this.gridAPI.row_deleted_transaction(this.rowID);
+    }
+
+    /**
+     * @hidden
+     */
+    public dragging = false;
+
+     /**
+     * @hidden
+     */
+    public get indicatorVisibility(): string {
+        const gridHasDragging = this.grid.rowDragging;
+        const rowDragged = this.dragging;
+
+        return gridHasDragging && rowDragged || !gridHasDragging ? 'visible' : 'hidden';
     }
 
     // TODO: Refactor
@@ -343,6 +351,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
+        const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${dragClass}`.trim();
     }
 }

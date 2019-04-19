@@ -282,5 +282,9 @@ $_light-grid: (
 
     grid-elevation: 2,
 
-    drag-elevation: 5
+    drag-elevation: 5,
+
+    row-ghost-background: (
+        igx-color: ('primary', 50)
+    )
 );

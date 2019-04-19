@@ -104,8 +104,16 @@
         }
     }
 
+    @include e(tr, $m: 'drag-indicator') {
+        @extend %igx-grid__tr--drag-indicator !optional;
+    }
+
     @include e(tr, $m: 'drag') {
         @extend %igx-grid__tr--drag !optional;
+    }
+
+    @include e(tr, $m: 'ghost') {
+        @extend %igx-grid__tr--ghost !optional;
     }
 
     @include e(summaries) {

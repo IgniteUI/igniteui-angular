@@ -533,6 +533,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._rowDrag = val;
     }
 
+    /**
+     * @hidden
+     */
+    public rowDragging = false;
+
 
     /**
  * Sets whether the `IgxGridRowComponent` is editable.
@@ -3136,10 +3141,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
     }
 
-    get showRowDrag(): boolean {
-        return this.rowDrag && this.columns.length > this.hiddenColumnsCount;
-    }
-
     /**
      * @hidden
      */
@@ -4131,7 +4132,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
-        if (this.rowDraggable) {
+        if (this.rowDrag) {
             this.calcFixedWidth += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
         }
 

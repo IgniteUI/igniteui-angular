@@ -163,7 +163,8 @@
 
     $row-highlight: null,
     $grid-shadow: null,
-    $drag-shadow: null
+    $drag-shadow: null,
+    $row-ghost-background: null 
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -425,6 +426,7 @@
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
+        row-ghost-background: $row-ghost-background
     ));
 }
 
@@ -748,7 +750,7 @@
         }
     }
 
-    %igx-grid__tr--drag {
+    %igx-grid__tr--drag-indicator {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -757,6 +759,14 @@
         background: inherit;
         z-index: 1;
         cursor: move;
+    }
+
+    %igx-grid__tr--drag {
+        opacity: 0.5;
+    }
+
+    %igx-grid__tr--ghost {
+        background: --var($theme, 'row-ghost-background') !important;
     }
 
     %grid-row--odd {

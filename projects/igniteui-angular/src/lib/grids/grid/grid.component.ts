@@ -380,17 +380,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public dropAreaTemplate: TemplateRef<any>;
 
     /**
-     * An @Input property that determines whether the rows are draggable or not.
-     * The default state is false.
-     * ```html
-     * <igx-grid #grid [data]="Data" [rowDrag]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public rowDrag = false;
-
-    /**
      * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get
      * grouped/ungrouped at once by using the Group By API.
      * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling

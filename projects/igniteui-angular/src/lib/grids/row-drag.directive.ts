@@ -1,9 +1,12 @@
 import { Directive, Input, OnDestroy, NgModule, Output, EventEmitter } from '@angular/core';
-import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective, IgxDragCustomEventDetails } from '../directives/dragdrop/dragdrop.directive';
 import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
+
+const ghostBackgrounClass = 'igx-grid__tr--ghost';
+const draggedRowClass = 'igx-grid__tr--drag';
 
 /**
  * @hidden
@@ -33,6 +36,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         };
 
         this.row.grid.onRowDragStart.emit(args);
+        this.row.dragging = true;
+        this.row.grid.rowDragging = true;
 
         this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
             if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
@@ -44,16 +49,15 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     public onPointerUp(event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
-            this._clicked = false;
             super.onPointerUp(event);
+            this.row.dragging = false;
+            this.row.grid.rowDragging = false;
 
             const args: IRowDragEndEventArgs = {
                 source: this.row,
                 cancel: false
             };
             this.row.grid.onRowDragEnd.emit(args);
-            this._dragGhost.parentNode.removeChild(this._dragGhost);
-            this._dragGhost = null;
         });
 
         this._unsubscribe();
@@ -62,11 +66,27 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     protected createDragGhost(event) {
         super.createDragGhost(event, this._row.nativeElement);
-       
-        const gridWidth = this._row.grid.nativeElement.style.width;
+        const gridWidth = this.row.grid.nativeElement.style.width;
         this._dragGhost.style.overflow = 'hidden';
         this._dragGhost.style.width = gridWidth;
-        this._dragGhost.style.background = 'blue';
+        this.renderer.removeClass(this._dragGhost, this.row.grid.oddRowCSS);
+        this.renderer.removeClass(this._dragGhost, this.row.grid.evenRowCSS);
+        this.renderer.removeClass(this._dragGhost, draggedRowClass);
+        this.renderer.addClass(this._dragGhost, ghostBackgrounClass);
+    }
+
+    protected dispatchDropEvent(pageX: number, pageY: number) {
+
+        // TODO: This should be investigated if it is needed
+        const eventArgs: IgxDragCustomEventDetails = {
+            startX: this._startX,
+            startY: this._startY,
+            pageX: pageX,
+            pageY: pageY,
+            owner: this
+        };
+        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
+        this._lastDropArea = null;
     }
 
     private _unsubscribe() {
