@@ -140,10 +140,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     public set focusedItem(value: IgxDropDownItemBase) {
         this._focusedItem = value;
+        this.selection.clear(`${this.id}-active`);
         if (value) {
             this.selection.set(`${this.id}-active`, new Set([value.index]));
-        } else {
-            this.selection.clear(`${this.id}-active`);
         }
     }
 
@@ -153,9 +152,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     protected set _focusedIndex(value: number) {
-        if (value === -1 || value === null || value === undefined) {
-            this.selection.clear(`${this.id}-active`);
-        } else {
+        this.selection.clear(`${this.id}-active`);
+        if (value !== -1 && value !== null && value !== undefined) {
             this.selection.set(`${this.id}-active`, new Set([value]));
         }
     }
@@ -293,13 +291,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             if (index === -1 || index >= this.collectionLength) {
                 return;
             }
-            const virtState = this.virtDir.state;
-            const subRequired = index < virtState.startIndex || index >= virtState.chunkSize + virtState.startIndex - 1;
             const direction = index > this._focusedIndex ? Navigate.Down : Navigate.Up;
+            const subRequired = this.isIndexOutOfBounds(index, direction);
+            this._focusedIndex = index;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
             }
-            this._focusedIndex = index;
             if (subRequired) {
                 this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                     this.skipHeader(direction);
@@ -314,6 +311,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this.focusedItem.element.nativeElement.focus();
             this.cdr.markForCheck();
         }
+    }
+
+    private isIndexOutOfBounds(index: number, direction: Navigate) {
+        const virtState = this.virtDir.state;
+        const currentPosition = this.virtDir.getVerticalScroll().scrollTop;
+        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
+        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
+        const subRequired = indexOutOfChunk || scrollNeeded;
+        return subRequired;
     }
 
     protected skipHeader(direction: Navigate) {
@@ -512,7 +519,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public selectItem(newSelection?: IgxDropDownItemBase | { value: any, index: any }, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
-            newSelection = this._focusedItem;
+            newSelection = this.focusedItem;
         }
         if (newSelection === null) {
             return;
