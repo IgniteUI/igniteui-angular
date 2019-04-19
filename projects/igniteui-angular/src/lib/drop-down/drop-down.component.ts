@@ -148,7 +148,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     protected get _focusedIndex() {
-        return this.selection.first_item(`${this.id}-active`) || -1;
+        const indexInService = this.selection.first_item(`${this.id}-active`);
+        return indexInService !== null && indexInService !== undefined ? indexInService : -1;
     }
 
     protected set _focusedIndex(value: number) {
