@@ -326,6 +326,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
+            if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+                this.filteredData = null;
+            }
+
             this.filteringService.refreshExpressions();
             this.summaryService.clearSummaryCache();
             this.markForCheck();
