@@ -19,7 +19,8 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get focused(): boolean {
-        const focusedState = this._index ? this._index === this.selection.first_item(`${this.dropDown.id}-active`) : this._focused;
+        const focusedState = this._index !== null && this._index !== undefined
+        ? this._index === this.selection.first_item(`${this.dropDown.id}-active`) : this._focused;
         return !this.isHeader && !this.disabled && focusedState;
     }
 
