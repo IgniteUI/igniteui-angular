@@ -608,7 +608,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(noRecordsSpan).toBeFalsy();
     }));
 
-    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
+    fit('Should generate the expressions UI list correctly.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -657,7 +657,7 @@ describe('IgxGrid - Filtering actions', () => {
         verifyExpressionUI(expressionUIs[1], expression11, FilteringLogic.And, FilteringLogic.Or);
         verifyExpressionUI(expressionUIs[2], expression12, FilteringLogic.Or, FilteringLogic.And);
         verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
-        verifyExpressionUI(expressionUIs[4], expression22, FilteringLogic.And, FilteringLogic.And);
+        verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
     }));
 });
 
