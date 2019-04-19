@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { IgxGridComponent, IgxGridCellComponent } from 'igniteui-angular';
+import { Observable } from 'rxjs';
+import { IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 @Component({
@@ -60,9 +60,15 @@ export class GridRowDraggableComponent implements AfterViewInit {
         this.grid1.selectRows([1, 2, 5], false);
     }
 
-    public dragAreaEnter(args) {
+    public onEnter(args) {
+        const drag = args.drag;
     }
 
-    public dragAreaLeave(args) {
+    public onLeave(args) {
+        const drag = args.drag;
+    }
+
+    public onDrop(args) {
+        const drag = args.drag;
     }
 }
