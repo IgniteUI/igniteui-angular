@@ -46,18 +46,35 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         });
     }
 
+    public onPointerMove(event) { 
+        super.onPointerMove(event);
+
+        if (this._dragGhost && this._lastDropArea != null) {
+            const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
+            dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'add';
+        } else if (this._dragGhost) {
+            const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
+            dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'block';
+        }
+    }
+
     public onPointerUp(event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
+            const isOnDroppadble = this._lastDropArea;
             super.onPointerUp(event);
             this.row.dragging = false;
             this.row.grid.rowDragging = false;
 
-            const args: IRowDragEndEventArgs = {
-                source: this.row,
-                cancel: false
-            };
-            this.row.grid.onRowDragEnd.emit(args);
+            if (isOnDroppadble) {
+                const args: IRowDragEndEventArgs = {
+                    source: this.row,
+                    cancel: false
+                };
+                this.row.grid.onRowDragEnd.emit(args);
+            } else {
+                this.row.grid.cdr.detectChanges();
+            }
         });
 
         this._unsubscribe();
@@ -66,13 +83,17 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     protected createDragGhost(event) {
         super.createDragGhost(event, this._row.nativeElement);
+
         const gridWidth = this.row.grid.nativeElement.style.width;
+        const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
+
         this._dragGhost.style.overflow = 'hidden';
         this._dragGhost.style.width = gridWidth;
         this.renderer.removeClass(this._dragGhost, this.row.grid.oddRowCSS);
         this.renderer.removeClass(this._dragGhost, this.row.grid.evenRowCSS);
         this.renderer.removeClass(this._dragGhost, draggedRowClass);
         this.renderer.addClass(this._dragGhost, ghostBackgrounClass);
+        dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'block';
     }
 
     protected dispatchDropEvent(pageX: number, pageY: number) {
