@@ -413,8 +413,7 @@ describe('IgxTabs', () => {
         expect(indicator.nativeElement.style.width).toBe('90px');
     }));
 
-    fit('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
-
+    it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
         const router = TestBed.get(Router);
         const location = TestBed.get(Location);
         const fixture = TestBed.createComponent(TabsRoutingTestComponent);
@@ -422,25 +421,23 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
-
-        tick();
+        tick(200);
         expect(location.path()).toBe('/view1');
 
         fixture.ngZone.run(() => { tabsComp.tabs.toArray()[2].select(); });
-        tick();
+        tick(200);
         expect(location.path()).toBe('/view3');
 
         fixture.ngZone.run(() => { tabsComp.tabs.toArray()[1].select(); });
-        tick();
+        tick(200);
         expect(location.path()).toBe('/view2');
 
         fixture.ngZone.run(() => { tabsComp.tabs.toArray()[0].select(); });
-        tick();
+        tick(200);
         expect(location.path()).toBe('/view1');
     }));
 
-    fit('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
-
+    it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
         const router = TestBed.get(Router);
         const location = TestBed.get(Location);
         const fixture = TestBed.createComponent(TabsRoutingTestComponent);
@@ -448,14 +445,14 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
-        tick();
+        tick(300);
         expect(location.path()).toBe('/view1');
         expect(tabsComp.selectedIndex).toBe(0);
         expect(tabsComp.groups.toArray()[0].isSelected).toBe(true);
         expect(tabsComp.tabs.toArray()[0].isSelected).toBe(true);
 
         fixture.ngZone.run(() => { router.navigate(['/view3']); });
-        tick();
+        tick(300);
         expect(location.path()).toBe('/view3');
         fixture.detectChanges();
         expect(tabsComp.selectedIndex).toBe(2);
@@ -463,7 +460,7 @@ describe('IgxTabs', () => {
         expect(tabsComp.tabs.toArray()[2].isSelected).toBe(true);
 
         fixture.ngZone.run(() => { router.navigate(['/view2']); });
-        tick();
+        tick(300);
         expect(location.path()).toBe('/view2');
         fixture.detectChanges();
         expect(tabsComp.selectedIndex).toBe(1);
@@ -471,13 +468,12 @@ describe('IgxTabs', () => {
         expect(tabsComp.tabs.toArray()[1].isSelected).toBe(true);
 
         fixture.ngZone.run(() => { router.navigate(['/view1']); });
-        tick();
+        tick(300);
         expect(location.path()).toBe('/view1');
         fixture.detectChanges();
         expect(tabsComp.selectedIndex).toBe(0);
         expect(tabsComp.groups.toArray()[0].isSelected).toBe(true);
         expect(tabsComp.tabs.toArray()[0].isSelected).toBe(true);
-
     }));
 });
 

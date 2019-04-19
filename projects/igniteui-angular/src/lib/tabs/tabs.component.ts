@@ -280,7 +280,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit() {
         // initially do not navigate to the route set on the tabs-groups to keep the url set by the user
-        this.setSelectedGroup(false);
+        this.navigationEndHandler(this);
+        this.setSelectedGroup();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
@@ -312,27 +313,18 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
         }
+        if (this._navigationEndSubscription) {
+            this._navigationEndSubscription.unsubscribe();
+        }
     }
 
-    private setSelectedGroup(navigateToRoute = true): void {
+    private setSelectedGroup(): void {
         requestAnimationFrame(() => {
-            if (!navigateToRoute) {
-                navigateToRoute = true;
-                const groupsArray = this.groups.toArray();
-                for (let i = 0; i < groupsArray.length; i++) {
-                    if (groupsArray[i].routerLinkDirective &&
-                        this.router.url.startsWith(groupsArray[i].routerLinkDirective.urlTree.toString())) {
-                        this._selectedIndex = i;
-                        navigateToRoute = false;
-                        break;
-                    }
-                }
-            }
             if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
                 // if nothing is selected - select the first tabs group
-                this.selectGroupByIndex(0, navigateToRoute);
+                this.selectGroupByIndex(0);
             } else {
-                this.selectGroupByIndex(this.selectedIndex, navigateToRoute);
+                this.selectGroupByIndex(this.selectedIndex);
             }
         });
     }
@@ -356,7 +348,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         const group = selectableGroups[selectedIndex];
 
         if (group) {
-            group.select(0, navigateToRoute);
+            group.select(0);
         }
     }
 
