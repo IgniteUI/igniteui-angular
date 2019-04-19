@@ -288,7 +288,7 @@ const appRoutes = [
         component: GridSelectionComponent
     },
     {
-        path: 'gridRowDraggable',
+        path: 'gridRowDrag',
         component: GridRowDraggableComponent
     },
     {

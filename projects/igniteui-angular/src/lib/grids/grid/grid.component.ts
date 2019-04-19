@@ -383,12 +383,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * An @Input property that determines whether the rows are draggable or not.
      * The default state is false.
      * ```html
-     * <igx-grid #grid [data]="Data" [rowDraggable]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [rowDrag]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public rowDraggable = false;
+    public rowDrag = false;
 
     /**
      * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get

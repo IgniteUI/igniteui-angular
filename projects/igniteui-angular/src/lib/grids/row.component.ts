@@ -162,15 +162,15 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get rowDraggable(): boolean {
-        return this.grid.rowDraggable;
+    public get rowDrag(): boolean {
+        return this.grid.rowDrag;
     }
 
     /**
      * @hidden
      */
-    public get showRowDraggable(): boolean {
-        return this.grid.showRowDraggable;
+    public get showRowDrag(): boolean {
+        return this.grid.showRowDrag;
     }
 
     /** @hidden */
