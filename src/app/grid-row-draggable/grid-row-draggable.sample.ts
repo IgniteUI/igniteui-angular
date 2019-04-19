@@ -10,15 +10,27 @@ import { RemoteService } from '../shared/remote.service';
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 
-    @ViewChild('grid1')
-    grid1: IgxGridComponent;
+    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;
+    @ViewChild("grid2", { read: IgxGridComponent }) public grid2: IgxGridComponent;
     remote: Observable<any[]>;
     selection = true;
     dragdrop = true;
+    public density = 'comfortable';
+    public displayDensities;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (state) => this.remoteService.url;
-     }
+
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
+    }
 
     ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
@@ -31,6 +43,8 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     handleRowDrop(args) {
+        this.grid2.addRow(args.source.rowData);
+        this.grid1.deleteRow(args.source.rowID);
         console.log('Row Drag End!');
     }
 

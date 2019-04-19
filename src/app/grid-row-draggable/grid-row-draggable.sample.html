@@ -1,13 +1,26 @@
+<div class="density-chooser" style="margin-bottom: 16px">
+    <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+</div>
 <div class="sample-container">
     <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
     <div class="separator"></div>
-    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
-            [rowSelectable]="selection" [rowDrag]="dragdrop" (onRowDragStart)="handleRowDrag($event)"
+    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [displayDensity]="density"
+            [rowSelectable]="selection" [rowDrag]="true" (onRowDragStart)="handleRowDrag($event)"
             (onRowDragEnd)="handleRowDrop($event)" [width]="'800px'" [height]="'600px'">
         <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
         <igx-column [field]="'ProductName'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
     </igx-grid>
-    <div class="separator"></div>
+    <div class="dropable-area" igxDrop>
+        <div class="sample-container">
+            <igx-grid #grid2 [data]="[]" [primaryKey]="'ProductID'" [displayDensity]="density"
+                    [rowSelectable]="false" [rowDrag]="true" (onRowDragStart)="handleRowDrag($event)"
+                    (onRowDragEnd)="handleRowDrop($event)" [width]="'800px'" [height]="'600px'">
+                <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
+                <igx-column [field]="'ProductName'"></igx-column>
+                <igx-column [field]="'UnitsInStock'"></igx-column>
+            </igx-grid>
+        </div>
+    </div>
 </div>
-<div class="dropable-area" igxDrop></div>
+

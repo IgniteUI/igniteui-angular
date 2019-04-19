@@ -2,7 +2,6 @@
     width: 100%;
     height: 100%;
     display: flex;
-    flex-flow: column;
     align-items: flex-start;
     margin: 24px;
 }
@@ -12,7 +11,7 @@
     box-shadow: 1px 1px #336caf;
 }
 .dropable-area {
-    height: 10%;
+    /* height: 10%;
     width: 10%;
-    background-color: chartreuse;
+    background-color: chartreuse; */
 }
