@@ -78,43 +78,6 @@ function addScrollDivToElement(parent) {
 
 }
 
-function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRect: DOMRect): number {
-    let expectedTop: number;
-    switch (verticalAlignment) {
-        case VerticalAlignment.Bottom: {
-            expectedTop = elementRect.top + elementRect.height;
-            break;
-        }
-        case VerticalAlignment.Middle: {
-            expectedTop = elementRect.top + elementRect.height / 2;
-            break;
-        }
-        default: {
-            expectedTop = elementRect.top;
-            break;
-        }
-    }
-    return expectedTop;
-}
-
-function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, elementRect: DOMRect): number {
-    let expectedLeft: number;
-    switch (horizontalAlignment) {
-        case HorizontalAlignment.Right: {
-            expectedLeft = elementRect.left + elementRect.width;
-            break;
-        }
-        case HorizontalAlignment.Center: {
-            expectedLeft = elementRect.left + elementRect.width / 2;
-            break;
-        }
-        default: {
-            expectedLeft = elementRect.left;
-            break;
-        }
-    }
-    return expectedLeft;
-}
 /**
  * Returns the top left location of the shown element
  * @param positionSettings Overlay setting to get location for
@@ -186,7 +149,7 @@ function getOverlayWrapperLocation(
             location.y = targetRect.bottom - wrapperRect.height;
         } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
             location.y = targetRect.bottom - targetRect.height / 2 - wrapperRect.height;
-    } else {
+        } else {
             location.y = targetRect.top - wrapperRect.height;
         }
     }
@@ -2066,12 +2029,7 @@ describe('igxOverlay', () => {
                 hAlignmentArray.forEach(function (horizontalStartPoint) {
                     vAlignmentArray.forEach(function (verticalStartPoint) {
                         hAlignmentArray.forEach(function (horizontalDirection) {
-                            //  do not check Center as we do nothing here
-                            if (horizontalDirection === 'Center') { return; }
                             vAlignmentArray.forEach(function (verticalDirection) {
-                                //  do not check Middle as we do nothing here
-                                if (verticalDirection === 'Middle') { return; }
-
                                 const positionSettings: PositionSettings = {
                                     target: button
                                 };
@@ -2092,9 +2050,17 @@ describe('igxOverlay', () => {
                                 fix.detectChanges();
 
                                 const targetRect: ClientRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
-                                const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                const overlayWrapperRect: ClientRect =
-                                    overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
+                                //  we need original rect of the wrapper element. After it was shown in overlay elastic may
+                                //  set width and/or height. To get original rect remove width and height, get the rect and
+                                //  restore width and height;
+                                const overlayWrapperElement: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                                const width = (<any>overlayWrapperElement).style.width;
+                                (<any>overlayWrapperElement).style.width = '';
+                                const height = (<any>overlayWrapperElement).style.height;
+                                (<any>overlayWrapperElement).style.height = '';
+                                let overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                (<any>overlayWrapperElement).style.width = width;
+                                (<any>overlayWrapperElement).style.height = height;
                                 const screenRect: ClientRect = {
                                     left: 0,
                                     top: 0,
@@ -2106,8 +2072,18 @@ describe('igxOverlay', () => {
 
                                 const location =
                                     getOverlayWrapperLocation(positionSettings, targetRect, overlayWrapperRect, screenRect, true);
-                                expect(overlayWrapperRect.top.toFixed(1)).toEqual(location.y.toFixed(1));
-                                expect(overlayWrapperRect.left.toFixed(1)).toEqual(location.x.toFixed(1));
+                                //  now get the wrapper rect as it is after elastic was applied
+                                overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                expect(overlayWrapperRect.top.toFixed(1))
+                                    .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                        `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                        `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                    .toEqual(location.y.toFixed(1));
+                                expect(overlayWrapperRect.left.toFixed(1))
+                                    .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                        `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                        `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                    .toEqual(location.x.toFixed(1));
                                 fix.componentInstance.overlay.hideAll();
                                 tick();
                                 fix.detectChanges();
@@ -2128,9 +2104,9 @@ describe('igxOverlay', () => {
                 button.style.height = '50px';
                 const buttonLocations = [
                     { left: `0px`, top: `0px` }, // topLeft
-                    { left: `${window.innerWidth - 200} px`, top: `0px` }, // topRight
-                    { left: `0px`, top: `${window.innerHeight - 200} px` }, // bottomLeft
-                    { left: `${window.innerWidth - 200} px`, top: `${window.innerHeight - 200} px` } // bottomRight
+                    { left: `${window.innerWidth - button.width} px`, top: `0px` }, // topRight
+                    { left: `0px`, top: `${window.innerHeight - button.height} px` }, // bottomLeft
+                    { left: `${window.innerWidth - button.width} px`, top: `${window.innerHeight - button.height} px` } // bottomRight
                 ];
                 const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
                 const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
@@ -2138,10 +2114,7 @@ describe('igxOverlay', () => {
                     for (const horizontalStartPoint of hAlignmentArray) {
                         for (const verticalStartPoint of vAlignmentArray) {
                             for (const horizontalDirection of hAlignmentArray) {
-                                if (horizontalDirection === 'Center') { continue; }
                                 for (const verticalDirection of vAlignmentArray) {
-                                    if (verticalDirection === 'Middle') { continue; }
-
                                     const positionSettings: PositionSettings = {
                                         target: button
                                     };
@@ -2165,8 +2138,17 @@ describe('igxOverlay', () => {
                                     fix.detectChanges();
 
                                     const targetRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
-                                    const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                    const overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                    //  we need original rect of the wrapper element. After it was shown in overlay elastic may
+                                    //  set width and/or height. To get original rect remove width and height, get the rect and
+                                    //  restore width and height;
+                                    const overlayWrapperElement: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                                    const width = (<any>overlayWrapperElement).style.width;
+                                    (<any>overlayWrapperElement).style.width = '';
+                                    const height = (<any>overlayWrapperElement).style.height;
+                                    (<any>overlayWrapperElement).style.height = '';
+                                    let overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                    (<any>overlayWrapperElement).style.width = width;
+                                    (<any>overlayWrapperElement).style.height = height;
                                     const screenRect: ClientRect = {
                                         left: 0,
                                         top: 0,
@@ -2178,9 +2160,19 @@ describe('igxOverlay', () => {
 
                                     const loc =
                                         getOverlayWrapperLocation(positionSettings, targetRect, overlayWrapperRect, screenRect, true);
-                                    expect(overlayWrapperRect.top.toFixed(1)).toEqual(loc.y.toFixed(1));
-                                    expect(overlayWrapperRect.left.toFixed(1)).toEqual(loc.x.toFixed(1));
-                                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+                                    //  now get the wrapper rect as it is after elastic was applied
+                                    overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                    expect(overlayWrapperRect.top.toFixed(1))
+                                        .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                            `VD: ${verticalDirection}; VSP: ${verticalStartPoint};` +
+                                            `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                        .toEqual(loc.y.toFixed(1));
+                                    expect(overlayWrapperRect.left.toFixed(1))
+                                        .withContext(`HD: ${horizontalDirection}; HSP: ${horizontalStartPoint};` +
+                                            `VD: ${verticalDirection}; VSP: ${verticalStartPoint}` +
+                                            `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                        .toEqual(loc.x.toFixed(1));
+                                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbars
                                     fix.componentInstance.overlay.hideAll();
                                     tick();
                                     fix.detectChanges();

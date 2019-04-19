@@ -13,8 +13,10 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
         const rightExtend = Math.min(minExtend, innerRect.right - outerRect.right);
         const extend = Math.max(leftExtend, rightExtend);
         element.style.width = `${innerRect.width - extend}px`;
+        //  if direction is center and element goes off the screen in left direction we should push the
+        //  element to the right. Otherwise only the right border will move to the left which is not ok
         if (leftExtend > 0 && settings.horizontalDirection === HorizontalAlignment.Center) {
-            element.style.left = '0';
+            element.style.transform += ` translateX(${leftExtend}px)`;
         }
     }
 
@@ -25,8 +27,10 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
         const bottomExtend = Math.min(minExtend, innerRect.bottom - outerRect.bottom);
         const extend = Math.max(topExtend, bottomExtend);
         element.style.height = `${innerRect.height - extend}px`;
+        //  if direction is middle and element goes off the screen in upper direction we should push the
+        //  element to the bottom. Otherwise only the bottom border will move to the top which is not ok
         if (topExtend > 0 && settings.verticalDirection === VerticalAlignment.Middle) {
-            element.style.top = '0';
+            element.style.transform += ` translateY(${topExtend}px)`;
         }
     }
 }
