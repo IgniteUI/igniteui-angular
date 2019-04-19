@@ -273,7 +273,10 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
-        this.setSelectedGroup();
+        requestAnimationFrame(() => {
+            this.setSelectedGroup();
+        });
+
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });

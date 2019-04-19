@@ -66,6 +66,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 
@@ -331,6 +332,10 @@ const appRoutes = [
     {
         path: 'treeGridFlatData',
         component: TreeGridFlatDataSampleComponent
+    },
+    {
+        path: 'treeGridLoadOnDemand',
+        component: TreeGridLoadOnDemandSampleComponent
     },
     {
         path: 'tooltip',
