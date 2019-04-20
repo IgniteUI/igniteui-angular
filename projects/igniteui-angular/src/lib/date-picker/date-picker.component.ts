@@ -15,7 +15,8 @@ import {
     Inject,
     ChangeDetectorRef,
     HostListener,
-    NgModuleRef
+    NgModuleRef,
+    AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -28,8 +29,8 @@ import {
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
+import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     OverlaySettings,
@@ -139,7 +140,7 @@ export enum PredefinedFormatOptions {
         }
     `]
 })
-export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, OnDestroy {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -813,6 +814,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.mask = DatePickerUtil.getMask(this.dateFormatParts);
             }
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit(): void {
+        if (this.mode === InteractionMode.DropDown && this.editableInput) {
+            fromEvent(this.editableInput.nativeElement, 'keydown').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroy$)
+            ).subscribe((res) => this.onKeyDown(res));
         }
     }
 
