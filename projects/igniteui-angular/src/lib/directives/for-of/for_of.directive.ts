@@ -1390,6 +1390,16 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return newHeight;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public assumeMaster() : void {
+        //this._sizesCache = this.sizesCache;
+        //this.state.chunkSize = this.syncService.chunkSize(this.igxForScrollOrientation);
+        this.syncService.setMaster(this, true);
+    }
+
     ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
