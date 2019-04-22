@@ -571,12 +571,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
-            requestAnimationFrame(() => {
-                if (!this._destroyed) {
-                    this.reflow();
-                    this.cdr.markForCheck();
-                }
-            });
+            if (this._ngAfterViewInitPassed) {
+                requestAnimationFrame(() => {
+                    if (!this._destroyed) {
+                        this.reflow();
+                        this.cdr.markForCheck();
+                    }
+                });
+            }
         }
     }
 
@@ -604,14 +606,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
-            requestAnimationFrame(() => {
-                // Calling reflow(), because the width calculation
-                // might make the horizontal scrollbar appear/disappear.
-                // This will change the height, which should be recalculated.
-                if (!this._destroyed) {
-                    this.reflow();
-                }
-            });
+            if (this._ngAfterViewInitPassed) {
+                requestAnimationFrame(() => {
+                    // Calling reflow(), because the width calculation
+                    // might make the horizontal scrollbar appear/disappear.
+                    // This will change the height, which should be recalculated.
+                    if (!this._destroyed) {
+                        this.reflow();
+                    }
+                });
+            }
         }
     }
 
@@ -1633,9 +1637,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
-        /**
-     * @hidden
-     */
+    /**
+ * @hidden
+ */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective })
     public verticalScroll: IgxGridForOfDirective<any>;
 
@@ -2608,8 +2612,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._derivePossibleHeight();
 
         this.columnList.changes
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
@@ -3818,8 +3822,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
 
     /**
      * @hidden
@@ -3931,7 +3935,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
-            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
+            if (computed.getPropertyValue('height').indexOf('%') === -1) {
                 gridHeight = parseInt(computed.getPropertyValue('height'), 10);
             } else {
                 return this.defaultTargetBodyHeight;
@@ -3940,10 +3944,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             gridHeight = parseInt(this._height, 10);
         }
         const height = Math.abs(gridHeight - toolbarHeight -
-                this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight -
-                groupAreaHeight - footerBordersAndScrollbars -
-                this.scr.nativeElement.clientHeight);
+            this.theadRow.nativeElement.offsetHeight -
+            this.summariesHeight - pagingHeight -
+            groupAreaHeight - footerBordersAndScrollbars -
+            this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
             return this.defaultTargetBodyHeight;
@@ -4029,7 +4033,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
         if (!width) {
-            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
         if (this.hasVerticalSroll()) {
@@ -4046,8 +4050,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._ngAfterViewInitPassed) { return false; }
         const isScrollable = this.verticalScrollContainer.isScrollable();
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
-        this.verticalScrollContainer.igxForOf.length > 0 &&
-        isScrollable);
+            this.verticalScrollContainer.igxForOf.length > 0 &&
+            isScrollable);
     }
 
     /**
@@ -4559,8 +4563,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
     setSelection(range: GridSelectionRange): void {
-        const startNode =  { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
-        const endNode =  { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
+        const startNode = { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
+        const endNode = { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
 
         this.selectionService.pointerState.node = startNode;
         this.selectionService.selectRange(endNode, this.selectionService.pointerState);
@@ -4644,10 +4648,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public wheelHandler(isScroll = false) {
         if (document.activeElement &&
-        // tslint:disable-next-line:no-bitwise
+            // tslint:disable-next-line:no-bitwise
             (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-        // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
+                // tslint:disable-next-line:no-bitwise
+                (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
@@ -4666,7 +4670,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const editModeCell = this.crudService.cell;
         if (editModeCell) {
-                this.endEdit(false);
+            this.endEdit(false);
         }
 
         if (!text) {
@@ -4714,7 +4718,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
-            this.lastSearchInfo = {...this.lastSearchInfo};
+            this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column);
@@ -4818,7 +4822,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof(row) !== 'number') {
+        if (this.paging && typeof (row) !== 'number') {
             const rowIndex = this.filteredSortedData.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
@@ -4831,11 +4835,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                    typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
@@ -5102,12 +5106,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected _restoreVirtState(row) {
-         // check virtualization state of data record added from cache
-         // in case state is no longer valid - update it.
-         const rowForOf = row.virtDirRow;
-         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
-         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        // check virtualization state of data record added from cache
+        // in case state is no longer valid - update it.
+        const rowForOf = row.virtDirRow;
+        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
         }
