@@ -4,11 +4,12 @@ import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
-import { IGridSelection, IEditDone, IGridRowEvents, IGridRowSelectionChange } from './grid-interfaces.spec';
+import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
+import { IgxGridCellType } from '../grids/grid-types';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -568,7 +569,7 @@ export class PinningComponent extends GridWithSizeComponent
     width = '800px';
     height = '300px';
 
-    selectedCell: IgxGridCellComponent;
+    selectedCell: IgxGridCellType;
     cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
     }
@@ -828,7 +829,7 @@ export class VirtualGridComponent extends BasicGridComponent {
         { field: 'other' },
         { field: 'another' }
     ];
-     public selectedCell: IgxGridCellComponent;
+     public selectedCell: IgxGridCellType;
      constructor() {
         super();
         this.data = this.generateData(1000);

@@ -106,7 +106,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 export interface IGridCellEventArgs {
-    cell: IgxGridCellComponent;
+    cell: IgxGridCellType;
     event: Event;
 }
 

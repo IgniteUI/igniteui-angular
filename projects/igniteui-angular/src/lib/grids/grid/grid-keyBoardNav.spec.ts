@@ -1342,8 +1342,8 @@ export class DefaultGridComponent {
         { index: 2, value: 2 }
     ];
 
-    public selectedCell: IgxGridCellComponent;
-    public clickedCell: IgxGridCellComponent;
+    public selectedCell;
+    public clickedCell;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -1377,7 +1377,7 @@ export class CtrlKeyKeyboardNagivationComponent {
         { index: 2, value: 2, other: 2, another: 2 }
     ];
 
-    public selectedCell: IgxGridCellComponent;
+    public selectedCell;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;

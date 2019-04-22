@@ -481,7 +481,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
     @Input('igxColumnMovingDrop')
     set data(val: any) {
-        this._column = val;
+        if (val.grid) {
+            this._column = val;
+        }
 
         if (val instanceof IgxGridForOfDirective) {
             this._hVirtDir = val;

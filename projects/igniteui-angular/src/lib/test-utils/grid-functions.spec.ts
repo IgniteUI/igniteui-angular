@@ -6,9 +6,9 @@ import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/grid-header.component';
 import { IgxChipComponent } from '../chips';
 import { IgxGridComponent } from '../grids/grid/grid.component';
-import { IgxColumnGroupComponent } from '../grids/column.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxGridColumnType } from '../grids/grid-types';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -18,7 +18,7 @@ const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 
 export class GridFunctions {
 
-    public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
+    public static getColGroup(grid: IgxGridComponent, headerName: string): IgxGridColumnType {
         const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;

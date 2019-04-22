@@ -31,15 +31,29 @@ export interface IgxGridCellType extends INativeElement {
     column: IgxGridColumnType;
     row: any;
     rowData: any;
+    cellID: any;
     value: any;
     rowIndex: number;
     columnIndex: number;
     visibleColumnIndex: number;
     editMode: boolean;
+    inEditMode: boolean;
     selected: boolean;
     editValue: any;
     editable: boolean;
+    grid: IgxGridType;
+    cdr: ChangeDetectorRef;
+    focused: boolean;
+    readonly: boolean;
+    describedby: string;
+    width: string;
+    gridAPI: any;
 
+    onClick(event: MouseEvent): void;
+    onFocus(event: FocusEvent): void;
+    dispatchEvent(event: KeyboardEvent): void;
+    onKeydownEnterEditMode(): void;
+    onKeydownExitEditMode(): void;
     calculateSizeToFit(range: any): number;
     highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number;
     clearHighlight(): void;
@@ -126,11 +140,12 @@ export interface IgxGridColumnType {
     maxWidth: string;
     minWidth: string;
     index: number;
-    formatter: (value: any) => string;
+    formatter: (value: any) => string | number;
     dataType: DataType;
     visibleIndex: number;
     columnGroup: boolean;
     summaries: any;
+    cells: IgxGridCellType[];
     children: QueryList<any>;
     parent: IgxGridColumnType;
     topLevelParent: IgxGridColumnType;
@@ -150,6 +165,7 @@ export interface IgxGridColumnType {
     grid: IgxGridType;
     sortStrategy: ISortingStrategy;
 
+    autosize(): void;
     resetVisibleIndex(): void;
     getLargestCellWidth(): string;
     getCellWidth(): string;
@@ -233,6 +249,7 @@ export interface IgxGridType extends INativeElement {
     moveColumn(column: IgxGridColumnType, dropTarget: IgxGridColumnType, pos: DropPosition): void;
     getVisibleContentHeight(): number;
     getPossibleColumnWidth(): string;
+    getRowByIndex(index: number): IgxGridRowType;
     getPinnedWidth(takeHidden: boolean): number;
     wheelHandler(): void;
     reflow(): void;

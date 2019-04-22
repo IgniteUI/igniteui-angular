@@ -29,6 +29,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { IgxGridCellType } from '../grid-types';
 
 const DEBOUNCETIME = 30;
 
@@ -2720,7 +2721,7 @@ describe('IgxGrid Component Tests', () => {
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
                 const initialData = Object.assign({}, initialRow.rowData);
-                let targetCell: IgxGridCellComponent;
+                let targetCell;
                 spyOn(grid.onRowEditCancel, 'emit');
                 spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
@@ -2748,7 +2749,7 @@ describe('IgxGrid Component Tests', () => {
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
                 const initialData = Object.assign({}, initialRow.rowData);
-                let targetCell: IgxGridCellComponent;
+                let targetCell;
                 spyOn(grid.onRowEditCancel, 'emit');
                 spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
@@ -2776,7 +2777,7 @@ describe('IgxGrid Component Tests', () => {
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
                 const initalData = Object.assign({}, initialRow.rowData);
-                let targetCell: IgxGridCellComponent;
+                let targetCell;
                 spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
@@ -2804,7 +2805,7 @@ describe('IgxGrid Component Tests', () => {
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
                 const initialData = Object.assign({}, initialRow.rowData);
-                let targetCell: IgxGridCellComponent;
+                let targetCell;
                 spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
@@ -2835,7 +2836,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fixture.componentInstance.grid;
 
-                const columns: IgxColumnComponent[] = grid.columnList.toArray();
+                const columns = grid.columnList.toArray();
                 expect(columns[0].editable).toBeFalsy();
                 expect(columns[1].editable).toBeFalsy();
                 expect(columns[2].editable).toBeTruthy();
@@ -3925,17 +3926,17 @@ export class IgxGridWithEditingAndFeaturesComponent {
             shiftKey
         }));
     }
-    public focusGridCell(rowIndex: number, columnName: string): IgxGridCellComponent {
+    public focusGridCell(rowIndex: number, columnName: string): IgxGridCellType {
         const targetCell = this.getCell(rowIndex, columnName);
         targetCell.onFocus(new FocusEvent('focus'));
         return targetCell;
     }
 
-    public getCell(rowIndex: number, columnName: string): IgxGridCellComponent {
+    public getCell(rowIndex: number, columnName: string): IgxGridCellType {
         return this.grid.getCellByColumn(rowIndex, columnName);
     }
 
-    public getCurrentEditCell(): IgxGridCellComponent {
+    public getCurrentEditCell(): IgxGridCellType {
         const grid = this.grid as any;
         const currentCell = grid.gridAPI.get_cell_inEditMode();
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
@@ -3984,7 +3985,7 @@ export class IgxGridCustomOverlayComponent {
         return this.gridAPI.get_cell_inEditMode();
     }
 
-    public getCurrentEditCell(): IgxGridCellComponent {
+    public getCurrentEditCell(): IgxGridCellType {
         const grid = this.grid as any;
         const currentCell = grid.gridAPI.get_cell_inEditMode();
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);

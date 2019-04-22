@@ -27,8 +27,8 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     }
     private _treeRow: ITreeGridRecord;
 
-    @ViewChildren(IgxTreeGridCellComponent)
-    protected _cells: QueryList<IgxTreeGridCellComponent>;
+    @ViewChildren('treeCell')
+    protected _cells: QueryList<any>;
 
     /**
      * The rendered cells in the row component.

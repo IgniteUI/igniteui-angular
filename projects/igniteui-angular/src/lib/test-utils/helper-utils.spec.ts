@@ -9,6 +9,7 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { IgxGridBaseComponent } from '../grids/index';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
+import { IgxGridCellType } from '../grids/grid-types';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
@@ -127,7 +128,7 @@ export class HelperUtils {
 
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
-        cell: IgxGridCellComponent,
+        cell: IgxGridCellType,
         index: number,
         shift = false) => new Promise(async (resolve) => {
             // grid - the grid in which to navigate.
@@ -167,7 +168,7 @@ export class HelperUtils {
 
     public static expandCollapceGroupRow =
         (fix, groupRow: IgxGridGroupByRowComponent,
-            cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+            cell: IgxGridCellType) => new Promise(async (resolve, reject) => {
                 expect(groupRow.focused).toBe(true);
                 expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
                 if (cell != null) {

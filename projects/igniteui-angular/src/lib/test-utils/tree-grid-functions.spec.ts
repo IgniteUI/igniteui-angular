@@ -1,7 +1,8 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent, IgxGridCellComponent, IGridDataBindable } from '../grids/tree-grid';
+import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from '../grids/tree-grid';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
+import { IgxGridCellType } from '../grids/grid-types';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -347,7 +348,7 @@ export class TreeGridFunctions {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 
-    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellType, selected: boolean = true) {
         expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
 
         if (selected) {
@@ -512,7 +513,7 @@ export class TreeGridFunctions {
             })
 
     public static moveGridCellWithTab =
-        (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+        (fix, cell: IgxGridCellType) => new Promise(async (resolve, reject) => {
                 UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();

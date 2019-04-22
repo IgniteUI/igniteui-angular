@@ -17,7 +17,6 @@ import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.component';
 import { IgxGridCellComponent } from '../grid';
@@ -713,7 +712,7 @@ describe('IgxTreeGrid - Integration', () => {
             const initialData = treeGrid.data.map(e => {
                 return Object.assign({}, e);
             });
-            let targetCell: IgxGridCellComponent;
+            let targetCell;
             // Get 147 row
             targetCell = treeGrid.getCellByKey(147, 'Name');
             expect(targetCell.value).toEqual('John Winchester');

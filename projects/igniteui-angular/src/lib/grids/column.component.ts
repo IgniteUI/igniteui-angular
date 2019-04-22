@@ -792,7 +792,7 @@ export class IgxColumnComponent implements AfterContentInit, IgxGridColumnType {
      * ```
      * @memberof IgxColumnComponent
      */
-    get allChildren(): IgxColumnComponent[] {
+    get allChildren(): IgxGridColumnType[] {
         return [];
     }
     /**
@@ -1465,7 +1465,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    get allChildren(): IgxColumnComponent[] {
+    get allChildren(): IgxGridColumnType[] {
         return flatten(this.children.toArray());
     }
     /**

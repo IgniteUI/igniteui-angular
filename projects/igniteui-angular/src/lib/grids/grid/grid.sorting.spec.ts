@@ -370,8 +370,8 @@ describe('IgxGrid - Grid Sorting', () => {
             strategy: new SortByParityComponent()
         });
         fixture.detectChanges();
-        const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
-        const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
+        const oddHalf = grid.getColumnByName('ID').cells.slice(0, 5);
+        const evenHalf = grid.getColumnByName('ID').cells.slice(5);
         const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
         const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
         expect(isFirstHalfOdd).toEqual(true);

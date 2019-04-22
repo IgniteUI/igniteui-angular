@@ -2,12 +2,13 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
+import { IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxGridCellType } from '../grid-types';
 
 const DEBOUNCETIME = 30;
 
@@ -763,7 +764,7 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
-        const lastCol: IgxColumnComponent = columns.last;
+        const lastCol = columns.last;
         lastCol.pinned = true;
         tick();
         fix.detectChanges();
@@ -780,7 +781,7 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(NoColumnWidthGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
-        const lastCol: IgxColumnComponent = columns.last;
+        const lastCol = columns.last;
         lastCol.cells.forEach((cell) => {
             expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
@@ -844,7 +845,7 @@ describe('IgxGrid - Cell component', () => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        const columns: IgxColumnComponent[] = grid.columnList.toArray();
+        const columns = grid.columnList.toArray();
         expect(columns[0].editable).toBeFalsy();
         expect(columns[1].editable).toBeFalsy();
         expect(columns[2].editable).toBeTruthy();
@@ -873,8 +874,8 @@ export class DefaultGridComponent {
         { index: 2, value: 2 }
     ];
 
-    public selectedCell: IgxGridCellComponent;
-    public clickedCell: IgxGridCellComponent;
+    public selectedCell: IgxGridCellType;
+    public clickedCell: IgxGridCellType;
     public eventCounter = 0;
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -921,7 +922,7 @@ export class VirtualGridComponent {
         { field: 'another' }
     ];
     public defaultWidth = '200px';
-    public selectedCell: IgxGridCellComponent;
+    public selectedCell: IgxGridCellType;
 
     constructor() {
         this.data = this.generateData(1000);

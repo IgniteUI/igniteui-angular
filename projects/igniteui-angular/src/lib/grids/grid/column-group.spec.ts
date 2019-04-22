@@ -7,11 +7,11 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../grid-header.component';
+import { IgxGridColumnType } from '../grid-types';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -2024,7 +2024,7 @@ export class NumberColWidthGridComponent {
     ];
 }
 
-function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
+function getColGroup(grid: IgxGridComponent, headerName: string): IgxGridColumnType {
     const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
     if (colGroups.length === 0) {
         return null;
@@ -2077,7 +2077,7 @@ function testColumnsIndexes(columns: IgxColumnComponent[]) {
     }
 }
 
-function testColumnsVisibleIndexes(columns: IgxColumnComponent[]) {
+function testColumnsVisibleIndexes(columns: IgxGridColumnType[]) {
     let visibleIndex = 0;
     for (let index = 0; index < columns.length; index++) {
         expect(columns[index].visibleIndex).toBe(visibleIndex);
@@ -2092,7 +2092,7 @@ function testGroupsAndColumns(groups: number, columns: number) {
     expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(columns);
 }
 
-function testColumnPinning(column: IgxColumnComponent, isPinned: boolean) {
+function testColumnPinning(column: IgxGridColumnType, isPinned: boolean) {
     expect(column.pinned).toBe(isPinned);
     expect(column.allChildren.every(c => c.pinned === isPinned)).toEqual(true);
 }
