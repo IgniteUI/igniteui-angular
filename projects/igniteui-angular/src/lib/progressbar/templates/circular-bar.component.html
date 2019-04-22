@@ -4,13 +4,12 @@
     role="progressbar"
     aria-valuemin="0"
     [attr.aria-valuemax]="max"
-    [attr.aria-valuenow]="value"
->
+    [attr.aria-valuenow]="value">
     <circle class="igx-circular-bar__inner" cx="50" cy="50" r="46" />
     <circle #circle class="igx-circular-bar__outer" cx="50" cy="50" r="46" />
-    <text #text [class.igx-circular-bar__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">
-            <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate; context: context">
-            </ng-container>
+    <text [class.igx-circular-bar__text--hidden]="!textVisibility" text-anchor="middle" x="50" y="60">
+        <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate; context: context">
+        </ng-container>
     </text>
 
     <ng-template #defaultTextTemplate>
