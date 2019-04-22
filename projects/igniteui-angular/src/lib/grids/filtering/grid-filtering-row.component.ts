@@ -155,7 +155,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            event.preventDefault();
+            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
         }
     }
 
@@ -623,14 +623,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                     Math.ceil(chipAraeChildren[count - 1].getBoundingClientRect().left) + 1;
                 this.transform(this.chipAreaScrollOffset);
             }
-        }
-    }
-
-    public onCloseButtonKeyDown(event: KeyboardEvent) {
-        if (event.key === KEYS.TAB && !event.shiftKey) {
-            this.filteringService.grid.navigation.goToFirstCell();
-            event.stopPropagation();
-            event.preventDefault();
         }
     }
 
