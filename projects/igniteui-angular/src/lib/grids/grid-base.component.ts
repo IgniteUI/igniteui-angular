@@ -86,6 +86,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1512,6 +1513,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden

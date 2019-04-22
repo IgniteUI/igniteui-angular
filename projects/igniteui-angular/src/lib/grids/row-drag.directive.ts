@@ -46,18 +46,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         });
     }
 
-    public onPointerMove(event) { 
-        super.onPointerMove(event);
-
-        if (this._dragGhost && this._lastDropArea != null) {
-            const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
-            dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'add';
-        } else if (this._dragGhost) {
-            const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
-            dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'block';
-        }
-    }
-
     public onPointerUp(event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
@@ -85,7 +73,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.createDragGhost(event, this._row.nativeElement);
 
         const gridWidth = this.row.grid.nativeElement.style.width;
-        const dragIndicator = this._dragGhost.getElementsByClassName('igx-grid__tr--drag-indicator')[0];
 
         this._dragGhost.style.overflow = 'hidden';
         this._dragGhost.style.width = gridWidth;
@@ -93,7 +80,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.renderer.removeClass(this._dragGhost, this.row.grid.evenRowCSS);
         this.renderer.removeClass(this._dragGhost, draggedRowClass);
         this.renderer.addClass(this._dragGhost, ghostBackgrounClass);
-        dragIndicator.getElementsByTagName('igx-icon')[0].innerHTML = 'block';
     }
 
     protected dispatchDropEvent(pageX: number, pageY: number) {
@@ -118,10 +104,20 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 }
 
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxDragIndicatorIcon]'
+})
+
+export class IgxDragIndicatorIconDirective {
+}
+
 @NgModule({
-    declarations: [IgxRowDragDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
     imports: []
 })
 
