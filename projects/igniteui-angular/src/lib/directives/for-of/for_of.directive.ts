@@ -1394,9 +1394,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @hidden
      * @internal
      */
-    public assumeMaster() : void {
-        //this._sizesCache = this.sizesCache;
-        //this.state.chunkSize = this.syncService.chunkSize(this.igxForScrollOrientation);
+    public assumeMaster(): void {
         this.syncService.setMaster(this, true);
     }
 
