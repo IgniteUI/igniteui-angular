@@ -18,7 +18,24 @@ const draggedRowClass = 'igx-grid__tr--drag';
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private _row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
-    private startDrag(event) {
+    public startDrag(event) {
+        this.onPointerDown(event);
+    }
+
+    @Input('igxRowDrag')
+    set data(val) {
+        this._row = val;
+    }
+
+    get data() {
+        return this.row;
+    }
+
+    get row() {
+        return this._row;
+    }
+
+    public onPointerDown(event) {
         event.preventDefault();
         super.onPointerDown(event);
 
@@ -36,23 +53,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this.onPointerUp(event);
             }
         });
-    }
-
-    @Input('igxRowDrag')
-    set data(val) {
-        this._row = val;
-    }
-
-    get data() {
-        return this.row;
-    }
-
-    get row() {
-        return this._row;
-    }
-
-    public onPointerDown(event) {
-        this.startDrag(event);
     }
 
     public onPointerUp(event) {

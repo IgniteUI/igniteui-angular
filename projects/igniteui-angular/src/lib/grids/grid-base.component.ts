@@ -5221,7 +5221,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
     }
-
 }
 
 
