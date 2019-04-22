@@ -45,7 +45,7 @@ export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
 export function verifyDOMMatchesLayoutSettings(row, colSettings) {
     const firstRowCells = row.cells.toArray();
     const rowElem = row.nativeElement;
-    const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl_block');
+    const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
 
     colSettings.forEach((groupSetting, index) => {
         // check group has rendered block
@@ -58,8 +58,8 @@ export function verifyDOMMatchesLayoutSettings(row, colSettings) {
              // check correct attributes are applied
             expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
             expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
-            expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd || '');
-            expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd || '');
+            expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+            expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
 
             // check width
             let sum = 0;

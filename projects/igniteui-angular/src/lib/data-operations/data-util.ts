@@ -63,26 +63,24 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, groupsRecords: any[] = []): IGroupByResult {
         const grouping = new IgxGrouping();
-        return grouping.groupBy(data, state.expressions);
+        groupsRecords.splice(0, groupsRecords.length);
+        return grouping.groupBy(data, state.expressions, groupsRecords);
     }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
+    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
         if (state.expressions.length === 0) {
             return groupData.data;
         }
-        return this.restoreGroupsIterative(groupData, state, groupsRecords);
+        return this.restoreGroupsIterative(groupData, state);
     }
-    private static restoreGroupsIterative(groupData: IGroupByResult,
-            state: IGroupingState, groupsRecords: any[]): any[] {
+    private static restoreGroupsIterative(groupData: IGroupByResult, state: IGroupingState): any[] {
         const metadata = groupData.metadata;
         const result = [], added = [];
         let chain: any[];
         let i = 0, j;
         let pointer: IGroupByRecord;
         let expanded: boolean;
-        // empty the array without changing reference
-        groupsRecords.splice(0, groupsRecords.length);
         for (i = 0; i < metadata.length;) {
             chain = [metadata[i]];
             pointer = metadata[i].groupParent;
@@ -93,16 +91,6 @@ export class DataUtil {
                 pointer = pointer.groupParent;
             }
             for (j = chain.length - 1; j >= 0; j--) {
-                if (!chain[j].level) {
-                    groupsRecords.push(chain[j]);
-                } else {
-                    const p = chain[j + 1] || added[added.length - 1];
-                    if (p['groups']) {
-                        p['groups'].push(chain[j]);
-                    } else {
-                        p['groups'] = [chain[j]];
-                    }
-                }
                 result.push(chain[j]);
                 added.unshift(chain[j]);
                 const hierarchy = this.getHierarchy(chain[j]);

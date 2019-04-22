@@ -824,40 +824,38 @@ export class IgxColumnComponent implements AfterContentInit {
     get isLastPinned(): boolean {
         return this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
-    get gridRowSpan() {
-        return (this.rowEnd && this.rowEnd.indexOf('span') !== -1) ?
-            parseInt(this.rowEnd.replace('span', ''), 10) : 1;
+    get gridRowSpan(): number {
+        return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
-    get gridColumnSpan() {
-        return (this.colEnd && this.colEnd.indexOf('span') !== -1) ?
-            parseInt(this.colEnd.replace('span', ''), 10) : 1;
+    get gridColumnSpan(): number {
+        return this.colEnd && this.colStart ? this.colEnd - this.colStart : 1;
     }
 
     /**
      * Row index where the current field should end.
-     * It can be applied as `span n` to specify that the current field is spanning on `n` rows.
+     * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
      * ```html
      * <igx-column-layout>
-     *   <igx-column [rowEnd]="'span 2'" [rowStart]="1" [colStart]="1"></igx-column>
+     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
      * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowEnd: string;
+    public rowEnd: number;
 
     /**
      * Column index where the current field should end.
-     * It can be applied as `span n` to specify that the current field is spanning on `n` columns.
+     * The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field
      * ```html
      * <igx-column-layout>
-     *   <igx-column [colEnd]="'span 2'" [rowStart]="1" [colStart]="1"></igx-column>
+     *   <igx-column [colEnd]="3" [rowStart]="1" [colStart]="1"></igx-column>
      * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public colEnd: string;
+    public colEnd: number;
 
     /**
      * Row index from which the field is starting.
@@ -922,7 +920,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    children;
+    children: QueryList<IgxColumnComponent>;
     /**
      *@hidden
      */
@@ -1652,7 +1650,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
      * ```
-     * @memberof IgxColumnLayoutComponent
+     * @memberof IgxColumnGroupComponent
      */
     get width() {
         const width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);

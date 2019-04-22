@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, ElementRef, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -12,7 +12,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
-export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
+export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> implements DoCheck {
     constructor(
         public gridAPI: GridBaseAPIService<IgxTreeGridComponent>,
         public crudService: IgxGridCRUDService,
@@ -83,9 +83,35 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     /**
      * @hidden
      */
+    public isLoading: boolean;
+
+    /**
+     * @hidden
+     */
+    public get showIndicator() {
+        return this.grid.loadChildrenOnDemand ?
+            this.grid.expansionStates.has(this.rowID) ?
+                this.treeRow.children && this.treeRow.children.length :
+                this.grid.hasChildrenKey ?
+                    this.rowData[this.grid.hasChildrenKey] :
+                    true :
+            this.treeRow.children && this.treeRow.children.length;
+    }
+
+    /**
+     * @hidden
+     */
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
         return `${classes} ${filteredClass}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public ngDoCheck() {
+        this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
+        super.ngDoCheck();
     }
 }

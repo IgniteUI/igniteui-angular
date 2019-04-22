@@ -334,8 +334,8 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`disablePinning`|boolean| Enables/disables pinning for the column, default value is `false`.|
 |`rowStart`|number|Row index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
 |`colStart`|number|Column index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
-|`rowEnd`|string|Row index where the current field should end(can use `span n` to specify that the current field is spanning on `n` rows). Only applies when the columns are within `IgxColumnLayoutComponent`.|
-|`colEnd`|string|Column index where the current field should end(can use span n to specify that the current field is spanning on n columns). Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`rowEnd`|string|Row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`colEnd`|string|Column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. Only applies when the columns are within `IgxColumnLayoutComponent`.|
 
 
 ### Methods

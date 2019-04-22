@@ -663,9 +663,8 @@
         overflow: visible;
     }
 
-    %igx-grid__mrl_block {
+    %grid-mrl-block {
         display: grid;
-        background: inherit;
 
         %grid-thead-item {
             display: flex;
@@ -921,6 +920,16 @@
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
+    %igx-grid__tree-loading-indicator {
+        width: rem(24px, 16px);
+        height: rem(24px, 16px);
+        margin-right: rem(8px, 16px);
+
+        %circular-outer {
+            stroke: --var($theme, 'expand-icon-color');
         }
     }
 
@@ -1880,6 +1889,20 @@
 
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: igx-color($palette, 'secondary');
+                }
+
+                + igx-icon {
+                    margin-left: rem(4px);
+                }
+            }
         }
     }
 
