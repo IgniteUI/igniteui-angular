@@ -561,6 +561,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     /**
      * @hidden
+    */
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - hierarchical grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
+    }
+
+    /**
+     * @hidden
      * Gets the visible content height that includes header + tbody + footer.
      * For hierarchical child grid it may be scrolled and not fully visible.
      */
