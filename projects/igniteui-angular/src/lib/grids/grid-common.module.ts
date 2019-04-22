@@ -17,7 +17,7 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -72,6 +72,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
         IgxGridCellComponent,
         IgxColumnComponent,
         IgxColumnGroupComponent,
+        IgxColumnLayoutComponent,
         IgxGridHeaderComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarCustomContentDirective,
@@ -101,12 +102,14 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
     ],
     entryComponents: [
         IgxColumnComponent,
-        IgxColumnGroupComponent
+        IgxColumnGroupComponent,
+        IgxColumnLayoutComponent
     ],
     exports: [
         IgxGridCellComponent,
         IgxColumnComponent,
         IgxColumnGroupComponent,
+        IgxColumnLayoutComponent,
         IgxGridHeaderComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarCustomContentDirective,
