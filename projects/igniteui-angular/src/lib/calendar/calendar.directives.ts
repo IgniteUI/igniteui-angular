@@ -126,28 +126,45 @@ export class IgxCalendarSubheaderTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCalendarScrollMonth]'
 })
 export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
 
+    /**
+     * A callback function to be invoked when month increment/decrement starts.
+     * @hidden
+     */
     @Input()
-    public sartScrollFn: (keydown?: boolean) => {};
+    public startScroll: (keydown?: boolean) => {};
 
+    /**
+     * A callback function to be invoked when month increment/decrement stops.
+     * @hidden
+     */
     @Input()
-    public stopScrollFn: (event: any) => {};
+    public stopScroll: (event: any) => {};
 
+    /**
+     * @hidden
+     */
     private destroy$ = new Subject<boolean>();
 
     constructor(private element: ElementRef, private zone: NgZone) { }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
 
         fromEvent(this.element.nativeElement, 'keyup').pipe(
             debounce(() => interval(100)),
             takeUntil(this.destroy$)
         ).subscribe((event: KeyboardEvent) => {
-            this.stopScrollFn(event);
+            this.stopScroll(event);
         });
 
         this.zone.runOutsideAngular(() => {
@@ -162,25 +179,34 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
                 takeUntil(this.destroy$)
             ).subscribe((event: KeyboardEvent) => {
                 if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-                    this.zone.run(() => this.sartScrollFn(true));
+                    this.zone.run(() => this.startScroll(true));
                 }
             });
         });
 
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('mousedown')
     public onMouseDown() {
-        this.sartScrollFn();
+        this.startScroll();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('mouseup', ['$event'])
     public onMouseUp(event: MouseEvent) {
-        this.stopScrollFn(event);
+        this.stopScroll(event);
     }
 }

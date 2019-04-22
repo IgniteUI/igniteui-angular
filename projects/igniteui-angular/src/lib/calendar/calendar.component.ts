@@ -163,14 +163,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ViewChild('prev')
-    public prevBtn: ElementRef;
+    @ViewChild('prevMonthBtn')
+    public prevMonthBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('next')
-    public nextBtn: ElementRef;
+    @ViewChild('nextMonthBtn')
+    public nextMonthBtn: ElementRef;
 
     /**
      * @hidden
@@ -382,10 +382,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         this.daysView.stopMonthScroll$.complete();
 
 
-        if  (this.daysView.monthScrollDirection === ScrollMonth.PREV) {
-            this.prevBtn.nativeElement.focus();
+        if (this.daysView.monthScrollDirection === ScrollMonth.PREV) {
+            this.prevMonthBtn.nativeElement.focus();
         } else if (this.daysView.monthScrollDirection === ScrollMonth.NEXT) {
-            this.nextBtn.nativeElement.focus();
+            this.nextMonthBtn.nativeElement.focus();
         }
 
         this.daysView.monthScrollDirection = ScrollMonth.NONE;
