@@ -12,7 +12,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
-import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective} from '../../directives/dragdrop/dragdrop.directive';
 
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
@@ -22,6 +22,8 @@ describe('IgxGrid - Row Drag', () => {
     let grid: IgxGridComponent;
     let dropArea: IgxDropDirective;
     let dropAreaElement;
+    let rows: any;
+    let dragIndicatorElements: any;
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -47,19 +49,19 @@ describe('IgxGrid - Row Drag', () => {
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
             fixture.detectChanges();
+            rows = grid.rowList.toArray();
             dropAreaElement = fixture.debugElement.query(By.css('.dropable-area')).nativeElement;
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
         }));
         configureTestSuite();
 
-        it('should drag and drop draggable row over droppable container', (done) => {
-            const dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+        fit('should drag and drop draggable row over droppable container', fakeAsync(() => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            const row = grid.rowList.toArray()[2];
+            const row = rows[2];
 
-            const dragIcon_x = dragIndicatorElement.getBoundingClientRect().x + dragIndicatorElement.getBoundingClientRect().width / 2;
-            const dragIcon_y = dragIndicatorElement.getBoundingClientRect().y + dragIndicatorElement.getBoundingClientRect().height / 2;
-            const dropArea_x = dropAreaElement.getBoundingClientRect().x + 10;
-            const dropArea_y = dropAreaElement.getBoundingClientRect().y + 10;
+            const startPoint = getElementsCenterCoordinates(dragIndicatorElement);
+            const movePoint = getElementsCenterCoordinates(rows[4].nativeElement);
+            const dropPoint = getElementsCenterCoordinates(dropAreaElement);
 
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
@@ -71,41 +73,31 @@ describe('IgxGrid - Row Drag', () => {
                 cancel: false
             };
 
-            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, dragIcon_x, dragIcon_y);
-            // tick(100);
-            setTimeout(() => {
-                fixture.detectChanges();
-                expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-                // expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
-                fixture.detectChanges();
-                UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
-                // tick(100);
-                setTimeout(function () {
-                    UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
-                    setTimeout(function () {
-                        fixture.detectChanges();
-                        UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropArea_x, dropArea_y);
-                        setTimeout(function () {
-                            fixture.detectChanges();
-                            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
-                            done();
-                        }, 3000);
-                    }, 50);
-                }, 50);
-            }, 50);
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            fixture.detectChanges();
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+            // expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            tick(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            tick(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            fixture.detectChanges();
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
             // expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
-        });
+        }));
 
         it('should be able to drag row only by drag icon', fakeAsync(() => {
-            const dragIconElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
-            const dragIconElement = dragIconElements[2].nativeElement;
-            const row = grid.rowList.toArray()[2];
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = rows[2];
             const rowElement = row.nativeElement;
 
             const row_x = rowElement.getBoundingClientRect().x + rowElement.getBoundingClientRect.width / 2;
             const row_y = rowElement.getBoundingClientRect().y + rowElement.getBoundingClientRect.height / 2;
-            const dragIcon_x = dragIconElement.getBoundingClientRect().x + dragIconElement.getBoundingClientRect().width / 2;
-            const dragIcon_y = dragIconElement.getBoundingClientRect().y + dragIconElement.getBoundingClientRect().height / 2;
+            const dragIcon_x = dragIndicatorElement.getBoundingClientRect().x + dragIndicatorElement.getBoundingClientRect().width / 2;
+            const dragIcon_y = dragIndicatorElement.getBoundingClientRect().y + dragIndicatorElement.getBoundingClientRect().height / 2;
 
             spyOn(grid.onRowDragStart, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
@@ -116,47 +108,53 @@ describe('IgxGrid - Row Drag', () => {
             fixture.detectChanges();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(0);
 
-            UIInteractions.simulatePointerEvent('pointerdown', dragIconElement, dragIcon_x, dragIcon_y);
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, dragIcon_x, dragIcon_y);
             fixture.detectChanges();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
         }));
 
         it('should emit drop events', fakeAsync(() => {
-            const dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            const row = grid.rowList.toArray()[2];
-            const rowElement = row.nativeElement;
+            const row = rows[2];
 
-            const dragIcon_x = dragIndicatorElement.getBoundingClientRect().x + dragIndicatorElement.getBoundingClientRect().width / 2;
-            const dragIcon_y = dragIndicatorElement.getBoundingClientRect().y + dragIndicatorElement.getBoundingClientRect().height / 2;
-            const dropArea_x = dropAreaElement.getBoundingClientRect().x + dropAreaElement.getBoundingClientRect().width / 2;
-            const dropArea_y = dropAreaElement.getBoundingClientRect().y + dropAreaElement.getBoundingClientRect().height / 2;
+            const startPoint = getElementsCenterCoordinates(dragIndicatorElement);
+            const movePoint = getElementsCenterCoordinates(rows[4].nativeElement);
+            const dropPoint = getElementsCenterCoordinates(dropAreaElement);
 
-            spyOn(dropArea.onDrop, 'emit');
             spyOn(dropArea.onEnter, 'emit');
             spyOn(dropArea.onLeave, 'emit');
-            spyOn(dropArea, 'onDragDrop').and.callThrough();
+            // spyOn(dropArea.onDrop, 'emit');
             spyOn(dropArea, 'onDragEnter').and.callThrough();
             spyOn(dropArea, 'onDragLeave').and.callThrough();
             spyOn(dropArea, 'onDragOver').and.callThrough();
-            const dragStartArgs: IRowDragStartEventArgs = {
-                source: row
-            };
+            // spyOn(dropArea, 'onDragDrop').and.callThrough();
+            // const dropEnterArgs: IgxDropEnterEventArgs = {
+            //     owner: dropArea,
+            //     drag: rowDragDirective,
+            //     dragData: row,
+            //     startX: 0,
+            //     startY: 0,
+            //     pageX: 0,
+            //     pageY: 0
+            // };
 
-            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, dragIcon_x, dragIcon_y);
-            tick(100);
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             fixture.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
-            tick(100);
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            tick(50);
             fixture.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropArea_x, dropArea_y);
-            tick(100);
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            tick(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
             fixture.detectChanges();
             expect(dropArea.onEnter.emit).toHaveBeenCalledTimes(1);
-            expect(dropArea.onDrop.emit).toHaveBeenCalledTimes(1);
+            expect(dropArea.onDragEnter).toHaveBeenCalledTimes(1);
             expect(dropArea.onLeave.emit).toHaveBeenCalledTimes(1);
-            // expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+            expect(dropArea.onDragLeave).toHaveBeenCalledTimes(1);
+            expect(dropArea.onDragOver).toHaveBeenCalledTimes(1);
+            // expect(dropArea.onEnter.emit).toHaveBeenCalledWith(dropEnterArgs);
         }));
 
         it('Start dragging programmatically using API.', (async () => {
@@ -237,4 +235,10 @@ export class IgxGridRowDraggableComponent extends DataParent {
     handleRowDrop(args) {
         console.log('Row Drag End!');
     }
+}
+
+function getElementsCenterCoordinates(element: Element) {
+    const x = element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2;
+    const y = element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2;
+    return { x: x, y: y };
 }
