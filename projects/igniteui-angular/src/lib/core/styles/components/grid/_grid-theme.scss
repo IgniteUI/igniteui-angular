@@ -661,29 +661,6 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
-
-        .igx-grid__mrl_block {
-            display: grid;
-
-            %grid-thead-item {
-                display: flex;
-            }
-
-            %grid-cell-header {
-                align-items: center;
-                flex-grow: 1;
-                border-bottom: $grid-header-border;
-            }
-
-            %grid-cell-display {
-                border-right: 1px solid --var($theme, 'row-border-color');
-                border-bottom: 1px solid --var($theme, 'row-border-color');
-            }
-        }
-    }
-
-    %grid-row--mrl {
-        border-bottom: none !important;
     }
 
     %grid-mrl-block {
@@ -709,28 +686,6 @@
         border-bottom: none !important;
     }
 
-    %grid-mrl-block {
-        display: grid;
-
-        %grid-thead-item {
-            display: flex;
-        }
-
-        %grid-cell-header {
-            align-items: center;
-            flex-grow: 1;
-            border-bottom: $grid-header-border;
-        }
-
-        %grid-cell-display {
-            border-right: 1px solid --var($theme, 'row-border-color');
-            border-bottom: 1px solid --var($theme, 'row-border-color');
-        }
-    }
-
-    %grid-row--mrl {
-        border-bottom: none !important;
-    }
 
     %grid-tbody {
         position: relative;

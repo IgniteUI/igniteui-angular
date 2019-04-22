@@ -45,7 +45,7 @@ export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
  export function verifyDOMMatchesLayoutSettings(row, colSettings) {
     const firstRowCells = row.cells.toArray();
     const rowElem = row.nativeElement;
-    const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl_block');
+    const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
 
      colSettings.forEach((groupSetting, index) => {
         // check group has rendered block
