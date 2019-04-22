@@ -3,12 +3,18 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.3.0
+### Features
+- `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
 - `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
     - The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
+
+## 7.2.6
+- `igxGrid`
+    - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
 
 ## 7.2.5
 - `igxDrop` 

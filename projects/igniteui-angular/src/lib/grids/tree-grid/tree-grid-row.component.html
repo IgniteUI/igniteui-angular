@@ -32,7 +32,7 @@
                 [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
                 [level]="treeRow.level"
                 [expanded]="treeRow.expanded"
-                [showIndicator]="treeRow.children && treeRow.children.length"
+                [showIndicator]="showIndicator"
                 [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
                 [column]="col"
                 [formatter]="col.formatter"
@@ -45,6 +45,7 @@
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
+                [isLoading]="isLoading"
                 [cellTemplate]="col.bodyTemplate" #treeCell>
             </igx-tree-grid-cell>
         </ng-template>
@@ -78,7 +79,7 @@
             [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
             [level]="treeRow.level"
             [expanded]="treeRow.expanded"
-            [showIndicator]="treeRow.children && treeRow.children.length"
+            [showIndicator]="showIndicator"
             [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
             [column]="col"
             [formatter]="col.formatter"
@@ -90,6 +91,7 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
+            [isLoading]="isLoading"
             [cellTemplate]="col.bodyTemplate" #treeCell>
         </igx-tree-grid-cell>
     </ng-template>
