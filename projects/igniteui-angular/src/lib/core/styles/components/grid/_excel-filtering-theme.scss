@@ -104,7 +104,9 @@
         align-items: center;
 
         header {
+            color: igx-color($palette, 'grays', 700);
             margin-right: auto;
+            text-transform: capitalize;
         }
     }
 

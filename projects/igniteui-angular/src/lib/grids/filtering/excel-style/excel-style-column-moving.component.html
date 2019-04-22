@@ -1,4 +1,4 @@
-<header class="igx-typography__overline">{{ grid.resourceStrings.igx_grid_excel_filter_moving_header }}</header>
+<header [ngClass]="(grid.displayDensity==='compact')? 'igx-typography__subtitle-1': 'igx-typography__overline'">{{ grid.resourceStrings.igx_grid_excel_filter_moving_header }}</header>
 <section class="igx-excel-filter__move-buttons">
     <button [displayDensity]="grid.displayDensity"
         igxButton
