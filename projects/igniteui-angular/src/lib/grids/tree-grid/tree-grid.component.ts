@@ -36,6 +36,7 @@ import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { first } from 'rxjs/operators';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxGridType } from '../grid-types';
 
 let NEXT_ID = 0;
 
@@ -65,7 +66,7 @@ let NEXT_ID = 0;
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, IgxGridType {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
 

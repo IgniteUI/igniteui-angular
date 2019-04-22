@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener, QueryList } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridType } from './grid-types';
+import { GridBaseAPIService } from './api.service';
 
 /** @hidden */
 @Directive({
@@ -30,7 +30,11 @@ export class IgxRowEditActionsDirective { }
 export class IgxRowEditTabStopDirective {
 
     get grid(): IgxGridType {
-        return this.navigationService.grid;
+        return this.gridAPI.grid;
+    }
+
+    get navigationService() {
+        return this.gridAPI.grid.navigation;
     }
 
     get nativeElement(): HTMLElement {
@@ -41,7 +45,8 @@ export class IgxRowEditTabStopDirective {
         return this.grid.rowEditTabs;
     }
 
-    constructor(public element: ElementRef, private navigationService: IgxGridNavigationService) {}
+    constructor(public element: ElementRef, private gridAPI: GridBaseAPIService<any>) {
+    }
 
 
     @HostListener('keydown.Tab', [`$event`])
