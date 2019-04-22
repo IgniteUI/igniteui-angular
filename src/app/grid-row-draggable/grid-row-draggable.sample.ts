@@ -48,6 +48,9 @@ export class GridRowDraggableComponent implements AfterViewInit {
         console.log('Row Drag End!');
     }
 
+    public onDragCageEnter(args) {
+    }
+
     toggle() {
         const currentSelection = this.grid1.selectedRows();
         if (currentSelection !== undefined) {
@@ -61,14 +64,16 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     public onEnter(args) {
-        const drag = args.drag;
+        // debugger;
+        // const drag = args.drag;
     }
 
     public onLeave(args) {
-        const drag = args.drag;
+        debugger;
+        // const drag = args.drag;
     }
 
     public onDrop(args) {
-        const drag = args.drag;
+        // const drag = args.drag;
     }
 }
