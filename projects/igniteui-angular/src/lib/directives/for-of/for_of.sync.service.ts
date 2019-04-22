@@ -22,8 +22,8 @@ export class IgxForOfSyncService {
     /**
      * @hidden
      */
-    public setMaster(directive: IgxGridForOfDirective<any>) {
-        if (!this._master[directive.igxForScrollOrientation]) {
+    public setMaster(directive: IgxGridForOfDirective<any>, forced = false) {
+        if (forced || !this._master[directive.igxForScrollOrientation]) {
             this._master[directive.igxForScrollOrientation] = directive;
         }
     }
