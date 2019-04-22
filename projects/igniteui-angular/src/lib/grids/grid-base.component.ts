@@ -1916,7 +1916,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.hasColumnLayouts ?
+                this.columnList.reduce((acc, col) => Math.max(acc, col.rowStart), 0) :
+                this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -2950,6 +2952,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
+        if (this.hasColumnLayouts) {
+            return '';
+        }
         const colWidth = column.width;
         const minWidth = this.defaultHeaderGroupMinWidth;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
@@ -3796,6 +3801,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get hasColumnGroups(): boolean {
         return this._columnGroups;
     }
+    /**
+     * Returns if the `IgxGridComponent` has column layouts for multi-row layout definition.
+     * ```typescript
+     * const layoutGrid = this.grid.hasColumnLayouts;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public get hasColumnLayouts() {
+        return !!this.columnList.some(col => col.columnLayout);
+    }
 
     /**
      * Returns an array of the selected `IgxGridCellComponent`s.
@@ -3983,9 +3998,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
+        const blockColumns = this.visibleColumns.filter(c => c.columnGroup);
 
         const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
-        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
+        const columnsToSize = this.hasColumnLayouts ?
+            this.getPossibleBlocksWidth(blockColumns) - columnsWithSetWidths.length :
+            visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
@@ -4002,6 +4020,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
         return columnWidth.toString();
+    }
+
+    private getPossibleBlocksWidth(blocks) {
+        const maxColEndPerBlock = (max, child) => Math.max(max, child.colStart + child.gridColumnSpan - 1);
+        const sumMaximalColSpans = (acc, col) => acc + col.children.reduce(maxColEndPerBlock, 1);
+        return blocks.reduce(sumMaximalColSpans, 0);
     }
 
     /**
@@ -4261,6 +4285,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
+        this._columnGroups = this.columnList.some(col => col.columnGroup);
+        if (this.hasColumnLayouts && this.hasColumnGroups) {
+            // invalid configuration - multi-row and column groups
+            // remove column groups
+            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || (col.parent && col.parent.columnLayout));
+            this.columnList.reset(columnLayoutColumns);
+        }
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
@@ -4272,7 +4303,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        this._columnGroups = this.columnList.some(col => col.columnGroup);
         this.reinitPinStates();
     }
 
