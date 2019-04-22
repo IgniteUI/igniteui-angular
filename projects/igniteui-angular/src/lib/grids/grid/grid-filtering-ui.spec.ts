@@ -2923,7 +2923,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const closeButton = filterUIRow.queryAll(By.css('button'))[1];
         expect(document.activeElement).toBe(closeButton.nativeElement);
 
-        closeButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        filterUIRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
         fix.detectChanges();
         tick();
         expect(document.activeElement).toBe(cell.nativeElement);
