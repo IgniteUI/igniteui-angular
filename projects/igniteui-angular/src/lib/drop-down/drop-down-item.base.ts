@@ -279,7 +279,8 @@ export abstract class IgxDropDownItemBase implements DoCheck {
             const dropDownSelectedItem = this.dropDown.selectedItem;
             if (!dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
-            } else if (this._index ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
+            } else if (this._index !== null && this._index !== undefined
+                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
                 this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
             }

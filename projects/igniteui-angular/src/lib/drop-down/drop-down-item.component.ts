@@ -79,8 +79,4 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             this.dropDown.selectItem(this, event);
         }
     }
-
-    ngDoCheck(): void {
-        super.ngDoCheck();
-    }
 }

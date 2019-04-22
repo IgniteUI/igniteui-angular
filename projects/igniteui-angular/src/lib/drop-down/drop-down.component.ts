@@ -527,12 +527,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (newSelection instanceof IgxDropDownItemBase && newSelection.isHeader) {
             return;
         }
-        if (this.virtDir) {
-            newSelection = {
-                value: newSelection.value,
-                index: newSelection.index
-            } as IgxDropDownItemBase;
-        }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
 
@@ -540,10 +534,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this.selection.set(this.id, new Set([newSelection]));
             if (!this.virtDir) {
                 if (oldSelection) {
-                    (oldSelection as IgxDropDownItemBase).selected = false;
+                    oldSelection.selected = false;
                 }
                 if (newSelection) {
-                    (newSelection as IgxDropDownItemBase).selected = true;
+                    newSelection.selected = true;
                 }
             }
             if (event) {
