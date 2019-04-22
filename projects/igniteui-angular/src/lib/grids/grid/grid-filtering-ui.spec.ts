@@ -3562,6 +3562,57 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 
+    it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+
+        grid.filterMode = FilterMode.excelStyleFilter;
+        grid.displayDensity = DisplayDensity.cosy;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component and pin 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickPinIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        const column = grid.columns.find((col) => col.field === 'ProductName');
+        GridFunctions.verifyColumnIsPinned(column, true, 1);
+
+        // Open excel style filtering component and UNpin 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickPinIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        GridFunctions.verifyColumnIsPinned(column, false, 0);
+    }));
+
+    it('Should hide column when clicking hide icon in header', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+
+        grid.filterMode = FilterMode.excelStyleFilter;
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        const column = grid.columns.find((col) => col.field === 'ProductName');
+        GridFunctions.verifyColumnIsHidden(column, false, 6);
+
+        // Open excel style filtering component and hide 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickHideIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        GridFunctions.verifyColumnIsHidden(column, true, 5);
+    }));
+
     it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
