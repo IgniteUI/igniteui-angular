@@ -281,7 +281,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public ngAfterViewInit() {
         // initially do not navigate to the route set on the tabs-groups to keep the url set by the user
         this.navigationEndHandler(this);
-        this.setSelectedGroup();
+        requestAnimationFrame(() => {
+            this.setSelectedGroup();
+        });
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });

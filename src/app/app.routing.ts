@@ -53,6 +53,7 @@ import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { RoutingView1Component } from './bottomnav-routing/bottomnav-routing.sample';
 import { RoutingView2Component } from './bottomnav-routing/bottomnav-routing.sample';
 import { RoutingView3Component } from './bottomnav-routing/bottomnav-routing.sample';
@@ -274,6 +275,10 @@ const appRoutes = [
     {
         path: 'treeGridFlatData',
         component: TreeGridFlatDataSampleComponent
+    },
+    {
+        path: 'treeGridLoadOnDemand',
+        component: TreeGridLoadOnDemandSampleComponent
     },
     {
         path: 'tooltip',
