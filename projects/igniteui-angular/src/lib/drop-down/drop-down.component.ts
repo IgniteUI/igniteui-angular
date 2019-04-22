@@ -184,12 +184,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (this.virtDir) {
-                return selectedItem;
-            } else if (selectedItem.selected) {
-                return selectedItem;
-            }
-            this.selection.clear(this.id);
+            return selectedItem;
         }
         return null;
     }

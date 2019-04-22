@@ -19,7 +19,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get focused(): boolean {
-        const focusedState = this._index !== null && this._index !== undefined
+        const focusedState = this.hasIndex
         ? this._index === this.selection.first_item(`${this.dropDown.id}-active`) : this._focused;
         return !this.isHeader && !this.disabled && focusedState;
     }
@@ -35,7 +35,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      */
     get selected(): boolean {
         if (this._index) {
-            const item = this.dropDown.selectedItem;
+            const item = this.selection.first_item(`${this.dropDown.id}`);
             return item ? item.index === this._index && item.value === this.value : false;
         }
         return this._selected;

@@ -22,6 +22,9 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     protected _selected = false;
     protected _index = null;
     protected _disabled = false;
+    protected get hasIndex(): boolean {
+        return this._index !== null && this._index !== undefined;
+    }
 
     /**
      * Sets/gets the `id` of the item.
@@ -279,7 +282,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
             const dropDownSelectedItem = this.dropDown.selectedItem;
             if (!dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
-            } else if (this._index !== null && this._index !== undefined
+            } else if (this.hasIndex
                 ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
                 this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
