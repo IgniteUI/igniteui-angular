@@ -473,4 +473,27 @@ export class IgxFilteringService implements OnDestroy {
             expressionsUIs.push(exprUI);
         }
     }
+
+    public isFilteringExpressionsTreeEmpty(): boolean {
+        const expressionTree = this.grid.filteringExpressionsTree;
+        if (!expressionTree.filteringOperands || !expressionTree.filteringOperands.length) {
+            return true;
+        }
+
+        let expr: any;
+
+        for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
+            expr = expressionTree.filteringOperands[i];
+
+            if ((expr instanceof FilteringExpressionsTree)) {
+                const exprTree = expr as FilteringExpressionsTree;
+                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
