@@ -8,7 +8,8 @@ import {
     template: `
         <div class="dummyDiv">dummy div for touch tests</div>
         <button [igxTooltipTarget]="tooltipRef"
-                (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
+                (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)"
+                style="margin: 200px">
             Hover me
         </button>
         <div igxTooltip #tooltipRef="tooltip">
@@ -37,11 +38,11 @@ export class IgxTooltipSingleTargetComponent {
 
 @Component({
     template: `
-        <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef">
+        <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
             Target One
         </button>
 
-        <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef">
+        <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
             Target Two
         </button>
 

@@ -424,7 +424,8 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        let clear = filterUIRow.query(By.css('igx-suffix'));
+        let suffix = filterUIRow.query(By.css('igx-suffix'));
+        let clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // clear input value
@@ -541,7 +542,8 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        clear = filterUIRow.query(By.css('igx-suffix'));
+        suffix = filterUIRow.query(By.css('igx-suffix'));
+        clear = suffix.queryAll(By.css('igx-icon'))[1];
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -1427,11 +1429,12 @@ describe('IgxGrid - Filtering actions', () => {
         sendInput(input, filterValue, fix);
 
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const clearSuffix = inputGroup.query(By.css('igx-suffix'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const clearIcon = suffix.queryAll(By.css('igx-icon'))[1];
 
         spyOn(grid.onFilteringDone, 'emit');
 
-        clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
+        clearIcon.nativeElement.dispatchEvent(new MouseEvent('click'));
         GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         tick(100);
         fix.detectChanges();
@@ -1506,6 +1509,61 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.value).toMatch('Ignite');
     }));
 
+    it('Should complete the filter when clicking the commit icon', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filterValue = 'an';
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        tick();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const commitIcon = suffix.queryAll(By.css('igx-icon'))[0];
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        commitIcon.nativeElement.dispatchEvent(new MouseEvent('click'));
+        tick(100);
+        fix.detectChanges();
+
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    }));
+
+    it('Should complete the filter when clicking the focusing out the input', async () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filterValue = 'an';
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        const editingButtons = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingButtons.queryAll(By.css('button'))[0];
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        reset.nativeElement.focus();
+        inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
+        fix.detectChanges();
+        await wait(16);
+
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    });
+
     it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
@@ -1519,7 +1577,6 @@ describe('IgxGrid - Filtering actions', () => {
         expect(datePicker.componentInstance.mode).toBe('dropdown');
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
-
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
@@ -2615,6 +2672,132 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         });
     }));
 
+    it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+    }));
+
+    it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+      }));
+
+    it('Should remove FilterRow, when allowFiltering is set to false.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        grid.allowFiltering = false;
+        fix.detectChanges();
+
+        filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeNull();
+    }));
+
+    it('should correctly apply locale to datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        registerLocaleData(localeDE);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.locale = 'de-DE';
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const dateCellChip = initialChips[3].nativeElement;
+
+        dateCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const input = filteringRow.query(By.directive(IgxInputDirective));
+
+        input.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+
+        expect(sundayLabel.trim()).toEqual('So');
+    }));
+
+    it('should open \'conditions dropdown\' on prefix click and should close it on second click', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        // Click filter chip to show filter row
+        stringCellChip.click();
+        tick(100);
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+        const prefix = inputgroup.query(By.css('igx-prefix'));
+
+        // Click prefix to open conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is opened
+        let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).not.toBeNull();
+
+        // Click prefix again to close conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is closed
+        dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).toBeNull();
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
@@ -3120,13 +3303,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const customMenu = grid.nativeElement.querySelector('.igx-excel-filter__secondary');
 
         // set first expression's value
-        GridFunctions.setInputValueESF(customMenu, 0, 20, fix);
+        GridFunctions.setInputValueESF(customMenu, 0, 0, fix);
 
         // select second expression's operator
         GridFunctions.setOperatorESF(customMenu, grid, 1, 1, fix);
 
         // set second expression's value
-        GridFunctions.setInputValueESF(customMenu, 1, 0, fix);
+        GridFunctions.setInputValueESF(customMenu, 1, 20, fix);
 
         const applyButton = customMenu.querySelector('.igx-button--raised');
         applyButton.click();
