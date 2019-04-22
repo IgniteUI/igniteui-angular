@@ -1082,50 +1082,96 @@ export class IgxColumnComponent implements AfterContentInit {
             (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
             (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
         const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
-        const generatedSizes = !isRow ? this.getColumnSizesString(this.children) : null;
+        const generatedSizes = !isRow ? this.getColumnSizesString(this.children.toArray()) : null;
         return isIE ?
         generatedSizes || `(1fr)[${templateItems}]` :
             generatedSizes || `repeat(${templateItems},1fr)`;
     }
 
-    protected getChildColumnSizes(children): Array<any> {
+    public getInitialChildColumnSizes(children: any[]): Array<any> {
         const columnSizes = [];
         // find the smallest col spans
         children.forEach(col => {
-            const actualWidth = parseInt(col.calcWidth, 10) + 'px';
             if (col.colStart && columnSizes[col.colStart - 1] === undefined) {
-                columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
-                    width: actualWidth, widthSetByUser: col.widthSetByUser };
-            } else if (col.colStart && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan &&
-                (col.widthSetByUser || !columnSizes[col.colStart - 1].widthSetByUser)) {
-                columnSizes[col.colStart - 1] = { colSpan: col.gridColumnSpan,
-                    width: actualWidth, widthSetByUser: col.widthSetByUser };
+                // If nothing is defined yet take any column at first
+                columnSizes[col.colStart - 1] = {
+                    field: col.field,
+                    width: col.widthSetByUser ? parseInt(col.calcWidth, 10) :
+                        (this.grid.columnWidthSetByUser ? parseInt(col.defaultWidth, 10) : null),
+                    colSpan: col.gridColumnSpan,
+                    widthSetByUser: col.widthSetByUser
+                };
+            } else if (col.colStart &&
+                ((col.widthSetByUser && !columnSizes[col.colStart - 1].widthSetByUser) ||
+                (columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan &&
+                    ((col.widthSetByUser && columnSizes[col.colStart - 1].widthSetByUser) ||
+                        (!col.widthSetByUser && !columnSizes[col.colStart - 1].widthSetByUser))))) {
+                // If a column is set already it should either not have width defined or have width with bigger span.
+                columnSizes[col.colStart - 1] = {
+                    field: col.field,
+                    width: col.widthSetByUser ? parseInt(col.calcWidth, 10) :
+                        (this.grid.columnWidthSetByUser ? parseInt(col.defaultWidth, 10) : null),
+                    colSpan: col.gridColumnSpan,
+                    widthSetByUser: col.widthSetByUser
+                };
             }
         });
+
+        // Flatten columnSizes so there are not columns with colSpan > 1
+        for (let i = 0; i < columnSizes.length; i++) {
+            if (columnSizes[i] && columnSizes[i].colSpan > 1) {
+                let j = 1;
+
+                // Replace all empty places depending on how much the current column spans starting from next col.
+                for (; j < columnSizes[i].colSpan; j++) {
+                    if (columnSizes[i + j] && !!columnSizes[i + j].width) {
+                        // If we reach an already defined column we stop.
+                        break;
+                    } else {
+                        const width = columnSizes[i].widthSetByUser ?
+                            columnSizes[i].width / columnSizes[i].colSpan :
+                            columnSizes[i].width;
+                        columnSizes[i + j] = {
+                            field: columnSizes[i].field,
+                            width: width,
+                            colSpan: 1,
+                            widthSetByUser: columnSizes[i].widthSetByUser,
+                            hidden: columnSizes[i].hidden
+                        };
+                    }
+                }
+
+                // Update the current column width so it is divided between all columns it spans and set it to 1.
+                columnSizes[i].width = columnSizes[i].widthSetByUser ?
+                    columnSizes[i].width / columnSizes[i].colSpan :
+                    columnSizes[i].width;
+                columnSizes[i].colSpan = 1;
+
+                // Update the index based on how much we have replaced. Subtract 1 because we started from 1.
+                i += j - 1;
+            }
+        }
+
+        return columnSizes;
+    }
+
+    protected getFilledChildColumnSizes(children: any[]): Array<any> {
+        const columnSizes = this.getInitialChildColumnSizes(children);
 
         // fill the gaps if there are any
         const result = [];
         for (let i = 0; i < columnSizes.length; i++) {
-            if (columnSizes[i] && columnSizes[i].colSpan !== 1) {
-                for (let j = 0; j < columnSizes[i].colSpan; j++) {
-                    result.push(
-                    (columnSizes[i].widthSetByUser ?
-                        parseInt(columnSizes[i].width, 10) / columnSizes[i].colSpan + 'px' :
-                        columnSizes[i].width)
-                    );
-                }
-                i += columnSizes[i].colSpan - 1;
-            } else if (columnSizes[i]) {
-                result.push(columnSizes[i].width);
+            if (columnSizes[i] && !!columnSizes[i].width) {
+                result.push(columnSizes[i].width + 'px');
             } else {
-                result.push(this.grid.getPossibleColumnWidth() + 'px');
+                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
             }
         }
         return result;
     }
 
-    protected getColumnSizesString(children): string {
-       const res = this.getChildColumnSizes(children);
+    protected getColumnSizesString(children: any[]): string {
+       const res = this.getFilledChildColumnSizes(children);
        return res.join(' ');
     }
 
@@ -1653,7 +1699,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        const width = this.getChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
+        const width = this.getFilledChildColumnSizes(this.children.toArray()).reduce((acc, val) => acc + parseInt(val, 10), 0);
         return width;
     }
 
