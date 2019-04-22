@@ -31,6 +31,9 @@ export class IgxExcelStyleSearchComponent {
     @ViewChild('input', { read: IgxInputDirective })
     public searchInput: IgxInputDirective;
 
+    @Input()
+    public grid: any;
+
     constructor() {}
 
     get filterOptions() {
