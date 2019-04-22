@@ -53,8 +53,15 @@
     }
 
     %grid-excel-menu__header {
+        display: flex;
+        align-items: center;
         padding: rem(16px);
         color: igx-color($palette, 'grays', 700);
+    }
+
+    %grid-excel-menu__header-actions {
+        display: flex;
+        margin-left: auto;
     }
 
     %grid-excel-menu__footer {
@@ -88,6 +95,20 @@
         }
     }
 
+    %grid-excel-action--compact {
+        display: flex;
+        align-items: center;
+
+        header {
+            margin-right: auto;
+        }
+    }
+
+    %grid-excel-sort--compact {
+        @extend %grid-excel-action--compact;
+        padding: rem(4px) rem(16px);
+    }
+
     %grid-excel-actions {
         padding: rem(8px) rem(16px);
     }
@@ -99,6 +120,10 @@
             color: igx-color($palette, 'grays', 700);
             margin-bottom: rem(4px);
         }
+    }
+
+    %grid-excel-move--compact {
+        @extend %grid-excel-action--compact;
     }
 
     %grid-excel-move__buttons {
