@@ -1561,7 +1561,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     @ViewChildren(IgxRowComponent, { read: IgxRowComponent })
-    private _dataRowList: QueryList<IgxRowComponent<any>>;
+    private _dataRowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`, currently rendered.
@@ -1570,8 +1570,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public get dataRowList(): QueryList<IgxRowComponent<any>> {
-        const res = new QueryList<IgxRowComponent<any>>();
+    public get dataRowList(): QueryList<any> {
+        const res = new QueryList<any>();
         if (!this._dataRowList) {
             return res;
         }
