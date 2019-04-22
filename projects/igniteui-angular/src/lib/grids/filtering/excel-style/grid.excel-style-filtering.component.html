@@ -5,34 +5,28 @@
 
     <header class="igx-excel-filter__menu-header">
         <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
-        <div class="igx-excel-filter__menu-header-actions">
-            <div *ngIf="!column.disablePinning && grid.displayDensity!=='comfortable'">
-                <button
-                    igxButton="icon"
-                    [displayDensity]="grid.displayDensity"
-                    (click)="onPin()"
-                    tabindex="0"
-                    *ngIf="!column.pinned">                
-                    <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
-                </button>
-                <button
-                    igxButton="icon"
-                    [displayDensity]="grid.displayDensity"
-                    (click)="onPin()"
-                    tabindex="0"
-                    *ngIf="column.pinned">                
-                    <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
-                </button>
-            </div>
-            <div *ngIf="!column.disableHiding && grid.displayDensity!=='comfortable'">
-                <button
-                    igxButton="icon"
-                    [displayDensity]="grid.displayDensity"
-                    tabindex="0"
-                    (click)="onHide()">                
-                    <igx-icon>visibility_off</igx-icon>
-                </button>
-            </div>
+        <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
+            <button *ngIf="!column.disablePinning && !column.pinned"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                (click)="onPin()"
+                tabindex="0">
+                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+            </button>
+            <button *ngIf="!column.disablePinning && column.pinned"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                (click)="onPin()"
+                tabindex="0">
+                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+            </button>
+            <button *ngIf="!column.disableHiding"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                tabindex="0"
+                (click)="onHide()">
+                <igx-icon>visibility_off</igx-icon>
+            </button>
         </div>
     </header>
 
