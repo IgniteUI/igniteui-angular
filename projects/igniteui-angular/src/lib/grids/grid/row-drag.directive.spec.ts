@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement} from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { TestBed, async, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
@@ -74,21 +74,25 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, dragIcon_x, dragIcon_y);
             // tick(100);
             setTimeout(() => {
-            fixture.detectChanges();
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-            // expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
-            // tick(100);
-            setTimeout(function () {
-            fixture.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropArea_x, dropArea_y);
-            setTimeout(function () {
-            fixture.detectChanges();
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
-            done();
-        }, 3000);
-        }, 50);
-        }, 50);
+                fixture.detectChanges();
+                expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+                // expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+                fixture.detectChanges();
+                UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
+                // tick(100);
+                setTimeout(function () {
+                    UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropArea_x, dropArea_y);
+                    setTimeout(function () {
+                        fixture.detectChanges();
+                        UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropArea_x, dropArea_y);
+                        setTimeout(function () {
+                            fixture.detectChanges();
+                            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
+                            done();
+                        }, 3000);
+                    }, 50);
+                }, 50);
+            }, 50);
             // expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
         });
 
@@ -160,23 +164,23 @@ describe('IgxGrid - Row Drag', () => {
 
         }));
 
-        it('Should cancel dragging when ESCAPE key is pressed.', (async() => {
+        it('Should cancel dragging when ESCAPE key is pressed.', (async () => {
 
         }));
 
-        it('Scroll start should be correctly aligned with first column and not with drag indicator ', (async() => {
+        it('Scroll start should be correctly aligned with first column and not with drag indicator ', (async () => {
             // Test if drag indicator width = 0
         }));
 
-        it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async() => {
+        it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async () => {
 
         }));
 
-        it('Should be able to cancel onColumnMoving event.', (async() => {
+        it('Should be able to cancel onColumnMoving event.', (async () => {
 
         }));
 
-        it('Multi-row layout integration.', (async() => {
+        it('Multi-row layout integration.', (async () => {
 
         }));
 
