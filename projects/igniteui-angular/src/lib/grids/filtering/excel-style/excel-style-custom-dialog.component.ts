@@ -141,7 +141,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
-            element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
+            element => element.expression.condition &&
+            (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
             this.expressionsList[0].beforeOperator = null;
