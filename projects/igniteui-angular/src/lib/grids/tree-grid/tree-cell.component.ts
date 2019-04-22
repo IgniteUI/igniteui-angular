@@ -56,13 +56,11 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @ViewChild('defaultContentElement', { read: ElementRef })
     public defaultContentElement: ElementRef;
 
-
     /**
      * @hidden
      */
-    public get hasChildren() {
-        return this.row.treeRow.children && this.row.treeRow.children.length > 0;
-    }
+    @Input()
+    public isLoading: boolean;
 
     /**
      * @hidden
@@ -85,6 +83,13 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     public onIndicatorFocus() {
         this.gridAPI.submit_value();
         this.nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    public onLoadingDblClick(event: Event) {
+        event.stopPropagation();
     }
 
     /**

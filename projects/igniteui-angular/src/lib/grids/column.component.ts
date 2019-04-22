@@ -924,7 +924,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    children;
+    children: QueryList<IgxColumnComponent>;
     /**
      *@hidden
      */

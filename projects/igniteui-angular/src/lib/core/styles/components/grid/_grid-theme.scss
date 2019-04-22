@@ -686,6 +686,29 @@
         border-bottom: none !important;
     }
 
+    %grid-mrl-block {
+        display: grid;
+
+        %grid-thead-item {
+            display: flex;
+        }
+
+        %grid-cell-header {
+            align-items: center;
+            flex-grow: 1;
+            border-bottom: $grid-header-border;
+        }
+
+        %grid-cell-display {
+            border-right: 1px solid --var($theme, 'row-border-color');
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
+    }
+
+    %grid-row--mrl {
+        border-bottom: none !important;
+    }
+
     %grid-tbody {
         position: relative;
         background: --var($theme, 'content-background');
@@ -920,6 +943,16 @@
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
+    %igx-grid__tree-loading-indicator {
+        width: rem(24px, 16px);
+        height: rem(24px, 16px);
+        margin-right: rem(8px, 16px);
+
+        %circular-outer {
+            stroke: --var($theme, 'expand-icon-color');
         }
     }
 
@@ -1879,6 +1912,20 @@
 
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: igx-color($palette, 'secondary');
+                }
+
+                + igx-icon {
+                    margin-left: rem(4px);
+                }
+            }
         }
     }
 

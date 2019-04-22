@@ -345,7 +345,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             filteringState.filteringOperands = [];
         }
 
-        grid.filteredData = null;
         grid.filteringExpressionsTree = filteringState;
     }
 

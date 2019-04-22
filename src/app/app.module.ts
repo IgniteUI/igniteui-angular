@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule, IgxHierarchicalGridModule
-} from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -89,6 +88,7 @@ import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.compon
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
 import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 
@@ -159,6 +159,7 @@ const components = [
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridWithTransactionsComponent,
+    TreeGridLoadOnDemandSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -186,6 +187,7 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
+        IgxInputGroupModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
