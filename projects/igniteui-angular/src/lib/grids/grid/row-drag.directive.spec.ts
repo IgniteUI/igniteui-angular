@@ -157,7 +157,7 @@ describe('IgxGrid - Row Drag', () => {
             // expect(dropArea.onEnter.emit).toHaveBeenCalledWith(dropEnterArgs);
         }));
 
-        it('Start dragging programmatically using API.', (async () => {
+        xit('Start dragging programmatically using API.', (async () => {
 
 
         }));
@@ -174,8 +174,38 @@ describe('IgxGrid - Row Drag', () => {
 
         }));
 
-        it('Should be able to cancel onColumnMoving event.', (async () => {
+        fit('Should be able to cancel onRowDragStart event.', (async () => {
+            grid.onRowDragStart.subscribe(e => {
+                e.cancel = true;
+            });
 
+            const dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+
+            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(grid.onRowDragStart, 'emit');
+            spyOn(grid.onRowDragEnd, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(0);
         }));
 
         it('Multi-row layout integration.', (async () => {
