@@ -62,6 +62,10 @@
     %grid-excel-menu__header-actions {
         display: flex;
         margin-left: auto;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(4px);
+        }
     }
 
     %grid-excel-menu__footer {
