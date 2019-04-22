@@ -46,7 +46,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         });
     }
 
-    public onPointerMove(event) { 
+    public onPointerMove(event) {
         super.onPointerMove(event);
 
         if (this._dragGhost && this._lastDropArea != null) {
