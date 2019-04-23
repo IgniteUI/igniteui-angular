@@ -9,10 +9,12 @@ import { IgxGridModule } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand,
+import {
+    IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+    IgxStringFilteringOperand
+} from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
@@ -31,11 +33,13 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
-import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxGridFilteringComponent,
-         IgxGridFilteringScrollComponent,
-         IgxGridFilteringMCHComponent } from '../../test-utils/grid-samples.spec';
+import {
+    IgxGridFilteringComponent,
+    IgxGridFilteringScrollComponent,
+    IgxGridFilteringMCHComponent,
+    IgxTestExcelFilteringDatePickerComponent
+} from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -1129,7 +1133,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('UI - should correctly filter date column by \'after\' filtering conditions', async() => {
+    it('UI - should correctly filter date column by \'after\' filtering conditions', async () => {
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
@@ -1512,9 +1516,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should complete the filter when clicking the commit icon', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
         const filterValue = 'an';
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
@@ -1539,9 +1540,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should complete the filter when clicking the focusing out the input', async () => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
         const filterValue = 'an';
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
@@ -1567,9 +1565,6 @@ describe('IgxGrid - Filtering actions', () => {
     });
 
     it('UI - should use dropdown mode for the date picker', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
@@ -1634,56 +1629,56 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         it('should render correct input and dropdown in filter row for different column types',
             fakeAsync(/** showHideArrowButtons rAF */() => {
-            const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
-            const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
-            const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
-            const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
-            // open for string
-            stringCellChip.nativeElement.click();
-            fix.detectChanges();
+                const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+                const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
+                const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
+                const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
+                // open for string
+                stringCellChip.nativeElement.click();
+                fix.detectChanges();
 
-            checkUIForType('string', fix.debugElement);
+                checkUIForType('string', fix.debugElement);
 
-            // close
-            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
+                // close
+                let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                let close = filterUIRow.queryAll(By.css('button'))[1];
+                close.nativeElement.click();
+                fix.detectChanges();
 
-            // open for number
-            numberCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('number', fix.debugElement);
+                // open for number
+                numberCellChip.nativeElement.click();
+                fix.detectChanges();
+                checkUIForType('number', fix.debugElement);
 
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
+                // close
+                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                close = filterUIRow.queryAll(By.css('button'))[1];
+                close.nativeElement.click();
+                fix.detectChanges();
 
-            // open for date
-            dateCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('date', fix.debugElement);
+                // open for date
+                dateCellChip.nativeElement.click();
+                fix.detectChanges();
+                checkUIForType('date', fix.debugElement);
 
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
+                // close
+                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                close = filterUIRow.queryAll(By.css('button'))[1];
+                close.nativeElement.click();
+                fix.detectChanges();
 
-            // open for bool
-            boolCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('bool', fix.debugElement);
+                // open for bool
+                boolCellChip.nativeElement.click();
+                fix.detectChanges();
+                checkUIForType('bool', fix.debugElement);
 
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
-        }));
+                // close
+                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                close = filterUIRow.queryAll(By.css('button'))[1];
+                close.nativeElement.click();
+                fix.detectChanges();
+            }));
 
         it('should apply  multiple conditions to grid immediately while the filter row is still open', fakeAsync(() => {
             const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
@@ -1822,7 +1817,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
                 const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
                 const ddItems = ddList.nativeElement.children;
                 let i;
-                for ( i = 0; i < ddItems.length; i++) {
+                for (i = 0; i < ddItems.length; i++) {
                     if (ddItems[i].textContent === 'Starts With') {
                         ddItems[i].click();
                         tick(100);
@@ -2127,7 +2122,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         }));
 
         // Filtering + Moving
-        it('should move chip under the correct column when column is moved and filter row should open for correct column.', fakeAsync(() => {
+        it('should move chip under the correct column when column is moved and filter row should open for correct column.',
+        fakeAsync(() => {
             let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
             let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
 
@@ -2467,6 +2463,37 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(filteringRow).toBeNull();
         }));
 
+        it('should open \'conditions dropdown\' on prefix click and should close it on second click.', fakeAsync(() => {
+            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const stringCellChip = initialChips[0].nativeElement;
+
+            // Click filter chip to show filter row
+            stringCellChip.click();
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+            const prefix = inputgroup.query(By.css('igx-prefix'));
+
+            // Click prefix to open conditions dropdown
+            prefix.triggerEventHandler('click', {});
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is opened
+            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).not.toBeNull();
+
+            // Click prefix again to close conditions dropdown
+            prefix.triggerEventHandler('click', {});
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is closed
+            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).toBeNull();
+        }));
     });
 
     describe(null, () => {
@@ -2497,47 +2524,47 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         }));
 
         it('should position filter row and chips correctly when grid has column groups and one is hidden.',
-        fakeAsync(/** showHideArrowButtons rAF */() => {
-            const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
-            const expression = {
-                fieldName: 'ProductName',
-                searchVal: 'Ignite',
-                condition: IgxStringFilteringOperand.instance().condition('startsWith')
-            };
-            filteringExpressionsTree.filteringOperands.push(expression);
-            grid.filteringExpressionsTree = filteringExpressionsTree;
-            fix.detectChanges();
-            let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            expect(filteringCells.length).toEqual(6);
+            fakeAsync(/** showHideArrowButtons rAF */() => {
+                const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+                const expression = {
+                    fieldName: 'ProductName',
+                    searchVal: 'Ignite',
+                    condition: IgxStringFilteringOperand.instance().condition('startsWith')
+                };
+                filteringExpressionsTree.filteringOperands.push(expression);
+                grid.filteringExpressionsTree = filteringExpressionsTree;
+                fix.detectChanges();
+                let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                expect(filteringCells.length).toEqual(6);
 
-            const groupCol = grid.getColumnByName('General');
-            groupCol.hidden = true;
-            fix.detectChanges();
+                const groupCol = grid.getColumnByName('General');
+                groupCol.hidden = true;
+                fix.detectChanges();
 
-            filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            expect(filteringCells.length).toEqual(1);
+                filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                expect(filteringCells.length).toEqual(1);
 
-            const chip = filteringCells[0].query(By.css('igx-chip'));
-            chip.nativeElement.click();
-            fix.detectChanges();
+                const chip = filteringCells[0].query(By.css('igx-chip'));
+                chip.nativeElement.click();
+                fix.detectChanges();
 
-            // check if it is positioned at the bottom of the thead.
-            const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
-            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-            const frElem = filteringRow.nativeElement;
-            expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
+                // check if it is positioned at the bottom of the thead.
+                const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
+                const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+                const frElem = filteringRow.nativeElement;
+                expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
 
-            GridFunctions.closeFilterRow(fix);
+                GridFunctions.closeFilterRow(fix);
 
-            groupCol.hidden = false;
-            fix.detectChanges();
+                groupCol.hidden = false;
+                fix.detectChanges();
 
-            filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            expect(filteringCells.length).toEqual(6);
+                filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                expect(filteringCells.length).toEqual(6);
 
-            const prodNameChipContent = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
-            expect(prodNameChipContent.nativeElement.textContent.trim()).toEqual('Ignite');
-        }));
+                const prodNameChipContent = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+                expect(prodNameChipContent.nativeElement.textContent.trim()).toEqual('Ignite');
+            }));
 
         it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
             const head = grid.nativeElement.querySelector('.igx-grid__thead');
@@ -2585,7 +2612,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     });
 
     describe(null, () => {
-        it('Should correctly update empty filter cells when scrolling horizontally.', async() => {
+        it('Should correctly update empty filter cells when scrolling horizontally.', async () => {
             const fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             const grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -2614,7 +2641,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
     });
 
-    it('Should correctly change resource strings for filter row', fakeAsync(() => {
+    it('Should correctly change resource strings for filter row.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
@@ -2642,7 +2669,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(reset.nativeElement.innerText).toBe('Reset');
     }));
 
-    it('Should correctly change resource strings for filter row using Changei18n', fakeAsync(() => {
+    it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const strings = getCurrentResourceStrings();
         strings.igx_grid_filter = 'My filter';
@@ -2673,7 +2700,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             igx_grid_filter_row_close: 'Close'
         });
     }));
-
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
@@ -2729,7 +2755,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
     it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
         grid.columns[2].sortable = true;
-        grid.sortingExpressions.push({dir: SortingDirection.Asc, fieldName: 'Downloads'});
+        grid.sortingExpressions.push({ dir: SortingDirection.Asc, fieldName: 'Downloads' });
         fix.detectChanges();
 
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -3285,7 +3311,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('Should use dropdown mode for the datePicker.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
+        fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
         fix.detectChanges();
 
         const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
