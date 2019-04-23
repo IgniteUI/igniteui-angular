@@ -1074,7 +1074,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-        /**
+    /**
      * @hidden
      */
     getGridTemplate(isRow, isIE): string {
@@ -1088,7 +1088,11 @@ export class IgxColumnComponent implements AfterContentInit {
             generatedSizes || `repeat(${templateItems},1fr)`;
     }
 
-    protected getChildColumnSizes(children): Array<any> {
+
+    /**
+     * @hidden
+     */
+    public getChildColumnSizes(children): Array<any> {
         const columnSizes = [];
         // find the smallest col spans
         children.forEach(col => {
@@ -1662,6 +1666,18 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
 
     get columnLayout() {
         return true;
+    }
+
+    /**
+     * Gets the column visible index.
+     * If the column is not visible, returns `-1`.
+     * ```typescript
+     * let visibleColumnIndex =  this.column.visibleIndex;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get visibleIndex(): number {
+        return this.grid.columnList.filter(c => c.columnLayout).indexOf(this);
     }
 
 }

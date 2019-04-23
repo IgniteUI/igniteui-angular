@@ -67,7 +67,7 @@
                 [lastPinned]="child.isLastPinned"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="child.visibleIndex"
+                [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
@@ -88,7 +88,7 @@
                 [row]="this"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="child.visibleIndex"
+                [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>

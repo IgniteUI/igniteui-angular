@@ -1,0 +1,193 @@
+import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './index';
+import { IgxGridComponent } from './grid.component';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+
+const DEBOUNCETIME = 30;
+const CELL_CSS_CLASS = '.igx-grid__td';
+
+describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
+    configureTestSuite();
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                ColumnLayoutTestComponent
+            ],
+            imports: [NoopAnimationsModule, IgxGridModule]
+        }).compileComponents();
+    }));
+
+    it('should navigate through a single layout with right and left arrow keys', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.detectChanges();
+
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        let fourthCell;
+        [firstCell, secondCell, thirdCell, fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // reached the end shouldn't stay on the same cell
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+    }));
+
+    it('should navigate between column layouts with right arrow key', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 1 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        secondCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
+
+    it('should navigate between column layouts with right left key', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        thirdCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+    }));
+});
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" (onSelection)="cellSelected($event)">
+        <igx-column-layout *ngFor='let group of colGroups'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class ColumnLayoutTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+    public selectedCell: IgxGridCellComponent;
+    cols: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1 },
+        { field: 'CompanyName', rowStart: 1, colStart: 2 },
+        { field: 'ContactName', rowStart: 1, colStart: 3 },
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+    ];
+    colGroups = [
+        {
+            group: 'group1',
+            columns: this.cols
+        }
+    ];
+    data = SampleTestData.contactInfoDataFull();
+
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+}
