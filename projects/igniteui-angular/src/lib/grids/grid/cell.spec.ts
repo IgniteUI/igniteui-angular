@@ -75,6 +75,27 @@ describe('IgxGrid - Cell component', () => {
         expect(cell).toBe(fix.componentInstance.selectedCell);
     });
 
+    it('Should not emit selection event for already selected cell', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cell = grid.columns[0].cells[0];
+        const spy = spyOn(grid.onSelection, 'emit');
+
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        expect(spy.calls.count()).toEqual(1);
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        fix.detectChanges();
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape'}));
+        fix.detectChanges();
+
+        expect(spy.calls.count()).toEqual(1);
+    });
+
     it('Should trigger onCellClick event when click into cell', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
