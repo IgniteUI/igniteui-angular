@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule} from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
+import { IgxDividerModule } from '../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -23,7 +24,7 @@ import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
-import { MaskSampleComponent } from './mask/mask.sample';
+import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
@@ -79,7 +80,6 @@ import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchica
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
-import { DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
@@ -87,6 +87,7 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 
 
 
@@ -167,7 +168,8 @@ const components = [
     GridColumnPercentageWidthsSampleComponent,
     CalendarViewsSampleComponent,
     GridSearchBoxComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    GridFilterTemplateSampleComponent
 ];
 
 @NgModule({
@@ -179,11 +181,13 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
+        IgxInputGroupModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
+        IgxDividerModule,
         SharedModule,
         routing
     ],

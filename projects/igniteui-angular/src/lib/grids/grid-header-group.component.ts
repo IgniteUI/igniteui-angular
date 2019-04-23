@@ -9,7 +9,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    ElementRef
+    ElementRef,
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -116,7 +117,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -132,13 +133,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        return this.column.isLastPinned;
     }
 
     /**
@@ -161,12 +156,23 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get hasLastPinnedChildColumn(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-        if (this.column.allChildren) {
-            return this.column.allChildren.some((child) => {
-                return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
-            });
-        }
+        return this.column.allChildren.some(child => child.isLastPinned);
+    }
+
+    /**
+     * @hidden
+     */
+    get height() {
+        return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event): void {
+        // hack for preventing text selection in IE and Edge while dragging the resizer
+        event.preventDefault();
     }
 
     public ngDoCheck() {
@@ -178,44 +184,4 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseOver() {
-        if (this.column.resizable) {
-            this.colResizingService.resizeCursor = 'col-resize';
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseDown(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.showResizer = true;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-        } else {
-            this.colResizingService.resizeCursor = null;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public autosizeColumnOnDblClick(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.autosizeColumnOnDblClick();
-         }
-    }
-
-    /**
-     * @hidden
-     */
-    get height() {
-        return this.element.nativeElement.getBoundingClientRect().height;
-    }
 }

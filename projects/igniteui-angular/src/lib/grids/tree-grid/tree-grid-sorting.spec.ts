@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
@@ -23,11 +23,11 @@ describe('IgxTreeGrid - Sorting', () => {
             .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-    });
+    }));
 
     describe('API sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {

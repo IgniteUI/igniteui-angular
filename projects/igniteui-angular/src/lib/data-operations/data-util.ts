@@ -63,57 +63,52 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, groupsRecords: any[] = []): IGroupByResult {
         const grouping = new IgxGrouping();
-        return grouping.groupBy(data, state.expressions);
+        groupsRecords.splice(0, groupsRecords.length);
+        return grouping.groupBy(data, state.expressions, groupsRecords);
     }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
+    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
         if (state.expressions.length === 0) {
             return groupData.data;
         }
-        return this.restoreGroupsRecursive(groupData, 1, state.expressions.length, state.expansion, state.defaultExpanded, groupsRecords);
+        return this.restoreGroupsIterative(groupData, state);
     }
-    private static restoreGroupsRecursive(
-        groupData: IGroupByResult, level: number, depth: number,
-        expansion: IGroupByExpandState[], defaultExpanded: boolean, groupsRecords): any[] {
-        let i = 0;
-        let j: number;
-        let result = [];
-        // empty the array without changing reference
-        groupsRecords.splice(0, groupsRecords.length);
-        if (level !== depth) {
-            groupData.data = this.restoreGroupsRecursive(groupData, level + 1, depth, expansion, defaultExpanded, groupsRecords);
-        }
-        while (i < groupData.data.length) {
-            const g = level === depth ? groupData.metadata[i] :
-                groupData.data[i].groupParent;
-            for (j = i + 1; j < groupData.data.length; j++) {
-                const h = level === depth ? groupData.metadata[j] :
-                    groupData.data[j].groupParent;
-                if (h && g !== h && g.level === h.level) {
+    private static restoreGroupsIterative(groupData: IGroupByResult, state: IGroupingState): any[] {
+        const metadata = groupData.metadata;
+        const result = [], added = [];
+        let chain: any[];
+        let i = 0, j;
+        let pointer: IGroupByRecord;
+        let expanded: boolean;
+        for (i = 0; i < metadata.length;) {
+            chain = [metadata[i]];
+            pointer = metadata[i].groupParent;
+            // break off if the parent is already added
+            while (pointer && added[0] !== pointer) {
+                chain.push(pointer);
+                added.shift();
+                pointer = pointer.groupParent;
+            }
+            for (j = chain.length - 1; j >= 0; j--) {
+                result.push(chain[j]);
+                added.unshift(chain[j]);
+                const hierarchy = this.getHierarchy(chain[j]);
+                const expandState: IGroupByExpandState = state.expansion.find((s) =>
+                    this.isHierarchyMatch(s.hierarchy || [{ fieldName: chain[j].expression.fieldName, value: chain[j].value }], hierarchy));
+                expanded = expandState ? expandState.expanded : state.defaultExpanded;
+                if (!expanded) {
                     break;
                 }
             }
-            const hierarchy = this.getHierarchy(g);
-            const expandState: IGroupByExpandState = expansion.find((state) =>
-                this.isHierarchyMatch(state.hierarchy || [{ fieldName: g.expression.fieldName, value: g.value }], hierarchy));
-            const expanded = expandState ? expandState.expanded : defaultExpanded;
-            result.push(g);
-            groupsRecords.push(g);
-
-            g['groups'] = groupData.data.slice(i, j).filter((e) =>
-                e.records && e.records.length && e.level === g.level + 1);
-            while (groupsRecords.length) {
-                if (groupsRecords[0].level + 1 > level) {
-                    groupsRecords.shift();
-                } else {
-                    break;
-                }
-            }
+            added.shift();
+            j = Math.max(j, 0);
+            const start = chain[j].records.findIndex(r => r === groupData.data[i]);
+            const end = Math.min(metadata.length - i + start, chain[j].records.length);
             if (expanded) {
-                result = result.concat(groupData.data.slice(i, j));
+                result.push(...chain[j].records.slice(start, end));
             }
-            i = j;
+            i += end - start;
         }
         return result;
     }

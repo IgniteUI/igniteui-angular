@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from '@angular/core';
-import { isFirefox } from '../core/utils';
 import { IgxColumnComponent } from './column.component';
 
 /** @hidden */
@@ -24,11 +23,6 @@ export class IgxColumnResizingService {
      *@hidden
      */
     public showResizer = false;
-
-    /**
-     *@hidden
-     */
-    public resizeEndTimeout = isFirefox() ? 200 : 0;
     /**
      * The column being resized.
      */
@@ -96,77 +90,73 @@ export class IgxColumnResizingService {
      * than the maximum allowed pinned area width (80% of the total grid width), autosizing will be deismissed.
      */
     public autosizeColumnOnDblClick() {
-        if (this.column.resizable) {
-            const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
 
-            const size = this.column.getLargestCellWidth();
+        const size = this.column.getLargestCellWidth();
 
-            if (this.column.pinned) {
-                const newPinnedWidth = this.column.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);
+        if (this.column.pinned) {
+            const newPinnedWidth = this.column.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);
 
-                if (newPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                    this.column.width = size;
-                }
-            } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
-                this.column.width = parseFloat(this.column.maxWidth) + 'px';
-            } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
-                this.column.width = this.column.defaultMinWidth + 'px';
-            } else {
+            if (newPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
                 this.column.width = size;
             }
-
-            this.zone.run(() => {});
-
-            this.column.grid.reflow();
-            this.column.grid.onColumnResized.emit({
-                column: this.column,
-                prevWidth: currentColWidth.toString(),
-                newWidth: this.column.width
-            });
+        } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
+            this.column.width = parseFloat(this.column.maxWidth) + 'px';
+        } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
+            this.column.width = this.column.defaultMinWidth + 'px';
+        } else {
+            this.column.width = size;
         }
+
+        this.zone.run(() => {});
+
+        this.column.grid.reflow();
+        this.column.grid.onColumnResized.emit({
+            column: this.column,
+            prevWidth: currentColWidth.toString(),
+            newWidth: this.column.width
+        });
     }
 
     /**
      * Resizes the column regaridng to the column minWidth and maxWidth.
      */
     public resizeColumn(event: MouseEvent) {
-        this.isColumnResizing = false;
-
         this.showResizer = false;
         const diff = event.clientX - this.startResizePos;
 
-        if (this.column.resizable) {
-            let currentColWidth = parseFloat(this.column.width);
+        let currentColWidth = parseFloat(this.column.width);
 
-            const actualMinWidth = parseFloat(this.column.minWidth);
-            const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
+        const actualMinWidth = parseFloat(this.column.minWidth);
+        const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
 
-            let colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
-            const colMaxWidth = this.column.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(this.column.maxWidth);
+        let colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
+        const colMaxWidth = this.column.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(this.column.maxWidth);
 
-            const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
 
-            currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
-            colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
+        currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
+        colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
 
-            if (currentColWidth + diff < colMinWidth) {
-                this.column.width = colMinWidth + 'px';
-            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-                this.column.width = colMaxWidth + 'px';
-            } else {
-                this.column.width = (currentColWidth + diff) + 'px';
-            }
-
-            this.zone.run(() => {});
-            this.column.grid.reflow();
-
-            if (currentColWidth !== parseFloat(this.column.width)) {
-                this.column.grid.onColumnResized.emit({
-                    column: this.column,
-                    prevWidth: currentColWidth.toString(),
-                    newWidth: this.column.width
-                });
-            }
+        if (currentColWidth + diff < colMinWidth) {
+            this.column.width = colMinWidth + 'px';
+        } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
+            this.column.width = colMaxWidth + 'px';
+        } else {
+            this.column.width = (currentColWidth + diff) + 'px';
         }
+
+        this.zone.run(() => {});
+        this.column.grid.reflow();
+
+        if (currentColWidth !== parseFloat(this.column.width)) {
+            this.column.grid.onColumnResized.emit({
+                column: this.column,
+                prevWidth: currentColWidth.toString(),
+                newWidth: this.column.width
+            });
+        }
+
+        this.isColumnResizing = false;
     }
 }

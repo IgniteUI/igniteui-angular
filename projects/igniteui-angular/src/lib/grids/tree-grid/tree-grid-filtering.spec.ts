@@ -24,11 +24,11 @@ describe('IgxTreeGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;
-    });
+    }));
 
     it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
         for (let i = 0; i < 5; i++) {
@@ -257,13 +257,29 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(7);
     });
 
+    it('should update expand indicator after filtering is applied', () => {
+        grid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('equals'), true);
+        fix.detectChanges();
+
+        let rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(1);
+        TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0], 'hidden');
+
+        grid.clearFilter('ID');
+        fix.detectChanges();
+
+        rows = TreeGridFunctions.getAllRows(fix);
+        TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0]);
+        TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
+    });
+
     describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should remove a filtered parent row from the filtered list', fakeAsync(() => {
             const newCellValue = 'John McJohn';

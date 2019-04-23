@@ -305,8 +305,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._collapsed = true;
         this.cdr.detectChanges();
         delete this._overlayId;
-        this.onClosed.emit();
         this.unsubscribe();
+        this.onClosed.emit();
     }
 
     private unsubscribe() {

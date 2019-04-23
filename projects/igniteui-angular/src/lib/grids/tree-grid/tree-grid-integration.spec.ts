@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -51,40 +51,40 @@ describe('IgxTreeGrid - Integration', () => {
             .compileComponents();
     }));
 
-    it('should have tree-column with a \'string\' dataType', () => {
+    it('should have tree-column with a \'string\' dataType', fakeAsync(/** height/width setter rAF */() => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridStringTreeColumnComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
-    });
+    }));
 
-    it('should have tree-column with a \'date\' dataType', () => {
+    it('should have tree-column with a \'date\' dataType', fakeAsync(/** height/width setter rAF */() => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridDateTreeColumnComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'HireDate', 4);
-    });
+    }));
 
-    it('should have tree-column with a \'boolean\' dataType', () => {
+    it('should have tree-column with a \'boolean\' dataType', fakeAsync(/** height/width setter rAF */() => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridBooleanTreeColumnComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
-    });
+    }));
 
     describe('Child Collection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should transform a non-tree column into a tree column when pinning it', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
@@ -176,6 +176,7 @@ describe('IgxTreeGrid - Integration', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
+            treeGrid.cdr.detectChanges();
 
             expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(225);
@@ -191,11 +192,11 @@ describe('IgxTreeGrid - Integration', () => {
 
     describe('Primary/Foreign key', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should transform a non-tree column into a tree column when pinning it', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
@@ -287,6 +288,7 @@ describe('IgxTreeGrid - Integration', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
+            treeGrid.cdr.detectChanges();
 
             expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(180, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(180);
@@ -301,11 +303,11 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Row editing', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should show the banner below the edited parent node', () => {
             // Collapsed state
@@ -528,7 +530,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(mockObj.stopPropagation).toHaveBeenCalled();
         });
 
-        it('should preserve updates after removing Filtering', () => {
+        it('should preserve updates after removing Filtering', fakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
@@ -553,7 +555,7 @@ describe('IgxTreeGrid - Integration', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(33);
 
-        });
+        }));
 
         it('should preserve updates after removing Sorting', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -652,43 +654,43 @@ describe('IgxTreeGrid - Integration', () => {
             const targetCell = treeGrid.getCellByColumn(3, 'Age');
             targetCell.inEditMode = true;
             targetCell.update('333');
+            flush();
             fix.detectChanges();
-            tick();
 
             //  ged DONE button and click it
             const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
             const doneButtonElement = rowEditingBannerElement.lastElementChild;
-            doneButtonElement.click();
-            tick();
+            doneButtonElement.dispatchEvent(new Event('click'));
+            flush();
+            fix.detectChanges();
 
             // Verify the value is updated and the correct style is applied before committing
             expect(targetCell.inEditMode).toBeFalsy();
-            expect(targetCell.value).toBe('333');
+            expect(targetCell.value).toBe(333);
             expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
 
             // Commit
             trans.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
-            tick();
 
             // Verify the correct value is set
-            expect(targetCell.value).toBe('333');
+            expect(targetCell.value).toBe(333);
 
             // Add new root lv row
             treeGrid.addRow({ ID: 11, ParentID: -1, Name: 'Dan Kolov', JobTitle: 'wrestler', Age: 32, OnPTO: true });
-            tick();
+            fix.detectChanges();
 
             // Edit a cell value and check it is correctly updated
             const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
             newTargetCell.inEditMode = true;
             newTargetCell.update('666');
+            flush();
             fix.detectChanges();
-            tick();
 
-            expect(newTargetCell.value).toBe('666');
+            expect(newTargetCell.value).toBe(666);
             expect(newTargetCell.nativeElement.classList).toContain('igx-grid__td--edited');
         }));
 
-        it('Undo/Redo keeps the correct number of steps with Hierarchical DS', () => {
+        it('Undo/Redo keeps the correct number of steps with Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
             // TODO:
             // 1. Update a cell in three different rows
             // 2. Execute "Undo" three times
@@ -752,7 +754,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGridData[0].Name).toEqual('Testy Testington');
             expect(treeGridData[0].Employees[0].Age).toEqual(42);
             expect(treeGridData[1].Name).toEqual('Old Richard');
-        });
+        }));
 
         it('Add parent node to a Flat DS tree grid', fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
@@ -781,7 +783,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
         }));
 
-        it('Add parent node to a Hierarchical DS tree grid', () => {
+        it('Add parent node to a Hierarchical DS tree grid', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -836,9 +838,9 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.records.get(addedRowId_2).level).toBe(0);
             expect(treeGrid.getRowByKey(addedRowId_2).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
             expect(treeGrid.getRowByKey(addedRowId_1).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
-        });
+        }));
 
-        it('Add a child node to a previously added parent node - Flat DS', () => {
+        it('Add a child node to a previously added parent node - Flat DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -867,9 +869,9 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
             expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
             expect(treeGrid.getRowByKey(13).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
-        });
+        }));
 
-        it('Add a child node to a previously added parent node - Hierarchical DS', () => {
+        it('Add a child node to a previously added parent node - Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -904,9 +906,9 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.getRowByKey(133).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
             expect(treeGrid.getRowByKey(1337).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
             expect(treeGrid.transactions.getAggregatedChanges(true).length).toEqual(1);
-        });
+        }));
 
-        it('Delete a pending parent node - Flat DS', () => {
+        it('Delete a pending parent node - Flat DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -949,7 +951,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
             expect(trans.add).toHaveBeenCalledWith(transParams);
-        });
+        }));
 
         it('Delete a pending parent node - Hierarchical DS', fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
@@ -1000,7 +1002,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalledWith(transParams, null);
         }));
 
-        it('Delete a pending child node - Flat DS', () => {
+        it('Delete a pending child node - Flat DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -1043,7 +1045,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
             expect(trans.add).toHaveBeenCalledWith(transParams);
-        });
+        }));
 
         it('Delete a pending child node - Hierarchical DS', fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
@@ -1157,11 +1159,11 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Multi-column header', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('Should transform a hidden column to a tree column when it becomes visible and it is part of a column group', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
@@ -1260,7 +1262,7 @@ describe('IgxTreeGrid - Integration', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
         }));
 
-        it('Add rows to empty grid - Hierarchical DS', () => {
+        it('Add rows to empty grid - Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -1306,9 +1308,9 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.records.get(11).level).toBe(0);
             expect(treeGrid.records.get(12).level).toBe(1);
             expect(treeGrid.records.get(13).level).toBe(2);
-        });
+        }));
 
-        it('Add rows to empty grid - Flat DS', () => {
+        it('Add rows to empty grid - Flat DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -1343,6 +1345,6 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.records.get(11).level).toBe(0);
             expect(treeGrid.records.get(12).level).toBe(1);
             expect(treeGrid.records.get(13).level).toBe(2);
-        });
+        }));
     });
 });

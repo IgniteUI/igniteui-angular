@@ -147,7 +147,7 @@
         outline-style: none;
         transition: all .15s ease-in-out;
         color: --var($theme, 'button-arrow-color');
-        background-color: --var($theme, 'button-background');
+        background: --var($theme, 'button-background');
         box-shadow: --var($theme, 'button-shadow');
 
         span {

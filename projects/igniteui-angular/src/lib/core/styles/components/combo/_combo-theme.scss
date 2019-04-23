@@ -95,7 +95,7 @@
         align-items: center;
         position: relative;
         padding: rem(16px);
-        background-color: --var($theme, 'empty-list-background');
+        background: --var($theme, 'empty-list-background');
     }
 
     %igx-combo__empty {

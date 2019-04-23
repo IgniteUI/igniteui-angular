@@ -15,6 +15,7 @@ import { IgxStringFilteringOperand,
     IgxFilteringOperand,
     IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -30,7 +31,7 @@ describe('IgxGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    it('should correctly filter by \'string\' filtering conditions', () => {
+    it('should correctly filter by \'string\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -123,9 +124,9 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter('AnotherField', '', CustomFilter.instance().condition('custom'), false);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
-    });
+    }));
 
-    it('should correctly filter by \'number\' filtering conditions', () => {
+    it('should correctly filter by \'number\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -199,9 +200,9 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter('Downloads', null, IgxNumberFilteringOperand.instance().condition('notEmpty'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
-    });
+    }));
 
-    it('should correctly filter by \'boolean\' filtering conditions', () => {
+    it('should correctly filter by \'boolean\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -247,9 +248,9 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('null'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
-    });
+    }));
 
-    it('should correctly filter by \'date\' filtering conditions', () => {
+    it('should correctly filter by \'date\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -367,9 +368,9 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
-    });
+    }));
 
-    it('should correctly apply multiple filtering through API', () => {
+    it('should correctly apply multiple filtering through API', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -395,9 +396,9 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(8);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
-    });
+    }));
 
-    it('should correctly apply global filtering', () => {
+    it('should correctly apply global filtering', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -409,9 +410,9 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columns.length);
         expect(grid.rowList.length).toEqual(1);
-    });
+    }));
 
-    it('Should render chip when filtering using the API.', () => {
+    it('Should render chip when filtering using the API.', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxGridFilteringComponent);
         fixture.detectChanges();
 
@@ -436,9 +437,9 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filteringChips.length).toEqual(1);
         chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
         expect(chipContent).toEqual('Filter');
-    });
+    }));
 
-    it('Should correctly apply two conditions to two columns at once.', () => {
+    it('Should correctly apply two conditions to two columns at once.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -470,9 +471,9 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(8);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
-    });
+    }));
 
-    it('Should correctly apply two conditions to number column.', () => {
+    it('Should correctly apply two conditions to number column.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -497,9 +498,9 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(3);
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
-    });
+    }));
 
-    it('Should correctly apply two conditions to string column.', () => {
+    it('Should correctly apply two conditions to string column.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -524,9 +525,9 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(1);
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
-    });
+    }));
 
-    it('Should correctly apply two conditions to date column.', () => {
+    it('Should correctly apply two conditions to date column.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -552,7 +553,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(4);
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
-    });
+    }));
 
     it('Should correctly update summary.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -579,6 +580,85 @@ describe('IgxGrid - Filtering actions', () => {
         const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
         HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
+
+    it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
+    }));
+
+    it('should correctly show and hide the "No records found." message.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.filter('ProductName', 'asdf', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fix.detectChanges();
+        let noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+        expect(grid.rowList.length).toEqual(0);
+        expect(noRecordsSpan).toBeTruthy();
+        expect(noRecordsSpan.nativeElement.innerText).toBe('No records found.');
+
+        grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        fix.detectChanges();
+        noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+        expect(grid.rowList.length).toEqual(8);
+        expect(noRecordsSpan).toBeFalsy();
+    }));
+
+    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+        const expression = {
+             fieldName: 'ProductName',
+             searchVal: 'Ignite',
+             condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        const expression1 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression11 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression12 = {
+            fieldName: 'ProductName',
+            searchVal: 'jQuery',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression2 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression21 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression22 = {
+            fieldName: 'ProductName',
+            searchVal: 'jQuery',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        expression1.filteringOperands.push(expression11);
+        expression1.filteringOperands.push(expression12);
+        expression2.filteringOperands.push(expression21);
+        expression2.filteringOperands.push(expression22);
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        filteringExpressionsTree.filteringOperands.push(expression2);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+
+        const expressionUIs: ExpressionUI[] = [];
+        grid.filteringService.generateExpressionsList(grid.filteringExpressionsTree, grid.filteringLogic, expressionUIs);
+
+        verifyExpressionUI(expressionUIs[0], expression, FilteringLogic.Or, undefined);
+        verifyExpressionUI(expressionUIs[1], expression11, FilteringLogic.And, FilteringLogic.Or);
+        verifyExpressionUI(expressionUIs[2], expression12, FilteringLogic.Or, FilteringLogic.And);
+        verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
+        verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -603,14 +683,14 @@ export class CustomFilter extends IgxFilteringOperand {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
-        <igx-column [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="true" dataType="date">
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
@@ -844,4 +924,11 @@ function isLastYear(date: Date, year: number): boolean {
 
 function isNextYear(date: Date, year: number): boolean {
     return date.getFullYear() > year;
+}
+
+function verifyExpressionUI(expressionUI: ExpressionUI, expression: IFilteringExpression,
+    afterOperator: FilteringLogic, beforeOperator: FilteringLogic) {
+    expect(expressionUI.expression).toBe(expression);
+    expect(expressionUI.afterOperator).toBe(afterOperator);
+    expect(expressionUI.beforeOperator).toBe(beforeOperator);
 }

@@ -134,6 +134,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Groups'
         },
         {
+            link: '/gridFilterTemplate',
+            icon: 'view_column',
+            name: 'Grid Filter Template'
+        },
+        {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'
@@ -377,5 +382,10 @@ export class AppComponent implements OnInit {
                     this.navdrawer.close();
                 }
             });
+
+        // register custom SVG icons
+        this.iconService.addSvgIcon("rain", "../assets/images/card/icons/rain.svg", "weather-icons");
+        this.iconService.addSvgIcon("breeze", "../assets/images/card/icons/breeze.svg", "weather-icons");
+
     }
 }
