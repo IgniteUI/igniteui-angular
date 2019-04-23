@@ -16,6 +16,41 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
     /**
+     * @inheritdoc
+     */
+    get focused(): boolean {
+        const focusedState = this.hasIndex
+        ? this._index === this.selection.first_item(`${this.dropDown.id}-active`) : this._focused;
+        return !this.isHeader && !this.disabled && focusedState;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    set focused(value: boolean) {
+        this._focused = value;
+    }
+    /**
+     * @inheritdoc
+     */
+    get selected(): boolean {
+        if (this.hasIndex) {
+            const item = this.selection.first_item(`${this.dropDown.id}`);
+            return item ? item.index === this._index && item.value === this.value : false;
+        }
+        return this._selected;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    set selected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
+        this._selected = value;
+    }
+    /**
      * @hidden @internal
      */
     @HostBinding('attr.tabindex')
