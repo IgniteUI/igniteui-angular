@@ -12,7 +12,8 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
-import { IgxDropDirective} from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxGridRowComponent } from './grid-row.component';
 
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
@@ -22,7 +23,7 @@ describe('IgxGrid - Row Drag', () => {
     let grid: IgxGridComponent;
     let dropArea: IgxDropDirective;
     let dropAreaElement;
-    let rows: any;
+    let rows: IgxGridRowComponent[];
     let dragIndicatorElements: any;
     configureTestSuite();
 
@@ -66,11 +67,11 @@ describe('IgxGrid - Row Drag', () => {
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row
-            };
-            const dragEndArgs: IRowDragEndEventArgs = {
                 source: row,
                 cancel: false
+            };
+            const dragEndArgs: IRowDragEndEventArgs = {
+                source: row
             };
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
@@ -98,7 +99,8 @@ describe('IgxGrid - Row Drag', () => {
             const rowPoint = UIInteractions.getPointFromElement(rowElement);
             spyOn(grid.onRowDragStart, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row
+                source: row,
+                cancel: false
             };
 
             UIInteractions.simulatePointerEvent('pointerdown', rowElement, rowPoint.x, rowPoint.y);
@@ -168,11 +170,43 @@ describe('IgxGrid - Row Drag', () => {
         }));
 
         it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async () => {
+            const rowToDrag = rows[2];
+            const dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
 
+            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(grid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(grid.onRowDragEnd, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
+                source: jasmine.any(IgxGridRowComponent),
+                cancel: false
+            });
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
+                source: jasmine.any(IgxGridRowComponent)
+            });
         }));
 
         it('Should be able to cancel onRowDragStart event.', (async () => {
-            grid.onRowDragStart.subscribe(e => {
+            grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
                 e.cancel = true;
             });
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
