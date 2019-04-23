@@ -1,7 +1,7 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { TestBed, async, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -12,7 +12,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
-import { IgxDropDirective, IgxDropEnterEventArgs, IgxDropLeaveEventArgs} from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective, IgxDropEnterEventArgs, IgxDropLeaveEventArgs } from '../../directives/dragdrop/dragdrop.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { Point } from '../../services';
@@ -21,7 +21,7 @@ const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 
 describe('IgxGrid - Row Drag', () => {
-    let fixture: ComponentFixture<IgxGridRowDraggableComponent>;
+    let fixture: ComponentFixture<any>;
     let grid: IgxGridComponent;
     let dropArea: IgxDropDirective;
     let dropAreaElement;
@@ -58,7 +58,7 @@ describe('IgxGrid - Row Drag', () => {
         }));
         configureTestSuite();
 
-        it('should drag and drop draggable row over droppable container', (async() => {
+        it('should drag and drop draggable row over droppable container', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = rows[1];
 
@@ -91,7 +91,7 @@ describe('IgxGrid - Row Drag', () => {
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
         }));
-        it('should be able to drag row only by drag icon', (async() => {
+        it('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = rows[1];
             const rowElement = row.nativeElement;
@@ -114,15 +114,15 @@ describe('IgxGrid - Row Drag', () => {
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
         }));
         it('should cancel dragging if dropping a row on a non-interactive area', fakeAsync(() => {
-           // TODO
+            // TODO
         }));
         it('should not be able to drag grid header', fakeAsync(() => {
             // TODO To be fixed
-         }));
+        }));
         it('should not change row data if the data in the drop area has been changed', fakeAsync(() => {
             // TODO
-         }));
-        it('should emit drop events on droppable area', (async() => {
+        }));
+        it('should emit drop events on droppable area', (async () => {
             const dragIndicatorElement = dragIndicatorElements[3].nativeElement;
             const row = rows[2];
 
@@ -142,7 +142,7 @@ describe('IgxGrid - Row Drag', () => {
             const dropEnterArgs: IgxDropEnterEventArgs = {
                 owner: dropArea,
                 drag: rowDrag,
-                dragData: undefined,
+                dragData: row,
                 startX: startPoint.x,
                 startY: startPoint.y,
                 pageX: dropPoint.x,
@@ -151,16 +151,17 @@ describe('IgxGrid - Row Drag', () => {
             const dragLeaveArgs: IgxDropLeaveEventArgs = {
                 owner: dropArea,
                 drag: rowDrag,
-                dragData: undefined,
+                dragData: row,
                 startX: startPoint.x,
                 startY: startPoint.y,
                 pageX: dropPoint.x,
                 pageY: dropPoint.y
             };
 
-            console.log(dragLeaveArgs);
+            console.log(dropEnterArgs);
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
             await wait(50);
@@ -169,6 +170,7 @@ describe('IgxGrid - Row Drag', () => {
             await wait(50);
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait();
             fixture.detectChanges();
             expect(dropArea.onEnter.emit).toHaveBeenCalledTimes(1);
             expect(dropArea.onEnter.emit).toHaveBeenCalledWith(dropEnterArgs);
@@ -179,7 +181,7 @@ describe('IgxGrid - Row Drag', () => {
             expect(dropArea.onDragOver).toHaveBeenCalledTimes(1);
         }));
         it('Start dragging programmatically using API.', (async () => {
-                // TODO
+            // TODO
         }));
         it('Should cancel dragging when ESCAPE key is pressed.', (async () => {
             // TODO
@@ -204,7 +206,7 @@ describe('IgxGrid - Row Drag', () => {
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
             dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
             horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
-            let dragIndicatorRect = dragIndicatorElement.nativeElement.getBoundingClientRect();
+            const dragIndicatorRect = dragIndicatorElement.nativeElement.getBoundingClientRect();
             let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             expect(rowSelectElement).toBeNull();
             expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
@@ -216,13 +218,11 @@ describe('IgxGrid - Row Drag', () => {
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
             dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
             horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
-            let rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
+            const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
         }));
         it('Should fire drag events with correct values of event arguments.', (async () => {
-
-        it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async () => {
             const rowToDrag: IgxGridRowComponent = rows[2];
             const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
 
@@ -293,6 +293,7 @@ describe('IgxGrid - Row Drag', () => {
         }));
     });
 });
+
 
 @Component({
     template: `
