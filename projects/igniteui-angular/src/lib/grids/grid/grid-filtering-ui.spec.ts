@@ -1284,8 +1284,6 @@ describe('IgxGrid - Filtering actions', () => {
         calendar = outlet.getElementsByClassName('igx-calendar')[0];
         const month = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
 
-        const today = new Date(Date.now());
-
         const expectedResult = today.getFullYear() - 3;
         expect(month.innerHTML.trim()).toEqual(expectedResult.toString());
     }));
