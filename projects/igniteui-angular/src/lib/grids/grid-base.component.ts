@@ -87,6 +87,7 @@ import {
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -178,13 +179,12 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
-export interface IRowDragStartEventArgs extends CancelableEventArgs {
-    source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+export interface IRowDragEndEventArgs {
+    owner: IgxDragDirective;
+    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
-export interface IRowDragEndEventArgs {
-    source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
-}
+export interface IRowDragStartEventArgs extends IRowDragEndEventArgs, CancelableEventArgs { }
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -1467,16 +1467,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      /**
      * Emitted when start dragging a row.
      * Return the dragged row.
-        */
+    */
     @Output()
     public onRowDragStart = new EventEmitter<IRowDragStartEventArgs>();
 
     /**
      * Emitted when dropping a row.
      * Return the dropped row.
-        */
-       @Output()
-       public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
+    */
+    @Output()
+    public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
      * @hidden

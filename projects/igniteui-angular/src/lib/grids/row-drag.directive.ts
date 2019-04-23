@@ -1,5 +1,5 @@
-import { Directive, Input, OnDestroy, NgModule, Output, EventEmitter } from '@angular/core';
-import { IgxDragDirective, IgxDragCustomEventDetails } from '../directives/dragdrop/dragdrop.directive';
+import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
+import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
@@ -40,7 +40,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.onPointerDown(event);
 
         const args: IRowDragStartEventArgs = {
-            source: this.row,
+            owner: this,
+            dragData: this.row,
             cancel: false
         };
 
@@ -56,26 +57,19 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public onPointerUp(event) {
-        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        super.onPointerUp(event);
+        this.row.dragging = false;
+        this.row.grid.rowDragging = false;
+
+        const args: IRowDragEndEventArgs = {
+            owner: this,
+            dragData: this.row
+        };
         this.zone.run(() => {
-            const isOnDroppadble = this._lastDropArea;
-            super.onPointerUp(event);
-            this.row.dragging = false;
-            this.row.grid.rowDragging = false;
-
-            if (isOnDroppadble) {
-                const args: IRowDragEndEventArgs = {
-                    source: this.row
-                };
-                this.row.grid.onRowDragEnd.emit(args);
-            } else {
-                this.row.grid.cdr.detectChanges();
-            }
+            this.row.grid.onRowDragEnd.emit(args);
         });
-
         this._unsubscribe();
     }
-
 
     protected createDragGhost(event) {
         super.createDragGhost(event, this._row.nativeElement);
@@ -90,25 +84,19 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.renderer.addClass(this._dragGhost, ghostBackgrounClass);
     }
 
-    protected dispatchDropEvent(pageX: number, pageY: number) {
-        const eventArgs: IgxDragCustomEventDetails = {
-            owner: this,
-            startX: this._startX,
-            startY: this._startY,
-            pageX: pageX,
-            pageY: pageY
-        };
-
-        this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
-        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
-        this._lastDropArea = null;
-    }
-
     private _unsubscribe() {
         if (this.subscription$) {
             this.subscription$.unsubscribe();
             this.subscription$ = null;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    ngOnInit() {
+        this.animateOnRelease = true;
+        super.ngOnInit();
     }
 }
 
