@@ -15,12 +15,13 @@ import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.compo
 import { IgxDropDirective, IgxDropEnterEventArgs, IgxDropLeaveEventArgs} from '../../directives/dragdrop/dragdrop.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
+import { Point } from '../../services';
 
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 
 describe('IgxGrid - Row Drag', () => {
-    let fixture;
+    let fixture: ComponentFixture<IgxGridRowDraggableComponent>;
     let grid: IgxGridComponent;
     let dropArea: IgxDropDirective;
     let dropAreaElement;
@@ -68,11 +69,11 @@ describe('IgxGrid - Row Drag', () => {
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row
-            };
-            const dragEndArgs: IRowDragEndEventArgs = {
                 source: row,
                 cancel: false
+            };
+            const dragEndArgs: IRowDragEndEventArgs = {
+                source: row
             };
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
@@ -99,7 +100,8 @@ describe('IgxGrid - Row Drag', () => {
             const rowPoint = UIInteractions.getPointFromElement(rowElement);
             spyOn(grid.onRowDragStart, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row
+                source: row,
+                cancel: false
             };
 
             UIInteractions.simulatePointerEvent('pointerdown', rowElement, rowPoint.x, rowPoint.y);
@@ -182,20 +184,88 @@ describe('IgxGrid - Row Drag', () => {
         it('Should cancel dragging when ESCAPE key is pressed.', (async () => {
             // TODO
         }));
-        it('Scroll start should be correctly aligned with first column and not with drag indicator ', (async () => {
-            // TODO Test if drag indicator width = 0
+        it('Should align horizontal scrollbar with first not pinned data cell', fakeAsync(() => {
+            // has no draggable rows and has no selectable rows
+            grid.rowSelectable = false;
+            grid.rowDrag = false;
+            tick();
+            fixture.detectChanges();
+            let rowSelectElement: DebugElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            expect(rowSelectElement).toBeNull();
+            expect(dragIndicatorElement).toBeNull();
+
+            // has draggable rows and has no selectable rows
+            grid.rowSelectable = false;
+            grid.rowDrag = true;
+            tick();
+            fixture.detectChanges();
+            rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            let dragIndicatorRect = dragIndicatorElement.nativeElement.getBoundingClientRect();
+            let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            expect(rowSelectElement).toBeNull();
+            expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
+
+            // has draggable rows and has selectable rows
+            grid.rowSelectable = true;
+            grid.rowDrag = true;
+            fixture.detectChanges();
+            rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            let rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
+            horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
         }));
         it('Should fire drag events with correct values of event arguments.', (async () => {
 
+        it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async () => {
+            const rowToDrag: IgxGridRowComponent = rows[2];
+            const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(grid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(grid.onRowDragEnd, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
+                source: jasmine.any(IgxGridRowComponent),
+                cancel: false
+            });
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
+                source: jasmine.any(IgxGridRowComponent)
+            });
         }));
         it('Should be able to cancel onRowDragStart event.', (async () => {
-            grid.onRowDragStart.subscribe(e => {
+            grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
                 e.cancel = true;
             });
-            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const rowToDrag: IgxGridRowComponent = rows[2];
+            const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
 
-            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const endPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');

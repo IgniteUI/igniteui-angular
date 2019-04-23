@@ -5,6 +5,7 @@ import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
 
+
 const ghostBackgrounClass = 'igx-grid__tr--ghost';
 const draggedRowClass = 'igx-grid__tr--drag';
 
@@ -17,10 +18,17 @@ const draggedRowClass = 'igx-grid__tr--drag';
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private _row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
+    public startDrag(event) {
+        this.onPointerDown(event);
+    }
 
     @Input('igxRowDrag')
     set data(val) {
         this._row = val;
+    }
+
+    get data() {
+        return this.row;
     }
 
     get row() {
@@ -32,7 +40,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.onPointerDown(event);
 
         const args: IRowDragStartEventArgs = {
-            source: this.row
+            source: this.row,
+            cancel: false
         };
 
         this.row.grid.onRowDragStart.emit(args);
@@ -56,8 +65,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
             if (isOnDroppadble) {
                 const args: IRowDragEndEventArgs = {
-                    source: this.row,
-                    cancel: false
+                    source: this.row
                 };
                 this.row.grid.onRowDragEnd.emit(args);
             } else {
@@ -83,15 +91,15 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     protected dispatchDropEvent(pageX: number, pageY: number) {
-
-        // TODO: This should be investigated if it is needed
         const eventArgs: IgxDragCustomEventDetails = {
+            owner: this,
             startX: this._startX,
             startY: this._startY,
             pageX: pageX,
-            pageY: pageY,
-            owner: this
+            pageY: pageY
         };
+
+        this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
     }

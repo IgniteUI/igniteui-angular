@@ -22,7 +22,7 @@ export enum RestrictDrag {
     NONE
 }
 
-export class IgxDragCustomEventDetails {
+export interface IgxDragCustomEventDetails {
     startX: number;
     startY: number;
     pageX: number;
@@ -30,7 +30,7 @@ export class IgxDragCustomEventDetails {
     owner: IgxDragDirective;
 }
 
-export class IgxDropEnterEventArgs {
+export interface IgxDropEnterEventArgs {
     owner: IgxDropDirective;
     drag: IgxDragDirective;
     dragData: any;
@@ -40,7 +40,7 @@ export class IgxDropEnterEventArgs {
     pageY: number;
 }
 
-export class IgxDropLeaveEventArgs {
+export interface IgxDropLeaveEventArgs {
     owner: IgxDropDirective;
     drag: IgxDragDirective;
     dragData: any;
@@ -50,7 +50,7 @@ export class IgxDropLeaveEventArgs {
     pageY: number;
 }
 
-export class IgxDropEventArgs {
+export interface IgxDropEventArgs {
     owner: IgxDropDirective;
     drag: IgxDragDirective;
     cancel: boolean;
@@ -916,7 +916,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             pageY: event.detail.pageY
         };
         this._zone.run(() => {
-            this.onLeave.emit();
+            this.onLeave.emit(eventArgs);
         });
     }
 

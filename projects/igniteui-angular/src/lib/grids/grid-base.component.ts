@@ -178,11 +178,11 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
-export interface IRowDragStartEventArgs {
+export interface IRowDragStartEventArgs extends CancelableEventArgs {
     source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
-export interface IRowDragEndEventArgs extends CancelableEventArgs {
+export interface IRowDragEndEventArgs {
     source: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
@@ -5221,7 +5221,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
     }
-
 }
 
 

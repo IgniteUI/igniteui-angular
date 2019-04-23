@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="dropable-area">
-    <div igxDrop>Drag here</div>
+    <div igxDrop (onDrop)="onDragCageEnter($event)">Drag here</div>
     <div igxDrop>Drag here</div>
     <div igxDrop (onEnter)="onEnter($event)" (onLeave)="onLeave($event)" (onDrop)="onDrop($event)">Drag here</div>
 </div>
