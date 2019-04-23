@@ -573,7 +573,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._height = value;
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
-                    this.resetForOfCache();
                     this.reflow();
                     this.cdr.markForCheck();
                 }
@@ -2526,7 +2525,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.resizeHandler = () => {
-            this.resetForOfCache();
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
         };
