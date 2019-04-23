@@ -12,7 +12,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
-import { IgxDropDirective, IgxDropEnterEventArgs, IgxDropLeaveEventArgs } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective, IgxDropEnterEventArgs, IgxDropLeaveEventArgs, IgxDropEventArgs } from '../../directives/dragdrop/dragdrop.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { Point } from '../../services';
@@ -27,6 +27,7 @@ describe('IgxGrid - Row Drag', () => {
     let dropAreaElement;
     let rows: IgxGridRowComponent[];
     let dragIndicatorElements: DebugElement[];
+    let dragRows: DebugElement[];
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -55,12 +56,14 @@ describe('IgxGrid - Row Drag', () => {
             rows = grid.rowList.toArray();
             dropAreaElement = fixture.debugElement.query(By.css('.dropable-area')).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
         configureTestSuite();
 
         it('should drag and drop draggable row over droppable container', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = rows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
 
             const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
@@ -69,14 +72,17 @@ describe('IgxGrid - Row Drag', () => {
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row,
+                owner: rowDragDirective,
+                dragData: row,
                 cancel: false
             };
             const dragEndArgs: IRowDragEndEventArgs = {
-                source: row
+                owner: rowDragDirective,
+                dragData: row
             };
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
             fixture.detectChanges();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
@@ -87,12 +93,14 @@ describe('IgxGrid - Row Drag', () => {
             await wait(50);
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait();
             fixture.detectChanges();
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
         }));
         it('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const row = rows[1];
             const rowElement = row.nativeElement;
 
@@ -100,7 +108,8 @@ describe('IgxGrid - Row Drag', () => {
             const rowPoint = UIInteractions.getPointFromElement(rowElement);
             spyOn(grid.onRowDragStart, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
-                source: row,
+                owner: rowDragDirective,
+                dragData: row,
                 cancel: false
             };
 
@@ -113,8 +122,38 @@ describe('IgxGrid - Row Drag', () => {
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
         }));
-        it('should cancel dragging if dropping a row on a non-interactive area', fakeAsync(() => {
-            // TODO
+        xit('should cancel dragging if dropping a row on a non-interactive area', (async() => {
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = rows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+            const dropPoint = UIInteractions.getPointFromElement(rows[6].nativeElement);
+
+            spyOn(grid.onRowDragStart, 'emit');
+            spyOn(grid.onRowDragEnd, 'emit');
+            const dragStartArgs: IRowDragStartEventArgs = {
+                owner: rowDragDirective,
+                dragData: row,
+                cancel: false
+            };
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(0);
         }));
         it('should not be able to drag grid header', fakeAsync(() => {
             // TODO To be fixed
@@ -125,6 +164,7 @@ describe('IgxGrid - Row Drag', () => {
         it('should emit drop events on droppable area', (async () => {
             const dragIndicatorElement = dragIndicatorElements[3].nativeElement;
             const row = rows[2];
+            const rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
 
             const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
@@ -132,51 +172,71 @@ describe('IgxGrid - Row Drag', () => {
 
             spyOn(dropArea.onEnter, 'emit');
             spyOn(dropArea.onLeave, 'emit');
-            // spyOn(dropArea.onDrop, 'emit');
+            spyOn(dropArea.onDrop, 'emit');
             spyOn(dropArea, 'onDragEnter').and.callThrough();
             spyOn(dropArea, 'onDragLeave').and.callThrough();
             spyOn(dropArea, 'onDragOver').and.callThrough();
-            // spyOn(dropArea, 'onDragDrop').and.callThrough();
-            const dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-            const rowDrag = dragRows[2].injector.get(IgxRowDragDirective);
-            const dropEnterArgs: IgxDropEnterEventArgs = {
-                owner: dropArea,
-                drag: rowDrag,
-                dragData: row,
-                startX: startPoint.x,
-                startY: startPoint.y,
-                pageX: dropPoint.x,
-                pageY: dropPoint.y
-            };
-            const dragLeaveArgs: IgxDropLeaveEventArgs = {
-                owner: dropArea,
-                drag: rowDrag,
-                dragData: row,
-                startX: startPoint.x,
-                startY: startPoint.y,
-                pageX: dropPoint.x,
-                pageY: dropPoint.y
-            };
-
-            console.log(dropEnterArgs);
+            spyOn(dropArea, 'onDragDrop').and.callThrough();
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
+
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
             await wait(50);
             fixture.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
+
+            const pointerMoveEvent = UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
             await wait(50);
             fixture.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
-            await wait();
-            fixture.detectChanges();
+            const elementPosX = dropAreaElement.getBoundingClientRect().left + getWindowScrollLeft();
+            const elementPosY = dropAreaElement.getBoundingClientRect().top + getWindowScrollTop();
+            const offsetX = dropPoint.x - elementPosX;
+            const offsetY = dropPoint.y - elementPosY;
+            const dropEnterArgs: IgxDropEnterEventArgs = {
+                originalEvent: pointerMoveEvent,
+                owner: dropArea,
+                drag: rowDragDirective,
+                dragData: row,
+                startX: startPoint.x,
+                startY: startPoint.y,
+                pageX: dropPoint.x,
+                pageY: dropPoint.y,
+                offsetX: offsetX,
+                offsetY: offsetY
+            };
             expect(dropArea.onEnter.emit).toHaveBeenCalledTimes(1);
             expect(dropArea.onEnter.emit).toHaveBeenCalledWith(dropEnterArgs);
             expect(dropArea.onDragEnter).toHaveBeenCalledTimes(1);
+
+            const pointerUpEvent = UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait();
+            fixture.detectChanges();
+            const dragDropArgs: IgxDropEventArgs = {
+                originalEvent: pointerUpEvent,
+                owner: dropArea,
+                drag: rowDragDirective,
+                offsetX: offsetX,
+                offsetY: offsetY,
+                cancel: false
+            };
+            expect(dropArea.onDrop.emit).toHaveBeenCalledTimes(1);
+            expect(dropArea.onDrop.emit).toHaveBeenCalledWith(dragDropArgs);
+            expect(dropArea.onDragDrop).toHaveBeenCalledTimes(1);
+            const dragLeaveArgs: IgxDropLeaveEventArgs = {
+                originalEvent: pointerUpEvent,
+                owner: dropArea,
+                drag: rowDragDirective,
+                dragData: row,
+                startX: startPoint.x,
+                startY: startPoint.y,
+                pageX: dropPoint.x,
+                pageY: dropPoint.y,
+                offsetX: offsetX,
+                offsetY: offsetY
+            };
             expect(dropArea.onLeave.emit).toHaveBeenCalledTimes(1);
-            // expect(dropArea.onLeave.emit).toHaveBeenCalledWith(dragLeaveArgs);
+            expect(dropArea.onLeave.emit).toHaveBeenCalledWith(dragLeaveArgs);
             expect(dropArea.onDragLeave).toHaveBeenCalledTimes(1);
             expect(dropArea.onDragOver).toHaveBeenCalledTimes(1);
         }));
@@ -345,4 +405,11 @@ export class IgxGridRowDraggableComponent extends DataParent {
     handleRowDrop(args) {
         console.log('Row Drag End!');
     }
+}
+
+function getWindowScrollLeft() {
+    return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
+}
+function getWindowScrollTop() {
+    return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
 }
