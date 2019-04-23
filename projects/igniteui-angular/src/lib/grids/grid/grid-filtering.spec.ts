@@ -15,7 +15,6 @@ import { IgxStringFilteringOperand,
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions', () => {
@@ -537,10 +536,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('should correctly show and hide the "No records found." message.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
         grid.filter('ProductName', 'asdf', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         let noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
@@ -556,10 +551,6 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     it('Should generate the expressions UI list correctly.', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression = {
              fieldName: 'ProductName',
