@@ -531,18 +531,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @WatchChanges()
     @Input()
-    get rowDrag(): boolean {
+    get rowDraggable(): boolean {
         return this._rowDrag;
     }
 
     /**
      * Sets whether rows can be moved.
      * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowDrag]="true"></igx-grid>
+     * <igx-grid #grid [rowDraggable]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    set rowDrag(val: boolean) {
+    set rowDraggable(val: boolean) {
         this._rowDrag = val;
     }
 
@@ -4215,7 +4215,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
-        if (this.rowDrag) {
+        if (this.rowDraggable) {
             this.calcFixedWidth += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
         }
 
@@ -4250,7 +4250,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        if (this.showRowCheckboxes || this.rowDrag) {
+        if (this.showRowCheckboxes || this.rowDraggable) {
             sum += this.calcFixedWidth;
         }
 

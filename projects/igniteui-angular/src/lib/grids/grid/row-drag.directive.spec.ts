@@ -249,7 +249,7 @@ describe('IgxGrid - Row Drag', () => {
         it('Should align horizontal scrollbar with first not pinned data cell', fakeAsync(() => {
             // has no draggable rows and has no selectable rows
             grid.rowSelectable = false;
-            grid.rowDrag = false;
+            grid.rowDraggable = false;
             tick();
             fixture.detectChanges();
             let rowSelectElement: DebugElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
@@ -260,7 +260,7 @@ describe('IgxGrid - Row Drag', () => {
 
             // has draggable rows and has no selectable rows
             grid.rowSelectable = false;
-            grid.rowDrag = true;
+            grid.rowDraggable = true;
             tick();
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
@@ -273,7 +273,7 @@ describe('IgxGrid - Row Drag', () => {
 
             // has draggable rows and has selectable rows
             grid.rowSelectable = true;
-            grid.rowDrag = true;
+            grid.rowDraggable = true;
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
             dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
@@ -362,7 +362,7 @@ describe('IgxGrid - Row Drag', () => {
             [height]='height'
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
-            [rowEditable]="true" [rowDrag]="enableRowDraggable"
+            [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             (onRowDragStart)="handleRowDrag($event)"
             (onRowDragEnd)="handleRowDrop($event)">
         </igx-grid>

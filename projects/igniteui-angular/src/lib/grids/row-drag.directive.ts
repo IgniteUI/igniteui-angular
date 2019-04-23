@@ -6,7 +6,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
 
 
-const ghostBackgrounClass = 'igx-grid__tr--ghost';
+const ghostBackgroundClass = 'igx-grid__tr--ghost';
 const draggedRowClass = 'igx-grid__tr--drag';
 
 /**
@@ -16,7 +16,7 @@ const draggedRowClass = 'igx-grid__tr--drag';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
-    private _row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    private row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
     public startDrag(event) {
         this.onPointerDown(event);
@@ -24,15 +24,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxRowDrag')
     set data(val) {
-        this._row = val;
+        this.row = val;
     }
 
     get data() {
         return this.row;
-    }
-
-    get row() {
-        return this._row;
     }
 
     public onPointerDown(event) {
@@ -72,7 +68,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     protected createDragGhost(event) {
-        super.createDragGhost(event, this._row.nativeElement);
+        super.createDragGhost(event, this.row.nativeElement);
 
         const gridWidth = this.row.grid.nativeElement.style.width;
 
@@ -81,7 +77,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.renderer.removeClass(this._dragGhost, this.row.grid.oddRowCSS);
         this.renderer.removeClass(this._dragGhost, this.row.grid.evenRowCSS);
         this.renderer.removeClass(this._dragGhost, draggedRowClass);
-        this.renderer.addClass(this._dragGhost, ghostBackgrounClass);
+        this.renderer.addClass(this._dragGhost, ghostBackgroundClass);
     }
 
     private _unsubscribe() {
