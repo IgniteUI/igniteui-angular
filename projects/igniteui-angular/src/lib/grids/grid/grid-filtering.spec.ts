@@ -16,6 +16,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -553,6 +554,58 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
         expect(noRecordsSpan).toBeFalsy();
     }));
+
+    it('Should generate the expressions UI list correctly.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+        const expression = {
+             fieldName: 'ProductName',
+             searchVal: 'Ignite',
+             condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        const expression1 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression11 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression12 = {
+            fieldName: 'ProductName',
+            searchVal: 'jQuery',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression2 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression21 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        const expression22 = {
+            fieldName: 'ProductName',
+            searchVal: 'jQuery',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        expression1.filteringOperands.push(expression11);
+        expression1.filteringOperands.push(expression12);
+        expression2.filteringOperands.push(expression21);
+        expression2.filteringOperands.push(expression22);
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        filteringExpressionsTree.filteringOperands.push(expression2);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+
+        const expressionUIs: ExpressionUI[] = [];
+        grid.filteringService.generateExpressionsList(grid.filteringExpressionsTree, grid.filteringLogic, expressionUIs);
+
+        verifyExpressionUI(expressionUIs[0], expression, FilteringLogic.Or, undefined);
+        verifyExpressionUI(expressionUIs[1], expression11, FilteringLogic.And, FilteringLogic.Or);
+        verifyExpressionUI(expressionUIs[2], expression12, FilteringLogic.Or, FilteringLogic.And);
+        verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
+        verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
+    }));
 });
 
 const expectedResults = [];
@@ -707,4 +760,11 @@ function isLastYear(date: Date, year: number): boolean {
 
 function isNextYear(date: Date, year: number): boolean {
     return date.getFullYear() > year;
+}
+
+function verifyExpressionUI(expressionUI: ExpressionUI, expression: IFilteringExpression,
+    afterOperator: FilteringLogic, beforeOperator: FilteringLogic) {
+    expect(expressionUI.expression).toBe(expression);
+    expect(expressionUI.afterOperator).toBe(afterOperator);
+    expect(expressionUI.beforeOperator).toBe(beforeOperator);
 }
