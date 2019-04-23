@@ -613,8 +613,21 @@ function verifyButtonsDisplayDensity(parentDebugEl: DebugElement, expectedDispla
     const fabButtons = parentDebugEl.queryAll(By.css('.igx-button--fab'));
     const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons)).concat(Array.from(fabButtons));
 
+    let expectedDensityClass;
+    switch (expectedDisplayDensity) {
+        case DisplayDensity.compact: expectedDensityClass = 'igx-button--compact'; break;
+        case DisplayDensity.cosy: expectedDensityClass = 'igx-button--cosy'; break;
+        default: expectedDensityClass = ''; break;
+    }
+
     buttons.forEach((button: DebugElement) => {
-        expect(button.componentInstance.displayDensity).toBe(expectedDisplayDensity);
+        if (expectedDisplayDensity === DisplayDensity.comfortable) {
+            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
+            expect(button.nativeElement.classList.contains('igx-button--compact')).toBe(false, 'incorrect button density');
+            expect(button.nativeElement.classList.contains('igx-button--cosy')).toBe(false, 'incorrect button density');
+        } else {
+            expect(button.nativeElement.classList.contains(expectedDensityClass)).toBe(true, 'incorrect button density');
+        }
     });
 }
 
