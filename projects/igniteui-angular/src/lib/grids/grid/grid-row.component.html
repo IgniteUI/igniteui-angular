@@ -4,7 +4,7 @@
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
-<ng-container *ngIf="rowDrag">
+<ng-container *ngIf="rowDraggable">
     <div class="igx-grid__tr--drag-indicator" [igxRowDrag]="this" [style.visibility]="indicatorVisibility">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : dragIndicatorIconBase"></ng-container>
     </div>
