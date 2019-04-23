@@ -14,17 +14,18 @@ import { IgxColumnComponent } from '../column.component';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { IgxGridRowComponent } from './grid-row.component';
+import { Point } from '../../services';
 
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 
 describe('IgxGrid - Row Drag', () => {
-    let fixture;
+    let fixture: ComponentFixture<IgxGridRowDraggableComponent>;
     let grid: IgxGridComponent;
     let dropArea: IgxDropDirective;
     let dropAreaElement;
     let rows: IgxGridRowComponent[];
-    let dragIndicatorElements: any;
+    let dragIndicatorElements: DebugElement[];
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -44,7 +45,7 @@ describe('IgxGrid - Row Drag', () => {
         UIInteractions.clearOverlay();
     });
 
-    describe('', () => {
+    fdescribe('', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
@@ -165,16 +166,49 @@ describe('IgxGrid - Row Drag', () => {
 
         }));
 
-        it('Scroll start should be correctly aligned with first column and not with drag indicator ', (async () => {
-            // Test if drag indicator width = 0
+        it('Should align horizontal scrollbar with first not pinned data cell', fakeAsync(() => {
+            // has no draggable rows and has no selectable rows
+            grid.rowSelectable = false;
+            grid.rowDrag = false;
+            tick();
+            fixture.detectChanges();
+            let rowSelectElement: DebugElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            expect(rowSelectElement).toBeNull();
+            expect(dragIndicatorElement).toBeNull();
+
+            // has draggable rows and has no selectable rows
+            grid.rowSelectable = false;
+            grid.rowDrag = true;
+            tick();
+            fixture.detectChanges();
+            rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            let dragIndicatorRect = dragIndicatorElement.nativeElement.getBoundingClientRect();
+            let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            expect(rowSelectElement).toBeNull();
+            expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
+
+            // has draggable rows and has selectable rows
+            grid.rowSelectable = true;
+            grid.rowDrag = true;
+            fixture.detectChanges();
+            rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            let rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
+            horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
         }));
 
         it('Should fire onDragStart and onDragEnd with correct values of event arguments.', (async () => {
-            const rowToDrag = rows[2];
-            const dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+            const rowToDrag: IgxGridRowComponent = rows[2];
+            const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
 
-            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const endPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             spyOn(grid.onRowDragStart, 'emit').and.callThrough();
             spyOn(grid.onRowDragEnd, 'emit').and.callThrough();
@@ -209,10 +243,11 @@ describe('IgxGrid - Row Drag', () => {
             grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
                 e.cancel = true;
             });
-            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const rowToDrag: IgxGridRowComponent = rows[2];
+            const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
 
-            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const endPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const endPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
