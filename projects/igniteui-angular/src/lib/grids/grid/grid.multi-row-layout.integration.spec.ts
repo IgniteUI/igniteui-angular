@@ -202,7 +202,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 group: 'group1',
                 // total colspan 3
                 columns: [
-                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                     { field: 'County', rowStart: 3, colStart: 1},
                     { field: 'Region', rowStart: 3, colStart: 2},
                     { field: 'City', rowStart: 3, colStart: 3}
@@ -214,7 +214,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 columns: [
                     { field: 'CompanyName', rowStart: 1, colStart: 1},
                     { field: 'Address', rowStart: 1, colStart: 2},
-                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 2', rowEnd: 'span 2'}
+                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 3, rowEnd: 4}
                 ]
             },
             {
@@ -222,19 +222,19 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 // total colspan 1
                 columns: [
                     { field: 'Phone', rowStart: 1, colStart: 1},
-                    { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 'span 2'}
+                    { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 4}
                 ]
             },
             {
                 group: 'group4',
                 // total colspan 4
                 columns: [
-                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
-                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
-                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3},
+                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3},
+                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4},
                     { field: 'Region', rowStart: 2, colStart: 1},
                     { field: 'City', rowStart: 2, colStart: 2},
-                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4},
                 ]
             }
             ];
@@ -285,7 +285,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[4];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(lastCell.nativeElement.getBoundingClientRect().right - 1)
+            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) - 1)
             .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
 
@@ -321,7 +321,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 group: 'group1',
                 // total colspan 3
                 columns: [
-                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 'span 3', rowEnd: 'span 2'},
+                    { field: 'Address', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
                     { field: 'County', rowStart: 3, colStart: 1},
                     { field: 'Region', rowStart: 3, colStart: 2},
                     { field: 'City', rowStart: 3, colStart: 3}
@@ -333,7 +333,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 columns: [
                     { field: 'CompanyName', rowStart: 1, colStart: 1},
                     { field: 'Address', rowStart: 1, colStart: 2},
-                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 'span 2', rowEnd: 'span 2'}
+                    { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 3, rowEnd: 4}
                 ]
             },
             {
@@ -341,19 +341,19 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 // total colspan 1
                 columns: [
                     { field: 'Phone', rowStart: 1, colStart: 1},
-                    { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 'span 2'}
+                    { field: 'Fax', rowStart: 2, colStart: 1, rowEnd: 4}
                 ]
             },
             {
                 group: 'group4',
                 // total colspan 4
                 columns: [
-                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 'span 2'},
-                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 'span 2'},
-                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 'span 3'},
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3},
+                    { field: 'Phone', rowStart: 1, colStart: 3, rowEnd: 3},
+                    { field: 'Address', rowStart: 1, colStart: 4, rowEnd: 4},
                     { field: 'Region', rowStart: 2, colStart: 1},
                     { field: 'City', rowStart: 2, colStart: 2},
-                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 'span 3'},
+                    { field: 'ContactName', rowStart: 3, colStart: 1, colEnd: 4},
                 ]
             }
             ];
@@ -405,13 +405,13 @@ export class ColumnLayoutPinningTestComponent {
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
         { field: 'ContactName', rowStart: 1, colStart: 3},
-        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd : 4},
     ];
     cols2: Array<any> = [
-        { field: 'PostalCode', rowStart: 1, colStart: 1, colEnd: 'span 2' },
+        { field: 'PostalCode', rowStart: 1, colStart: 1, colEnd: 3 },
         { field: 'City', rowStart: 2, colStart: 1},
         { field: 'Country', rowStart: 2, colStart: 2},
-        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 'span 2'}
+        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3}
     ];
     colGroups = [
         {

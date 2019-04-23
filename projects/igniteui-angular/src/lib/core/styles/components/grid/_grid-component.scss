@@ -72,10 +72,6 @@
         @extend %igx-grid__loading !optional;
     }
 
-    @include e(mrl_block) {
-        @extend %igx-grid__mrl_block !optional;
-    }
-
     @include e(tbody-scrollbar) {
         @extend %grid-tbody-scrollbar !optional;
     }
