@@ -2,17 +2,157 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-# 7.2.3
+## 7.3.0
+ - **New feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Multi-row-layouts). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+    - `rowStart`
+    - `colStart`
+    - `rowEnd`
+    - `colEnd`
+    ```html
+    <igx-column-layout>
+        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Address"></igx-column>
+    </igx-column-layout>
+    ```
+### Features
+- `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
+- `IgxListComponent`
+    - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
+- `igxButton`
+    - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `IgxDropDown`
+    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    ```html
+    <igx-drop-down>
+        <div class="wrapping-div">
+            <igx-drop-down *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+            [value]="item" [index]="index"
+            >
+                {{ item.data }}
+            </igx-drop-down>
+        </div>
+    </igx-drop-down>
+    ```
+
+## 7.2.6
+- `igxGrid`
+    - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
+
+## 7.2.5
+- `igxDrop` 
+    - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
+- `IgxList`
+    - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
+    ```html
+        <igx-list>
+            <div [style.height]="'480px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item [index]="i" *igxFor="let item of data; index as i; scrollOrientation: 'vertical'; containerSize: '480px'; itemSize: '48px'">
+                    <div>{{ item.key }}</div>
+                    <div class="contact__info">
+                        <span class="name">{{item.name}}</span>
+                    </div>
+                </igx-list-item>
+            </div>
+        </igx-list>
+    ```
+    - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed.
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
+- `IgxCard` - The card component has been refactored. It now includes several new supporting components/directives:
+    - `igxCardHeaderTitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card title;
+    - `igxCardHeaderSubtitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card subtitle;
+    - `igxCardThumbnail` - tag anything placed in the `igx-card-header` as a thumb to be placed to the left of your titles;
+    - `igx-card-header` - the card header can now detect and automatically position `igx-avatar`s placed in it;
+    - `igx-card-media` - wrap images or videos that will be automatically sized for you;
+    - `igx-card-actions` - the card actions can now detect and automatically position all `igxButton`s placed in it;
+    - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
+    - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
+- New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+
+## 7.2.4
+### New feature
+- [Multi-cell selection](https://github.com/IgniteUI/igniteui-angular/wiki/Grid-Multi-cell-selection-Specification) - Enables range selection of cells in the grid.
+
+### Grids Performance improvements 
+- Grid rendering speed
+- Grid grouping rendering speed 
+- Grid vertical scrolling using the scroll arrows
+- Grid horizontal scrolling using the scroll arrows
+- Grid cell focusing time
+- Typing a character in an inline editor
+
+### Bug fixes
+- IgxForOf - Virtual item index with remote data #4455
+- If grid has height in %(or no height) and filtering is enabled, then height is not calculated correctly. #4458
+- 3rd level child does not scroll with keyboard nav #4447
+- When in column group a column is hidden in the excel style filter LEFT and RIGHT buttons are enabled #4412
+- Column Moving keydown.escape HostListener needs refactoring #4296
+- Hierarchical Grid: scrolled child views remain after the root grid has been destroyed #4440
+- When child grids have width in % (or no width) and there is horizontal scrollbar the vertical scrollbar is not visible. #4449
+- Opening the Filtering dropdown twice in an igxHierarchicalGrid results in warning messages in the browser console #4436
+- for-of init optimizations for grids #4374
+- Changing columns dynamically in the Hierarchical Grid resets root column list to contain child columns. #4337
+- Cell is not selected on click [IE] #1780
+- igx-grid: Uncommitted IME text gets lost when Enter key is pressed in an edit cell template. #4314
+
+## 7.2.3
+### Improvements
 - `IPinColumnEventArgs` new property - added a new property `isPinned` to the `IPinColumnEventArgs` interface. Now the `onColumnPinning` event emits information whether the column is pinned or unpinned.
 - `igxGrid`
     - `igxFilterCellTemplate` directive added that allows retemplating of the filter cell.
     - `IgxColumnComponent` now has `filterCellTemplate` property that can be used to retemplate the filter cell.
 
-# 7.2.2
+### Bug fixes
+- Fix auto-generate columns for TreeGrid #4399
+- Emiting event when unpinning column #3833
+- In Firefox when collapse all groups grid becomes empty #4304
+- When transactions are enabled and update a filtered cell there is an error in console #4214
+- In IE11 datePicker delete button is not in correct position when open a cell in edit mode #4116
+- Refactoring filter cell navigation so that it is handled in the navigation service. Handling special scenarios for hierarchical grid in the hierarchical navigation service. #4267
+- Grid: fix sorting in chrome #4397
+- An error is returned when add a child for not committed row and summaries are enabled #4317
+- Update child summaries correctly when CRUD operations are performed #4408
+- Add igxQuickFilterTemplate directive #4377
+- Resizing: move resize handle logic in a directive #4378
+- No event emitted when column is unpinned #3799 
+- When update a cell in the grouped column the child summaries are not updated #4324
+- Column Group border is misaligned with its children's in some cases #4387
+- Expanding last row of HierarchicalGrid via keyboard(Alt + downArrow) leads to cell losing its focus. #4080
+- fix(HierarchicalGrid): Moving onGridCreated to be emitted onInit #4370
+- Virtualization of grid not working in tab #4329
+- When you pin child column the whole group is not pinned #4278
+
+## 7.2.2
+### Features
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
 - **Themes** 
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
+
+### Bug fixes
+- fix(tabs): Fix for applying styles to tabs group #4371
+- igxInput - add ability to toggle required dynamically #4361
+- Select sort button only if default template is used #4372
+- Public enumerations should not be constants #4364
+- fix(hierarchicalGrid): Fix scrollbar not updated when data for children is loaded after initial load. #4334
+- fix(date-picker): Fix for re-templating dropdown date-picker #4325
+- Remove ngModel from datepicker #4333
+- Scrollbar is not updated when load remote data #4209
+- IgxGrid cell edit does not update values (onCellEdit) #4055
+- Initial GroupBy performance is poor with many columns grouped #4309
+- Components' display type #4316
+- Including summary row cells in tab sequence for HierarchicalGrid navigation. #4293
+- Surface color #4109
+- `headerGroupClasses` is marked as hidden #4276
+- Update AutoScrollStrategy to reposition elements outside NgZone #4250
+- Optimizing post group pipe for 4309 - 7.2.x #4310
+- IgxSelect does not close on Shift+Tab #4164
+- clone method should have inheritdoc in all position strategies #4265
+- Dialog does not emits close event the second time that is opened and closed #4222
+- IgxLabelComponent is hidden #4237
+- refactor(button-group): Fix the double borders between the buttons #4092
+- Allow gradient/image values as backgrounds in component themes #4218
+- Time Picker enhancements #4348
 
 ## 7.2.1
 - `igxGrid`
@@ -213,6 +353,10 @@ All notable changes for each version of this project will be documented in this 
 - Last (right-aligned) column is cut off when no widths are set for the columns #3396 
 - The selection in the last grid column does not span in the whole cell. #1115
 - Last column header is a bit wider than the cells #1230
+
+## 7.1.11
+### Improvements
+- Row and Cell editing Docs improvements #4055 
 
 ## 7.1.10
 ### Features
@@ -498,7 +642,7 @@ All notable changes for each version of this project will be documented in this 
     - The collapse/expand icons have new orientantion to display the action that will be performed when clicked. When an icon points up clicking on it would result in collapsing the related tree grid level and when it points down clicking on it would expand the tree grid level.
     - Expanding/collapsing tree levels can now be performed also by using Alt + Arrow Up/Down to reflect the new icons.
 
-### Bug Fixing
+### Bug Fixes
 - Add additional ways of expanding/collapsing in Tree Grid/Group By to reflect new icons #3841
 
 ## 6.2.8

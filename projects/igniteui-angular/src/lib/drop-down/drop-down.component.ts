@@ -4,31 +4,34 @@ import {
     ContentChildren,
     ElementRef,
     forwardRef,
-    NgModule,
     QueryList,
     OnInit,
     Input,
     OnDestroy,
     ViewChild,
-    EventEmitter,
+    ContentChild,
+    AfterViewInit,
     Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { DropDownActionKey } from './drop-down.common';
+import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
-import { ISelectionEventArgs, Navigate } from './drop-down.common';
+import { ISelectionEventArgs } from './drop-down.common';
 import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { OverlaySettings } from '../services';
+import { OverlaySettings, IgxOverlayService } from '../services';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { take } from 'rxjs/operators';
 
 
 /**
  * **Ignite UI for Angular DropDown** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
  *
  * The Ignite UI for Angular Drop Down displays a scrollable list of items which may be visually grouped and
  * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
@@ -47,8 +50,12 @@ import { OverlaySettings } from '../services';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
+export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
     protected destroy$ = new Subject<boolean>();
+    protected _scrollPosition: number;
+
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
+    protected virtDir: IgxForOfDirective<any>;
 
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
@@ -59,43 +66,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
     public children: QueryList<IgxDropDownItemBase>;
-
-    /**
-     * Gets/sets whether items take focus. Disabled by default.
-     * When enabled, drop down items gain tab index and are focused when active -
-     * this includes activating the selected item when opening the drop down and moving with keyboard navigation.
-     *
-     * Note: Keep that focus shift in mind when using the igxDropDownItemNavigation directive
-     * and ensure it's placed either on each focusable item or a common ancestor to allow it to handle keyboard events.
-     *
-     * ```typescript
-     * // get
-     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
-     * ```
-     */
-    @Input()
-    public allowItemsFocus = false;
-
-    @Input()
-    get id(): string {
-        return this._id;
-    }
-    set id(value: string) {
-        this.toggleDirective.id = value;
-        this.selection.set(value, this.selection.get(this.id));
-        this.selection.clear(this.id);
-        this._id = value;
-    }
-
-    /** Id of the internal listbox of the drop down */
-    public get listId() {
-        return this.id + '-list';
-    }
 
     /**
      * Emitted before the dropdown is opened
@@ -138,6 +108,73 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public onClosed = new EventEmitter<void>();
 
     /**
+     * Gets/sets whether items take focus. Disabled by default.
+     * When enabled, drop down items gain tab index and are focused when active -
+     * this includes activating the selected item when opening the drop down and moving with keyboard navigation.
+     *
+     * Note: Keep that focus shift in mind when using the igxDropDownItemNavigation directive
+     * and ensure it's placed either on each focusable item or a common ancestor to allow it to handle keyboard events.
+     *
+     * ```typescript
+     * // get
+     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
+     * ```
+     */
+    @Input()
+    public allowItemsFocus = false;
+
+    /**
+     * @hidden @internal
+     */
+    public get focusedItem(): IgxDropDownItemBase {
+        if (this.virtDir) {
+            return this._focusedIndex !== -1 ? this.children.find(e => e.index === this._focusedIndex) : null;
+        }
+        return this._focusedItem;
+    }
+
+    public set focusedItem(value: IgxDropDownItemBase) {
+        this._focusedItem = value;
+        this.selection.clear(`${this.id}-active`);
+        if (value && this.virtDir) {
+            this.selection.set(`${this.id}-active`, new Set([value.index]));
+        }
+    }
+
+    protected get _focusedIndex() {
+        const indexInService = this.selection.first_item(`${this.id}-active`);
+        return indexInService !== null && indexInService !== undefined ? indexInService : -1;
+    }
+
+    protected set _focusedIndex(value: number) {
+        this.selection.clear(`${this.id}-active`);
+        if (value !== -1 && value !== null && value !== undefined) {
+            this.selection.set(`${this.id}-active`, new Set([value]));
+        }
+    }
+
+    @Input()
+    get id(): string {
+        return this._id;
+    }
+    set id(value: string) {
+        this.toggleDirective.id = value;
+        this.selection.set(value, this.selection.get(this.id));
+        this.selection.clear(this.id);
+        this._id = value;
+    }
+
+    /** Id of the internal listbox of the drop down */
+    public get listId() {
+        return this.id + '-list';
+    }
+
+    /**
      * Get currently selected item
      *
      * ```typescript
@@ -147,10 +184,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (selectedItem.selected) {
-                return selectedItem;
-            }
-            this.selection.clear(this.id);
+            return selectedItem;
         }
         return null;
     }
@@ -170,10 +204,17 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return this.toggleDirective.element;
     }
 
+    protected get collectionLength() {
+        if (this.virtDir) {
+            return this.virtDir.totalItemCount || this.virtDir.igxForOf.length;
+        }
+    }
+
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
+        protected selection: IgxSelectionAPIService,
+        protected overlay?: IgxOverlayService) {
         super(elementRef, cdr);
     }
 
@@ -186,6 +227,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public open(overlaySettings?: OverlaySettings) {
         this.toggleDirective.open(overlaySettings);
+        this.updateScrollPosition();
     }
 
     /**
@@ -216,26 +258,94 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     /**
      * Select an item by index
-     * @param index of the item to select
+     * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        const newSelection = this.items[index];
+        let newSelection: IgxDropDownItemBase;
+        if (this.virtDir) {
+            newSelection = {
+                value: this.virtDir.igxForOf[index],
+                index
+            } as IgxDropDownItemBase;
+        } else {
+            newSelection = this.items[index];
+        }
         this.selectItem(newSelection);
     }
 
     /**
      * Navigates to the item on the specified index
+     * If the data in the drop-down is virtualized, pass the index of the item in the virtualized data.
      * @param newIndex number
      */
     public navigateItem(index: number) {
-        super.navigateItem(index);
+        if (this.virtDir) {
+            if (index === -1 || index >= this.collectionLength) {
+                return;
+            }
+            const direction = index > this._focusedIndex ? Navigate.Down : Navigate.Up;
+            const subRequired = this.isIndexOutOfBounds(index, direction);
+            this._focusedIndex = index;
+            if (subRequired) {
+                this.virtDir.scrollTo(index);
+            }
+            if (subRequired) {
+                this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    this.skipHeader(direction);
+                });
+            } else {
+                this.skipHeader(direction);
+            }
+        } else {
+            super.navigateItem(index);
+        }
         if (this.allowItemsFocus && this.focusedItem) {
             this.focusedItem.element.nativeElement.focus();
             this.cdr.markForCheck();
         }
+    }
+
+    private isIndexOutOfBounds(index: number, direction: Navigate) {
+        const virtState = this.virtDir.state;
+        const currentPosition = this.virtDir.getVerticalScroll().scrollTop;
+        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
+        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
+        const subRequired = indexOutOfChunk || scrollNeeded;
+        return subRequired;
+    }
+
+    protected skipHeader(direction: Navigate) {
+        if (!this.focusedItem) {
+            return;
+        }
+        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
+            if (direction === Navigate.Up) {
+                this.navigatePrev();
+            } else {
+                this.navigateNext();
+            }
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    updateScrollPosition() {
+        if (!this.virtDir) {
+            return;
+        }
+        if (!this.selectedItem) {
+            this.virtDir.scrollTo(0);
+            return;
+        }
+        let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
+        const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
+        targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
+        this.virtDir.getVerticalScroll().scrollTop = targetScroll;
     }
 
     /**
@@ -246,7 +356,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (e.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+        if (!this.virtDir && this.selectedItem) {
+            this.scrollToItem(this.selectedItem);
+        }
+        if (this.virtDir) {
+            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+        }
     }
 
     /**
@@ -254,7 +369,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleOpened() {
         if (this.selectedItem) {
-            this._focusedItem = this.selectedItem;
+            this.focusedItem = this.selectedItem;
             this._focusedItem.focused = true;
         } else if (this.allowItemsFocus) {
             this.navigateFirst();
@@ -267,6 +382,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
+        if (this.virtDir) {
+            this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
+        }
     }
 
     /**
@@ -329,10 +447,61 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.toggleDirective.id = this.id;
     }
 
+    ngAfterViewInit() {
+        if (this.virtDir) {
+            this.virtDir.igxForItemSize = 32;
+        }
+    }
+
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
         super.onItemActionKey(key, event);
         this.close();
+    }
+
+    /**
+     * Virtual scroll implementation
+     * @hidden @internal
+     */
+    public navigateFirst() {
+        if (this.virtDir) {
+            this.navigateItem(0);
+        } else {
+            super.navigateFirst();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigateLast() {
+        if (this.virtDir) {
+            this.navigateItem(this.virtDir.totalItemCount ? this.virtDir.totalItemCount - 1 : this.virtDir.igxForOf.length - 1);
+        } else {
+            super.navigateLast();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigateNext() {
+        if (this.virtDir) {
+            this.navigateItem(this._focusedIndex !== -1 ? this._focusedIndex + 1 : 0);
+        } else {
+            super.navigateNext();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public navigatePrev() {
+        if (this.virtDir) {
+            this.navigateItem(this._focusedIndex !== -1 ? this._focusedIndex - 1 : 0);
+        } else {
+            super.navigatePrev();
+        }
     }
 
     /**
@@ -345,24 +514,32 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
-            newSelection = this._focusedItem;
+            newSelection = this.focusedItem;
         }
         if (newSelection === null) {
             return;
         }
-        if (newSelection.isHeader) {
+        if (newSelection instanceof IgxDropDownItemBase && newSelection.isHeader) {
             return;
+        }
+        if (this.virtDir) {
+            newSelection = {
+                value: newSelection.value,
+                index: newSelection.index
+            } as IgxDropDownItemBase;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
 
         if (!args.cancel) {
             this.selection.set(this.id, new Set([newSelection]));
-            if (oldSelection) {
-                oldSelection.selected = false;
-            }
-            if (newSelection) {
-                newSelection.selected = true;
+            if (!this.virtDir) {
+                if (oldSelection) {
+                    oldSelection.selected = false;
+                }
+                if (newSelection) {
+                    newSelection.selected = true;
+                }
             }
             if (event) {
                 this.toggleDirective.close();

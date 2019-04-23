@@ -109,7 +109,7 @@ const noop = () => { };
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+ OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -150,6 +150,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         super(_displayDensityOptions);
         this.comboAPI.register(this);
     }
+
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
+    protected virtDir: IgxForOfDirective<any>;
 
     /**
      * @hidden @internal
@@ -887,7 +890,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get virtualizationState(): IForOfState {
-        return this.dropdown.verticalScrollContainer.state;
+        return this.virtDir.state;
     }
     /**
      * Sets the current state of the virtualized data.
@@ -898,7 +901,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set virtualizationState(state: IForOfState) {
-        this.dropdown.verticalScrollContainer.state = state;
+        this.virtDir.state = state;
     }
 
     /**
@@ -910,7 +913,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     get totalItemCount(): number {
-        return this.dropdown.verticalScrollContainer.totalItemCount;
+        return this.virtDir.totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
@@ -921,7 +924,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     set totalItemCount(count: number) {
-        this.dropdown.verticalScrollContainer.totalItemCount = count;
+        this.virtDir.totalItemCount = count;
         this.cdr.detectChanges();
     }
 
@@ -1033,7 +1036,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleInputChange(event?: string) {
         let cdrFlag = false;
-        const vContainer = this.dropdown.verticalScrollContainer;
+        const vContainer = this.virtDir;
         if (event !== undefined && this._prevInputValue === event) {
             // Nothing has changed
             return;
@@ -1048,6 +1051,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
                 cdrFlag = true;
             }
             this.onSearchInput.emit(event);
+        } else {
+            cdrFlag = true;
         }
         if (this.filterable) {
             this.filter();
@@ -1295,7 +1300,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
-        }
+    }
     }
 
     /**

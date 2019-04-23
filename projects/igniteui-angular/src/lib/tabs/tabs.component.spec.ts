@@ -5,14 +5,20 @@ import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxDropDownModule } from '../drop-down';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
-            imports: [IgxTabsModule, NoopAnimationsModule]
+            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
+                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component],
+            imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule]
         })
             .compileComponents();
     }));
@@ -353,6 +359,44 @@ describe('IgxTabs', () => {
         expect(tabs.selectedTabItem).toBe(tabsItems[2]);
         expect(tabs.selectedTabItem.relatedGroup.label).toBe('Tab 3');
     }));
+
+    it('should apply custom css style to tabs and tabs groups', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TabsTestCustomStylesComponent);
+        tick(100);
+        fixture.detectChanges();
+
+        const tabsDomElement = document.getElementsByClassName('igx-tabs')[0];
+        expect(tabsDomElement.classList.length).toEqual(2);
+        expect(tabsDomElement.classList.contains('tabsClass')).toBeTruthy();
+
+        const tabsGroupsDomElement = document.getElementsByClassName('igx-tabs__group');
+
+        expect(tabsGroupsDomElement.length).toEqual(2);
+        expect(tabsGroupsDomElement[0].classList.length).toBe(2);
+        expect(tabsGroupsDomElement[0].classList.contains('groupClass')).toBeTruthy();
+
+        expect(tabsGroupsDomElement[1].classList.length).toBe(1);
+        expect(tabsGroupsDomElement[1].classList.contains('groupClass')).toBeFalsy();
+    }));
+
+    it('tabs in drop down, bug #4420 - check selection indicator width', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TabsTestBug4420Component);
+        const dom = fixture.debugElement;
+        const tabs = fixture.componentInstance.tabs;
+        tick(50);
+        fixture.detectChanges();
+
+        const button = dom.query(By.css('.igx-button--flat'));
+        UIInteractions.clickElement(button);
+        tick(50);
+        fixture.detectChanges();
+
+        expect(tabs.selectedIndex).toBe(1);
+        const selectedGroup = document.getElementsByClassName('igx-tabs__group')[1] as HTMLElement;
+        expect(selectedGroup.innerText.trim()).toEqual('Tab content 2');
+        const indicator = dom.query(By.css('.igx-tabs__header-menu-item-indicator'));
+        expect(indicator.nativeElement.style.width).toBe('90px');
+    }));
 });
 
 @Component({
@@ -499,4 +543,44 @@ class TabsTestSelectedTabComponent {
                 { name: 'Tab 4' }
             ];
     }
+}
+
+@Component({
+    template:
+        `
+        <igx-tabs class="tabsClass">
+            <igx-tabs-group class="groupClass" label="Tab1">
+                Content 1
+            </igx-tabs-group>
+            <igx-tabs-group label="Tab2">
+                Content 2
+            </igx-tabs-group>
+        </igx-tabs>
+        `
+})
+class TabsTestCustomStylesComponent {
+}
+
+@Component({
+    template:
+        `
+        <button igxButton="flat" [igxToggleAction]="userProfile">
+            Click
+        </button>
+        <igx-drop-down #userProfile>
+            <div>
+                <igx-tabs selectedIndex="1">
+                    <igx-tabs-group label="tab1">
+                        Tab content 1
+                    </igx-tabs-group>
+                    <igx-tabs-group label="tab2">
+                        Tab content 2
+                    </igx-tabs-group>
+                </igx-tabs>
+            </div>
+        </igx-drop-down>
+        `
+})
+class TabsTestBug4420Component {
+    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
 }

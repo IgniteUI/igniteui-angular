@@ -18,9 +18,20 @@ import {
 
 import { HammerGesturesManager } from '../core/touch';
 
-// ====================== ITEM ================================
-// The `<igx-item>` component is a container intended for row items in
-// a `<igx-list>` container.
+/**
+ * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
+ *
+ * Example:
+ * ```html
+ * <igx-list>
+ *   <igx-list-item isHeader="true">Contacts</igx-list-item>
+ *   <igx-list-item *ngFor="let contact of contacts">
+ *     <span class="name">{{ contact.name }}</span>
+ *     <span class="phone">{{ contact.phone }}</span>
+ *   </igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Component({
     providers: [HammerGesturesManager],
     selector: 'igx-list-item',
@@ -38,6 +49,11 @@ export class IgxListItemComponent implements IListChild {
      *@hidden
      */
     private panOffset = 0;
+
+    /**
+     * @hidden
+     */
+    private _index: number = null;
 
     /**
      *@hidden
@@ -320,8 +336,20 @@ export class IgxListItemComponent implements IListChild {
      * ```
      * @memberof IgxListItemComponent
      */
+    @Input()
     public get index(): number {
-        return this.list.children.toArray().indexOf(this);
+        return this._index !== null ? this._index : this.list.children.toArray().indexOf(this);
+    }
+
+    /**
+     * Sets the `index` of the `list item`.
+     * ```typescript
+     * this.listItem.index = index;
+     * ```
+     * @memberof IgxListItemComponent
+     */
+    public set index(value: number) {
+        this._index = value;
     }
 
     /**
