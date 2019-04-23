@@ -459,6 +459,17 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
                                     operator: FilteringLogic,
                                     expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
@@ -468,18 +479,19 @@ export class IgxFilteringService implements OnDestroy {
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsList(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            }
+            if (expressionsUIs.length) {
+                expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
             }
         } else {
             const exprUI = new ExpressionUI();
             exprUI.expression = expressions as IFilteringExpression;
-            if (expressionsUIs.length !== 0) {
-                exprUI.beforeOperator = operator;
-            }
+            exprUI.afterOperator = operator;
 
             const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
             if (prevExprUI) {
-                prevExprUI.afterOperator = operator;
+                exprUI.beforeOperator = prevExprUI.afterOperator;
             }
 
             expressionsUIs.push(exprUI);

@@ -158,6 +158,10 @@
         @extend %grid-row--group !optional;
     }
 
+    @include e(tr,  $m: mrl) {
+        @extend %grid-row--mrl !optional;
+    }
+
     @include e(tr-container) {
         @extend %igx-grid__tr-container !optional;
     }
@@ -436,6 +440,10 @@
 
     @include e(hierarchical-indent, $m: scroll) {
         @extend %igx-grid__hierarchical-indent--scroll !optional;
+    }
+
+    @include e(mrl-block) {
+        @extend %grid-mrl-block !optional;
     }
 
     @for $i from 1 through 10 {
