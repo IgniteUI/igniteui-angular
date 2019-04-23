@@ -3,6 +3,18 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.3.0
+ - **New feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Multi-row-layouts). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+    - `rowStart`
+    - `colStart`
+    - `rowEnd`
+    - `colEnd`
+    ```html
+    <igx-column-layout>
+        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Address"></igx-column>
+    </igx-column-layout>
+    ```
 ### Features
 - `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
