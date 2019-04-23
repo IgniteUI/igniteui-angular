@@ -54,7 +54,6 @@ public ngAfterViewInit() {
 }
 
 public dataLoading(evt: IForOfState) {
-  console.log(evt);
     if (this.prevRequest) {
         this.prevRequest.unsubscribe();
     }

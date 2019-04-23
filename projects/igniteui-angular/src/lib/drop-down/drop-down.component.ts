@@ -141,7 +141,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public set focusedItem(value: IgxDropDownItemBase) {
         this._focusedItem = value;
         this.selection.clear(`${this.id}-active`);
-        if (value) {
+        if (value && this.virtDir) {
             this.selection.set(`${this.id}-active`, new Set([value.index]));
         }
     }

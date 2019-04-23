@@ -34,7 +34,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
      * @inheritdoc
      */
     get selected(): boolean {
-        if (this._index) {
+        if (this.hasIndex) {
             const item = this.selection.first_item(`${this.dropDown.id}`);
             return item ? item.index === this._index && item.value === this.value : false;
         }
