@@ -525,7 +525,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     /**
      * @hidden
-     * Perform drag end logic when releasing the dragGhost and dispatchind drop event if igxDrop is under the pointer.
+     * Perform drag end logic when releasing the dragGhost and dispatching drop event if igxDrop is under the pointer.
      * This method is bound at first at the base element.
      * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
      * @param event PointerUp event captured

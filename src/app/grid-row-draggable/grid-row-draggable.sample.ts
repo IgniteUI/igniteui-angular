@@ -3,6 +3,12 @@ import { Observable } from 'rxjs';
 import { IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
+enum DragIcon {
+    DEFAULT = 'drag_indicator',
+    BLOCK = 'block',
+    ALLOW = 'add'
+}
+
 @Component({
     selector: 'app-grid-row-draggable-sample',
     templateUrl: 'grid-row-draggable.sample.html',
@@ -13,7 +19,6 @@ export class GridRowDraggableComponent implements AfterViewInit {
     @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;
     @ViewChild("grid2", { read: IgxGridComponent }) public grid2: IgxGridComponent;
     remote: Observable<any[]>;
-    selection = true;
     dragdrop = true;
     public density = 'comfortable';
     public displayDensities;
@@ -28,52 +33,46 @@ export class GridRowDraggableComponent implements AfterViewInit {
         ];
     }
 
-    public selectDensity(event) {
-        this.density = this.displayDensities[event.index].label;
-    }
-
     ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
         this.remoteService.getData(this.grid1.data);
         this.cdr.detectChanges();
     }
 
-    handleRowDrag(args) {
-        console.log('RowDrag started!');
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 
-    handleRowDrop(args) {
-        this.grid2.addRow(args.source.rowData);
-        this.grid1.deleteRow(args.source.rowID);
-        console.log('Row Drag End!');
+    public handleRowDrag(args) {
+
     }
 
-    public onDragCageEnter(args) {
+    public handleRowDrop(args) {
+
     }
 
-    toggle() {
-        const currentSelection = this.grid1.selectedRows();
-        if (currentSelection !== undefined) {
-            const currentSelectionSet = new Set(currentSelection);
-            if (currentSelectionSet.has(1) && currentSelectionSet.has(2) && currentSelectionSet.has(5)) {
-                this.grid1.deselectRows([1, 2, 5]);
-                return;
-            }
-        }
-        this.grid1.selectRows([1, 2, 5], false);
+    public onDropAllowed(args) {
+        this.grid2.addRow(args.drag.data.rowData);
+        this.grid1.deleteRow(args.drag.data.rowID);
     }
 
-    public onEnter(args) {
-        // debugger;
-        // const drag = args.drag;
+    public onEnterAllowed(args) {
+        this.changeGhostIcon(args.drag._dragGhost, DragIcon.ALLOW);
     }
 
-    public onLeave(args) {
-        debugger;
-        // const drag = args.drag;
+    public onLeaveAllowed(args) {
+        this.changeGhostIcon(args.drag._dragGhost, DragIcon.DEFAULT);
     }
 
-    public onDrop(args) {
-        // const drag = args.drag;
+    public onEnterBlocked(args) {
+        this.changeGhostIcon(args.drag._dragGhost, DragIcon.BLOCK);
+    }
+
+    public onLeaveBlocked(args) {
+        this.changeGhostIcon(args.drag._dragGhost, DragIcon.DEFAULT);
+    }
+
+    private changeGhostIcon(ghost, icon: string) {
+        ghost.querySelector('igx-icon').innerHTML = icon;
     }
 }
