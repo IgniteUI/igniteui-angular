@@ -27,9 +27,7 @@
     </igx-grid>
 </div>
 <div class="dropable-area">
-    <div igxDrop (onEnter)="onEnterBlocked($event)" (onLeave)="onLeaveBlocked($event)">Drag here</div>
-    <div igxDrop (onEnter)="onEnterBlocked($event)" (onLeave)="onLeaveBlocked($event)">Drag here</div>
-    <div igxDrop (onEnter)="onEnterAllowed($event)" (onLeave)="onLeaveAllowed($event)">Drag here</div>
+    <div igxDrop (onEnter)="onEnterBlocked($event)" (onLeave)="onLeaveBlocked($event)" (onDropBlocke)="onDropBlocked($event)">Drag here</div>
 </div>
 <ng-template #dragHereTemplate>Drag Here</ng-template>
 
