@@ -114,7 +114,7 @@ export class IgxGridNavigationService {
             `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
     }
 
-    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, cell?, isSummary = false) {
+    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
@@ -143,7 +143,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, cell?, isSummary = false) {
+    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
         if (visibleColumnIndex === 0 && !this.grid.hasColumnLayouts) {
             return;
         }
@@ -649,7 +649,7 @@ export class IgxGridNavigationService {
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
-                if (cell) {
+                if (this.grid.hasColumnLayouts) {
                     const next = this.nextElement(cell.nativeElement, cell);
                     if (next) {
                         next.focus({ preventScroll: true });

@@ -861,7 +861,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.navigation.onKeydownHome(node.row);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, node.row, node.column, this);
+                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, node.row, node.column, false, this);
                 break;
             case 'arrowright':
             case 'right':
@@ -869,7 +869,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.navigation.onKeydownEnd(node.row);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowRight(this.nativeElement, node.row, node.column, this);
+                this.grid.navigation.onKeydownArrowRight(this.nativeElement, node.row, node.column, false, this);
                 break;
             case 'arrowup':
             case 'up':
