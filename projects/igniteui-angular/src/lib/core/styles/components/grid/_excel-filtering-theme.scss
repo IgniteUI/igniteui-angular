@@ -50,6 +50,7 @@
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
+
     }
 
     %grid-excel-menu__header {
@@ -113,6 +114,14 @@
     %grid-excel-sort--compact {
         @extend %grid-excel-action--compact;
         padding: rem(4px) rem(16px);
+
+        igx-buttongroup {
+            width: rem(208px);
+
+            [igxButton] > igx-icon + span {
+                margin-left: rem(8px);
+            }
+        }
     }
 
     %grid-excel-actions {
@@ -138,10 +147,7 @@
 
         [igxButton] {
             flex-grow: 1;
-
-            + [igxButton] {
-                margin-left: rem(8px);
-            }
+            width: rem(104px);
         }
 
         igx-icon {
