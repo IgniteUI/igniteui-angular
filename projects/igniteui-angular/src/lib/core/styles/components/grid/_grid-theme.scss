@@ -164,7 +164,8 @@
     $row-highlight: null,
     $grid-shadow: null,
     $drag-shadow: null,
-    $row-ghost-background: null 
+    $row-ghost-background: null,
+    $drag-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -426,7 +427,8 @@
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
-        row-ghost-background: $row-ghost-background
+        row-ghost-background: $row-ghost-background,
+        drag-color: $drag-color
     ));
 }
 
@@ -595,6 +597,10 @@
     %grid-thead-container {
         grid-row: 3;
         display: flex;
+
+        %igx-grid__tr--drag-indicator {
+            cursor: default;
+        }
     }
 
     %grid-thead--cosy {
@@ -771,9 +777,13 @@
             background: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
         }
+
+        &%igx-grid__tr--ghost {
+            background: --var($theme, 'row-ghost-background');
+        }
     }
 
-    %igx-grid__tr--drag-indicator {
+    %igx-grid__drag-indicator {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -784,12 +794,12 @@
         cursor: move;
     }
 
-    %igx-grid__tr--drag {
-        opacity: .5;
+    %igx-grid__drag-indicator--off {
+        color: --var($theme, 'drag-color');
     }
 
-    %igx-grid__tr--ghost {
-        background: --var($theme, 'row-ghost-background') !important;
+    %igx-grid__tr--drag {
+        opacity: .5;
     }
 
     %grid-row--odd {

@@ -6,7 +6,7 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 <ng-container *ngIf="rowDraggable">
-    <div class="igx-grid__tr--drag-indicator" [igxRowDrag]="this" [style.visibility]="indicatorVisibility">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
