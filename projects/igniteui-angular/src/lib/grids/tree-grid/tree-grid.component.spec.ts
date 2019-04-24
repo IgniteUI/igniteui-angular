@@ -31,7 +31,7 @@ describe('IgxTreeGrid Component Tests', () => {
     }));
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
-
+        configureTestSuite();
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
@@ -112,6 +112,7 @@ describe('IgxTreeGrid Component Tests', () => {
     });
 
     describe('Auto-generated columns', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
             grid = fix.componentInstance.treeGrid;
@@ -126,6 +127,7 @@ describe('IgxTreeGrid Component Tests', () => {
     });
 
     describe('Loading Template', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
