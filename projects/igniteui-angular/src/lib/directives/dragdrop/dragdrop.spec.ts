@@ -234,6 +234,7 @@ describe('IgxDrag/IgxDrop', () => {
                 originalEvent: eventUp,
                 owner: dropArea,
                 drag: firstDrag,
+                dragData: firstDrag.data,
                 offsetX: 100,
                 offsetY: 20,
                 cancel: false
