@@ -95,13 +95,13 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
+            fixture.detectChanges();
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
-            await wait(50);
-            fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
             await wait(50);
             fixture.detectChanges();
@@ -123,6 +123,7 @@ describe('IgxGrid - Row Drag', () => {
 
             const dragIndicatorPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             const rowPoint = UIInteractions.getPointFromElement(rowElement);
+            const movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
             spyOn(grid.onRowDragStart, 'emit');
             const dragStartArgs: IRowDragStartEventArgs = {
                 owner: rowDragDirective,
@@ -135,11 +136,17 @@ describe('IgxGrid - Row Drag', () => {
 
             UIInteractions.simulatePointerEvent('pointerdown', rowElement, rowPoint.x, rowPoint.y);
             fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
+            fixture.detectChanges();
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(0);
 
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, dragIndicatorPoint.x, dragIndicatorPoint.y);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
             fixture.detectChanges();
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
@@ -170,12 +177,12 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
-            expect(row.dragging).toBeTruthy();
-            expect(row.grid.rowDragging).toBeTruthy();
-            expect(row.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeTruthy();
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
             await wait(50);
             fixture.detectChanges();
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+            expect(row.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeTruthy();
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
             await wait(50);
             fixture.detectChanges();
@@ -236,6 +243,11 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
+            await wait();
+            fixture.detectChanges();
+
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
                 dragData: jasmine.any(IgxGridRowComponent),
@@ -243,9 +255,6 @@ describe('IgxGrid - Row Drag', () => {
                 cancel: false
             });
 
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
-            await wait();
-            fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
             await wait();
@@ -286,13 +295,16 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
+            fixture.detectChanges();
+
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
-            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
-            await wait(50);
-            fixture.detectChanges();
+
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
             await wait(50);
             fixture.detectChanges();
@@ -402,11 +414,12 @@ describe('IgxGrid - Row Drag', () => {
             UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
             await wait();
             fixture.detectChanges();
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
             await wait();
             fixture.detectChanges();
+
+            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, endPoint.x, endPoint.y);
             await wait();

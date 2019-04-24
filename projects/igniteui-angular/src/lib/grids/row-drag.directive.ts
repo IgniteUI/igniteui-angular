@@ -7,7 +7,6 @@ import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
-const draggedRowClass = 'igx-grid__tr--drag';
 const gridCellClass = 'igx-grid__td';
 
 /**
@@ -19,6 +18,7 @@ const gridCellClass = 'igx-grid__td';
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
+    private _rowDragStarted = false;
     public startDrag(event) {
         this.onPointerDown(event);
     }
@@ -34,31 +34,39 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     public onPointerDown(event) {
         event.preventDefault();
+        this._rowDragStarted = false;
         super.onPointerDown(event);
+    }
 
-        const args: IRowDragStartEventArgs = {
-            owner: this,
-            dragData: this.row,
-            cancel: false
-        };
+    public onPointerMove(event) {
+        super.onPointerMove(event);
+        if (this._dragStarted && !this._rowDragStarted) {
+            this._rowDragStarted = true;
+            const args: IRowDragStartEventArgs = {
+                owner: this,
+                dragData: this.row,
+                cancel: false
+            };
 
-        this.row.grid.onRowDragStart.emit(args);
-        if (args.cancel) {
-            this._clicked = false;
-            return;
-        }
-        this.row.dragging = true;
-        this.row.grid.rowDragging = true;
-        if (this.row.grid.rowEditable && this.row.grid.rowInEditMode) {
-            this.row.grid.endEdit(true);
-        }
-
-        this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
-                this._lastDropArea = false;
-                this.onPointerUp(event);
+            this.row.grid.onRowDragStart.emit(args);
+            if (args.cancel) {
+                this._clicked = false;
+                return;
             }
-        });
+            this.row.dragging = true;
+            this.row.grid.rowDragging = true;
+            if (this.row.grid.rowEditable && this.row.grid.rowInEditMode) {
+                this.row.grid.endEdit(true);
+            }
+            this.row.grid.markForCheck();
+
+            this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+                if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+                    this._lastDropArea = false;
+                    this.onPointerUp(event);
+                }
+            });
+        }
     }
 
     public onPointerUp(event) {
