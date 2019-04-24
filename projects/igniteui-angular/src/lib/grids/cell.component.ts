@@ -773,42 +773,36 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (!SUPPORTED_KEYS.has(key)) {
             return;
         }
+        event.stopPropagation();
+        this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
+        const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+        this.grid.onGridKeydown.emit(keydownArgs);
+        if (keydownArgs.cancel) { return; }
 
         if (event.altKey) {
             this.handleAlt(key, event);
             return;
         }
 
-        this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
-
-
         if (key === 'tab') {
             event.preventDefault();
-            event.stopPropagation();
         }
 
         if (this.editMode) {
-            event.stopPropagation();
             if (NAVIGATION_KEYS.has(key)) {
                 if (this.column.inlineEditorTemplate) { return; }
                 if (['date', 'boolean'].includes(this.column.dataType)) { return; }
-                // event.preventDefault();
                 return;
             }
         }
 
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            event.stopPropagation();
         }
-
+        // TODO: to be deleted when onFocusChange event is removed #4054
         const args = { cell: this, groupRow: null, event: event, cancel: false };
-
         this.grid.onFocusChange.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
+        if (args.cancel) { return; }
 
         switch (key) {
             case 'tab':
