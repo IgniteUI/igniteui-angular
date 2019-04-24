@@ -126,7 +126,7 @@ describe('IgxTreeGrid Component Tests', () => {
         }));
     });
 
-    describe('Loading Template', () => {
+    xdescribe('Loading Template', () => {
         configureTestSuite();
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
