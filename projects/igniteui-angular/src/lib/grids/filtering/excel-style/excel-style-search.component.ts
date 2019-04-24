@@ -69,4 +69,14 @@ export class IgxExcelStyleSearchComponent {
         }
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
+
+    public get itemSize() {
+        let itemSize = '50px';
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy: itemSize = '32px'; break;
+            case DisplayDensity.compact: itemSize = '28px'; break;
+            default: break;
+        }
+        return itemSize;
+    }
 }
