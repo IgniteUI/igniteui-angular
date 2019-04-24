@@ -1804,6 +1804,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    public dragIndicatorIconBase: TemplateRef<any>;
+
     /**
      * @hidden
      */
@@ -2718,7 +2721,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCachedWidths() {
-        this.calcFixedWidth = 0;
         this._unpinnedWidth = NaN;
         this._pinnedWidth = NaN;
         this._totalWidth = NaN;
@@ -4215,6 +4217,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         this.calculateGridHeight();
 
+        this.calcFixedWidth = 0;
         if (this.showRowCheckboxes) {
             this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }

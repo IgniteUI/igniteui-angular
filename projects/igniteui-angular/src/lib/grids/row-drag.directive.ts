@@ -95,8 +95,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.renderer.addClass(ghost, ghostBackgroundClass);
 
         const ghostCells = ghost.getElementsByClassName(gridCellClass);
-        for (let index = 0, cell = ghostCells[index]; index < ghostCells.length; index++) {
-            cell.classList = [gridCellClass];
+        for (let index = 0; index < ghostCells.length; index++) {
+            ghostCells[index].classList = [gridCellClass];
         }
     }
 

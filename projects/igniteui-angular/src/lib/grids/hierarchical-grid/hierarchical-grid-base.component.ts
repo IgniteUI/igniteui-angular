@@ -9,7 +9,9 @@ import {
     Inject,
     ComponentFactoryResolver,
     Optional,
-    Input
+    Input,
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -78,6 +80,9 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     public childRow: IgxChildGridRowComponent;
 
     protected _expandChildren = false;
+
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    public dragIndicatorIconBase: TemplateRef<any>;
 
     constructor(
         public selectionService: IgxGridSelectionService,
