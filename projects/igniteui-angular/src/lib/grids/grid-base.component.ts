@@ -4895,7 +4895,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 ||  (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
-        this.nativeElement.focus({ preventScroll: true });// TODO: do it only when the focused element is in grid body
+        this.nativeElement.focus({ preventScroll: true }); // TODO: do it only when the focused element is in grid body
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
                 && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
             if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
