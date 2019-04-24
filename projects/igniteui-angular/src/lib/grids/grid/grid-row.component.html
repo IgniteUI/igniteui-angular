@@ -1,12 +1,9 @@
-<ng-template #dragIndicatorIconBase>
-    <igx-icon fontSet="material">drag_indicator</igx-icon>
-</ng-template>
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
-        <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : dragIndicatorIconBase"></ng-container>
+        <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
 <ng-container *ngIf="showRowCheckboxes">

@@ -2,12 +2,9 @@
     <igx-icon *ngIf="!expanded" [isActive]='!added' fontSet="material">expand_more</igx-icon>
     <igx-icon *ngIf="expanded" [isActive]='!added' fontSet="material">expand_less</igx-icon>
 </div>
-<ng-template #dragIndicatorIconBase>
-    <igx-icon fontSet="material">drag_indicator</igx-icon>
-</ng-template>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
-        <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : dragIndicatorIconBase"></ng-container>
+            <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
 <ng-container *ngIf="rowSelectable">

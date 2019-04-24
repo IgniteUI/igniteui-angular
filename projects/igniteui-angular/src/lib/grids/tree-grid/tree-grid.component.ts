@@ -18,7 +18,8 @@ import {
     TemplateRef,
     QueryList,
     ContentChild,
-    AfterContentInit
+    AfterContentInit,
+    ViewChild
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -370,6 +371,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     private _gridAPI: IgxTreeGridAPIService;
     private _filteredData = null;
+
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    public dragIndicatorIconBase: TemplateRef<any>;
 
     constructor(
         selectionService: IgxGridSelectionService,
