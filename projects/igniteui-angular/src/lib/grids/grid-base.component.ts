@@ -525,7 +525,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             // should selection persist?
             this.allRowsSelected = false;
             this.deselectAllRows();
-            this.markForCheck();
+            this.resetCachedWidths();
+            this.calculateGridSizes();
         }
     }
 
@@ -543,6 +544,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
+        if (this.gridAPI.grid) {
+            this.resetCachedWidths();
+            this.calculateGridSizes();
+        }
     }
 
     /**
@@ -2713,6 +2718,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCachedWidths() {
+        this.calcFixedWidth = 0;
         this._unpinnedWidth = NaN;
         this._pinnedWidth = NaN;
         this._totalWidth = NaN;
@@ -4209,7 +4215,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         this.calculateGridHeight();
 
-        this.calcFixedWidth = 0;
         if (this.showRowCheckboxes) {
             this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }

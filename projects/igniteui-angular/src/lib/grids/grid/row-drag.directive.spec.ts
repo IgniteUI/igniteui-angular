@@ -22,7 +22,7 @@ import {
          IgxDropEventArgs
         } from '../../directives/dragdrop/dragdrop.directive';
 
-const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__tr--drag-indicator';
+const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 
 describe('IgxGrid - Row Drag', () => {
@@ -160,7 +160,7 @@ describe('IgxGrid - Row Drag', () => {
             tick();
             fixture.detectChanges();
             let rowSelectElement: DebugElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
-            let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('igx-grid__drag-indicator'));
             let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
             expect(rowSelectElement).toBeNull();
             expect(dragIndicatorElement).toBeNull();
@@ -171,7 +171,7 @@ describe('IgxGrid - Row Drag', () => {
             tick();
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
-            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__drag-indicator'));
             horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
             const dragIndicatorRect = dragIndicatorElement.nativeElement.getBoundingClientRect();
             let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
@@ -183,7 +183,7 @@ describe('IgxGrid - Row Drag', () => {
             grid.rowDraggable = true;
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
-            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__tr--drag-indicator'));
+            dragIndicatorElement = fixture.debugElement.query(By.css('igx-grid__drag-indicator'));
             horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
             const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();

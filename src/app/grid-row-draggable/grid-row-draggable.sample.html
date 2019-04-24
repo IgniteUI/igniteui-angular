@@ -15,7 +15,7 @@
             </ng-template>
         </igx-column>
     </igx-grid>
-    <igx-grid #grid2 igxDrop [data]="[]" [primaryKey]="'ProductID'"
+    <igx-grid #grid2 igxDrop [data]="newData" [primaryKey]="'ProductID'"
         [displayDensity]="density" [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
         (onEnter)="onEnterAllowed($event)" (onLeave)="onLeaveAllowed($event)" (onDrop)="onDropAllowed($event)">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>

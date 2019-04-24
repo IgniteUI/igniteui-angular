@@ -19,6 +19,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
     @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;
     @ViewChild("grid2", { read: IgxGridComponent }) public grid2: IgxGridComponent;
     remote: Observable<any[]>;
+    newData = [];
     dragdrop = true;
     public density = 'comfortable';
     public displayDensities;
@@ -52,6 +53,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     public onDropAllowed(args) {
+        args.cancel = true;
         this.grid2.addRow(args.dragData.rowData);
         this.grid1.deleteRow(args.dragData.rowID);
     }
@@ -73,6 +75,8 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     private changeGhostIcon(ghost, icon: string) {
-        ghost.querySelector('igx-icon').innerHTML = icon;
+        if (ghost) {
+            ghost.querySelector('igx-icon').innerHTML = icon;
+        }
     }
 }
