@@ -72,6 +72,7 @@
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
+/// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 ///
 /// @requires $default-palette
@@ -166,7 +167,7 @@
     $grid-shadow: null,
     $drag-shadow: null,
     $row-ghost-background: null,
-    $drag-color: null
+    $row-drag-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -429,7 +430,7 @@
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
         row-ghost-background: $row-ghost-background,
-        drag-color: $drag-color
+        row-drag-color: $row-drag-color
     ));
 }
 
@@ -796,7 +797,7 @@
     }
 
     %igx-grid__drag-indicator--off {
-        color: --var($theme, 'drag-color');
+        color: --var($theme, 'row-drag-color');
     }
 
     %igx-grid__tr--drag {
