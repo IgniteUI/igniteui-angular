@@ -4250,9 +4250,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        if (this.showRowCheckboxes || this.rowDraggable) {
-            sum += this.calcFixedWidth;
-        }
+        sum += this.calcFixedWidth;
 
         return sum;
     }
