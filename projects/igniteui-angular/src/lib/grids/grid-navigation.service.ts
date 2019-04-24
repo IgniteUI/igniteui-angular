@@ -299,7 +299,8 @@ export class IgxGridNavigationService {
     }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
-        if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
+        if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1 ||
+            (currentRowIndex === 0 && rowElement.tagName.toLowerCase() === 'igx-grid-summary-row')) { // check if this is rootSummary row
             return;
         }
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex + 1);
