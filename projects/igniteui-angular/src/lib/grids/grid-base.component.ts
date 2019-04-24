@@ -2987,7 +2987,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable ? this.calcFixedWidth : 0;
+        return this.rowSelectable || this.rowDraggable ? this.calcFixedWidth : 0;
     }
 
     /**
