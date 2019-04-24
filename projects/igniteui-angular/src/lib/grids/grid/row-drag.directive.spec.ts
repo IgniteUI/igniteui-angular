@@ -162,6 +162,31 @@ describe('IgxGrid - Row Drag', () => {
         it('should cancel dragging when ESCAPE key is pressed.', (async () => {
             // TODO
         }));
+        it('should create ghost element upon row dragging', (async () => {
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+            let ghostElements: HTMLCollection = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+
+            expect(ghostElements.length).toEqual(0);
+            UIInteractions.simulatePointerEvent('pointerdown', dragIndicatorElement, startPoint.x, startPoint.y);
+            await wait();
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, movePoint.x, movePoint.y);
+            await wait(50);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait(50);
+            fixture.detectChanges();
+            ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(1);
+            UIInteractions.simulatePointerEvent('pointerup', dragIndicatorElement, dropPoint.x, dropPoint.y);
+            await wait();
+            fixture.detectChanges();
+            ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(0);
+        }));
         it('should apply drag class to row upon row dragging', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = rows[1];
