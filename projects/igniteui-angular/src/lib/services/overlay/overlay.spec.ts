@@ -151,9 +151,9 @@ function getOverlayWrapperLocation(
     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
         const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
         if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-            location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset)
+            location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset);
         } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-            location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 -flipOffset);
+            location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 - flipOffset);
         } else {
             location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
         }

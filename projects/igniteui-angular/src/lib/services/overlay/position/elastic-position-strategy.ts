@@ -10,7 +10,7 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
         element.classList.add('igx-overlay__content--elastic');
         let transformString = '';
         if (!connectedFit.fitHorizontal) {
-            const minReduction = Math.max(0 ,connectedFit.elementRect.width - this.settings.minSize.width);
+            const minReduction = Math.max(0, connectedFit.elementRect.width - this.settings.minSize.width);
             const leftExtend = Math.max(0, connectedFit.viewPortRect.left - connectedFit.elementRect.left);
             const rightExtend = Math.max(0, connectedFit.elementRect.right - connectedFit.viewPortRect.right);
             const reduction = Math.min(minReduction, leftExtend + rightExtend);
