@@ -12,7 +12,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridSelectionService } from '../../core/grid-selection';
-import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../../core/utils';
+import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -182,13 +182,17 @@ export class IgxGridGroupByRowComponent {
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
         // TODO: Refactor
+        const key = event.key.toLowerCase();
+        if (!SUPPORTED_KEYS.has(key)) {
+            return;
+        }
         event.preventDefault();
         event.stopPropagation();
-        const key = event.key.toLowerCase();
-        const selection = this.gridSelection;
-        selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
+        const args = { cell: null, groupRow: this, event: event, cancel: false };
+        this.grid.onGridKeyDown.emit(args);
+        if (args.cancel) { return; }
 
-        if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
+        if (!this.isKeySupportedInGroupRow(key, event.shiftKey, event.altKey) || event.ctrlKey) { return; }
 
         if (this.isToggleKey(key, event.altKey)) {
             if ((this.expanded && ROW_COLLAPSE_KEYS.has(key)) || (!this.expanded && ROW_EXPAND_KEYS.has(key))) {
@@ -196,15 +200,12 @@ export class IgxGridGroupByRowComponent {
             }
             return;
         }
-        const args = { cell: null, groupRow: this, event: event, cancel: false };
-        this.grid.onFocusChange.emit(args);
-        if (args.cancel) {
-            return;
-        }
 
-        const visibleColumnIndex = selection.activeElement &&
-            this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex).indexOf(selection.activeElement.column) !== -1 ?
-                selection.activeElement.column : 0;
+        const selection = this.gridSelection;
+        selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
+
+        const visibleColumnIndex = selection.activeElement && this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex)
+                .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':
@@ -239,12 +240,7 @@ export class IgxGridGroupByRowComponent {
 
     private handleTabKey(shift) {
         if (shift) {
-            if (this.index === 0) {
-                this.grid.navigation.moveFocusToFilterCell();
-            } else {
-                this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
-            }
+            this.grid.navigation.performShiftTabKey(this.nativeElement, this.index, 0);
         } else {
             if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
                 this.grid.navigation.onKeydownHome(0, true);
@@ -254,9 +250,11 @@ export class IgxGridGroupByRowComponent {
         }
     }
 
-    private isKeySupportedInGroupRow(key) {
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-            'tab'].indexOf(key) !== -1;
+    private isKeySupportedInGroupRow(key, shift = false, alt = false) {
+        if (shift) {
+            return ['down', 'up', 'arrowdown', 'arrowup', 'tab'].indexOf(key) !== -1;
+        }
+        return this.isToggleKey(key, alt) ? true : ['down', 'up', 'arrowdown', 'arrowup', 'tab'].indexOf(key) !== -1;
     }
 
     private isToggleKey(key, altKey) {
