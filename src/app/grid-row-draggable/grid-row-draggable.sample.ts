@@ -74,6 +74,10 @@ export class GridRowDraggableComponent implements AfterViewInit {
         this.changeGhostIcon(args.drag._dragGhost, DragIcon.DEFAULT);
     }
 
+    public onDropBlocked(args) {
+        args.cancel = true;
+    }
+
     private changeGhostIcon(ghost, icon: string) {
         if (ghost) {
             ghost.querySelector('igx-icon').innerHTML = icon;
