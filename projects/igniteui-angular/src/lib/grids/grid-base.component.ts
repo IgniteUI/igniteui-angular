@@ -172,9 +172,16 @@ export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
 }
-
+// TODO: to be deleted when onFocusChange event is removed #4054
 export interface IFocusChangeEventArgs {
     cell: IgxGridCellComponent;
+    event: Event;
+    cancel: boolean;
+}
+
+export interface IGridKeydownEventArgs {
+    targetType: GridKeydownTargetType;
+    target: Object;
     event: Event;
     cancel: boolean;
 }
@@ -198,6 +205,12 @@ export enum GridSummaryCalculationMode {
 export enum FilterMode {
     quickFilter = 'quickFilter',
     excelStyleFilter = 'excelStyleFilter'
+}
+
+export enum GridKeydownTargetType {
+    dataCell = 'dataCell',
+    summaryCell = 'summaryCell',
+    groupRow = 'groupRow'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -1430,19 +1443,26 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
-     * Emitted when changing the focus while navigating with the keyboard.
-     * Return the focused cell or focused group row. This event is cancelable.
-     * ```typescript
-     * changeFocus(event: IGridFocusChangeEventArgs) {
-     *  const changedFocus = event;
-     * }
-     * ```
-     * ```html
-     * * <igx-grid (onFocusChange)="changeFocus($event)"></igx-grid>
-     * ```
+     * @deprecated you should use onGridKeydown event
      */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+    /**
+     * Emitted when keydown is triggered over element inside grid's body.
+     * This event is fired only if the key combination is supported in the grid.
+     * Return the target type, target object and the original event. This event is cancelable.
+     * ```typescript
+     * customKeydown(args: IGridKeydownEventArgs) {
+     *  const keydownEvent = args.event;
+     * }
+     * ```
+     * ```html
+     *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
+     * ```
+    */
+    @Output()
+    public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
     /**
      * @hidden
@@ -4868,6 +4888,115 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // directive.onChunkLoad.pipe(first())
         //     .subscribe(() => requestAnimationFrame(() => this.cdr.detectChanges()));
         directive.scrollTo(goal);
+    }
+
+    public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
+        if (rowIndex < 0 || rowIndex > this.verticalScrollContainer.igxForOf.length - 1
+                ||  (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+            return;
+        }
+        this.nativeElement.focus({ preventScroll: true });// TODO: do it only when the focused element is in grid body
+        if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
+                && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
+            if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                this.verticalScrollContainer.scrollTo(rowIndex);
+                this.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    this.perFormAction(rowIndex, visibleColIndex, cb);
+                });
+            } else {
+                this.perFormAction(rowIndex, visibleColIndex, cb);
+            }
+        } else {
+            const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
+            this.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                        this.verticalScrollContainer.scrollTo(rowIndex);
+                        this.verticalScrollContainer.onChunkLoad
+                        .pipe(first()).subscribe(() => {
+                            this.perFormAction(rowIndex, visibleColIndex, cb);
+                        });
+                    } else {
+                        this.perFormAction(rowIndex, visibleColIndex, cb);
+                    }
+
+                });
+            this.navigation.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+        }
+    }
+
+    public getNextCell(currRowIndex, curVisibleColIndex, callback: (IgxColumnComponent) => boolean = null) {
+        const visibleColIndex = curVisibleColIndex;
+        const colIndexes = callback ? this.columnList.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
+                                            this.columnList.map(editCol => editCol.visibleIndex);
+        const nextCellIndex = colIndexes.find(index => index > visibleColIndex);
+        if (nextCellIndex !== undefined) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
+        } else {
+            if (this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: visibleColIndex};
+            } else {
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+            }
+        }
+    }
+
+    public getPreviousCell(currRowIndex, curVisibleColIndex, callback: (IgxColumnComponent) => boolean = null) {
+        const visibleColIndex = curVisibleColIndex;
+        const colIndexes = callback ? this.columnList.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
+                        this.columnList.map(editCol => editCol.visibleIndex);
+        const prevCellIndex = colIndexes.reverse().find(index => index < visibleColIndex);
+        if (prevCellIndex !== undefined) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
+        } else {
+            if (this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: visibleColIndex};
+            } else {
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+            }
+        }
+    }
+
+    private perFormAction(rowIndex, visibleColIndex = -1, cb: Function = null) {
+        if (!cb) { return; }
+        let targetType, target;
+        const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        if (row) {
+            switch (row.nativeElement.tagName) {
+                case 'igx-grid-groupby-row':
+                    targetType = GridKeydownTargetType.groupRow;
+                    target = row;
+                    break;
+                case 'igx-grid-summary-row':
+                    targetType = GridKeydownTargetType.summaryCell;
+                    target = row.summaryCells && visibleColIndex !== -1 ?
+                        row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
+                    break;
+                default:
+                    targetType = GridKeydownTargetType.dataCell;
+                    target = row.cells && visibleColIndex !== -1 ?
+                        row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
+                    break;
+            }
+            const args = { targetType: targetType, target: target };
+            cb(args);
+        }
+    }
+
+    private getPrevDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex <= 0) { return currentRowIndex; }
+        const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
+            .find(rec => !rec.expression && !rec.summaries);
+        return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
+    }
+
+    private getNextDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) {return currentRowIndex; }
+        const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
+            .find(rec => !rec.expression && !rec.summaries);
+        return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
     }
 
     private rebuildMatchCache() {
