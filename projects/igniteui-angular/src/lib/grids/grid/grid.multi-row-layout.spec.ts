@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+﻿import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
@@ -380,7 +380,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
                 { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
@@ -404,6 +404,70 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 383px 100px 100px 200px');
     });
 
+    it('should correctly size column without width when it overlaps partially with bigger column that has width above it', () => {
+        // In this case it would be for City column and 3rd template column overlapping width ContactName.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '300px'},
+                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
+                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
+                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5},
+                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px'},
+                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px'},
+                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px'},
+                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+            ]
+        }];
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+
+        // headers are aligned to cells
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
+    });
+
+    it('should correctly size column without width when it overlaps partially with bigger column that has width bellow it', () => {
+        // In this case it would be for City column and 3rd template column overlapping width ContactName.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 5, width: '200px'},
+                { field: 'ContactTitle', rowStart: 1, colStart: 5, colEnd: 6, width: '200px'},
+                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
+                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, width: '200px'},
+                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '300px'},
+                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px'},
+                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px'},
+                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '200px'},
+            ]
+        }];
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+
+        // headers are aligned to cells
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 200px 150px');
+    });
+
     it('should correctly set column width when there is bigger column at the bottom where there is not width yet', () => {
         // In this case it would be for City column and 3rd template column.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -412,7 +476,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
                 { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
@@ -436,6 +500,38 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
     });
 
+    it('should correctly set column width of column without width when there are two bigger columns that overlap with it', () => {
+        // In this case it would be for City column and 3rd template column overlapping with ContactName and Fax.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '360px'},
+                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
+                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
+                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5},
+                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px'},
+                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px'},
+                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px'},
+                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7, width: '400px'},
+            ]
+        }];
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+
+        // headers are aligned to cells
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 120px 100px 100px 200px');
+    });
+
     it('should correctly autofit column without width when grid width is not enough and other cols are set in pixels', () => {
         // In this case it would be for City column and 3rd template column.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -444,7 +540,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
                 { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
@@ -476,10 +572,10 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
-                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3},
                 { field: 'City', rowStart: 2, colStart: 3, colEnd: 5},
                 { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px'},
                 { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px'},
@@ -508,7 +604,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px'},
                 { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
@@ -540,7 +636,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '200px'},
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
                 { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px'},
                 { field: 'Country', rowStart: 1, colStart: 6, colEnd: 8, width: '200px'},
                 { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px'},
@@ -561,7 +657,7 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
-        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 50px 100px 100px');
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 100px 100px');
     });
 
     it('should initialize correctly when widths are set in %.', () => {
