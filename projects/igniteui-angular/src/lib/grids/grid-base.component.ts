@@ -544,6 +544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
+        this.reflow();
     }
 
     /**
