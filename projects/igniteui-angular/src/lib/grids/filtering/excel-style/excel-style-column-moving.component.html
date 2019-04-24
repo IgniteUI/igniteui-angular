@@ -1,24 +1,24 @@
-<header [ngClass]="(grid.displayDensity==='compact')? 'igx-typography__subtitle-1': 'igx-typography__overline'">
+<header [ngClass]="(displayDensity==='compact')? 'igx-typography__subtitle-1': 'igx-typography__overline'">
     {{ grid.resourceStrings.igx_grid_excel_filter_moving_header }}
 </header>
 <section class="igx-excel-filter__move-buttons">
-    <button [displayDensity]="grid.displayDensity"
+    <button [displayDensity]="displayDensity"
         igxButton
         [disabled]="canNotMoveLeft"
         (click)="onMoveButtonClicked(0)">
         <igx-icon>arrow_back</igx-icon>
         <span>
-            {{ grid.displayDensity==='compact'?
+            {{ displayDensity==='compact'?
             grid.resourceStrings.igx_grid_excel_filter_moving_left_short:
             grid.resourceStrings.igx_grid_excel_filter_moving_left }}
         </span>
     </button>
-    <button [displayDensity]="grid.displayDensity"
+    <button [displayDensity]="displayDensity"
         igxButton
         [disabled]="canNotMoveRight"
         (click)="onMoveButtonClicked(1)">
         <span>
-            {{ grid.displayDensity==='compact'?
+            {{ displayDensity==='compact'?
             grid.resourceStrings.igx_grid_excel_filter_moving_right_short:
             grid.resourceStrings.igx_grid_excel_filter_moving_right }}
         </span>

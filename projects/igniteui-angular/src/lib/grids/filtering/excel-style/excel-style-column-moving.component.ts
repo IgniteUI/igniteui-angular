@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
 import { IgxGridBaseComponent } from '../../grid-base.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -18,6 +19,9 @@ export class IgxExcelStyleColumnMovingComponent {
 
     @Input()
     public grid: IgxGridBaseComponent;
+
+    @Input()
+    public displayDensity: DisplayDensity;
 
     constructor() {}
 

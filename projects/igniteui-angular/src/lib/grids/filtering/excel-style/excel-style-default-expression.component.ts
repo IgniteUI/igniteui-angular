@@ -18,6 +18,7 @@ import { IFilteringOperation } from '../../../data-operations/filtering-conditio
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
 import { KEYS } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -56,6 +57,9 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     @Input()
     public grid: any;
+
+    @Input()
+    public displayDensity: DisplayDensity;
 
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();

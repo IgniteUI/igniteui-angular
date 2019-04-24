@@ -35,7 +35,8 @@
             #excelStyleSorting
             [ngClass]="(grid.displayDensity==='compact')? 'igx-excel-filter__sort--compact': 'igx-excel-filter__sort'"
             [column]="column"
-            [grid]="grid">
+            [grid]="grid"
+            [displayDensity]="grid.displayDensity">
         </igx-excel-style-sorting>
     </ng-template>
 
@@ -49,7 +50,8 @@
             <igx-excel-style-column-moving
                 [ngClass]="(grid.displayDensity==='compact')? 'igx-excel-filter__move--compact': 'igx-excel-filter__move'"
                 [column]="column"
-                [grid]="grid">
+                [grid]="grid"
+                [displayDensity]="grid.displayDensity">
             </igx-excel-style-column-moving>
         </ng-template>
 
@@ -146,5 +148,6 @@
     [column]="column"
     [filteringService]="filteringService"
     [overlayComponentId]="overlayComponentId"
-    [overlayService]="overlayService">
+    [overlayService]="overlayService"
+    [displayDensity]="grid.displayDensity">
 </igx-excel-style-custom-dialog>

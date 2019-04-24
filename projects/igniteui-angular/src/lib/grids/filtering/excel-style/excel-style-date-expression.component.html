@@ -13,7 +13,7 @@
     #inputGroupConditions
     (click)="toggleCustomDialogDropDown()"
     type="box"
-    [displayDensity]="grid.displayDensity"
+    [displayDensity]="displayDensity"
     [supressInputAutofocus]="true">
 
     <igx-prefix>
@@ -35,7 +35,7 @@
 
 <igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
-        <igx-input-group #dropDownTarget type="box" [displayDensity]="grid.displayDensity" [supressInputAutofocus]="true">
+        <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
             <input #input
                     igxInput
                     tabindex="0"
@@ -49,14 +49,14 @@
     </ng-template>
 </igx-date-picker>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="grid.displayDensity" *ngIf="!isSingle" >
+<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle" >
     <igx-icon>cancel</igx-icon>
 </button>
 
 <igx-buttongroup #logicOperatorButtonGroup
     *ngIf="!isLast"
     [multiSelection]="false">
-    <span igxButton [displayDensity]="grid.displayDensity"
+    <span igxButton [displayDensity]="displayDensity"
         #andButton
         (keydown)="onLogicOperatorKeyDown($event, 0)"
         tabindex="0"
@@ -66,7 +66,7 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton [displayDensity]="grid.displayDensity"
+    <span igxButton [displayDensity]="displayDensity"
         #orButton
         tabindex="0"
         (keydown)="onLogicOperatorKeyDown($event, 1)"
