@@ -1092,6 +1092,38 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyDOMMatchesSettings(lastRow, fixture.componentInstance.colGroups);
     });
 
+    it('should correctly size columns without widths when default column width is set to percentages', () => {
+        // In this case it would be for City column and 3rd template column overlapping width ContactName.
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        // creating an incomplete layout
+        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.grid.columnWidth = '10%';
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
+                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6},
+                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3},
+                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5},
+                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7},
+                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2},
+                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3},
+                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+            ]
+        }];
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const gridFirstRow = grid.rowList.first;
+        const firstRowCells = gridFirstRow.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
+
+        // headers are aligned to cells
+        verifyHeadersAreAligned(headerCells, firstRowCells);
+
+        const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118px 118px 118px 118px 118px 118px');
+    });
 });
 
 @Component({

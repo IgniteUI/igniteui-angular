@@ -1105,8 +1105,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
                 columnSizes[col.colStart - 1] = {
                     field: col.field,
-                    width: col.widthSetByUser ? parseInt(col.calcWidth, 10) :
-                        (this.grid.columnWidthSetByUser ? parseInt(col.defaultWidth, 10) : null),
+                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1134,8 +1133,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 // Replace the old column with the new one.
                 columnSizes[col.colStart - 1] = {
                     field: col.field,
-                    width: col.widthSetByUser ? parseInt(col.calcWidth, 10) :
-                        (this.grid.columnWidthSetByUser ? parseInt(col.defaultWidth, 10) : null),
+                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1148,8 +1146,7 @@ export class IgxColumnComponent implements AfterContentInit {
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
                             field: col.field,
-                            width: col.widthSetByUser ? parseInt(col.calcWidth, 10) :
-                                (this.grid.columnWidthSetByUser ? parseInt(col.defaultWidth, 10) : null),
+                            width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
