@@ -5,7 +5,7 @@ import { IgxHierarchicalGridModule } from './index';
 import { ChangeDetectorRef, Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowIslandComponent } from './row-island.component';
+import { IgxRowIslandComponent, IGridCreatedEventArgs } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
@@ -536,6 +536,15 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
         colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
         expect(colHeaders.length).toBeGreaterThan(0);
         expect(loadingIndicator).toBeNull();
+
+        const row = grid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        tick(1000);
+
+        const rowIslandDOM = fixture.debugElement.query(By.css('#igx-hierarchical-grid-1'));
+        const rowIslandBody = rowIslandDOM.query(By.css('.igx-grid__tbody-content'));
+        expect(parseInt(window.getComputedStyle(rowIslandBody.nativeElement).height, 10)).toBe(255);
     }));
 
     it('should render disabled collapse all icon for child grid even when it has no data but with child row island',
@@ -770,7 +779,7 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     template: `
         <igx-hierarchical-grid [data]="data" (onDataPreLoad)="dataLoading($event)"
          [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1>
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1 (onGridCreated)="gridCreated($event, rowIsland1)">
                 <igx-column field="ID"></igx-column>
                 <igx-column field="ProductName"></igx-column>
                 <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2>
@@ -810,6 +819,21 @@ export class IgxHGridRemoteOnDemandComponent {
 
     bind () {
         this.data = this.generateDataUneven(20, 3);
+    }
+
+    generateRowIslandData(count: number) {
+        const prods = [];
+        for (let i = 0; i < count; i++) {
+            prods.push({ ID: i, ProductName: 'Product: A' + i });
+        }
+        return prods;
+    }
+
+    gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+        setTimeout(() => {
+            event.grid.data = this.generateRowIslandData(5);
+            event.grid.cdr.detectChanges();
+        }, 1000);
     }
 }
 
