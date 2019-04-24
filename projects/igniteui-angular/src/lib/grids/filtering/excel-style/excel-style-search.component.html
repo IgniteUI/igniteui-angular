@@ -1,6 +1,6 @@
 <igx-input-group
             type="box"
-            [displayDensity]="grid.displayDensity"
+            [displayDensity]="displayDensity"
             [supressInputAutofocus]="true">
     <igx-icon igxPrefix>search</igx-icon>
     <input
@@ -19,7 +19,7 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list [displayDensity]="grid.displayDensity" [style.height.px]="250">
+<igx-list [displayDensity]="displayDensity" [style.height.px]="250">
     <div [style.overflow]="'hidden'" [style.position]="'relative'">
         <igx-list-item
             *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: '50px'">

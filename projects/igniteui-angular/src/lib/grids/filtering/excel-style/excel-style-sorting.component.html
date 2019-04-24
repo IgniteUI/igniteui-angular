@@ -2,7 +2,7 @@
     <span>{{ grid.resourceStrings.igx_grid_excel_filter_sorting_header }}</span>
 </header>
 <igx-buttongroup #sortButtonGroup [multiSelection]="false">
-    <span tabindex="0" igxButton  type="button" [displayDensity]="grid.displayDensity" [attr.data-togglable]="true" (click)="onSortButtonClicked(1)">
+    <span tabindex="0" igxButton type="button" [displayDensity]="grid.displayDensity" [attr.data-togglable]="true" (click)="onSortButtonClicked(1)">
         <igx-icon>arrow_upwards</igx-icon>
         <span>
             {{ grid.displayDensity==='compact'?

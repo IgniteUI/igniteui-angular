@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -32,7 +33,7 @@ export class IgxExcelStyleSearchComponent {
     public searchInput: IgxInputDirective;
 
     @Input()
-    public grid: any;
+    public displayDensity: DisplayDensity;
 
     constructor() {}
 
