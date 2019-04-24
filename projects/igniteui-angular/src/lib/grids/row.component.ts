@@ -186,16 +186,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     public dragging = false;
 
-     /**
-     * @hidden
-     */
-    public get indicatorVisibility(): string {
-        const gridHasDragging = this.grid.rowDragging;
-        const rowDragged = this.dragging;
-
-        return gridHasDragging && rowDragged || !gridHasDragging ? 'visible' : 'hidden';
-    }
-
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
@@ -353,5 +343,14 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${dragClass}`.trim();
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveDragIndicatorClasses(): string {
+        const defaultDragIndicatorCssClass = 'igx-grid__drag-indicator';
+        const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
+        return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
     }
 }

@@ -286,5 +286,9 @@ $_light-grid: (
 
     row-ghost-background: (
         igx-color: ('primary', 50)
+    ),
+
+    drag-color: (
+        igx-color: ('grays', 400)
     )
 );
