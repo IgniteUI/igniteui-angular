@@ -72,10 +72,12 @@ export class IgxSummaryCellComponent {
             return;
         }
         event.stopPropagation();
+        const args = { targetType: 'summaryCell', target: this, event: event, cancel: false };
+        this.grid.onGridKeydown.emit(args);
+        if (args.cancel) {
+            return;
+        }
         event.preventDefault();
-        const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid.onGridKeyDown.emit(args);
-        if (args.cancel) { return; }
 
         if (!this.isKeySupportedInCell(key, ctrl)) { return; }
 

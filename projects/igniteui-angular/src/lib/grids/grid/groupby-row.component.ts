@@ -186,11 +186,13 @@ export class IgxGridGroupByRowComponent {
         if (!SUPPORTED_KEYS.has(key)) {
             return;
         }
-        event.preventDefault();
         event.stopPropagation();
-        const args = { cell: null, groupRow: this, event: event, cancel: false };
-        this.grid.onGridKeyDown.emit(args);
-        if (args.cancel) { return; }
+        const keydownArgs = { targetType: 'groupRow', target: this, event: event, cancel: false };
+        this.grid.onGridKeydown.emit(keydownArgs);
+        if (keydownArgs.cancel) {
+            return;
+        }
+        event.preventDefault();
 
         if (!this.isKeySupportedInGroupRow(key, event.shiftKey, event.altKey) || event.ctrlKey) { return; }
 
@@ -200,6 +202,10 @@ export class IgxGridGroupByRowComponent {
             }
             return;
         }
+        // TODO: to be deleted when onFocusChange event is removed #4054
+        const args = { cell: this, groupRow: null, event: event, cancel: false };
+        this.grid.onFocusChange.emit(args);
+        if (args.cancel) { return; }
 
         const selection = this.gridSelection;
         selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
