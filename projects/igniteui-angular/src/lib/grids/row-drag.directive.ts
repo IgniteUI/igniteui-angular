@@ -8,6 +8,7 @@ import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
 const draggedRowClass = 'igx-grid__tr--drag';
+const gridCellClass = 'igx-grid__td';
 
 /**
  * @hidden
@@ -44,6 +45,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.row.grid.onRowDragStart.emit(args);
         this.row.dragging = true;
         this.row.grid.rowDragging = true;
+        if (this.row.grid.rowEditable && this.row.grid.rowInEditMode) {
+            this.row.grid.endEdit(true);
+        }
 
         this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
             if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
@@ -70,14 +74,22 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     protected createDragGhost(event) {
         super.createDragGhost(event, this.row.nativeElement);
 
-        const gridWidth = this.row.grid.nativeElement.style.width;
+        const ghost = this._dragGhost;
 
-        this._dragGhost.style.overflow = 'hidden';
-        this._dragGhost.style.width = gridWidth;
-        this.renderer.removeClass(this._dragGhost, this.row.grid.oddRowCSS);
-        this.renderer.removeClass(this._dragGhost, this.row.grid.evenRowCSS);
-        this.renderer.removeClass(this._dragGhost, draggedRowClass);
-        this.renderer.addClass(this._dragGhost, ghostBackgroundClass);
+        const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
+        const rowRect = this.row.nativeElement.getBoundingClientRect();
+        ghost.style.overflow = 'hidden';
+        ghost.style.width = gridRect.width + 'px';
+        ghost.style.height = rowRect.height + 'px';
+
+        ghost.classList = [];
+        this.renderer.addClass(ghost, this.row.defaultCssClass);
+        this.renderer.addClass(ghost, ghostBackgroundClass);
+
+        const ghostCells = ghost.getElementsByClassName(gridCellClass);
+        for (let index = 0, cell = ghostCells[index]; index < ghostCells.length; index++) {
+            cell.classList = [gridCellClass];
+        }
     }
 
     private _unsubscribe() {
@@ -85,14 +97,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.subscription$.unsubscribe();
             this.subscription$ = null;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    ngOnInit() {
-        this.animateOnRelease = true;
-        super.ngOnInit();
     }
 }
 

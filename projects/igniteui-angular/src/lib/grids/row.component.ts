@@ -262,7 +262,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    protected defaultCssClass = 'igx-grid__tr';
+    public defaultCssClass = 'igx-grid__tr';
 
     /**
      * @hidden

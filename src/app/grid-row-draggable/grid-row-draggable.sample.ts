@@ -52,8 +52,8 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     public onDropAllowed(args) {
-        this.grid2.addRow(args.drag.data.rowData);
-        this.grid1.deleteRow(args.drag.data.rowID);
+        this.grid2.addRow(args.dragData.rowData);
+        this.grid1.deleteRow(args.dragData.rowID);
     }
 
     public onEnterAllowed(args) {

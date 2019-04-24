@@ -117,6 +117,8 @@ export interface IgxDropEventArgs {
     owner: IgxDropDirective;
     /** The igxDrag directive instanced on an element that entered the area of the igxDrop element */
     drag: IgxDragDirective;
+    /** The data contained for the draggable element in igxDrag directive. */
+    dragData: any;
     /**
      * The current position of the pointer on X axis relative to the container that initializes the igxDrop.
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
@@ -1044,6 +1046,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             owner: this,
             originalEvent: event.detail.originalEvent,
             drag: event.detail.owner,
+            dragData: event.detail.owner.data,
             offsetX: offsetX,
             offsetY: offsetY,
             cancel: false
