@@ -529,7 +529,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    @WatchChanges()
     @Input()
     get rowDraggable(): boolean {
         return this._rowDrag;
@@ -544,7 +543,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
-        this.reflow();
     }
 
     /**
