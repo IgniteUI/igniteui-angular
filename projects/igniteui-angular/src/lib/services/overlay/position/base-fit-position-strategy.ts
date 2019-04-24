@@ -10,7 +10,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         super.position(contentElement, size);
         this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
         this.settings = Object.assign({}, this.settings, this._initialSettings);
-        const connectedFit: ConnectedFit = {}
+        const connectedFit: ConnectedFit = {};
         connectedFit.elementRect = contentElement.getBoundingClientRect();
         connectedFit.viewPortRect = getViewportRect(document);
         this.canFitInViewPort(connectedFit);

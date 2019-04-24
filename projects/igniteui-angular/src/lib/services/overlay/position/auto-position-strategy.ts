@@ -12,11 +12,12 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return;
         }
         let transformString = '';
+        let shouldPosition = false;
         connectedFit.targetRect = this.calculateTargetRect(settings);
         if (!connectedFit.fitHorizontal) {
             if (this.canFlipHorizontal(settings, connectedFit)) {
                 this.flipHorizontal(settings);
-                super.position(element, null, document);
+                shouldPosition = true;
             } else {
                 const horizontalPush = this.pushHorizontal(connectedFit);
                 transformString = this.joinStringNoTrailingSpaces([transformString, `translateX(${horizontalPush}px)`]);
@@ -26,7 +27,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (!connectedFit.fitVertical) {
             if (this.canFlipVertical(settings, connectedFit)) {
                 this.flipVertical(settings);
-                super.position(element, null, document);
+                shouldPosition = true;
             } else {
                 const verticalPush = this.pushVertical(connectedFit);
                 transformString = this.joinStringNoTrailingSpaces([transformString, `translateY(${verticalPush}px)`]);
@@ -34,6 +35,9 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         }
 
         element.style.transform = transformString;
+        if (shouldPosition) {
+            super.position(element, null, document);
+        }
     }
 
     calculateTargetRect(settings: PositionSettings): ClientRect {
@@ -133,6 +137,8 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return Math.abs(leftExtend);
         } else if (rightExtend > 0) {
             return - Math.min(rightExtend, leftExtend);
+        } else {
+            return 0;
         }
     }
 
@@ -143,6 +149,9 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {
             return - Math.min(bottomExtend, topExtend);
+        } else {
+            return 0;
         }
+
     }
 }

@@ -84,7 +84,7 @@ function addScrollDivToElement(parent) {
  * @param targetRect Rectangle of overlaySettings.target
  * @param wrapperRect Rectangle of shown element
  * @param screenRect Rectangle of the visible area
- * @param elastic Is elastic position strategy
+ * @param elastic Is elastic position strategy, defaults to false
  */
 function getOverlayWrapperLocation(
     positionSettings: PositionSettings,
@@ -106,21 +106,24 @@ function getOverlayWrapperLocation(
             }
             location.x += offset;
         } else {
+            const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
             if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-                location.x = targetRect.right;
+                location.x = Math.max(0, targetRect.right - flipOffset);
             } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-                location.x = targetRect.left + targetRect.width / 2;
+                location.x =
+                    Math.max(0, targetRect.left + targetRect.width / 2 - flipOffset);
             } else {
-                location.x = targetRect.left;
+                location.x = Math.max(0, targetRect.left - flipOffset);
             }
         }
     } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
+        const flipOffset = wrapperRect.width * (1 + positionSettings.horizontalDirection);
         if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
-            location.x = targetRect.right - wrapperRect.width;
+            location.x = Math.min(screenRect.right, targetRect.right - flipOffset);
         } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
-            location.x = targetRect.right - targetRect.width / 2 - wrapperRect.width;
+            location.x = Math.min(screenRect.right, targetRect.left + targetRect.width / 2 - flipOffset);
         } else {
-            location.x = targetRect.left - wrapperRect.width;
+            location.x = Math.min(screenRect.right, targetRect.left - flipOffset);
         }
     }
 
@@ -136,21 +139,23 @@ function getOverlayWrapperLocation(
             }
             location.y += offset;
         } else {
+            const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
             if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-                location.y = targetRect.bottom;
+                location.y = Math.max(0, targetRect.bottom - flipOffset);
             } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-                location.y = targetRect.top + targetRect.height / 2;
+                location.y = Math.max(0, targetRect.top + targetRect.height / 2 - flipOffset);
             } else {
-                location.y = targetRect.top;
+                location.y =  Math.max(0, targetRect.top - flipOffset);
             }
         }
     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
+        const flipOffset = wrapperRect.height * (1 + positionSettings.verticalDirection);
         if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
-            location.y = targetRect.bottom - wrapperRect.height;
+            location.y = Math.min(screenRect.bottom, targetRect.bottom - flipOffset)
         } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
-            location.y = targetRect.bottom - targetRect.height / 2 - wrapperRect.height;
+            location.y = Math.min(screenRect.bottom, targetRect.top + targetRect.height / 2 -flipOffset);
         } else {
-            location.y = targetRect.top - wrapperRect.height;
+            location.y = Math.min(screenRect.bottom, targetRect.top - flipOffset);
         }
     }
     return location;
@@ -464,36 +469,36 @@ describe('igxOverlay', () => {
 
         it('Should properly call position method - AutoPosition.', () => {
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
-            const element = {} as HTMLElement;
+            const element = document.createElement('div');
             const autoStrat1 = new AutoPositionStrategy();
-            autoStrat1.position(element, null, null, false);
+            autoStrat1.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new AutoPositionStrategy();
-            autoStrat2.position(element, null, null, false);
+            autoStrat2.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new AutoPositionStrategy();
-            autoStrat3.position(element, null, null, false);
+            autoStrat3.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
         it('Should properly call position method - ElasticPosition.', () => {
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
-            const element = {} as HTMLElement;
+            const element = document.createElement('div');
             const autoStrat1 = new ElasticPositionStrategy();
 
-            autoStrat1.position(element, null, null, false);
+            autoStrat1.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
 
             const autoStrat2 = new ElasticPositionStrategy();
-            autoStrat2.position(element, null, null, false);
+            autoStrat2.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new ElasticPositionStrategy();
-            autoStrat3.position(element, null, null, false);
+            autoStrat3.position(element, null, document, false);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
@@ -1658,9 +1663,7 @@ describe('igxOverlay', () => {
                     for (const horizontalStartPoint of hAlignmentArray) {
                         for (const verticalStartPoint of vAlignmentArray) {
                             for (const horizontalDirection of hAlignmentArray) {
-                                if (horizontalDirection === 'Center') { continue; }
                                 for (const verticalDirection of vAlignmentArray) {
-                                    if (verticalDirection === 'Middle') { continue; }
 
                                     const positionSettings: PositionSettings = {
                                         target: button
@@ -1686,7 +1689,7 @@ describe('igxOverlay', () => {
                                     const targetRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
                                     const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
                                     const overlayWrapperRect =
-                                        overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
+                                        overlayWrapperElement.getBoundingClientRect() as ClientRect;
                                     const screenRect: ClientRect = {
                                         left: 0,
                                         top: 0,
@@ -1697,8 +1700,18 @@ describe('igxOverlay', () => {
                                     };
 
                                     const loc = getOverlayWrapperLocation(positionSettings, targetRect, overlayWrapperRect, screenRect);
-                                    expect(overlayWrapperRect.top.toFixed(1)).toEqual(loc.y.toFixed(1));
-                                    expect(overlayWrapperRect.left.toFixed(1)).toEqual(loc.x.toFixed(1));
+                                    expect(overlayWrapperRect.top.toFixed(1))
+                                        .withContext(`YYY HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
+                                            `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
+                                            `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
+                                            `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                        .toEqual(loc.y.toFixed(1));
+                                    expect(overlayWrapperRect.left.toFixed(1))
+                                        .withContext(`XXX HD: ${horizontalDirection}; VD: ${verticalDirection}; ` +
+                                            `HSP: ${horizontalStartPoint}; VSP: ${verticalStartPoint}; ` +
+                                            `BL: ${buttonLocation.left}; BT: ${buttonLocation.top}; ` +
+                                            `STYLE: ${overlayWrapperElement.getAttribute('style')};`)
+                                        .toEqual(loc.x.toFixed(1));
                                     expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
                                     fix.componentInstance.overlay.hideAll();
                                     tick();
