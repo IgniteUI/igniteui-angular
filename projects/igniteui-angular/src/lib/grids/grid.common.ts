@@ -90,14 +90,15 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                         this.column.grid.resizeLine.resizer.onMousedown(event);
                     }
                 });
-            });
+            
 
-            fromEvent(this.element.nativeElement, 'mouseup').pipe(
-                debounceTime(DEBOUNCE_TIME),
-                takeUntil(this.destroy$)
-            ).subscribe(() => {
-                this.colResizingService.showResizer = false;
-                this.column.grid.cdr.detectChanges();
+                fromEvent(this.element.nativeElement, 'mouseup').pipe(
+                    debounceTime(DEBOUNCE_TIME),
+                    takeUntil(this.destroy$)
+                ).subscribe(() => {
+                    this.colResizingService.showResizer = false;
+                    this.column.grid.cdr.detectChanges();
+                });
             });
         }
     }
