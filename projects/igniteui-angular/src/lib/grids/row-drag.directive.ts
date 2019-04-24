@@ -43,6 +43,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         };
 
         this.row.grid.onRowDragStart.emit(args);
+        if (args.cancel) {
+            this._clicked = false;
+            return;
+        }
         this.row.dragging = true;
         this.row.grid.rowDragging = true;
         if (this.row.grid.rowEditable && this.row.grid.rowInEditMode) {
@@ -58,6 +62,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public onPointerUp(event) {
+        if (!this._clicked) {
+            return;
+        }
         super.onPointerUp(event);
         this.row.dragging = false;
         this.row.grid.rowDragging = false;
