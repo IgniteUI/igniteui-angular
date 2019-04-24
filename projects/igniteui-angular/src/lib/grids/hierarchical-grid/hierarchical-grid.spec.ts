@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { ChangeDetectorRef, Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, TemplateRef, AfterViewInit, Version } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -10,6 +10,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
+import { Observable } from 'rxjs';
 
 describe('Basic IgxHierarchicalGrid', () => {
     configureTestSuite();
@@ -564,6 +565,8 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     const THEAD_CLASS = '.igx-grid__thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
+    const pkg = require('rxjs/package.json');
+    console.log(pkg.version);
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
