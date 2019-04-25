@@ -400,8 +400,9 @@ describe('IgxGrid - multi-row-layout', () => {
         // headers are aligned to cells
         verifyHeadersAreAligned(headerCells, firstRowCells);
 
+        const autoSizedColumnWidth = 400 - grid.scrollWidth;
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
-        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 383px 100px 100px 200px');
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px ' + autoSizedColumnWidth + 'px 100px 100px 200px');
     });
 
     it('should correctly size column without width when it overlaps partially with bigger column that has width above it', () => {
@@ -672,7 +673,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
             ]
         }];
-        fixture.componentInstance.grid.width = '1017px';
+        fixture.componentInstance.grid.width = (1000 + grid.scrollWidth) + 'px';
         fixture.detectChanges();
 
         // check columns
@@ -740,6 +741,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // check group blocks
         groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 200px');
 
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
