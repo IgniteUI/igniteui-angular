@@ -1804,6 +1804,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
     public dragIndicatorIconBase: TemplateRef<any>;
 
