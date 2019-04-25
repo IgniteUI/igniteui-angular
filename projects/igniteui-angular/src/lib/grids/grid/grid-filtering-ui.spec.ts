@@ -3321,10 +3321,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
-
-        grid.filterMode = FilterMode.excelStyleFilter;
         grid.displayDensity = DisplayDensity.cosy;
         tick(200);
         fix.detectChanges();
@@ -3350,10 +3346,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('Should hide column when clicking hide icon in header', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
-
-        grid.filterMode = FilterMode.excelStyleFilter;
         grid.displayDensity = DisplayDensity.compact;
         tick(200);
         fix.detectChanges();
@@ -3372,12 +3364,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        grid.filterMode = FilterMode.excelStyleFilter;
-        fix.detectChanges();
-
         const column = grid.columns.find((c) => c.field === 'ProductName');
         column.sortable = true;
         column.movable = true;
@@ -3414,12 +3401,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        grid.filterMode = FilterMode.excelStyleFilter;
-        fix.detectChanges();
-
         const column = grid.columns.find((c) => c.field === 'ProductName');
         column.sortable = true;
         column.movable = true;
@@ -3468,10 +3450,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('should scroll items in search list correctly', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        const grid = fix.componentInstance.grid;
-        fix.detectChanges();
-
         // Add additional rows as prerequisite for the test
         for (let index = 0; index < 30; index++) {
             const newRow = {
@@ -3486,7 +3464,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         }
         fix.detectChanges();
 
-        grid.filterMode = FilterMode.excelStyleFilter;
         grid.displayDensity = DisplayDensity.compact;
         tick(200);
         fix.detectChanges();
