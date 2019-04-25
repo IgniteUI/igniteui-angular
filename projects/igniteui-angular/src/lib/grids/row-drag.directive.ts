@@ -111,7 +111,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private _unsubscribe() {
         if (this.subscription$ && !this.subscription$.closed) {
             this.subscription$.unsubscribe();
-            this.subscription$ = null;
         }
     }
 }
