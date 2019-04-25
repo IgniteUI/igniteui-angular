@@ -490,6 +490,13 @@ function getWindowScrollTop() {
     return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
 }
 
+/**
+ * Move pointer to the provided point and calls pointerdown event over provided element
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
 async function pointerDown(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointerdown', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
@@ -497,6 +504,13 @@ async function pointerDown(element: Element, startPoint: Point, fixture: Compone
     return pointerEvent;
 }
 
+/**
+ * Move pointer to the provided point and calls pointermove event over provided element
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
 async function pointerMove(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointermove', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
@@ -504,6 +518,13 @@ async function pointerMove(element: Element, startPoint: Point, fixture: Compone
     return pointerEvent;
 }
 
+/**
+ * Move pointer to the provided point and calls pointerup event over provided element
+ * @param element Element to fire event on
+ * @param startPoint Point on which to move the pointer to
+ * @param fixture Test's ComponentFixture
+ * @returns Promise with reference to the generated event
+ */
 async function pointerUp(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointerup', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
