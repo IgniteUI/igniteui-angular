@@ -609,6 +609,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // might make the horizontal scrollbar appear/disappear.
                 // This will change the height, which should be recalculated.
                 if (!this._destroyed) {
+                    this.resetForOfCache();
                     this.reflow();
                 }
             });
@@ -2620,6 +2621,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public resetColumnsVisibleIndexCache() {
         this.columnList.forEach(column => column.resetVisibleIndex());
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetForOfCache() {
+        const firstVirtRow = this.dataRowList.first;
+        if (firstVirtRow) {
+            firstVirtRow.virtDirRow.assumeMaster();
+        }
     }
 
     /**
