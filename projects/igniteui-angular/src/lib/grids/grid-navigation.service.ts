@@ -115,11 +115,14 @@ export class IgxGridNavigationService {
     }
 
     public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
+        if (this.grid.hasColumnLayouts) {
+            this.focusNextCellFromLayout(cell);
+            return;
+        }
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
-        const next = this.nextElement(element, cell);
-        if (this.isColumnFullyVisible(visibleColumnIndex + 1, cell)) { // if next column is fully visible or is pinned
+        if (this.isColumnFullyVisible(visibleColumnIndex + 1)) { // if next column is fully visible or is pinned
             if (element.classList.contains('igx-grid__td--pinned-last') || element.classList.contains('igx-grid-summary--pinned-last')) {
                 if (this.isColumnLeftFullyVisible(visibleColumnIndex + 1)) {
                     element.nextElementSibling.firstElementChild.focus({ preventScroll: true });
@@ -133,31 +136,30 @@ export class IgxGridNavigationService {
                     this.horizontalScroll(rowIndex).scrollTo(0);
                 }
             } else {
-                if (next) {
-                    next.focus({ preventScroll: true });
-                }
+                element.nextElementSibling.focus({ preventScroll: true });
             }
         } else {
             this.grid.nativeElement.focus({ preventScroll: true });
-            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1, isSummary, cell);
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1, isSummary);
         }
     }
 
     public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
-        if (visibleColumnIndex === 0 && !this.grid.hasColumnLayouts) {
+        if (this.grid.hasColumnLayouts) {
+            this.focusPrevCellFromLayout(cell);
             return;
         }
-        const index = this.getColumnUnpinnedIndex(visibleColumnIndex - 1, cell);
+        if (visibleColumnIndex === 0) {
+            return;
+        }
+        const index = this.getColumnUnpinnedIndex(visibleColumnIndex - 1);
         if (!element.previousElementSibling && this.grid.pinnedColumns.length && index === - 1) {
             element.parentNode.previousElementSibling.focus({ preventScroll: true });
-        } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1, cell)) {
+        } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             this.grid.nativeElement.focus({ preventScroll: true });
-            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1, isSummary, cell);
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1, isSummary);
         } else {
-            const prev = this.prevElement(element, cell);
-            if (prev) {
-                prev.focus({ preventScroll: true });
-            }
+            element.previousElementSibling.focus({ preventScroll: true });
         }
 
     }
@@ -526,84 +528,103 @@ export class IgxGridNavigationService {
         }
     }
 
-    private prevElement(element, cell) {
-        if (this.grid.hasColumnLayouts) {
-            const columnLayout = cell.column.parent;
+    private focusPrevCellFromLayout(cell, isSummary = false) {
+        const columnLayout = cell.column.parent;
+        const element = cell.nativeElement.parentElement;
+        const currentColStart = cell.colStart;
+        const currentRowStart = cell.rowStart;
 
-            const currentColStart = cell.colStart;
-            const currentRowStart = cell.rowStart;
+        // previous element is from the same layout
+        let prevElementColumn = columnLayout.children
+        .find(c => (c.colEnd === currentColStart || c.colStart + c.gridColumnSpan === currentColStart ) &&
+            c.rowStart <= currentRowStart &&
+            (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
-            // previous element is from the same layout
-            let prevElementColumn = columnLayout.children
-            .find(c => (c.colEnd === currentColStart || c.colStart + c.gridColumnSpan === currentColStart ) &&
+        let columnIndex = columnLayout.children.toArray().indexOf(prevElementColumn);
+        let prevElement = element.children[columnIndex];
+
+        if (!prevElement) {
+            // try extracting first element from the previous layout
+            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
+            const prevLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex - 1];
+            if (!prevLayout) {
+                // reached the end
+                return null;
+            }
+            const layoutSize = prevLayout.getChildColumnSizes(prevLayout.children).length;
+            // first element is from the next layout
+            prevElementColumn = prevLayout.children
+            .find(c => (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
                 c.rowStart <= currentRowStart &&
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
-            let columnIndex = columnLayout.children.toArray().indexOf(prevElementColumn);
-            let prevElement = element.parentElement.children[columnIndex];
+            columnIndex = prevLayout.children.toArray().indexOf(prevElementColumn);
+            prevElement = element.previousElementSibling.children[columnIndex];
 
-            if (!prevElement) {
-                // try extracting first element from the previous layout
-                const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
-                const prevLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex - 1];
-                if (!prevLayout) {
-                    // reached the end
-                    return null;
-                }
-                const layoutSize = prevLayout.getChildColumnSizes(prevLayout.children).length;
-                // first element is from the next layout
-                prevElementColumn = prevLayout.children
-                .find(c => (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
-                    c.rowStart <= currentRowStart &&
-                    (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
-
-                columnIndex = prevLayout.children.toArray().indexOf(prevElementColumn);
-                prevElement = cell.nativeElement.parentElement.previousElementSibling.children[columnIndex];
+            if (!element.previousElementSibling) {
+                this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    prevElement = element.previousElementSibling.children[columnIndex];
+                    prevElement.focus({ preventScroll: true });
+                });
+                // TODO could be precised scrolling to the cell into the block, not the block,
+                // as scrolling to the start of the block may not show the cell itself
+                this.horizontalScroll(cell.rowIndex).scrollTo(cell.unpinnedIndex);
+                return;
+            } else {
+                prevElement = element.previousElementSibling.children[columnIndex];
             }
-
-            return prevElement;
-        } else {
-            return element.previousElementSibling;
         }
+        prevElement.focus();
     }
 
-    private nextElement(element, cell) {
-        if (this.grid.hasColumnLayouts) {
-            const columnLayout = cell.column.parent;
-            const layoutSize = columnLayout.getChildColumnSizes(columnLayout.children).length;
+    private focusNextCellFromLayout(cell, isSummary = false) {
+        const columnLayout = cell.column.parent;
+        const element = cell.nativeElement.parentElement;
+        const layoutSize = columnLayout.getChildColumnSizes(columnLayout.children).length;
 
-            const currentColEnd = cell.colEnd || cell.colStart + cell.gridColumnSpan;
-            const currentRowStart = cell.rowStart;
+        const currentColEnd = cell.colEnd || cell.colStart + cell.gridColumnSpan;
+        const currentRowStart = cell.rowStart;
 
-            // next element is from the same layout
-            let nextElementColumn = columnLayout.children.find(c => c.colStart === currentColEnd &&
+        // next element is from the same layout
+        let nextElementColumn = columnLayout.children.find(c => c.colStart === currentColEnd &&
+            c.rowStart <= currentRowStart &&
+            (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
+
+        let columnIndex = columnLayout.children.toArray().indexOf(nextElementColumn);
+        let nextElement = element.children[columnIndex];
+
+        if (!nextElement) {
+            // try extracting first element from the next layout
+            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
+            const nextLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex + 1];
+            if (!nextLayout) {
+                // reached the end
+                return null;
+            }
+            // first element is from the next layout
+            nextElementColumn = nextLayout.children.find(c => c.colStart === 1 &&
                 c.rowStart <= currentRowStart &&
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
-            let columnIndex = columnLayout.children.toArray().indexOf(nextElementColumn);
-            let nextElement = element.parentElement.children[columnIndex];
-
-            if (!nextElement) {
-                // try extracting first element from the next layout
-                const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
-                const nextLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex + 1];
-                if (!nextLayout) {
-                    // reached the end
-                    return null;
-                }
-                // first element is from the next layout
-                nextElementColumn = nextLayout.children.find(c => c.colStart === 1 &&
-                    c.rowStart <= currentRowStart &&
-                    (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
-
-                columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
-                nextElement = cell.nativeElement.parentElement.nextElementSibling.children[columnIndex];
+            columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
+            if (!element.nextElementSibling) {
+                this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    nextElement = element.nextElementSibling.children[columnIndex];
+                    nextElement.focus();
+                });
+                // TODO could be precised scrolling to the cell into the block, not the block,
+                // as scrolling to the start of the block may not show the cell itself
+                this.horizontalScroll(cell.rowIndex).scrollTo(cell.unpinnedIndex);
+                return;
+            } else {
+                nextElement = element.nextElementSibling.children[columnIndex];
             }
-
-            return nextElement;
-        } else {
-            return element.nextElementSibling;
         }
+        nextElement.focus();
     }
 
     private getLastPinnedFilterableColumn(): IgxColumnComponent {
@@ -643,23 +664,16 @@ export class IgxGridNavigationService {
             }
         }
     }
-
-    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false, cell?: IgxGridCellComponent) {
-        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex, cell);
+    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
+        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
-                if (this.grid.hasColumnLayouts) {
-                    const next = this.nextElement(cell.nativeElement, cell);
-                    if (next) {
-                        next.focus({ preventScroll: true });
-                    }
-                } else {
-                    this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus({ preventScroll: true });
-                }
+                this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus({ preventScroll: true });
             });
         this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
     }
+
     protected getRowByIndex(index, selector = this.getRowSelector()) {
         return this.grid.nativeElement.querySelector(
                 `${selector}[data-rowindex="${index}"]`);
