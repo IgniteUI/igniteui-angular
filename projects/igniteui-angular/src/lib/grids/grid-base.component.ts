@@ -2527,6 +2527,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.resizeHandler = () => {
+            this.resetForOfCache();
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
         };
