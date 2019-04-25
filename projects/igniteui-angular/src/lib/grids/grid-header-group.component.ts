@@ -173,7 +173,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.display')
     get groupDisplayStyle(): string {
-        return this.grid.hasColumnLayouts && this.column.children && !isIE ? 'flex' : '';
+        return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
     /**
