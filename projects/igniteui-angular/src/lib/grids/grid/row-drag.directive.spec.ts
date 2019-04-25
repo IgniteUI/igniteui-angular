@@ -58,7 +58,7 @@ describe('IgxGrid - Row Drag', () => {
         UIInteractions.clearOverlay();
     });
 
-    fdescribe('', () => {
+    describe('', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
