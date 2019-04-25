@@ -351,21 +351,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             const elementPosY = dropAreaElement.getBoundingClientRect().top + getWindowScrollTop();
             const offsetX = dropPoint.x - elementPosX;
             const offsetY = dropPoint.y - elementPosY;
-            const dropEnterArgs: IgxDropEnterEventArgs = {
-                originalEvent: pointerMoveEvent,
-                owner: dropArea,
-                drag: rowDragDirective,
-                dragData: row,
-                startX: startPoint.x,
-                startY: startPoint.y,
-                pageX: dropPoint.x,
-                pageY: dropPoint.y,
-                offsetX: offsetX,
-                offsetY: offsetY
-            };
-            expect(dropArea.onEnter.emit).toHaveBeenCalledTimes(1);
-            expect(dropArea.onEnter.emit).toHaveBeenCalledWith(dropEnterArgs);
-            expect(dropArea.onDragEnter).toHaveBeenCalledTimes(1);
 
             const pointerUpEvent = await pointerUp(dragIndicatorElement, dropPoint, fixture);
             const dragDropArgs: IgxDropEventArgs = {
