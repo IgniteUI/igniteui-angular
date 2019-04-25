@@ -100,6 +100,9 @@ export class UIInteractions {
     }
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
+        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
             resolve();
