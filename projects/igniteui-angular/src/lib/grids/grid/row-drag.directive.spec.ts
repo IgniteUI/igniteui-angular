@@ -22,7 +22,7 @@ import {
     IgxDropEventArgs
 } from '../../directives/dragdrop/dragdrop.directive';
 
-const DEBOUNCE_TIME = 50;
+const DEBOUNCE_TIME = 100;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
