@@ -3708,6 +3708,56 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         fix.detectChanges();
     }));
+
+    it('should scroll items in search list correctly', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        // Add additional rows as prerequisite for the test
+        for (let index = 0; index < 30; index++) {
+            const newRow = {
+                Downloads: index,
+                ID: index + 100,
+                ProductName: 'New Product ' + index,
+                ReleaseDate: new Date(),
+                Released: false,
+                AnotherField: 'z'
+            };
+            grid.addRow(newRow);
+        }
+        fix.detectChanges();
+
+        grid.filterMode = FilterMode.excelStyleFilter;
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(200);
+        fix.detectChanges();
+
+        // Scroll the search list to the bottom.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        const scrollbar = searchComponent.querySelector('igx-virtual-helper');
+        scrollbar.scrollTop = 3000;
+        tick(200);
+        fix.detectChanges();
+
+        // Verify scrollbar's scrollTop.
+        expect(scrollbar.scrollTop >= 955 && scrollbar.scrollTop <= 960).toBe(true,
+            'search scrollbar has incorrect scrollTop');
+        // Verify display container height.
+        const displayContainer = searchComponent.querySelector('igx-display-container');
+        const displayContainerRect = displayContainer.getBoundingClientRect();
+        expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+        // Verify rendered list items count.
+        const listItems = displayContainer.querySelectorAll('igx-list-item');
+        expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
