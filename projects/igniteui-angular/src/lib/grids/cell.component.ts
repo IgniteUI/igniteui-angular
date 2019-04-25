@@ -779,15 +779,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         event.stopPropagation();
-        this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
+
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
         this.grid.onGridKeydown.emit(keydownArgs);
-        if (keydownArgs.cancel) { return; }
+        if (keydownArgs.cancel) {
+            this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
+            return;
+        }
 
         if (event.altKey) {
+            event.preventDefault();
             this.handleAlt(key, event);
             return;
         }
+        this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
 
         if (key === 'tab') {
             event.preventDefault();
