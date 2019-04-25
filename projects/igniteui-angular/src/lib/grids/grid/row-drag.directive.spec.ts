@@ -112,7 +112,7 @@ describe('IgxGrid - Row Drag', () => {
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
         }));
-        it('should be able to drag row only by drag icon', (async () => {
+        xit('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const row = rows[1];
