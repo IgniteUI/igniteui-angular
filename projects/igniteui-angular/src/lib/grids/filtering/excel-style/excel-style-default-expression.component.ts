@@ -122,7 +122,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getConditionName(condition: IFilteringOperation) {
-        return condition ? condition.name : null;
+        return condition ? this.translateCondition(condition.name) : null;
     }
 
     public getInputWidth() {
