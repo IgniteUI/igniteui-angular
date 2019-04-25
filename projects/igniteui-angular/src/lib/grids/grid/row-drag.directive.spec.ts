@@ -506,13 +506,12 @@ describe('IgxGrid - Row Drag Tests', () => {
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
-            (onRowDragStart)="handleRowDrag($event)"
-            (onRowDragEnd)="handleRowDrop($event)">
+            >
         </igx-grid>
         <div #dropArea class="droppable-area" igxDrop (onDrop)="onRowDrop($event)"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
         </div>
-        <div #nonDroppableArea class="non-droppable-area" igxDrop
+        <div #nonDroppableArea class="non-droppable-area"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
         </div>
     `
@@ -559,8 +558,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
-            (onRowDragStart)="handleRowDrag($event)"
-            (onRowDragEnd)="handleRowDrop($event)">
+            >
         </igx-grid>
         <igx-grid #dropGrid igxDrop [data]="newData" [primaryKey]="'ID'"
         [width]="'800px'" [height]="'600px'"
