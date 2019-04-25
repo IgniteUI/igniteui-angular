@@ -81,6 +81,10 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
 
     protected _expandChildren = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
     public dragIndicatorIconBase: TemplateRef<any>;
 

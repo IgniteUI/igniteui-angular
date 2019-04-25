@@ -372,6 +372,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     private _gridAPI: IgxTreeGridAPIService;
     private _filteredData = null;
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
     public dragIndicatorIconBase: TemplateRef<any>;
 
