@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
+import { IgxRowComponent } from '../row.component';
 import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -471,6 +472,47 @@ describe('IgxGrid Component Tests', () => {
             expect(colHeaders.length).toBeGreaterThan(0);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
+    });
+
+    describe('IgxGrid - virtualization tests', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridTestComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should change chunk size for every record after enlarging the grid and the horizontal dirs are scrambled', async () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false },
+            );
+            fix.detectChanges();
+            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 100;
+            await wait(100);
+            fix.detectChanges();
+            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 250;
+            await wait(100);
+            fix.detectChanges();
+            fix.componentInstance.grid.width = '1300px';
+            await wait(100);
+            fix.detectChanges();
+            const rows = fix.componentInstance.grid.rowList.toArray();
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i] as IgxRowComponent<any>;
+                expect(row.cells.length).toEqual(4);
+            }
+        });
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
