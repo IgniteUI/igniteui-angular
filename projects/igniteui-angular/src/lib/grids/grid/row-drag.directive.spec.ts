@@ -17,8 +17,6 @@ import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
 import {
     IgxDropDirective,
-    IgxDropEnterEventArgs,
-    IgxDropLeaveEventArgs,
     IgxDropEventArgs
 } from '../../directives/dragdrop/dragdrop.directive';
 
@@ -554,21 +552,21 @@ export class IgxGridRowDraggableComponent extends DataParent {
     template: `
         <igx-grid #dragGrid
             [width]="'800px'"
-            [height]="'600px'"
+            [height]="'300px'"
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
         </igx-grid>
-        <igx-grid #dropGrid igxDrop [data]="newData" [primaryKey]="'ID'"
-        [width]="'800px'" [height]="'600px'"
-        (onDrop)="onRowDrop($event)">
-        <igx-column [field]="'Downloads'"></igx-column>
-        <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'"></igx-column>
-        <igx-column [field]="'ReleaseDate'"></igx-column>
-        <igx-column [field]="'Released'"></igx-column>
-    </igx-grid>
+        <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+        <igx-grid #dropGrid [data]="newData" [primaryKey]="'ID'"
+            [width]="'800px'" [height]="'300px'">
+            <igx-column [field]="'Downloads'"></igx-column>
+            <igx-column [field]="'ID'"></igx-column>
+            <igx-column [field]="'ProductName'"></igx-column>
+            <igx-column [field]="'ReleaseDate'"></igx-column>
+            <igx-column [field]="'Released'"></igx-column>
+        </igx-grid></div>
     `
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
