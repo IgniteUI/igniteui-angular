@@ -76,6 +76,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         super.onPointerUp(event);
         this.row.dragging = false;
         this.row.grid.rowDragging = false;
+        this.row.grid.markForCheck();
 
         const args: IRowDragEndEventArgs = {
             owner: this,
