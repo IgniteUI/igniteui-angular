@@ -2336,10 +2336,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public calcFixedWidth = 0;
-    /**
-     * @hidden
-     */
     public calcHeight = 0;
     /**
      * @hidden
@@ -2977,7 +2973,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable || this.rowDraggable ? this.calcFixedWidth : 0;
+        return this.rowSelectable || this.rowDraggable ? this.headerFixedWidth : 0;
     }
 
     /**
@@ -4201,16 +4197,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         this.calculateGridHeight();
 
-        this.calcFixedWidth = 0;
-        if (this.showRowCheckboxes) {
-            this.calcFixedWidth += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
-        }
-
-        if (this.rowDraggable) {
-            this.calcFixedWidth += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
-        }
-
-
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
@@ -4241,7 +4227,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        sum += this.calcFixedWidth;
+        sum += this.headerFixedWidth;
 
         return sum;
     }
