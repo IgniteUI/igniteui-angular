@@ -803,7 +803,7 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // The moving indicator shouldn't show that a column can be moved.
             const childGroupHeader = childGrids[0].query(By.css('igx-grid-header')).injector.get(IgxColumnMovingDragDirective);
-            const dragElem = childGroupHeader['_dragGhost'];
+            const dragElem = childGroupHeader['dragGhost'];
             const dragIcon = dragElem.querySelector('i');
             expect(dragElem).toBeDefined();
             expect(dragIcon.innerText.trim()).toEqual('block');
