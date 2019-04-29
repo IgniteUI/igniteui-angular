@@ -2868,10 +2868,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get headerFixedWidth() {
         let width = 0;
         if (this.headerCheckboxContainer) {
-            width += this.headerCheckboxContainer.nativeElement.clientWidth;
+            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
         if (this.headerDragContainer) {
-            width += this.headerDragContainer.nativeElement.clientWidth;
+            width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
         }
 
         return width;
