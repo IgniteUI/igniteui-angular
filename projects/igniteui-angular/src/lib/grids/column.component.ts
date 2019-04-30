@@ -836,7 +836,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
      * ```html
      * <igx-column-layout>
-     *   <igx-column [rowEnd]="'span 2'" [rowStart]="1" [colStart]="1"></igx-column>
+     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
      * </igx-column-layout>
      * ```
      * @memberof IgxColumnComponent
@@ -1074,7 +1074,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-        /**
+    /**
      * @hidden
      */
     getGridTemplate(isRow, isIE): string {
@@ -1754,4 +1754,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
         return true;
     }
 
+    /**
+     * Gets whether the group contains the last pinned child column of the column layout.
+     * ```typescript
+     * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
+     * ```
+     * @memberof IgxColumnLayoutComponent
+     */
+    get hasLastPinnedChildColumn() {
+        return this.children.some(child => child.isLastPinned);
+    }
 }

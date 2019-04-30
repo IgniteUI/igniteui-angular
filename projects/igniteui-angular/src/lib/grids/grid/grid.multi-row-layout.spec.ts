@@ -12,11 +12,14 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../grid-header.component';
+import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
+
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
+const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout', () => {
     configureTestSuite();
@@ -33,66 +36,6 @@ describe('IgxGrid - multi-row-layout', () => {
         }).compileComponents();
     }));
 
-    function verifyHeadersAreAligned(headerCells, rowCells) {
-        for (let i; i < headerCells.length; i++) {
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
-                .toBe(rowCells[i].nativeElement.offsetWidth);
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
-                .toBe(rowCells[i].nativeElement.offsetHeight);
-        }
-    }
-
-    function verifyDOMMatchesSettings(row, colSettings) {
-        const firstRowCells = row.cells.toArray();
-        const rowElem = row.nativeElement;
-        const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
-
-        colSettings.forEach((groupSetting, index) => {
-            // check group has rendered block
-            const groupBlock = mrlBlocks[index];
-            const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
-            expect(groupBlock).not.toBeNull();
-            groupSetting.columns.forEach((col, colIndex) => {
-                const cell = cellsFromBlock[colIndex];
-                const cellElem = cell.nativeElement;
-                // check correct attributes are applied
-                expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
-                expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
-                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
-                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
-
-                // check width
-                let sum = 0;
-                if (cell.gridColumnSpan > 1) {
-                    for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
-                        const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
-                        const col2 = row.grid.getColumnByName(colData ? colData.field : '');
-                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
-                    }
-                }
-                const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
-                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
-                // check height
-                const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
-                expect(cellElem.offsetHeight).toBe(expectedHeight);
-
-                // check offset left
-                const acc = (accum, c) => {
-                    if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
-                        return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
-                    } else {
-                        return accum;
-                    }
-                };
-                const expectedLeft = cellsFromBlock.reduce(acc, 0);
-                expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
-                // check offsetTop
-                const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
-                expect(cellElem.offsetTop).toBe(expectedTop);
-            });
-        });
-    }
-
     it('should initialize a grid with 1 column group', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -102,14 +45,14 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-        verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups);
+        verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
         // the last cell is spaned as much as the first 3 cells
         const firstThreeCellsWidth = firstRowCells[0].nativeElement.offsetWidth +
-            firstRowCells[1].nativeElement.offsetWidth +
-            firstRowCells[2].nativeElement.offsetWidth;
+             firstRowCells[1].nativeElement.offsetWidth +
+             firstRowCells[2].nativeElement.offsetWidth;
         const lastCellWidth = firstRowCells[3].nativeElement.offsetWidth;
         expect(2 * firstRowCells[0].nativeElement.offsetHeight).toEqual(firstRowCells[3].nativeElement.offsetHeight);
         expect(firstThreeCellsWidth).toEqual(lastCellWidth);
@@ -132,10 +75,10 @@ describe('IgxGrid - multi-row-layout', () => {
         const firstRowCells = gridFirstRow.cells.toArray();
         const headerCells = grid.headerGroups.first.children.toArray();
 
-        // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+         // headers are aligned to cells
+         verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-        verifyDOMMatchesSettings(gridFirstRow, fixture.componentInstance.colGroups);
+         verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
     });
 
     it('should not throw error when layout is incomplete and should render valid mrl block styles', () => {
@@ -160,10 +103,10 @@ describe('IgxGrid - multi-row-layout', () => {
         const firstRowCells = gridFirstRow.cells.toArray();
         const headerCells = grid.headerGroups.first.children.toArray();
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         // verify block style
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
 
@@ -180,7 +123,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
 
@@ -199,15 +142,15 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(200 * 3);
 
         // check group blocks
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(200 * 3);
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
 
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         // test with 2 groups
         fixture.componentInstance.colGroups.push({
@@ -234,7 +177,7 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'Country').nativeElement.offsetWidth).toBe(150 * 3);
 
         // check group blocks
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(150 * 3);
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(150 * 3);
@@ -243,8 +186,8 @@ describe('IgxGrid - multi-row-layout', () => {
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
 
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         // test with 3 groups
         fixture.componentInstance.colGroups.push({
@@ -269,7 +212,7 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'Phone').nativeElement.offsetWidth).toBe(136 * 2);
 
         // check group blocks
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(136 * 3);
         expect(groupHeaderBlocks[0].nativeElement.clientHeight).toBe(51 * 3);
         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(136 * 3);
@@ -278,8 +221,8 @@ describe('IgxGrid - multi-row-layout', () => {
         // the following throws error because last colgroup row span in header does not fill content
         // expect(groupHeaderBlocks[2].nativeElement.clientHeight).toBe(50 * 3);
 
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
     it('should initialize correctly when widths are set in px.', () => {
         // test with single group - all cols with colspan 1 have width
@@ -302,13 +245,13 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
 
         // check group blocks
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
 
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
 
         // test with 2 groups - only 2 columns with colspan1 have width
@@ -339,13 +282,13 @@ describe('IgxGrid - multi-row-layout', () => {
         //  expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(200);
 
         //  // check group blocks
-        //  groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        //  groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
         //  expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(500);
 
-        firstRowCells = grid.rowList.first.cells.toArray();
-        headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+         firstRowCells = grid.rowList.first.cells.toArray();
+         headerCells = grid.headerGroups.first.children.toArray();
+         verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+         verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         // test with 3 groups - only parent has width
         fixture.componentInstance.colGroups.push({
@@ -364,12 +307,12 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'Phone1').nativeElement.offsetWidth).toBe(250);
         expect(grid.getCellByColumn(0, 'Phone2').nativeElement.offsetWidth).toBe(250);
 
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[2].nativeElement.clientWidth).toBe(500);
 
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
     });
 
     it('should correctly autofit column without width when there are other set with width in pixels', () => {
@@ -398,7 +341,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const autoSizedColumnWidth = 400 - grid.scrollWidth;
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
@@ -432,7 +375,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
@@ -464,7 +407,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 200px 150px');
@@ -496,7 +439,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 100px 100px 100px 200px');
@@ -528,7 +471,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 120px 100px 100px 200px');
@@ -560,7 +503,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 136px 100px 100px 200px');
@@ -592,7 +535,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 136px 136px 100px 100px 200px');
@@ -624,7 +567,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 200px');
@@ -656,7 +599,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('100px 100px 136px 100px 100px 100px 100px');
@@ -686,13 +629,13 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'ContactTitle').nativeElement.offsetWidth).toBe(600);
 
         // check group blocks
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
 
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups.push({
             group: 'group2',
@@ -712,13 +655,13 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(200);
 
         // check group blocks
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(436);
 
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         fixture.componentInstance.colGroups = [{
             group: 'group1',
@@ -742,14 +685,14 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(grid.getCellByColumn(0, 'Region').nativeElement.offsetWidth).toBe(200);
 
         // check group blocks
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(600);
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 200px');
 
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
     it('should initialize correctly when grid width is in % and no widths are set for columns.', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -767,13 +710,13 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.detectChanges();
 
         // check group blocks
-        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(groupHeaderBlocks[0].nativeElement.parentNode.clientWidth);
 
         const firstRowCells = grid.rowList.first.cells.toArray();
         const headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
 
     it('should use columns with the smallest col spans when determining the column group’s column widths.', () => {
@@ -790,7 +733,7 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.detectChanges();
 
         // check group blocks
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(400);
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('100px 200px 100px');
         fixture.componentInstance.colGroups = [{
@@ -804,7 +747,7 @@ describe('IgxGrid - multi-row-layout', () => {
         }];
         fixture.detectChanges();
         // check group blocks
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.clientWidth).toBe(400);
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('100px 200px 100px');
     });
@@ -852,7 +795,7 @@ describe('IgxGrid - multi-row-layout', () => {
         // check first group has height of 3 row spans in header and rows
 
         // check group block and column header height
-        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl-block'));
+        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
         expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
@@ -944,9 +887,9 @@ describe('IgxGrid - multi-row-layout', () => {
 
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first,
-            fixture.componentInstance.colGroups.slice(0, horizontalVirtualization.state.chunkSize));
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first,
+             fixture.componentInstance.colGroups.slice(0, horizontalVirtualization.state.chunkSize));
 
         // check last column group can be scrolled in view
         horizontalVirtualization.scrollTo(11);
@@ -956,11 +899,11 @@ describe('IgxGrid - multi-row-layout', () => {
         // last 3 blocks should be rendered
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first,
-            fixture.componentInstance.colGroups.slice(
-                horizontalVirtualization.state.startIndex,
-                horizontalVirtualization.state.startIndex + horizontalVirtualization.state.chunkSize));
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first,
+             fixture.componentInstance.colGroups.slice(
+                 horizontalVirtualization.state.startIndex,
+                 horizontalVirtualization.state.startIndex + horizontalVirtualization.state.chunkSize));
 
     });
 
@@ -991,8 +934,8 @@ describe('IgxGrid - multi-row-layout', () => {
         // check DOM
         let firstRowCells = grid.rowList.first.cells.toArray();
         let headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         // test with %
         fixture.componentInstance.colGroups.push({
@@ -1015,8 +958,8 @@ describe('IgxGrid - multi-row-layout', () => {
         // check DOM
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
 
         // test with no width
         fixture.componentInstance.colGroups.push({
@@ -1044,11 +987,11 @@ describe('IgxGrid - multi-row-layout', () => {
         // check DOM
         firstRowCells = grid.rowList.first.cells.toArray();
         headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, firstRowCells);
-        verifyDOMMatchesSettings(grid.rowList.first, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+        verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     });
 
-    it('vertical virtualization should work as expected when there are multi-row layouts.', async () => {
+    it('vertical virtualization should work as expected when there are multi-row layouts.', async() => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
@@ -1088,13 +1031,13 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(lastRow.element.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
         // check size is correct
-        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(151);
+        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(150);
 
         // check DOM
         const lastRowCells = lastRow.cells.toArray();
         const headerCells = grid.headerGroups.first.children.toArray();
-        verifyHeadersAreAligned(headerCells, lastRowCells);
-        verifyDOMMatchesSettings(lastRow, fixture.componentInstance.colGroups);
+        verifyLayoutHeadersAreAligned(headerCells, lastRowCells);
+        verifyDOMMatchesLayoutSettings(lastRow, fixture.componentInstance.colGroups);
     });
 
     it('should correctly size columns without widths when default column width is set to percentages', () => {
@@ -1124,7 +1067,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const headerCells = grid.headerGroups.first.children.toArray();
 
         // headers are aligned to cells
-        verifyHeadersAreAligned(headerCells, firstRowCells);
+        verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118px 118px 118px 118px 118px 118px');

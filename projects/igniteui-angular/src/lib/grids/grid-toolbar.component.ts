@@ -199,7 +199,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get pinnedColumnsCount() {
-        return this.grid.pinnedColumns.length;
+        return this.grid.pinnedColumns.filter(col => !col.columnLayout).length;
     }
 
     /**
