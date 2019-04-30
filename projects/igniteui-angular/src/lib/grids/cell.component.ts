@@ -877,7 +877,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.navigation.navigateTop(node.column);
                     break;
                 }
-                this.grid.navigation.navigateUp(this.row.nativeElement, node.row, node.column);
+                this.grid.navigation.navigateUp(this.row.nativeElement, node.row, node.column, this);
                 break;
             case 'arrowdown':
             case 'down':
@@ -885,7 +885,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.navigation.navigateBottom(node.column);
                     break;
                 }
-                this.grid.navigation.navigateDown(this.row.nativeElement, node.row, node.column);
+                this.grid.navigation.navigateDown(this.row.nativeElement, node.row, node.column, this);
                 break;
             case 'enter':
             case 'f2':

@@ -293,7 +293,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
+    public navigateUp(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
         if (currentRowIndex === 0) {
             return;
         }
@@ -324,7 +324,11 @@ export class IgxGridNavigationService {
         this.focusElem(currentRowEl.previousElementSibling, visibleColumnIndex);
     }
 
-    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
+    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
+        if (this.grid.hasColumnLayouts) {
+            this.focusCellDownFromLayout(cell);
+            return;
+        }
         if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
             return;
         }
@@ -623,6 +627,31 @@ export class IgxGridNavigationService {
             } else {
                 nextElement = element.nextElementSibling.children[columnIndex];
             }
+        }
+        nextElement.focus();
+    }
+
+    private focusCellDownFromLayout(cell, isSummary = false) {
+        const columnLayout = cell.column.parent;
+        const element = cell.nativeElement.parentElement;
+        const layoutSize = columnLayout.getChildColumnSizes(columnLayout.children).length;
+
+        const currentRowEnd = cell.rowEnd || cell.rowStart + cell.gridRowSpan;
+        const currentColStart = cell.colStart;
+
+        // element down is from the same layout
+        let nextElementColumn = columnLayout.children.find(c => c.rowStart === currentRowEnd &&
+            c.colStart <= currentColStart &&
+            (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
+
+        let columnIndex = columnLayout.children.toArray().indexOf(nextElementColumn);
+        let nextElement = element.children[columnIndex];
+
+        if (!nextElement) {
+            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
+            this.grid.rowList.toArray()[cell.row.index + 1];
+            
+            this.focusNextElement(cell.row.nativeElement, columnIndex);
         }
         nextElement.focus();
     }
