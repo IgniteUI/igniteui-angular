@@ -65,6 +65,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
@@ -111,6 +112,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DropDownVirtualComponent,
     DragDropSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,

@@ -1,0 +1,10 @@
+.drop-down-wrapper {
+    display: flex;
+    flex-flow: row;
+}
+
+.drop-down-virtual-wrapper {
+    overflow: hidden;
+    height: 320px;
+    width: 160px;
+}
