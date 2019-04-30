@@ -675,6 +675,7 @@
 
     %grid-mrl-block {
         display: grid;
+        background: inherit;
 
         %grid-thead-item {
             display: flex;
