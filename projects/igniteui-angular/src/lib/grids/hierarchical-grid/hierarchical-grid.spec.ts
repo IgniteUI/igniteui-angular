@@ -495,7 +495,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
+describe('IgxHierarchicalGrid Remote Scenarios', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -508,7 +508,9 @@ xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
+    }));
 
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
         fixture.detectChanges();
     }));
@@ -558,7 +560,7 @@ xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -572,7 +574,9 @@ xdescribe('IgxHierarchicalGrid Template Changing Scenarios', () => {
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
+    }));
 
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridColumnsUpdateComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
