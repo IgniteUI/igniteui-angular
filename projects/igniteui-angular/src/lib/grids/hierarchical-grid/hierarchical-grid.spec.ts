@@ -508,13 +508,15 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
+    }));
 
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
         fixture.detectChanges();
     }));
 
     // To investigate why it times out
-    xit('should render loading indicator when loading and autoGenerate are enabled', fakeAsync(() => {
+    it('should render loading indicator when loading and autoGenerate are enabled', fakeAsync(() => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.instance;
@@ -573,7 +575,9 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
+    }));
 
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridColumnsUpdateComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
