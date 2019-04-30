@@ -19,6 +19,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { isIE } from '../core/utils';
 
 const Z_INDEX = 9999;
 
@@ -167,12 +168,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        return this.column.isLastPinned;
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
     }
 
     @HostBinding('style.display')
     get groupDisplayStyle(): string {
-        return this.grid.hasColumnLayouts && this.column.children ? 'flex' : '';
+        return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
     /**
