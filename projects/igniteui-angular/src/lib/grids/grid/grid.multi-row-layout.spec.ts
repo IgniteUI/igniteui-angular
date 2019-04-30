@@ -402,8 +402,8 @@ describe('IgxGrid - multi-row-layout', () => {
 
         const autoSizedColumnWidth = 400 - grid.scrollWidth;
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
-        const gridTemplateColumns = groupRowBlocks[0].nativeElement.style.gridTemplateColumns;
-        expect(gridTemplateColumns).toEqual('200px 200px ' + autoSizedColumnWidth + 'px 100px 100px 200px');
+        expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns)
+            .toEqual('200px 200px ' + autoSizedColumnWidth + 'px 100px 100px 200px');
     });
 
     it('should correctly size column without width when it overlaps partially with bigger column that has width above it', () => {
@@ -664,6 +664,8 @@ describe('IgxGrid - multi-row-layout', () => {
 
     it('should initialize correctly when widths are set in %.', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        fixture.detectChanges();
+
         const grid = fixture.componentInstance.grid;
         fixture.componentInstance.colGroups = [{
             group: 'group1',
