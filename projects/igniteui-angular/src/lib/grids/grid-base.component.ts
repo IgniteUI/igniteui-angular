@@ -552,6 +552,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
      */
     public rowDragging = false;
 
