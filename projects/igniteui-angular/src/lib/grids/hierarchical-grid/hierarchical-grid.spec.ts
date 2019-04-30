@@ -495,7 +495,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Remote Scenarios', () => {
+xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -558,7 +558,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+xdescribe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
