@@ -104,6 +104,10 @@
         }
     }
 
+    @include e(tr,  $m: mrl) {
+        @extend %grid-row--mrl !optional;
+    }
+
     @include e(summaries) {
         @extend %grid-summaries !optional;
 
