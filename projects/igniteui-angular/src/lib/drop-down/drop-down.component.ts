@@ -133,29 +133,27 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
-            return this._focusedIndex !== -1 ? this.children.find(e => e.index === this._focusedIndex) : null;
+            return this._focusedItem && this._focusedItem.index !== -1 ?
+            (this.children.find(e => e.index === this._focusedItem.index) || null) :
+            null;
         }
         return this._focusedItem;
     }
 
     public set focusedItem(value: IgxDropDownItemBase) {
+        if (!value) {
+            this.selection.clear(`${this.id}-active`);
+            this._focusedItem = null;
+            return;
+        }
         this._focusedItem = value;
-        this.selection.clear(`${this.id}-active`);
-        if (value && this.virtDir) {
-            this.selection.set(`${this.id}-active`, new Set([value.index]));
+        if (this.virtDir) {
+            this._focusedItem = {
+                value: value.value,
+                index: value.index
+            } as IgxDropDownItemBase;
         }
-    }
-
-    protected get _focusedIndex() {
-        const indexInService = this.selection.first_item(`${this.id}-active`);
-        return indexInService !== null && indexInService !== undefined ? indexInService : -1;
-    }
-
-    protected set _focusedIndex(value: number) {
-        this.selection.clear(`${this.id}-active`);
-        if (value !== -1 && value !== null && value !== undefined) {
-            this.selection.set(`${this.id}-active`, new Set([value]));
-        }
+        this.selection.set(`${this.id}-active`, new Set([this._focusedItem]));
     }
 
     @Input()
@@ -166,6 +164,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.toggleDirective.id = value;
         this.selection.set(value, this.selection.get(this.id));
         this.selection.clear(this.id);
+        this.selection.set(value, this.selection.get(`${this.id}-active`));
+        this.selection.clear(`${this.id}-active`);
         this._id = value;
     }
 
@@ -286,9 +286,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             if (index === -1 || index >= this.collectionLength) {
                 return;
             }
-            const direction = index > this._focusedIndex ? Navigate.Down : Navigate.Up;
+            const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
             const subRequired = this.isIndexOutOfBounds(index, direction);
-            this._focusedIndex = index;
+            this.focusedItem = {
+                value: this.virtDir.igxForOf[index],
+                index: index
+            } as IgxDropDownItemBase;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
             }
@@ -404,6 +407,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.destroy$.next(true);
         this.destroy$.complete();
         this.selection.clear(this.id);
+        this.selection.clear(`${this.id}-active`);
     }
 
     protected scrollToItem(item: IgxDropDownItemBase) {
@@ -487,7 +491,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigateNext() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedIndex !== -1 ? this._focusedIndex + 1 : 0);
+            this.navigateItem(this._focusedItem ? this._focusedItem.index + 1 : 0);
         } else {
             super.navigateNext();
         }
@@ -498,7 +502,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public navigatePrev() {
         if (this.virtDir) {
-            this.navigateItem(this._focusedIndex !== -1 ? this._focusedIndex - 1 : 0);
+            this.navigateItem(this._focusedItem ? this._focusedItem.index - 1 : 0);
         } else {
             super.navigatePrev();
         }

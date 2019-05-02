@@ -21,6 +21,8 @@ steps:
 
 - script: npm run test:lib:azure
   displayName: 'Run tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
 
 - script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   condition: and(succeeded(), eq(variables['system.teamProject'], 'igniteui-angular'))
