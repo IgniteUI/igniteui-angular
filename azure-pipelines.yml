@@ -7,6 +7,9 @@ steps:
   env:
     AZURE_PIPELINES: "true"
 
+- script: export NODE_OPTIONS="--max_old_space_size=4096"
+  displayName: 'setting max_old_space_size=4096'
+
 - script: sudo npm install -g @angular/cli
   displayName: 'Install Angular CLI'
 
