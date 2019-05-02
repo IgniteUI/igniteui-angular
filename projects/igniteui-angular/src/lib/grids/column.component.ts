@@ -1104,7 +1104,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 // If nothing is defined yet take any column at first
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
                 columnSizes[col.colStart - 1] = {
-                    field: col.field,
+                    ref: col,
                     width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
@@ -1132,7 +1132,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
                 // Replace the old column with the new one.
                 columnSizes[col.colStart - 1] = {
-                    field: col.field,
+                    ref: col,
                     width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
@@ -1145,7 +1145,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (let i = col.colStart - 1 + columnSizes[col.colStart - 1].colSpan; i < col.colStart - 1 + col.gridColumnSpan; i++) {
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
-                            field: col.field,
+                            ref: col,
                             width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
@@ -1176,11 +1176,11 @@ export class IgxColumnComponent implements AfterContentInit {
                             columnSizes[i].width / columnSizes[i].colSpan :
                             columnSizes[i].width;
                         columnSizes[i + j] = {
-                            field: columnSizes[i].field,
+                            ref: columnSizes[i].ref,
                             width: width,
                             colSpan: 1,
-                            widthSetByUser: columnSizes[i].widthSetByUser,
-                            hidden: columnSizes[i].hidden
+                            colEnd: columnSizes[i].colEnd,
+                            widthSetByUser: columnSizes[i].widthSetByUser
                         };
                     }
                 }
@@ -1217,6 +1217,40 @@ export class IgxColumnComponent implements AfterContentInit {
     protected getColumnSizesString(children: any[]): string {
        const res = this.getFilledChildColumnSizes(children);
        return res.join(' ');
+    }
+
+    public getResizableColUnderEnd(): { target: IgxColumnComponent, spanUsed: 1, spanRatio: number }[] {
+        if (this.columnLayout || !this.parent.columnLayout || this.columnGroup) {
+            return [{ target: this, spanUsed: 1, spanRatio: 1 }];
+        }
+
+        const columnSized = this.getInitialChildColumnSizes(this.parent.children.toArray());
+        const targets = [];
+        const colEnd = this.colEnd ? this.colEnd : this.colStart + 1;
+
+        for (let i = 0; i < columnSized.length; i++) {
+            if (this.colStart <= i + 1 && i + 1 < colEnd) {
+
+                targets.push({ target: columnSized[i].ref, spanUsed: 1});
+            }
+        }
+
+        const targetsSquashed = [];
+        for (let j = 0; j < targets.length; j++) {
+            if (targetsSquashed.length && targetsSquashed[targetsSquashed.length - 1].target.field === targets[j].target.field) {
+                targetsSquashed[targetsSquashed.length - 1].spanUsed++;
+            } else {
+                targetsSquashed.push(targets[j]);
+            }
+        }
+
+        for (let k = 0; k < targetsSquashed.length; k++) {
+            const curCol = targetsSquashed[k].target;
+            targetsSquashed[k].spanRatio =
+                ((curCol.colEnd ? curCol.colEnd : curCol.colStart + 1) - curCol.colStart / targetsSquashed[k].spanUsed);
+        }
+
+        return targetsSquashed;
     }
 
     /**

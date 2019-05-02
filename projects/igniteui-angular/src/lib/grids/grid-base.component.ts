@@ -3863,7 +3863,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
             this.columnList.forEach((column: IgxColumnComponent) => {
-                column.defaultWidth = this._columnWidth;
+                if (this.hasColumnLayouts) {
+                    const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+                    column.defaultWidth = columnWidthCombined + 'px';
+                } else {
+                    column.defaultWidth = this._columnWidth;
+                }
             });
         }
     }

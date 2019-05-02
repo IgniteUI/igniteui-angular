@@ -138,12 +138,39 @@ export class IgxColumnResizingService {
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
         colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
 
-        if (currentColWidth + diff < colMinWidth) {
-            this.column.width = colMinWidth + 'px';
-        } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-            this.column.width = colMaxWidth + 'px';
+        if (this.column.grid.hasColumnLayouts) {
+            const relativeColumns = this.column.getResizableColUnderEnd();
+            const minWidth = relativeColumns.reduce((acc, col) => {
+                const colMin = parseFloat(col.target.minWidth);
+                const colDefaultMin = parseFloat(col.target.defaultMinWidth);
+                return acc + (Number.isNaN(colMin) || colMin < colDefaultMin ? colDefaultMin : colMin);
+            }, 0);
+            const maxWidth = relativeColumns.reduce((acc, col) => {
+                return acc + (col.target.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(col.target.maxWidth));
+            }, 0);
+            const curSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
+
+            let sizeChanged = diff;
+            if (currentColWidth + diff < colMinWidth) {
+                sizeChanged = (colMinWidth - currentColWidth);
+            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
+                sizeChanged = (colMaxWidth - currentColWidth);
+            }
+
+            relativeColumns.forEach((col) => {
+                let currentResizeWidth = parseFloat(col.target.width);
+                const actualResizeWidth = col.target.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+                currentResizeWidth = Number.isNaN(currentResizeWidth) ? actualResizeWidth : currentResizeWidth;
+                col.target.width = (currentResizeWidth + (sizeChanged / curSpan) * col.spanRatio) + 'px';
+            });
         } else {
-            this.column.width = (currentColWidth + diff) + 'px';
+            if (currentColWidth + diff < colMinWidth) {
+                this.column.width = colMinWidth + 'px';
+            } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
+                this.column.width = colMaxWidth + 'px';
+            } else {
+                this.column.width = (currentColWidth + diff) + 'px';
+            }
         }
 
         this.zone.run(() => {});
