@@ -477,6 +477,12 @@ export class IgxTimePickerComponent implements
     @ViewChild('dropdownInputTemplate', { read: TemplateRef })
     private dropdownInputTemplate: TemplateRef<any>;
 
+    /*
+     * @hidden
+     */
+    @ContentChild('dropDownTarget', { read: ElementRef })
+    protected templateDropDownTarget: ElementRef;
+
     /**
      * @hidden
      */
@@ -723,7 +729,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown) {
+        if (this.mode === InteractionMode.DropDown && this.input) {
             fromEvent(this.input.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
@@ -1166,8 +1172,14 @@ export class IgxTimePickerComponent implements
 
             if (this.mode === InteractionMode.DropDown) {
                 settings = this.overlaySettings || this._dropDownOverlaySettings;
-                if (settings.positionStrategy && settings.positionStrategy.settings) {
+
+                if (this.group && settings.positionStrategy) {
                     settings.positionStrategy.settings.target = this.group.element.nativeElement;
+                } else if (this.templateDropDownTarget && settings.positionStrategy) {
+                    settings.positionStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                } else if (settings.positionStrategy && !settings.positionStrategy.settings.target) {
+                    throw new Error('There is no target element for the dropdown to attach.' +
+                        'Mark a DOM element with #dropDownTarget ref variable or provide correct overlaySettings.');
                 }
             }
 
