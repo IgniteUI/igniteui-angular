@@ -1,8 +1,8 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
-import { DisplayDensity } from '../../core/density';
 import { DataType } from '../../data-operations/data-util';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,28 +27,7 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
-    constructor(private element: ElementRef) {
-    }
-
-    @HostBinding('class')
-    get styleClasses(): string {
-        const defaultClasses = ['igx-grid-summary--cell'];
-        const classList = {
-            'igx-grid-summary': this.density === DisplayDensity.comfortable,
-            'igx-grid-summary--fw': this.column.width !== null,
-            'igx-grid-summary--empty': !this.column.hasSummary,
-            'igx-grid-summary--compact': this.density === DisplayDensity.compact,
-            'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
-            'igx-grid-summary--pinned': this.column.pinned,
-            'igx-grid-summary--pinned-last': this.column.isLastPinned,
-            'igx-grid-summary--active': this.focused
-        };
-        Object.entries(classList).forEach(([className, value]) => {
-            if (value) {
-                defaultClasses.push(className);
-            }
-        });
-        return defaultClasses.join(' ');
+    constructor(private element: ElementRef, private selectionService: IgxGridSelectionService) {
     }
 
     @Input()
@@ -68,7 +47,8 @@ export class IgxSummaryCellComponent {
         return `Summary_${this.column.field}`;
     }
 
-    private focused;
+    @HostBinding('class.igx-grid-summary--active')
+    public focused: boolean;
 
     @HostListener('focus')
     public onFocus() {
@@ -82,12 +62,14 @@ export class IgxSummaryCellComponent {
 
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
+        // TODO: Refactor
         const key = event.key.toLowerCase();
         if (!this.isKeySupportedInCell(key)) { return; }
         event.preventDefault();
         event.stopPropagation();
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        this.selectionService.keyboardState.shift = shift && !(key === 'tab');
 
         if (ctrl && (key === 'arrowup' || key === 'arrowdown' || key === 'up'
                         || key  === 'down'  || key === 'end' || key === 'home')) { return; }
@@ -95,17 +77,8 @@ export class IgxSummaryCellComponent {
         switch (key) {
             case 'tab':
                 if (shift) {
-                    if (this.rowIndex === 0 && this.visibleColumnIndex === 0 && this.grid.data && this.grid.data.length) {
-                        this.grid.navigation.goToLastBodyElement();
-                        return;
-                    }
                     this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
                     break;
-                }
-                if (this.rowIndex === 0 &&
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
-                        return;
-
                 }
                 this.grid.navigation.performTab(row, this.rowIndex, this.visibleColumnIndex, true);
                 break;
@@ -153,11 +126,6 @@ export class IgxSummaryCellComponent {
         return this.element.nativeElement;
     }
 
-    get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
-        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    }
-
     get columnDatatype(): DataType {
         return this.column.dataType;
     }
@@ -174,7 +142,8 @@ export class IgxSummaryCellComponent {
     }
 
     private getRowElementByIndex(rowIndex) {
-        return this.grid.nativeElement.querySelector(`igx-grid-summary-row[data-rowindex="${rowIndex}"]`);
+        const summaryRows = this.grid.summariesRowList.toArray();
+        return summaryRows.find((sr) => sr.dataRowIndex === rowIndex).nativeElement;
     }
 
     private isKeySupportedInCell(key) {

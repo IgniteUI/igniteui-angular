@@ -18,10 +18,13 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */
-    protected _isFocused = false;
-    protected _isSelected = false;
+    protected _focused = false;
+    protected _selected = false;
     protected _index = null;
     protected _disabled = false;
+    protected get hasIndex(): boolean {
+        return this._index !== null && this._index !== undefined;
+    }
 
     /**
      * Sets/gets the `id` of the item.
@@ -108,14 +111,14 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     get selected(): boolean {
-        return this._isSelected;
+        return this._selected;
     }
 
     set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
-        this._isSelected = value;
+        this._selected = value;
     }
 
     /**
@@ -139,17 +142,17 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * Sets/gets if the given item is focused
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemFocused = mySelectedItem.isFocused;
+     *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get focused(): boolean {
-        return (!this.isHeader && !this.disabled) && this._isFocused;
+        return (!this.isHeader && !this.disabled) && this._focused;
     }
 
     /**
      * ```html
-     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{!item.isFocused}}>
+     *  <igx-drop-down-item *ngFor="let item of items" focused={{!item.focused}}>
      *      <div>
      *          {{item.field}}
      *      </div>
@@ -157,7 +160,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * ```
      */
     set focused(value: boolean) {
-        this._isFocused = value;
+        this._focused = value;
     }
 
     /**
@@ -275,9 +278,13 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     ngDoCheck(): void {
-        if (this.selected) {
-            const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
-            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
+        if (this._selected) {
+            const dropDownSelectedItem = this.dropDown.selectedItem;
+            if (!dropDownSelectedItem) {
+                this.dropDown.selectItem(this);
+            } else if (this.hasIndex
+                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
+                this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
             }
         }

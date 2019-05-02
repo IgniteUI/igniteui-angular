@@ -58,10 +58,27 @@
                 <igx-switch class="settings" [(ngModel)]="modal" name="modal" [value]="modal"
                     (change)="onSwitchChange($event)">Modal</igx-switch>
             </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="useOutlet" name="outlet" [value]="useOutlet"
+                    (change)="onSwitchChange($event)">Open in outlet</igx-switch>
+            </div>
+            <div>
+                <igx-input-group>
+                    <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
+                    <label igxLabel for="dropDownItems">Drop down items</label>
+                </igx-input-group>
+                <igx-input-group>
+                    <input igxInput name="dropDownWidth" type="number" [(ngModel)]="dropDownWidth">
+                    <label igxLabel for="dropDownWidth">Drop down width</label>
+                </igx-input-group>
+            </div>
+        </div>
+        <div #outlet class="outlet column">
+            Outlet
         </div>
         <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
             (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
-        <igx-drop-down width=" 200px">
+        <igx-drop-down width="{{dropDownWidth}}px">
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
                     {{ item }}

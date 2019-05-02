@@ -4,11 +4,15 @@ import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridRowEditingComponent
+    IgxTreeGridRowEditingComponent,
+    IgxTreeGridLoadOnDemandComponent,
+    IgxTreeGridLoadOnDemandHasChildrenComponent,
+    IgxTreeGridLoadOnDemandChildDataComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Expanding / Collapsing', () => {
     configureTestSuite();
@@ -19,7 +23,10 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
+                IgxTreeGridPrimaryForeignKeyComponent,
+                IgxTreeGridLoadOnDemandComponent,
+                IgxTreeGridLoadOnDemandHasChildrenComponent,
+                IgxTreeGridLoadOnDemandChildDataComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -29,11 +36,11 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -218,17 +225,24 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             expect(rows.length).toBe(4, 'root level row collapsing problem');
         });
 
-        it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', () => {
+        it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', async () => {
             treeGrid.perPage = 50;
+            await wait();
+            fix.detectChanges();
 
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
 
             treeGrid.expandAll();
+            await wait();
+            fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(12);
+            expect(rows.length).toBeGreaterThan(10);
+            expect(rows.length).toBeLessThan(14);
 
             treeGrid.collapseAll();
+            await wait();
+            fix.detectChanges();
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(4);
         });
@@ -425,13 +439,13 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.expansionDepth = 0;
             fix.detectChanges();
-        });
+        }));
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -469,6 +483,9 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             });
 
             for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
+                if (rowToToggle === 1) {
+                    continue;
+                }
                 const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(rows[rowToToggle]);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
 
@@ -813,6 +830,162 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
     });
 
+    describe('Load On Demand', () => {
+
+        describe('Primary/Foreign key', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridLoadOnDemandComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+                fix.detectChanges();
+            });
+
+            it('check expanding and collapsing a row with children', async () => {
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const row = rows[0];
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(500);
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, true);
+                expect(rows.length).toBe(3);
+                await wait(550);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(5);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(16);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+            });
+
+            it('check expanding and collapsing a row without children', async () => {
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const row = rows[1];
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(500);
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, true);
+                expect(rows.length).toBe(3);
+                await wait(550);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false, false);
+                expect(rows.length).toBe(3);
+            });
+        });
+
+        describe('ChildDataKey', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridLoadOnDemandChildDataComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+                fix.detectChanges();
+            });
+
+            it('check expanding and collapsing a row with children', async () => {
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const row = rows[0];
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(500);
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, true);
+                expect(rows.length).toBe(3);
+                await wait(550);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(5);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(16);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+            });
+
+            it('check expanding and collapsing a row without children', async () => {
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const row = rows[1];
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false);
+                expect(rows.length).toBe(3);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(500);
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, true);
+                expect(rows.length).toBe(3);
+                await wait(550);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(row, false, false);
+                expect(rows.length).toBe(3);
+            });
+        });
+
+        describe('HasChildrenKey', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+                fix.detectChanges();
+            });
+
+            it('check expanding and collapsing a row with children', async () => {
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const firstRow = rows[0];
+                const secondRow = rows[1];
+                TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
+                TreeGridFunctions.verifyTreeRowIndicator(secondRow, false, false);
+                expect(rows.length).toBe(3);
+
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(500);
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(firstRow, true);
+                expect(rows.length).toBe(3);
+                await wait(550);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
+                expect(rows.length).toBe(5);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(16);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
+                expect(rows.length).toBe(3);
+            });
+        });
+    });
+
 });
 
 describe('Row editing expanding/collapsing', () => {
@@ -832,11 +1005,11 @@ describe('Row editing expanding/collapsing', () => {
             .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-    });
+    }));
 
     it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
         const rows = TreeGridFunctions.getAllRows(fix);

@@ -25,15 +25,16 @@
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
-        <div tabindex="0" class="igx-calendar-picker__prev" (keydown)="previousMonthKB($event)"
-            (click)="previousMonth()">
+        <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
+            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
         <div>
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next" (keydown)="nextMonthKB($event)" (click)="nextMonth()">
+        <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn
+            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
@@ -45,6 +46,7 @@
                    [viewDate]="viewDate"
                    [weekStart]="weekStart"
                    [formatOptions]="formatOptions"
+                   [formatViews]="formatViews"
                    [selection]="selection"
                    [disabledDates]="disabledDates"
                    [specialDates]="specialDates"
@@ -53,10 +55,18 @@
     </igx-days-view>
 </div>
 
-<igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months [date]="viewDate" [locale]="locale"
-    [monthFormat]="formatOptions.month" (onSelection)="changeMonth($event)">
+<igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months 
+                 [date]="viewDate" 
+                 [locale]="locale"
+                 [formatView]="formatViews.month"
+                 [monthFormat]="formatOptions.month" 
+                 (onSelection)="changeMonth($event)">
 </igx-months-view>
 
-<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade [date]="viewDate" [locale]="locale"
-    [yearFormat]="formatOptions.year" (onSelection)="changeYear($event)">
+<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade 
+                [date]="viewDate" 
+                [locale]="locale"
+                [formatView]="formatViews.year"
+                [yearFormat]="formatOptions.year" 
+                (onSelection)="changeYear($event)">
 </igx-years-view>

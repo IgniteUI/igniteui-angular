@@ -170,11 +170,11 @@
     }
 
     @if not($flat-hover-background) and $flat-background {
-        $flat-hover-background: lighten($flat-background, 5%);
+        $flat-hover-background: lighten-color($flat-background, 5%);
     }
 
     @if not($flat-focus-background) and $flat-background {
-        $flat-focus-background: lighten($flat-background, 5%);
+        $flat-focus-background: lighten-color($flat-background, 5%);
     }
 
     @if not($flat-hover-text-color) and $flat-hover-background {
@@ -190,11 +190,11 @@
     }
 
     @if not($outlined-hover-background) and $outlined-background {
-        $outlined-hover-background: lighten($outlined-background, 5%);
+        $outlined-hover-background: lighten-color($outlined-background, 5%);
     }
 
     @if not($outlined-focus-background) and $outlined-background {
-        $outlined-focus-background: lighten($outlined-background, 5%);
+        $outlined-focus-background: lighten-color($outlined-background, 5%);
     }
 
     @if not($outlined-hover-text-color) and $outlined-hover-background {
@@ -210,11 +210,11 @@
     }
 
     @if not($raised-hover-background) and $raised-background {
-        $raised-hover-background: lighten($raised-background, 5%);
+        $raised-hover-background: lighten-color($raised-background, 5%);
     }
 
     @if not($raised-focus-background) and $raised-background {
-        $raised-focus-background: lighten($raised-background, 5%);
+        $raised-focus-background: lighten-color($raised-background, 5%);
     }
 
     @if not($raised-hover-text-color) and $raised-hover-background {
@@ -230,11 +230,11 @@
     }
 
     @if not($fab-hover-background) and $fab-background {
-        $fab-hover-background: lighten($fab-background, 5%);
+        $fab-hover-background: lighten-color($fab-background, 5%);
     }
 
     @if not($fab-focus-background) and $fab-background {
-        $fab-focus-background: lighten($fab-background, 5%);
+        $fab-focus-background: lighten-color($fab-background, 5%);
     }
 
     @if not($fab-hover-text-color) and $fab-hover-background {
@@ -250,11 +250,11 @@
     }
 
     @if not($icon-hover-background) and $icon-background {
-        $icon-hover-background: lighten($icon-background, 5%);
+        $icon-hover-background: lighten-color($icon-background, 5%);
     }
 
     @if not($icon-focus-background) and $icon-background {
-        $icon-focus-background: lighten($icon-background, 5%);
+        $icon-focus-background: lighten-color($icon-background, 5%);
     }
 
     @if not($icon-focus-color) and $icon-focus-background {
@@ -364,10 +364,11 @@
 
     $button-border: 1px solid transparent;
     $button-width: rem(88px);
-    $button-height: rem(36px);
-    $button-padding: 0 rem(16px, 16px);
-    $button-transition: all .15s $ease-in-out-cubic;
 
+    $button-transition: background .15s $ease-in-out-cubic,
+        color .15s $ease-in-out-cubic,
+        border .15s $ease-in-out-cubic;
+  
     $button-disabled-shadow: none;
 
     $button-floating-width: rem(56px);
@@ -378,15 +379,39 @@
     $button-icon-font-size: rem(24px, 24px);
     $button-icon-padding: 0;
 
+    $button-padding: (
+        comfortable: rem(9px, 16px) rem(16px, 16px),
+        cosy: rem(6px, 16px) rem(16px, 16px),
+        compact: rem(3px, 16px) rem(16px, 16px)
+    );
+    $button-size: (
+        comfortable: rem(36px),
+        cosy: rem(30px),
+        compact: rem(24px)
+    );
+    $button-floating-padding: (
+        comfortable: rem(15px),
+        cosy: rem(11px),
+        compact: rem(7px)
+    );
+
+    $button-floating-size: (
+        comfortable: rem(56px),
+        cosy: rem(48px),
+        compact: rem(40px)
+    );
+
+    $icon-in-button-size: rem(18px);
+
     %igx-button-display {
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         min-width: $button-width;
-        height: $button-height;
-        padding: $button-padding;
-        border: $button-border;
+        padding: map-get($button-padding, 'comfortable');
+        min-height: map-get($button-size, 'comfortable');
+        border: none;
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -396,6 +421,22 @@
         transition: $button-transition;
         font-family: inherit;
         margin: 0;
+
+        %igx-icon-display {
+            width: $icon-in-button-size;
+            height: $icon-in-button-size;
+            font-size: $icon-in-button-size;
+        }
+    }
+
+    %igx-button-display--cosy {
+        padding: map-get($button-padding, 'cosy');
+        min-height: map-get($button-size, 'cosy');
+    }
+
+    %igx-button-display--compact {
+        padding: map-get($button-padding, 'compact');
+        min-height: map-get($button-size, 'compact');
     }
 
     %igx-button--flat {
@@ -416,6 +457,7 @@
     }
 
     %igx-button--outlined {
+        border: $button-border;
         border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
@@ -472,8 +514,11 @@
     }
 
     %igx-button--fab {
-        width: $button-floating-width;
-        height: $button-floating-height;
+        padding: map-get($button-floating-padding, 'comfortable');
+        min-width: map-get($button-floating-size, 'comfortable');
+        min-height: map-get($button-floating-size, 'comfortable');
+        line-height: unset;
+        white-space: nowrap;
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
         box-shadow: --var($theme, 'fab-resting-shadow');
@@ -491,6 +536,18 @@
             background: --var($theme, 'fab-focus-background');
             box-shadow: --var($theme, 'fab-focus-shadow');
         }
+    }
+
+    %igx-button--fab-cosy {
+        padding: map-get($button-floating-padding, 'cosy');
+        min-width: map-get($button-floating-size, 'cosy');
+        min-height: map-get($button-floating-size, 'cosy');
+    }
+
+    %igx-button--fab-compact {
+        padding: map-get($button-floating-padding, 'compact');
+        min-width: map-get($button-floating-size, 'compact');
+        min-height: map-get($button-floating-size, 'compact');
     }
 
     %igx-button--icon {

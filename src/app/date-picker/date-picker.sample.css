@@ -1,7 +1,7 @@
 .datepicker-column {
     display: flex;
     flex-flow: column nowrap;
-    flex: 1 0 25%;
+    flex: 1 0 20%;
     align-content: flex-start;
     margin: 16px;
     width: 200px;

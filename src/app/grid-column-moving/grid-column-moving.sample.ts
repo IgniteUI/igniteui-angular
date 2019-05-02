@@ -16,9 +16,13 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxGridComponent;
 
+    log(event) {
+        console.log(event);
+    }
+
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true },
+            { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
@@ -465,6 +469,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'Contract': false
             }
         ];
+        // this.data = [...this.data, ...this.data, ...this.data];
     }
 
     toggleColumn(name: string) {

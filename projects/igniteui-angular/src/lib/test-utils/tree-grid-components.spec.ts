@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
@@ -533,4 +533,199 @@ export class IgxTreeGridSummariesScrollingComponent {
 export class IgxTreeGridSearchComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSearchTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID"
+                   [loadChildrenOnDemand]="loadChildren"
+                   width="900px" height="600px">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridLoadOnDemandComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
+
+    constructor() {
+        this.data = this.allData.filter(r => r.ParentID === -1);
+    }
+
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        setTimeout(() => {
+            done(this.allData.filter(r => r.ParentID === parentID));
+        }, 1000);
+    }
+}
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px"columnWidth="150px" >
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSelectionKeyComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees"
+                   [loadChildrenOnDemand]="loadChildren"
+                   width="900px" height="600px">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridLoadOnDemandChildDataComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
+
+    constructor() {
+        this.data = this.allData.filter(r => r.ParentID === -1);
+    }
+
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        setTimeout(() => {
+            done(this.allData.filter(r => r.ParentID === parentID));
+        }, 1000);
+    }
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="500px" height="600px"columnWidth="150px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSelectionComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID"
+                   [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
+                   width="900px" height="600px">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridLoadOnDemandHasChildrenComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
+
+    constructor() {
+        this.data = this.getChildren(-1);
+    }
+
+    private getChildren(parentID) {
+        const children = this.allData.filter(r => r.ParentID === parentID);
+
+        for (const child of children) {
+            child['hasEmployees'] = this.allData.some(r => r.ParentID === child.ID);
+        }
+        return children;
+    }
+
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        setTimeout(() => {
+            const children = this.getChildren(parentID);
+            done(children);
+        }, 1000);
+    }
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="800px" height="600px" columnWidth="150px" primaryKey="ID">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+    </igx-tree-grid>
+    `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
+})
+export class IgxTreeGridSelectionWithTransactionComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px"columnWidth="150px" >
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+    </igx-tree-grid>
+    `, providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class IgxTreeGridFKeySelectionWithTransactionComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" [autoGenerate]="true" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridAutoGenerateComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridDefaultLoadingComponent implements OnInit {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = [];
+
+    ngOnInit(): void {
+        this.treeGrid.isLoading = true;
+        setTimeout(() => {
+            this.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+            this.treeGrid.isLoading = false;
+        }, 1000);
+    }
 }

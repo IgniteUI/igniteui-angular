@@ -159,7 +159,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get grid(): IgxGridBaseComponent {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -199,7 +199,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get pinnedColumnsCount() {
-        return this.grid.pinnedColumns.length;
+        return this.grid.pinnedColumns.filter(col => !col.columnLayout).length;
     }
 
     /**

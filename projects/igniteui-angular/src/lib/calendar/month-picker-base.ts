@@ -1,6 +1,5 @@
 import { IgxCalendarBase } from './calendar-base';
-import { ViewChild, ElementRef, Input, HostBinding } from '@angular/core';
-import { IFormattingViews } from './calendar';
+import { ViewChild, ElementRef, HostBinding } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -12,23 +11,6 @@ export enum CalendarView {
     DECADE
 }
 export class IgxMonthPickerBase extends IgxCalendarBase {
-
-    /**
-     * Gets whether the `day`, `month` and `year` should be rendered
-     * according to the locale and formatOptions, if any.
-     */
-    @Input()
-    public get formatViews(): IFormattingViews {
-        return this._formatViews;
-    }
-
-    /**
-     * Gets whether the `day`, `month` and `year` should be rendered
-     * according to the locale and formatOptions, if any.
-     */
-    public set formatViews(formatViews: IFormattingViews) {
-        this._formatViews = Object.assign(this._formatViews, formatViews);
-    }
 
     /**
      * @hidden
@@ -78,15 +60,6 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     private _activeView = CalendarView.DEFAULT;
 
     /**
-     *@hidden
-     */
-    private _formatViews: IFormattingViews = {
-        day: false,
-        month: true,
-        year: false
-    };
-
-    /**
      * @hidden
      */
     public changeYear(event: Date) {
@@ -122,7 +95,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
      * @hidden
      */
     public formattedYear(value: Date): string {
-        if (this._formatViews.year) {
+        if (this.formatViews.year) {
             return this.formatterYear.format(value);
         }
         return `${value.getFullYear()}`;

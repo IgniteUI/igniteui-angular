@@ -11,7 +11,6 @@ import {
     forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
@@ -19,7 +18,8 @@ import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective
+    IgxCellTemplateDirective,
+    IgxFilterCellTemplateDirective
 } from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
@@ -34,6 +34,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -189,14 +190,10 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._hidden !== value) {
             this._hidden = value;
             if (this.grid) {
-                this.grid.endEdit(true);
+                this.grid.resetCaches();
+                this.grid.endEdit(false);
             }
-            const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (cellInEditMode) {
-                if (cellInEditMode.cell.column.field === this.field) {
-                    this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
-                }
-            }
+            // TODO: Simplify
             this.check();
             if (this.grid) {
                 this.grid.refreshSearch(true);
@@ -344,8 +341,16 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
+
     /**
-     *@hidden
+     * Sets/gets the class selector of the column group header.
+     * ```typescript
+     * let columnHeaderClass = this.column.headerGroupClasses;
+     * ```
+     * ```html
+     * <igx-column [headerGroupClasses] = "'column-group-header'"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
      */
     @Input()
     public headerGroupClasses = '';
@@ -385,25 +390,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get formatter(): any {
-        return this._formatter;
-    }
-    /**
-     * Sets formatter for the column.
-     * ```typescript
-     * this.column.formatter = (val: Date) => {
-     *  return new Intl.DateTimeFormat("en-US").format(val); }
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    public set formatter(value: any) {
-        if (this._formatter !== value) {
-            this._formatter = value;
-            if (this.grid) {
-                this.grid.cdr.detectChanges();
-            }
-        }
-    }
+    formatter: (value: any) => any;
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -475,6 +462,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
+     * @deprecated
      * Gets/Sets the `id` of the `igx-grid`.
      * ```typescript
      * let columnGridId = this.column.gridID;
@@ -484,6 +472,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @DeprecateProperty(`The property is deprecated. Please, use \`column.grid.id\` instead.`)
     public gridID: string;
     /**
      * Gets the column `summaries`.
@@ -604,15 +593,13 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._defaultMinWidth;
     }
     /**
-     * Returns reference to the `igx-grid`.
+     * The reference to the `igx-grid` owner.
      * ```typescript
      * let gridComponent = this.column.grid;
      * ```
      * @memberof IgxColumnComponent
      */
-    get grid(): IgxGridBaseComponent {
-        return this.gridAPI.get(this.gridID);
-    }
+    public grid: IgxGridBaseComponent;
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
@@ -711,6 +698,34 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
     /**
+     * Returns a reference to the `filterCellTemplate`.
+     * ```typescript
+     * let filterCellTemplate = this.column.filterCellTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input('filterCellTemplate')
+    get filterCellTemplate(): TemplateRef<any> {
+        return this._filterCellTemplate;
+    }
+    /**
+     * Sets the quick filter template.
+     * ```html
+     * <ng-template #filterCellTemplate IgxFilterCellTemplate let-column="column">
+     *    <input (input)="onInput()">
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'filterCellTemplate'", {read: TemplateRef })
+     * public filterCellTemplate: TemplateRef<any>;
+     * this.column.filterCellTemplate = this.filterCellTemplate;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set filterCellTemplate(template: TemplateRef<any>) {
+        this._filterCellTemplate = template;
+    }
+    /**
      * Gets the cells of the column.
      * ```typescript
      * let columnCells =  this.column.cells;
@@ -734,6 +749,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
+        if (!isNaN(this._vIndex)) {
+            return this._vIndex;
+        }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
         let col = this;
@@ -749,6 +767,7 @@ export class IgxColumnComponent implements AfterContentInit {
         } else {
             vIndex = pinnedColumns.indexOf(col);
         }
+        this._vIndex = vIndex;
         return vIndex;
     }
     /**
@@ -761,6 +780,17 @@ export class IgxColumnComponent implements AfterContentInit {
     get columnGroup() {
         return false;
     }
+    /**
+     * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayout() {
+        return false;
+    }
+
     /**
      * Returns the children columns collection.
      * Returns an empty array if the column does not contain children columns.
@@ -792,14 +822,62 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this) === pinnedCols.length - 1;
+        return this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
+    get gridRowSpan(): number {
+        return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
+    }
+    get gridColumnSpan(): number {
+        return this.colEnd && this.colStart ? this.colEnd - this.colStart : 1;
+    }
+
+    /**
+     * Row index where the current field should end.
+     * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public rowEnd: number;
+
+    /**
+     * Column index where the current field should end.
+     * The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colEnd]="3" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public colEnd: number;
+
+    /**
+     * Row index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input() rowStart: number;
+
+    /**
+     * Column index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colStart]="1" [rowStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input() colStart: number;
 
     /**
      * hidden
@@ -842,7 +920,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    children;
+    children: QueryList<IgxColumnComponent>;
     /**
      *@hidden
      */
@@ -866,11 +944,11 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _summaries = null;
+    protected _filterCellTemplate: TemplateRef<any>;
     /**
      *@hidden
      */
-    private _formatter = null;
+    protected _summaries = null;
     /**
      *@hidden
      */
@@ -927,7 +1005,23 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
+    private _vIndex = NaN;
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
+    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetVisibleIndex() {
+        this._vIndex = NaN;
+    }
+
     /**
      *@hidden
      */
@@ -940,6 +1034,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
+        }
+        if (this.filterCellTemplateDirective) {
+            this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
         if (!this.summaries) {
             switch (this.dataType) {
@@ -976,6 +1073,152 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+
+    /**
+     * @hidden
+     */
+    getGridTemplate(isRow, isIE): string {
+        const itemAccum = isRow ?
+            (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
+            (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
+        const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
+        const generatedSizes = !isRow ? this.getColumnSizesString(this.children.toArray()) : null;
+        return isIE ?
+        generatedSizes || `(1fr)[${templateItems}]` :
+            generatedSizes || `repeat(${templateItems},1fr)`;
+    }
+
+    public getInitialChildColumnSizes(children: any[]): Array<any> {
+        const columnSizes = [];
+        // find the smallest col spans
+        children.forEach(col => {
+            if (!col.colStart) {
+                return;
+            }
+            const newWidthSet =  col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+            const newSpanSmaller = columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan;
+            const bothWidthsSet = col.widthSetByUser && columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].widthSetByUser;
+            const bothWidthsNotSet = !col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+
+            if (columnSizes[col.colStart - 1] === undefined) {
+                // If nothing is defined yet take any column at first
+                // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
+                columnSizes[col.colStart - 1] = {
+                    field: col.field,
+                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    colSpan: col.gridColumnSpan,
+                    colEnd: col.colStart + col.gridColumnSpan,
+                    widthSetByUser: col.widthSetByUser
+                };
+            } else if (newWidthSet || (newSpanSmaller && ((bothWidthsSet) || (bothWidthsNotSet)))) {
+                // If a column is set already it should either not have width defined or have width with bigger span than the new one.
+
+                /**
+                 *  If replaced column has bigger span, we want to fill the remaining columns
+                 *  that the replacing column does not fill with the old one.
+                 **/
+                if (bothWidthsSet && newSpanSmaller) {
+                    // Start from where the new column set would end and apply the old column to the rest depending on how much it spans.
+                    // We have not yet replaced it so we can use it directly from the columnSizes collection.
+                    // This is where colEnd is used because the colStart of the old column is not actually i + 1.
+                    for (let i = col.colStart - 1 + col.gridColumnSpan; i < columnSizes[col.colStart - 1].colEnd - 1; i++) {
+                        if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
+                            columnSizes[i] = columnSizes[col.colStart - 1];
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                // Replace the old column with the new one.
+                columnSizes[col.colStart - 1] = {
+                    field: col.field,
+                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    colSpan: col.gridColumnSpan,
+                    colEnd: col.colStart + col.gridColumnSpan,
+                    widthSetByUser: col.widthSetByUser
+                };
+            } else if (bothWidthsSet && columnSizes[col.colStart - 1].colSpan < col.gridColumnSpan) {
+                // If the column already in the columnSizes has smaller span, we still need to fill any empty places with the current col.
+                // Start from where the smaller column set would end and apply the bigger column to the rest depending on how much it spans.
+                // Since here we do not have it in columnSizes we set it as a new column keeping the same colSpan.
+                for (let i = col.colStart - 1 + columnSizes[col.colStart - 1].colSpan; i < col.colStart - 1 + col.gridColumnSpan; i++) {
+                    if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
+                        columnSizes[i] = {
+                            field: col.field,
+                            width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                            colSpan: col.gridColumnSpan,
+                            colEnd: col.colStart + col.gridColumnSpan,
+                            widthSetByUser: col.widthSetByUser
+                        };
+                    } else {
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Flatten columnSizes so there are not columns with colSpan > 1
+        for (let i = 0; i < columnSizes.length; i++) {
+            if (columnSizes[i] && columnSizes[i].colSpan > 1) {
+                let j = 1;
+
+                // Replace all empty places depending on how much the current column spans starting from next col.
+                for (; j < columnSizes[i].colSpan && i + j + 1 < columnSizes[i].colEnd; j++) {
+                    if (columnSizes[i + j] &&
+                        ((!columnSizes[i].width && columnSizes[i + j].width) ||
+                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan < columnSizes[i].colSpan))) {
+                        // If we reach an already defined column that has width and the current doesn't have or
+                        // if the reached column has bigger colSpan we stop.
+                        break;
+                    } else {
+                        const width = columnSizes[i].widthSetByUser ?
+                            columnSizes[i].width / columnSizes[i].colSpan :
+                            columnSizes[i].width;
+                        columnSizes[i + j] = {
+                            field: columnSizes[i].field,
+                            width: width,
+                            colSpan: 1,
+                            widthSetByUser: columnSizes[i].widthSetByUser,
+                            hidden: columnSizes[i].hidden
+                        };
+                    }
+                }
+
+                // Update the current column width so it is divided between all columns it spans and set it to 1.
+                columnSizes[i].width = columnSizes[i].widthSetByUser ?
+                    columnSizes[i].width / columnSizes[i].colSpan :
+                    columnSizes[i].width;
+                columnSizes[i].colSpan = 1;
+
+                // Update the index based on how much we have replaced. Subtract 1 because we started from 1.
+                i += j - 1;
+            }
+        }
+
+        return columnSizes;
+    }
+
+    protected getFilledChildColumnSizes(children: any[]): Array<any> {
+        const columnSizes = this.getInitialChildColumnSizes(children);
+
+        // fill the gaps if there are any
+        const result = [];
+        for (let i = 0; i < columnSizes.length; i++) {
+            if (columnSizes[i] && !!columnSizes[i].width) {
+                result.push(columnSizes[i].width + 'px');
+            } else {
+                result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
+            }
+        }
+        return result;
+    }
+
+    protected getColumnSizesString(children: any[]): string {
+       const res = this.getFilledChildColumnSizes(children);
+       return res.join(' ');
+    }
+
     /**
      * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
@@ -1009,7 +1252,6 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const width = parseInt(this.width, 10);
-        const oldIndex = this.visibleIndex;
 
         if (!this.parent && (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth)) {
             return false;
@@ -1019,7 +1261,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
-        const args = { column: this, insertAtIndex: index };
+        const args = { column: this, insertAtIndex: index, isPinned: true };
         grid.onColumnPinning.emit(args);
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
@@ -1039,6 +1281,7 @@ export class IgxColumnComponent implements AfterContentInit {
             grid.reinitPinStates();
         }
 
+        grid.resetCaches();
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
@@ -1073,12 +1316,12 @@ export class IgxColumnComponent implements AfterContentInit {
             return false;
         }
 
-        const oldIndex = this.visibleIndex;
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
 
         const targetColumn = grid._unpinnedColumns[index];
+
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
@@ -1093,10 +1336,16 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.reinitPinStates();
+        grid.resetCaches();
+
+        const insertAtIndex = grid._unpinnedColumns.indexOf(this);
+        const args = { column: this, insertAtIndex, isPinned: false };
+        grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
+
         return true;
     }
     /**
@@ -1214,7 +1463,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
-            if (this.sortable) {
+            if (this.sortable || this.filterable) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
             }
 
@@ -1239,13 +1488,14 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     public getCellWidth() {
-        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
+        if (this.parent && this.parent.columnLayout) {
+            return '';
+        }
+
         if (colWidth && !isPercentageWidth) {
-            const unpinnedColumns = this.grid.unpinnedColumns;
-            const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
             let cellWidth = colWidth;
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
@@ -1440,6 +1690,16 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return true;
     }
     /**
+     * Returns a boolean indicating if the column is a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnGroup =  this.column.columnGroup;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayout() {
+        return false;
+    }
+    /**
      * Gets the width of the column group.
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
@@ -1447,14 +1707,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        let isChildrenWidthInPercent = false;
-        const width = `${this.children.reduce((acc, val) => {
+        let isChildrenWidthInPercent = false, width;
+        width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
             }
-
             if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                isChildrenWidthInPercent = true;
+                   isChildrenWidthInPercent = true;
             }
             return acc + parseInt(val.width, 10);
         }, 0)}`;
@@ -1466,5 +1725,43 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
+    }
+}
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
+    selector: 'igx-column-layout',
+    template: ``
+})
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
+    /**
+     * Gets the width of the column layout.
+     * ```typescript
+     * let columnGroupWidth = this.columnGroup.width;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    get width() {
+        const width = this.getFilledChildColumnSizes(this.children.toArray()).reduce((acc, val) => acc + parseInt(val, 10), 0);
+        return width;
+    }
+
+    set width(val) { }
+
+
+    get columnLayout() {
+        return true;
+    }
+
+    /**
+     * Gets whether the group contains the last pinned child column of the column layout.
+     * ```typescript
+     * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
+     * ```
+     * @memberof IgxColumnLayoutComponent
+     */
+    get hasLastPinnedChildColumn() {
+        return this.children.some(child => child.isLastPinned);
     }
 }

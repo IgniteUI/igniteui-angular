@@ -532,6 +532,7 @@
     }
 
     %form-group-label--float {
+        overflow: visible;
         transform: translateY(-50%) scale(.75);
     }
 
@@ -544,7 +545,7 @@
     }
 
     %form-group-label--success {
-        color: --var($theme, 'focused-secondary-color');
+        color: --var($theme, 'success-secondary-color');
     }
 
     %form-group-label--error {
@@ -577,7 +578,7 @@
         box-shadow: none;
 
         &::-webkit-input-placeholder {
-            padding: 4px 0;
+            line-height: normal;
         }
 
         &::placeholder {
@@ -593,6 +594,7 @@
     }
 
     %form-group-input--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
         padding: 0 0 rem(8px, map-get($base-scale-size, 'compact'));
         border-top: rem(8px, map-get($base-scale-size, 'compact')) solid rgba(0, 0, 0, 0);
@@ -719,6 +721,7 @@
 
     %form-group-prefix--compact,
     %form-group-suffix--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
     }
 

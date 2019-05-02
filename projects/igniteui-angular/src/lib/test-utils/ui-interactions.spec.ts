@@ -20,11 +20,13 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey = false) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyPressed,
-            bubbles,
-            altKey
+            bubbles: bubbles,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            altKey: altKey
         });
         elem.dispatchEvent(keyboardEvent);
     }
@@ -89,6 +91,41 @@ export class UIInteractions {
         Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
         Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
         element.dispatchEvent(pointerEvent);
+        return pointerEvent;
+    }
+
+    public static simulatePointerOverCellEvent(eventName: string, element, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
+    }
+
+    public static simulateDragScrollOverCellEvent(eventName: string, element, clientX, clientY, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            clientX: clientX,
+            clientY: clientY
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
+    }
+
+    public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
+        element.nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
     }
 
     public static clearOverlay() {
@@ -101,6 +138,9 @@ export class UIInteractions {
     }
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
+        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
             resolve();

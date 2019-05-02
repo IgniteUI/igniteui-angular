@@ -115,7 +115,14 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
     }
     return expectedLeft;
 }
-
+/**
+ * Returns the top left location of the shown element
+ * @param positionSettings Overlay setting to get location for
+ * @param targetRect Rectangle of overlaySettings.target
+ * @param wrapperRect Rectangle of shown element
+ * @param screenRect Rectangle of the visible area
+ * @param elastic Is elastic position strategy
+ */
 function getOverlayWrapperLocation(
     positionSettings: PositionSettings,
     targetRect: ClientRect,
@@ -136,10 +143,22 @@ function getOverlayWrapperLocation(
             }
             location.x += offset;
         } else {
-            location.x = targetRect.right;
+            if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+                location.x = targetRect.right;
+            } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+                location.x = targetRect.left + targetRect.width / 2;
+            } else {
+                location.x = targetRect.left;
+            }
         }
     } else if (location.x + wrapperRect.width > screenRect.right && !elastic) {
-        location.x = targetRect.left - wrapperRect.width;
+        if (positionSettings.horizontalStartPoint === HorizontalAlignment.Left) {
+            location.x = targetRect.right - wrapperRect.width;
+        } else if (positionSettings.horizontalStartPoint === HorizontalAlignment.Center) {
+            location.x = targetRect.right - targetRect.width / 2 - wrapperRect.width;
+        } else {
+            location.x = targetRect.left - wrapperRect.width;
+        }
     }
 
     location.y =
@@ -154,10 +173,22 @@ function getOverlayWrapperLocation(
             }
             location.y += offset;
         } else {
-            location.y = targetRect.bottom;
+            if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+                location.y = targetRect.bottom;
+            } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+                location.y = targetRect.top + targetRect.height / 2;
+            } else {
+                location.y = targetRect.top;
+            }
         }
     } else if (location.y + wrapperRect.height > screenRect.bottom && !elastic) {
-        location.y = targetRect.top - wrapperRect.height;
+        if (positionSettings.verticalStartPoint === VerticalAlignment.Top) {
+            location.y = targetRect.bottom - wrapperRect.height;
+        } else if (positionSettings.verticalStartPoint === VerticalAlignment.Middle) {
+            location.y = targetRect.bottom - targetRect.height / 2 - wrapperRect.height;
+    } else {
+            location.y = targetRect.top - wrapperRect.height;
+        }
     }
     return location;
 }
@@ -2370,7 +2401,7 @@ describe('igxOverlay', () => {
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
             tick();
             const styles = css(overlayWrapper);
-            const expectedBackgroundColor = 'background-color: rgba(0, 0, 0, 0.38)';
+            const expectedBackgroundColor = 'background: rgba(0, 0, 0, 0.38)';
             const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));

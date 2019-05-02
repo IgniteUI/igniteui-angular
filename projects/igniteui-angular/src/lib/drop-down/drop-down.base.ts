@@ -214,7 +214,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this._focusedItem.itemIndex;
+            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
         this.navigateItem(newIndex);
@@ -244,11 +244,11 @@ export abstract class IgxDropDownBase implements IDropDownList {
             const oldItem = this._focusedItem;
             const newItem = this.items[newIndex];
             if (oldItem) {
-                oldItem.isFocused = false;
+                oldItem.focused = false;
             }
-            this._focusedItem = newItem;
+            this.focusedItem = newItem;
             this.scrollToHiddenItem(newItem);
-            this._focusedItem.isFocused = true;
+            this.focusedItem.focused = true;
         }
     }
 

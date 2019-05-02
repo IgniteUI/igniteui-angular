@@ -22,12 +22,12 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     ConnectedPositioningStrategy,
-    CloseScrollStrategy,
     OverlaySettings,
     VerticalAlignment,
     PositionSettings,
     HorizontalAlignment,
-    IgxOverlayService
+    IgxOverlayService,
+    AbsoluteScrollStrategy
 } from '../../../services/index';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
@@ -58,7 +58,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new CloseScrollStrategy()
+        scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     @Input()
@@ -141,14 +141,15 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
-            element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
+            element => element.expression.condition &&
+            (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
             this.expressionsList[0].beforeOperator = null;
             this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
         }
 
-        this.filteringService.filter(this.column.field, this.expressionsList);
+        this.filteringService.filterInternal(this.column.field, this.expressionsList);
         this.closeDialog();
     }
 

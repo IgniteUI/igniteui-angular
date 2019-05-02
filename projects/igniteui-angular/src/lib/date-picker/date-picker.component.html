@@ -10,7 +10,7 @@
 </ng-template>
 
 <ng-template #editableDatePickerTemplate>
-    <igx-input-group #editableInputGroup>
+    <igx-input-group #editableInputGroup [supressInputAutofocus]="true">
         <igx-prefix (click)="openDialog()">
             <igx-icon>today</igx-icon>
         </igx-prefix>
@@ -18,7 +18,7 @@
         <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
             [igxMask]="inputMask" [placeholder]="mask" [disabled]="disabled" [displayValuePipe]="displayValuePipe"
             [focusedValuePipe]="inputValuePipe" (blur)="onBlur($event)" (wheel)="onWheel($event)"
-            (input)="onInput($event)" (keydown)="onKeyDown($event)" (focus)=onFocus() />
+            (input)="onInput($event)" (focus)="onFocus()" />
         <igx-suffix *ngIf="!isEmpty" (click)="clear()">
             <igx-icon>clear</igx-icon>
         </igx-suffix>

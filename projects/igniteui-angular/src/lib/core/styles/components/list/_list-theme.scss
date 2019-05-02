@@ -29,7 +29,7 @@
 /// @example scss Change the list background color
 ///   $my-list-theme: igx-list-theme($background: black);
 ///   // Pass the theme to the igx-list component mixin
-///   @include igx-avatar($my-list-theme);
+///   @include igx-list($my-list-theme);
 @function igx-list-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -65,10 +65,12 @@
     }
 
     @if not($item-background-active) and $background {
-        @if lightness($background) > 50 {
-            $item-background-active: rgba(text-contrast($background), .04);
-        } @else {
-            $item-background-active: rgba(text-contrast($background), .12);
+        @if type-of($background) == 'color' {
+            @if lightness($background) > 50 {
+                $item-background-active: rgba(text-contrast($background), .04);
+            } @else {
+                $item-background-active: rgba(text-contrast($background), .12);
+            }
         }
     }
 
@@ -107,15 +109,29 @@
 
     // @debug $theme;
 
-    $list-item-height: rem(48px);
-    $list-item-padding: rem(8px) rem(16px);
-    $list-empty-padding: rem(16px);
+    $list-item-height: (
+        comfortable: rem(48px),
+        cosy: rem(32px),
+        compact: rem(24px)
+    );
+
+    $list-empty-padding: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $list-item-padding: (
+        comfortable: rem(8px) rem(16px),
+        cosy: rem(4px) rem(8px),
+        compact: rem(2px) rem(4px)
+    );
 
     %igx-list {
         position: relative;
         display: flex;
         flex-flow: column nowrap;
-        background-color: --var($theme, 'background');
+        background: --var($theme, 'background');
         height: 100%;
         overflow: hidden;
         z-index: 0;
@@ -135,17 +151,33 @@
     %igx-list-empty-message {
         text-align: center;
         color: --var($theme, 'item-text-color');
-        padding: $list-empty-padding;
+        padding: map-get($list-empty-padding, 'comfortable');
         z-index: 1;
+    }
+
+    %igx-list-empty-message--cosy{
+        padding: map-get($list-empty-padding, 'cosy');
+    }
+
+    %igx-list-empty-message--compact{
+        padding: map-get($list-empty-padding, 'compact');
     }
 
     %igx-list-header {
         display: flex;
         align-items: center;
         color: --var($theme, 'header-text-color');
-        background-color: --var($theme, 'header-background');
-        padding: $list-item-padding;
+        background: --var($theme, 'header-background');
+        padding: map-get($list-item-padding, 'comfortable');
         user-select: none;
+    }
+
+    %igx-list-header--cosy {
+        padding: map-get($list-item-padding, 'cosy');
+    }
+
+    %igx-list-header--compact {
+        padding: map-get($list-item-padding, 'compact');
     }
 
     %igx-list-item-base {
@@ -167,17 +199,27 @@
         position: relative;
         flex-flow: column wrap;
         justify-content: center;
-        padding: $list-item-padding;
-        min-height: $list-item-height;
+        padding: map-get($list-item-padding, 'comfortable');
+        min-height: map-get($list-item-height, 'comfortable');
         color: --var($theme, 'item-text-color');
-        background-color: --var($theme, 'item-background');
+        background: --var($theme, 'item-background');
         z-index: 2;
         border-radius: --var($theme, 'item-border-radius');
     }
 
+    %igx-list-item-content--compact {
+        padding: map-get($list-item-padding, 'compact');
+        min-height: map-get($list-item-height, 'compact');
+    }
+
+    %igx-list-item-content--cosy {
+        padding: map-get($list-item-padding, 'cosy');
+        min-height: map-get($list-item-height, 'cosy');
+    }
+
     %igx-list-item-content--active {
         color: --var($theme, 'item-text-color-active');
-        background-color: --var($theme, 'item-background-active');
+        background: --var($theme, 'item-background-active');
         z-index: 3;
     }
 

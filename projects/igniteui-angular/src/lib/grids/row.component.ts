@@ -19,6 +19,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -170,13 +171,14 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
+        return this.gridAPI.row_deleted_transaction(this.rowID);
     }
 
+    // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.gridAPI.get_edit_row_state(this.gridID);
-            return (editRowState && editRowState.rowID === this.rowID) || false;
+            const editRowState = this.crudService.row;
+            return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
         }
@@ -200,16 +202,20 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * ```
      */
     get grid(): T {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
-     * @hidden
+     * Gets the ID of the row.
+     * A row in the grid is identified either by:
+     * - primaryKey data value,
+     * - the whole rowData, if the primaryKey is omitted.
+     *
+     * ```typescript
+     * let rowID = this.grid.selectedRows[2].rowID;
+     * ```
      */
     public get rowID() {
-        // A row in the grid is identified either by:
-        // primaryKey data value,
-        // or if the primaryKey is omitted, then the whole rowData is used instead.
         const primaryKey = this.grid.primaryKey;
         return primaryKey ? this._rowData[primaryKey] : this._rowData;
     }
@@ -242,6 +248,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     protected _rowSelection = false;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
+        public crudService: IgxGridCRUDService,
+        public selectionService: IgxGridSelectionService,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
@@ -268,11 +276,12 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * ```
      */
     public update(value: any) {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell && editableCell.cellID.rowID === this.rowID) {
+        const crudService = this.crudService;
+        if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
-        this.gridAPI.update_row(value, this.gridID, this.rowID);
+        const row = new IgxRow(this.rowID, this.index, this.rowData);
+        this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }
 
@@ -314,19 +323,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
-
-    /**
-     * @hidden
-     */
     protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
+        const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${mrlClass}`.trim();
     }
 }

@@ -108,7 +108,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should always fill available space for last chunk size calculation', () => {
+        it('should always fill available space for last chunk size calculation - horizontal virtualization', () => {
             fix.componentInstance.width = '1900px';
             fix.componentInstance.cols = [
                 { field: '1', width: 100 },
@@ -264,6 +264,46 @@ describe('IgxForOf directive -', () => {
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
         });
+
+        it('should always fill available space for last chunk size calculation - vertical virtualization', () => {
+            fix.componentInstance.height = '1900px';
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            virtualContainer.igxForSizePropName = 'height';
+            fix.componentInstance.data = [
+                { '1': '1', height: '100px' },
+                {  '1': '2', height: '1800px' },
+                {  '1': '3', height: '200px' },
+                {  '1': '4', height: '200px' },
+                {  '1': '5', height: '300px' },
+                {  '1': '6', height: '100px' },
+                {  '1': '7', height: '100px' },
+                {  '1': '8', height: '100px' },
+                {  '1': '9', height: '150px' },
+                {  '1': '10', height: '150px' }
+            ];
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+            let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
+            expect(chunkSize).toEqual(9);
+
+            fix.componentInstance.height = '1900px';
+            fix.componentInstance.data = [
+                {  '1': '1', height: '1800px' },
+                {  '1': '2', height: '100px' },
+                {  '1': '3', height: '200px' },
+                {  '1': '4', height: '200px' },
+                {  '1': '5', height: '300px' },
+                {  '1': '6', height: '100px' },
+                {  '1': '7', height: '100px' },
+                {  '1': '8', height: '100px' },
+                {  '1': '9', height: '150px' },
+                {  '1': '10', height: '150px' }
+            ];
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+            chunkSize = (virtualContainer as any)._calcMaxChunkSize();
+            expect(chunkSize).toEqual(10);
+        });
     });
 
     describe('vertical and horizontal virtual component', () => {
@@ -347,7 +387,7 @@ describe('IgxForOf directive -', () => {
 
         it('should scroll to wheel event correctly', async() => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
-            await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             await wait();
 
             const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
@@ -686,7 +726,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should apply inertia when swiping via touch interaction.', async() => {
+        xit('should apply inertia when swiping via touch interaction.', async() => {
             const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(
@@ -1187,7 +1227,7 @@ export class EmptyVirtualComponent {
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='"50px"'>
-                <div [style.display]="'flex'" [style.height]="'50px'">
+                <div [style.display]="'flex'" [style.height]="rowData.height || '50px'">
                     <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
                     <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>

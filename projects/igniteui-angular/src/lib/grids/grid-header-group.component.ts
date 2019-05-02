@@ -9,7 +9,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     DoCheck,
-    ElementRef
+    ElementRef,
+    HostListener
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -18,6 +19,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { isIE } from '../core/utils';
 
 const Z_INDEX = 9999;
 
@@ -31,6 +33,40 @@ const Z_INDEX = 9999;
     templateUrl: './grid-header-group.component.html'
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
+
+    @HostBinding('style.-ms-grid-row-span')
+    get gridRowSpan(): number {
+        return this.column.gridRowSpan;
+    }
+
+    @HostBinding('style.-ms-grid-column-span')
+    get gridColumnSpan(): number {
+        return this.column.gridColumnSpan;
+    }
+
+
+    @HostBinding('style.grid-row-end')
+    get rowEnd(): number {
+        return this.column.rowEnd;
+    }
+
+    @HostBinding('style.grid-column-end')
+    get colEnd(): number {
+        return this.column.colEnd;
+    }
+
+    @HostBinding('style.-ms-grid-row')
+    @HostBinding('style.grid-row-start')
+    get rowStart(): number {
+        return this.column.rowStart;
+    }
+
+    @HostBinding('style.-ms-grid-column')
+    @HostBinding('style.grid-column-start')
+    get colStart(): number {
+        return this.column.colStart;
+    }
+
 
     /**
      * Gets the column of the header group.
@@ -116,7 +152,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -132,13 +168,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
 
-        if (pinnedCols.length === 0) {
-            return false;
-        }
-
-        return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+    @HostBinding('style.display')
+    get groupDisplayStyle(): string {
+        return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
     /**
@@ -161,12 +196,23 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get hasLastPinnedChildColumn(): boolean {
-        const pinnedCols = this.grid.pinnedColumns;
-        if (this.column.allChildren) {
-            return this.column.allChildren.some((child) => {
-                return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
-            });
-        }
+        return this.column.allChildren.some(child => child.isLastPinned);
+    }
+
+    /**
+     * @hidden
+     */
+    get height() {
+        return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event): void {
+        // hack for preventing text selection in IE and Edge while dragging the resizer
+        event.preventDefault();
     }
 
     public ngDoCheck() {
@@ -178,44 +224,4 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseOver() {
-        if (this.column.resizable) {
-            this.colResizingService.resizeCursor = 'col-resize';
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public onResizeAreaMouseDown(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.showResizer = true;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-        } else {
-            this.colResizingService.resizeCursor = null;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public autosizeColumnOnDblClick(event) {
-        if (event.button === 0 && this.column.resizable) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.autosizeColumnOnDblClick();
-         }
-    }
-
-    /**
-     * @hidden
-     */
-    get height() {
-        return this.element.nativeElement.getBoundingClientRect().height;
-    }
 }

@@ -109,8 +109,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
+    // TODO: Refactor
     get parentGrid(): any/* TODO: IgxHierarchicalGridComponent*/ {
-        return this.gridAPI.get(this.parentGridID);
+        return this.gridAPI.grid;
     }
 
     @HostBinding('attr.data-level')
@@ -152,6 +153,12 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
+        this.hGrid.childRow =  this;
+        this.layout.onGridCreated.emit({
+            owner: this.layout,
+            parentID: this.rowData.rowID,
+            grid: this.hGrid
+        });
     }
 
     /**
@@ -163,24 +170,13 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this.hGrid.createColumnsList(this.layout.childColumns.toArray());
         }
         const layouts = this.hGrid.childLayoutList.toArray();
-        layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
+        layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
-
-        this.layout.onGridCreated.emit({
-            owner: this.layout,
-            parentID: this.rowData.rowID,
-            grid: this.hGrid
-        });
+        this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
         this.hGrid.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
-    public notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
 
     private _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {

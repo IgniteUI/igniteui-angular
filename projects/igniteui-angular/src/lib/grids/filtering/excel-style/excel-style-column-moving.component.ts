@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
 import { IgxGridBaseComponent } from '../../grid-base.component';
 
 /**
@@ -21,16 +21,19 @@ export class IgxExcelStyleColumnMovingComponent {
 
     constructor() {}
 
+    private get visibleColumns() {
+        return this.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+    }
+
     get canNotMoveLeft() {
-        const prevIndex = this.grid.columns.indexOf(this.column) - 1;
         return this.column.visibleIndex === 0 ||
             (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
-            (this.column.level !== 0 && this.grid.columns[prevIndex] && this.grid.columns[prevIndex].level !== this.column.level);
+            (this.column.level !== 0 && !this.findColumn(0, this.visibleColumns));
     }
 
     get canNotMoveRight() {
-        const nextIndex = this.grid.columns.indexOf(this.column) + 1;
-        return !this.grid.columns[nextIndex] || (this.column.level !== 0 && this.grid.columns[nextIndex].level !== this.column.level);
+        return this.column.visibleIndex === this.visibleColumns.length - 1 ||
+            (this.column.level !== 0 && !this.findColumn(1, this.visibleColumns));
     }
 
     public onMoveButtonClicked(moveDirection) {
@@ -61,7 +64,12 @@ export class IgxExcelStyleColumnMovingComponent {
                 }
             }
         } else {
-            return columns[index + 1];
+            while (index < columns.length - 1) {
+                index++;
+                if (columns[index].level === this.column.level && columns[index].parent === this.column.parent) {
+                    return columns[index];
+                }
+            }
         }
     }
 }

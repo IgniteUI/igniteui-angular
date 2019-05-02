@@ -109,6 +109,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/virtual-dropdown',
+            icon: 'horizontal_split',
+            name: 'DropDown - Virtual'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -132,6 +137,21 @@ export class AppComponent implements OnInit {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
+        },
+        {
+            link: '/gridMRL',
+            icon: 'view_column',
+            name: 'Grid MRL'
+        },
+        {
+            link: '/gridMRLConfig',
+            icon: 'view_column',
+            name: 'Grid MRL Config'
+        },
+        {
+            link: '/gridFilterTemplate',
+            icon: 'view_column',
+            name: 'Grid Filter Template'
         },
         {
             link: '/gridColumnMoving',
@@ -304,6 +324,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridLoadOnDemand',
+            icon: 'view_column',
+            name: 'Tree Grid Load On Demand'
         }
     ];
 
@@ -377,5 +402,10 @@ export class AppComponent implements OnInit {
                     this.navdrawer.close();
                 }
             });
+
+        // register custom SVG icons
+        this.iconService.addSvgIcon("rain", "../assets/images/card/icons/rain.svg", "weather-icons");
+        this.iconService.addSvgIcon("breeze", "../assets/images/card/icons/breeze.svg", "weather-icons");
+
     }
 }
