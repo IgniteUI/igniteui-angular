@@ -670,51 +670,51 @@
     }
 
     @include _excel-filtering-partial();
-}
-
-@include b(igx-drop-area) {
-    @extend %igx-drop-area !optional;
-
-    @include m(hover) {
-        @extend %igx-drop-area--hover !optional;
     }
 
-    @include e(icon) {
-        @extend %igx-drop-area__icon !optional;
-    }
-
-    @include e(text) {
-        @extend %igx-drop-area__text !optional;
-    }
-
-    @include m(compact) {
+    @include b(igx-drop-area) {
         @extend %igx-drop-area !optional;
-        @extend %igx-drop-area--cosy !optional;
+
+        @include m(hover) {
+            @extend %igx-drop-area--hover !optional;
+        }
+
+        @include e(icon) {
+            @extend %igx-drop-area__icon !optional;
+        }
+
+        @include e(text) {
+            @extend %igx-drop-area__text !optional;
+        }
+
+        @include m(compact) {
+            @extend %igx-drop-area !optional;
+            @extend %igx-drop-area--cosy !optional;
+        }
+
+        @include m(cosy) {
+            @extend %igx-drop-area !optional;
+            @extend %igx-drop-area--compact !optional;
+        }
     }
 
-    @include m(cosy) {
-        @extend %igx-drop-area !optional;
-        @extend %igx-drop-area--compact !optional;
-    }
-}
+    @include b(igx-group-label) {
+        @extend %igx-group-label !optional;
 
-@include b(igx-group-label) {
-    @extend %igx-group-label !optional;
+        @include e(icon) {
+            @extend %igx-group-label__icon !optional;
+        }
 
-    @include e(icon) {
-        @extend %igx-group-label__icon !optional;
-    }
+        @include e(column-name) {
+            @extend %igx-group-label__column-name !optional;
+        }
 
-    @include e(column-name) {
-        @extend %igx-group-label__column-name !optional;
-    }
+        @include e(text) {
+            @extend %igx-group-label__text !optional;
+        }
 
-    @include e(text) {
-        @extend %igx-group-label__text !optional;
+        @include e(count-badge) {
+            @extend %igx-group-label__count-badge !optional;
+        }
     }
-
-    @include e(count-badge) {
-        @extend %igx-group-label__count-badge !optional;
-    }
-}
 }
