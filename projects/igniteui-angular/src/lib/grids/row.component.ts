@@ -344,7 +344,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${mrlClass} ${dragClass}`.trim();
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
+         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
     }
 
     /**
