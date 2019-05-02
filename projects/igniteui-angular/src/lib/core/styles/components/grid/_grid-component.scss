@@ -118,6 +118,7 @@
 
     @include e(drag-indicator, $m: 'off') {
         @extend %igx-grid__drag-indicator--off !optional;
+    }
 
         @include e(tr,  $m: mrl) {
             @extend %grid-row--mrl !optional;
@@ -717,4 +718,3 @@
             @extend %igx-group-label__count-badge !optional;
         }
     }
-}
