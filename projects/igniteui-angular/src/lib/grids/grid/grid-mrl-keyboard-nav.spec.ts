@@ -156,6 +156,146 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     }));
+
+    it('should navigate down to a cell from the same column layout from a cell with bigger col span', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
+
+    it('should navigate down to a cell from the same column layout to a cell with bigger col span', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        secondCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+    }));
+
+    it('should navigate down to a cell from the same column layout acording to its starting location', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2, colEnd: 4 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 3}
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        secondCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+    }));
+
+    it('should allow navigating down to a cell from the next row', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        thirdCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
+
+    fit('should allow navigating down to the next data chunk', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        const lastCell = cells[cells.length - 1];
+        const rowIndex = parseInt(lastCell.nativeElement.getAttribute("data-rowindex"), 10);
+
+        lastCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', lastCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[rowIndex + 1].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
 });
 
 @Component({
