@@ -1422,7 +1422,7 @@ describe('IgxTimePicker', () => {
         it('TimePicker with retemplated input group and dropDownTarget ref variable', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxTimePickerRetemplatedDropDownComponent);
             fixture.detectChanges();
-    
+
             const dom = fixture.debugElement;
             const icon = dom.query(By.css('.igx-icon'));
             const inputGroup = dom.query(By.css('.igx-input-group'));
