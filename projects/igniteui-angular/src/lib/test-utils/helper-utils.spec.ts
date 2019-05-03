@@ -42,12 +42,12 @@ export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
     }
 }
 
- export function verifyDOMMatchesLayoutSettings(row, colSettings) {
+export function verifyDOMMatchesLayoutSettings(row, colSettings) {
     const firstRowCells = row.cells.toArray();
     const rowElem = row.nativeElement;
     const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
 
-     colSettings.forEach((groupSetting, index) => {
+    colSettings.forEach((groupSetting, index) => {
         // check group has rendered block
         const groupBlock = mrlBlocks[index];
         const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
@@ -61,7 +61,7 @@ export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
             expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
             expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
 
-             // check width
+            // check width
             let sum = 0;
             if (cell.gridColumnSpan > 1) {
                 for (let i =  col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
@@ -76,7 +76,7 @@ export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
             const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
             expect(cellElem.offsetHeight).toBe(expectedHeight);
 
-              // check offset left
+             // check offset left
             const acc = (accum, c) => {
                 if (c.column.colStart <  col.colStart && c.column.rowStart === col.rowStart) {
                     return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
