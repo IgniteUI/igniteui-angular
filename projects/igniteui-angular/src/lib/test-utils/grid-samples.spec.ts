@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -9,6 +9,8 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
+import { IgxFilteringOperand } from '../data-operations/filtering-condition';
+import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -889,4 +891,137 @@ export class SelectionWithScrollsComponent extends BasicGridComponent {
 })
 export class SelectionWithTransactionsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
+}
+
+export class CustomFilter extends IgxFilteringOperand {
+    private static _instance: CustomFilter;
+
+    private constructor () {
+        super();
+        this.operations = [{
+            name: 'custom',
+            isUnary: false,
+            logic: (target: string): boolean => {
+                return target === 'custom';
+            },
+            iconName: 'custom'
+        }];
+    }
+
+    public static instance(): CustomFilter {
+        return this._instance || (this._instance = new this());
+    }
+}
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent { }
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+    <igx-column-group header="General Information" field='General'>
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column-group header="Details" field='Details'>
+            <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+            <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+                dataType="date">
+            </igx-column>
+        </igx-column-group>
+    </igx-column-group>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {}
+
+@Component({
+    template:
+    `
+    <igx-grid #grid1 [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-excel-style-date-expression *ngIf="grid1.columns.length > 0"
+                                     [column]="grid1.columns[4]"
+                                     [grid]="grid1"
+                                     [expressionUI]="exprUI"
+                                     [expressionsList]="exprList">
+    </igx-excel-style-date-expression>`
+})
+export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringComponent implements AfterViewInit {
+    exprUI: ExpressionUI;
+    exprList: Array<ExpressionUI>;
+
+    constructor(private cd: ChangeDetectorRef) {
+        super();
+
+        this.exprUI = new ExpressionUI();
+        this.exprUI.expression = {
+            fieldName: 'ReleaseDate',
+            condition: {
+                name: 'equals',
+                isUnary: false,
+                iconName: 'equals',
+                logic: (target: Date, searchVal: Date) => {
+                    return true;
+                }
+            },
+        };
+
+        this.exprList = [ this.exprUI ];
+    }
+
+    ngAfterViewInit() {
+        this.cd.detectChanges();
+    }
 }

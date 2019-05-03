@@ -2557,13 +2557,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        this.onFilteringDone.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.endEdit(true);
             this.selectionService.clear();
             this.selectionService.activeElement = null;
         });
-        this.onSortingDone.pipe(destructor).subscribe(() => this.endEdit(true));
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
@@ -4661,10 +4659,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return 0;
         }
 
-        const editModeCell = this.crudService.cell;
-        if (editModeCell) {
-                this.endEdit(false);
-        }
+        this.endEdit(false);
 
         if (!text) {
             this.clearSearch();

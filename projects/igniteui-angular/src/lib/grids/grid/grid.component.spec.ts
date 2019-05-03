@@ -2471,7 +2471,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe(110); // SORT does not submit
 
                 expect(grid.endEdit).toHaveBeenCalled();
-                expect(grid.endEdit).toHaveBeenCalledWith(true);
+                expect(grid.endEdit).toHaveBeenCalledWith(false);
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2696,9 +2696,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
             }));
 
-            it(`Should show the updated value when showing the column again`, fakeAsync(() => {
+            it(`Should show the previous value when showing the column again`, fakeAsync(() => {
                 const targetCbText = 'Product Name';
-                const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -2706,7 +2705,7 @@ describe('IgxGrid Component Tests', () => {
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 tick();
-                targetCell.update(newValue);
+                targetCell.update('Tea');
 
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
@@ -2719,7 +2718,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCheckbox.nativeElement.click();
                 tick();
 
-                expect(targetCell.value).toEqual(newValue);
+                expect(targetCell.value).toEqual('Chai');
             }));
 
             xit(`Should be possible to update a cell that is hidden programmatically`, () => { // This is NOT possible
