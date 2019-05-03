@@ -2918,6 +2918,26 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Transaction', () => {
+            it('Should properly exit pending state when committing row edit w/o changes', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const initialDataLength = grid.data.length;
+                const productNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
+                productNameCell.triggerEventHandler('keydown', { key: 'enter' });
+                tick();
+                fixture.detectChanges();
+                expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeTruthy();
+                productNameCell.triggerEventHandler('keydown', { key: 'enter' });
+                tick();
+                fixture.detectChanges();
+                expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeFalsy();
+                grid.deleteRow(2);
+                tick();
+                fixture.detectChanges();
+                expect(grid.data.length).toEqual(initialDataLength - 1);
+            }));
             it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
