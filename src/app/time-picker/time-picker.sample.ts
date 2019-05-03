@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxTimePickerComponent, InteractionMode, ConnectedPositioningStrategy, IgxInputDirective } from 'igniteui-angular';
+import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositionStrategy } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -24,7 +24,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     myOverlaySettings = {
         modal: false,
         closeOnOutsideClick: true,
-        positionStrategy: new ConnectedPositioningStrategy(),
+        positionStrategy: new AutoPositionStrategy()
     };
 
     @ViewChild('tp', { read: IgxTimePickerComponent })
@@ -51,5 +51,13 @@ export class TimePickerSampleComponent implements AfterViewInit {
 
     validationFailed(event) {
         console.log(event);
+    }
+
+    public enterKeyUp(inputValue, timePickerValue) {
+        const parts = inputValue.split(":");
+
+        if (parts.length === 2) {
+            timePickerValue.setHours(parts[0], parts[1]);
+        }
     }
 }
