@@ -5,7 +5,11 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridWrappedInContComponent, IgxTreeGridAutoGenerateComponent } from '../../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridWrappedInContComponent,
+    IgxTreeGridAutoGenerateComponent,
+    IgxTreeGridDefaultLoadingComponent
+} from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid Component Tests', () => {
@@ -18,7 +22,8 @@ describe('IgxTreeGrid Component Tests', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
-                IgxTreeGridAutoGenerateComponent
+                IgxTreeGridAutoGenerateComponent,
+                IgxTreeGridDefaultLoadingComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
@@ -118,6 +123,26 @@ describe('IgxTreeGrid Component Tests', () => {
 
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
         }));
+    });
+
+    describe('Loading Template', () => {
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
+            grid = fix.componentInstance.treeGrid;
+        }));
+
+        it('should auto-generate columns', async () => {
+            fix.detectChanges();
+            let circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
+            expect(circularBar).toBeTruthy();
+            expect(grid.dataRowList.length).toBe(0);
+
+            await wait(1000);
+            fix.detectChanges();
+            circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
+            expect(circularBar).toBeFalsy();
+            expect(grid.dataRowList.length).toBeGreaterThan(0);
+        });
     });
 
 });

@@ -19,8 +19,10 @@ export * from './drop-down-group.component';
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
-    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
+    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent,
+        IgxDropDownItemNavigationDirective],
+    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent,
+        IgxDropDownItemNavigationDirective],
     imports: [CommonModule, IgxToggleModule],
     providers: [IgxSelectionAPIService]
 })

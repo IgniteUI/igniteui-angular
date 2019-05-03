@@ -283,7 +283,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         const lastCell = cells[cells.length - 1];
-        const rowIndex = parseInt(lastCell.nativeElement.getAttribute("data-rowindex"), 10);
+        const rowIndex = parseInt(lastCell.nativeElement.getAttribute('data-rowindex'), 10);
 
         lastCell.nativeElement.dispatchEvent(new Event('focus'));
         await wait();

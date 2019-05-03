@@ -645,7 +645,7 @@ export class IgxGridNavigationService {
             (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
 
         let columnIndex = columnLayout.children.toArray().indexOf(nextElementColumn);
-        let nextElement = element.children[columnIndex];
+        const nextElement = element.children[columnIndex];
 
         if (!nextElement) {
 
@@ -653,7 +653,6 @@ export class IgxGridNavigationService {
                 c.colStart <= currentColStart &&
                 (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
             columnIndex = this.grid.columns.filter(c => !c.columnLayout).indexOf(nextElementColumn);
-            //const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
 
             const nextIndex = cell.row.index + 1;
             let nextRow;
@@ -673,9 +672,6 @@ export class IgxGridNavigationService {
                 nextRow = this.grid.getRowByIndex(nextIndex);
                 nextRow.cells.toArray()[columnIndex].nativeElement.focus();
             }
-            
-            //this.focusNextElement(nextRow.nativeElement, columnIndex);
-            
             return;
         }
         nextElement.focus();
