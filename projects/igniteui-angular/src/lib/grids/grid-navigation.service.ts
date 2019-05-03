@@ -586,7 +586,6 @@ export class IgxGridNavigationService {
     private focusNextCellFromLayout(cell, isSummary = false) {
         const columnLayout = cell.column.parent;
         const element = cell.nativeElement.parentElement;
-        const layoutSize = columnLayout.getChildColumnSizes(columnLayout.children).length;
 
         const currentColEnd = cell.colEnd || cell.colStart + cell.gridColumnSpan;
         const currentRowStart = cell.rowStart;
@@ -634,7 +633,6 @@ export class IgxGridNavigationService {
     private focusCellDownFromLayout(cell, isSummary = false) {
         const columnLayout = cell.column.parent;
         const element = cell.nativeElement.parentElement;
-        const layoutSize = columnLayout.getChildColumnSizes(columnLayout.children).length;
 
         const currentRowEnd = cell.rowEnd || cell.rowStart + cell.gridRowSpan;
         const currentColStart = cell.colStart;
