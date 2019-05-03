@@ -159,6 +159,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return false;
     }
 
+    /**
+     * @hidden
+     */
+    public get rowDraggable(): boolean {
+        return this.grid.rowDraggable;
+    }
+
     /** @hidden */
     public get added(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);
@@ -173,6 +180,11 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     public get deleted(): boolean {
         return this.gridAPI.row_deleted_transaction(this.rowID);
     }
+
+    /**
+     * @hidden
+     */
+    public dragging = false;
 
     // TODO: Refactor
     public get inEditMode(): boolean {
@@ -239,8 +251,9 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /**
      * @hidden
+     * @internal
      */
-    protected defaultCssClass = 'igx-grid__tr';
+    public defaultCssClass = 'igx-grid__tr';
 
     /**
      * @hidden
@@ -330,6 +343,17 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass} ${mrlClass}`.trim();
+        const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
+         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
+    }
+
+    /**
+     * @hidden
+     */
+    public get resolveDragIndicatorClasses(): string {
+        const defaultDragIndicatorCssClass = 'igx-grid__drag-indicator';
+        const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
+        return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
     }
 }

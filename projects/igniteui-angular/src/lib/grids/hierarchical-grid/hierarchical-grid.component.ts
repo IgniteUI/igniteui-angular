@@ -66,6 +66,20 @@ export interface HierarchicalStateRecord {
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
+
+    /**
+     * @inheritdoc
+     */
+    public get rowDraggable(): boolean {
+        return this.parent ? this.parent.rowDraggable : this._rowDrag;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public set rowDraggable(val: boolean) {
+        this._rowDrag = val;
+    }
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -471,7 +485,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return width;
     }
 
-     private getDefaultExpanderWidth(): number {
+    private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 57;
