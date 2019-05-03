@@ -2925,11 +2925,12 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const initialDataLength = grid.data.length;
                 const productNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
-                productNameCell.triggerEventHandler('keydown', { key: 'enter' });
+                const enterEvent = { key: 'enter', stopPropagation: () => {}, preventDefault: () => {} };
+                productNameCell.triggerEventHandler('keydown', enterEvent);
                 tick();
                 fixture.detectChanges();
                 expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeTruthy();
-                productNameCell.triggerEventHandler('keydown', { key: 'enter' });
+                productNameCell.triggerEventHandler('keydown', enterEvent);
                 tick();
                 fixture.detectChanges();
                 expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeFalsy();
