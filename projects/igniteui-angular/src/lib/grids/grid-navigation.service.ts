@@ -555,7 +555,7 @@ export class IgxGridNavigationService {
                 // reached the end
                 return null;
             }
-            const layoutSize = prevLayout.getChildColumnSizes(prevLayout.children).length;
+            const layoutSize = prevLayout.getInitialChildColumnSizes(prevLayout.children.toArray()).length;
             // first element is from the next layout
             prevElementColumn = prevLayout.children
             .find(c => (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
