@@ -218,12 +218,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
-            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-            this.dropDownConditions.toggle(this._conditionsOverlaySettings);
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB && event.shiftKey) {
-            event.preventDefault();
-            event.stopPropagation();
+        } else if (event.key === KEYS.TAB) {
+            if (event.shiftKey) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else if (!this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            }
         }
     }
 
@@ -234,12 +237,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.isKeyPressed = true;
 
         if (this.column.dataType === DataType.Boolean) {
-            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
-                return;
-            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+            if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
+                this.input.nativeElement.blur();
+                this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 event.stopPropagation();
                 return;
@@ -250,7 +250,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             if (this.isComposing) {
                 return;
             }
-
             this.commitInput();
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.input.nativeElement.blur();
@@ -300,6 +299,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onInputClick() {
         if (this.column.dataType === DataType.Boolean) {
+            this.input.nativeElement.blur();
+            this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
@@ -511,7 +512,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expression.condition.isUnary) {
             // update grid's filtering on the next cycle to ensure the drop-down is closed
             // if the drop-down is not closed this event handler will be invoked multiple times
-            requestAnimationFrame(() => this.unaryConditionChangedCallback());
+            requestAnimationFrame(() => { this.unaryConditionChangedCallback(); this.input.nativeElement.focus(); });
         } else {
             requestAnimationFrame(() => this.conditionChangedCallback());
         }
