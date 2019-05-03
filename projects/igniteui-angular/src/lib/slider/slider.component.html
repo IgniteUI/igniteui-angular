@@ -2,30 +2,31 @@
     #slider
     class="igx-slider"
     [class.igx-slider--disabled]="disabled"
-    (panstart)="showThumbsLabels($event)"
-    (panend)="onPanEnd($event)"
-    (pan)="update($event)"
+    (mousedown)="findClosestThumb($event)"
+    (pan)="update($event.srcEvent.x)"
     (tap)="onTap($event)">
     <div class="igx-slider__track">
         <div #track class="igx-slider__track-fill"></div>
         <div #ticks class="igx-slider__track-ticks"></div>
     </div>
     <div class="igx-slider__thumbs">
-        <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
+        <!-- <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
         *ngIf="isRange" class="igx-slider__thumb-from" tabindex="1" [ngClass]="{ 'igx-slider__thumb-from--active': isActiveLabel }"
         #thumbFrom>
             <span class="label">
                 <ng-container *ngTemplateOutlet="thumbFromTemplateRef ? thumbFromTemplateRef : thumbFromDefaultTemplate; context: context"></ng-container>
             </span>
             <span class="dot"></span>
-        </div>
-        <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
+        </div> -->
+        <igx-thumb *ngIf="isRange" #thumbFrom [value]="lowerLabel"></igx-thumb>
+        <igx-thumb #thumbTo [value]="upperLabel"></igx-thumb>
+        <!-- <div (keydown)="onKeyDown($event);" (keyup)="hideThumbsLabels()" (blur)="hideThumbLabelsOnBlur()" (focus)="onFocus($event);"
             class="igx-slider__thumb-to" tabindex="1" [ngClass]="{ 'igx-slider__thumb-to--active': isActiveLabel }" #thumbTo>
             <span class="label">
                 <ng-container *ngTemplateOutlet="thumbToTemplateRef ? thumbToTemplateRef : thumbToDefaultTemplate; context: context"></ng-container>
             </span>
             <span class="dot"></span>
-        </div>
+        </div> -->
     </div>
 </div>
 
