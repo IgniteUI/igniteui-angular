@@ -1077,7 +1077,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    getChildColumnSizes(isRow, isIE): string {
+    getGridTemplate(isRow, isIE): string {
         if (isRow) {
             const itemAccum = (acc, val) => !val.columnLayout ?
                 Math.max((val.rowStart + val.gridRowSpan || val.rowEnd) - 1, acc) :

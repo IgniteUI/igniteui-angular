@@ -270,7 +270,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    fit('should allow navigating down to the next data chunk', (async() => {
+    it('should allow navigating down to the next data chunk', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
