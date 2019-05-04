@@ -1079,14 +1079,10 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     getGridTemplate(isRow, isIE): string {
         if (isRow) {
-            const itemAccum = (acc, val) => !val.columnLayout ?
-                Math.max((val.rowStart + val.gridRowSpan || val.rowEnd) - 1, acc) :
-                acc;
-            const templateItems = this.grid.columns && this.grid.columns.reduce(itemAccum, 1) || 1;
-
+            const rowsCount = this.grid.columnLayoutRowsCount;
             return isIE ?
-                `(1fr)[${templateItems}]` :
-                `repeat(${templateItems},1fr)`;
+                `(1fr)[${rowsCount}]` :
+                `repeat(${rowsCount},1fr)`;
         } else {
             return this.getColumnSizesString(this.children.toArray());
         }

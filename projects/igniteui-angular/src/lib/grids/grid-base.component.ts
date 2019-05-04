@@ -5116,6 +5116,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    get columnLayoutRowsCount(): number {
+        const itemAccum = (acc, val) => !val.columnLayout ?
+            Math.max((val.rowStart + val.gridRowSpan || val.rowEnd) - 1, acc) :
+            acc;
+        const templateItems = this.columns && this.columns.reduce(itemAccum, 1) || 1;
+
+        return templateItems;
+    }
+
+    /**
+     * @hidden
+     */
     public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.gridAPI.get_all_data());
         if (this.transactions.enabled) {

@@ -157,7 +157,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     }));
 
-    it('should navigate down to a cell from the same column layout from a cell with bigger col span', (async() => {
+    it('should navigate down and up to a cell from the same column layout from a cell with bigger col span', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -183,9 +183,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     }));
 
-    it('should navigate down to a cell from the same column layout to a cell with bigger col span', (async() => {
+    it('should navigate down and up to a cell from the same column layout to a cell with bigger col span', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -211,9 +218,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    it('should navigate down to a cell from the same column layout acording to its starting location', (async() => {
+    it('should navigate down and down to a cell from the same column layout acording to its starting location', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -240,6 +254,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
     it('should allow navigating down to a cell from the next row', (async() => {

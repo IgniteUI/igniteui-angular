@@ -294,6 +294,10 @@ export class IgxGridNavigationService {
     }
 
     public navigateUp(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
+        if (this.grid.hasColumnLayouts) {
+            this.focusCellUpFromLayout(cell);
+            return;
+        }
         if (currentRowIndex === 0) {
             return;
         }
@@ -673,6 +677,53 @@ export class IgxGridNavigationService {
             return;
         }
         nextElement.focus();
+    }
+
+    private focusCellUpFromLayout(cell, isSummary = false) {
+        const columnLayout = cell.column.parent;
+        const element = cell.nativeElement.parentElement;
+
+        const currentRowStart = cell.rowStart;
+        const currentColStart = cell.colStart;
+
+        // element up is from the same layout
+        let upperElementColumn = columnLayout.children.find(c =>
+            (c.rowEnd === currentRowStart || c.rowStart + c.gridRowSpan === currentRowStart)  &&
+            c.colStart <= currentColStart &&
+            (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
+
+        let columnIndex = columnLayout.children.toArray().indexOf(upperElementColumn);
+        const upperElement = element.children[columnIndex];
+
+        if (!upperElement) {
+            const layoutRowEnd = this.grid.columnLayoutRowsCount + 1;
+            upperElementColumn = columnLayout.children.find(c =>
+                (c.rowEnd === layoutRowEnd || c.rowStart + c.gridRowSpan === layoutRowEnd) &&
+                c.colStart <= currentColStart &&
+                (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
+            columnIndex = this.grid.columns.filter(c => !c.columnLayout).indexOf(upperElementColumn);
+
+            const prevIndex = cell.row.index - 1;
+            let prevRow;
+
+            if (!cell.row.nativeElement.previousElementSibling) {
+                this.grid.nativeElement.focus({ preventScroll: true });
+                this.grid.verticalScrollContainer.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        prevRow = this.grid.getRowByIndex(prevIndex);
+                        if (prevRow && prevRow.cells) {
+                            prevRow.cells.toArray()[columnIndex].nativeElement.focus();
+                        }
+                    });
+                this.grid.verticalScrollContainer.scrollTo(prevIndex);
+            } else {
+                prevRow = this.grid.getRowByIndex(prevIndex);
+                prevRow.cells.toArray()[columnIndex].nativeElement.focus();
+            }
+            return;
+        }
+        upperElement.focus();
     }
 
     private getLastPinnedFilterableColumn(): IgxColumnComponent {
