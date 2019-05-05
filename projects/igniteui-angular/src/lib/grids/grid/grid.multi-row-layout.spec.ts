@@ -796,8 +796,10 @@ describe('IgxGrid - multi-row-layout', () => {
 
         // check group block and column header height
         const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
+        // group block height should take the maximal row span for the row
         expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
-        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+        // the header spans as much as it row span - in this case row span is 1
+        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 1);
 
         expect(groupHeaderBlocks[1].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
@@ -805,8 +807,7 @@ describe('IgxGrid - multi-row-layout', () => {
         const firstCell = grid.getCellByColumn(0, 'Fax').nativeElement;
         expect(firstCell.offsetHeight)
             .toEqual(
-                grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight +
-                grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetHeight
+                grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight
             );
     });
 

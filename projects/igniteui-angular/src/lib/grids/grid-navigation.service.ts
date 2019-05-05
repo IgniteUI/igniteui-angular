@@ -659,7 +659,12 @@ export class IgxGridNavigationService {
             const nextIndex = cell.row.index + 1;
             let nextRow;
 
-            if (!cell.row.nativeElement.nextElementSibling) {
+            const rowHeight = this.grid.verticalScrollContainer.getSizeAt(cell.row.index + 1);
+            const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
+            const targetEndTopOffset = cell.row.nativeElement.nextElementSibling ?
+            cell.row.nativeElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
+                containerHeight + rowHeight;
+            if (containerHeight && containerHeight < targetEndTopOffset) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.verticalScrollContainer.onChunkLoad
                     .pipe(first())
@@ -672,11 +677,11 @@ export class IgxGridNavigationService {
                 this.grid.verticalScrollContainer.scrollTo(nextIndex);
             } else {
                 nextRow = this.grid.getRowByIndex(nextIndex);
-                nextRow.cells.toArray()[columnIndex].nativeElement.focus();
+                nextRow.cells.toArray()[columnIndex].nativeElement.focus({ preventScroll: true });
             }
             return;
         }
-        nextElement.focus();
+        nextElement.focus({ preventScroll: true });
     }
 
     private focusCellUpFromLayout(cell, isSummary = false) {

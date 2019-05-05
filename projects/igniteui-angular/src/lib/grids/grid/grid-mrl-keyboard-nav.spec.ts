@@ -10,6 +10,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
+const ROW_CSS_CLASS = '.igx-grid__tr';
 
 describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     configureTestSuite();
@@ -227,7 +228,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    it('should navigate down and down to a cell from the same column layout acording to its starting location', (async() => {
+    it('should navigate down and up to a cell from the same column layout acording to its starting location', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -255,7 +256,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', thirdCell.nativeElement, true);
         await wait(DEBOUNCETIME);
         fix.detectChanges();
 
@@ -291,7 +292,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    it('should allow navigating down to the next data chunk', (async() => {
+    it('should allow navigating down with scrolling', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -302,8 +303,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             ]
         }];
         fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        const lastCell = cells[cells.length - 1];
+        const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
+        const penultRowCells = rows[rows.length - 2].queryAll(By.css(CELL_CSS_CLASS));
+        const lastCell = penultRowCells[penultRowCells.length - 1];
         const rowIndex = parseInt(lastCell.nativeElement.getAttribute('data-rowindex'), 10);
 
         lastCell.nativeElement.dispatchEvent(new Event('focus'));
