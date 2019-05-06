@@ -32,6 +32,7 @@ import {
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -75,6 +76,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayService: IgxOverlayService;
+
+    @Input()
+    public displayDensity: DisplayDensity;
 
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;

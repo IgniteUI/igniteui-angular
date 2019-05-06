@@ -47,10 +47,14 @@ export interface IGridResourceStrings {
     igx_grid_summary_earliest?: string;
     igx_grid_summary_latest?: string;
     igx_grid_excel_filter_moving_left?: string;
+    igx_grid_excel_filter_moving_left_short?: string;
     igx_grid_excel_filter_moving_right?: string;
+    igx_grid_excel_filter_moving_right_short?: string;
     igx_grid_excel_filter_moving_header?: string;
     igx_grid_excel_filter_sorting_asc?: string;
+    igx_grid_excel_filter_sorting_asc_short?: string;
     igx_grid_excel_filter_sorting_desc?: string;
+    igx_grid_excel_filter_sorting_desc_short?: string;
     igx_grid_excel_filter_sorting_header?: string;
     igx_grid_excel_custom_dialog_add?: string;
     igx_grid_excel_custom_dialog_clear?: string;
@@ -118,12 +122,16 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_summary_average: 'Avg',
     igx_grid_summary_earliest: 'Earliest',
     igx_grid_summary_latest: 'Latest',
-    igx_grid_excel_filter_moving_left: 'left',
-    igx_grid_excel_filter_moving_right: 'right',
-    igx_grid_excel_filter_moving_header: 'column moving',
+    igx_grid_excel_filter_moving_left: 'move left',
+    igx_grid_excel_filter_moving_left_short: 'left',
+    igx_grid_excel_filter_moving_right: 'move right',
+    igx_grid_excel_filter_moving_right_short: 'right',
+    igx_grid_excel_filter_moving_header: 'move',
     igx_grid_excel_filter_sorting_asc: 'ascending',
+    igx_grid_excel_filter_sorting_asc_short: 'asc',
     igx_grid_excel_filter_sorting_desc: 'descending',
-    igx_grid_excel_filter_sorting_header: 'sorting',
+    igx_grid_excel_filter_sorting_desc_short: 'desc',
+    igx_grid_excel_filter_sorting_header: 'sort',
     igx_grid_excel_custom_dialog_add: 'add filter',
     igx_grid_excel_custom_dialog_clear: 'Clear filter',
     igx_grid_excel_custom_dialog_header: 'Custom auto-filter on column: ',
