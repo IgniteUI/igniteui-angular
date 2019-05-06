@@ -112,6 +112,13 @@
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>
 
+<ng-template #defaultLoadingGrid>
+    <div class="igx-grid__loading">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
+</ng-template>
+
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass">
         <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
