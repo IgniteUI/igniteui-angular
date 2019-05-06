@@ -109,6 +109,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/virtual-dropdown',
+            icon: 'horizontal_split',
+            name: 'DropDown - Virtual'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -197,6 +202,11 @@ export class AppComponent implements OnInit {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
+        },
+        {
+            link: '/gridRowDrag',
+            icon: 'view_column',
+            name: 'Grid Row Drag'
         },
         {
             link: '/gridSummary',

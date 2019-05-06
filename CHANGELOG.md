@@ -15,12 +15,28 @@ All notable changes for each version of this project will be documented in this 
         <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Address"></igx-column>
     </igx-column-layout>
     ```
+    - **New feature** `igxGridComponent` now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 ### Features
 - `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
+    - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
+- `IgxDropDown`
+    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    ```html
+    <igx-drop-down>
+        <div class="wrapping-div">
+            <igx-drop-down *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+            [value]="item" [index]="index"
+            >
+                {{ item.data }}
+            </igx-drop-down>
+        </div>
+    </igx-drop-down>
+    ```
 
 ## 7.2.6
 - `igxGrid`
