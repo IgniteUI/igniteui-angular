@@ -458,8 +458,8 @@ describe('IgxGrid - Summaries', () => {
             let grid: IgxGridComponent;
             beforeEach(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
-                fix.detectChanges();
                 grid = fix.componentInstance.grid;
+                fix.detectChanges();
             });
 
             it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {

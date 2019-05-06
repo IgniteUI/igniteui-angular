@@ -544,19 +544,19 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.reflow();
             await wait();
             fixture.detectChanges();
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
             hierarchicalGrid.perPage = 5;
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
 
             // expand first
             hierarchicalGrid.getRowByKey('0').nativeElement.children[0].click();
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
 
             // scroll bottom
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
@@ -638,7 +638,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
 
             // expand row
             hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
@@ -646,7 +646,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
 
             // change page
             hierarchicalGrid.page = 1;
@@ -654,7 +654,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
 
             // change page
             hierarchicalGrid.page = 0;
@@ -662,7 +662,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             await wait(30);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
+            expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
         }));
     });
 

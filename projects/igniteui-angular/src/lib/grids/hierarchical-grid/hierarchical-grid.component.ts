@@ -710,14 +710,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private updateParentSizes() {
         let currGrid = this.parent;
         while (currGrid) {
-            const hadScrollbar = currGrid.hasVerticalSroll();
+            const hadScrollbar = currGrid.hasVerticalScroll();
             const virt = currGrid.verticalScrollContainer;
             virt.recalcUpdateSizes();
             const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scr = virt.getVerticalScroll();
             scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
 
-            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
+            if (hadScrollbar !== currGrid.hasVerticalScroll()) {
                 // If after recalculations the grid should show vertical scrollbar it should also reflow.
                 currGrid.reflow();
             }

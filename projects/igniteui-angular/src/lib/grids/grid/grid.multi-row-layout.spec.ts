@@ -1008,7 +1008,7 @@ describe('IgxGrid - multi-row-layout', () => {
         }];
         fixture.detectChanges();
 
-        expect(grid.hasVerticalSroll()).toBeTruthy();
+        expect(grid.hasVerticalScroll()).toBeTruthy();
 
         const verticalVirt = grid.verticalScrollContainer;
 

@@ -3918,9 +3918,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
             const viewPortHeight = document.documentElement.clientHeight;
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
     }
 
@@ -3942,7 +3939,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     private get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
+        return (this.rowHeight + 1) * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
 
@@ -4039,7 +4036,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
+        return this.hasVerticalScroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**
@@ -4132,7 +4129,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
-        if (this.hasVerticalSroll()) {
+        if (this.hasVerticalScroll()) {
             width -= this.scrollWidth;
         }
         if (Number.isFinite(width) && width !== this.calcWidth) {
@@ -4142,7 +4139,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._derivePossibleWidth();
     }
 
-    public hasVerticalSroll() {
+    public hasVerticalScroll() {
         if (!this._ngAfterViewInitPassed) { return false; }
         const isScrollable = this.verticalScrollContainer.isScrollable();
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
@@ -4199,7 +4196,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             in a broken layout.
         */
         this.resetCaches();
-        const hasScroll = this.hasVerticalSroll();
+        const hasScroll = this.hasVerticalScroll();
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.resetCaches();
@@ -4212,7 +4209,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.cdr.detectChanges();
         this.resetCaches();
         // in case scrollbar has appeared recalc to size correctly.
-        if (hasScroll !== this.hasVerticalSroll()) {
+        if (hasScroll !== this.hasVerticalScroll()) {
             this.calculateGridWidth();
             this.cdr.detectChanges();
             this.resetCaches();
@@ -4251,7 +4248,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let width = isPercentage ?
             this.calcWidth :
             parseInt(this._width, 10);
-        if (this.hasVerticalSroll() && !isPercentage) {
+        if (this.hasVerticalScroll() && !isPercentage) {
             width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);

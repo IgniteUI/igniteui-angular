@@ -143,8 +143,9 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('height/width should be calculated depending on number of records', fakeAsync(() => {
+        it('height/width should be calculated depending on number of records when height = null', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.height = null;
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
@@ -273,12 +274,17 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
 
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columns;
@@ -286,13 +292,13 @@ describe('IgxGrid Component Tests', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -311,6 +317,11 @@ describe('IgxGrid Component Tests', () => {
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
 
             expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
@@ -319,7 +330,7 @@ describe('IgxGrid Component Tests', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(1000);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
@@ -330,13 +341,13 @@ describe('IgxGrid Component Tests', () => {
             fixture.detectChanges();
             tick(100);
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
             fixture.detectChanges();
             tick(100);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
@@ -481,7 +492,8 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridDefaultRenderingComponent,
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
-                    IgxGridFormattingComponent
+                    IgxGridFormattingComponent,
+                    IgxGridFixedContainerHeightComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -853,9 +865,34 @@ describe('IgxGrid Component Tests', () => {
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(320);
+            expect(defaultHeightNum).toBe(330);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+        }));
+
+        it(`should render grid with correct height when parent container\'s height is set
+            and the total row height is smaller than parent height #1861`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.paging = true;
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it(`should render grid with correct height when height is in percent and the
+            sum height of all rows is lower than parent height #1858`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
         it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
@@ -883,7 +920,7 @@ describe('IgxGrid Component Tests', () => {
                 }
             });
 
-        it('Should render date and number values based on default formatting', () => {
+        it('Should render date and number values based on default formatting', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             fixture.detectChanges();
             const grid = fixture.componentInstance.grid;
@@ -925,7 +962,7 @@ describe('IgxGrid Component Tests', () => {
                     expect(earliestValue).toBe('May 17, 1990');
                 }
             });
-        });
+        }));
 
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
@@ -3413,7 +3450,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(500);
+            expect(grid.calcHeight).toBe(510);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -3475,7 +3512,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(200);
+            expect(grid.calcHeight).toBe(204);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
@@ -3485,7 +3522,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator'));
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
     });
@@ -3493,7 +3530,7 @@ describe('IgxGrid Component Tests', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)" [height]="height">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -3509,7 +3546,7 @@ export class IgxGridTestComponent {
     @ViewChild('grid') public grid: IgxGridComponent;
 
     public autoGenerate = false;
-
+    public height = '100%';
     public columnEventCount = 0;
 
     public columnCreated(column: IgxColumnComponent) {
@@ -4148,4 +4185,18 @@ export class IgxGridInsideIgxTabsComponent {
         }
         this.data = data;
     }
+}
+
+@Component({
+    template:
+        `<div style="height:300px">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
+                [paging]="paging" [perPage]="pageSize">
+            </igx-grid>
+        </div>`
+})
+export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
 }

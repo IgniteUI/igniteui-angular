@@ -231,7 +231,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [allowFiltering]="true" height="null"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
