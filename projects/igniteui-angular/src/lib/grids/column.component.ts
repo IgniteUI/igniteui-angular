@@ -1082,10 +1082,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     getGridTemplate(isRow, isIE): string {
-        const itemAccum = isRow ?
-            (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
-            (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
-        const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
+        const colSpanAccum = (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
+        const templateItems = !isRow ?
+            this.children && this.children.reduce(colSpanAccum, 1) || 1 :
+            this.grid.multiRowLayoutRowSize;
         const generatedSizes = !isRow ? this.getColumnSizesString(this.children.toArray()) : null;
         return isIE ?
         generatedSizes || `(1fr)[${templateItems}]` :
@@ -1752,7 +1752,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     }
 
     set width(val) { }
-
 
     get columnLayout() {
         return true;

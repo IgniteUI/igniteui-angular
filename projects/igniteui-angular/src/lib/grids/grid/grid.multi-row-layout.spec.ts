@@ -852,22 +852,20 @@ describe('IgxGrid - multi-row-layout', () => {
             }];
         fixture.detectChanges();
 
-        // check first group has height of 3 row spans in header and rows
-
+        // check first group has height of 2 row spans in header and rows but the header itself should span 1 row
         // check group block and column header height
         const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
+        expect(grid.multiRowLayoutRowSize).toEqual(2);
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
         expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
-        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
+        expect(groupHeaderBlocks[1].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
         expect(groupHeaderBlocks[1].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
-        // check cell height in row
+        // check cell height in row. By default should span 1 row
         const firstCell = grid.getCellByColumn(0, 'Fax').nativeElement;
-        expect(firstCell.offsetHeight)
-            .toEqual(
-                grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight +
-                grid.getCellByColumn(0, 'CompanyName').nativeElement.offsetHeight
-            );
+        expect(firstCell.offsetHeight).toEqual(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight);
     });
 
     // Virtualization
@@ -1068,6 +1066,8 @@ describe('IgxGrid - multi-row-layout', () => {
         }];
         fixture.detectChanges();
 
+        const rows = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('igx-grid-row'));
+        expect(rows.length).toEqual(4);
         expect(grid.hasVerticalSroll()).toBeTruthy();
 
         const verticalVirt = grid.verticalScrollContainer;
@@ -1103,7 +1103,7 @@ describe('IgxGrid - multi-row-layout', () => {
     it('should correctly size columns without widths when default column width is set to percentages', () => {
         // In this case it would be for City column and 3rd template column overlapping width ContactName.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        // creating an incomplete layout
+
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.grid.columnWidth = '10%';
         fixture.componentInstance.colGroups = [{
