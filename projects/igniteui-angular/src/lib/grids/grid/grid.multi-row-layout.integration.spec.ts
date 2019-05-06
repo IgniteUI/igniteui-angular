@@ -19,7 +19,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                ColumnLayoutPinningTestComponent
+                ColumnLayoutPinningTestComponent,
+                ColumnLayoutFilteringTestComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
@@ -385,6 +386,34 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
         }));
 
     });
+
+    describe('Filtering ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            colGroups = fixture.componentInstance.colGroups;
+        }));
+
+        it('should enforce excel style filtering.', () => {
+            const filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            expect(filteringCells.length).toBe(0);
+
+            const filterIcons = fixture.debugElement.queryAll(By.css('.igx-excel-filter__icon'));
+            expect(filterIcons.length).not.toBe(0);
+
+            const gridFirstRow = grid.rowList.first;
+            const firstRowCells = gridFirstRow.cells.toArray();
+            const headerCells = grid.headerGroups.first.children.toArray();
+
+            expect(filterIcons.length).toBe(gridFirstRow.cells.length);
+
+            // headers are aligned to cells
+            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+
+            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+        });
+    });
 });
 
 @Component({
@@ -428,3 +457,16 @@ export class ColumnLayoutPinningTestComponent {
     data = SampleTestData.contactInfoDataFull();
 }
 
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" [allowFiltering]="true">
+        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
+}

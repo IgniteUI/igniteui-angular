@@ -1734,7 +1734,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -1763,5 +1763,13 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
      */
     get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
+    }
+
+    ngAfterContentInit() {
+        super.ngAfterContentInit();
+        this.children.forEach(child => {
+            child.disableHiding = true;
+            child.disablePinning = true;
+        });
     }
 }
