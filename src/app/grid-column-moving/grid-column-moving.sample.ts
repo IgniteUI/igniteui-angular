@@ -20,7 +20,16 @@ export class GridColumnMovingSampleComponent implements OnInit {
         console.log(event);
     }
 
+    public density = 'comfortable';
+    public displayDensities;
+
     public ngOnInit(): void {
+        this.displayDensities = [
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        ];
+
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
@@ -470,6 +479,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
             }
         ];
         // this.data = [...this.data, ...this.data, ...this.data];
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 
     toggleColumn(name: string) {
