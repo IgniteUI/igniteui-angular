@@ -1791,6 +1791,11 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         } else {
             this.children.forEach(child => child.hidden = this.hidden);
         }
+
+        this.children.forEach(child => {
+            child.disableHiding = true;
+            child.disablePinning = true;
+        });
     }
 
     /*
@@ -1803,4 +1808,5 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
     }
+
 }
