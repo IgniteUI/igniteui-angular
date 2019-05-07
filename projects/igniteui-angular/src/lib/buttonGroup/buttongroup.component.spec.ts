@@ -224,10 +224,12 @@ describe('IgxButtonGroup', () => {
         const buttongroup = fixture.componentInstance.buttonGroup;
 
         expect(buttongroup.displayDensity).toBe('cosy');
+
+        const groupChildren = buttongroup.buttons;
         // The density class should be applied only to buttons with no DisplayDensity set
-        expect(buttongroup.buttons[0].displayDensity).toBe('compact');
-        expect(buttongroup.buttons[0].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Density class is not correct!');
-        expect(buttongroup.buttons[1].element.nativeElement.classList.contains('igx-button--cosy')).toBe(true, 'Density class is not correct!');
+        expect(groupChildren[0].displayDensity).toBe('compact');
+        expect(groupChildren[0].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Missing density class!');
+        expect(groupChildren[1].element.nativeElement.classList.contains('igx-button--cosy')).toBe(true, 'Missing density class!');
     });
 
 });
