@@ -52,7 +52,8 @@ describe('IgxButtonGroup', () => {
             declarations: [
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
-                TemplatedButtonGroupComponent
+                TemplatedButtonGroupComponent,
+                TemplatedButtonGroupDesplayDensityComponent
             ],
             imports: [
                 IgxButtonGroupModule,
@@ -201,6 +202,34 @@ describe('IgxButtonGroup', () => {
         expect(error).toBe('');
     });
 
+    it('Button Group - DisplayDensity property is applied', () => {
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+
+        expect(buttongroup.displayDensity).toBe('comfortable');
+
+        buttongroup.displayDensity = 'compact';
+        fixture.detectChanges();
+
+        expect(buttongroup.displayDensity).toBe('compact', 'DisplayDensity not set!');
+        expect(buttongroup.buttons[1].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Missing density class!');
+    });
+
+    it('Button Group - DisplayDensity property is applied to templated buttons', () => {
+        const fixture = TestBed.createComponent(TemplatedButtonGroupDesplayDensityComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+
+        expect(buttongroup.displayDensity).toBe('cosy');
+        // The density class should be applied only to buttons with no DisplayDensity set
+        expect(buttongroup.buttons[0].displayDensity).toBe('compact');
+        expect(buttongroup.buttons[0].element.nativeElement.classList.contains('igx-button--compact')).toBe(true, 'Density class is not correct!');
+        expect(buttongroup.buttons[1].element.nativeElement.classList.contains('igx-button--cosy')).toBe(true, 'Density class is not correct!');
+    });
+
 });
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
@@ -317,4 +346,12 @@ class TemplatedButtonGroupComponent {
 
     private alignment = ButtonGroupAlignment.vertical;
     public multiselection = true;
+}
+
+@Component({ template: `<igx-buttongroup [multiSelection]="multiselection" displayDensity="cosy">
+                            <button igxButton displayDensity="compact">Sofia</button>
+                            <button igxButton>London</button>
+                        </igx-buttongroup>` })
+class TemplatedButtonGroupDesplayDensityComponent {
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
 }
