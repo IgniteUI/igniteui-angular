@@ -16,8 +16,10 @@ import {
     Optional,
     OnInit,
     TemplateRef,
+    QueryList,
     ContentChild,
-    AfterContentInit
+    AfterContentInit,
+    ViewChild
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -36,9 +38,11 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { mergeObjects } from '../../core/utils';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
 
@@ -300,6 +304,27 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
     /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    /**
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
@@ -368,6 +393,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     private _gridAPI: IgxTreeGridAPIService;
     private _filteredData = null;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    public dragIndicatorIconBase: TemplateRef<any>;
 
     constructor(
         selectionService: IgxGridSelectionService,
@@ -715,5 +747,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
+    }
+
+    /**
+     * @hidden
+    */
+   protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - tree grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
     }
 }

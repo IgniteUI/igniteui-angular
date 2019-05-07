@@ -57,6 +57,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -65,6 +66,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
@@ -87,8 +89,10 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
+import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 
 
 
@@ -109,6 +113,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DropDownVirtualComponent,
     DragDropSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,
@@ -145,10 +150,13 @@ const components = [
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
+    GridRowDraggableComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
+    GridMRLSampleComponent,
+    GridMRLConfigSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,

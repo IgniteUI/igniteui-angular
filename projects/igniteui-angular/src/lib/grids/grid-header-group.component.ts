@@ -19,6 +19,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { isIE } from '../core/utils';
 
 const Z_INDEX = 9999;
 
@@ -32,6 +33,40 @@ const Z_INDEX = 9999;
     templateUrl: './grid-header-group.component.html'
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
+
+    @HostBinding('style.-ms-grid-row-span')
+    get gridRowSpan(): number {
+        return this.column.gridRowSpan;
+    }
+
+    @HostBinding('style.-ms-grid-column-span')
+    get gridColumnSpan(): number {
+        return this.column.gridColumnSpan;
+    }
+
+
+    @HostBinding('style.grid-row-end')
+    get rowEnd(): number {
+        return this.column.rowEnd;
+    }
+
+    @HostBinding('style.grid-column-end')
+    get colEnd(): number {
+        return this.column.colEnd;
+    }
+
+    @HostBinding('style.-ms-grid-row')
+    @HostBinding('style.grid-row-start')
+    get rowStart(): number {
+        return this.column.rowStart;
+    }
+
+    @HostBinding('style.-ms-grid-column')
+    @HostBinding('style.grid-column-start')
+    get colStart(): number {
+        return this.column.colStart;
+    }
+
 
     /**
      * Gets the column of the header group.
@@ -133,7 +168,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
-        return this.column.isLastPinned;
+        return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    @HostBinding('style.display')
+    get groupDisplayStyle(): string {
+        return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
     /**

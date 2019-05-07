@@ -3,6 +3,19 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.3.0
+ - **New feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Multi-row-layouts). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+    - `rowStart`
+    - `colStart`
+    - `rowEnd`
+    - `colEnd`
+    ```html
+    <igx-column-layout>
+        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="'span 2'" field="Address"></igx-column>
+    </igx-column-layout>
+    ```
+    - **New feature** `igxGridComponent` now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 ### Features
 - `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
@@ -11,6 +24,21 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
 - `igxButtonGroup`
     - **Feature** The `igxButtonGroup` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button group. The buttons within the group will have the same density as the button group. If a templated button has the `displayDensity` set in the template, it is not changed by the density of the group where the button is placed.
+- `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
+    - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
+- `IgxDropDown`
+    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    ```html
+    <igx-drop-down>
+        <div class="wrapping-div">
+            <igx-drop-down *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+            [value]="item" [index]="index"
+            >
+                {{ item.data }}
+            </igx-drop-down>
+        </div>
+    </igx-drop-down>
+    ```
 
 ## 7.2.6
 - `igxGrid`

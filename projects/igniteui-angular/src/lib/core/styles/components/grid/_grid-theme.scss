@@ -72,6 +72,8 @@
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
+/// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {color} $row-ghost-background [null] - The dragged row background color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -163,7 +165,9 @@
 
     $row-highlight: null,
     $grid-shadow: null,
-    $drag-shadow: null
+    $drag-shadow: null,
+    $row-ghost-background: null,
+    $row-drag-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -425,6 +429,8 @@
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
+        row-ghost-background: $row-ghost-background,
+        row-drag-color: $row-drag-color
     ));
 }
 
@@ -593,6 +599,10 @@
     %grid-thead-container {
         grid-row: 3;
         display: flex;
+
+        %igx-grid__drag-indicator {
+            cursor: default;
+        }
     }
 
     %grid-thead--cosy {
@@ -662,6 +672,31 @@
         width: 100%;
         overflow: visible;
     }
+
+    %grid-mrl-block {
+        display: grid;
+        background: inherit;
+
+        %grid-thead-item {
+            display: flex;
+        }
+
+        %grid-cell-header {
+            align-items: center;
+            flex-grow: 1;
+            border-bottom: $grid-header-border;
+        }
+
+        %grid-cell-display {
+            border-right: 1px solid --var($theme, 'row-border-color');
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
+    }
+
+    %grid-row--mrl {
+        border-bottom: none !important;
+    }
+
 
     %grid-tbody {
         position: relative;
@@ -746,6 +781,29 @@
             background: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
         }
+
+        &%igx-grid__tr--ghost {
+            background: --var($theme, 'row-ghost-background');
+        }
+    }
+
+    %igx-grid__drag-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: map-get($grid-cell-padding, 'comfortable');
+        padding-right: 0;
+        background: inherit;
+        z-index: 4;
+        cursor: move;
+    }
+
+    %igx-grid__drag-indicator--off {
+        color: --var($theme, 'row-drag-color');
+    }
+
+    %igx-grid__tr--drag {
+        opacity: .5;
     }
 
     %grid-row--odd {
