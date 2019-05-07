@@ -2485,6 +2485,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowHeight;
     private _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
+    private _multiRowLayoutRowSize = 1;
 
     // Caches
     private _totalWidth = NaN;
@@ -3910,6 +3911,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    get multiRowLayoutRowSize() {
+        return this._multiRowLayoutRowSize;
+    }
+
+    /**
+     * @hidden
+     */
     protected get rowBasedHeight() {
             return this.dataLength * this.rowHeight;
         }
@@ -4362,6 +4370,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
         this._columnGroups = this.columnList.some(col => col.columnGroup);
+        if (this.hasColumnLayouts) {
+            // Set overall row layout size
+            this.columnList.forEach((col) => {
+                if (col.columnLayout) {
+                    const layoutSize = col.children ?
+                     col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
+                     1;
+                     this._multiRowLayoutRowSize = Math.max(layoutSize, this._multiRowLayoutRowSize);
+                }
+            });
+        }
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
