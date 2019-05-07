@@ -853,6 +853,35 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifySummaryCellActive(fix, 0, 1);
         });
 
+        it ('Custom KB navigation: onGridKeydown event should be emitted from summaryCell', async () => {
+            HelperUtils.focusSummaryCell(fix, 0, 1);
+            const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
+            const summaryCell = grid.summariesRowList.find(r => r.index === 0).summaryCells.find(c => c.visibleColumnIndex === 1);
+            await HelperUtils.moveSummaryCell(fix, 0, 1, 'ArrowRight', false, true);
+            await wait(100);
+            fix.detectChanges();
+            HelperUtils.verifySummaryCellActive(fix, 0, 5);
+            expect(gridKeydown).toHaveBeenCalledTimes(1);
+            expect(gridKeydown).toHaveBeenCalledWith({
+                targetType: 'summaryCell', target: summaryCell, cancel: false, event: new KeyboardEvent ('keydown') });
+        });
+
+        it('Custom KB navigation: should be able to focus summary cell with navigateTo method', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.navigateTo(6, 1, (args) => { args.target.nativeElement.focus(); });
+            await wait(100);
+            fix.detectChanges();
+
+            const summaryCell = grid.summariesRowList.find(r => r.index === 6).summaryCells.find(c => c.visibleColumnIndex === 1);
+            expect(summaryCell).toBeDefined();
+            expect(summaryCell.focused).toBe(true);
+        });
+
         it('Grouping: should be able to select summaries with arrow keys', async () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
