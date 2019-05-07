@@ -111,5 +111,9 @@ $_dark-grid: extend($_light-grid, (
 
     row-highlight: (
         igx-color: ('secondary', 500)
+    ),
+
+    row-ghost-background: (
+        igx-color: ('primary', 900)
     )
 ));

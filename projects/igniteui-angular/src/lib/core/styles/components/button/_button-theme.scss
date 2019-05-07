@@ -401,6 +401,8 @@
         compact: rem(40px)
     );
 
+    $icon-in-button-size: rem(18px);
+
     %igx-button-display {
         position: relative;
         display: inline-flex;
@@ -409,7 +411,7 @@
         min-width: $button-width;
         padding: map-get($button-padding, 'comfortable');
         min-height: map-get($button-size, 'comfortable');
-        border: $button-border;
+        border: none;
         cursor: pointer;
         user-select: none;
         outline-style: none;
@@ -419,6 +421,12 @@
         transition: $button-transition;
         font-family: inherit;
         margin: 0;
+
+        %igx-icon-display {
+            width: $icon-in-button-size;
+            height: $icon-in-button-size;
+            font-size: $icon-in-button-size;
+        }
     }
 
     %igx-button-display--cosy {
@@ -449,6 +457,7 @@
     }
 
     %igx-button--outlined {
+        border: $button-border;
         border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
