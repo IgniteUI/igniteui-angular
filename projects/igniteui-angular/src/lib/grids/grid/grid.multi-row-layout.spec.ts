@@ -36,6 +36,66 @@ describe('IgxGrid - multi-row-layout', () => {
         }).compileComponents();
     }));
 
+    function verifyHeadersAreAligned(headerCells, rowCells) {
+        for (let i; i < headerCells.length; i++) {
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
+                .toBe(rowCells[i].nativeElement.offsetWidth);
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
+                .toBe(rowCells[i].nativeElement.offsetHeight);
+        }
+    }
+
+    function verifyDOMMatchesSettings(row, colSettings) {
+        const firstRowCells = row.cells.toArray();
+        const rowElem = row.nativeElement;
+        const mrlBlocks = rowElem.querySelectorAll(GRID_MRL_BLOCK);
+
+        colSettings.forEach((groupSetting, index) => {
+            // check group has rendered block
+            const groupBlock = mrlBlocks[index];
+            const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
+            expect(groupBlock).not.toBeNull();
+            groupSetting.columns.forEach((col, colIndex) => {
+                const cell = cellsFromBlock[colIndex];
+                const cellElem = cell.nativeElement;
+                // check correct attributes are applied
+                expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
+                expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
+                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
+
+                // check width
+                let sum = 0;
+                if (cell.gridColumnSpan > 1) {
+                    for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
+                        const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
+                        const col2 = row.grid.getColumnByName(colData ? colData.field : '');
+                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                    }
+                }
+                const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
+                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                // check height
+                const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
+                expect(cellElem.offsetHeight).toBe(expectedHeight);
+
+                // check offset left
+                const acc = (accum, c) => {
+                    if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
+                        return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
+                    } else {
+                        return accum;
+                    }
+                };
+                const expectedLeft = cellsFromBlock.reduce(acc, 0);
+                expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
+                // check offsetTop
+                const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
+                expect(cellElem.offsetTop).toBe(expectedTop);
+            });
+        });
+    }
+
     it('should initialize a grid with 1 column group', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
@@ -282,7 +342,7 @@ describe('IgxGrid - multi-row-layout', () => {
         //  expect(grid.getCellByColumn(0, 'Fax').nativeElement.offsetWidth).toBe(200);
 
         //  // check group blocks
-        //  groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css('.igx-grid__mrl_block'));
+        //  groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
         //  expect(groupHeaderBlocks[1].nativeElement.clientWidth).toBe(500);
 
          firstRowCells = grid.rowList.first.cells.toArray();
@@ -792,23 +852,20 @@ describe('IgxGrid - multi-row-layout', () => {
             }];
         fixture.detectChanges();
 
-        // check first group has height of 3 row spans in header and rows
-
+        // check first group has height of 2 row spans in header and rows but the header itself should span 1 row
         // check group block and column header height
         const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
-        // group block height should take the maximal row span for the row
+        expect(grid.multiRowLayoutRowSize).toEqual(2);
+        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
         expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
-        // the header spans as much as it row span - in this case row span is 1
-        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 1);
+        expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
+        expect(groupHeaderBlocks[1].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
         expect(groupHeaderBlocks[1].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
-        // check cell height in row
+        // check cell height in row. By default should span 1 row
         const firstCell = grid.getCellByColumn(0, 'Fax').nativeElement;
-        expect(firstCell.offsetHeight)
-            .toEqual(
-                grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight
-            );
+        expect(firstCell.offsetHeight).toEqual(grid.getCellByColumn(0, 'ContactName').nativeElement.offsetHeight);
     });
 
     // Virtualization
@@ -1009,6 +1066,8 @@ describe('IgxGrid - multi-row-layout', () => {
         }];
         fixture.detectChanges();
 
+        const rows = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('igx-grid-row'));
+        expect(rows.length).toEqual(4);
         expect(grid.hasVerticalSroll()).toBeTruthy();
 
         const verticalVirt = grid.verticalScrollContainer;
@@ -1044,7 +1103,7 @@ describe('IgxGrid - multi-row-layout', () => {
     it('should correctly size columns without widths when default column width is set to percentages', () => {
         // In this case it would be for City column and 3rd template column overlapping width ContactName.
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        // creating an incomplete layout
+
         fixture.componentInstance.grid.width = '1200px';
         fixture.componentInstance.grid.columnWidth = '10%';
         fixture.componentInstance.colGroups = [{

@@ -478,6 +478,11 @@ export class IgxGridNavigationService {
     }
 
     public moveFocusToFilterCell(toStart?: boolean) {
+        if (this.grid.filteringService.isFilterRowVisible) {
+            this.grid.filteringService.focusFilterRowCloseButton();
+            return;
+        }
+
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         const targetIndex = toStart ? 0 : columns.length - 1;
         const visibleIndex = columns[targetIndex].visibleIndex;
@@ -510,19 +515,24 @@ export class IgxGridNavigationService {
         }
     }
 
+    public navigateFirstCellIfPossible(eventArgs) {
+        if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
+            if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0 ||
+                !this.grid.data || !this.grid.data.length) {
+                eventArgs.stopPropagation();
+                return;
+            }
+            this.goToFirstCell();
+        }
+        eventArgs.preventDefault();
+    }
+
     public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
         const cols = this.grid.filteringService.unpinnedFilterableColumns;
         const nextFilterableIndex = cols.indexOf(column) + 1;
         if (nextFilterableIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
             // next is not filter cell
-            if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
-                if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
-                    eventArgs.stopPropagation();
-                    return;
-                }
-                this.goToFirstCell();
-            }
-            eventArgs.preventDefault();
+            this.navigateFirstCellIfPossible(eventArgs);
             return;
         }
         const nextColumn = cols[nextFilterableIndex];

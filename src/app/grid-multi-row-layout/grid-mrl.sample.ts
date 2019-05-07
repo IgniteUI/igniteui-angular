@@ -67,4 +67,8 @@ export class GridMRLSampleComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
+    hideGroup() {
+        const col = this.grid.getColumnByName('group2');
+        col.hidden = !col.hidden;
+    }
 }
