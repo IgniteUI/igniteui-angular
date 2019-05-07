@@ -21,6 +21,8 @@ import {
     IgxDropEnterEventArgs
 } from '../../directives/dragdrop/dragdrop.directive';
 import { getHostElement } from '@angular/core/src/render3';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { Grid10x30WithSummariesComponent } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
@@ -157,9 +159,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(headerDragIndicatorElement, dropPoint, fixture);
             expect(grid.rowDragging).toBeFalsy();
             expect(grid.onRowDragStart.emit).not.toHaveBeenCalled();
-        }));
-        it('should not change row data if the data in the drop area has been changed', fakeAsync(() => {
-            // TODO
         }));
         it('should cancel dragging when ESCAPE key is pressed.', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -362,9 +361,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             fixture.detectChanges();
             dragGridRows = dragGrid.rowList.toArray();
             dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-            // nonDroppableAreaElement = fixture.debugElement.query(By.css('.non-droppable-area')).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
-            // dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
         configureTestSuite();
         it('should drop data in the proper drop grid columns', (async () => {
@@ -383,13 +380,14 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
-            for ( let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
+            for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }
         }));
         it('column moving - should drop row data in correct columns', (async () => {
             const dragGridColumns = dragGrid.columnList.toArray();
             dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
+            fixture.detectChanges();
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
@@ -435,6 +433,101 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(dropRowCells[2].value).toEqual(dragRowCells[0].value);
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
+        }));
+        it('row selection - should not change row selection on row drag', (async () => {
+            dragGrid.rowSelectable = true;
+            fixture.detectChanges();
+            dragGrid.selectRows([2], false);
+            fixture.detectChanges();
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            expect(row.isSelected).toBeTruthy();
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+            expect(row.isSelected).toBeTruthy();
+        }));
+        it('cell selection - should not change cell selection on row drag', (async () => {
+            const range = { rowStart: 1, rowEnd: 1, columnStart: 0, columnEnd: 2 };
+            dragGrid.selectRange(range);
+            fixture.detectChanges();
+
+            const verifyCellSelection = function () {
+                for (let index = 0; index < rowCells.length; index++) {
+                    const cellSelected = index <= 2 ? true : false;
+                    expect(rowCells[index].selected).toEqual(cellSelected);
+                }
+            };
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            const rowCells = row.cells.toArray();
+            verifyCellSelection();
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+            verifyCellSelection();
+        }));
+        it('grouping - should not change grouping on row drag', (async () => {
+            dragGrid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            const dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+            const row = dragGridRows[2];
+            const rowCells = row.cells.toArray();
+            const groupHeader = dragGrid.groupsRecords.find(function (element) {
+                return element.value === rowCells[2].value;
+            });
+            let groupRow = groupHeader.records.find(function (element) {
+                return element['ID'] === rowCells[1].value;
+            });
+            expect(groupHeader.records.length).toEqual(2);
+            expect(groupRow).toBeDefined();
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+            expect(groupHeader.records.length).toEqual(2);
+            groupRow = groupHeader.records.find(function (element) {
+                return element['ID'] === rowCells[1].value;
+            });
+            expect(groupRow).toBeDefined();
         }));
     });
 });
@@ -498,6 +591,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [width]="'800px'"
             [height]="'300px'"
             [data]="data"
+            [primaryKey]="'ID'"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
@@ -541,7 +635,6 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     public onRowDrop(args) {
         args.cancel = true;
         this.dropGrid.addRow(args.dragData.rowData);
-        this.dragGrid.deleteRow(args.dragData.rowID);
     }
 }
 
