@@ -136,6 +136,7 @@
         overflow: hidden;
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
+        padding: rem(8px) 0;
     }
 
     %igx-list-empty {
