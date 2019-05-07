@@ -2730,6 +2730,161 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             igx_grid_filter_row_close: 'Close'
         });
     }));
+
+    it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+    }));
+
+    it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+      }));
+
+    it('Should remove FilterRow, when allowFiltering is set to false.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        grid.allowFiltering = false;
+        fix.detectChanges();
+
+        filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeNull();
+    }));
+
+    it('should correctly apply locale to datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        registerLocaleData(localeDE);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.locale = 'de-DE';
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const dateCellChip = initialChips[3].nativeElement;
+
+        dateCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const input = filteringRow.query(By.directive(IgxInputDirective));
+
+        input.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+        const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+        const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
+
+        expect(sundayLabel.trim()).toEqual('So');
+    }));
+
+    it('should open \'conditions dropdown\' on prefix click and should close it on second click', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        // Click filter chip to show filter row
+        stringCellChip.click();
+        tick(100);
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+        const prefix = inputgroup.query(By.css('igx-prefix'));
+
+        // Click prefix to open conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is opened
+        let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).not.toBeNull();
+
+        // Click prefix again to close conditions dropdown
+        prefix.triggerEventHandler('click', {});
+        tick(100);
+        fix.detectChanges();
+
+        // Verify dropdown is closed
+        dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList).toBeNull();
+    }));
+
+    it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const cell = grid.getCellByColumn(0, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const closeButton = filterUIRow.queryAll(By.css('button'))[1];
+        expect(document.activeElement).toBe(closeButton.nativeElement);
+
+        filterUIRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        fix.detectChanges();
+        tick();
+        expect(document.activeElement).toBe(cell.nativeElement);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
