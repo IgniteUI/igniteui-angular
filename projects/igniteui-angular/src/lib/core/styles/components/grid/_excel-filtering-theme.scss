@@ -53,8 +53,19 @@
     }
 
     %grid-excel-menu__header {
+        display: flex;
+        align-items: center;
         padding: rem(16px);
         color: igx-color($palette, 'grays', 700);
+    }
+
+    %grid-excel-menu__header-actions {
+        display: flex;
+        margin-left: auto;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(4px);
+        }
     }
 
     %grid-excel-menu__footer {
@@ -88,6 +99,30 @@
         }
     }
 
+    %grid-excel-action--compact {
+        display: flex;
+        align-items: center;
+
+        header {
+            color: igx-color($palette, 'grays', 700);
+            margin-right: auto;
+            text-transform: capitalize;
+        }
+    }
+
+    %grid-excel-sort--compact {
+        @extend %grid-excel-action--compact;
+        padding: rem(4px) rem(16px);
+
+        igx-buttongroup {
+            width: rem(208px);
+
+            [igxButton] > igx-icon + span {
+                margin-left: rem(8px);
+            }
+        }
+    }
+
     %grid-excel-actions {
         padding: rem(8px) rem(16px);
     }
@@ -101,16 +136,17 @@
         }
     }
 
+    %grid-excel-move--compact {
+        @extend %grid-excel-action--compact;
+    }
+
     %grid-excel-move__buttons {
         display: flex;
         justify-content: space-between;
 
         [igxButton] {
             flex-grow: 1;
-
-            + [igxButton] {
-                margin-left: rem(8px);
-            }
+            width: rem(104px);
         }
 
         igx-icon {
