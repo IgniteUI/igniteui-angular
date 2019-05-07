@@ -201,6 +201,10 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
             }
+
+            if (this.parent && this.parent.columnLayout && this.parent.hidden !== value) {
+                this.parent.hidden = value;
+            }
         }
     }
     /**
@@ -1078,10 +1082,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     getGridTemplate(isRow, isIE): string {
-        const itemAccum = isRow ?
-            (acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc) :
-            (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
-        const templateItems = this.children && this.children.reduce(itemAccum, 1) || 1;
+        const colSpanAccum = (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
+        const templateItems = !isRow ?
+            this.children && this.children.reduce(colSpanAccum, 1) || 1 :
+            this.grid.multiRowLayoutRowSize;
         const generatedSizes = !isRow ? this.getColumnSizesString(this.children.toArray()) : null;
         return isIE ?
         generatedSizes || `(1fr)[${templateItems}]` :
@@ -1734,7 +1738,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -1749,12 +1753,52 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
 
     set width(val) { }
 
-
     get columnLayout() {
         return true;
     }
 
     /**
+     * Gets whether the column layout is hidden.
+     * ```typescript
+     * let isHidden = this.columnGroup.hidden;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    get hidden() {
+        return this._hidden;
+    }
+
+    /**
+     * Sets the column layout hidden property.
+     * ```typescript
+     * <igx-column-layout [hidden] = "true"></igx-column->
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    set hidden(value: boolean) {
+        this._hidden = value;
+        this.children.forEach(child => child.hidden = value);
+    }
+
+    /**
+     *@hidden
+    */
+    ngAfterContentInit() {
+        super.ngAfterContentInit();
+        if (!this.hidden) {
+            this.hidden = this.allChildren.some(x => x.hidden);
+        } else {
+            this.children.forEach(child => child.hidden = this.hidden);
+        }
+
+        this.children.forEach(child => {
+            child.disableHiding = true;
+            child.disablePinning = true;
+        });
+    }
+
+    /*
      * Gets whether the group contains the last pinned child column of the column layout.
      * ```typescript
      * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
@@ -1764,4 +1808,5 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent {
     get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
     }
+
 }

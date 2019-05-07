@@ -8,6 +8,9 @@ import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
 const gridCellClass = 'igx-grid__td';
+const rowSelectedClass = 'igx-grid__tr--selected';
+const cellSelectedClass = 'igx-grid__td--selected';
+const cellActiveClass = 'igx-grid__td--active';
 
 /**
  * @hidden
@@ -55,9 +58,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             }
             this.row.dragging = true;
             this.row.grid.rowDragging = true;
-            if (this.row.grid.rowEditable && this.row.grid.rowInEditMode) {
-                this.row.grid.endEdit(true);
-            }
             this.row.grid.markForCheck();
 
             this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
@@ -89,6 +89,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     protected createDragGhost(event) {
+        this.row.grid.endEdit(true);
+        this.row.grid.markForCheck();
         super.createDragGhost(event, this.row.nativeElement);
 
         const ghost = this.dragGhost;
@@ -99,13 +101,13 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         ghost.style.width = gridRect.width + 'px';
         ghost.style.height = rowRect.height + 'px';
 
-        ghost.classList = [];
-        this.renderer.addClass(ghost, this.row.defaultCssClass);
         this.renderer.addClass(ghost, ghostBackgroundClass);
+        this.renderer.removeClass(ghost, rowSelectedClass);
 
         const ghostCells = ghost.getElementsByClassName(gridCellClass);
         for (let index = 0; index < ghostCells.length; index++) {
-            ghostCells[index].classList = [gridCellClass];
+            this.renderer.removeClass(ghostCells[index], cellSelectedClass);
+            this.renderer.removeClass(ghostCells[index], cellActiveClass);
         }
     }
 
