@@ -1436,7 +1436,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
             }).not.toThrowError();
 
-            let dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+            const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
             expect(dropDown.properties.hidden).toBeFalsy();
 
             const dropdownClientRect = dropDown.nativeElement.getBoundingClientRect();
