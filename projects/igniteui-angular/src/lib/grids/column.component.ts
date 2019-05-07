@@ -1171,7 +1171,8 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (; j < columnSizes[i].colSpan && i + j + 1 < columnSizes[i].colEnd; j++) {
                     if (columnSizes[i + j] &&
                         ((!columnSizes[i].width && columnSizes[i + j].width) ||
-                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan < columnSizes[i].colSpan))) {
+                         (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
+                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
                         // If we reach an already defined column that has width and the current doesn't have or
                         // if the reached column has bigger colSpan we stop.
                         break;
@@ -1223,9 +1224,9 @@ export class IgxColumnComponent implements AfterContentInit {
        return res.join(' ');
     }
 
-    public getResizableColUnderEnd(): { target: IgxColumnComponent, spanUsed: 1, spanRatio: number }[] {
+    public getResizableColUnderEnd(): { target: IgxColumnComponent, spanUsed: 1 }[] {
         if (this.columnLayout || !this.parent.columnLayout || this.columnGroup) {
-            return [{ target: this, spanUsed: 1, spanRatio: 1 }];
+            return [{ target: this, spanUsed: 1 }];
         }
 
         const columnSized = this.getInitialChildColumnSizes(this.parent.children.toArray());
@@ -1246,12 +1247,6 @@ export class IgxColumnComponent implements AfterContentInit {
             } else {
                 targetsSquashed.push(targets[j]);
             }
-        }
-
-        for (let k = 0; k < targetsSquashed.length; k++) {
-            const curCol = targetsSquashed[k].target;
-            targetsSquashed[k].spanRatio =
-                ((curCol.colEnd ? curCol.colEnd : curCol.colStart + 1) - curCol.colStart / targetsSquashed[k].spanUsed);
         }
 
         return targetsSquashed;

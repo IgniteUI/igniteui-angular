@@ -790,7 +790,6 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 600, 5);
             fixture.detectChanges();
 
-            // expect(grid.columns[1].width).toEqual('450px');
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 150px 100px 100px 200px');
         });
@@ -829,7 +828,6 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            // expect(grid.columns[4].width).toEqual('400px');
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 100px 100px 100px 200px');
         });
@@ -868,8 +866,6 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            // expect(grid.columns[4].width).toEqual('500px');
-            // expect(grid.columns[8].width).toEqual('300px');
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 300px 100px 100px 100px 200px');
         });
@@ -908,13 +904,12 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            // expect(grid.columns[7].width).toEqual('300px');
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 100px 100px 100px 200px');
         });
 
-        it('should correctly resize column that does not have width set', async() => {
-            grid.width = '1500px';
+        it('should correctly resize column while there is another column that does not have width set', async() => {
+            grid.width = 1500 + grid.scrollWidth + 'px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
@@ -935,6 +930,9 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(grid.columns[7].width).toEqual('200px');
             expect(grid.columns[7].cells[0].value).toEqual('Alfreds Futterkiste');
 
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
+
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
@@ -947,9 +945,46 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
             fixture.detectChanges();
 
-            // expect(grid.columns[7].width).toEqual('300px');
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 600px 100px 100px 200px');
+        });
+
+        it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
+            grid.width = 1500 + grid.scrollWidth + 'px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // City
+            expect(grid.columns[5].cells[0].value).toEqual('Berlin');
+
             const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 100px 100px 100px 200px');
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[5].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 950, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 850, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 850, 5);
+            fixture.detectChanges();
+
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });
 });

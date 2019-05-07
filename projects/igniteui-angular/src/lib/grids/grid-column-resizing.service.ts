@@ -36,8 +36,14 @@ export class IgxColumnResizingService {
     get resizerHeight(): number {
         let height = this.column.grid.getVisibleContentHeight();
 
+        // Column height multiplier in case there are Column Layouts. The resizer height need to take into account rowStart.
+        let columnHeightMultiplier = 1;
+        if (this.column.parent && this.column.parent.columnLayout) {
+            columnHeightMultiplier = this.column.grid.multiRowLayoutRowSize - this.column.rowStart + 1;
+        }
+
         if (this.column.level !== 0) {
-            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height;
+            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height * columnHeightMultiplier;
         }
 
         return height;
@@ -148,7 +154,7 @@ export class IgxColumnResizingService {
             const maxWidth = relativeColumns.reduce((acc, col) => {
                 return acc + (col.target.pinned ? parseFloat(this.pinnedMaxWidth) : parseFloat(col.target.maxWidth));
             }, 0);
-            const curSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
+            const combinedSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
 
             let sizeChanged = diff;
             if (currentColWidth + diff < colMinWidth) {
@@ -161,7 +167,7 @@ export class IgxColumnResizingService {
                 let currentResizeWidth = parseFloat(col.target.width);
                 const actualResizeWidth = col.target.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
                 currentResizeWidth = Number.isNaN(currentResizeWidth) ? actualResizeWidth : currentResizeWidth;
-                col.target.width = (currentResizeWidth + (sizeChanged / curSpan) * col.spanRatio) + 'px';
+                col.target.width = (currentResizeWidth + (sizeChanged / combinedSpan) * col.target.gridColumnSpan) + 'px';
             });
         } else {
             if (currentColWidth + diff < colMinWidth) {
