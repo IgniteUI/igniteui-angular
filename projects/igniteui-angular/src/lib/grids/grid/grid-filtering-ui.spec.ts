@@ -33,6 +33,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
+import { ExpressionUI } from '../filtering/grid-filtering.service';
+import { DisplayDensity } from '../../core/density';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
     IgxGridFilteringComponent,
@@ -2730,6 +2732,34 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             igx_grid_filter_row_close: 'Close'
         });
     }));
+
+    it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const cell = grid.getCellByColumn(0, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const closeButton = filterUIRow.queryAll(By.css('button'))[1];
+        expect(document.activeElement).toBe(closeButton.nativeElement);
+
+        filterUIRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        fix.detectChanges();
+        tick();
+        expect(document.activeElement).toBe(cell.nativeElement);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
@@ -3349,6 +3379,180 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(datePicker.componentInstance.mode).toBe('dropdown');
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
+
+    it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
+        grid.displayDensity = DisplayDensity.cosy;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component and pin 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickPinIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        const column = grid.columns.find((col) => col.field === 'ProductName');
+        GridFunctions.verifyColumnIsPinned(column, true, 1);
+
+        // Open excel style filtering component and UNpin 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickPinIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        GridFunctions.verifyColumnIsPinned(column, false, 0);
+    }));
+
+    it('Should hide column when clicking hide icon in header', fakeAsync(() => {
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        const column = grid.columns.find((col) => col.field === 'ProductName');
+        GridFunctions.verifyColumnIsHidden(column, false, 6);
+
+        // Open excel style filtering component and hide 'ProductName' column through header icon
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickHideIconInExcelStyleFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        GridFunctions.verifyColumnIsHidden(column, true, 5);
+    }));
+
+    it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const column = grid.columns.find((c) => c.field === 'ProductName');
+        column.sortable = true;
+        column.movable = true;
+        fix.detectChanges();
+
+        // Open excel style filtering component and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.compact);
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.cosy;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+    }));
+
+    it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const column = grid.columns.find((c) => c.field === 'ProductName');
+        column.sortable = true;
+        column.movable = true;
+        fix.detectChanges();
+
+        // Open excel style custom filtering dialog and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        fix.detectChanges();
+        verifyExcelCustomFilterDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.cosy;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style custom filtering dialog and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        fix.detectChanges();
+        verifyExcelCustomFilterDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style custom filtering dialog and verify its display density
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        fix.detectChanges();
+        verifyExcelCustomFilterDisplayDensity(gridNativeElement, DisplayDensity.compact);
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        fix.detectChanges();
+    }));
+
+    it('should scroll items in search list correctly', fakeAsync(() => {
+        // Add additional rows as prerequisite for the test
+        for (let index = 0; index < 30; index++) {
+            const newRow = {
+                Downloads: index,
+                ID: index + 100,
+                ProductName: 'New Product ' + index,
+                ReleaseDate: new Date(),
+                Released: false,
+                AnotherField: 'z'
+            };
+            grid.addRow(newRow);
+        }
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        // Open excel style filtering component
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(200);
+        fix.detectChanges();
+
+        // Scroll the search list to the bottom.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        const scrollbar = searchComponent.querySelector('igx-virtual-helper');
+        scrollbar.scrollTop = 3000;
+        tick(200);
+        fix.detectChanges();
+
+        // Verify scrollbar's scrollTop.
+        expect(scrollbar.scrollTop >= 955 && scrollbar.scrollTop <= 960).toBe(true,
+            'search scrollbar has incorrect scrollTop');
+        // Verify display container height.
+        const displayContainer = searchComponent.querySelector('igx-display-container');
+        const displayContainerRect = displayContainer.getBoundingClientRect();
+        expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+        // Verify rendered list items count.
+        const listItems = displayContainer.querySelectorAll('igx-list-item');
+        expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+    }));
 });
 
 const expectedResults = [];
@@ -3559,4 +3763,195 @@ function checkUIForType(type: string, elem: DebugElement) {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
     }
+}
+
+function verifyExcelStyleFilteringDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+    // Get excel style dialog
+    const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+
+    // Verify display density of search input and list.
+    const excelSearch = excelMenu.querySelector('igx-excel-style-search');
+    const inputGroup = excelSearch.querySelector('igx-input-group');
+    const list = excelSearch.querySelector('igx-list');
+    expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
+        'incorrect inputGroup density');
+    expect(list.classList.contains(getListDensityClass(expectedDisplayDensity))).toBe(true,
+        'incorrect list density');
+
+    // Verify display density of all flat and raised buttons in excel stlye dialog.
+    const flatButtons = excelMenu.querySelectorAll('.igx-button--flat');
+    const raisedButtons = excelMenu.querySelectorAll('.igx-button--raised');
+    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    buttons.forEach((button) => {
+        if (expectedDisplayDensity === DisplayDensity.comfortable) {
+            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
+            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
+                'incorrect button density');
+            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
+                'incorrect button density');
+        } else {
+            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
+                'incorrect button density');
+        }
+    });
+
+    // Verify column pinning and column hiding elements in header area and actions area
+    // are shown based on the expected display density.
+    verifyPinningHidingDisplayDensity(gridNativeElement, expectedDisplayDensity);
+    // Verify column sorting and column moving buttons are positioned either on right of their
+    // respective header or under it, based on the expected display density.
+    verifySortMoveDisplayDensity(gridNativeElement, expectedDisplayDensity);
+}
+
+function verifyPinningHidingDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+    // Get excel style dialog
+    const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+
+    // Get column pinning and column hiding icons from header (if present at all)
+    const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
+    const headerTitle = excelMenu.querySelector('h4');
+    const headerIcons = Array.from(headerArea.querySelectorAll('.igx-button--icon'));
+    const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
+    const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
+    const headerAreaColumnHidingIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'visibility_off');
+
+    // Get column pinning and column hiding icons from actionsArea (if present at all)
+    const actionsArea = excelMenu.querySelector('.igx-excel-filter__actions');
+    const actionsAreaPinIcon = actionsArea.querySelector('.igx-excel-filter__actions-pin');
+    const actionsAreaUnpinIcon = actionsArea.querySelector('.igx-excel-filter__actions-unpin');
+    const actionsAreaColumnHidingIcon = actionsArea.querySelector('.igx-excel-filter__actions-hide');
+
+    if (expectedDisplayDensity === DisplayDensity.comfortable) {
+        // Verify icons in header are not present.
+        expect(headerAreaPinIcon === null || headerAreaPinIcon === undefined).toBe(true,
+            'headerArea pin icon is present');
+        expect(headerAreaUnpinIcon === null || headerAreaUnpinIcon === undefined).toBe(true,
+            'headerArea unpin icon is present');
+        expect(headerAreaColumnHidingIcon === null || headerAreaColumnHidingIcon === undefined).toBe(true,
+            'headerArea column hiding icon is present');
+        // Verify icons in actions area are present.
+        expect((actionsAreaPinIcon !== null) || (actionsAreaUnpinIcon !== null)).toBe(true,
+             'actionsArea pin/unpin icon is  NOT present');
+        expect(actionsAreaColumnHidingIcon).not.toBeNull('actionsArea column hiding icon is  NOT present');
+    } else {
+        // Verify icons in header are present.
+        expect((headerAreaPinIcon !== null) || (headerAreaUnpinIcon !== null)).toBe(true,
+            'headerArea pin/unpin icon is  NOT present');
+        expect(headerAreaColumnHidingIcon).not.toBeNull('headerArea column hiding icon is  NOT present');
+        // Verify icons in actions area are not present.
+        expect(actionsAreaPinIcon).toBeNull('actionsArea pin icon is present');
+        expect(actionsAreaUnpinIcon).toBeNull('actionsArea unpin icon is present');
+        expect(actionsAreaColumnHidingIcon).toBeNull('headerArea column hiding icon is present');
+        // Verify icons are on right of the title
+        const headerTitleRect = headerTitle.getBoundingClientRect();
+        const pinUnpinIconRect = ((headerAreaPinIcon !== null) ? headerAreaPinIcon : headerAreaUnpinIcon).getBoundingClientRect();
+        const columnHidingRect = headerAreaColumnHidingIcon.getBoundingClientRect();
+
+        expect(pinUnpinIconRect.left >= headerTitleRect.right).toBe(true,
+             'pinUnpin icon is NOT on the right of top header');
+        expect(columnHidingRect.left > headerTitleRect.right).toBe(true,
+            'columnHiding icon is NOT on the right of top header');
+    }
+}
+
+function verifySortMoveDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+    // Get excel style dialog.
+    const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+
+    // Get container of sort component and its header and buttons.
+    const sortContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__sort--compact' : 'igx-excel-filter__sort';
+    const sortContainer = excelMenu.querySelector('.' + sortContainerClass);
+    const sortHeaderRect = sortContainer.querySelector('header').getBoundingClientRect();
+    const sortButtons = sortContainer.querySelectorAll('.igx-button--flat');
+
+    // Get container of move component and its header and buttons.
+    const moveContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__move--compact' : 'igx-excel-filter__move';
+    const moveContainer = excelMenu.querySelector('.' + moveContainerClass);
+    const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
+    const moveButtons = moveContainer.querySelectorAll('.igx-button--flat');
+
+    const isCompact = expectedDisplayDensity === DisplayDensity.compact;
+    // Verify sort buttons are on right of the sort title if density is 'compact'
+    // or that they are under the sort title if density is not 'compact'.
+    expect(sortHeaderRect.right <= sortButtons[0].getBoundingClientRect().left).toBe(isCompact,
+        'incorrect sort button horizontal position based on the sort title');
+    expect(sortHeaderRect.right <= sortButtons[1].getBoundingClientRect().left).toBe(isCompact,
+        'incorrect sort button horizontal position based on the sort title');
+    expect(sortHeaderRect.bottom <= sortButtons[0].getBoundingClientRect().top).toBe(!isCompact,
+        'incorrect sort button vertical position based on the sort title');
+    expect(sortHeaderRect.bottom <= sortButtons[1].getBoundingClientRect().top).toBe(!isCompact,
+        'incorrect sort button vertical position based on the sort title');
+    // Verify move buttons are on right of the move title if density is 'compact'
+    // or that they are under the sort title if density is not 'compact'.
+    expect(moveHeaderRect.right < moveButtons[0].getBoundingClientRect().left).toBe(isCompact,
+        'incorrect move button horizontal position based on the sort title');
+    expect(moveHeaderRect.right < moveButtons[1].getBoundingClientRect().left).toBe(isCompact,
+        'incorrect move button horizontal position based on the sort title');
+    expect(moveHeaderRect.bottom <= moveButtons[0].getBoundingClientRect().top).toBe(!isCompact,
+        'incorrect move button vertical position based on the sort title');
+    expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top).toBe(!isCompact,
+        'incorrect move button vertical position based on the sort title');
+}
+
+function verifyExcelCustomFilterDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+    // Excel style filtering custom filter dialog
+    const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+
+    // Verify display density of all flat and raised buttons in custom filter dialog.
+    const flatButtons = customFilterMenu.querySelectorAll('.igx-button--flat');
+    const raisedButtons = customFilterMenu.querySelectorAll('.igx-button--raised');
+    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons));
+    buttons.forEach((button) => {
+        if (expectedDisplayDensity === DisplayDensity.comfortable) {
+            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
+            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.compact))).toBe(false,
+                'incorrect button density in custom filter dialog');
+            expect(button.classList.contains(getButtonDensityClass(DisplayDensity.cosy))).toBe(false,
+                'incorrect button density in custom filter dialog');
+        } else {
+            expect(button.classList.contains(getButtonDensityClass(expectedDisplayDensity))).toBe(true,
+                'incorrect button density in custom filter dialog');
+        }
+    });
+
+    // Verify display density of all input groups in custom filter dialog.
+    const inputGroups = customFilterMenu.querySelectorAll('igx-input-group');
+    inputGroups.forEach((inputGroup) => {
+        expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
+                'incorrect inputGroup density in custom filter dialog');
+    });
+}
+
+function getListDensityClass(displayDensity: DisplayDensity) {
+    let densityClass;
+    switch (displayDensity) {
+        case DisplayDensity.compact: densityClass = 'igx-list--compact'; break;
+        case DisplayDensity.cosy: densityClass = 'igx-list--cosy'; break;
+        default: densityClass = 'igx-list'; break;
+    }
+    return densityClass;
+}
+
+function getInputGroupDensityClass(displayDensity: DisplayDensity) {
+    let densityClass;
+    switch (displayDensity) {
+        case DisplayDensity.compact: densityClass = 'igx-input-group--compact'; break;
+        case DisplayDensity.cosy: densityClass = 'igx-input-group--cosy'; break;
+        default: densityClass = 'igx-input-group--comfortable'; break;
+    }
+    return densityClass;
+}
+
+/**
+ * Gets the corresponding class that a flat/raised/outlined button
+ * has added to it additionally based on displayDensity input.
+*/
+function getButtonDensityClass(displayDensity: DisplayDensity) {
+    let densityClass;
+    switch (displayDensity) {
+        case DisplayDensity.compact: densityClass = 'igx-button--compact'; break;
+        case DisplayDensity.cosy: densityClass = 'igx-button--cosy'; break;
+        default: densityClass = ''; break;
+    }
+    return densityClass;
 }

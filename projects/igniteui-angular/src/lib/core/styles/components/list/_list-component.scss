@@ -63,6 +63,8 @@
     }
 
     @include m(compact) {
+        @extend %igx-list !optional;
+
         @include e(empty) {
             @include b(message) {
                 @extend %igx-list-empty-message--compact !optional;
@@ -79,6 +81,8 @@
     }
 
     @include m(cosy) {
+        @extend %igx-list !optional;
+
         @include e(empty) {
             @include b(message) {
                 @extend %igx-list-empty-message--cosy !optional;
