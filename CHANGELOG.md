@@ -9,13 +9,15 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `igxButtonGroup`
+    - **Feature** The `igxButtonGroup` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button group. The buttons within the group will have the same density as the button group. If a templated button has the `displayDensity` set in the template, it is not changed by the density of the group where the button is placed.
 
 ## 7.2.6
 - `igxGrid`
     - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
 
 ## 7.2.5
-- `igxDrop` 
+- `igxDrop`
     - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
 - `IgxList`
     - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
@@ -48,9 +50,9 @@ All notable changes for each version of this project will be documented in this 
 ### New feature
 - [Multi-cell selection](https://github.com/IgniteUI/igniteui-angular/wiki/Grid-Multi-cell-selection-Specification) - Enables range selection of cells in the grid.
 
-### Grids Performance improvements 
+### Grids Performance improvements
 - Grid rendering speed
-- Grid grouping rendering speed 
+- Grid grouping rendering speed
 - Grid vertical scrolling using the scroll arrows
 - Grid horizontal scrolling using the scroll arrows
 - Grid cell focusing time
@@ -89,7 +91,7 @@ All notable changes for each version of this project will be documented in this 
 - Update child summaries correctly when CRUD operations are performed #4408
 - Add igxQuickFilterTemplate directive #4377
 - Resizing: move resize handle logic in a directive #4378
-- No event emitted when column is unpinned #3799 
+- No event emitted when column is unpinned #3799
 - When update a cell in the grouped column the child summaries are not updated #4324
 - Column Group border is misaligned with its children's in some cases #4387
 - Expanding last row of HierarchicalGrid via keyboard(Alt + downArrow) leads to cell losing its focus. #4080
@@ -100,7 +102,7 @@ All notable changes for each version of this project will be documented in this 
 ## 7.2.2
 ### Features
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
-- **Themes** 
+- **Themes**
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
 
@@ -325,13 +327,13 @@ All notable changes for each version of this project will be documented in this 
 - IgxCombo - Keyboard navigation ArrowDown stutters on chunk load #3999
 - Row editing overlay banner not shown when enter row editing #4117
 - IgxToggle open method always tries to get id even when it has one #3971
-- Last (right-aligned) column is cut off when no widths are set for the columns #3396 
+- Last (right-aligned) column is cut off when no widths are set for the columns #3396
 - The selection in the last grid column does not span in the whole cell. #1115
 - Last column header is a bit wider than the cells #1230
 
 ## 7.1.11
 ### Improvements
-- Row and Cell editing Docs improvements #4055 
+- Row and Cell editing Docs improvements #4055
 
 ## 7.1.10
 ### Features
