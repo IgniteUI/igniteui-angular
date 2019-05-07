@@ -24,7 +24,7 @@ import { CancelableEventArgs, CancelableBrowserEventArgs, isIE } from '../core/u
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { OverlaySettings, IgxOverlayService } from '../services';
+import { OverlaySettings } from '../services';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 
@@ -213,8 +213,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        protected overlay?: IgxOverlayService) {
+        protected selection: IgxSelectionAPIService) {
         super(elementRef, cdr);
     }
 
