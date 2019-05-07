@@ -139,7 +139,8 @@ export class IgxFilterPipe implements PipeTransform {
             items = options.items;
         }
 
-        result = items.filter((item: any) => {
+        const selectAll = items[0];
+        result = items.slice(1, items.length).filter((item: any) => {
             const match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
 
             if (match) {
@@ -154,6 +155,10 @@ export class IgxFilterPipe implements PipeTransform {
 
             return match;
         });
+
+        if (result.length > 0) {
+            result.unshift(selectAll);
+        }
 
         return result;
     }
