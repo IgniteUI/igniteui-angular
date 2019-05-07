@@ -372,6 +372,13 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
+    /**
+     * Focus the close button in the filtering row.
+     */
+    public focusFilterRowCloseButton() {
+        this.grid.filteringRow.closeButton.nativeElement.focus();
+    }
+
     public get filteredData() {
         return this.grid.filteredData;
     }

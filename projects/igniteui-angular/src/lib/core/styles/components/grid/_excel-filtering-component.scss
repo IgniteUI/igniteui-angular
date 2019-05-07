@@ -28,6 +28,10 @@
             @extend %grid-excel-menu__header !optional;
         }
 
+        @include e(menu-header-actions) {
+            @extend %grid-excel-menu__header-actions !optional;
+        }
+
         @include e(menu-main) {
             @extend %grid-excel-main !optional;
         }
@@ -40,8 +44,16 @@
             @extend %grid-excel-sort !optional;
         }
 
+        @include e(sort, $m: compact) {
+            @extend %grid-excel-sort--compact !optional;
+        }
+
         @include e(move) {
             @extend %grid-excel-move !optional;
+        }
+
+        @include e(move, $m: compact) {
+            @extend %grid-excel-move--compact !optional;
         }
 
         @include e(move-buttons) {
