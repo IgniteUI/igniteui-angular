@@ -238,7 +238,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
         if (this.column.dataType === DataType.Boolean) {
             if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
-                this.input.nativeElement.blur();
                 this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 event.stopPropagation();
@@ -252,7 +251,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             }
             this.commitInput();
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
@@ -298,8 +296,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean) {
-            this.input.nativeElement.blur();
+        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
