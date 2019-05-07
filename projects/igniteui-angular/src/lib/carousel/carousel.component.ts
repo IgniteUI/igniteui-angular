@@ -448,7 +448,6 @@ export class IgxCarouselComponent implements OnDestroy {
 
         this.onSlideChanged.emit({ carousel: this, slide });
         this._restartInterval();
-        requestAnimationFrame(() => this.nativeElement.focus());
     }
     /**
      *@hidden
@@ -482,6 +481,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
         this.next();
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
     /**
      *@hidden
@@ -489,6 +489,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
         this.prev();
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
 }
 
