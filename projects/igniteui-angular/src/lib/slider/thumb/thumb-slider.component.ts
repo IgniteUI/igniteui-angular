@@ -4,33 +4,28 @@ import {
     Input,
     HostListener,
     ElementRef,
-    ViewEncapsulation,
-    HostBinding } from '@angular/core';
+    HostBinding,
+    Output,
+    EventEmitter,
+    OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Observable, Subject } from 'rxjs';
 
 
-enum SliderHandle {
-    FROM,
-    TO
-}
+// enum SliderHandle {
+//     FROM,
+//     TO
+// }
 
-export interface IRangeSliderValue {
-    lower: number;
-    upper: number;
-}
-
-export interface ISliderValueChangeEventArgs {
-    oldValue: number | IRangeSliderValue;
-    value: number | IRangeSliderValue;
-}
-
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html'
 })
-export class IgxSliderThumbComponent {
+export class IgxSliderThumbComponent implements OnInit {
 
-    private _disabled = false;
     private _timer;
     private _oldValue;
     private _isActiveLabel = false;
@@ -41,43 +36,60 @@ export class IgxSliderThumbComponent {
     public value: number;
 
     @Input()
-    public isContinuous: boolean;
+    public continuous: boolean;
 
     @Input()
-    public thumbLabelVisibilityDuration = 750;
+    public thumbLabelVisibilityDuration;
 
     @Input()
-    public sliderHandle: SliderHandle;
+    public disabled: boolean;
 
     @Input()
-    public get disabled(): boolean {
-        return this._disabled;
-    }
+    public onPan: Subject<number>;
+
+    @Input()
+    public distancePerStep: number;
+
+    @Input()
+    public step: number;
+
+    @Output()
+    public onThumbValueChange = new EventEmitter<number>();
+
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
 
     @HostBinding('class.igx-slider__thumb-to')
     public sliderThumbToClass = true;
-
-    @HostBinding('attr.tabindex')
-    public tabindex = 1;
 
     @HostBinding('class.igx-slider__thumb-to--active')
     public get thumbToActiveClass() {
         return this._isActiveLabel;
     }
 
-    public set disabled(disable: boolean) {
-        this._disabled = disable;
-    }
-
     public get nativeElement() {
-        return this.elementRef.nativeElement;
+        return this._elementRef.nativeElement;
     }
 
-    constructor (public elementRef: ElementRef) { }
+    private get _thumbPositionX() {
+        const thumbBounderies = this.nativeElement.getBoundingClientRect();
+        const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
+        return thumbBounderies.x + thumbCenter;
+    }
+
+    constructor (private _elementRef: ElementRef) { }
+
+    public ngOnInit() {
+        this.onPan.subscribe(value =>
+            this.updateValue(value)
+        );
+    }
 
     @HostListener('keydown', ['$event'])
-    public onKeyDown($event: KeyboardEvent) {
-        this.showThumbsLabels();
+    public onKeyDown(event: KeyboardEvent) {
+        if (event.key.endsWith('Left') || event.key.endsWith('Right')) {
+            this.showThumbsLabels();
+        }
     }
 
     @HostListener('keyup')
@@ -87,7 +99,6 @@ export class IgxSliderThumbComponent {
 
     @HostListener('blur')
     public hideThumbLabelsOnBlur() {
-        // console.log('blur');
         if (this._timer !== null) {
             clearInterval(this._timer);
         }
@@ -98,8 +109,11 @@ export class IgxSliderThumbComponent {
 
     @HostListener('focus', ['$event'])
     public onFocus($event: FocusEvent) {
-        // console.log('focus');
         this.toggleThumbLabel();
+    }
+
+    public updateValue(mouseX: number) {
+        this.updateThumbValue(mouseX);
     }
 
     public showThumbsLabels() {
@@ -109,7 +123,7 @@ export class IgxSliderThumbComponent {
             return;
         }
 
-        if (this.isContinuous) {
+        if (this.continuous) {
             return;
         }
 
@@ -121,6 +135,27 @@ export class IgxSliderThumbComponent {
         this.isActive = true;
     }
 
+    private updateThumbValue(mouseX: number) {
+        const updateRange = this.fractionToValue(mouseX);
+        if (this.isActive && updateRange !== 0) {
+            this.onThumbValueChange.emit(updateRange);
+        }
+    }
+
+    private stepToProceed(scaleX, stepDist, direction) {
+        const increment = Math.round(scaleX / stepDist) * this.step;
+        return direction < 0 ? -increment : increment;
+    }
+
+    private fractionToValue(mouseX: number): number {
+        const scaleX = Math.abs(mouseX - this._thumbPositionX);
+        const distancePerStep = this.distancePerStep;
+        const stepRangeCenter = distancePerStep / 2;
+
+        return scaleX > stepRangeCenter ? this.stepToProceed(scaleX, distancePerStep, mouseX - this._thumbPositionX) : 0;
+    }
+
+
     private toggleThumbLabel() {
         this.showThumbsLabels();
         this.hideThumbsLabels();
@@ -131,7 +166,7 @@ export class IgxSliderThumbComponent {
             return;
         }
 
-        if (this.isContinuous) {
+        if (this.continuous) {
             return;
         }
 
