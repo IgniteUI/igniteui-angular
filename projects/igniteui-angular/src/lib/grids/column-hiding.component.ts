@@ -130,6 +130,9 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
      *@hidden
      */
     protected createColumnItem(container: any, column: any) {
+        if (column.grid.hasColumnLayouts && !column.columnLayout) {
+            return null;
+        }
         const item = new IgxColumnHidingItemDirective();
         item.container = container;
         item.column = column;
