@@ -20,6 +20,7 @@ import {
     IgxDropEventArgs,
     IgxDropEnterEventArgs
 } from '../../directives/dragdrop/dragdrop.directive';
+import { getHostElement } from '@angular/core/src/render3';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
@@ -111,7 +112,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
         }));
-        xit('should be able to drag row only by drag icon', (async () => {
+        it('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const row = rows[1];
@@ -142,6 +143,8 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(row.grid.rowDragging).toBeTruthy();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+
+            await pointerUp(dragIndicatorElement, movePoint, fixture);
         }));
         it('should not be able to drag grid header', (async () => {
             const headerDragIndicatorElement = dragIndicatorElements[0].nativeElement;
@@ -163,21 +166,21 @@ describe('IgxGrid - Row Drag Tests', () => {
             const row = rows[1];
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
-            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
-            expect(row.grid.rowDragging).toBeTruthy();
+            expect(grid.rowDragging).toBeTruthy();
             expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.simulateKeyDownEvent(dragIndicatorElement, 'Escape');
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
             expect(row.dragging).toBeFalsy();
-            expect(row.grid.rowDragging).toBeFalsy();
+            expect(grid.rowDragging).toBeFalsy();
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
         }));
         it('should create ghost element upon row dragging', (async () => {
@@ -345,8 +348,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, endPoint, fixture);
             await pointerUp(dragIndicatorElement, endPoint, fixture);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(0);
-        }));
-        it('multi-row layout integration.', (async () => {
         }));
     });
     describe('Grid Features Integration Tests', () => {
