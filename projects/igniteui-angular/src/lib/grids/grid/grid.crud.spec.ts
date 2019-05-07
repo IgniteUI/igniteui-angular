@@ -48,8 +48,8 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support adding rows by manipulating the `data` @Input of the grid', fakeAsync(() => {
-        grid.height = '800px';
-        fix.detectChanges();        
+        grid.height = null;
+        fix.detectChanges();
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
@@ -74,7 +74,7 @@ describe('IgxGrid - CRUD operations', () => {
         tick(1000);
 
         expect(grid.data.length).toEqual(fix.componentInstance.data.length);
-        expect(grid.rowList.length).toEqual(16);
+        expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
     }));
 
     it('should support deleting rows through the grid API', () => {

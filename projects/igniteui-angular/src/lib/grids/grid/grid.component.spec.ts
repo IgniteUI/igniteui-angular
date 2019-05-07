@@ -922,6 +922,7 @@ describe('IgxGrid Component Tests', () => {
 
         it('Should render date and number values based on default formatting', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
+            fixture.componentInstance.grid.height = null;
             fixture.detectChanges();
             const grid = fixture.componentInstance.grid;
             const rows = grid.rowList.toArray();
