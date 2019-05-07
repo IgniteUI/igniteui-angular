@@ -75,7 +75,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
@@ -1447,6 +1447,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @deprecated you should use onGridKeydown event
      */
     @Output()
+    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     /**
@@ -4897,7 +4898,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 ||  (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
-        this.nativeElement.focus({ preventScroll: true }); // TODO: do it only when the focused element is in grid body
+        this.wheelHandler();
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
                 && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
             if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
@@ -4965,26 +4966,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!cb) { return; }
         let targetType, target;
         const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
-        if (row) {
-            switch (row.nativeElement.tagName) {
-                case 'igx-grid-groupby-row':
-                    targetType = GridKeydownTargetType.groupRow;
-                    target = row;
-                    break;
-                case 'igx-grid-summary-row':
-                    targetType = GridKeydownTargetType.summaryCell;
-                    target = row.summaryCells && visibleColIndex !== -1 ?
-                        row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
-                    break;
-                default:
-                    targetType = GridKeydownTargetType.dataCell;
-                    target = row.cells && visibleColIndex !== -1 ?
-                        row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
-                    break;
-            }
-            const args = { targetType: targetType, target: target };
-            cb(args);
+        if (!row) { return; }
+        switch (row.nativeElement.tagName.toLowerCase()) {
+            case 'igx-grid-groupby-row':
+                targetType = GridKeydownTargetType.groupRow;
+                target = row;
+                break;
+            case 'igx-grid-summary-row':
+                targetType = GridKeydownTargetType.summaryCell;
+                target = row.summaryCells && visibleColIndex !== -1 ?
+                    row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
+                break;
+            default:
+                targetType = GridKeydownTargetType.dataCell;
+                target = row.cells && visibleColIndex !== -1 ?
+                    row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
+                break;
         }
+        const args = { targetType: targetType, target: target };
+        cb(args);
     }
 
     private getPrevDataRowIndex(currentRowIndex): number {
