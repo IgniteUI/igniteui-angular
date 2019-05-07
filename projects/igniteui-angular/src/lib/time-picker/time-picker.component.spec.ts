@@ -1430,15 +1430,14 @@ describe('IgxTimePicker', () => {
             expect(inputGroup).not.toBeNull();
             expect(icon).not.toBeNull();
 
-            UIInteractions.clickElement(icon);
-            tick();
-            fixture.detectChanges();
-
-            let dropDown;
             expect(() => {
-                dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
-                expect(dropDown.properties.hidden).toBeFalsy();
+                UIInteractions.clickElement(icon);
+                tick();
+                fixture.detectChanges();
             }).not.toThrowError();
+
+            let dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+            expect(dropDown.properties.hidden).toBeFalsy();
 
             const dropdownClientRect = dropDown.nativeElement.getBoundingClientRect();
             const inputGroupClientRect = inputGroup.nativeElement.getBoundingClientRect();
