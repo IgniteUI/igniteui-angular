@@ -86,6 +86,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1694,6 +1695,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('headerCheckbox', { read: IgxCheckboxComponent })
     public headerCheckbox: IgxCheckboxComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
+    public filteringRow: IgxGridFilteringRowComponent;
 
     /**
      * @hidden
