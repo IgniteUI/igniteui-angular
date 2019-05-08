@@ -136,7 +136,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected operand: ElementRef;
 
     @ViewChild('closeButton')
-    protected closeButton: ElementRef;
+    public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
@@ -155,7 +155,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            event.preventDefault();
+            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
         }
     }
 
@@ -484,6 +484,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
+        this.commitInput();
     }
 
     /**
