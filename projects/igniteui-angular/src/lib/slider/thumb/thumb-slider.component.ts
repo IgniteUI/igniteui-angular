@@ -13,9 +13,6 @@ import { CommonModule } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-/**
- * @hidden
- */
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html'
@@ -95,9 +92,17 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent) {
-        if (event.key.endsWith('Left') || event.key.endsWith('Right')) {
-            this.showThumbsLabels();
+        let increment = 0;
+        if (event.key.endsWith('Left')) {
+            increment = this.step * - 1;
+        } else if (event.key.endsWith('Right')) {
+            increment = this.step;
+        } else {
+            return;
         }
+
+        this.showThumbsLabels();
+        this.onThumbValueChange.emit(increment);
     }
 
     @HostListener('keyup')

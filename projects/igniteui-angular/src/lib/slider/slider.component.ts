@@ -103,7 +103,13 @@ let NEXT_ID = 0;
         }
     `]
 })
-export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, AfterContentInit, OnDestroy {
+export class IgxSliderComponent implements
+    ControlValueAccessor,
+    EditorProvider,
+    OnInit,
+    AfterViewInit,
+    AfterContentInit,
+    OnDestroy {
 
     // Limit handle travel zone
     private _pMin = 0;
@@ -811,67 +817,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
 
     /** @hidden */
     getEditElement() {
-        return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
+        return this.slider.nativeElement;
     }
 
-    /**
-     *
-     * @hidden
-     */
-    public onKeyDown($event: KeyboardEvent) {
-        if (this.disabled) {
-            return true;
-        }
-
-        // let incrementSign;
-
-        // if ($event.key.endsWith('Left')) {
-        //     incrementSign = -1;
-        // } else if ($event.key.endsWith('Right')) {
-        //     incrementSign = 1;
-        // } else {
-        //     return;
-        // }
-
-        // // const value = this.value;
-        // this._oldValue = this.value;
-
-        // if (this.isRange) {
-        //     if (this.activeHandle === SliderHandle.FROM) {
-        //         const newLower = (this.value as IRangeSliderValue).lower + incrementSign * this.step;
-
-        //         if (newLower >= (this.value as IRangeSliderValue).upper) {
-        //             this.thumbTo.nativeElement.focus();
-        //             return;
-        //         }
-
-        //         this.value = {
-        //             lower: newLower,
-        //             upper: (this.value as IRangeSliderValue).upper
-        //         };
-        //     } else {
-        //         const newUpper = (this.value as IRangeSliderValue).upper + incrementSign * this.step;
-
-        //         if (newUpper <= (this.value as IRangeSliderValue).lower) {
-        //             this.thumbFrom.nativeElement.focus();
-        //             return;
-        //         }
-
-        //         this.value = {
-        //             lower: (this.value as IRangeSliderValue).lower,
-        //             upper: (this.value as IRangeSliderValue).upper + incrementSign * this.step
-        //         };
-        //     }
-        // } else {
-        //     this.value = this.value as number + incrementSign * this.step;
-        // }
-
-        if (this.hasValueChanged(this._oldValue)) {
-            this.emitValueChanged(this._oldValue);
-        }
-
-        // this.showThumbsLabels(null);
-    }
     /**
      *
      * @hidden
@@ -886,10 +834,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     public update(mouseX) {
         if (this.disabled) {
             return;
-        }
-
-        if (this.isRange) {
-            this.swapThumb();
         }
 
         // Update To/From Values
@@ -916,6 +860,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
                     upper: (this.value as IRangeSliderValue).upper + value
                 };
             }
+
+            // Swap the thumbs if a collision appears.
+            this.swapThumb();
         } else {
             this.value = this.value as number + value;
         }
@@ -1086,12 +1033,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     private updateTrack() {
         const fromPosition = this.valueToFraction(this.lowerValue);
         const toPosition = this.valueToFraction(this.upperValue);
-        const positionGap = (this.valueToFraction(this.upperValue) - this.valueToFraction(this.lowerValue));
-
-        if (!this.isRange) {
-            this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
-        }
-
+        const positionGap = toPosition - fromPosition;
 
         this.track.nativeElement.style.transform = `scaleX(${1})`;
         this.track.nativeElement.style.left = `${fromPosition * 100}%`;
