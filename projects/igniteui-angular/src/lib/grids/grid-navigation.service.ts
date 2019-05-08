@@ -711,7 +711,7 @@ export class IgxGridNavigationService {
         const upperElement = element.children[columnIndex];
 
         if (!upperElement) {
-            const layoutRowEnd = this.grid.columnLayoutRowsCount + 1;
+            const layoutRowEnd = this.grid.multiRowLayoutRowSize + 1;
             upperElementColumn = columnLayout.children.find(c =>
                 (c.rowEnd === layoutRowEnd || c.rowStart + c.gridRowSpan === layoutRowEnd) &&
                 c.colStart <= currentColStart &&
