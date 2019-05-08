@@ -486,13 +486,14 @@ export class IgxGridNavigationService {
     }
 
     public navigateFirstCellIfPossible(eventArgs) {
-        if (!this.grid.filteringService.grid.filteredData || this.grid.filteringService.grid.filteredData.length > 0) {
-            if (this.grid.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0 ||
-                !this.grid.data || !this.grid.data.length) {
+        if (this.grid.rowList.length > 0) {
+            if (this.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0 ) {
                 eventArgs.stopPropagation();
                 return;
             }
             this.goToFirstCell();
+        } else if (this.grid.rootSummariesEnabled) {
+            this.onKeydownHome(0, true);
         }
         eventArgs.preventDefault();
     }

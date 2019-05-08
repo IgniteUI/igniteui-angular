@@ -483,6 +483,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
+        this.commitInput();
     }
 
     /**
