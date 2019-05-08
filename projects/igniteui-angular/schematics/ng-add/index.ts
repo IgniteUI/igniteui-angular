@@ -1,7 +1,7 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
-import { logSuccess, addDependencies, overwriteJsonFile } from '../utils/dependency-handler';
+import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspace } from '../utils/dependency-handler';
 
 import * as os from 'os';
 import { addResetCss } from './add-normalize';
@@ -30,36 +30,6 @@ function addIgxGridSupportForIe(polyfillsData: string): string {
 function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchema): boolean {
   const foundProp = getPropertyFromWorkspace(targetProp, workspace);
   return foundProp !== null && foundProp.key === targetProp;
-}
-
-/**
- * Recursively search for the targeted property name within the angular.json file.
- */
-function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
-  if (workspace.hasOwnProperty(targetProp)) {
-    return { key: targetProp, value: workspace[targetProp] };
-  }
-
-  const workspaceKeys = Object.keys(workspace);
-  for (const key of workspaceKeys) {
-    // If the target property is an array, return its key and its contents.
-    if (Array.isArray(workspace[key])) {
-      return {
-        key: curKey,
-        value: workspace[key]
-      };
-    } else if (workspace[key] instanceof Object) {
-      // If the target property is an object, go one level in.
-      if (workspace.hasOwnProperty(key)) {
-        const newValue = getPropertyFromWorkspace(targetProp, workspace[key], key);
-        if (newValue !== null) {
-          return newValue;
-        }
-      }
-    }
-  }
-
-  return null;
 }
 
 function enablePolyfills(tree: Tree, context: SchematicContext): string {
