@@ -33,13 +33,17 @@ export function addDependencies(options: Options): Rule {
             const version = pkgJson.dependencies[pkg];
             switch (pkg) {
                 case 'hammerjs':
-                    addPackageToPkgJson(tree, pkg, version, dependencies);
-                    addHammerJsToWorkspace(tree);
                     logIncludingDependency(context, pkg, version);
+                    addPackageToPkgJson(tree, pkg, version, dependencies);
+
+                    // import hammerjs in the main.ts file
+                    const mainTsPath = 'src/main.ts';
+                    const contents = 'import \'hammerjs\';\n' + tree.read(mainTsPath).toString();
+                    tree.overwrite(mainTsPath, contents);
                     break;
                 default:
-                    addPackageToPkgJson(tree, pkg, version, dependencies);
                     logIncludingDependency(context, pkg, version);
+                    addPackageToPkgJson(tree, pkg, version, dependencies);
                     break;
             }
         });
@@ -57,26 +61,6 @@ export function addDependencies(options: Options): Rule {
         addPackageToPkgJson(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli'], devDependencies);
         return tree;
     };
-}
-
-function addHammerJsToWorkspace(tree: Tree): Tree {
-    try {
-        const workspace = getWorkspace(tree);
-        const addedtoBuildScripts = addHammerToAngularWorkspace(workspace, 'build');
-        const addedtoToTestScripts = addHammerToAngularWorkspace(workspace, 'test');
-
-        if (addedtoBuildScripts || addedtoToTestScripts) {
-            overwriteJsonFile(tree, 'angular.json', workspace);
-        }
-
-        return tree;
-    } catch (e) {
-        if (e.toString().includes('Could not find (undefined)')) {
-            throw new SchematicsException('angular.json was not found in the project\'s root');
-        }
-
-        throw new Error(e.message);
-    }
 }
 
 /**
