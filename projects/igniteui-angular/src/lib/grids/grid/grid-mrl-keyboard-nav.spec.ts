@@ -300,7 +300,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             columns: [
                 { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
             ]
-        },{
+        }, {
             group: 'group2',
             columns: [
                 { field: 'Phone', rowStart: 1, colStart: 1 },
