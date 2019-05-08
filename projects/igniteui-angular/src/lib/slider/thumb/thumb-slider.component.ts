@@ -7,15 +7,11 @@ import {
     HostBinding,
     Output,
     EventEmitter,
-    OnInit} from '@angular/core';
+    OnInit,
+    OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
-
-
-// enum SliderHandle {
-//     FROM,
-//     TO
-// }
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -24,11 +20,11 @@ import { Observable, Subject } from 'rxjs';
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html'
 })
-export class IgxSliderThumbComponent implements OnInit {
+export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     private _timer;
-    private _oldValue;
     private _isActiveLabel = false;
+    private _destroy$ = new Subject<boolean>();
 
     public isActive = false;
 
@@ -48,7 +44,7 @@ export class IgxSliderThumbComponent implements OnInit {
     public onPan: Subject<number>;
 
     @Input()
-    public distancePerStep: number;
+    public stepDistance: number;
 
     @Input()
     public step: number;
@@ -79,10 +75,22 @@ export class IgxSliderThumbComponent implements OnInit {
 
     constructor (private _elementRef: ElementRef) { }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
-        this.onPan.subscribe(value =>
-            this.updateValue(value)
-        );
+        this.onPan
+            .pipe(takeUntil(this._destroy$))
+            .subscribe(mouseX =>
+                this.updateThumbValue(mouseX)
+            );
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this._destroy$.next(true);
     }
 
     @HostListener('keydown', ['$event'])
@@ -112,13 +120,7 @@ export class IgxSliderThumbComponent implements OnInit {
         this.toggleThumbLabel();
     }
 
-    public updateValue(mouseX: number) {
-        this.updateThumbValue(mouseX);
-    }
-
     public showThumbsLabels() {
-        this._oldValue = this.value;
-
         if (this.disabled) {
             return;
         }
@@ -136,25 +138,29 @@ export class IgxSliderThumbComponent implements OnInit {
     }
 
     private updateThumbValue(mouseX: number) {
-        const updateRange = this.fractionToValue(mouseX);
-        if (this.isActive && updateRange !== 0) {
-            this.onThumbValueChange.emit(updateRange);
+        const updateValue = this.calculateTrackUpdate(mouseX);
+        if (this.isActive && updateValue !== 0) {
+            this.onThumbValueChange.emit(updateValue);
         }
     }
 
-    private stepToProceed(scaleX, stepDist, direction) {
-        const increment = Math.round(scaleX / stepDist) * this.step;
-        return direction < 0 ? -increment : increment;
+    private calculateTrackUpdate(mouseX: number): number {
+        const scaleX = mouseX - this._thumbPositionX;
+        const stepDistanceCenter = this.stepDistance / 2;
+
+        // If the thumb scale range (slider update) is less thàn a half step,
+        // the position stays the same.
+        const scaleXPositive = Math.abs(scaleX);
+        if (scaleXPositive < stepDistanceCenter) {
+            return 0;
+        }
+
+        return this.stepToProceed(scaleX, this.stepDistance);
     }
 
-    private fractionToValue(mouseX: number): number {
-        const scaleX = Math.abs(mouseX - this._thumbPositionX);
-        const distancePerStep = this.distancePerStep;
-        const stepRangeCenter = distancePerStep / 2;
-
-        return scaleX > stepRangeCenter ? this.stepToProceed(scaleX, distancePerStep, mouseX - this._thumbPositionX) : 0;
+    private stepToProceed(scaleX, stepDist) {
+        return Math.round(scaleX / stepDist) * this.step;
     }
-
 
     private toggleThumbLabel() {
         this.showThumbsLabels();

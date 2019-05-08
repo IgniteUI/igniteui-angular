@@ -6,12 +6,14 @@ import {
     Directive,
     TemplateRef,
     ContentChild,
-    HostListener,
+    AfterContentInit,
+    OnDestroy,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSliderThumbModule, IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
@@ -101,14 +103,14 @@ let NEXT_ID = 0;
         }
     `]
 })
-export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit {
+export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, AfterContentInit, OnDestroy {
 
     // Limit handle travel zone
-    private pMin = 0;
-    private pMax = 1;
+    private _pMin = 0;
+    private _pMax = 1;
 
     // From/upperValue in percent values
-    private hasViewInit = false;
+    private _hasViewInit = false;
     private _minValue = 0;
     private _maxValue = 100;
     private _lowerBound?: number;
@@ -125,8 +127,14 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
 
+    private _destroy$ = new Subject<boolean>();
+
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
+
+    public stepDistance = this._step;
+    public onPan: Subject<number> = new Subject<number>();
+
 
     @ViewChild('slider')
     private slider: ElementRef;
@@ -222,8 +230,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             this.upperValue = this.labels.length - 1;
         }
 
-        if (this.hasViewInit) {
-            // this.positionHandlesAndUpdateTrack();
+        if (this._hasViewInit) {
             this.updateTrack();
         }
     }
@@ -260,7 +267,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             this.maxValue = this._maxValue;
             this.minValue = this._minValue;
         }
-        if (this.hasViewInit) {
+        if (this._hasViewInit) {
             this.positionHandlesAndUpdateTrack();
             this.setTickInterval(labels);
         }
@@ -562,7 +569,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
 
         this._onChangeCallback(this.value);
 
-        if (this.hasViewInit) {
+        if (this._hasViewInit) {
             this.positionHandlesAndUpdateTrack();
         }
     }
@@ -581,11 +588,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @Output()
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
-    public get distancePerStep() {
-        return this.slider.nativeElement.getBoundingClientRect().width / this.maxValue * this.step;
-    }
-
-    public onPan: Subject<number> = new Subject<number>();
 
     constructor(private renderer: Renderer2) {}
 
@@ -748,25 +750,42 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             }
         }
 
-        this.pMin = this.valueToFraction(this.lowerBound) || 0;
-        this.pMax = this.valueToFraction(this.upperBound) || 1;
+        this._pMin = this.valueToFraction(this.lowerBound) || 0;
+        this._pMax = this.valueToFraction(this.upperBound) || 1;
     }
 
     /**
      * @hidden
      */
     public ngAfterViewInit() {
-        this.hasViewInit = true;
+        this._hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
         this.setTickInterval(this.labels);
 
-        this.thumbFrom.onThumbValueChange
-            .pipe()
-            .subscribe(value => this.thumbChanged(value, SliderHandle.FROM));
+        if (this.thumbFrom) {
+            this.thumbFrom.onThumbValueChange
+                .pipe(takeUntil(this._destroy$))
+                .subscribe(value => this.thumbChanged(value, SliderHandle.FROM));
+        }
 
         this.thumbTo.onThumbValueChange
-            .pipe()
+            .pipe(takeUntil(this._destroy$))
             .subscribe(value => this.thumbChanged(value, SliderHandle.TO));
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+        // Calculates the distance between every step in pixels.
+        this.stepDistance = this.calculateStepDistance();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this._destroy$.next(true);
     }
 
     /**
@@ -858,12 +877,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      * @hidden
      */
     public onTap($event) {
-        this._oldValue = this.value;
         this.update($event.srcEvent.x);
-
-        if (this.hasValueChanged(this._oldValue)) {
-            this.emitValueChanged(this._oldValue);
-        }
     }
     /**
      *
@@ -879,18 +893,36 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         }
 
         // Update To/From Values
-        // this.updateThumbValue(mouseX);
         this.onPan.next(mouseX);
 
         // Finally do positionHandlesAndUpdateTrack the DOM
         // based on data values
-        // this.positionHandlesAndUpdateTrack();
+        this.positionHandlesAndUpdateTrack();
         this._onTouchedCallback();
     }
 
-    public thumbChanged(value: number, thumb: SliderHandle) {
-        console.log(value);
-        console.log(thumb);
+    public thumbChanged(value: number, thumb: number) {
+        const oldValue = this.value;
+
+        if (this.isRange) {
+            if (thumb === SliderHandle.FROM) {
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower + value,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else {
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: (this.value as IRangeSliderValue).upper + value
+                };
+            }
+        } else {
+            this.value = this.value as number + value;
+        }
+
+        if (this.hasValueChanged(oldValue)) {
+            this.emitValueChanged(oldValue);
+        }
     }
 
     public swapThumb() {
@@ -907,10 +939,17 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     public findClosestThumb(event) {
         if (this.isRange) {
             this.closestHandle(event.x);
-            this.update(event.x);
+        } else {
+            this.thumbTo.nativeElement.focus();
         }
 
+        this.update(event.x);
+
         event.preventDefault();
+    }
+
+    private calculateStepDistance() {
+        return this.slider.nativeElement.getBoundingClientRect().width / this.maxValue * this.step;
     }
 
     private toggleThumb() {
@@ -1040,54 +1079,9 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         });
     }
 
-    // // Set Values for To/From based on active handle
-    // private updateThumbValue(mouseX: number) {
-    //     if (this.thumbTo.isActive) {
-    //         const updateRange = this.fractionToValue(mouseX, this.thumbTo);
-    //         if (updateRange === 0) {
-    //             return;
-    //         }
-    //         if (this.isRange) {
-    //             this.value = {
-    //                 lower: (this.value as IRangeSliderValue).lower,
-    //                 upper: (this.value as IRangeSliderValue).upper + updateRange
-    //             };
-    //         } else {
-    //             this.value = (this.value as IRangeSliderValue).upper + updateRange;
-    //         }
-    //     }
-
-    //     if (this.thumbFrom.isActive) {
-    //         const updateRange = this.fractionToValue(mouseX, this.thumbFrom);
-    //         if (updateRange === 0) {
-    //             return;
-    //         }
-    //         this.value = {
-    //             lower: (this.value as IRangeSliderValue).lower + updateRange,
-    //             upper: (this.value as IRangeSliderValue).upper
-    //         };
-    //     }
-    // }
-
-    // private stepToProceed(scaleX, stepDist, direction) {
-    //     const increment = Math.round(scaleX / stepDist) * this.step;
-    //     return direction < 0 ? -increment : increment;
-    // }
-
     private valueToFraction(value: number) {
-        return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), this.pMin, this.pMax);
+        return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), this._pMin, this._pMax);
     }
-
-    // private fractionToValue(mouseX: number, thumb: IgxSliderThumbComponent): number {
-    //     const thumbBounderies = thumb.nativeElement.getBoundingClientRect();
-    //     const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
-    //     const thumbPositionX = thumbBounderies.x + thumbCenter;
-    //     const scaleX = Math.abs(mouseX - thumbPositionX);
-    //     const distancePerStep = this.slider.nativeElement.getBoundingClientRect().width / this.maxValue * this.step;
-    //     const stepRangeCenter = distancePerStep / 2;
-
-    //     return scaleX > stepRangeCenter ? this.stepToProceed(scaleX, distancePerStep, mouseX - thumbPositionX) : 0;
-    // }
 
     private updateTrack() {
         const fromPosition = this.valueToFraction(this.lowerValue);
