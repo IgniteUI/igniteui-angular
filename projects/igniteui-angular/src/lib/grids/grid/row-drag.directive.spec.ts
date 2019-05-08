@@ -23,6 +23,7 @@ import {
 import { getHostElement } from '@angular/core/src/render3';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { Grid10x30WithSummariesComponent } from '../../test-utils/grid-samples.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
@@ -32,7 +33,7 @@ const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 
-describe('IgxGrid - Row Drag Tests', () => {
+fdescribe('IgxGrid - Row Drag Tests', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
@@ -223,7 +224,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(row.grid.rowDragging).toBeFalsy();
             expect(row.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeFalsy();
         }));
-        it('should align horizontal scrollbar with first non-pinned data cell', fakeAsync(() => {
+        it('should align horizontal scrollbar with first non-pinned column', fakeAsync(() => {
             // has no draggable and selectable rows
             grid.rowSelectable = false;
             grid.rowDraggable = false;
@@ -252,9 +253,9 @@ describe('IgxGrid - Row Drag Tests', () => {
             grid.rowSelectable = true;
             grid.rowDraggable = true;
             fixture.detectChanges();
-            rowSelectElement = fixture.debugElement.query(By.css('.igx-grid__cbx-selection'));
+            rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
             dragIndicatorElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
-            horizontalScrollbarElement = fixture.debugElement.query(By.css('.igx-vhelper--horizontal'));
+            horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
             const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
@@ -354,6 +355,17 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dropGrid: IgxGridComponent;
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
+        function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
+            const dragRow = dragGridRows[dragRowIndex];
+            const dragRowCells = dragRow.cells.toArray();
+
+            dropGridRows = dropGrid.rowList.toArray();
+            const dropRow = dropGridRows[dropRowIndex];
+            const dropRowCells = dropRow.cells.toArray();
+            for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex ++) {
+                expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
+            }
+        }
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
@@ -367,22 +379,16 @@ describe('IgxGrid - Row Drag Tests', () => {
         it('should drop data in the proper drop grid columns', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
-            const dragRowCells = row.cells.toArray();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-
-            dropGridRows = dropGrid.rowList.toArray();
-            const dropRowCells = dropGridRows[0].cells.toArray();
-            for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
-                expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
-            }
+            verifyDragAndDropRowCellValues(1, 0);
         }));
         it('column moving - should drop row data in correct columns', (async () => {
             const dragGridColumns = dragGrid.columnList.toArray();
@@ -394,7 +400,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             const dragRowCells = row.cells.toArray();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
@@ -418,7 +424,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             const dragRowCells = row.cells.toArray();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
@@ -433,6 +439,48 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(dropRowCells[2].value).toEqual(dragRowCells[0].value);
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
+        }));
+        it('sorting - should be able to drag sorted row', (async () => {
+            dragGrid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+            verifyDragAndDropRowCellValues(1, 0);
+        }));
+        fit('filtering - should be able to drag filtered row', (async () => {
+            dragGrid.filter('ProductName', 'Advantage', IgxStringFilteringOperand.instance().condition('contains'), true);
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+            verifyDragAndDropRowCellValues(1, 0);
         }));
         it('row selection - should not change row selection on row drag', (async () => {
             dragGrid.rowSelectable = true;
