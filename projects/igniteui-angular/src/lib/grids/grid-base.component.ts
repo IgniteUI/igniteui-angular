@@ -4905,10 +4905,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.verticalScrollContainer.scrollTo(rowIndex);
                 this.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
-                    this.perFormAction(rowIndex, visibleColIndex, cb);
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
                 });
             } else {
-                this.perFormAction(rowIndex, visibleColIndex, cb);
+                this.executeCallback(rowIndex, visibleColIndex, cb);
             }
         } else {
             const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
@@ -4919,10 +4919,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.verticalScrollContainer.scrollTo(rowIndex);
                         this.verticalScrollContainer.onChunkLoad
                         .pipe(first()).subscribe(() => {
-                            this.perFormAction(rowIndex, visibleColIndex, cb);
+                            this.executeCallback(rowIndex, visibleColIndex, cb);
                         });
                     } else {
-                        this.perFormAction(rowIndex, visibleColIndex, cb);
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
                     }
 
                 });
@@ -4962,7 +4962,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private perFormAction(rowIndex, visibleColIndex = -1, cb: Function = null) {
+    private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
         let targetType, target;
         const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
@@ -4974,13 +4974,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 break;
             case 'igx-grid-summary-row':
                 targetType = GridKeydownTargetType.summaryCell;
-                target = row.summaryCells && visibleColIndex !== -1 ?
+                target = visibleColIndex !== -1 ?
                     row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
                 break;
             default:
                 targetType = GridKeydownTargetType.dataCell;
-                target = row.cells && visibleColIndex !== -1 ?
-                    row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
+                target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
         const args = { targetType: targetType, target: target };

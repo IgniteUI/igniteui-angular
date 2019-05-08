@@ -2,13 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-##7.2.7
-- `onFocusChange` event is deprecated.
-- `onGridKeydown` is exposed. The event will emit
-`IGridKeydownEventArgs { targetType: GridKeydownTargetType; target: Object; event: Event; cancel: boolean; }`
-- `navigateTo(rowIndex: number, visibleColumnIndex: number, callback({targetType, target: Object }))` - this method allows you to navigate to a randon position in the grid;
-- `getNextCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the next cell, that match specific criteria according to the current position
-- `getPreviousCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the previous cell, that match specific criteria according to the current position
+##7.2.8
+- `IgxGrid` Custom keyboard navigation
+    - `onFocusChange` event is deprecated.
+    - `onGridKeydown` is exposed. The event will emit
+    `IGridKeydownEventArgs { targetType: GridKeydownTargetType; target: Object; event: Event; cancel: boolean; }`
+    - `navigateTo(rowIndex: number, visibleColumnIndex: number, callback({targetType, target: Object }))` - this method allows you to navigate to a randon position in the grid;
+    - `getNextCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the next cell, that match specific criteria according to the current position
+    - `getPreviousCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the previous cell, that match specific criteria according to the current position
 
 ## 7.2.6
 - `igxGrid`
