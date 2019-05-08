@@ -563,8 +563,8 @@ export class IgxGridNavigationService {
 
         if (!prevElement) {
             // try extracting first element from the previous layout
-            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
-            const prevLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex - 1];
+            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout && !c.hidden).indexOf(columnLayout);
+            const prevLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[currentLayoutIndex - 1];
             if (!prevLayout) {
                 // reached the end
                 return null;
@@ -577,18 +577,16 @@ export class IgxGridNavigationService {
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
             columnIndex = prevLayout.children.toArray().indexOf(prevElementColumn);
-            prevElement = element.previousElementSibling.children[columnIndex];
 
-            if (!element.previousElementSibling) {
+            if (!this.isColumnFullyVisible(prevElementColumn.visibleIndex)) {
+                this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
                     prevElement = element.previousElementSibling.children[columnIndex];
                     prevElement.focus({ preventScroll: true });
                 });
-                // TODO could be precised scrolling to the cell into the block, not the block,
-                // as scrolling to the start of the block may not show the cell itself
-                this.horizontalScroll(cell.rowIndex).scrollTo(cell.unpinnedIndex);
+                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.unpinnedIndex);
                 return;
             } else {
                 prevElement = element.previousElementSibling.children[columnIndex];
@@ -614,8 +612,8 @@ export class IgxGridNavigationService {
 
         if (!nextElement) {
             // try extracting first element from the next layout
-            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout).indexOf(columnLayout);
-            const nextLayout = this.grid.columns.filter(c => c.columnLayout)[currentLayoutIndex + 1];
+            const currentLayoutIndex = this.grid.columns.filter(c => c.columnLayout && !c.hidden).indexOf(columnLayout);
+            const nextLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[currentLayoutIndex + 1];
             if (!nextLayout) {
                 // reached the end
                 return null;
@@ -626,16 +624,15 @@ export class IgxGridNavigationService {
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
             columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
-            if (!element.nextElementSibling) {
+            if (!this.isColumnLeftFullyVisible(nextElementColumn.visibleIndex)) {
+                this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
                     nextElement = element.nextElementSibling.children[columnIndex];
-                    nextElement.focus();
+                    nextElement.focus({ preventScroll: true });
                 });
-                // TODO could be precised scrolling to the cell into the block, not the block,
-                // as scrolling to the start of the block may not show the cell itself
-                this.horizontalScroll(cell.rowIndex).scrollTo(cell.unpinnedIndex);
+                this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
                 return;
             } else {
                 nextElement = element.nextElementSibling.children[columnIndex];
