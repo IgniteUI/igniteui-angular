@@ -141,7 +141,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -216,9 +216,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on the input group's prefix.
      */
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === KEYS.TAB) {
             if (event.shiftKey) {
