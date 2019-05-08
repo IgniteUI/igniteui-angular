@@ -292,6 +292,40 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
+    it('should allow navigating down to a cell from the next row with hidden column layout', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            hidden: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        },{
+            group: 'group2',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        thirdCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
+
     it('should allow navigating down with scrolling', (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
@@ -324,7 +358,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" (onSelection)="cellSelected($event)">
-        <igx-column-layout *ngFor='let group of colGroups'>
+        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
@@ -342,7 +376,7 @@ export class ColumnLayoutTestComponent {
         { field: 'ContactName', rowStart: 1, colStart: 3 },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
     ];
-    colGroups = [
+    colGroups: Array<any> = [
         {
             group: 'group1',
             columns: this.cols

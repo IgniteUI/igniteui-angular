@@ -664,7 +664,7 @@ export class IgxGridNavigationService {
             nextElementColumn = columnLayout.children.find(c => c.rowStart === 1 &&
                 c.colStart <= currentColStart &&
                 (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
-            columnIndex = this.grid.columns.filter(c => !c.columnLayout).indexOf(nextElementColumn);
+            columnIndex = this.grid.columns.filter(c => !c.columnLayout && !c.parent.hidden).indexOf(nextElementColumn);
 
             const nextIndex = cell.row.index + 1;
             let nextRow;
@@ -687,7 +687,9 @@ export class IgxGridNavigationService {
                 this.grid.verticalScrollContainer.scrollTo(nextIndex);
             } else {
                 nextRow = this.grid.getRowByIndex(nextIndex);
-                nextRow.cells.toArray()[columnIndex].nativeElement.focus({ preventScroll: true });
+                if (nextRow && nextRow.cells) {
+                    nextRow.cells.toArray()[columnIndex].nativeElement.focus({ preventScroll: true });
+                }
             }
             return;
         }
@@ -716,7 +718,7 @@ export class IgxGridNavigationService {
                 (c.rowEnd === layoutRowEnd || c.rowStart + c.gridRowSpan === layoutRowEnd) &&
                 c.colStart <= currentColStart &&
                 (currentColStart < c.rowEnd || currentColStart < c.rowStart + c.gridRowSpan));
-            columnIndex = this.grid.columns.filter(c => !c.columnLayout).indexOf(upperElementColumn);
+            columnIndex = this.grid.columns.filter(c => !c.columnLayout && !c.parent.hidden).indexOf(upperElementColumn);
 
             const prevIndex = cell.row.index - 1;
             let prevRow;
