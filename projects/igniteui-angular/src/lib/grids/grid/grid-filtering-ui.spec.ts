@@ -2526,6 +2526,37 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).toBeNull();
         }));
+
+        it('Should commit the input and new chip after picking date from calendar for filtering.', fakeAsync(() => {
+            // Click date filter chip to show filter row.
+            const filterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent));
+            const dateFilterCell = filterCells.find((fc) => fc.componentInstance.column.field === 'ReleaseDate');
+            const dateFilterCellChip = dateFilterCell.query(By.directive(IgxChipComponent));
+            dateFilterCellChip.nativeElement.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click input to open calendar.
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+            input.nativeElement.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click the today date.
+            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
+            (<HTMLElement>todayDayItem).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the chip and input are committed.
+            const activeFiltersArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
+            const activeFilterChip = activeFiltersArea.query(By.directive(IgxChipComponent));
+            expect((<IgxChipComponent>activeFilterChip.componentInstance).selected).toBe(false, 'chip is not committed');
+            expect((<IgxInputDirective>input.componentInstance).value).toBeNull('input value is present and not committed');
+        }));
     });
 
     describe(null, () => {
