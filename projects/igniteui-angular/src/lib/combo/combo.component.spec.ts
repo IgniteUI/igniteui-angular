@@ -3090,7 +3090,6 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
             expect(combo.selectedItems()).toEqual(fixture.componentInstance.comboSelectedItems);
             combo.selectItems([...data].splice(1, 3), true);
             fixture.detectChanges();

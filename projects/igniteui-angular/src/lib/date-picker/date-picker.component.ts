@@ -35,11 +35,9 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import {
     OverlaySettings,
     IgxOverlayService,
-    VerticalAlignment,
-    HorizontalAlignment,
     PositionSettings,
-    ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy
 } from '../services/index';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
@@ -769,8 +767,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     public ngOnInit(): void {
         this._positionSettings = {
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
             openAnimation: fadeIn,
             closeAnimation: fadeOut
         };
@@ -780,7 +776,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
-            positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+            positionStrategy: new AutoPositionStrategy(this._positionSettings),
             outlet: outlet
         };
 
@@ -934,7 +930,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     }
 
                     dropDownOverlay.positionStrategy.settings.target = dropDownTarget;
-                    dropDownOverlay.positionStrategy.settings.verticalDirection = this._getDropDownVerticalAlignment(dropDownTarget);
                 }
 
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
@@ -1229,21 +1224,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         requestAnimationFrame(() => {
             this.getEditElement().setSelectionRange(start, end);
         });
-    }
-
-    private _getDropDownVerticalAlignment(dropDownTarget: HTMLElement): VerticalAlignment {
-        const windowHeight = getViewportRect(document).height;
-        const inputGroupRect = dropDownTarget.getBoundingClientRect() as DOMRect;
-        const heightAbove = inputGroupRect.top + inputGroupRect.height;
-        const heightBelow = windowHeight - heightAbove;
-
-        if (heightBelow > this.calendarHeight) {
-            return VerticalAlignment.Bottom;
-        } else if (heightAbove > this.calendarHeight) {
-            return VerticalAlignment.Top;
-        } else {
-            return VerticalAlignment.Middle;
-        }
     }
 
     /**

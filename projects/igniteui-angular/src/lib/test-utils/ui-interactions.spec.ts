@@ -1,3 +1,5 @@
+import { HorizontalAlignment, VerticalAlignment, Point } from '../services';
+
 export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
@@ -138,6 +140,9 @@ export class UIInteractions {
     }
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
+        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
             resolve();
@@ -186,5 +191,22 @@ export class UIInteractions {
             element.dispatchEvent(touchEventObject);
             resolve();
         });
+    }
+
+    /**
+     * Calculate point within element
+     * @param element Element to calculate point for
+     * @param hAlign The horizontal position of the point within the element (defaults to center)
+     * @param vAlign The vertical position of the point within the element (defaults to middle)
+     */
+    public static getPointFromElement(
+        element: Element,
+        hAlign: HorizontalAlignment = HorizontalAlignment.Center,
+        vAlign: VerticalAlignment = VerticalAlignment.Middle): Point {
+            const elementRect = element.getBoundingClientRect();
+            return {
+                x: elementRect.right + hAlign * elementRect.width,
+                y: elementRect.bottom + vAlign * elementRect.height
+            };
     }
 }
