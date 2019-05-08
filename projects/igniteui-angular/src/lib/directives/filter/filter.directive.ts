@@ -36,7 +36,7 @@ export class IgxFilterOptions {
         } else if (item.element) {
             if (item.element.nativeElement) {
                 result = item.element.nativeElement.textContent.trim();
-            // Check if element doesn't return the DOM element directly
+                // Check if element doesn't return the DOM element directly
             } else if (item.element.textContent) {
                 result = item.element.textContent.trim();
             }
@@ -126,8 +126,8 @@ export class IgxFilterDirective implements OnChanges {
 
 export class IgxFilterPipe implements PipeTransform {
     public transform(items: any[],
-                     // options - initial settings of filter functionality
-                     options: IgxFilterOptions) {
+        // options - initial settings of filter functionality
+        options: IgxFilterOptions) {
 
         let result = [];
 
@@ -140,7 +140,13 @@ export class IgxFilterPipe implements PipeTransform {
         }
 
         const selectAll = items[0];
-        result = items.slice(1, items.length).filter((item: any) => {
+        const selectAllText = options.formatter(options.get_value(selectAll, options.key));
+        const exclude = selectAllText === 'select all';
+        if (exclude) {
+            items = items.slice(1, items.length);
+        }
+
+        result = items.filter((item: any) => {
             const match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
 
             if (match) {
@@ -156,7 +162,7 @@ export class IgxFilterPipe implements PipeTransform {
             return match;
         });
 
-        if (result.length > 0) {
+        if (result.length > 0 && exclude) {
             result.unshift(selectAll);
         }
 
