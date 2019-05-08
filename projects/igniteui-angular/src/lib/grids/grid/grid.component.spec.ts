@@ -495,7 +495,7 @@ describe('IgxGrid Component Tests', () => {
             fix.componentInstance.columns[1].width = '400px';
             fix.componentInstance.columns.push(
                 { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
-                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
             );
             fix.detectChanges();
             fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 100;
@@ -508,6 +508,29 @@ describe('IgxGrid Component Tests', () => {
             await wait(100);
             fix.detectChanges();
             const rows = fix.componentInstance.grid.rowList.toArray();
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i] as IgxRowComponent<any>;
+                expect(row.cells.length).toEqual(4);
+            }
+        });
+
+        it('should not keep a cached-out template as master after column resizing', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
+            );
+            fix.detectChanges();
+            fix.componentInstance.grid.groupBy({ fieldName: 'value', dir: SortingDirection.Asc });
+            fix.detectChanges();
+            fix.componentInstance.grid.getColumnByName('index').width = '100px';
+            fix.componentInstance.grid.reflow();
+            const rows = fix.componentInstance.grid.dataRowList.toArray();
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i] as IgxRowComponent<any>;
                 expect(row.cells.length).toEqual(4);
