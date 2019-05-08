@@ -697,6 +697,7 @@
         border-bottom: none !important;
     }
 
+
     %grid-tbody {
         position: relative;
         background: --var($theme, 'content-background');
@@ -793,7 +794,7 @@
         padding: map-get($grid-cell-padding, 'comfortable');
         padding-right: 0;
         background: inherit;
-        z-index: 1;
+        z-index: 4;
         cursor: move;
     }
 
