@@ -33,7 +33,7 @@ function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchem
 }
 
 /**
- * Recursively search for the targetted property name within the angular.json file.
+ * Recursively search for the targeted property name within the angular.json file.
  */
 function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
   if (workspace.hasOwnProperty(targetProp)) {
@@ -62,7 +62,7 @@ function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = '
   return null;
 }
 
-function enablePolyfills(tree: Tree, context: SchematicContext): any {
+function enablePolyfills(tree: Tree, context: SchematicContext): string {
   const targetFile = 'src/polyfills.ts';
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
