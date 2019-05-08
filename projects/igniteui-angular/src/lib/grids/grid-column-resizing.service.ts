@@ -184,6 +184,15 @@ export class IgxColumnResizingService {
         const relativeColumns = column.getResizableColUnderEnd();
         const combinedSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
 
+        if (column.pinned) {
+            const pinnedWidth = this.column.grid.getPinnedWidth(true);
+            const maxPinnedWidth = this.column.grid.calcPinnedContainerMaxWidth;
+
+            if (pinnedWidth + diff > maxPinnedWidth) {
+                diff = maxPinnedWidth - pinnedWidth;
+            }
+        }
+
         // Resize first those who might reach min/max width
         let columnsToResize = [...relativeColumns];
         let updatedDiff = diff;
