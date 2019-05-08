@@ -722,8 +722,10 @@ export class IgxGridNavigationService {
 
             const prevIndex = cell.row.index - 1;
             let prevRow;
-
-            if (!cell.row.nativeElement.previousElementSibling) {
+            const rowElement = cell.row.nativeElement;
+            const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
+            if (prevIndex >= 0 && (!rowElement.previousElementSibling ||
+                rowElement.previousElementSibling.offsetTop < Math.abs(containerTopOffset))) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.verticalScrollContainer.onChunkLoad
                     .pipe(first())
@@ -736,11 +738,13 @@ export class IgxGridNavigationService {
                 this.grid.verticalScrollContainer.scrollTo(prevIndex);
             } else {
                 prevRow = this.grid.getRowByIndex(prevIndex);
-                prevRow.cells.toArray()[columnIndex].nativeElement.focus();
+                if (prevRow && prevRow.cells) {
+                    prevRow.cells.toArray()[columnIndex].nativeElement.focus({ preventScroll: true });
+                }
             }
             return;
         }
-        upperElement.focus();
+        upperElement.focus({ preventScroll: true });
     }
 
     private getLastPinnedFilterableColumn(): IgxColumnComponent {

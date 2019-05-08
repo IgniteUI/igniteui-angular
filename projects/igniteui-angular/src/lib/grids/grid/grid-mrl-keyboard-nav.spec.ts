@@ -353,6 +353,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[rowIndex + 1].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
+
+    it('should retain the focus when the first cell is reached', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'Phone', rowStart: 1, colStart: 1 },
+                { field: 'City', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        secondCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+    }));
 });
 
 @Component({
