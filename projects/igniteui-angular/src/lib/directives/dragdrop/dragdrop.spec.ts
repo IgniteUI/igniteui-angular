@@ -106,9 +106,9 @@ describe('IgxDrag/IgxDrop', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(firstDrag['_dragGhost']).toBeDefined();
-            expect(firstDrag['_dragGhost'].id).toEqual('firstDrag');
-            expect(firstDrag['_dragGhost'].className).toEqual('dragElem');
+            expect(firstDrag['dragGhost']).toBeDefined();
+            expect(firstDrag['dragGhost'].id).toEqual('firstDrag');
+            expect(firstDrag['dragGhost'].className).toEqual('dragElem');
             expect(document.getElementsByClassName('dragElem').length).toEqual(4);
 
             return fix.whenStable();
@@ -116,8 +116,8 @@ describe('IgxDrag/IgxDrop', () => {
             fix.detectChanges();
 
             // We need to trigger the pointerup on the dragGhost because this is the element we move and is under the mouse
-            UIInteractions.simulatePointerEvent('pointerup', firstDrag['_dragGhost'], startingX + 10, startingY + 10);
-            expect(firstDrag['_dragGhost']).toBeNull();
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag['dragGhost'], startingX + 10, startingY + 10);
+            expect(firstDrag['dragGhost']).toBeNull();
             expect(document.getElementsByClassName('dragElem').length).toEqual(3);
 
             done();
@@ -159,7 +159,7 @@ describe('IgxDrag/IgxDrop', () => {
             fix.detectChanges();
 
             // We need to trigger the pointerup on the dragGhost because this is the element we move and is under the mouse
-            UIInteractions.simulatePointerEvent('pointerup', firstDrag['_dragGhost'], startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag['dragGhost'], startingX + 10, startingY + 10);
 
             expect(firstDrag.dragStart.emit).toHaveBeenCalled();
             expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
@@ -205,7 +205,7 @@ describe('IgxDrag/IgxDrop', () => {
             fix.detectChanges();
 
             const event =
-                UIInteractions.simulatePointerEvent('pointermove', firstDrag['_dragGhost'], dropAreaLeft  + 100, dropAreaTop  + 5);
+                UIInteractions.simulatePointerEvent('pointermove', firstDrag['dragGhost'], dropAreaLeft  + 100, dropAreaTop  + 5);
 
 
             expect(dropArea.onEnter.emit).toHaveBeenCalledWith({
@@ -227,13 +227,14 @@ describe('IgxDrag/IgxDrop', () => {
             fix.detectChanges();
 
             // We need to trigger the pointerup on the dragGhost because this is the element we move and is under the mouse
-            const eventUp = UIInteractions.simulatePointerEvent('pointerup', firstDrag['_dragGhost'], dropAreaLeft + 100, dropAreaTop + 20);
+            const eventUp = UIInteractions.simulatePointerEvent('pointerup', firstDrag['dragGhost'], dropAreaLeft + 100, dropAreaTop + 20);
             await wait();
 
             expect(dropArea.onDrop.emit).toHaveBeenCalledWith({
                 originalEvent: eventUp,
                 owner: dropArea,
                 drag: firstDrag,
+                dragData: firstDrag.data,
                 offsetX: 100,
                 offsetY: 20,
                 cancel: false

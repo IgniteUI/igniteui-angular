@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:lib": "node --max_old_space_size=2048 node_modules/@angular/cli/bin/ng test igniteui-angular --watch=false --no-progress --code-coverage",
+    "test:lib": "ng test igniteui-angular --watch=false --no-progress --code-coverage",
     "test:lib:azure": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.azure.conf.js",
     "test:lib:watch": "ng test igniteui-angular",
     "test:schematics": "node -r ts-node/register ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/migrations/**/*.spec.ts ./projects/igniteui-angular/schematics/**/*.spec.ts",
