@@ -6,15 +6,16 @@ import { HorizontalAlignment, VerticalAlignment, PositionSettings } from '../uti
  * to fit in the view port in case the element is partially getting out of view
  */
 export class ElasticPositionStrategy extends BaseFitPositionStrategy {
-    protected fitInViewPort(element: HTMLElement, settings: PositionSettings, connectedFit: ConnectedFit, initialCall?: boolean) {
+    /** @inheritdoc */
+    protected fitInViewport(element: HTMLElement, settings: PositionSettings, connectedFit: ConnectedFit) {
         element.classList.add('igx-overlay__content--elastic');
         let transformString = '';
         if (!connectedFit.fitHorizontal) {
-            const minReduction = Math.max(0, connectedFit.elementRect.width - this.settings.minSize.width);
-            const leftExtend = Math.max(0, connectedFit.viewPortRect.left - connectedFit.elementRect.left);
-            const rightExtend = Math.max(0, connectedFit.elementRect.right - connectedFit.viewPortRect.right);
+            const minReduction = Math.max(0, connectedFit.contentElementRect.width - this.settings.minSize.width);
+            const leftExtend = Math.max(0, connectedFit.viewPortRect.left - connectedFit.leftBorder);
+            const rightExtend = Math.max(0, connectedFit.rightBorder - connectedFit.viewPortRect.right);
             const reduction = Math.min(minReduction, leftExtend + rightExtend);
-            element.style.width = `${connectedFit.elementRect.width - reduction}px`;
+            element.style.width = `${connectedFit.contentElementRect.width - reduction}px`;
 
             //  if direction is center and element goes off the screen in left direction we should push the
             //  element to the right. Otherwise only the right border will move to the left which is not ok
@@ -31,11 +32,11 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
         }
 
         if (!connectedFit.fitVertical) {
-            const minReduction = Math.max(0, connectedFit.elementRect.height - this.settings.minSize.height);
-            const topExtend = Math.max(0, connectedFit.viewPortRect.top - connectedFit.elementRect.top);
-            const bottomExtend = Math.max(0, connectedFit.elementRect.bottom - connectedFit.viewPortRect.bottom);
+            const minReduction = Math.max(0, connectedFit.contentElementRect.height - this.settings.minSize.height);
+            const topExtend = Math.max(0, connectedFit.viewPortRect.top - connectedFit.topBorder);
+            const bottomExtend = Math.max(0, connectedFit.bottomBorder - connectedFit.viewPortRect.bottom);
             const reduction = Math.min(minReduction, topExtend + bottomExtend);
-            element.style.height = `${connectedFit.elementRect.height - reduction}px`;
+            element.style.height = `${connectedFit.contentElementRect.height - reduction}px`;
 
             //  if direction is center and element goes off the screen in left direction we should push the
             //  element to the right. Otherwise only the right border will move to the left which is not ok

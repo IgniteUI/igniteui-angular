@@ -40,6 +40,7 @@ import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.compone
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
+import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -468,38 +469,40 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly call position method - AutoPosition.', () => {
-            spyOn(ConnectedPositioningStrategy.prototype, 'position');
+            spyOn(BaseFitPositionStrategy.prototype, 'position');
+            spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
             const element = document.createElement('div');
             const autoStrat1 = new AutoPositionStrategy();
             autoStrat1.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledWith(element, null, document, false);
 
             const autoStrat2 = new AutoPositionStrategy();
             autoStrat2.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new AutoPositionStrategy();
             autoStrat3.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
         it('Should properly call position method - ElasticPosition.', () => {
-            spyOn(ConnectedPositioningStrategy.prototype, 'position');
+            spyOn(BaseFitPositionStrategy.prototype, 'position');
+            spyOn<any>(ConnectedPositioningStrategy.prototype, 'setStyle');
             const element = document.createElement('div');
             const autoStrat1 = new ElasticPositionStrategy();
 
             autoStrat1.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(element, null);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledWith(element, null, document, false);
 
             const autoStrat2 = new ElasticPositionStrategy();
             autoStrat2.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(2);
 
             const autoStrat3 = new ElasticPositionStrategy();
             autoStrat3.position(element, null, document, false);
-            expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
+            expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
         it('fix for #1690 - click on second filter does not close first one.', fakeAsync(() => {
@@ -546,16 +549,24 @@ describe('igxOverlay', () => {
         }));
 
         it('fix for #1799 - content div should reposition on window resize.', fakeAsync(() => {
-            let point: Point = new Point(50, 50);
-            const getPointSpy = spyOn(utilities, 'getPointFromPositionsSettings').and.returnValue(point);
+            const rect: ClientRect = {
+                bottom: 50,
+                height: 0,
+                left: 50,
+                right: 50,
+                top: 50,
+                width: 0
+            };
+            const getPointSpy = spyOn(utilities, 'calculateTargetRect').and.returnValue(rect);
             const fix = TestBed.createComponent(FlexContainerComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
             const buttonElement: HTMLElement = fix.componentInstance.buttonElement.nativeElement;
 
-            const id = overlayInstance.show(
+            const id = overlayInstance.attach(
                 SimpleDynamicComponent,
                 { positionStrategy: new ConnectedPositioningStrategy({ target: buttonElement }) });
+            overlayInstance.show(id);
             tick();
 
             let contentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
@@ -563,8 +574,11 @@ describe('igxOverlay', () => {
             expect(50).toEqual(contentRect.left);
             expect(50).toEqual(contentRect.top);
 
-            point = new Point(200, 200);
-            getPointSpy.and.callThrough().and.returnValue(point);
+            rect.left = 200;
+            rect.right = 200;
+            rect.top = 200;
+            rect.bottom = 200;
+            getPointSpy.and.callThrough().and.returnValue(rect);
             window.resizeBy(200, 200);
             window.dispatchEvent(new Event('resize'));
             tick();
