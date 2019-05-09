@@ -545,7 +545,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
         fixture.detectChanges();
         tick(1000);
 
-        const rowIslandDOM = fixture.debugElement.query(By.css('#igx-hierarchical-grid-1'));
+        const rowIslandDOM = fixture.debugElement.query(By.css('.igx-grid__hierarchical-indent .igx-grid'));
         const rowIslandBody = rowIslandDOM.query(By.css('.igx-grid__tbody-content'));
         expect(parseInt(window.getComputedStyle(rowIslandBody.nativeElement).height, 10)).toBe(255);
     }));
@@ -560,6 +560,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
+        tick(1000);
 
         const gridHead = fixture.debugElement.queryAll(By.css(THEAD_CLASS))[1];
         const headerExpanderElem = gridHead.queryAll(By.css('.igx-grid__hierarchical-expander--header'))[0];
