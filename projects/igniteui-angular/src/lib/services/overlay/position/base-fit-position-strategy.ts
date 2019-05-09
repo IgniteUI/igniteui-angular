@@ -1,48 +1,108 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { IPositionStrategy } from './IPositionStrategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect, Point } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect, calculateTargetRect } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
-    protected _initialSettings: PositionSettings;
     protected _initialSize: Size;
 
+    /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        super.position(contentElement, size);
-        this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
-        this.settings = Object.assign({}, this.settings, this._initialSettings);
-        const connectedFit: ConnectedFit = {};
-        connectedFit.elementRect = contentElement.getBoundingClientRect();
-        connectedFit.viewPortRect = getViewportRect(document);
-        this.canFitInViewPort(connectedFit);
-        if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
-            this.fitInViewPort(contentElement, this.settings, connectedFit, initialCall);
+        const targetRect = calculateTargetRect(this.settings);
+        const contentElementRect = contentElement.getBoundingClientRect();
+        if (initialCall) {
+            const connectedFit: ConnectedFit = {};
+            connectedFit.targetRect = targetRect;
+            connectedFit.contentElementRect = contentElementRect;
+            this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
+            this.settings = Object.assign({}, this._initialSettings);
+            connectedFit.viewPortRect = getViewportRect(document);
+            this.updateViewPortFit(connectedFit);
+            if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
+                this.fitInViewport(contentElement, this.settings, connectedFit);
+            }
         }
+        this.setStyle(contentElement, this.settings, targetRect, contentElementRect);
     }
 
-    protected canFitInViewPort(connectedFit: ConnectedFit) {
+    /**
+     * Checks if element can fit in viewport and updates provided connectedFit
+     * with the result
+     * @param connectedFit connectedFit to update
+     */
+    protected updateViewPortFit(connectedFit: ConnectedFit) {
+        connectedFit.leftBorder = this.calculateLeftElementBorder(
+            connectedFit.targetRect,
+            connectedFit.contentElementRect,
+            this.settings.horizontalStartPoint,
+            this.settings.horizontalDirection);
+        connectedFit.rightBorder = connectedFit.leftBorder + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal =
-            connectedFit.viewPortRect.left < connectedFit.elementRect.left &&
-            connectedFit.elementRect.right < connectedFit.viewPortRect.right;
+            connectedFit.viewPortRect.left < connectedFit.leftBorder && connectedFit.rightBorder < connectedFit.viewPortRect.right;
+
+        connectedFit.topBorder = this.calculateTopElementBorder(
+            connectedFit.targetRect,
+            connectedFit.contentElementRect,
+            this.settings.verticalStartPoint,
+            this.settings.verticalDirection);
+        connectedFit.bottomBorder = connectedFit.topBorder + connectedFit.contentElementRect.height;
         connectedFit.fitVertical =
-            connectedFit.viewPortRect.top < connectedFit.elementRect.top &&
-            connectedFit.elementRect.bottom < connectedFit.viewPortRect.bottom;
+            connectedFit.viewPortRect.top < connectedFit.topBorder && connectedFit.bottomBorder < connectedFit.viewPortRect.bottom;
     }
 
+    /**
+     * Joins provided strings with empty space delimiter and trims the result
+     * @param input array of strings to join
+     * @returns joined string
+     */
     protected joinStringNoTrailingSpaces(input: string[]): string {
         return input.join(' ').trim();
     }
 
-    protected abstract fitInViewPort(
+    /**
+     * Calculates the position of the left border of the element if it gets positioned
+     * with provided start point and direction
+     * @param targetRect Rectangle of the target where element is attached
+     * @param elementRect Rectangle of the element
+     * @param startPoint Start point of the target
+     * @param direction Direction in which to show the element
+     */
+    protected calculateLeftElementBorder(
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment): number {
+        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction;
+    }
+
+    /**
+     * Calculates the position of the top border of the element if it gets positioned
+     * with provided position settings related to the target
+     * @param targetRect Rectangle of the target where element is attached
+     * @param elementRect Rectangle of the element
+     * @param startPoint Start point of the target
+     * @param direction Direction in which to show the element
+     */
+    protected calculateTopElementBorder(
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment): number {
+        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction;
+    }
+
+    /**
+     * Fits the element into viewport according to provided position settings
+     * @param element element to fit in viewport
+     * @param settings position settings to use
+     * @param connectedFit connectedFit object containing all necessary parameters
+     */
+    protected abstract fitInViewport(
         element: HTMLElement,
         settings: PositionSettings,
-        connectedFit: ConnectedFit,
-        initialCall?: boolean);
+        connectedFit: ConnectedFit);
 }
 
 export interface ConnectedFit {
+    contentElementRect?: ClientRect;
     targetRect?: ClientRect;
-    elementRect?: ClientRect;
     viewPortRect?: ClientRect;
     fitHorizontal?: boolean;
     fitVertical?: boolean;
+    leftBorder?: number;
+    rightBorder?: number;
+    topBorder?: number;
+    bottomBorder?: number;
 }

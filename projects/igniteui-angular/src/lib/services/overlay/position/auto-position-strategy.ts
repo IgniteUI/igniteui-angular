@@ -1,5 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from './../utilities';
-import { IPositionStrategy } from './IPositionStrategy';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings } from './../utilities';
 import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
 
 /**
@@ -7,19 +6,15 @@ import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strat
  * the view port (calculating a different start point) in case the element is partially getting out of view
  */
 export class AutoPositionStrategy extends BaseFitPositionStrategy {
-    protected fitInViewPort(element: HTMLElement, settings: PositionSettings, connectedFit: ConnectedFit, initialCall?: boolean) {
-        if (!initialCall) {
-            return;
-        }
+
+    /** @inheritdoc */
+    protected fitInViewport(element: HTMLElement, settings: PositionSettings, connectedFit: ConnectedFit) {
         let transformString = '';
-        let shouldPosition = false;
-        connectedFit.targetRect = this.calculateTargetRect(settings);
         if (!connectedFit.fitHorizontal) {
             if (this.canFlipHorizontal(settings, connectedFit)) {
                 this.flipHorizontal(settings);
-                shouldPosition = true;
             } else {
-                const horizontalPush = this.pushHorizontal(connectedFit);
+                const horizontalPush = this.horizontalPush(connectedFit);
                 transformString = this.joinStringNoTrailingSpaces([transformString, `translateX(${horizontalPush}px)`]);
             }
         }
@@ -27,35 +22,21 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (!connectedFit.fitVertical) {
             if (this.canFlipVertical(settings, connectedFit)) {
                 this.flipVertical(settings);
-                shouldPosition = true;
             } else {
-                const verticalPush = this.pushVertical(connectedFit);
+                const verticalPush = this.verticalPush(connectedFit);
                 transformString = this.joinStringNoTrailingSpaces([transformString, `translateY(${verticalPush}px)`]);
             }
         }
 
         element.style.transform = transformString;
-        if (shouldPosition) {
-            super.position(element, null, document);
-        }
     }
 
-    calculateTargetRect(settings: PositionSettings): ClientRect {
-        if (settings.target instanceof HTMLElement) {
-            return (settings.target as HTMLElement).getBoundingClientRect();
-        } else {
-            const targetPoint = settings.target as Point;
-            return {
-                bottom: targetPoint.y,
-                height: 0,
-                left: targetPoint.x,
-                right: targetPoint.x,
-                top: targetPoint.y,
-                width: 0
-            };
-        }
-    }
-
+    /**
+     * Checks if element can be flipped without get off the viewport
+     * @param settings position settings to check against
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns true if element can be flipped and stain in viewport
+     */
     private canFlipHorizontal(settings: PositionSettings, connectedFit: ConnectedFit): boolean {
         //  HorizontalAlignment can be Left = -1; Center = -0.5 or Right = 0.
         //  To virtually flip direction and start point (both are HorizontalAlignment) we can do this:
@@ -67,26 +48,32 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const flippedStartPoint = (-1) * (settings.horizontalStartPoint + 1);
         const flippedDirection = (-1) * (settings.horizontalDirection + 1);
 
-        const leftBorder =
-            connectedFit.targetRect.right +
-            flippedStartPoint * connectedFit.targetRect.width +
-            flippedDirection * connectedFit.elementRect.width;
-        const rightBorder = leftBorder + connectedFit.elementRect.width;
+        const leftBorder = this.calculateLeftElementBorder(
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+        const rightBorder = leftBorder + connectedFit.contentElementRect.width;
         return connectedFit.viewPortRect.left < leftBorder && rightBorder < connectedFit.viewPortRect.right;
     }
 
+    /**
+     * Checks if element can be flipped without get off the viewport
+     * @param settings position settings to check against
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns true if element can be flipped and stain in viewport
+     */
     private canFlipVertical(settings: PositionSettings, connectedFit: ConnectedFit): boolean {
         const flippedStartPoint = (-1) * (settings.verticalStartPoint + 1);
         const flippedDirection = (-1) * (settings.verticalDirection + 1);
 
-        const topBorder =
-            connectedFit.targetRect.bottom +
-            flippedStartPoint * connectedFit.targetRect.height +
-            flippedDirection * connectedFit.elementRect.height;
-        const bottomBorder = topBorder + connectedFit.elementRect.height;
+        const topBorder = this.calculateTopElementBorder(
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+        const bottomBorder = topBorder + connectedFit.contentElementRect.height;
         return connectedFit.viewPortRect.top < topBorder && bottomBorder < connectedFit.viewPortRect.bottom;
     }
 
+    /**
+     * Flips direction and start point of provided position settings
+     * @param settings position settings to flip
+     */
     private flipHorizontal(settings: PositionSettings) {
         switch (settings.horizontalDirection) {
             case HorizontalAlignment.Left:
@@ -106,6 +93,10 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         }
     }
 
+    /**
+     * Flips direction and start point of provided position settings
+     * @param settings position settings to flip
+     */
     private flipVertical(settings: PositionSettings) {
         switch (settings.verticalDirection) {
             case VerticalAlignment.Top:
@@ -125,9 +116,14 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         }
     }
 
-    private pushHorizontal(connectedFit: ConnectedFit): number {
-        const leftExtend = connectedFit.elementRect.left;
-        const rightExtend = connectedFit.elementRect.right - connectedFit.viewPortRect.right;
+    /**
+     * Calculates necessary horizontal push according to provided connectedFit
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns amount of necessary translation which will push the element into viewport
+     */
+    private horizontalPush(connectedFit: ConnectedFit): number {
+        const leftExtend = connectedFit.leftBorder;
+        const rightExtend = connectedFit.rightBorder - connectedFit.viewPortRect.right;
         //  if leftExtend < 0 overlay goes beyond left end of the screen. We should push it back with exactly
         //  as much as it is beyond the screen.
         //  if rightExtend > 0 overlay goes beyond right end of the screen. We should push it back with the
@@ -142,9 +138,14 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         }
     }
 
-    private pushVertical(connectedFit: ConnectedFit): number {
-        const topExtend = connectedFit.elementRect.top;
-        const bottomExtend = connectedFit.elementRect.bottom - connectedFit.viewPortRect.bottom;
+    /**
+     * Calculates necessary vertical push according to provided connectedFit
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns amount of necessary translation which will push the element into viewport
+     */
+    private verticalPush(connectedFit: ConnectedFit): number {
+        const topExtend = connectedFit.topBorder;
+        const bottomExtend = connectedFit.bottomBorder - connectedFit.viewPortRect.bottom;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {
@@ -152,6 +153,5 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         } else {
             return 0;
         }
-
     }
 }
