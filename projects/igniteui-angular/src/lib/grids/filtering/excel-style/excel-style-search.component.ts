@@ -71,7 +71,7 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public get itemSize() {
-        let itemSize = '50px';
+        let itemSize = '48px';
         switch (this.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
             case DisplayDensity.compact: itemSize = '28px'; break;
