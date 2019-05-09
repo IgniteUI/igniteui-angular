@@ -54,6 +54,11 @@ export class AppComponent implements OnInit {
             name: 'Bottom Navigation'
         },
         {
+            link: '/bottom-navigation-routing',
+            icon: 'tab',
+            name: 'Bottom Navigation Routing'
+        },
+        {
             link: '/buttonGroup',
             icon: 'group_work',
             name: 'Button Group'

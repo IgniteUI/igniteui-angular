@@ -43,6 +43,11 @@ import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
 import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bottomnav.sample';
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
+import {
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
@@ -133,6 +138,10 @@ const components = [
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
+    BottomNavRoutingSampleComponent,
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component,
     TabsSampleComponent,
     TimePickerSampleComponent,
     ToastSampleComponent,
