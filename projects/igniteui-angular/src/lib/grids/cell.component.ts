@@ -785,7 +785,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (ctrl) {
             this.grid.navigation.goToLastCell();
         } else {
-            this.grid.navigation.onKeydownEnd(this.rowIndex);
+            this.grid.navigation.onKeydownEnd(this.rowIndex, false, this.rowStart);
         }
     }
 
@@ -794,7 +794,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (ctrl) {
             this.grid.navigation.goToFirstCell();
         } else {
-            this.grid.navigation.onKeydownHome(this.rowIndex);
+            this.grid.navigation.onKeydownHome(this.rowIndex, false, this.rowStart);
         }
     }
 
@@ -863,7 +863,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'arrowleft':
             case 'left':
                 if (ctrl) {
-                    this.grid.navigation.onKeydownHome(node.row);
+                    this.grid.navigation.onKeydownHome(node.row, false, this.rowStart);
                     break;
                 }
                 this.grid.navigation.onKeydownArrowLeft(this.nativeElement, node.row, node.column, false, this);
@@ -871,7 +871,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'arrowright':
             case 'right':
                 if (ctrl) {
-                    this.grid.navigation.onKeydownEnd(node.row);
+                    this.grid.navigation.onKeydownEnd(node.row, false, this.rowStart);
                     break;
                 }
                 this.grid.navigation.onKeydownArrowRight(this.nativeElement, node.row, node.column, false, this);
