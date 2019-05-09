@@ -35,10 +35,7 @@ export class IgxGridNavigationService {
         return rowComp.virtDirRow;
     }
 
-    public getColumnUnpinnedIndex(visibleColumnIndex: number, cell?: IgxGridCellComponent) {
-        if (this.grid.hasColumnLayouts) {
-            return this.grid.unpinnedColumns.filter((c) => c.columnLayout).indexOf(cell.column.parent);
-        }
+    public getColumnUnpinnedIndex(visibleColumnIndex: number) {
         const column = this.grid.unpinnedColumns.find((col) => !col.columnGroup && col.visibleIndex === visibleColumnIndex);
         return this.grid.pinnedColumns.length ? this.grid.unpinnedColumns.filter((c) => !c.columnGroup).indexOf(column) :
             visibleColumnIndex;
@@ -58,7 +55,7 @@ export class IgxGridNavigationService {
             return true;
         }
         if (this.grid.hasColumnLayouts) {
-            return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.visibleIndex + 1) - this.displayContainerScrollLeft;
+            return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.visibleIndex) - this.displayContainerScrollLeft;
         } else {
             const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
             return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft;
@@ -578,7 +575,7 @@ export class IgxGridNavigationService {
 
             columnIndex = prevLayout.children.toArray().indexOf(prevElementColumn);
 
-            if (!this.isColumnFullyVisible(prevElementColumn.visibleIndex)) {
+            if (!this.isColumnLeftFullyVisible(prevElementColumn.index)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
@@ -586,7 +583,7 @@ export class IgxGridNavigationService {
                     prevElement = element.previousElementSibling.children[columnIndex];
                     prevElement.focus({ preventScroll: true });
                 });
-                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.unpinnedIndex);
+                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
                 return;
             } else {
                 prevElement = element.previousElementSibling.children[columnIndex];
@@ -624,7 +621,7 @@ export class IgxGridNavigationService {
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
             columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
-            if (!this.isColumnLeftFullyVisible(nextElementColumn.visibleIndex)) {
+            if (!this.isColumnFullyVisible(nextElementColumn.index)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())

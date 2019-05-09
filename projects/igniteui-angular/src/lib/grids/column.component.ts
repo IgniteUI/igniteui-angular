@@ -1766,7 +1766,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
-        return this.grid.columnList.filter(c => c.columnLayout).indexOf(this);
+        return this.grid.columnList.filter(c => c.columnLayout && !c.hidden).indexOf(this);
     }
 
     /*

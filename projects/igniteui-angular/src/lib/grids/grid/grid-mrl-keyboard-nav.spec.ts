@@ -409,6 +409,47 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     }));
+
+    it('navigate to right and left with hidden columns', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            hidden: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 }
+            ]
+        }];
+        fix.detectChanges();
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        secondCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', thirdCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+    }));
 });
 
 @Component({
