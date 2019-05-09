@@ -53,7 +53,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
         console.log(event);
     }
 
-    public enterKeyUp(inputValue, timePickerValue) {
+    public onBlur(inputValue, timePickerValue) {
         const parts = inputValue.split(":");
 
         if (parts.length === 2) {
