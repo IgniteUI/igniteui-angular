@@ -22,9 +22,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     private subscription$: Subscription;
     private _rowDragStarted = false;
-    public startDrag(event) {
-        this.onPointerDown(event);
-    }
 
     @Input('igxRowDrag')
     set data(val) {
