@@ -225,8 +225,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             _displayDensityOptions
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
-        // M. P.: Setting height to null for row islands so that remote LOD doesn't shrink the grid by default
-        this.height = null;
     }
 
     /**
