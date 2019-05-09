@@ -28,7 +28,7 @@ describe('IgxGrid - Row Selection', () => {
                 GridSummaryComponent,
                 GridCancelableComponent,
                 GridFeaturesComponent,
-                HierarchicalGridRowSelectableIsland
+                HierarchicalGridRowSelectableIslandComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -968,7 +968,7 @@ describe('IgxGrid - Row Selection', () => {
 
     it('Set rowSelectable on HGrid row island', fakeAsync(() => {
         expect(() => {
-            const fix = TestBed.createComponent(HierarchicalGridRowSelectableIsland);
+            const fix = TestBed.createComponent(HierarchicalGridRowSelectableIslandComponent);
             fix.detectChanges();
         }).not.toThrow();
     }));
@@ -1153,4 +1153,4 @@ export class GridFeaturesComponent {
         </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class HierarchicalGridRowSelectableIsland extends IgxHierarchicalGridMultiLayoutComponent { }
+export class HierarchicalGridRowSelectableIslandComponent extends IgxHierarchicalGridMultiLayoutComponent { }
