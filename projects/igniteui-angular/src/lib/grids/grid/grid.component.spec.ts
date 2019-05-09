@@ -514,7 +514,7 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('should not keep a cached-out template as master after column resizing', () => {
+        it('should not keep a cached-out template as master after column resizing', async() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             for (let i = 2; i < 100; i++) {
                 fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
@@ -529,7 +529,8 @@ describe('IgxGrid Component Tests', () => {
             fix.componentInstance.grid.groupBy({ fieldName: 'value', dir: SortingDirection.Asc });
             fix.detectChanges();
             fix.componentInstance.grid.getColumnByName('index').width = '100px';
-            fix.componentInstance.grid.reflow();
+            fix.detectChanges();
+            await wait();
             const rows = fix.componentInstance.grid.dataRowList.toArray();
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i] as IgxRowComponent<any>;
