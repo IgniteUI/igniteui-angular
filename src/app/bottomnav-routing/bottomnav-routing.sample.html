@@ -1,0 +1,53 @@
+<div class="sample-wrapper">
+        <app-page-header title="Tabbar">
+            Allows the user to navigate between different content displayed in one view. Supports 3 to 5 panels identified with an icon
+            and/or text.
+        </app-page-header>
+        <div class="sample-content">
+            <article class="sample-column">
+                <div>
+                    <router-outlet></router-outlet>
+                </div>
+                <div class="tabbar-wrapper" #tabbarEl>
+                    <igx-bottom-nav>
+                        <!-- <igx-tab-panel icon="phone">
+                            Tab 1 content
+                        </igx-tab-panel>
+                        <igx-tab-panel icon="supervisor_account">
+                            Tab 2 content
+                        </igx-tab-panel>
+                        <igx-tab-panel icon="format_list_bulleted">
+                            Tab 3 content
+                        </igx-tab-panel> -->
+    
+                        <igx-tab icon="phone" label="Dial"
+                            routerLink="/bottom-navigation-routing/view1"
+                            routerLinkActive #rla1="routerLinkActive"
+                            [isSelected]="rla1.isActive">
+                        </igx-tab>
+    
+                        <igx-tab icon="supervisor_account" label="Contacts"
+                            routerLink="/bottom-navigation-routing/view2"
+                            routerLinkActive #rla2="routerLinkActive"
+                            [isSelected]="rla2.isActive">
+                        </igx-tab>
+    
+                        <igx-tab icon="format_list_bulleted" label="Recent"
+                            routerLink="/bottom-navigation-routing/view3"
+                            routerLinkActive #rla3="routerLinkActive"
+                            [isSelected]="rla3.isActive">
+                        </igx-tab>
+    
+                    </igx-bottom-nav>
+
+                    <button (click)="sel1()">Select Tab 1</button><br>
+                    <button (click)="sel2()">Select Tab 2</button><br>
+                    <button (click)="sel3()">Select Tab 3</button><br>
+    
+                </div>
+            </article>
+    
+            
+        </div>
+    </div>
+    
