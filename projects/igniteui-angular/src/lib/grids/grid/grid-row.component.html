@@ -60,6 +60,7 @@
         [ngClass]="{'igx-grid__th--pinned-last': col.hasLastPinnedChildColumn}"
         [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),
         'grid-template-columns':col.getGridTemplate(false, false),
+        'z-index': col.pinned ? 1 : null,
         '-ms-grid-rows':col.getGridTemplate(true, true),
         '-ms-grid-columns':col.getGridTemplate(false, true)}">
             <igx-grid-cell *ngFor="let child of col.children"
