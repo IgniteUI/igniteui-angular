@@ -36,7 +36,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
-import { ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy, AutoPositionStrategy } from '../services/overlay/position';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil, filter, throttle } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -710,16 +710,13 @@ export class IgxTimePickerComponent implements
             this._generateAmPm();
         }
 
-        this._positionSettings = {
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom
-        };
+        this._positionSettings = { };
 
         this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
             scrollStrategy: new AbsoluteScrollStrategy(),
-            positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+            positionStrategy: new AutoPositionStrategy(this._positionSettings)
         };
 
         this._dialogOverlaySettings = {};
@@ -1165,14 +1162,14 @@ export class IgxTimePickerComponent implements
         if (this.collapsed) {
             this.collapsed = false;
 
-            let settings, posStrategy;
+            let settings;
             if (this.mode === InteractionMode.Dialog) {
                 settings = this.overlaySettings || this._dialogOverlaySettings;
             }
 
             if (this.mode === InteractionMode.DropDown) {
                 settings = this.overlaySettings || this._dropDownOverlaySettings;
-                posStrategy = settings.positionStrategy;
+                let posStrategy = settings.positionStrategy;
 
                 if (this.group && posStrategy) {
                     posStrategy.settings.target = this.group.element.nativeElement;
