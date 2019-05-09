@@ -288,9 +288,6 @@ export class IgxColumnComponent implements AfterContentInit {
         if (value) {
             this.widthSetByUser = true;
             this._width = value;
-            if (this.grid) {
-                this.grid.resetForOfCache();
-            }
         }
     }
 
