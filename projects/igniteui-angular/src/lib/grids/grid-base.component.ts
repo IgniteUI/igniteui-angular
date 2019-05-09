@@ -4936,8 +4936,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
             return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
         }
-        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
-                                visibleColumns.map(editCol => editCol.visibleIndex);
+        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort() :
+                                visibleColumns.map(editCol => editCol.visibleIndex).sort();
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (nextCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
@@ -4945,7 +4945,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
                 return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
             } else {
-                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes.sort()[0]};
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
             }
         }
     }
@@ -4956,8 +4956,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
             return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
         }
-        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
-                                visibleColumns.map(editCol => editCol.visibleIndex);
+        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort() :
+                                visibleColumns.map(editCol => editCol.visibleIndex).sort();
         const prevCellIndex = colIndexes.reverse().find(index => index < curVisibleColIndex);
         if (prevCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
@@ -4965,7 +4965,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
                 return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
             } else {
-                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes.sort((a, b) => b - a)[0]};
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
             }
         }
     }
