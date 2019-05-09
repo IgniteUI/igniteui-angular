@@ -4930,34 +4930,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    public getNextCell(currRowIndex, curVisibleColIndex, callback: (IgxColumnComponent) => boolean = null) {
-        const visibleColIndex = curVisibleColIndex;
-        const colIndexes = callback ? this.columnList.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
-                                            this.columnList.map(editCol => editCol.visibleIndex);
-        const nextCellIndex = colIndexes.find(index => index > visibleColIndex);
+    public getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
+        const visibleColumns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+        }
+        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
+                                visibleColumns.map(editCol => editCol.visibleIndex);
+        const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (nextCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
         } else {
-            if (this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: visibleColIndex};
+            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
             } else {
-                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes.sort()[0]};
             }
         }
     }
 
-    public getPreviousCell(currRowIndex, curVisibleColIndex, callback: (IgxColumnComponent) => boolean = null) {
-        const visibleColIndex = curVisibleColIndex;
-        const colIndexes = callback ? this.columnList.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
-                        this.columnList.map(editCol => editCol.visibleIndex);
-        const prevCellIndex = colIndexes.reverse().find(index => index < visibleColIndex);
+    public getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
+        const visibleColumns =  this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+        }
+        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex) :
+                                visibleColumns.map(editCol => editCol.visibleIndex);
+        const prevCellIndex = colIndexes.reverse().find(index => index < curVisibleColIndex);
         if (prevCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
         } else {
-            if (this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: visibleColIndex};
+            if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
             } else {
-                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes.sort((a, b) => b - a)[0]};
             }
         }
     }
@@ -4988,6 +4996,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private getPrevDataRowIndex(currentRowIndex): number {
         if (currentRowIndex <= 0) { return currentRowIndex; }
+
         const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
             .find(rec => !rec.expression && !rec.summaries);
         return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
@@ -4995,9 +5004,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private getNextDataRowIndex(currentRowIndex): number {
         if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) {return currentRowIndex; }
+
         const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
             .find(rec => !rec.expression && !rec.summaries);
         return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
+    }
+
+    private isValidPosition(rowIndex, colIndex) {
+        const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        if (rows < 0 || cols < 0) { return false; }
+        if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
+            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+                return true;
+        }
+        return false;
     }
 
     private rebuildMatchCache() {
