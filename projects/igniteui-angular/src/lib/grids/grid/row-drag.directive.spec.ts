@@ -32,6 +32,7 @@ const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
 const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
+const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
 
 fdescribe('IgxGrid - Row Drag Tests', () => {
     let fixture: ComponentFixture<any>;
@@ -224,7 +225,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(row.grid.rowDragging).toBeFalsy();
             expect(row.element.nativeElement.classList.contains(CSS_CLASS_DRAG_ROW)).toBeFalsy();
         }));
-        it('should align horizontal scrollbar with first non-pinned column', fakeAsync(() => {
+        it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
             grid.rowSelectable = false;
             grid.rowDraggable = false;
@@ -259,6 +260,27 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
+        }));
+        it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', fakeAsync(() => {
+            grid.pinColumn('ProductName');
+            tick();
+            fixture.detectChanges();
+
+            // selectable rows disabled
+            let horizontalScrollbarElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+            let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
+            let pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
+            expect(pinnedColumnHeaderRect.right).toBe(horizontalScrollbarRect.left);
+
+            // selectable rows enabled
+            grid.rowSelectable = true;
+            fixture.detectChanges();
+            horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
+            horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
+            pinnedColumnHeaderElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
+            pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
+            expect(pinnedColumnHeaderRect.right).toBe(horizontalScrollbarRect.left);
         }));
         it('should fire drag events with correct values of event arguments.', (async () => {
             const rowToDrag: IgxGridRowComponent = rows[2];
@@ -356,13 +378,12 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
-            const dragRow = dragGridRows[dragRowIndex];
+            const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
 
-            dropGridRows = dropGrid.rowList.toArray();
-            const dropRow = dropGridRows[dropRowIndex];
+            const dropRow = dropGrid.getRowByIndex(dropRowIndex);
             const dropRowCells = dropRow.cells.toArray();
-            for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex ++) {
+            for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }
         }
@@ -376,9 +397,8 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
         }));
         configureTestSuite();
-        it('should drop data in the proper drop grid columns', (async () => {
+        it('should drop row data in the proper grid columns', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            const row = dragGridRows[1];
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
@@ -390,7 +410,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             verifyDragAndDropRowCellValues(1, 0);
         }));
-        it('column moving - should drop row data in correct columns', (async () => {
+        it('should be able to drag grid row when column moving is enabled', (async () => {
             const dragGridColumns = dragGrid.columnList.toArray();
             dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
             fixture.detectChanges();
@@ -405,8 +425,12 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -416,7 +440,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
         }));
-        it('column pinning - should drop row data in correct columns', (async () => {
+        it('should be able to drag grid row when column pinning is enabled', (async () => {
             dragGrid.pinColumn('ProductName');
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -429,8 +453,12 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -440,7 +468,33 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
             expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
         }));
-        it('sorting - should be able to drag sorted row', (async () => {
+        it('should be able to drag grid row when column hiding is enabled', (async () => {
+            const hiddenDragCellValue = dragGrid.getCellByColumn(1, 'Downloads').value;
+            dragGrid.columnHiding = true;
+            const column = dragGrid.getColumnByName('Downloads');
+            column.hidden = true;
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(dragGrid.rowDragging).toBeTruthy();
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(dragGrid.rowDragging).toBeFalsy();
+            expect(dropGrid.rowList.length).toEqual(1);
+
+            const hiddenDropCellValue = dropGrid.getCellByColumn(0, 'Downloads').value;
+            expect(hiddenDropCellValue).toEqual(hiddenDragCellValue);
+
+        }));
+        it('should be able to drag sorted grid row', (async () => {
             dragGrid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -461,7 +515,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
-        fit('filtering - should be able to drag filtered row', (async () => {
+        it('should be able to drag filtered grid row', (async () => {
             dragGrid.filter('ProductName', 'Advantage', IgxStringFilteringOperand.instance().condition('contains'), true);
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -482,7 +536,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
-        it('row selection - should not change row selection on row drag', (async () => {
+        it('should be able to drag selected grid row', (async () => {
             dragGrid.rowSelectable = true;
             fixture.detectChanges();
             dragGrid.selectRows([2], false);
@@ -508,7 +562,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropGrid.rowList.length).toEqual(1);
             expect(row.isSelected).toBeTruthy();
         }));
-        it('cell selection - should not change cell selection on row drag', (async () => {
+        it('should be able to drag grid row with selected cells', (async () => {
             const range = { rowStart: 1, rowEnd: 1, columnStart: 0, columnEnd: 2 };
             dragGrid.selectRange(range);
             fixture.detectChanges();
@@ -541,7 +595,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(dropGrid.rowList.length).toEqual(1);
             verifyCellSelection();
         }));
-        it('grouping - should not change grouping on row drag', (async () => {
+        it('should be able to drag grouped grid row', (async () => {
             dragGrid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true });
             fixture.detectChanges();
 
@@ -576,6 +630,52 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
                 return element['ID'] === rowCells[1].value;
             });
             expect(groupRow).toBeDefined();
+        }));
+        it('should exit edit mode and commit changes on row dragging', (async () => {
+            dragGrid.rowEditable = true;
+            fixture.detectChanges();
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            const dragCell = dragGrid.getCellByColumn(1, 'Downloads');
+            const cellElement = dragCell.nativeElement;
+            let cellInput = null;
+
+            cellElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            cellElement.dispatchEvent(new Event('dblclick'));
+            fixture.detectChanges();
+
+            const newCellValue = 2000;
+            cellInput = cellElement.querySelector('[igxinput]');
+            cellInput.value = newCellValue;
+            cellInput.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(row.inEditMode).toBeTruthy();
+            expect(dragCell.inEditMode).toBeTruthy();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+            expect(dragGrid.endEdit).toHaveBeenCalled();
+            expect(row.inEditMode).toBeFalsy();
+            expect(dragCell.inEditMode).toBeFalsy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(row.dragging).toBeFalsy();
+            expect(row.grid.rowDragging).toBeFalsy();
+
+            const dropCell = dropGrid.getCellByColumn(0, 'Downloads');
+            expect(dropCell.value).toEqual(newCellValue);
+            expect(dragCell.value).toEqual(newCellValue);
         }));
     });
 });
