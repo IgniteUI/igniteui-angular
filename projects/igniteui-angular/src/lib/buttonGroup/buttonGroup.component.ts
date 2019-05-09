@@ -361,7 +361,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     public ngAfterContentInit() {
         this.templateButtons.forEach( (button) => {
-            if (this.displayDensity && button.displayDensity === DisplayDensity.comfortable) {
+            if (button.displayDensity === DisplayDensity.comfortable) {
                 button.displayDensity = this.displayDensity;
             }
         });
