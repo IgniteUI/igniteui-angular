@@ -30,6 +30,7 @@ const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
 const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
 const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
+const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
 const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
@@ -561,6 +562,33 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(row.grid.rowDragging).toBeFalsy();
             expect(dropGrid.rowList.length).toEqual(1);
             expect(row.isSelected).toBeTruthy();
+        }));
+        it('should not apply selection class to ghost element when dragging selected grid row', (async () => {
+            dragGrid.rowSelectable = true;
+            fixture.detectChanges();
+            dragGrid.selectRows([2], false);
+            fixture.detectChanges();
+
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const row = dragGridRows[1];
+            expect(row.isSelected).toBeTruthy();
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(row.dragging).toBeTruthy();
+            expect(row.grid.rowDragging).toBeTruthy();
+
+            const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            const ghostElement = ghostElements[0];
+            expect(ghostElements.length).toEqual(1);
+            expect(ghostElement.classList.contains(CSS_CLASS_SELECTED_ROW)).toBeFalsy();
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
         }));
         it('should be able to drag grid row with selected cells', (async () => {
             const range = { rowStart: 1, rowEnd: 1, columnStart: 0, columnEnd: 2 };
