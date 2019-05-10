@@ -245,12 +245,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         prevElement.focus();
     }
 
-    public onKeydownEnd(rowIndex, isSummary = false, cellRowStart = 1) {
+    public onKeydownEnd(rowIndex, isSummary = false, cellRowStart?) {
         const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).length;
         const lastLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[layouts - 1];
         const lastLayoutChildren = lastLayout.children.toArray();
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
-        const currentRowStart =  cellRowStart;
+        const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
         const nextElementColumn = lastLayout.children.find(c =>
             (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
             c.rowStart <= currentRowStart &&

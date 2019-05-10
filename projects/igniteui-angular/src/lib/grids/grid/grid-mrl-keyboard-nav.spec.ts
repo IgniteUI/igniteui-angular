@@ -516,6 +516,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
+        await wait(100);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
+
+        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', ctrlKey: true }));
+        await wait(100);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     }));
 });
 
