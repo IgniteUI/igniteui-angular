@@ -1,12 +1,13 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect, calculateTargetRect } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect, getTargetRect } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
+    protected _initialSettings: PositionSettings;
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const targetRect = calculateTargetRect(this.settings);
+        const targetRect = getTargetRect(this.settings);
         const contentElementRect = contentElement.getBoundingClientRect();
         if (initialCall) {
             const connectedFit: ConnectedFit = {};
@@ -17,10 +18,10 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.viewPortRect = getViewportRect(document);
             this.updateViewPortFit(connectedFit);
             if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
-                this.fitInViewport(contentElement, this.settings, connectedFit);
+                this.fitInViewport(contentElement, connectedFit);
             }
         }
-        this.setStyle(contentElement, this.settings, targetRect, contentElementRect);
+        this.setStyle(contentElement, targetRect, contentElementRect);
     }
 
     /**
@@ -29,32 +30,23 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param connectedFit connectedFit to update
      */
     protected updateViewPortFit(connectedFit: ConnectedFit) {
-        connectedFit.leftBorder = this.calculateLeftElementBorder(
+        connectedFit.left = this.calculateLeft(
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
             this.settings.horizontalDirection);
-        connectedFit.rightBorder = connectedFit.leftBorder + connectedFit.contentElementRect.width;
+        connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal =
-            connectedFit.viewPortRect.left < connectedFit.leftBorder && connectedFit.rightBorder < connectedFit.viewPortRect.right;
+            connectedFit.viewPortRect.left < connectedFit.left && connectedFit.right < connectedFit.viewPortRect.right;
 
-        connectedFit.topBorder = this.calculateTopElementBorder(
+        connectedFit.top = this.calculateTop(
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
             this.settings.verticalDirection);
-        connectedFit.bottomBorder = connectedFit.topBorder + connectedFit.contentElementRect.height;
+        connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical =
-            connectedFit.viewPortRect.top < connectedFit.topBorder && connectedFit.bottomBorder < connectedFit.viewPortRect.bottom;
-    }
-
-    /**
-     * Joins provided strings with empty space delimiter and trims the result
-     * @param input array of strings to join
-     * @returns joined string
-     */
-    protected joinStringNoTrailingSpaces(input: string[]): string {
-        return input.join(' ').trim();
+            connectedFit.viewPortRect.top < connectedFit.top && connectedFit.bottom < connectedFit.viewPortRect.bottom;
     }
 
     /**
@@ -65,7 +57,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param startPoint Start point of the target
      * @param direction Direction in which to show the element
      */
-    protected calculateLeftElementBorder(
+    protected calculateLeft(
         targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment): number {
         return targetRect.right + targetRect.width * startPoint + elementRect.width * direction;
     }
@@ -78,20 +70,18 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param startPoint Start point of the target
      * @param direction Direction in which to show the element
      */
-    protected calculateTopElementBorder(
+    protected calculateTop(
         targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment): number {
         return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction;
     }
 
     /**
-     * Fits the element into viewport according to provided position settings
+     * Fits the element into viewport according to the position settings
      * @param element element to fit in viewport
-     * @param settings position settings to use
      * @param connectedFit connectedFit object containing all necessary parameters
      */
     protected abstract fitInViewport(
         element: HTMLElement,
-        settings: PositionSettings,
         connectedFit: ConnectedFit);
 }
 
@@ -101,8 +91,8 @@ export interface ConnectedFit {
     viewPortRect?: ClientRect;
     fitHorizontal?: boolean;
     fitVertical?: boolean;
-    leftBorder?: number;
-    rightBorder?: number;
-    topBorder?: number;
-    bottomBorder?: number;
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
 }
