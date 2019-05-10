@@ -31,7 +31,7 @@
                     [indeterminate]="item.indeterminate"
                     [disableTransitions]="true"
                     (change)="onCheckboxChange($event)">
-                        {{ column.formatter ? column.formatter(item.label) : column.dataType === 'number' ? (item.label | igxdecimal:
+                        {{ column.formatter && !item.isSpecial ? column.formatter(item.label) : column.dataType === 'number' ? (item.label | igxdecimal:
                             column.grid.locale) : column.dataType === 'date' ? (item.label | igxdate: column.grid.locale) : item.label }}
                     </igx-checkbox>
                 </igx-list-item>

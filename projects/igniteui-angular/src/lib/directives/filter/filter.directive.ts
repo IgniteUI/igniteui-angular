@@ -140,9 +140,7 @@ export class IgxFilterPipe implements PipeTransform {
         }
 
         const selectAll = items[0];
-        const selectAllText = options.formatter(options.get_value(selectAll, options.key));
-        const exclude = selectAllText === 'select all';
-        if (exclude) {
+        if (selectAll.isSpecial) {
             items = items.slice(1, items.length);
         }
 
@@ -162,7 +160,7 @@ export class IgxFilterPipe implements PipeTransform {
             return match;
         });
 
-        if (result.length > 0 && exclude) {
+        if (result.length > 0 && selectAll.isSpecial) {
             result.unshift(selectAll);
         }
 
