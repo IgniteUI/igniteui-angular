@@ -9,6 +9,8 @@ import { ViewChild, Component } from '@angular/core';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from './../column.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - multi-row-layout Integration - ', () => {
     configureTestSuite();
@@ -20,7 +22,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             declarations: [
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
-                ColumnLayouHidingTestComponent
+                ColumnLayouHidingTestComponent,
+                ColumnLayoutGroupingTestComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
@@ -742,6 +745,69 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
         });
     });
+
+    describe('GroupBy ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            colGroups = fixture.componentInstance.colGroups;
+        }));
+
+        it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async() => {
+            grid.height = '600px';
+            grid.groupBy({
+                dir: SortingDirection.Desc,
+                fieldName: 'Country',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            fixture.detectChanges();
+
+            expect(grid.rowList.length).toEqual(8);
+            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
+
+            const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
+            grid.verticalScrollContainer.scrollTo(lastIndex);
+            await wait(100);
+            fixture.detectChanges();
+
+            const scrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            const scrollHeight = grid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+            const tbody = fixture.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
+            const scrolledToBottom = Math.round(scrollTop + tbody.scrollHeight) === scrollHeight;
+            expect(grid.rowList.length).toEqual(8);
+            expect(scrolledToBottom).toBeTruthy();
+
+            const lastRowOffset = grid.rowList.last.element.nativeElement.offsetTop +
+                grid.rowList.last.element.nativeElement.offsetHeight + parseInt(tbody.children[0].children[0].style.top, 10);
+            expect(lastRowOffset).toEqual(tbody.scrollHeight);
+        });
+
+        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async() => {
+            grid.height = '600px';
+            grid.groupBy({
+                dir: SortingDirection.Desc,
+                fieldName: 'Country',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            fixture.detectChanges();
+
+            expect(grid.rowList.length).toEqual(8);
+            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
+
+            grid.toggleAllGroupRows();
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(grid.rowList.length).toEqual(12);
+            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeLessThanOrEqual(0);
+        });
+    });
 });
 
 
@@ -840,4 +906,30 @@ export class ColumnLayoutPinningTestComponent {
     `
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" displayDensity="compact">
+        <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
+    cols1: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1},
+        { field: 'CompanyName', rowStart: 1, colStart: 2, groupable: true},
+        { field: 'ContactName', rowStart: 1, colStart: 3, groupable: true},
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd : 4, groupable: true},
+    ];
+    cols2: Array<any> = [
+        { field: 'PostalCode', rowStart: 1, colStart: 1, colEnd: 3 },
+        { field: 'City', rowStart: 2, colStart: 1, groupable: true},
+        { field: 'Country', rowStart: 2, colStart: 2, groupable: true},
+        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3}
+    ];
 }
