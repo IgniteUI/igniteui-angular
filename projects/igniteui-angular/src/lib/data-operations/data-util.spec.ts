@@ -117,7 +117,7 @@ function testGroupBy() {
             // sort
             let res = DataUtil.sort(data, [expr]);
             // first group pipe
-            const gres = DataUtil.group(res, state, 32);
+            const gres = DataUtil.group(res, state);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -145,7 +145,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
-            const gres = DataUtil.group(sorted, state, 32);
+            const gres = DataUtil.group(sorted, state);
             // second group pipe
             const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -169,7 +169,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
-            const gres = DataUtil.group(sorted, state, 32);
+            const gres = DataUtil.group(sorted, state);
             // second group pipe
             const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -196,7 +196,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
             // first group pipe
-            const gres = DataUtil.group(sorted, state, 32);
+            const gres = DataUtil.group(sorted, state);
             // second group pipe
             const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -223,7 +223,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
-            const grouped = DataUtil.group(sorted, state, 32);
+            const grouped = DataUtil.group(sorted, state);
             // page
             let paged: IGroupByResult = {
                 data: cloneArray(grouped.data),
@@ -273,7 +273,7 @@ function testGroupBy() {
             // sort
             let res = DataUtil.sort(data, [expr]);
             // first group pipe
-            let gres = DataUtil.group(res, state, 32, groupRecords);
+            let gres = DataUtil.group(res, state, null, groupRecords);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);
@@ -291,7 +291,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
             // first group pipe
-            gres = DataUtil.group(sorted, state, 32, groupRecords);
+            gres = DataUtil.group(sorted, state, null, groupRecords);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);
@@ -324,7 +324,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2, expr3]);
             // first group pipe
-            const gres = DataUtil.group(sorted, state, 32);
+            const gres = DataUtil.group(sorted, state);
             // second group pipe
             const res = DataUtil.restoreGroups(gres, state);
             expect(res.length).toEqual(4);

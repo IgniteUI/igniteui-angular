@@ -21,7 +21,7 @@ describe('Unit testing GroupingStrategy', () => {
             strategy: DefaultSortingStrategy.instance()
         }];
         const res = grouping.sort(data, expr);
-        const gres = grouping.groupBy(res, expr, 32);
+        const gres = grouping.groupBy(res, expr);
         expect(dataGenerator.getValuesForColumn(gres.data, 'boolean'))
                     .toEqual([false, false, false, true, true]);
         const group1: IGroupByRecord = gres.metadata[0];
