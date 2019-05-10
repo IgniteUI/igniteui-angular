@@ -19,6 +19,7 @@ describe('ng-add schematics', () => {
           serve: {},
           build: {
             options: {
+              main: 'src/main.ts',
               scripts: []
             }
           }

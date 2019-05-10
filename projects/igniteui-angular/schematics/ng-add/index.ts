@@ -1,7 +1,7 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
-import { logSuccess, addDependencies, overwriteJsonFile } from '../utils/dependency-handler';
+import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspace } from '../utils/dependency-handler';
 
 import * as os from 'os';
 import { addResetCss } from './add-normalize';
@@ -28,8 +28,7 @@ function addIgxGridSupportForIe(polyfillsData: string): string {
  * Checks whether a property exists in the angular workspace.
  */
 function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchema): boolean {
-  // TODO: use a more generic way of searching out the property - getPropertyFromWorkspace(targetProp, workspace)
-  const foundProp = workspace.projects[workspace.defaultProject].architect.build.options.scripts;
+  const foundProp = getPropertyFromWorkspace(targetProp, workspace);
   return foundProp !== null && foundProp.key === targetProp;
 }
 
