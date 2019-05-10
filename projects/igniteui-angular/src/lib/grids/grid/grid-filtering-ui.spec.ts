@@ -2495,6 +2495,38 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(dropdownList).toBeNull();
         }));
 
+        it('should close \'conditions dropdown\' when navigate with Tab key', fakeAsync(() => {
+            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const stringCellChip = initialChips[0].nativeElement;
+
+            // Click filter chip to show filter row
+            stringCellChip.click();
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+            const prefix = inputgroup.query(By.css('igx-prefix'));
+
+            // Click prefix to open conditions dropdown
+            prefix.triggerEventHandler('click', {});
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is opened
+            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).not.toBeNull();
+
+            // Press Tab key
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', prefix.nativeElement, true);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is closed
+            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).toBeNull();
+        }));
+
         it('Should commit the input and new chip after picking date from calendar for filtering.', fakeAsync(() => {
             // Click date filter chip to show filter row.
             const filterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent));
