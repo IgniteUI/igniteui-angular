@@ -8,7 +8,8 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    AfterViewInit
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
@@ -763,6 +764,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.columnGroup) {
             col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
+        }
+        if (this.parent && this.parent.columnGroup) {
+            return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
         if (!this.pinned) {
@@ -1738,7 +1742,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit, AfterViewInit {
+    public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -1791,6 +1796,10 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
+        if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
+            // reset indexes in case columns are hidden/shown runtime
+            this._populateVisibleIndexes();
+        }
     }
 
     /**
@@ -1810,6 +1819,11 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         });
     }
 
+    ngAfterViewInit() {
+        // sort cols by parent index, rowStart and col start
+        this._populateVisibleIndexes();
+    }
+
     /*
      * Gets whether the group contains the last pinned child column of the column layout.
      * ```typescript
@@ -1819,6 +1833,21 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      */
     get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
+    }
+
+    private _populateVisibleIndexes() {
+        const orderedCols = this.grid.columns
+        .filter(x => !x.columnGroup && !x.hidden)
+        .sort((a, b) => a.rowStart - b.rowStart || a.parent.visibleIndex - b.parent.visibleIndex || a.colStart - b.colStart);
+        this.children.forEach(child => {
+            const rs = child.rowStart || 1;
+            let vIndex = 0;
+            // filter out all cols with larger rowStart
+            const cols = orderedCols.filter(c =>
+                !c.columnGroup && (c.rowStart || 1) <= rs);
+            vIndex = cols.indexOf(child);
+            this.childrenVisibleIndexes.push({column: child, index: vIndex});
+        });
     }
 
 }

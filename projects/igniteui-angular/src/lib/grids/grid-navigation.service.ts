@@ -415,7 +415,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
+    public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cellComponent?) {
         if (isSummaryRow && rowIndex === 0 &&
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
                 return;
@@ -527,7 +527,7 @@ export class IgxGridNavigationService {
         return this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable)[0];
     }
 
-    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
+    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false, cellComponent?) {
         if (isSummary && rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
             this.goToLastBodyElement();
             return;
