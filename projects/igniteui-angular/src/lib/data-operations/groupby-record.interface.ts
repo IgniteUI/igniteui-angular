@@ -12,4 +12,5 @@ export interface IGroupByRecord {
     value: any;
     groupParent: IGroupByRecord;
     groups?: IGroupByRecord[];
+    height: number;
  }
