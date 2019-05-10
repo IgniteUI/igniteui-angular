@@ -450,6 +450,73 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
+
+    it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            hidden: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'ContactName', rowStart: 2, colStart: 1 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                { field: 'Region', rowStart: 3, colStart: 1 },
+                { field: 'PostalCode', rowStart: 3, colStart: 2 }
+            ]
+        }, {
+            group: 'group4',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1 },
+                { field: 'Phone', rowStart: 1, colStart: 2 },
+                { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+            ]
+        }];
+        fix.detectChanges();
+        const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+    }));
 });
 
 @Component({
