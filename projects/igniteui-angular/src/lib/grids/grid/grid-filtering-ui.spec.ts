@@ -2492,6 +2492,69 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).toBeNull();
         }));
+
+        it('should close \'conditions dropdown\' when navigate with Tab key', fakeAsync(() => {
+            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const stringCellChip = initialChips[0].nativeElement;
+
+            // Click filter chip to show filter row
+            stringCellChip.click();
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+            const prefix = inputgroup.query(By.css('igx-prefix'));
+
+            // Click prefix to open conditions dropdown
+            prefix.triggerEventHandler('click', {});
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is opened
+            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).not.toBeNull();
+
+            // Press Tab key
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', prefix.nativeElement, true);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify dropdown is closed
+            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            expect(dropdownList).toBeNull();
+        }));
+
+        it('Should commit the input and new chip after picking date from calendar for filtering.', fakeAsync(() => {
+            // Click date filter chip to show filter row.
+            const filterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent));
+            const dateFilterCell = filterCells.find((fc) => fc.componentInstance.column.field === 'ReleaseDate');
+            const dateFilterCellChip = dateFilterCell.query(By.directive(IgxChipComponent));
+            dateFilterCellChip.nativeElement.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click input to open calendar.
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+            input.nativeElement.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click the today date.
+            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
+            (<HTMLElement>todayDayItem).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the chip and input are committed.
+            const activeFiltersArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
+            const activeFilterChip = activeFiltersArea.query(By.directive(IgxChipComponent));
+            expect((<IgxChipComponent>activeFilterChip.componentInstance).selected).toBe(false, 'chip is not committed');
+            expect((<IgxInputDirective>input.componentInstance).value).toBeNull('input value is present and not committed');
+        }));
     });
 
     describe(null, () => {
@@ -3472,6 +3535,50 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(datePicker.componentInstance.mode).toBe('dropdown');
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
+
+    it('should correctly display all items in search list after filtering it', (async() => {
+        // Add additional rows as prerequisite for the test
+        for (let index = 0; index < 5; index++) {
+            const newRow = {
+                Downloads: index,
+                ID: index + 100,
+                ProductName: 'New Sales Product ' + index,
+                ReleaseDate: new Date(),
+                Released: false,
+                AnotherField: 'z'
+            };
+            grid.addRow(newRow);
+        }
+        fix.detectChanges();
+
+        // Open excel style filtering component
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await wait(200);
+        fix.detectChanges();
+
+        // Scroll the search list to the middle.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        const displayContainer = searchComponent.querySelector('igx-display-container');
+        const scrollbar = searchComponent.querySelector('igx-virtual-helper');
+        scrollbar.scrollTop = (<HTMLElement>displayContainer).getBoundingClientRect().height / 2;
+        await wait(200);
+        fix.detectChanges();
+
+        // Type string in search box
+        const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+        sendInputNativeElement(inputNativeElement, 'sale', fix);
+        await wait(200);
+        fix.detectChanges();
+
+        // Verify the display container is within the bounds of the list
+        const displayContainerRect = displayContainer.getBoundingClientRect();
+        const listNativeElement = searchComponent.querySelector('.igx-list');
+        const listRect = listNativeElement.getBoundingClientRect();
+        expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
+        expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
+    }));
 });
 
 const expectedResults = [];
@@ -3481,6 +3588,14 @@ function sendInput(element, text, fix) {
     element.nativeElement.dispatchEvent(new Event('keydown'));
     element.nativeElement.dispatchEvent(new Event('input'));
     element.nativeElement.dispatchEvent(new Event('keyup'));
+    fix.detectChanges();
+}
+
+function sendInputNativeElement(nativeElement, text, fix) {
+    nativeElement.value = text;
+    nativeElement.dispatchEvent(new Event('keydown'));
+    nativeElement.dispatchEvent(new Event('input'));
+    nativeElement.dispatchEvent(new Event('keyup'));
     fix.detectChanges();
 }
 
