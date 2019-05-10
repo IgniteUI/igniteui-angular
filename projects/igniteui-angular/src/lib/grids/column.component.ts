@@ -1515,6 +1515,11 @@ export class IgxColumnComponent implements AfterContentInit {
             return colWidth;
         }
     }
+
+    /**
+     *@hidden
+    */
+    public populateVisibleIndexes() { }
 }
 
 
@@ -1742,7 +1747,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit, AfterViewInit {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
@@ -1798,7 +1803,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this._populateVisibleIndexes();
+            this.populateVisibleIndexes();
         }
     }
 
@@ -1819,11 +1824,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         });
     }
 
-    ngAfterViewInit() {
-        // sort cols by parent index, rowStart and col start
-        this._populateVisibleIndexes();
-    }
-
     /*
      * Gets whether the group contains the last pinned child column of the column layout.
      * ```typescript
@@ -1835,7 +1835,10 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return this.children.some(child => child.isLastPinned);
     }
 
-    private _populateVisibleIndexes() {
+    /**
+     *@hidden
+    */
+    public populateVisibleIndexes() {
         const orderedCols = this.grid.columns
         .filter(x => !x.columnGroup && !x.hidden)
         .sort((a, b) => a.rowStart - b.rowStart || a.parent.visibleIndex - b.parent.visibleIndex || a.colStart - b.colStart);
