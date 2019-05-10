@@ -141,7 +141,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -216,14 +216,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on the input group's prefix.
      */
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-            this.dropDownConditions.toggle(this._conditionsOverlaySettings);
+        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB && event.shiftKey) {
-            event.preventDefault();
-            event.stopPropagation();
+        } else if (event.key === KEYS.TAB) {
+            if (event.shiftKey) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else if (!this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            }
         }
     }
 
@@ -234,12 +236,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.isKeyPressed = true;
 
         if (this.column.dataType === DataType.Boolean) {
-            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
-                return;
-            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+            if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
+                this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 event.stopPropagation();
                 return;
@@ -250,10 +248,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             if (this.isComposing) {
                 return;
             }
-
             this.commitInput();
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
@@ -299,7 +295,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean) {
+        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
+            this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
