@@ -761,4 +761,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private filter() {
         this.filteringService.filterInternal(this.column.field);
     }
+
+    private get isColumnFiltered() {
+        return this.expressionsList.length > 0;
+    }
 }
