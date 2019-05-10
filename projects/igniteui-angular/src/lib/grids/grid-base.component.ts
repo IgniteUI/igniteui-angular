@@ -4939,7 +4939,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
                                 columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
-        if (!this.rowList.find(r => r.index === currRowIndex).groupRow && nextCellIndex !== undefined) {
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+                .find(rec => !rec.expression && !rec.summaries) && nextCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
@@ -4959,7 +4960,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
                                 columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
-        if (!this.rowList.find(r => r.index === currRowIndex).groupRow && prevCellIndex !== undefined) {
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+                .find(rec => !rec.expression && !rec.summaries) && prevCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
