@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-##7.2.8
+## 7.2.8
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
     - `onGridKeydown` is exposed. The event will emit
