@@ -1,6 +1,6 @@
 import { IPositionStrategy } from './IPositionStrategy';
 import {
-  calculateTargetRect,
+  getTargetRect,
   cloneInstance,
   HorizontalAlignment,
   Point,
@@ -26,7 +26,6 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     closeAnimation: scaleOutVerTop,
     minSize: { width: 0, height: 0 }
   };
-  protected _initialSettings: PositionSettings;
 
   /** @inheritdoc */
   public settings: PositionSettings;
@@ -37,9 +36,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-    const targetRect = calculateTargetRect(this.settings);
+    const targetRect = getTargetRect(this.settings);
     const contentElementRect = contentElement.getBoundingClientRect();
-    this.setStyle(contentElement, this.settings, targetRect, contentElementRect);
+    this.setStyle(contentElement, targetRect, contentElementRect);
   }
 
   /**
@@ -55,11 +54,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * Sets element's style which effectively positions provided element according
    * to provided position settings
    * @param element Element to position
-   * @param settings Position settings according to which element should be positioned
    * @param targetRect Bounding rectangle of strategy target
    * @param elementRect Bounding rectangle of the element
    */
-  protected setStyle(element: HTMLElement, settings: PositionSettings, targetRect: ClientRect, elementRect: ClientRect) {
+  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect) {
     const startPoint: Point = {
       x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint,
       y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint,
@@ -72,7 +70,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     element.style.bottom = '';
     element.style.top = '';
 
-    switch (settings.horizontalDirection) {
+    switch (this.settings.horizontalDirection) {
       case HorizontalAlignment.Left:
         element.style.right = `${Math.round(wrapperRect.right - startPoint.x)}px`;
         break;
@@ -84,7 +82,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
         break;
     }
 
-    switch (settings.verticalDirection) {
+    switch (this.settings.verticalDirection) {
       case VerticalAlignment.Top:
         element.style.bottom = `${Math.round(wrapperRect.bottom - startPoint.y)}px`;
         break;

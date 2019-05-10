@@ -8,36 +8,35 @@ import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strat
 export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /** @inheritdoc */
-    protected fitInViewport(element: HTMLElement, settings: PositionSettings, connectedFit: ConnectedFit) {
-        let transformString = '';
+    protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
+        const transformString: string[] = [];
         if (!connectedFit.fitHorizontal) {
-            if (this.canFlipHorizontal(settings, connectedFit)) {
-                this.flipHorizontal(settings);
+            if (this.canFlipHorizontal(connectedFit)) {
+                this.flipHorizontal();
             } else {
                 const horizontalPush = this.horizontalPush(connectedFit);
-                transformString = this.joinStringNoTrailingSpaces([transformString, `translateX(${horizontalPush}px)`]);
+                transformString.push(`translateX(${horizontalPush}px)`);
             }
         }
 
         if (!connectedFit.fitVertical) {
-            if (this.canFlipVertical(settings, connectedFit)) {
-                this.flipVertical(settings);
+            if (this.canFlipVertical(connectedFit)) {
+                this.flipVertical();
             } else {
                 const verticalPush = this.verticalPush(connectedFit);
-                transformString = this.joinStringNoTrailingSpaces([transformString, `translateY(${verticalPush}px)`]);
+                transformString.push(`translateY(${verticalPush}px)`);
             }
         }
 
-        element.style.transform = transformString;
+        element.style.transform = transformString.join(' ').trim();
     }
 
     /**
      * Checks if element can be flipped without get off the viewport
-     * @param settings position settings to check against
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
-    private canFlipHorizontal(settings: PositionSettings, connectedFit: ConnectedFit): boolean {
+    private canFlipHorizontal(connectedFit: ConnectedFit): boolean {
         //  HorizontalAlignment can be Left = -1; Center = -0.5 or Right = 0.
         //  To virtually flip direction and start point (both are HorizontalAlignment) we can do this:
         //  flippedAlignment = (-1) * (HorizontalAlignment + 1)
@@ -45,10 +44,10 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         //  (-1) * (Left + 1) = 0 = Right
         //  (-1) * (Center + 1) = -0.5 = Center
         //  (-1) * (Right + 1) = -1 = Left
-        const flippedStartPoint = (-1) * (settings.horizontalStartPoint + 1);
-        const flippedDirection = (-1) * (settings.horizontalDirection + 1);
+        const flippedStartPoint = (-1) * (this.settings.horizontalStartPoint + 1);
+        const flippedDirection = (-1) * (this.settings.horizontalDirection + 1);
 
-        const leftBorder = this.calculateLeftElementBorder(
+        const leftBorder = this.calculateLeft(
             connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
         const rightBorder = leftBorder + connectedFit.contentElementRect.width;
         return connectedFit.viewPortRect.left < leftBorder && rightBorder < connectedFit.viewPortRect.right;
@@ -56,62 +55,59 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Checks if element can be flipped without get off the viewport
-     * @param settings position settings to check against
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
-    private canFlipVertical(settings: PositionSettings, connectedFit: ConnectedFit): boolean {
-        const flippedStartPoint = (-1) * (settings.verticalStartPoint + 1);
-        const flippedDirection = (-1) * (settings.verticalDirection + 1);
+    private canFlipVertical(connectedFit: ConnectedFit): boolean {
+        const flippedStartPoint = (-1) * (this.settings.verticalStartPoint + 1);
+        const flippedDirection = (-1) * (this.settings.verticalDirection + 1);
 
-        const topBorder = this.calculateTopElementBorder(
+        const topBorder = this.calculateTop(
             connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
         const bottomBorder = topBorder + connectedFit.contentElementRect.height;
         return connectedFit.viewPortRect.top < topBorder && bottomBorder < connectedFit.viewPortRect.bottom;
     }
 
     /**
-     * Flips direction and start point of provided position settings
-     * @param settings position settings to flip
+     * Flips direction and start point of the position settings
      */
-    private flipHorizontal(settings: PositionSettings) {
-        switch (settings.horizontalDirection) {
+    private flipHorizontal() {
+        switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
-                settings.horizontalDirection = HorizontalAlignment.Right;
+                this.settings.horizontalDirection = HorizontalAlignment.Right;
                 break;
             case HorizontalAlignment.Right:
-                settings.horizontalDirection = HorizontalAlignment.Left;
+                this.settings.horizontalDirection = HorizontalAlignment.Left;
                 break;
         }
-        switch (settings.horizontalStartPoint) {
+        switch (this.settings.horizontalStartPoint) {
             case HorizontalAlignment.Left:
-                settings.horizontalStartPoint = HorizontalAlignment.Right;
+                this.settings.horizontalStartPoint = HorizontalAlignment.Right;
                 break;
             case HorizontalAlignment.Right:
-                settings.horizontalStartPoint = HorizontalAlignment.Left;
+                this.settings.horizontalStartPoint = HorizontalAlignment.Left;
                 break;
         }
     }
 
     /**
-     * Flips direction and start point of provided position settings
-     * @param settings position settings to flip
+     * Flips direction and start point of the position settings
      */
-    private flipVertical(settings: PositionSettings) {
-        switch (settings.verticalDirection) {
+    private flipVertical() {
+        switch (this.settings.verticalDirection) {
             case VerticalAlignment.Top:
-                settings.verticalDirection = VerticalAlignment.Bottom;
+                this.settings.verticalDirection = VerticalAlignment.Bottom;
                 break;
             case VerticalAlignment.Bottom:
-                settings.verticalDirection = VerticalAlignment.Top;
+                this.settings.verticalDirection = VerticalAlignment.Top;
                 break;
         }
-        switch (settings.verticalStartPoint) {
+        switch (this.settings.verticalStartPoint) {
             case VerticalAlignment.Top:
-                settings.verticalStartPoint = VerticalAlignment.Bottom;
+                this.settings.verticalStartPoint = VerticalAlignment.Bottom;
                 break;
             case VerticalAlignment.Bottom:
-                settings.verticalStartPoint = VerticalAlignment.Top;
+                this.settings.verticalStartPoint = VerticalAlignment.Top;
                 break;
         }
     }
@@ -122,8 +118,8 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @returns amount of necessary translation which will push the element into viewport
      */
     private horizontalPush(connectedFit: ConnectedFit): number {
-        const leftExtend = connectedFit.leftBorder;
-        const rightExtend = connectedFit.rightBorder - connectedFit.viewPortRect.right;
+        const leftExtend = connectedFit.left;
+        const rightExtend = connectedFit.right - connectedFit.viewPortRect.right;
         //  if leftExtend < 0 overlay goes beyond left end of the screen. We should push it back with exactly
         //  as much as it is beyond the screen.
         //  if rightExtend > 0 overlay goes beyond right end of the screen. We should push it back with the
@@ -144,8 +140,8 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @returns amount of necessary translation which will push the element into viewport
      */
     private verticalPush(connectedFit: ConnectedFit): number {
-        const topExtend = connectedFit.topBorder;
-        const bottomExtend = connectedFit.bottomBorder - connectedFit.viewPortRect.bottom;
+        const topExtend = connectedFit.top;
+        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.bottom;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {

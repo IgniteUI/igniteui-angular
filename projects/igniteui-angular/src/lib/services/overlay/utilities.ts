@@ -95,7 +95,7 @@ export interface Size {
  * if no target is provided
  * @param settings Overlay settings for which to calculate target rectangle
  */
-export function calculateTargetRect(settings: PositionSettings): ClientRect {
+export function getTargetRect(settings: PositionSettings): ClientRect {
     let targetRect: ClientRect = {
         bottom: 0,
         height: 0,
