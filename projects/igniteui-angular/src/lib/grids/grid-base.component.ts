@@ -4931,15 +4931,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
-        const visibleColumns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
 
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
             return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
         }
-        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort() :
-                                visibleColumns.map(editCol => editCol.visibleIndex).sort();
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
+                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
-        if (nextCellIndex !== undefined) {
+        if (!this.rowList.find(r => r.index === currRowIndex).groupRow && nextCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
@@ -4951,15 +4951,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
-        const visibleColumns =  this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+        const columns =  this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
 
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
             return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
         }
-        const colIndexes = callback ? visibleColumns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort() :
-                                visibleColumns.map(editCol => editCol.visibleIndex).sort();
-        const prevCellIndex = colIndexes.reverse().find(index => index < curVisibleColIndex);
-        if (prevCellIndex !== undefined) {
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
+                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
+        const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
+        if (!this.rowList.find(r => r.index === currRowIndex).groupRow && prevCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
@@ -5013,7 +5013,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private isValidPosition(rowIndex, colIndex) {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
-        if (rows < 0 || cols < 0) { return false; }
+        if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
             colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
                 return true;
