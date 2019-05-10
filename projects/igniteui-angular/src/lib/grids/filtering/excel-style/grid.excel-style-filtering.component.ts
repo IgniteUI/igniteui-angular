@@ -448,6 +448,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         blanks.value = null;
         blanks.label = this.grid.resourceStrings.igx_grid_excel_blanks;
         blanks.indeterminate = false;
+        blanks.isSpecial = true;
         this.listData.unshift(blanks);
     }
 
