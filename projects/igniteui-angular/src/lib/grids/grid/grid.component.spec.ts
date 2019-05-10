@@ -2433,7 +2433,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe(110); // SORT does not submit
 
                 expect(grid.endEdit).toHaveBeenCalled();
-                expect(grid.endEdit).toHaveBeenCalledWith(true);
+                expect(grid.endEdit).toHaveBeenCalledWith(false);
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2658,9 +2658,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
             }));
 
-            it(`Should show the updated value when showing the column again`, fakeAsync(() => {
+            it(`Should show the previous value when showing the column again`, fakeAsync(() => {
                 const targetCbText = 'Product Name';
-                const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -2668,7 +2667,7 @@ describe('IgxGrid Component Tests', () => {
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 tick();
-                targetCell.update(newValue);
+                targetCell.update('Tea');
 
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
@@ -2681,7 +2680,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCheckbox.nativeElement.click();
                 tick();
 
-                expect(targetCell.value).toEqual(newValue);
+                expect(targetCell.value).toEqual('Chai');
             }));
 
             xit(`Should be possible to update a cell that is hidden programmatically`, () => { // This is NOT possible
@@ -2919,6 +2918,27 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Transaction', () => {
+            it('Should properly exit pending state when committing row edit w/o changes', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const initialDataLength = grid.data.length;
+                const productNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
+                const enterEvent = { key: 'enter', stopPropagation: () => {}, preventDefault: () => {} };
+                productNameCell.triggerEventHandler('keydown', enterEvent);
+                tick();
+                fixture.detectChanges();
+                expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeTruthy();
+                productNameCell.triggerEventHandler('keydown', enterEvent);
+                tick();
+                fixture.detectChanges();
+                expect(grid.getCellByKey(1, 'ProductName').inEditMode).toBeFalsy();
+                grid.deleteRow(2);
+                tick();
+                fixture.detectChanges();
+                expect(grid.data.length).toEqual(initialDataLength - 1);
+            }));
             it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();

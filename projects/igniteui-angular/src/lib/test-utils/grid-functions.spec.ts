@@ -9,6 +9,7 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/column.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { UIInteractions } from './ui-interactions.spec';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -444,6 +445,12 @@ export class GridFunctions {
         const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         filterIcon.nativeElement.click();
+    }
+
+    public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
+        const columnHeader = GridFunctions.getColumnHeader(columnField, fix);
+        const filterIcon = columnHeader.query(By.css('.igx-excel-filter__icon'));
+        UIInteractions.clickElement(filterIcon);
     }
 
     public static simulateKeyboardEvent(element, eventName, inputKey) {
