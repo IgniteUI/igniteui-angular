@@ -2699,6 +2699,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    public resetForOfCache() {
+        const firstVirtRow = this.dataRowList.first;
+        if (firstVirtRow) {
+            firstVirtRow.virtDirRow.assumeMaster();
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public resetColumnCollections() {
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
@@ -2720,6 +2731,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCaches() {
+        this.resetForOfCache();
         this.resetColumnsVisibleIndexCache();
         this.resetColumnCollections();
         this.resetCachedWidths();
