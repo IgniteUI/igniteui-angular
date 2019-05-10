@@ -86,6 +86,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1682,6 +1683,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
+    public filteringRow: IgxGridFilteringRowComponent;
+
+    /**
+     * @hidden
+     */
     @ViewChild('theadRow')
     public theadRow: ElementRef;
 
@@ -2561,13 +2568,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        this.onFilteringDone.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.endEdit(true);
             this.selectionService.clear();
             this.selectionService.activeElement = null;
         });
-        this.onSortingDone.pipe(destructor).subscribe(() => this.endEdit(true));
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
@@ -4668,10 +4673,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return 0;
         }
 
-        const editModeCell = this.crudService.cell;
-        if (editModeCell) {
-                this.endEdit(false);
-        }
+        this.endEdit(false);
 
         if (!text) {
             this.clearSearch();

@@ -191,7 +191,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this._hidden = value;
             if (this.grid) {
                 this.grid.resetCaches();
-                this.grid.endEdit(true);
+                this.grid.endEdit(false);
             }
             // TODO: Simplify
             this.check();
