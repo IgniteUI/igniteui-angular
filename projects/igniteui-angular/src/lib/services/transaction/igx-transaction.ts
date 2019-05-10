@@ -135,7 +135,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public commit(data: any[]): void {
+    public commit(data: any[], id?: any): void {
         this._states.forEach((s: S) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
@@ -160,7 +160,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public clear(): void {
+    public clear(id?: any): void {
         this._transactions = [];
         this._states.clear();
         this._redoStack = [];

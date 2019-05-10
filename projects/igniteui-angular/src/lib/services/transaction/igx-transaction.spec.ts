@@ -547,6 +547,59 @@ describe('IgxTransaction', () => {
             expect(originalData[49]).toEqual(newItem1.newValue);
         });
 
+        it('Should update data for provided id when data is list of objects', () => {
+            const originalData = SampleTestData.generateProductData(50);
+            const trans = new IgxTransactionService();
+            expect(trans).toBeDefined();
+
+            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            trans.add(item0Update1, originalData[1]);
+
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            trans.add(item10Delete, originalData[10]);
+
+            const newItem1: Transaction = {
+                id: 'add1', type: TransactionType.ADD, newValue: {
+                    ID: undefined,
+                    Category: 'Category Added',
+                    Downloads: 100,
+                    Items: 'Items Added',
+                    ProductName: 'ProductName Added',
+                    ReleaseDate: new Date(),
+                    Released: true,
+                    Test: 'test Added'
+                }
+            };
+
+            trans.add(newItem1, undefined);
+
+            trans.commit(originalData, 10);
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 'FAKE ID');
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 20);
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 1);
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Some new value');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 'add1');
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Some new value');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(50);
+            expect(originalData[49]).toEqual(newItem1.newValue);
+        });
+
         it('Should update data when data is list of primitives', () => {
             const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
             const trans = new IgxTransactionService();
@@ -569,6 +622,50 @@ describe('IgxTransaction', () => {
             expect(originalData.find(i => i === 'Row 10')).toBeUndefined();
             expect(originalData.length).toBe(50);
             expect(originalData[49]).toEqual('Added Row');
+        });
+
+        it('Should update data for provided id when data is list of primitives', () => {
+            const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
+            const trans = new IgxTransactionService();
+            expect(trans).toBeDefined();
+
+            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
+            trans.add(item0Update1, originalData[1]);
+
+            const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            trans.add(item10Delete, originalData[10]);
+
+            const newItem1: Transaction = {
+                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row'
+            };
+
+            trans.add(newItem1, undefined);
+
+            trans.commit(originalData, 10);
+            expect(originalData[1]).toBe('Row 1');
+            expect(originalData.find(i => i.id === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 'FAKE ID');
+            expect(originalData[1]).toBe('Row 1');
+            expect(originalData.find(i => i.id === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 20);
+            expect(originalData[1]).toBe('Row 1');
+            expect(originalData.find(i => i.id === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 1);
+            expect(originalData[1]).toBe('Updated Row');
+            expect(originalData.find(i => i.id === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(49);
+
+            trans.commit(originalData, 'add1');
+            expect(originalData[1]).toBe('Updated Row');
+            expect(originalData.find(i => i.id === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(50);
+            expect(originalData[49]).toEqual(newItem1.newValue);
         });
 
         it('Should add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
@@ -648,6 +745,56 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
             expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(0);
+        });
+
+        it('Should clear transactions for provided id', () => {
+            const originalData = SampleTestData.generateProductData(50);
+            const trans = new IgxTransactionService();
+            expect(trans).toBeDefined();
+
+            let transaction: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            trans.add(transaction, originalData[1]);
+
+            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            trans.add(transaction, originalData[2]);
+
+            transaction = { id: 2, type: TransactionType.UPDATE, newValue: { Items: 'Some new value' } };
+            trans.add(transaction, originalData[2]);
+
+            transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some very new value' } };
+            trans.add(transaction, originalData[1]);
+
+            transaction = { id: 10, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            trans.add(transaction, originalData[10]);
+
+            expect(trans.getTransactionLog().length).toBe(5);
+            expect(trans.getAggregatedChanges(true).length).toBe(3);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
+
+            trans.clear(1);
+            expect(trans.getTransactionLog().length).toBe(3);
+            expect(trans.getAggregatedChanges(true).length).toBe(2);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
+
+            trans.clear('FAKE ID');
+            expect(trans.getTransactionLog().length).toBe(3);
+            expect(trans.getAggregatedChanges(true).length).toBe(2);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
+
+            trans.clear(20);
+            expect(trans.getTransactionLog().length).toBe(3);
+            expect(trans.getAggregatedChanges(true).length).toBe(2);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
+
+            trans.clear(10);
+            expect(trans.getTransactionLog().length).toBe(2);
+            expect(trans.getAggregatedChanges(true).length).toBe(1);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
         });
     });
 
@@ -729,6 +876,9 @@ describe('IgxTransaction', () => {
 
             expect(transaction.getAggregatedChanges(false)).toEqual([deleteTransaction]);
         });
+
+        it('Should update data for provided id', () => {
+            fail('update hierarchical transaction commit method to accept and optional id');
+        });
     });
 });
-
