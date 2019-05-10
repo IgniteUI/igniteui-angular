@@ -106,13 +106,15 @@ export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Applies all transactions over the provided data
      * @param data Data source to update
+     * @param id Optional record id to commit transactions for
      */
-    commit(data: any[]): void;
+    commit(data: any[], id?: any): void;
 
     /**
      * Clears all transactions
+     * @param id Optional record id to clear transactions for
      */
-    clear(): void;
+    clear(id?: any): void;
 
     /**
      * Starts pending transactions. All transactions passed after call to startPending

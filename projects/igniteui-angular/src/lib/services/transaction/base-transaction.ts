@@ -95,12 +95,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    commit(data: any[]): void { }
+    commit(data: any[], id?: any): void { }
 
     /**
      * @inheritdoc
      */
-    clear(): void {
+    clear(id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
     }
