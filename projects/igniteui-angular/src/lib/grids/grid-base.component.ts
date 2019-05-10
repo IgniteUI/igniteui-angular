@@ -521,12 +521,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
-        if (this.gridAPI.grid) {
+        if (this.gridAPI.grid && this.columnList) {
 
             // should selection persist?
             this.allRowsSelected = false;
             this.deselectAllRows();
-            this.resetCachedWidths();
             this.calculateGridSizes();
         }
     }
@@ -545,8 +544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
-        if (this.gridAPI.grid) {
-            this.resetCachedWidths();
+        if (this.gridAPI.grid && this.columnList) {
             this.calculateGridSizes();
         }
     }
