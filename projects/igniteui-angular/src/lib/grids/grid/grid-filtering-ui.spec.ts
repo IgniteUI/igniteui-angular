@@ -3547,6 +3547,50 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
+
+    it('should keep newly added filter expression in view', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        // await wait(200);
+        tick(200);
+        fix.detectChanges();
+
+        // Click 'Add Filter' button.
+        GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
+        // await wait(3000);
+        tick(200);
+        fix.detectChanges();
+
+        // Verify last expression is currently in view inside the expressions container.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+        const expressionsContainer = customFilterMenu.querySelector('.igx-excel-filter__secondary-main');
+        const expressions = GridFunctions.sortNativeElementsVertically(
+            Array.from(expressionsContainer.querySelectorAll('.igx-excel-filter__condition')));
+        const lastExpression = expressions[expressions.length - 1];
+        const lastExpressionRect = lastExpression.getBoundingClientRect();
+        const expressionsContainerRect = expressionsContainer.getBoundingClientRect();
+        expect(lastExpressionRect.top >= expressionsContainerRect.top).toBe(true,
+            'lastExpression starts above expressionsContainer');
+        expect(lastExpressionRect.bottom <= expressionsContainerRect.bottom).toBe(true,
+            'lastExpression ends below expressionsContainer');
+
+        // Verify addFilter button is currently in view beneath the last expression.
+        const addFilterButton = customFilterMenu.querySelector('.igx-excel-filter__add-filter');
+        const addFilterButtonRect = addFilterButton.getBoundingClientRect();
+        expect(addFilterButtonRect.top >= lastExpressionRect.bottom).toBe(true,
+            'addFilterButton overlaps lastExpression');
+        expect(addFilterButtonRect.bottom <= expressionsContainerRect.bottom).toBe(true,
+            'addFilterButton ends below expressionsContainer');
+
+        // Close excel style custom filtering dialog.
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        fix.detectChanges();
+    }));
 });
 
 const expectedResults = [];
