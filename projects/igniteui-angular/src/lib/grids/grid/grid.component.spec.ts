@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
+import { IgxRowComponent } from '../row.component';
 import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -471,6 +472,71 @@ describe('IgxGrid Component Tests', () => {
             expect(colHeaders.length).toBeGreaterThan(0);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
+    });
+
+    describe('IgxGrid - virtualization tests', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridTestComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should change chunk size for every record after enlarging the grid and the horizontal dirs are scrambled', async () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
+            );
+            fix.detectChanges();
+            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 100;
+            await wait(100);
+            fix.detectChanges();
+            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 250;
+            await wait(100);
+            fix.detectChanges();
+            fix.componentInstance.grid.width = '1300px';
+            await wait(100);
+            fix.detectChanges();
+            const rows = fix.componentInstance.grid.rowList.toArray();
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i] as IgxRowComponent<any>;
+                expect(row.cells.length).toEqual(4);
+            }
+        });
+
+        it('should not keep a cached-out template as master after column resizing', async() => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
+            );
+            fix.detectChanges();
+            fix.componentInstance.grid.groupBy({ fieldName: 'value', dir: SortingDirection.Asc });
+            fix.detectChanges();
+            fix.componentInstance.grid.getColumnByName('index').width = '100px';
+            fix.detectChanges();
+            await wait();
+            const rows = fix.componentInstance.grid.dataRowList.toArray();
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i] as IgxRowComponent<any>;
+                expect(row.cells.length).toEqual(4);
+            }
+        });
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
@@ -1076,6 +1142,77 @@ describe('IgxGrid Component Tests', () => {
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
             }));
+
+        it(`GetNextCell: should return correctly next cell coordinates`, async() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(15, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            grid.height = '500px';
+            await wait(30);
+            fix.detectChanges();
+
+            grid.getColumnByName('col2').editable = true;
+            fix.detectChanges();
+            grid.getColumnByName('col4').editable = true;
+            fix.detectChanges();
+            // when the next cell is on the same row
+            let nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
+            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            // when the next cell is on the next row
+            nextCellCoords = grid.getNextCell(0, 4, (col) => col.editable);
+            expect(nextCellCoords).toEqual({rowIndex: 1, visibleColumnIndex: 2});
+            // when the next cell is not in the view
+            nextCellCoords = grid.getNextCell(9, 4, (col) => col.editable);
+            expect(nextCellCoords).toEqual({rowIndex: 10, visibleColumnIndex: 2});
+            // when the current row and column index are not valid
+            nextCellCoords = grid.getNextCell(-10, 14, (col) => col.editable);
+            expect(nextCellCoords).toEqual({rowIndex: -10, visibleColumnIndex: 14});
+            // when grid has no data
+            grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+
+            nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
+            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 0});
+        });
+
+        it(`GetPreviousCell: should return correctly next cell coordinates`, async() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(15, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            grid.height = '500px';
+            await wait(30);
+            fix.detectChanges();
+
+            grid.getColumnByName('col2').editable = true;
+            fix.detectChanges();
+            grid.getColumnByName('col4').editable = true;
+            fix.detectChanges();
+            // when the previous cell is on the same row
+            let prevCellCoords = grid.getPreviousCell(0, 4, (col) => col.editable);
+            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            // when the previous cell is on the previous row
+            prevCellCoords = grid.getPreviousCell(1, 2, (col) => col.editable);
+            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 4});
+            // when the current row and column index are not valid
+            prevCellCoords = grid.getPreviousCell(-110, 2, (col) => col.editable);
+            expect(prevCellCoords).toEqual({rowIndex: -110, visibleColumnIndex: 2});
+            // when there is no previous cell
+            prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
+            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+             // when the filter function has no matching colums
+             prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
+             expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 3});
+            // when grid has no data
+            grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+
+            prevCellCoords = grid.getPreviousCell(99, 0, (col) => col.editable);
+            expect(prevCellCoords).toEqual({rowIndex: 99, visibleColumnIndex: 0});
+        });
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
