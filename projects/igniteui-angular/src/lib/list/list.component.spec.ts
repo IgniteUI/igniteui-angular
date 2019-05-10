@@ -8,11 +8,19 @@ import {
     ListWithHeaderComponent, ListWithPanningComponent,
     EmptyListComponent, CustomEmptyListComponent,
     ListLoadingComponent, ListWithPanningTemplatesComponent,
-    ListCustomLoadingComponent,
-    TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+    ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent,
+    TwoHeadersListComponent, TwoHeadersListNoPanningComponent
+} from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
+import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
+
+const LIST_CSS_CLASS = 'igx-list';
+const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
+const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
 describe('List', () => {
     configureTestSuite();
@@ -27,9 +35,10 @@ describe('List', () => {
                 ListWithPanningComponent,
                 TwoHeadersListComponent,
                 TwoHeadersListNoPanningComponent,
-                ListWithPanningTemplatesComponent
+                ListWithPanningTemplatesComponent,
+                ListWithIgxForAndScrollingComponent
             ],
-            imports: [IgxListModule]
+            imports: [IgxListModule, IgxForOfModule]
         }).compileComponents();
     }));
 
@@ -85,7 +94,7 @@ describe('List', () => {
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
         expect(item.element.offsetLeft).toBe(testLeft);
-     });
+    });
 
     it('should calculate properly item index', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
@@ -623,6 +632,83 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
+    it('display density is properly applied', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        const list = fixture.componentInstance.list as IgxListComponent;
+        const domList = fixture.debugElement.query(By.css('igx-list'));
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
+
+        list.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
+    });
+
+    it('should emit onDensityChanged with proper event arguments', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        let oldDensity: DisplayDensity;
+        let newDensity: DisplayDensity;
+        const list = fixture.componentInstance.list as IgxListComponent;
+
+        list.onDensityChanged.subscribe((args: IDensityChangedEventArgs) => {
+            oldDensity = args.oldDensity;
+            newDensity = args.newDensity;
+        });
+
+        list.displayDensity = DisplayDensity.compact;
+        expect(oldDensity).toBeUndefined();
+        expect(newDensity).toBe(DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        expect(oldDensity).toBe(DisplayDensity.compact);
+        expect(newDensity).toBe(DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        expect(oldDensity).toBe(DisplayDensity.cosy);
+        expect(newDensity).toBe(DisplayDensity.comfortable);
+
+        unsubscribeEvents(list);
+    });
+
+    it('should allow setting the index of list items', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.igxFor.scrollTo(6);
+        await wait(50);
+        fixture.detectChanges();
+        const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const len = items.length;
+        expect(items[0].nativeElement.textContent).toContain('3');
+        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(2);
+        expect(items[len - 1].nativeElement.textContent).toContain('8');
+        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(7);
+    }));
+
+    it('should return items as they appear in the list with virtualization', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.igxFor.scrollTo(6);
+        await wait(50);
+        fixture.detectChanges();
+        const dItems = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const pItems = fixture.componentInstance.forOfList.items;
+        const len = dItems.length;
+        for (let i = 0; i < len; i++) {
+            expect(dItems[i].nativeElement).toEqual(pItems[i].element);
+        }
+    }));
+
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
             deltaX: itemWidth * 0.6,
@@ -660,10 +746,10 @@ describe('List', () => {
         const itemWidth = elementRefObject.nativeElement.offsetWidth;
 
         elementRefObject.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         elementRefObject.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
         elementRefObject.triggerEventHandler('panend', null);
         return new Promise((resolve, reject) => {
@@ -680,10 +766,10 @@ describe('List', () => {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
         itemNativeElement.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         itemNativeElement.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
     }
 
@@ -706,5 +792,41 @@ describe('List', () => {
         list.onPanStateChange.unsubscribe();
         list.onRightPan.unsubscribe();
         list.onItemClicked.unsubscribe();
+        list.onDensityChanged.unsubscribe();
+    }
+
+    /**
+     * Verifies the display density of the IgxList by providing the IgxListComponent,
+     * the list DebugElement and the expected DisplayDensity enumeration value.
+    */
+    function verifyDisplayDensity(listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) {
+        let expectedListDensityClass;
+
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS; break;
+            case DisplayDensity.cosy: expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS; break;
+            default: expectedListDensityClass = LIST_CSS_CLASS; break;
+        }
+
+        // Verify list display density.
+        expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
+        expect(listComp.displayDensity).toBe(expectedDisplayDensity);
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(true);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+            case DisplayDensity.cosy: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(true);
+            } break;
+            default: {
+                expect(listComp.cssClass).toBe(true);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+        }
     }
 });

@@ -7,7 +7,8 @@ import {
     HostListener,
     Input,
     ViewChild,
-    ElementRef
+    ElementRef,
+    AfterViewInit
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter } from '../animations/main';
@@ -22,6 +23,9 @@ import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { DateRangeDescriptor } from '../core/dates';
+import { interval } from 'rxjs';
+import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
+import { ScrollMonth } from './calendar-base';
 
 let NEXT_ID = 0;
 
@@ -73,7 +77,7 @@ export interface IDayView {
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxMonthPickerBase {
+export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -198,6 +202,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     @ViewChild('days', {read: IgxDaysViewComponent})
     public daysView: IgxDaysViewComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('prevMonthBtn')
+    public prevMonthBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('nextMonthBtn')
+    public nextMonthBtn: ElementRef;
 
     /**
      * @hidden
@@ -343,6 +359,29 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
      */
     private dayViews: Array<IDayView> = [this.defaultDayView];
 
+    public ngAfterViewInit() {
+
+        this.startMonthScroll$.pipe(
+            takeUntil(this.stopMonthScroll$),
+            switchMap(() => this.daysView.scrollMonth$.pipe(
+                skipLast(1),
+                debounce(() => interval(300)),
+                takeUntil(this.stopMonthScroll$)
+            ))).subscribe(() => {
+                switch (this.daysView.monthScrollDirection) {
+                    case ScrollMonth.PREV:
+                        this.previousMonth();
+                        break;
+                    case ScrollMonth.NEXT:
+                        this.nextMonth();
+                        break;
+                    case ScrollMonth.NONE:
+                    default:
+                        break;
+                }
+        });
+    }
+
     /**
      * Returns the locale representation of the month in the month view if enabled,
      * otherwise returns the default `Date.getMonth()` value.
@@ -359,7 +398,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public previousMonth(isKeydownTrigger: boolean = false) {
+    public previousMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
         this.dayViews.forEach((val, index) => {
             val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', -1);
@@ -374,23 +413,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public previousMonthKB(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            this.previousMonth(true);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public nextMonth(isKeydownTrigger: boolean = false) {
+    public nextMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
-        this.dayViews.forEach((val, index) => {
-            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', 1);
-        });
         this._monthAction = 'next';
 
         if (this.daysView) {
@@ -401,13 +425,39 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public nextMonthKB(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
-            event.preventDefault();
-            event.stopPropagation();
+    public startPrevMonthScroll = (isKeydownTrigger = false) => {
+        this.startMonthScroll$.next();
+        this.daysView.monthScrollDirection = ScrollMonth.PREV;
+        this.previousMonth(isKeydownTrigger);
+    }
 
-            this.nextMonth(true);
+    /**
+     * @hidden
+     */
+    public startNextMonthScroll = (isKeydownTrigger = false) => {
+        this.startMonthScroll$.next();
+        this.daysView.monthScrollDirection = ScrollMonth.NEXT;
+
+        this.nextMonth(isKeydownTrigger);
+    }
+
+    /**
+     * @hidden
+     */
+    public stopMonthScroll = (event) => {
+        event.stopPropagation();
+
+        this.daysView.stopMonthScroll$.next(true);
+        this.daysView.stopMonthScroll$.complete();
+
+
+        if (this.daysView.monthScrollDirection === ScrollMonth.PREV) {
+            this.prevMonthBtn.nativeElement.focus();
+        } else if (this.daysView.monthScrollDirection === ScrollMonth.NEXT) {
+            this.nextMonthBtn.nativeElement.focus();
         }
+
+        this.daysView.monthScrollDirection = ScrollMonth.NONE;
     }
 
     /**
@@ -586,8 +636,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
                 if (dayItem) { dayItem.nativeElement.focus(); }
             };
         }
-
-        // this.nextMonth(true);
     }
 
     /**
@@ -671,6 +719,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBase {
     public onKeydownEnd(event: KeyboardEvent) {
         if (this.daysView) {
             this.daysView.onKeydownEnd(event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('document:mouseup', ['$event'])
+    public onMouseUp(event: KeyboardEvent) {
+        if (this.daysView && this.daysView.monthScrollDirection !== ScrollMonth.NONE) {
+            this.stopMonthScroll(event);
         }
     }
 

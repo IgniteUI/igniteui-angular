@@ -32,6 +32,7 @@ import {
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -75,6 +76,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @Input()
     public overlayService: IgxOverlayService;
+
+    @Input()
+    public displayDensity: DisplayDensity;
 
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
@@ -141,7 +145,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
-            element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
+            element => element.expression.condition &&
+            (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
             this.expressionsList[0].beforeOperator = null;

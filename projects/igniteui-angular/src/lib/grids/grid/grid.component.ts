@@ -4,7 +4,7 @@ import {
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable, FilterMode } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -29,6 +29,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
 
@@ -302,7 +303,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public groupsExpanded = true;
 
     /**
-     * A hierarchical representation of the visible group by records.
+     * A hierarchical representation of the group by records.
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
@@ -414,6 +415,27 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -822,6 +844,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public ngAfterContentInit() {
+        if (this.allowFiltering && this.hasColumnLayouts) {
+            this.filterMode = FilterMode.excelStyleFilter;
+        }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }

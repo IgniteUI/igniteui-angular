@@ -44,6 +44,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _conditionsOverlaySettings: OverlaySettings = {
+        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -51,6 +52,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _operatorsOverlaySettings: OverlaySettings = {
+        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -121,6 +123,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
+    @ViewChild('inputGroup', { read: ElementRef })
+    protected inputGroup: ElementRef;
+
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
 
@@ -131,12 +136,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected operand: ElementRef;
 
     @ViewChild('closeButton')
-    protected closeButton: ElementRef;
+    public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -150,7 +155,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            event.preventDefault();
+            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
         }
     }
 
@@ -211,14 +216,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on the input group's prefix.
      */
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-            this.dropDownConditions.toggle(this._conditionsOverlaySettings);
+        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB && event.shiftKey) {
-            event.preventDefault();
-            event.stopPropagation();
+        } else if (event.key === KEYS.TAB) {
+            if (event.shiftKey) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else if (!this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            }
         }
     }
 
@@ -229,12 +236,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.isKeyPressed = true;
 
         if (this.column.dataType === DataType.Boolean) {
-            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
-                return;
-            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+            if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
+                this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 event.stopPropagation();
                 return;
@@ -245,25 +248,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             if (this.isComposing) {
                 return;
             }
-
-            this.chipsArea.chipsList.filter(chip => chip.selected = false);
-
-            let indexToDeselect = -1;
-            for (let index = 0; index < this.expressionsList.length; index++) {
-                const expression = this.expressionsList[index].expression;
-                if (expression.searchVal === null && !expression.condition.isUnary) {
-                    indexToDeselect = index;
-                }
-            }
-
-            if (indexToDeselect !== -1) {
-                this.removeExpression(indexToDeselect, this.expression);
-            }
-
-            this.resetExpression();
-            this.scrollChipsWhenAddingExpression();
+            this.commitInput();
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
@@ -309,7 +295,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean) {
+        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
+            this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
@@ -373,6 +360,25 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /**
+     * Commits the value of the input.
+     */
+    public commitInput() {
+        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+        let indexToDeselect = -1;
+        for (let index = 0; index < this.expressionsList.length; index++) {
+            const expression = this.expressionsList[index].expression;
+            if (expression.searchVal === null && !expression.condition.isUnary) {
+                indexToDeselect = index;
+            }
+        }
+        if (indexToDeselect !== -1) {
+            this.removeExpression(indexToDeselect, this.expression);
+        }
+        this.resetExpression();
+        this.scrollChipsWhenAddingExpression();
+    }
+
+    /**
      * Clears the value of the input.
      */
     public clearInput() {
@@ -383,10 +389,54 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on clear button.
      */
     public onClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER) {
+        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
             eventArgs.preventDefault();
             this.clearInput();
+            this.input.nativeElement.focus();
         }
+    }
+
+    /**
+     * Event handler for click on clear button.
+     */
+    public onClearClick() {
+        this.clearInput();
+        this.input.nativeElement.focus();
+    }
+
+    /**
+     * Event handler for keydown on commit button.
+     */
+    public onCommitKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+            eventArgs.preventDefault();
+            this.commitInput();
+            this.input.nativeElement.focus();
+        }
+    }
+
+    /**
+     * Event handler for click on commit button.
+     */
+    public onCommitClick() {
+        this.commitInput();
+        this.input.nativeElement.focus();
+    }
+
+    /**
+     * Event handler for focusout on the input group.
+     */
+    public onInputGroupFocusout() {
+        if (!this.value && this.value !== 0) {
+            return;
+        }
+        requestAnimationFrame(() => {
+            const focusedElement = document.activeElement;
+            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement)) &&
+                this.dropDownConditions.collapsed) {
+                this.commitInput();
+            }
+        });
     }
 
     /**
@@ -431,6 +481,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
+        this.commitInput();
     }
 
     /**

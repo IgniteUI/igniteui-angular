@@ -79,6 +79,32 @@ public rightPanPerformed(args) {
 }
 ```
 
+### Display Density
+
+The list provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). We can set it by using the `displayDensity` input of the list.
+
+```html
+<igx-list #list [displayDensity]="'compact'">
+    <igx-list-item [isHeader]="true">
+        Work Contacts
+    </igx-list-item>
+    <igx-list-item>Terrance Orta</igx-list-item>
+    <igx-list-item>Richard Mahoney</igx-list-item>
+	  <igx-list-item>Donna Price</igx-list-item>
+    <igx-list-item [isHeader]="true">
+        Family Contacts
+    </igx-list-item>
+    <igx-list-item>John Smith</igx-list-item>
+    <igx-list-item>Mary Smith</igx-list-item>
+</igx-list>
+```
+
+Or
+
+```typescript
+this.list.displayDensity = "compact";
+```
+
 ## API
 
 ### Inputs
@@ -91,7 +117,7 @@ public rightPanPerformed(args) {
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
 | panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
-
+| displayDensity  | Determines the display density of the list.  |
 
 ### Properties
 
@@ -152,15 +178,14 @@ All list items implement `IListChild`.
 
 | Name | Description |
 | :--- | :--- |
+| index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
-
 
 ### Properties
 
 | Name | Description |
 | :--- | :--- |
-| index  | The index of item in children collection  |
 | panState  | Gets the item's pan state  |
 | list  | Gets the list that is associated with the item  |
 | role  | Gets the role of the item within its respective list - _separator_ if isHeader is true and _listitem_ otherwise   |

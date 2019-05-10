@@ -1,3 +1,8 @@
+<ng-container *ngIf="rowDraggable">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
+        <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
+    </div>
+</ng-container>
 <ng-container *ngIf="rowSelectable">
     <div class="igx-grid__cbx-selection">
         <igx-checkbox [checked]="isSelected" [disabled]="deleted" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
@@ -32,7 +37,7 @@
                 [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
                 [level]="treeRow.level"
                 [expanded]="treeRow.expanded"
-                [showIndicator]="treeRow.children && treeRow.children.length"
+                [showIndicator]="showIndicator"
                 [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
                 [column]="col"
                 [formatter]="col.formatter"
@@ -45,6 +50,7 @@
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
+                [isLoading]="isLoading"
                 [cellTemplate]="col.bodyTemplate" #treeCell>
             </igx-tree-grid-cell>
         </ng-template>
@@ -78,7 +84,7 @@
             [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
             [level]="treeRow.level"
             [expanded]="treeRow.expanded"
-            [showIndicator]="treeRow.children && treeRow.children.length"
+            [showIndicator]="showIndicator"
             [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
             [column]="col"
             [formatter]="col.formatter"
@@ -90,6 +96,7 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
+            [isLoading]="isLoading"
             [cellTemplate]="col.bodyTemplate" #treeCell>
         </igx-tree-grid-cell>
     </ng-template>

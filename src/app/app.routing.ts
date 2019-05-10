@@ -35,6 +35,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
@@ -52,6 +53,7 @@ import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 
 const appRoutes = [
     {
@@ -229,6 +231,10 @@ const appRoutes = [
         component: GridSelectionComponent
     },
     {
+        path: 'gridRowDrag',
+        component: GridRowDraggableComponent
+    },
+    {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
     },
@@ -251,6 +257,10 @@ const appRoutes = [
     {
         path: 'treeGridFlatData',
         component: TreeGridFlatDataSampleComponent
+    },
+    {
+        path: 'treeGridLoadOnDemand',
+        component: TreeGridLoadOnDemandSampleComponent
     },
     {
         path: 'tooltip',

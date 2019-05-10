@@ -75,6 +75,27 @@ describe('IgxGrid - Cell component', () => {
         expect(cell).toBe(fix.componentInstance.selectedCell);
     });
 
+    it('Should not emit selection event for already selected cell', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cell = grid.columns[0].cells[0];
+        const spy = spyOn(grid.onSelection, 'emit');
+
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        expect(spy.calls.count()).toEqual(1);
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        fix.detectChanges();
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape'}));
+        fix.detectChanges();
+
+        expect(spy.calls.count()).toEqual(1);
+    });
+
     it('Should trigger onCellClick event when click into cell', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -668,6 +689,44 @@ describe('IgxGrid - Cell component', () => {
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
                 expect(parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10))
                     .toBe(virtRowStyle);
+            }));
+
+            it('edit mode - should close calendar when scroll', (async () => {
+                fixture.componentInstance.scrollLeft(800);
+                await wait(100);
+                fixture.detectChanges();
+
+                let cell = grid.getCellByColumn(1, 'birthday');
+                cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+                await wait();
+                fixture.detectChanges();
+
+                const domDatePicker = fixture.debugElement.query(By.css('igx-date-picker'));
+                const iconDate = domDatePicker.query(By.css('.igx-icon'));
+                expect(iconDate).toBeDefined();
+
+                UIInteractions.clickElement(iconDate);
+                await wait(30);
+                fixture.detectChanges();
+
+                // Verify calendar is opened
+                let picker = document.getElementsByClassName('igx-calendar-picker');
+                expect(picker.length).toBe(1);
+
+                fixture.componentInstance.scrollTop(10);
+                await wait(100);
+                fixture.detectChanges();
+
+                // Verify calendar is closed
+                picker = document.getElementsByClassName('igx-calendar-picker');
+                expect(picker.length).toBe(0);
+
+                // Verify cell is still in edit mode
+                cell = grid.getCellByColumn(1, 'birthday');
+                expect(cell.nativeElement.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
+                const editCellID = cell.gridAPI.get_cell_inEditMode().id;
+                expect(4).toBe(editCellID.columnID);
+                expect(1).toBe(editCellID.rowIndex);
             }));
         });
     });

@@ -104,6 +104,26 @@
         }
     }
 
+    @include e(tr, $m: 'drag') {
+        @extend %igx-grid__tr--drag !optional;
+    }
+
+    @include e(tr, $m: 'ghost') {
+        @extend %igx-grid__tr--ghost !optional;
+    }
+
+    @include e(drag-indicator) {
+        @extend %igx-grid__drag-indicator !optional;
+    }
+
+    @include e(drag-indicator, $m: 'off') {
+        @extend %igx-grid__drag-indicator--off !optional;
+    }
+
+    @include e(tr,  $m: mrl) {
+        @extend %grid-row--mrl !optional;
+    }
+
     @include e(summaries) {
         @extend %grid-summaries !optional;
 
@@ -156,6 +176,10 @@
 
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
+    }
+
+    @include e(tr,  $m: mrl) {
+        @extend %grid-row--mrl !optional;
     }
 
     @include e(tr-container) {
@@ -245,6 +269,11 @@
 
     @include e(tree-grouping-indicator) {
         @extend %igx-grid__tree-grouping-indicator !optional;
+    }
+
+    @include e(tree-loading-indicator) {
+        @extend %igx-grid__tree-loading-indicator !optional;
+        @extend %igx-grid__tree-loading-indicator !optional;
     }
 
     @include e(td, $m: edited) {
@@ -431,6 +460,10 @@
 
     @include e(hierarchical-indent, $m: scroll) {
         @extend %igx-grid__hierarchical-indent--scroll !optional;
+    }
+
+    @include e(mrl-block) {
+        @extend %grid-mrl-block !optional;
     }
 
     @for $i from 1 through 10 {
