@@ -4094,7 +4094,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Column layouts related
         let visibleCols = [];
         const columnBlocks = this.visibleColumns.filter(c => c.columnGroup);
-        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children.toArray()));
+        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children));
         const combinedBlocksSize = colsPerBlock.reduce((acc, item) => acc + item.length, 0);
         colsPerBlock.forEach(blockCols => visibleCols = visibleCols.concat(blockCols));
         //
