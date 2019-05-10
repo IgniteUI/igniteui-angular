@@ -71,7 +71,7 @@ describe('ng-add schematics', () => {
   it('should add hammer.js to the main.ts file', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const mainTs = tree.read('src/main.ts').toString();
-    expect(mainTs).toContain('hammerjs');
+    expect(mainTs).toContain('import \'hammerjs\';');
   });
 
   it('should not add hammer.js if it exists in angular.json', () => {
