@@ -3957,7 +3957,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
             this.columnList.forEach((column: IgxColumnComponent) => {
-                column.defaultWidth = this._columnWidth;
+                if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
+                    const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+                    column.defaultWidth = columnWidthCombined + 'px';
+                } else {
+                    column.defaultWidth = this._columnWidth;
+                }
             });
         }
     }
@@ -4101,7 +4106,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Column layouts related
         let visibleCols = [];
         const columnBlocks = this.visibleColumns.filter(c => c.columnGroup);
-        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children.toArray()));
+        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children));
         const combinedBlocksSize = colsPerBlock.reduce((acc, item) => acc + item.length, 0);
         colsPerBlock.forEach(blockCols => visibleCols = visibleCols.concat(blockCols));
         //

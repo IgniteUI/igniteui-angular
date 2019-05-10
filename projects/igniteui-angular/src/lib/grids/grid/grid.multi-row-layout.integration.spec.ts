@@ -1,5 +1,5 @@
-import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+﻿import { configureTestSuite } from '../../test-utils/configure-suite';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -8,7 +8,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from './../column.component';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
@@ -23,7 +23,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
                 ColumnLayouHidingTestComponent,
-                ColumnLayoutGroupingTestComponent
+                ColumnLayoutGroupingTestComponent,
+                ColumnLayoutResizingTestComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
@@ -808,9 +809,252 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeLessThanOrEqual(0);
         });
     });
+
+    describe('Resizing', () => {
+        const DEBOUNCE_TIME = 200;
+        const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
+        const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            colGroups = fixture.componentInstance.colGroups;
+        }));
+
+        it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async() => {
+            grid.width = '1500px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '300px', resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // ContactName
+            expect(grid.columns[1].width).toEqual('300px');
+            expect(grid.columns[1].cells[0].value).toEqual('Maria Anders');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[1].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 600, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 600, 5);
+            fixture.detectChanges();
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 150px 100px 100px 200px');
+        });
+
+        it('should correctly resize column with span 2 and the ones below it that have span 1 with width set', async() => {
+            grid.width = '1500px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '300px', resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // Phone
+            expect(grid.columns[4].width).toEqual('200px');
+            expect(grid.columns[4].cells[0].value).toEqual('030-0074321');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[4].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            fixture.detectChanges();
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 100px 100px 100px 200px');
+        });
+
+        it('should correctly resize column that spans 1 column that is used to size the column templates', async() => {
+            grid.width = '1500px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '300px', resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // PostalCode
+            expect(grid.columns[8].width).toEqual('200px');
+            expect(grid.columns[8].cells[0].value).toEqual('12209');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[8].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            fixture.detectChanges();
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 300px 100px 100px 100px 200px');
+        });
+
+        it('should correctly resize column with span 1 and bigger columns that start with same colStart with bigger span', async() => {
+            grid.width = '1500px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, width: '300px', resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // CompanyName
+            expect(grid.columns[7].width).toEqual('200px');
+            expect(grid.columns[7].cells[0].value).toEqual('Alfreds Futterkiste');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[7].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            fixture.detectChanges();
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 100px 100px 100px 200px');
+        });
+
+        it('should correctly resize column while there is another column that does not have width set', async() => {
+            grid.width = 1500 + grid.scrollWidth + 'px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // CompanyName
+            expect(grid.columns[7].width).toEqual('200px');
+            expect(grid.columns[7].cells[0].value).toEqual('Alfreds Futterkiste');
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[7].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
+            fixture.detectChanges();
+
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 600px 100px 100px 200px');
+        });
+
+        it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
+            grid.width = 1500 + grid.scrollWidth + 'px';
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: [
+                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4, resizable: true},
+                    { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6, width: '200px', resizable: true},
+                    { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'City', rowStart: 2, colStart: 3, colEnd: 5, resizable: true},
+                    { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7, width: '200px', resizable: true},
+                    { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2, width: '200px', resizable: true},
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3, width: '200px', resizable: true},
+                    { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+                ]
+            }];
+            fixture.detectChanges();
+
+            // City
+            expect(grid.columns[5].cells[0].value).toEqual('Berlin');
+
+            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
+
+            const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
+            const headerResArea = headerCells[5].children[1].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 950, 0);
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 850, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 850, 5);
+            fixture.detectChanges();
+
+            // Small misalignment in the third column occurs when cols are being intersected.
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 640px 80px 100px 200px');
+        });
+    });
 });
-
-
 
 @Component({
     template: `
@@ -932,4 +1176,34 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
         { field: 'Country', rowStart: 2, colStart: 2, groupable: true},
         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3}
     ];
+}
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px">
+        <igx-column-layout *ngFor='let group of colGroups'>
+            <igx-column *ngFor='let col of group.columns' [field]='col.field' [width]='col.width' [resizable]='col.resizable'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [colEnd]="col.colEnd" [rowEnd]="col.rowEnd">
+            </igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class ColumnLayoutResizingTestComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    cols: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1, resizable: true },
+        { field: 'CompanyName', rowStart: 1, colStart: 2, resizable: true },
+        { field: 'ContactName', rowStart: 1, colStart: 3, resizable: true },
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4, resizable: true },
+    ];
+    colGroups = [
+        {
+            group: 'group1',
+            columns: this.cols
+        }
+    ];
+    data = SampleTestData.contactInfoDataFull();
 }
