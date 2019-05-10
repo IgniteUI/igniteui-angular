@@ -557,7 +557,7 @@ describe('igxOverlay', () => {
                 top: 50,
                 width: 0
             };
-            const getPointSpy = spyOn(utilities, 'calculateTargetRect').and.returnValue(rect);
+            const getPointSpy = spyOn(utilities, 'getTargetRect').and.returnValue(rect);
             const fix = TestBed.createComponent(FlexContainerComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
