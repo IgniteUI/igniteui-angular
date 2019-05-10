@@ -8,6 +8,7 @@ import {
     ContentChild,
     AfterContentInit,
     OnDestroy,
+    HostListener,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -119,16 +120,13 @@ export class IgxSliderComponent implements
     private _hasViewInit = false;
     private _minValue = 0;
     private _maxValue = 100;
-    private _lowerBound?: number;
-    private _upperBound?: number;
-    private _lowerValue: number;
-    private _upperValue: number;
-    private _trackUpperBound: boolean;
-    private _trackLowerBound: boolean;
+    private _lowerBound = this._minValue;
+    private _upperBound = this._maxValue;
+    private _lowerValue = this._lowerBound;
+    private _upperValue = this._upperBound;
     private _countinuous = false;
     private _disabled = false;
     private _step = 1;
-    private _oldValue;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
@@ -408,11 +406,6 @@ export class IgxSliderComponent implements
         } else {
             this._maxValue = value;
         }
-
-        if (this._trackUpperBound) {
-            this._upperBound = this._maxValue;
-        }
-        this.invalidateValue();
     }
 
     /**
@@ -447,11 +440,6 @@ export class IgxSliderComponent implements
         } else {
             this._minValue = value;
         }
-
-        if (this._trackLowerBound) {
-            this._lowerBound = this._minValue;
-        }
-        this.invalidateValue();
     }
 
     /**
@@ -477,10 +465,6 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set lowerBound(value: number) {
-        if (this._trackLowerBound) {
-            this._trackLowerBound = false;
-        }
-
         if (value >= this.upperBound) {
             this._lowerBound = this.minValue;
             return;
@@ -500,6 +484,10 @@ export class IgxSliderComponent implements
      * ```
      */
     public get upperBound(): number {
+        if (this.labelsViewEnabled) {
+            return this.valueInRange(this._upperBound, this.minValue, this.maxValue);
+        }
+
         return this._upperBound;
     }
 
@@ -512,13 +500,8 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set upperBound(value: number) {
-        if (this._trackUpperBound) {
-            this._trackUpperBound = false;
-        }
-
         if (value <= this.lowerBound) {
             this._upperBound = this.maxValue;
-
             return;
         }
 
@@ -539,12 +522,11 @@ export class IgxSliderComponent implements
     public get value(): number | IRangeSliderValue {
         if (this.isRange) {
             return {
-                lower: this.snapValueToStep(this.lowerValue),
-                upper: this.snapValueToStep(this.upperValue)
+                lower: this.lowerValue,
+                upper: this.upperValue
             };
         } else {
-            const val = this.snapValueToStep(this.upperValue);
-            return val;
+            return this.upperValue;
         }
     }
 
@@ -596,6 +578,16 @@ export class IgxSliderComponent implements
 
 
     constructor(private renderer: Renderer2) {}
+
+    @HostListener('mousedown')
+    public onMouseDown() {
+        this.showThumbLabels();
+    }
+
+    @HostListener('mouseup')
+    public onMouseUp() {
+        this.hideThumbLabels();
+    }
 
     /**
      *Returns whether the `IgxSliderComponent` type is RANGE.
@@ -726,36 +718,13 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public ngOnInit() {
-        if (this.lowerBound === undefined) {
-            this.lowerBound = this.minValue;
-            this._trackLowerBound = true;
+        /**
+         * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
+         */
+        if (!this.isRange) {
+            this.value = this.lowerValue;
         }
-
-        if (this.upperBound === undefined) {
-            this.upperBound = this.maxValue;
-            this._trackUpperBound = true;
-        }
-
-        if (this.isRange) {
-            if (Number.isNaN((this.value as IRangeSliderValue).lower)) {
-                this.value = {
-                    lower: this.lowerBound,
-                    upper: (this.value as IRangeSliderValue).upper
-                };
-            }
-
-            if (Number.isNaN((this.value as IRangeSliderValue).upper)) {
-                this.value = {
-                    lower: (this.value as IRangeSliderValue).lower,
-                    upper: this.upperBound
-                };
-            }
-        } else {
-            if (Number.isNaN(this.value as number)) {
-                this.value = this.lowerBound;
-            }
-        }
-
+        // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
     }
@@ -816,7 +785,7 @@ export class IgxSliderComponent implements
     }
 
     /** @hidden */
-    getEditElement() {
+    public getEditElement() {
         return this.slider.nativeElement;
     }
 
@@ -909,43 +878,6 @@ export class IgxSliderComponent implements
         return Math.max(Math.min(value, max), min);
     }
 
-    private invalidateValue() {
-        if (!this.isRange) {
-            this.invalidateSliderValue(this.value);
-        } else {
-            const value = this.value as IRangeSliderValue;
-
-            this.invalidateSliderValueRange(value.lower, value);
-            this.invalidateSliderValueRange(value.upper, value);
-        }
-    }
-
-    private invalidateSliderValue(value) {
-        if (value >= this._lowerBound && value <= this._upperBound) {
-            this.positionHandlesAndUpdateTrack();
-        } else if (value < this._lowerBound) {
-            this.value = this._lowerBound;
-        } else if (value > this._upperBound) {
-            this.value = this._upperBound;
-        }
-    }
-
-    private invalidateSliderValueRange(thumbVal, rangeSliderVal: IRangeSliderValue) {
-        if (thumbVal >= this._lowerBound && thumbVal <= this._upperBound) {
-            this.positionHandlesAndUpdateTrack();
-        } else if (thumbVal < this._lowerBound) {
-            this.value = {
-                lower: this._lowerBound,
-                upper: rangeSliderVal.upper
-            };
-        } else if (thumbVal > this._upperBound) {
-            this.value = {
-                lower: rangeSliderVal.lower,
-                upper: this._upperBound
-            };
-        }
-    }
-
     private generateTickMarks(color: string, interval: number) {
         return interval !== null ? `repeating-linear-gradient(
             ${'to left'},
@@ -1009,15 +941,16 @@ export class IgxSliderComponent implements
         this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
     }
 
-    private snapValueToStep(value: number): number {
-        const valueModStep = (value - this.minValue) % this.step;
-        let snapValue = value - valueModStep;
+    private showThumbLabels() {
+        return this.thumbTo.isActive ?
+            this.thumbTo.showThumbLabel() :
+            this.thumbFrom.showThumbLabel();
+    }
 
-        if (Math.abs(valueModStep) * 2 >= this.step) {
-            snapValue += (valueModStep > 0) ? this.step : (-this.step);
-        }
-
-        return parseFloat(snapValue.toFixed(20));
+    private hideThumbLabels() {
+        return this.thumbTo.isActive ?
+            this.thumbTo.hideThumbLabel() :
+            this.thumbFrom.hideThumbLabel();
     }
 
     private closestTo(goal: number, positions: number[]): number {
@@ -1035,9 +968,13 @@ export class IgxSliderComponent implements
         const toPosition = this.valueToFraction(this.upperValue);
         const positionGap = toPosition - fromPosition;
 
-        this.track.nativeElement.style.transform = `scaleX(${1})`;
-        this.track.nativeElement.style.left = `${fromPosition * 100}%`;
-        this.track.nativeElement.style.width = `${positionGap * 100}%`;
+        if (this.isRange) {
+            this.track.nativeElement.style.transform = `scaleX(${1})`;
+            this.track.nativeElement.style.left = `${fromPosition * 100}%`;
+            this.track.nativeElement.style.width = `${positionGap * 100}%`;
+        } else {
+            this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
+        }
     }
 
     private hasValueChanged(oldValue) {

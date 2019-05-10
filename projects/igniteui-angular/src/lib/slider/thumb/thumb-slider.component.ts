@@ -101,17 +101,17 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.showThumbsLabels();
+        this.showThumbLabel();
         this.onThumbValueChange.emit(increment);
     }
 
     @HostListener('keyup')
     public onKeyUp() {
-        this.hideThumbsLabels();
+        this.hideThumbLabel();
     }
 
     @HostListener('blur')
-    public hideThumbLabelsOnBlur() {
+    public onBlur() {
         if (this._timer !== null) {
             clearInterval(this._timer);
         }
@@ -120,12 +120,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         this.isActive = false;
     }
 
-    @HostListener('focus', ['$event'])
-    public onFocus($event: FocusEvent) {
+    @HostListener('focus')
+    public onFocus() {
         this.toggleThumbLabel();
     }
 
-    public showThumbsLabels() {
+    public showThumbLabel() {
         if (this.disabled) {
             return;
         }
@@ -135,11 +135,27 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         }
 
         if (this._timer !== null) {
-            clearInterval(this._timer);
+            clearTimeout(this._timer);
         }
 
         this._isActiveLabel = true;
         this.isActive = true;
+    }
+
+
+    public hideThumbLabel() {
+        if (this.disabled) {
+            return;
+        }
+
+        if (this.continuous) {
+            return;
+        }
+
+        this._timer = setTimeout(
+            () => this._isActiveLabel = false,
+            this.thumbLabelVisibilityDuration
+        );
     }
 
     private updateThumbValue(mouseX: number) {
@@ -168,23 +184,8 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     }
 
     private toggleThumbLabel() {
-        this.showThumbsLabels();
-        this.hideThumbsLabels();
-    }
-
-    private hideThumbsLabels() {
-        if (this.disabled) {
-            return;
-        }
-
-        if (this.continuous) {
-            return;
-        }
-
-        this._timer = setTimeout(
-            () => this._isActiveLabel = false,
-            this.thumbLabelVisibilityDuration
-        );
+        this.showThumbLabel();
+        this.hideThumbLabel();
     }
 
 }
