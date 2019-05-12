@@ -802,6 +802,12 @@
         background: inherit;
         z-index: 4;
         cursor: move;
+
+        %igx-icon-display {
+            width: $drag-icon-size;
+            height: $drag-icon-size;
+            font-size: $drag-icon-size;
+        }
     }
 
     %igx-grid__drag-indicator--cosy{
