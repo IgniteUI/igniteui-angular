@@ -189,8 +189,6 @@
     $desktop-header-padding: 16px;
     $mobile-header-padding: 8px;
 
-    $mobile-break-point: 600px;
-
     %igx-drop-down {
         max-height: 100%;
         position: absolute;
@@ -203,6 +201,7 @@
         z-index: 1;
         box-shadow: --var($theme, 'shadow');
         background: --var($theme, 'background-color');
+        min-width: rem(128px);
 
         &:empty {
             box-shadow: none;

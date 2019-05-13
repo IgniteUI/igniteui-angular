@@ -104,6 +104,26 @@
         }
     }
 
+    @include e(tr, $m: 'drag') {
+        @extend %igx-grid__tr--drag !optional;
+    }
+
+    @include e(tr, $m: 'ghost') {
+        @extend %igx-grid__tr--ghost !optional;
+    }
+
+    @include e(drag-indicator) {
+        @extend %igx-grid__drag-indicator !optional;
+    }
+
+    @include e(drag-indicator, $m: 'off') {
+        @extend %igx-grid__drag-indicator--off !optional;
+    }
+
+    @include e(tr,  $m: mrl) {
+        @extend %grid-row--mrl !optional;
+    }
+
     @include e(summaries) {
         @extend %grid-summaries !optional;
 
