@@ -1152,7 +1152,7 @@
             --var($theme, 'header-border-style')
             --var($theme, 'header-border-color');
         background: inherit;
-        z-index: 1;
+        z-index: 4;
     }
 
     %grid__cbx-selection--cosy {
@@ -1655,7 +1655,7 @@
         padding-right: map-get($grid-grouping-indicator-padding, 'comfortable');
         border-right: 1px solid --var($theme, 'header-border-color');
         background: --var($theme, 'header-background');
-        z-index: 1;
+        z-index: 4;
     }
 
     %igx-grid__header-indentation--cosy {
@@ -1856,6 +1856,20 @@
 
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: igx-color($palette, 'secondary');
+                }
+
+                + igx-icon {
+                    margin-left: rem(4px);
+                }
+            }
         }
     }
 

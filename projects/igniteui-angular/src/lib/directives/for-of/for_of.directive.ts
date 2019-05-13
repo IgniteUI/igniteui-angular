@@ -1267,13 +1267,21 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
-    protected get sizesCache(): number[] {
+    /**
+     * @hidden
+     * @internal
+     */
+    public get sizesCache(): number[] {
         if (this.syncService.isMaster(this)) {
             return this._sizesCache;
         }
         return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
-    protected set sizesCache(value: number[]) {
+    /**
+     * @hidden
+     * @internal
+     */
+    public set sizesCache(value: number[]) {
         this._sizesCache = value;
     }
 
@@ -1390,6 +1398,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return newHeight;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public assumeMaster(): void {
+        this._sizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
+        this.syncService.setMaster(this, true);
+    }
+
     ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
@@ -1398,7 +1415,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                if (!this.igxForOf.length) {
+                /* we need to reset the master dir if all rows are removed
+                (e.g. because of filtering); if all columns are hidden, rows are
+                still rendered empty, so we should not reset master */
+                if (!this.igxForOf.length &&
+                    this.igxForScrollOrientation === 'vertical') {
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);

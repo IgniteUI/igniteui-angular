@@ -24,7 +24,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection, IgxChipComponent } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../grid-base.component';
 
@@ -853,6 +853,35 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifySummaryCellActive(fix, 0, 1);
         });
 
+        it ('Custom KB navigation: onGridKeydown event should be emitted from summaryCell', async () => {
+            HelperUtils.focusSummaryCell(fix, 0, 1);
+            const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
+            const summaryCell = grid.summariesRowList.find(r => r.index === 0).summaryCells.find(c => c.visibleColumnIndex === 1);
+            await HelperUtils.moveSummaryCell(fix, 0, 1, 'ArrowRight', false, true);
+            await wait(100);
+            fix.detectChanges();
+            HelperUtils.verifySummaryCellActive(fix, 0, 5);
+            expect(gridKeydown).toHaveBeenCalledTimes(1);
+            expect(gridKeydown).toHaveBeenCalledWith({
+                targetType: 'summaryCell', target: summaryCell, cancel: false, event: new KeyboardEvent ('keydown') });
+        });
+
+        it('Custom KB navigation: should be able to focus summary cell with navigateTo method', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.navigateTo(6, 1, (args) => { args.target.nativeElement.focus(); });
+            await wait(100);
+            fix.detectChanges();
+
+            const summaryCell = grid.summariesRowList.find(r => r.index === 6).summaryCells.find(c => c.visibleColumnIndex === 1);
+            expect(summaryCell).toBeDefined();
+            expect(summaryCell.focused).toBe(true);
+        });
+
         it('Grouping: should be able to select summaries with arrow keys', async () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
@@ -1061,6 +1090,37 @@ describe('IgxGrid - Summaries', () => {
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(false);
 
+        });
+
+        it('should navigate with tab to filter row if the grid is empty', async () => {
+            grid.allowFiltering = true;
+            await wait();
+            fix.detectChanges();
+
+            grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
+
+            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const stringCellChip = initialChips[1].nativeElement;
+
+            stringCellChip.click();
+            await wait();
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 0, 0);
+
+            await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
+            await wait();
+
+            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+            const allButtons = filterUIRow.queryAll(By.css('button'));
+            const closeButton = allButtons[allButtons.length - 1];
+            expect(document.activeElement).toEqual(closeButton.nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterUIRow.nativeElement, true);
+            await wait();
+            fix.detectChanges();
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
         });
     });
 

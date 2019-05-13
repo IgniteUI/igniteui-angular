@@ -372,6 +372,13 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
+    /**
+     * Focus the close button in the filtering row.
+     */
+    public focusFilterRowCloseButton() {
+        this.grid.filteringRow.closeButton.nativeElement.focus();
+    }
+
     public get filteredData() {
         return this.grid.filteredData;
     }
@@ -452,6 +459,17 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
                                     operator: FilteringLogic,
                                     expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
@@ -461,21 +479,45 @@ export class IgxFilteringService implements OnDestroy {
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsList(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            }
+            if (expressionsUIs.length) {
+                expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
             }
         } else {
             const exprUI = new ExpressionUI();
             exprUI.expression = expressions as IFilteringExpression;
-            if (expressionsUIs.length !== 0) {
-                exprUI.beforeOperator = operator;
-            }
+            exprUI.afterOperator = operator;
 
             const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
             if (prevExprUI) {
-                prevExprUI.afterOperator = operator;
+                exprUI.beforeOperator = prevExprUI.afterOperator;
             }
 
             expressionsUIs.push(exprUI);
         }
+    }
+
+    public isFilteringExpressionsTreeEmpty(): boolean {
+        const expressionTree = this.grid.filteringExpressionsTree;
+        if (!expressionTree.filteringOperands || !expressionTree.filteringOperands.length) {
+            return true;
+        }
+
+        let expr: any;
+
+        for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
+            expr = expressionTree.filteringOperands[i];
+
+            if ((expr instanceof FilteringExpressionsTree)) {
+                const exprTree = expr as FilteringExpressionsTree;
+                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }
