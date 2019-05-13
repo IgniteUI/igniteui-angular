@@ -233,7 +233,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
             columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
-            if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
+
+            if (element.classList.contains('igx-grid__td--pinned-last')) {
+                nextElement = element.nextElementSibling.children[0].children[columnIndex]
+            } else if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
@@ -244,9 +247,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
                 return;
             } else {
-                nextElement = element.classList.contains('igx-grid__td--pinned-last') ?
-                    element.nextElementSibling.children[0].children[columnIndex] :
-                    element.nextElementSibling.children[columnIndex];
+                nextElement = element.nextElementSibling.children[columnIndex];
             }
         }
         nextElement.focus();

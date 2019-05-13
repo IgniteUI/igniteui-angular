@@ -572,6 +572,48 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     }));
+
+    it('should navigate to unpinned area when the column layout is bigger than the display container', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            pinned: true,
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                { field: 'ContactName', rowStart: 2, colStart: 1 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                { field: 'Region', rowStart: 3, colStart: 1 },
+                { field: 'PostalCode', rowStart: 3, colStart: 2 }
+            ]
+        }];
+        fix.componentInstance.grid.width = "600px";
+        fix.detectChanges();
+        const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+    }));
 });
 
 @Component({
