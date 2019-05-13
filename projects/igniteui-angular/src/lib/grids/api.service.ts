@@ -235,12 +235,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             return args;
         }
 
-        if (!args.newValue) {
-            return args;
-        }
-
         if (rowInEditMode) {
             grid.transactions.endPending(false);
+        }
+
+        if (!args.newValue) {
+            return args;
         }
 
         if (hasSummarized) {
