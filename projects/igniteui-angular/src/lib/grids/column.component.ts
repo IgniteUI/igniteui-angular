@@ -1798,7 +1798,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this._populateVisibleIndexes();
+            this._populateChildVisibleIndexes();
         }
     }
 
@@ -1820,8 +1820,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     }
 
     ngAfterViewInit() {
-        // sort cols by parent index, rowStart and col start
-        this._populateVisibleIndexes();
+        this._populateChildVisibleIndexes();
     }
 
     /*
@@ -1835,10 +1834,13 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return this.children.some(child => child.isLastPinned);
     }
 
-    private _populateVisibleIndexes() {
-        const orderedCols = this.grid.columns
+    private _populateChildVisibleIndexes() {
+        this.childrenVisibleIndexes = [];
+        const grid = this.gridAPI.grid;
+        const columns = grid && grid.columnList ? grid.columnList.toArray() : [];
+        const orderedCols = columns
         .filter(x => !x.columnGroup && !x.hidden)
-        .sort((a, b) => a.rowStart - b.rowStart || a.parent.visibleIndex - b.parent.visibleIndex || a.colStart - b.colStart);
+        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;

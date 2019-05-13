@@ -12,7 +12,7 @@ const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 
-describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
+fdescribe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -450,6 +450,167 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
+
+    it(`Tab Navigation should move through each cell from the row once,
+      moving through all cells with same rowStart, following the columnStart and column layout order,
+      before moving on to the next rowStart.`, (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+        const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
+        // check visible indexes are correct
+        expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(0);
+        expect(grid.getCellByColumn(0, 'ContactName').visibleColumnIndex).toBe(1);
+        expect(grid.getCellByColumn(0, 'Address').visibleColumnIndex).toBe(2);
+        expect(grid.getCellByColumn(0, 'Phone').visibleColumnIndex).toBe(3);
+        expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
+        expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
+        expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
+
+        // focus 1st
+        let cell = grid.getCellByColumn(0, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        // tab thorugh all data cols and check cells are selected/focused.
+        for (let i = 1; i < dataCols.length; i++) {
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait();
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[i]);
+            expect(cell.focused).toBe(true);
+            expect(cell.visibleColumnIndex).toBe(i);
+        }
+    }));
+
+    it(`Shift+Tab Navigation should move through each cell from the row once, moving through all cells with same rowStart,
+     following the columnStart and column layout setup order,
+     before moving on to the previous cell with smaller rowStart.`, (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+
+        // focus last
+        let cell = grid.getCellByColumn(0, 'PostalCode');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+        const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
+
+        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        // shit+tab through all data cols and check cells are selected/focused.
+        for (let i = dataCols.length - 1; i >= 0; i--) {
+            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            await wait();
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[i]);
+            expect(cell.focused).toBe(true);
+            expect(cell.visibleColumnIndex).toBe(i);
+        }
+     }));
+
+     it('Tab/Shift+Tab Navigation should allow moving to next/prev row when at last/first cell.',  (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+
+        // focus 1st cell in 2nd row
+        let cell = grid.getCellByColumn(1, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // shift + tab into prev row
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait();
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(0, 'PostalCode');
+        expect(cell.focused).toBe(true);
+        expect(cell.visibleColumnIndex).toBe(6);
+
+        // tab into next row
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(1, 'ID');
+        expect(cell.focused).toBe(true);
+        expect(cell.visibleColumnIndex).toBe(0);
+     }));
 });
 
 @Component({

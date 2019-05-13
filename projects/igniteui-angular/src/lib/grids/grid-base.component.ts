@@ -4381,6 +4381,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                      col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
                      1;
                      this._multiRowLayoutRowSize = Math.max(layoutSize, this._multiRowLayoutRowSize);
+                     (col as any)._populateChildVisibleIndexes();
                 }
             });
         }
