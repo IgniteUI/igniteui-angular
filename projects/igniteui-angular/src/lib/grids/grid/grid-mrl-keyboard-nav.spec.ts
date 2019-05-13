@@ -7,6 +7,7 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -669,7 +670,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
 
         const dataCols = grid.columns.filter(x => !x.columnLayout);
-        // shit+tab through all data cols and check cells are selected/focused.
+        // shift+tab through all data cols and check cells are selected/focused.
         for (let i = dataCols.length - 1; i >= 0; i--) {
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
             await wait();
@@ -732,6 +733,109 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell = grid.getCellByColumn(1, 'ID');
         expect(cell.focused).toBe(true);
         expect(cell.visibleColumnIndex).toBe(0);
+     }));
+
+     fit('Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        grid.columnWidth = '300px';
+        grid.width = '300px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
+
+        // focus 1st
+        let cell = grid.getCellByColumn(0, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        // tab thorugh all data cols and check cells are selected/focused.
+        for (let i = 1; i < dataCols.length; i++) {
+           UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+           await wait(100);
+           fix.detectChanges();
+           cell = grid.getCellByColumn(0, order[i]);
+           expect(cell.focused).toBe(true);
+           expect(cell.visibleColumnIndex).toBe(i);
+       }
+     }));
+
+     fit('Shift+Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        setupGridScrollDetection(fix, grid);
+        grid.columnWidth = '300px';
+        grid.width = '300px';
+        fix.detectChanges();
+        const forOfDir = grid.headerContainer;
+        forOfDir.scrollTo(2);
+        await wait(200);
+        fix.detectChanges();
+        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
+         // focus last
+         let cell = grid.getCellByColumn(0, 'PostalCode');
+         cell.nativeElement.dispatchEvent(new Event('focus'));
+         fix.detectChanges();
+         // shift+tab through all data cols and check cells are selected/focused.
+         for (let j = dataCols.length - 1; j >= 0; j--) {
+             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+             await wait(100);
+             fix.detectChanges();
+             cell = grid.getCellByColumn(0, order[j]);
+             expect(cell.focused).toBe(true);
+             expect(cell.visibleColumnIndex).toBe(j);
+         }
      }));
 });
 
