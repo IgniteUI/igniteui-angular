@@ -702,7 +702,7 @@ describe('IgxGrid Component Tests', () => {
                 }
             });
 
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         }));
 
