@@ -1168,7 +1168,7 @@ export class IgxTimePickerComponent implements
             if (this.mode === InteractionMode.DropDown) {
                 settings = this.overlaySettings || this._dropDownOverlaySettings;
                 const posStrategy = settings.positionStrategy;
-    
+
                 if (this.group && posStrategy) {
                     posStrategy.settings.target = this.group.element.nativeElement;
                 } else if (this.templateDropDownTarget && posStrategy) {
