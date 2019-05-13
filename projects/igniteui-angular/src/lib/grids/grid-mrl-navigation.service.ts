@@ -47,6 +47,59 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this.focusPrevCellFromLayout(cell);
     }
 
+    public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
+        const nextElementColumn = cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex + 1);
+        if (nextElementColumn) {
+            if (!this.isColumnFullyVisible(nextElementColumn.parent.index)) {
+                this.grid.nativeElement.focus({ preventScroll: true });
+                this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    const nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                    nextCell.nativeElement.focus({ preventScroll: true });
+                });
+                this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
+            } else {
+                const nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                nextCell.nativeElement.focus();
+            }
+        } else {
+            // end of layout reached
+            if (this.isRowInEditMode(rowIndex)) {
+                this.grid.rowEditTabs.first.element.nativeElement.focus();
+                return;
+            }
+            super.navigateDown(currentRowEl, rowIndex, 0, cell);
+        }
+    }
+
+    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
+        const prevElementColumn =
+         cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex - 1 && !x.hidden);
+        if (prevElementColumn) {
+            if (!this.isColumnLeftFullyVisible(prevElementColumn.parent.index)) {
+                this.grid.nativeElement.focus({ preventScroll: true });
+                this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    const nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                    nextCell.nativeElement.focus({ preventScroll: true });
+                });
+                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
+            } else {
+                const nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                nextCell.nativeElement.focus();
+            }
+        } else {
+            // end of layout reached
+            let lastVisibleIndex = 0;
+            cell.grid.unpinnedColumns.forEach((col) => {
+                lastVisibleIndex = Math.max(lastVisibleIndex, col.visibleIndex);
+            });
+            super.navigateUp(currentRowEl, rowIndex, lastVisibleIndex, cell);
+        }
+    }
+
     private focusCellUpFromLayout(cell, isSummary = false) {
         const columnLayout = cell.column.parent;
         const element = cell.nativeElement.parentElement;

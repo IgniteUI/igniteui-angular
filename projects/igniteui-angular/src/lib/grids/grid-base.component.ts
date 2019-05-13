@@ -4401,6 +4401,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
+        if (this.hasColumnLayouts) {
+            collection.forEach((column: IgxColumnComponent) => {
+                column.populateVisibleIndexes();
+            });
+        }
+
         this.reinitPinStates();
     }
 
