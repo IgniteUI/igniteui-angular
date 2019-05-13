@@ -3538,7 +3538,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
     it('should correctly display all items in search list after filtering it', (async () => {
         // Add additional rows as prerequisite for the test
-        for (let index = 0; index < 5; index++) {
+        for (let index = 0; index < 4; index++) {
             const newRow = {
                 Downloads: index,
                 ID: index + 100,
@@ -3580,7 +3580,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
 
-    it('Should not treat \'Select All\' as a search result.', (async () => {
+    fit('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[0].nativeElement;
         const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
@@ -3594,12 +3594,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(checkBoxes.length).toBe(6);
 
         sendInputNativeElement(input, 'a', fix);
-        await wait(100);
+        tick(100);
         checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
         expect(checkBoxes.length).toBe(4);
 
         sendInputNativeElement(input, 'al', fix);
-        await wait(100);
+        tick(100);
         checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
         expect(checkBoxes.length).toBe(0);
     }));
