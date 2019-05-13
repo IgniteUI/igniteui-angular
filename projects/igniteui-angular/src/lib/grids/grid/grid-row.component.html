@@ -72,7 +72,7 @@
                 [row]="this"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="col.visibleIndex"
+                [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
@@ -93,7 +93,7 @@
                 [row]="this"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="col.visibleIndex"
+                [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
