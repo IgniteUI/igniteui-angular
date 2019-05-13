@@ -2123,45 +2123,45 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         // Filtering + Moving
         it('should move chip under the correct column when column is moved and filter row should open for correct column.',
-        fakeAsync(() => {
-            let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+            fakeAsync(() => {
+                let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
 
-            // filter string col
-            stringCellChip.nativeElement.click();
-            fix.detectChanges();
+                // filter string col
+                stringCellChip.nativeElement.click();
+                fix.detectChanges();
 
-            GridFunctions.filterBy('Contains', 'Angular', fix);
-            GridFunctions.closeFilterRow(fix);
+                GridFunctions.filterBy('Contains', 'Angular', fix);
+                GridFunctions.closeFilterRow(fix);
 
-            filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            let stringCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
-            expect(stringCellChipText.nativeElement.textContent.trim()).toEqual('Angular');
-
-            // swap columns
-            const stringCol = grid.getColumnByName('ProductName');
-            const numberCol = grid.getColumnByName('Downloads');
-            grid.moveColumn(stringCol, numberCol);
-            fix.detectChanges();
-
-            // check UI in filter cell is correct after moving
-            filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-            stringCellChip = filteringCells[2].query(By.css('igx-chip'));
-            expect(stringCellChip).not.toBeNull();
-            if (stringCellChip) {
-                stringCellChipText = filteringCells[2].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+                filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                let stringCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
                 expect(stringCellChipText.nativeElement.textContent.trim()).toEqual('Angular');
-            }
-            const numberChip = filteringCells[1].query(By.css('igx-chip'));
-            const numberCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
-            expect(numberCellChipText.nativeElement.textContent.trim()).toEqual('Filter');
 
-            // check if chip opens correct UI after moving
-            numberChip.nativeElement.click();
-            fix.detectChanges();
+                // swap columns
+                const stringCol = grid.getColumnByName('ProductName');
+                const numberCol = grid.getColumnByName('Downloads');
+                grid.moveColumn(stringCol, numberCol);
+                fix.detectChanges();
 
-            checkUIForType('number', fix.debugElement);
-        }));
+                // check UI in filter cell is correct after moving
+                filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+                stringCellChip = filteringCells[2].query(By.css('igx-chip'));
+                expect(stringCellChip).not.toBeNull();
+                if (stringCellChip) {
+                    stringCellChipText = filteringCells[2].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+                    expect(stringCellChipText.nativeElement.textContent.trim()).toEqual('Angular');
+                }
+                const numberChip = filteringCells[1].query(By.css('igx-chip'));
+                const numberCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+                expect(numberCellChipText.nativeElement.textContent.trim()).toEqual('Filter');
+
+                // check if chip opens correct UI after moving
+                numberChip.nativeElement.click();
+                fix.detectChanges();
+
+                checkUIForType('number', fix.debugElement);
+            }));
 
         // Filtering + Hiding
         it('should not display filter cell for hidden columns and chips should show under correct column.', fakeAsync(() => {
@@ -3627,6 +3627,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const listRect = listNativeElement.getBoundingClientRect();
         expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
+    }));
+
+    it('Should not treat \'Select All\' as a search result.', (async () => {
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[0].nativeElement;
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        const input = searchComponent.querySelector('.igx-input-group__input');
+        let checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(6);
+
+        sendInputNativeElement(input, 'a', fix);
+        await wait(100);
+        checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(4);
+
+        sendInputNativeElement(input, 'al', fix);
+        await wait(100);
+        checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(0);
     }));
 });
 

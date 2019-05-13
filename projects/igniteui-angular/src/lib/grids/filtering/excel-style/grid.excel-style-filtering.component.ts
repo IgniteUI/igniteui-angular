@@ -47,6 +47,7 @@ export class FilterListItem {
     public label: any;
     public isSelected: boolean;
     public indeterminate: boolean;
+    public isSpecial = false;
 }
 
 @Directive({
@@ -427,6 +428,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         selectAll.value = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.label = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.indeterminate = this.selectAllIndeterminate;
+        selectAll.isSpecial = true;
         this.listData.unshift(selectAll);
     }
 
@@ -505,10 +507,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.column.field);
-        const selectedItems = this.listData.filter(el =>
-            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === true);
-        const unselectedItem = this.listData.find(el =>
-            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
+        const selectedItems = this.listData.slice(1, this.listData.length).filter(el => el.isSelected === true);
+        const unselectedItem = this.listData.slice(1, this.listData.length).find(el => el.isSelected === false);
 
         if (unselectedItem) {
             selectedItems.forEach(element => {
