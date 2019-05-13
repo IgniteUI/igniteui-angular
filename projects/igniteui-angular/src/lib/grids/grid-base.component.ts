@@ -75,7 +75,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
@@ -176,12 +176,24 @@ export interface IColumnMovingEndEventArgs {
     target: IgxColumnComponent;
 }
 
+// TODO: to be deleted when onFocusChange event is removed #4054
 export interface IFocusChangeEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
     cancel: boolean;
 }
 
+export interface IGridKeydownEventArgs {
+    targetType: GridKeydownTargetType;
+    target: Object;
+    event: Event;
+    cancel: boolean;
+}
+
+export interface ICellPosition {
+    rowIndex: number;
+    visibleColumnIndex: number;
+}
 export interface IGridDataBindable {
     data: any[];
     filteredData: any[];
@@ -208,6 +220,12 @@ export enum GridSummaryCalculationMode {
 export enum FilterMode {
     quickFilter = 'quickFilter',
     excelStyleFilter = 'excelStyleFilter'
+}
+
+export enum GridKeydownTargetType {
+    dataCell = 'dataCell',
+    summaryCell = 'summaryCell',
+    groupRow = 'groupRow'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -1466,19 +1484,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
-     * Emitted when changing the focus while navigating with the keyboard.
-     * Return the focused cell or focused group row. This event is cancelable.
+     * @deprecated you should use onGridKeydown event
+     */
+    @Output()
+    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
+    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+    /**
+     * Emitted when keydown is triggered over element inside grid's body.
+     * This event is fired only if the key combination is supported in the grid.
+     * Return the target type, target object and the original event. This event is cancelable.
      * ```typescript
-     * changeFocus(event: IGridFocusChangeEventArgs) {
-     *  const changedFocus = event;
+     * customKeydown(args: IGridKeydownEventArgs) {
+     *  const keydownEvent = args.event;
      * }
      * ```
      * ```html
-     * * <igx-grid (onFocusChange)="changeFocus($event)"></igx-grid>
+     *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+    public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
      /**
      * Emitted when start dragging a row.
@@ -4761,6 +4787,168 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
+    }
+
+    /**
+     * this method allows you to navigate to a position
+     * in the grid based on provided `rowindex` and `visibleColumnIndex`,
+     * also to execute a custom logic over the target element,
+     * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
+     * ```typescript
+     *  this.grid.navigateTo(10, 3, (args) => { args.target.nativeElement.focus(); });
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
+        if (rowIndex < 0 || rowIndex > this.verticalScrollContainer.igxForOf.length - 1
+            ||  (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+            return;
+        }
+        this.wheelHandler();
+        if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
+            && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
+            if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                this.verticalScrollContainer.scrollTo(rowIndex);
+                this.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                });
+            } else {
+                this.executeCallback(rowIndex, visibleColIndex, cb);
+            }
+        } else {
+            const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
+            this.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                    this.verticalScrollContainer.scrollTo(rowIndex);
+                    this.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
+                    });
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }
+
+            });
+            this.navigation.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+        }
+    }
+
+     /**
+     * returns `ICellPosition` which defines the next cell,
+     * according to the current position, that match specific criteria.
+     * You can pass callback function as a third parameter of `getPreviousCell` method.
+     * The callback fuction accepts IgxColumnComponent as a param
+     * ```typescript
+     *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public getNextCell(currRowIndex: number, curVisibleColIndex: number,
+            callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+        }
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
+                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
+        const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+                .find(rec => !rec.expression && !rec.summaries) && nextCellIndex !== undefined) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
+        } else {
+            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
+            } else {
+                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+            }
+        }
+    }
+
+     /**
+     * returns `ICellPosition` which defines the previous cell,
+     * according to the current position, that match specific criteria.
+     * You can pass callback function as a third parameter of `getPreviousCell` method.
+     * The callback fuction accepts IgxColumnComponent as a param
+     * ```typescript
+     *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
+            callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        const columns =  this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+        }
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
+                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
+        const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+                .find(rec => !rec.expression && !rec.summaries) && prevCellIndex !== undefined) {
+            return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
+        } else {
+            if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
+            } else {
+                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+            }
+        }
+    }
+
+    private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
+        if (!cb) { return; }
+        let targetType, target;
+        const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        if (!row) { return; }
+        switch (row.nativeElement.tagName.toLowerCase()) {
+            case 'igx-grid-groupby-row':
+                targetType = GridKeydownTargetType.groupRow;
+                target = row;
+                break;
+            case 'igx-grid-summary-row':
+                targetType = GridKeydownTargetType.summaryCell;
+                target = visibleColIndex !== -1 ?
+                    row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
+                break;
+            default:
+                targetType = GridKeydownTargetType.dataCell;
+                target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
+                break;
+        }
+        const args = { targetType: targetType, target: target };
+        cb(args);
+    }
+
+    private getPrevDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex <= 0) { return currentRowIndex; }
+
+        const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
+            .find(rec => !rec.expression && !rec.summaries);
+        return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
+    }
+
+    private getNextDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) {return currentRowIndex; }
+
+        const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
+            .find(rec => !rec.expression && !rec.summaries);
+        return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
+    }
+
+    private isValidPosition(rowIndex, colIndex): boolean {
+        const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        if (rows < 1 || cols < 1) { return false; }
+        if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
+            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+                return true;
+        }
+        return false;
     }
 
     /**
