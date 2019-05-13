@@ -57,9 +57,10 @@
 <ng-container *ngIf="grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
         <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
-        [ngClass]="{'igx-grid__th--pinned-last': col.hasLastPinnedChildColumn}"
+        [ngClass]="{'igx-grid__td--pinned-last': col.hasLastPinnedChildColumn}"
         [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),
         'grid-template-columns':col.getGridTemplate(false, false),
+        'z-index': col.pinned ? 1 : null,
         '-ms-grid-rows':col.getGridTemplate(true, true),
         '-ms-grid-columns':col.getGridTemplate(false, true)}">
             <igx-grid-cell *ngFor="let child of col.children"
@@ -72,7 +73,7 @@
                 [row]="this"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="col.visibleIndex"
+                [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
@@ -93,7 +94,7 @@
                 [row]="this"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
-                [visibleColumnIndex]="col.visibleIndex"
+                [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
