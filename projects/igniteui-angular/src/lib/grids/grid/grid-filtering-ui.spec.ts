@@ -3629,7 +3629,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
 
-    fit('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
+    it('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[0].nativeElement;
         const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
