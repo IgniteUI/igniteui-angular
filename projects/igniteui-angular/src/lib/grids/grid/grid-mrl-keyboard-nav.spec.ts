@@ -592,7 +592,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 { field: 'PostalCode', rowStart: 3, colStart: 2 }
             ]
         }];
-        fix.componentInstance.grid.width = "600px";
+        fix.componentInstance.grid.width = '600px';
         fix.detectChanges();
         const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
