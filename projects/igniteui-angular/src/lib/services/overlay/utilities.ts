@@ -89,19 +89,37 @@ export interface Size {
     height: number;
 }
 
-/** @hidden */
-export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
-    let result: Point = new Point(0, 0);
+/**
+ * @hidden
+ * Calculates the rectangle of target for provided overlay settings. Defaults to 0,0,0,0 rectangle
+ * if no target is provided
+ * @param settings Overlay settings for which to calculate target rectangle
+ */
+export function getTargetRect(settings: PositionSettings): ClientRect {
+    let targetRect: ClientRect = {
+        bottom: 0,
+        height: 0,
+        left: 0,
+        right: 0,
+        top: 0,
+        width: 0
+    };
 
     if (settings.target instanceof HTMLElement) {
-        const rect = (<HTMLElement>settings.target).getBoundingClientRect();
-        result.x = rect.right + rect.width * settings.horizontalStartPoint;
-        result.y = rect.bottom + rect.height * settings.verticalStartPoint;
+        targetRect = (settings.target as HTMLElement).getBoundingClientRect();
     } else if (settings.target instanceof Point) {
-        result = settings.target;
+        const targetPoint = settings.target as Point;
+        targetRect = {
+            bottom: targetPoint.y,
+            height: 0,
+            left: targetPoint.x,
+            right: targetPoint.x,
+            top: targetPoint.y,
+            width: 0
+        };
     }
 
-    return result;
+    return targetRect;
 }
 
 /** @hidden */
@@ -144,9 +162,9 @@ export function getViewportScrollPosition(): Point {
     const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
 
     return new Point(horizontalScrollPosition, verticalScrollPosition);
-  }
+}
 
-  /** @hidden @internal*/
+/** @hidden @internal*/
 export function cloneInstance(object) {
     const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
     clonedObj.settings = cloneValue(clonedObj.settings);
