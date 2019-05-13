@@ -45,7 +45,6 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        // const selectAll = this.column.grid.resourceStrings.igx_grid_excel_select_all;
         const selectedIndex = this.data.indexOf(eventArgs.checkbox.value);
         if (selectedIndex === 0) {
             this.data.forEach(element => {
