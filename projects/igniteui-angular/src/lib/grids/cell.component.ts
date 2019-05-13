@@ -747,7 +747,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleEnd(ctrl: boolean) {
-        this.nativeElement.blur();
         if (ctrl) {
             this.grid.navigation.goToLastCell();
         } else {
@@ -756,7 +755,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleHome(ctrl: boolean) {
-        this.nativeElement.blur();
         if (ctrl) {
             this.grid.navigation.goToFirstCell();
         } else {
@@ -780,22 +778,27 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (!SUPPORTED_KEYS.has(key)) {
             return;
         }
+        event.stopPropagation();
 
-        if (event.altKey) {
-            this.handleAlt(key, event);
+        const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+        this.grid.onGridKeydown.emit(keydownArgs);
+        if (keydownArgs.cancel) {
+            this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
             return;
         }
 
+        if (event.altKey) {
+            event.preventDefault();
+            this.handleAlt(key, event);
+            return;
+        }
         this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
-
 
         if (key === 'tab') {
             event.preventDefault();
-            event.stopPropagation();
         }
 
         if (this.editMode) {
-            event.stopPropagation();
             if (NAVIGATION_KEYS.has(key)) {
                 if (this.column.inlineEditorTemplate) { return; }
                 if (['date', 'boolean'].indexOf(this.column.dataType) > -1) { return; }
@@ -805,16 +808,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            event.stopPropagation();
         }
-
+        // TODO: to be deleted when onFocusChange event is removed #4054
         const args = { cell: this, groupRow: null, event: event, cancel: false };
-
         this.grid.onFocusChange.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
+        if (args.cancel) { return; }
 
         switch (key) {
             case 'tab':
