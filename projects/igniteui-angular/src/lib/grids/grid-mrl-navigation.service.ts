@@ -235,7 +235,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
 
             if (element.classList.contains('igx-grid__td--pinned-last')) {
-                nextElement = element.nextElementSibling.children[0].children[columnIndex]
+                nextElement = element.nextElementSibling.children[0].children[columnIndex];
             } else if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
