@@ -687,7 +687,6 @@ export class IgxTimePickerComponent implements
         this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
-            excludePositionTarget: true,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings)
         };
@@ -1160,32 +1159,34 @@ export class IgxTimePickerComponent implements
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
 
-        let settings;
-        if (this.mode === InteractionMode.Dialog) {
-            settings = this.overlaySettings || this._dialogOverlaySettings;
-        }
-
-        if (this.mode === InteractionMode.DropDown) {
-            settings = this.overlaySettings || this._dropDownOverlaySettings;
-            const posStrategy = settings.positionStrategy;
-
-            if (this.group && posStrategy) {
-                posStrategy.settings.target = this.group.element.nativeElement;
-            } else if (this.templateDropDownTarget && posStrategy) {
-                posStrategy.settings.target = this.templateDropDownTarget.nativeElement;
-            } else if (!posStrategy || (posStrategy && !posStrategy.settings.target)) {
-                throw new Error('There is no target element for the dropdown to attach.' +
-                    'Mark a DOM element with #dropDownTarget ref variable or provide correct overlay positionStrategy.');
+        if (this.toggleRef.collapsed) {
+            let settings;
+            if (this.mode === InteractionMode.Dialog) {
+                settings = this.overlaySettings || this._dialogOverlaySettings;
             }
-        }
 
-        if (this.outlet) {
-            settings.outlet = this.outlet;
-        }
+            if (this.mode === InteractionMode.DropDown) {
+                settings = this.overlaySettings || this._dropDownOverlaySettings;
+                const posStrategy = settings.positionStrategy;
+    
+                if (this.group && posStrategy) {
+                    posStrategy.settings.target = this.group.element.nativeElement;
+                } else if (this.templateDropDownTarget && posStrategy) {
+                    posStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                } else if (!posStrategy || (posStrategy && !posStrategy.settings.target)) {
+                    throw new Error('There is no target element for the dropdown to attach.' +
+                        'Mark a DOM element with #dropDownTarget ref variable or provide correct overlay positionStrategy.');
+                }
+            }
 
-        this.toggleRef.toggle(settings);
+            if (this.outlet) {
+                settings.outlet = this.outlet;
+            }
 
-        if (this.mode === InteractionMode.DropDown && !this.toggleRef.collapsed) {
+            this.toggleRef.open(settings);
+
+        } else if (this.mode === InteractionMode.DropDown) {
+            this.toggleRef.close();
             this._onDropDownClosed();
         }
 
