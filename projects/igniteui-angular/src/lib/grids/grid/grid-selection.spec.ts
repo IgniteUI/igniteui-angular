@@ -11,6 +11,8 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ScrollsComponent, GridWithPrimaryKeyComponent, SelectionComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxHierarchicalGridMultiLayoutComponent } from '../hierarchical-grid/hierarchical-grid.spec';
+import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
 
 describe('IgxGrid - Row Selection', () => {
     configureTestSuite();
@@ -25,11 +27,13 @@ describe('IgxGrid - Row Selection', () => {
                 ScrollsComponent,
                 GridSummaryComponent,
                 GridCancelableComponent,
-                GridFeaturesComponent
+                GridFeaturesComponent,
+                HierarchicalGridRowSelectableIslandComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule
+                IgxGridModule,
+                IgxHierarchicalGridModule
             ]
         })
             .compileComponents();
@@ -962,6 +966,13 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowCheck).toBeDefined();
     }));
 
+    it('Set rowSelectable on HGrid row island', fakeAsync(() => {
+        expect(() => {
+            const fix = TestBed.createComponent(HierarchicalGridRowSelectableIslandComponent);
+            fix.detectChanges();
+        }).not.toThrow();
+    }));
+
 });
 
 @Component({
@@ -1125,3 +1136,21 @@ export class GridFeaturesComponent {
         column.resizable = true;
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+    <igx-column field="ID"></igx-column>
+    <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1 [rowSelectable]="true">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2 [rowSelectable]="true">
+            <igx-column field="Col1"></igx-column>
+            <igx-column field="Col2"></igx-column>
+            <igx-column field="Col3"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class HierarchicalGridRowSelectableIslandComponent extends IgxHierarchicalGridMultiLayoutComponent { }

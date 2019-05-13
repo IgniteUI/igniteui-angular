@@ -272,7 +272,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 // reached the end
                 return null;
             }
-            const layoutSize = prevLayout.getInitialChildColumnSizes(prevLayout.children.toArray()).length;
+            const layoutSize = prevLayout.getInitialChildColumnSizes(prevLayout.children).length;
             // first element is from the next layout
             prevElementColumn = prevLayout.children
             .find(c => (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
@@ -301,14 +301,14 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public onKeydownEnd(rowIndex, isSummary = false, cellRowStart?) {
         const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).length;
         const lastLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[layouts - 1];
-        const lastLayoutChildren = lastLayout.children.toArray();
+        const lastLayoutChildren = lastLayout.children;
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
         const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
         const nextElementColumn = lastLayout.children.find(c =>
             (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
             c.rowStart <= currentRowStart &&
             (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
-        const indexInLayout = lastLayoutChildren.indexOf(nextElementColumn);
+        const indexInLayout = lastLayoutChildren.toArray().indexOf(nextElementColumn);
 
         const rowList = isSummary ? this.grid.summariesRowList : this.grid.dataRowList;
         let rowElement = rowList.find((row) => row.index === rowIndex);
