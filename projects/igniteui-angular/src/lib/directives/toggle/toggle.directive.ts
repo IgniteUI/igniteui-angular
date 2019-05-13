@@ -252,7 +252,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
-        debugger;
         //  if toggle is collapsed call open
         //  if there is close animation call open
         if (this.collapsed || this.isClosing) {

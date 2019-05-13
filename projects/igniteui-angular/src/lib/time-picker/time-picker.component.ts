@@ -34,11 +34,10 @@ import {
 import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { IgxOverlayService } from '../services/overlay/overlay';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
 import { PositionSettings, OverlaySettings } from '../services/overlay/utilities';
-import { takeUntil, filter, throttle } from 'rxjs/operators';
+import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
 import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -722,18 +721,18 @@ export class IgxTimePickerComponent implements
         if (this.toggleRef) {
             this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.collapsed = true;
-    
+
                 if (this._input) {
                     this._input.nativeElement.focus();
                 }
-    
+
                 if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
                 }
 
                 this.onClose.emit(this);
             });
-    
+
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.collapsed = false;
                 this.onOpen.emit(this);
