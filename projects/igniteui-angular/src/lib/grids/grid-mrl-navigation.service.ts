@@ -244,7 +244,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
                 return;
             } else {
-                nextElement = element.nextElementSibling.children[columnIndex];
+                nextElement = element.classList.contains('igx-grid__td--pinned-last') ?
+                    element.nextElementSibling.children[0].children[columnIndex] :
+                    element.nextElementSibling.children[columnIndex];
             }
         }
         nextElement.focus();
@@ -293,7 +295,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
                 return;
             } else {
-                prevElement = element.previousElementSibling.children[columnIndex];
+                prevElement = !element.previousElementSibling && this.grid.pinnedColumns.length ?
+                    element.parentNode.previousElementSibling.children[columnIndex] :
+                    element.previousElementSibling.children[columnIndex];
             }
         }
         prevElement.focus();
