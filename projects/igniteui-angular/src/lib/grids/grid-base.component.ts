@@ -585,14 +585,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
-            if (this._ngAfterViewInitPassed) {
-                requestAnimationFrame(() => {
-                    if (!this._destroyed) {
-                        this.reflow();
-                        this.cdr.markForCheck();
-                    }
-                });
-            }
+            requestAnimationFrame(() => {
+                if (!this._destroyed) {
+                    this.reflow();
+                    this.cdr.markForCheck();
+                }
+            });
         }
     }
 
@@ -620,16 +618,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
-            if (this._ngAfterViewInitPassed) {
-                requestAnimationFrame(() => {
-                    // Calling reflow(), because the width calculation
-                    // might make the horizontal scrollbar appear/disappear.
-                    // This will change the height, which should be recalculated.
-                    if (!this._destroyed) {
-                        this.reflow();
-                    }
-                });
-            }
+            requestAnimationFrame(() => {
+                // Calling reflow(), because the width calculation
+                // might make the horizontal scrollbar appear/disappear.
+                // This will change the height, which should be recalculated.
+                if (!this._destroyed) {
+                    this.reflow();
+                }
+            });
         }
     }
 
@@ -2686,8 +2682,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCaches() {
-        this.resetColumnsCaches();
         this.resetForOfCache();
+        this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
         this._columnGroups = this.columnList.some(col => col.columnGroup);
@@ -4698,7 +4694,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col._columnWidth;
+        return col.field + col._width;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
