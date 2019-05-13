@@ -22,21 +22,21 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public isColumnFullyVisible(visibleColumnIndex: number) {
         const forOfDir =  this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
-        const column = this.grid.columnList.toArray()[visibleColumnIndex];
+        const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
         if (!horizontalScroll.clientWidth || column.pinned) {
             return true;
         }
-        return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.visibleIndex) - this.displayContainerScrollLeft;
+        return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.parent.visibleIndex) - this.displayContainerScrollLeft;
     }
 
-    public isColumnLeftFullyVisible(visibleColumnIndex) {
+    public isColumnLeftFullyVisible(visibleColumnIndex: number) {
         const forOfDir = this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
-        const column = this.grid.columnList.toArray()[visibleColumnIndex];
+        const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
         if (!horizontalScroll.clientWidth || column.pinned) {
             return true;
         }
-        return this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(column.visibleIndex);
+        return this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(column.parent.visibleIndex);
     }
 
     public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
@@ -50,7 +50,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
         const nextElementColumn = cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex + 1);
         if (nextElementColumn) {
-            if (!this.isColumnFullyVisible(nextElementColumn.parent.index)) {
+            if (!(this.isColumnFullyVisible(nextElementColumn.visibleIndex) &&
+             this.isColumnLeftFullyVisible(nextElementColumn.visibleIndex))) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
@@ -77,7 +78,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const prevElementColumn =
          cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex - 1 && !x.hidden);
         if (prevElementColumn) {
-            if (!this.isColumnLeftFullyVisible(prevElementColumn.parent.index)) {
+            if (!this.isColumnLeftFullyVisible(prevElementColumn.visibleIndex)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
@@ -232,7 +233,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
             columnIndex = nextLayout.children.toArray().indexOf(nextElementColumn);
-            if (!this.isColumnFullyVisible(nextElementColumn.index)) {
+            if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
@@ -281,7 +282,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
             columnIndex = prevLayout.children.toArray().indexOf(prevElementColumn);
 
-            if (!this.isColumnLeftFullyVisible(prevElementColumn.index)) {
+            if (!this.isColumnLeftFullyVisible(prevElementColumn.visibleIndex)) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
