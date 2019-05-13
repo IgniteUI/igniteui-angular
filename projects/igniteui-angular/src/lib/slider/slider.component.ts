@@ -9,6 +9,7 @@ import {
     AfterContentInit,
     OnDestroy,
     HostListener,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -120,10 +121,10 @@ export class IgxSliderComponent implements
     private _hasViewInit = false;
     private _minValue = 0;
     private _maxValue = 100;
-    private _lowerBound = this._minValue;
-    private _upperBound = this._maxValue;
-    private _lowerValue = this._lowerBound;
-    private _upperValue = this._upperBound;
+    private _lowerBound?: number;
+    private _upperBound?: number;
+    private _lowerValue?: number;
+    private _upperValue?: number;
     private _countinuous = false;
     private _disabled = false;
     private _step = 1;
@@ -406,6 +407,17 @@ export class IgxSliderComponent implements
         } else {
             this._maxValue = value;
         }
+
+        if (value < this.lowerBound) {
+            this.updateLowerBoundAndMinTravelZone();
+            this.upperBound = value;
+        }
+
+        // refresh max travel zone limits.
+        this._pMax = 1;
+        // recalculate step distance.
+        this.stepDistance = this.calculateStepDistance();
+        this.positionHandlesAndUpdateTrack();
     }
 
     /**
@@ -440,6 +452,17 @@ export class IgxSliderComponent implements
         } else {
             this._minValue = value;
         }
+
+        if (value > this.upperBound) {
+            this.updateUpperBoundAndMaxTravelZone();
+            this.lowerBound = value;
+        }
+
+        // Refresh min travel zone limit.
+        this._pMin = 0;
+        // Recalculate step distance.
+        this.stepDistance = this.calculateStepDistance();
+        this.positionHandlesAndUpdateTrack();
     }
 
     /**
@@ -453,7 +476,7 @@ export class IgxSliderComponent implements
      *```
      */
     public get lowerBound(): number {
-        return this._lowerBound;
+        return this.valueInRange(this._lowerBound, this.minValue, this.maxValue);
     }
 
     /**
@@ -471,6 +494,10 @@ export class IgxSliderComponent implements
         }
 
         this._lowerBound = this.valueInRange(value, this.minValue, this.maxValue);
+
+        // Refresh time travel zone.
+        this._pMin = 0;
+        this.positionHandlesAndUpdateTrack();
     }
 
     /**
@@ -484,11 +511,7 @@ export class IgxSliderComponent implements
      * ```
      */
     public get upperBound(): number {
-        if (this.labelsViewEnabled) {
-            return this.valueInRange(this._upperBound, this.minValue, this.maxValue);
-        }
-
-        return this._upperBound;
+        return this.valueInRange(this._upperBound, this.minValue, this.maxValue);
     }
 
     /**
@@ -506,6 +529,9 @@ export class IgxSliderComponent implements
         }
 
         this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
+        // Refresh time travel zone.
+        this._pMax = 1;
+        this.positionHandlesAndUpdateTrack();
     }
 
     /**
@@ -522,11 +548,11 @@ export class IgxSliderComponent implements
     public get value(): number | IRangeSliderValue {
         if (this.isRange) {
             return {
-                lower: this.lowerValue,
-                upper: this.upperValue
+                lower: this.valueInRange(this.lowerValue, this.lowerBound, this.upperBound),
+                upper: this.valueInRange(this.upperValue, this.lowerBound, this.upperBound)
             };
         } else {
-            return this.upperValue;
+            return this.valueInRange(this.upperValue, this.lowerBound, this.upperBound);
         }
     }
 
@@ -577,7 +603,7 @@ export class IgxSliderComponent implements
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2, private _cdr: ChangeDetectorRef) {}
 
     @HostListener('mousedown')
     public onMouseDown() {
@@ -614,7 +640,7 @@ export class IgxSliderComponent implements
      *```
      */
     public get lowerValue(): number {
-        return this._lowerValue;
+        return this.valueInRange(this._lowerValue, this.lowerBound, this.upperBound);
     }
 
     /**
@@ -649,7 +675,7 @@ export class IgxSliderComponent implements
      *```
      */
     public get upperValue() {
-        return this._upperValue;
+        return this.valueInRange(this._upperValue, this.lowerBound, this.upperBound);
     }
 
     /**
@@ -754,6 +780,8 @@ export class IgxSliderComponent implements
     public ngAfterContentInit() {
         // Calculates the distance between every step in pixels.
         this.stepDistance = this.calculateStepDistance();
+
+        this.sliderSetup();
     }
 
     /**
@@ -864,8 +892,36 @@ export class IgxSliderComponent implements
         event.preventDefault();
     }
 
+    private updateLowerBoundAndMinTravelZone() {
+        this.lowerBound = this.minValue;
+        this._pMin = 0;
+    }
+
+    private updateUpperBoundAndMaxTravelZone() {
+        this.upperBound = this.maxValue;
+        this._pMax = 1;
+    }
+
+    private sliderSetup() {
+        if (!this.lowerBound) {
+            this.lowerBound = this._minValue;
+        }
+
+        if (!this.upperBound) {
+            this.upperBound = this._maxValue;
+        }
+
+        if (!this.lowerValue && this.isRange) {
+            this.lowerValue = this.lowerBound;
+        }
+
+        if (!this.upperValue) {
+            this.upperValue = this.upperBound;
+        }
+    }
+
     private calculateStepDistance() {
-        return this.slider.nativeElement.getBoundingClientRect().width / this.maxValue * this.step;
+        return this.slider.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
     private toggleThumb() {
@@ -959,8 +1015,8 @@ export class IgxSliderComponent implements
         });
     }
 
-    private valueToFraction(value: number) {
-        return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), this._pMin, this._pMax);
+    private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {
+        return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
     }
 
     private updateTrack() {
