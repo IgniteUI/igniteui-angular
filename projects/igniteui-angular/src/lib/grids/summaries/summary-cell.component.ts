@@ -65,8 +65,9 @@ export class IgxSummaryCellComponent {
     dispatchEvent(event: KeyboardEvent) {
         // TODO: Refactor
         const key = event.key.toLowerCase();
-        const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        const shift = event.shiftKey;
+
         if (!SUPPORTED_KEYS.has(key)) {
             return;
         }
@@ -114,7 +115,7 @@ export class IgxSummaryCellComponent {
                 break;
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
                 break;
         }
     }
