@@ -514,7 +514,7 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('should not keep a cached-out template as master after column resizing', async() => {
+        it('should not keep a cached-out template as master after column resizing', async () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             for (let i = 2; i < 100; i++) {
                 fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
@@ -1124,24 +1124,24 @@ describe('IgxGrid Component Tests', () => {
 
         it(`When edit a cell onto filtered data through grid method, the row should
             disapear and the new value should not persist onto the next row`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(5, 5);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            fix.detectChanges();
 
-                const grid = fix.componentInstance.grid;
-                const cols = fix.componentInstance.columns;
-                const editValue = 0;
+            const grid = fix.componentInstance.grid;
+            const cols = fix.componentInstance.columns;
+            const editValue = 0;
 
-                grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-                fix.detectChanges();
-                grid.getCellByColumn(0, cols[1].key).update(editValue);
-                fix.detectChanges();
-                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-                expect(gridRows.length).toEqual(1);
-                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-                const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
-                expect(firstCellInputValue).toEqual('4');
-            }));
+            grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+            grid.getCellByColumn(0, cols[1].key).update(editValue);
+            fix.detectChanges();
+            const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+            expect(gridRows.length).toEqual(1);
+            const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+            const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
+            expect(firstCellInputValue).toEqual('4');
+        }));
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
@@ -2991,7 +2991,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const initialDataLength = grid.data.length;
                 const productNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
-                const enterEvent = { key: 'enter', stopPropagation: () => {}, preventDefault: () => {} };
+                const enterEvent = { key: 'enter', stopPropagation: () => { }, preventDefault: () => { } };
                 productNameCell.triggerEventHandler('keydown', enterEvent);
                 tick();
                 fixture.detectChanges();
@@ -3205,7 +3205,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const expectedTransaction: Transaction = {
                     id: 1,
-                    newValue: {OrderDate: newValue},
+                    newValue: { OrderDate: newValue },
                     type: TransactionType.UPDATE
                 };
                 expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
@@ -3574,6 +3574,28 @@ describe('IgxGrid Component Tests', () => {
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
+        });
+    });
+
+    describe('IgxGrid - Performance tests', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridPerformanceComponent
+                ],
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridModule,
+                    IgxTabsModule
+                ]
+            }).compileComponents();
+        }));
+
+        fit('IgxTabs: should initialize a grid with correct width/height', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            expect(fix.componentInstance.delta).toBeLessThan(500);
         });
     });
 });
@@ -4234,5 +4256,52 @@ export class IgxGridInsideIgxTabsComponent {
             data.push(item);
         }
         this.data = data;
+    }
+}
+
+@Component({
+    template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
+        [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)" [displayDensity]="'compact'">
+        <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
+            [header]="column.field" [width]="column.width">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
+
+    @ViewChild('grid') public grid: IgxGridComponent;
+
+    public columns = [];
+    public data = [];
+
+    public startTime;
+    public delta;
+
+    public ngOnInit() {
+        const cols = [], d = [];
+        for (let i = 0; i < 30; i++) {
+            cols.push({ field: 'field' + i, width: '100px', hasSummary: false });
+        }
+        for (let i = 0; i < 10000; i++) {
+            const r = {};
+            for (let j = 0; j < 30; j++) {
+                r['field' + j] = j;
+            }
+            d.push(r);
+        }
+        this.columns = cols;
+        this.data = d;
+        this.startTime = new Date().getTime();
+        console.log(this.grid.rowList.length);
+    }
+
+    public ngAfterViewInit() {
+        this.delta = new Date().getTime() - this.startTime;
+        console.log('\x1b[43mInit Time: ' + this.delta + '\x1b[0m');
+        console.log(this.grid.rowList.length);
+    }
+
+    public columnCreated(event) {
+
     }
 }
