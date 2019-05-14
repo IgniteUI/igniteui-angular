@@ -382,7 +382,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                   this._focusCell(cellElem);
+                    cellElem.focus({ preventScroll: true });
             });
             this.grid.verticalScrollContainer.addScrollTop(diffTop);
         } else if (diffBottom > 0) {
@@ -391,7 +391,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                   this._focusCell(cellElem);
+                    cellElem.focus({ preventScroll: true });
             });
             this.grid.verticalScrollContainer.addScrollTop(diffBottom);
         } else {
