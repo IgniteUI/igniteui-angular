@@ -574,17 +574,17 @@ describe('IgxTransaction', () => {
             trans.add(newItem1, undefined);
 
             trans.commit(originalData, 10);
-            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category1');
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
             expect(originalData.length).toBe(49);
 
             trans.commit(originalData, 'FAKE ID');
-            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category1');
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
             expect(originalData.length).toBe(49);
 
             trans.commit(originalData, 20);
-            expect(originalData.find(i => i.ID === 1).Category).toBe('Category 1');
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Category1');
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
             expect(originalData.length).toBe(49);
 
