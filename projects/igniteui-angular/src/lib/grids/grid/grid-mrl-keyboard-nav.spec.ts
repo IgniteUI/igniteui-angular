@@ -1187,7 +1187,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
         expect(diff).toBe(0);
     }));
-});
 
     it('should navigate using Arrow Right through bigger cell with smaller rowStart and bigger rowEnd', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
