@@ -235,6 +235,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     public onHide() {
         this.column.hidden = true;
+        this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: true });
         this.closeDropdown();
     }
 
