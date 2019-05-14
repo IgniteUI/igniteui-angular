@@ -35,7 +35,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
-import { PositionSettings, OverlaySettings } from '../services/overlay/utilities';
+import { OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
@@ -1197,11 +1197,11 @@ export class IgxTimePickerComponent implements
     /**
      * opens the dialog.
      * ```html
-     *<igx-time-picker #tp></igx-time-picker>
+     *<igx-time-picker #timePicker></igx-time-picker>
      * ```
      * ```typescript
-     * @ViewChild('tp', { read: IgxTimePickerComponent }) tp: IgxTimePickerComponent;
-     * tp.openDialog();
+     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
+     * picker.openDialog();
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
@@ -1241,12 +1241,12 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a hour item into view.
      * ```typescript
-     *scrhintoView(tp) {
-     *tp.scrollHourIntoView('2');
+     *scrhintoView(picker) {
+     *picker.scrollHourIntoView('2');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrhintoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrhintoView(picker)"></igx-time-picker>
      *```
      *@param item to be scrolled in view.
      */
@@ -1262,12 +1262,12 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a minute item into view.
      * ```typescript
-     *scrMintoView(tp) {
-     *tp.scrollMinuteIntoView('3');
+     *scrMintoView(picker) {
+     *picker.scrollMinuteIntoView('3');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrMintoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
      *```
      * @param item to be scrolled in view.
      */
@@ -1283,12 +1283,12 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls an ampm item into view.
      * ```typescript
-     *scrAmPmIntoView(tp) {
-     *tp.scrollAmPmIntoView('PM');
+     *scrAmPmIntoView(picker) {
+     *picker.scrollAmPmIntoView('PM');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrAmPmIntoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrAmPmIntoView(picker)"></igx-time-picker>
      *```
      * @param item to be scrolled in view.
      */
