@@ -1267,13 +1267,21 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
-    protected get sizesCache(): number[] {
+    /**
+     * @hidden
+     * @internal
+     */
+    public get sizesCache(): number[] {
         if (this.syncService.isMaster(this)) {
             return this._sizesCache;
         }
         return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
-    protected set sizesCache(value: number[]) {
+    /**
+     * @hidden
+     * @internal
+     */
+    public set sizesCache(value: number[]) {
         this._sizesCache = value;
     }
 
@@ -1390,6 +1398,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.heightCache = newHeightCache;
         this.sizesCache = newSizesCache;
         return newHeight;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public assumeMaster(): void {
+        this._sizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
+        this.syncService.setMaster(this, true);
     }
 
     ngDoCheck() {
