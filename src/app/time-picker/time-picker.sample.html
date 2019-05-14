@@ -79,7 +79,7 @@
                 <igx-time-picker [value]="today" format="HH:mm" mode="dropdown">
                     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
                         <igx-input-group>
-                            <input #dropDownTarget igxInput class="date-picker" [value]="displayTime" (blur)="onBlur(dropDownTarget.value, value)"/>
+                            <input #dropDownTarget igxInput [value]="displayTime" (blur)="onBlur(dropDownTarget.value, value)"/>
                             <igx-suffix>
                                 <igx-icon (click)="openDialog()">access_time</igx-icon>
                             </igx-suffix>
@@ -92,10 +92,10 @@
             <h4 class="sample-title">Templated Time Picker</h4>
             <p class="sample-description">Time picker with dropdown mode + overlay settings </p>
             <div class="preview">
-                <igx-time-picker [value]="today" [overlaySettings]="myOverlaySettings" format="HH:mm" mode="dropdown">
-                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+                <igx-time-picker [value]="today" [overlaySettings]="myOverlaySettings" format="HH:mm" [mode]="'dropdown'">
+                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayValue="displayValue">
                         <igx-input-group>
-                            <input #target igxInput class="date-picker" [value]="displayTime" (blur)="onBlur(dropDownTarget.value, value)"/>
+                            <input #target igxInput [value]="displayValue" (blur)="onBlur(target.value, value)"/>
                             <igx-suffix>
                                 <igx-icon (click)="openDialog()">access_time</igx-icon>
                             </igx-suffix>
