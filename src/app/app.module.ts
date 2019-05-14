@@ -49,6 +49,11 @@ import {
     BottomNavRoutingView2Component,
     BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
+import {
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { RemoteService } from './shared/remote.service';
@@ -143,6 +148,10 @@ const components = [
     BottomNavRoutingView2Component,
     BottomNavRoutingView3Component,
     TabsSampleComponent,
+    TabsRoutingSampleComponent,
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component,
     TimePickerSampleComponent,
     ToastSampleComponent,
     VirtualForSampleComponent,

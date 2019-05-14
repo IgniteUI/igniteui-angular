@@ -149,6 +149,9 @@ export class IgxBottomNavComponent implements AfterViewInit {
         return this._itemStyle;
     }
 
+    /**
+     *@hidden
+     */
     public get inTabsRoutingMode(): boolean {
         return (this.tabsAsContentChildren && this.tabsAsContentChildren.toArray().length > 0);
     }
@@ -580,11 +583,11 @@ export class IgxTabComponent {
 
     /**@hidden*/
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
+    protected defaultTabTemplate: TemplateRef<any>;
 
     /**@hidden*/
     @ViewChild('defaultTabTemplateNoPanel', { read: TemplateRef })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
+    protected defaultTabTemplateNoPanel: TemplateRef<any>;
 
     /**
      * Returns the `template` for this IgxTabComponent.
@@ -598,9 +601,9 @@ export class IgxTabComponent {
         if (this.relatedPanel && this.relatedPanel.customTabTemplate) {
             return this.relatedPanel.customTabTemplate;
         } else if (this.relatedPanel) {
-            return this.defaultEmptyListTemplate;
+            return this.defaultTabTemplate;
         } else {
-            return this.defaultDataLoadingTemplate;
+            return this.defaultTabTemplateNoPanel;
         }
     }
 

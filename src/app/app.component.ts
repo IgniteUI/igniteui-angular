@@ -294,6 +294,11 @@ export class AppComponent implements OnInit {
             name: 'Tabs'
         },
         {
+            link: '/tabs-routing',
+            icon: 'tab',
+            name: 'Tabs Routing'
+        },
+        {
             link: '/timePicker',
             icon: 'date_range',
             name: 'TimePicker'

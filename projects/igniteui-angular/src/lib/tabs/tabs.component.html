@@ -1,6 +1,6 @@
 <!-- TODO Remove tab container from here -->
 <div #tabsContainer>
-    <div class="igx-tabs__header" #headerContainer>
+    <div class="igx-tabs__header" #headerContainer *ngIf="!inTabsRoutingMode">
         <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollLeft($event)" igxLeftButtonStyle>
             <igx-icon fontSet="material">navigate_before</igx-icon>
         </button>
@@ -20,9 +20,15 @@
             <igx-icon fontSet="material">navigate_next</igx-icon>
         </button>
     </div>
-    <div class="igx-tabs__content-fixed">
-        <div #contentsContainer class="igx-tabs__content-fluid">
+    <div class="{{tabItemsContainer1Class}}">
+        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollLeft($event)" igxLeftButtonStyle *ngIf="inTabsRoutingMode">
+            <igx-icon fontSet="material">navigate_before</igx-icon>
+        </button>
+        <div #contentsContainer class="{{tabItemsContainer2Class}}">
             <ng-content></ng-content>
         </div>
+        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollRight($event)" igxRightButtonStyle *ngIf="inTabsRoutingMode">
+            <igx-icon fontSet="material">navigate_next</igx-icon>
+        </button>
     </div>
 </div>

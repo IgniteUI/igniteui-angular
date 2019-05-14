@@ -41,11 +41,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
     * Provides an observable collection of all `IgxTabsGroupComponent`s.
     * ```typescript
-    * const groupItems = this.myTabComponent.tabs;
+    * const groupItems = this.myTabComponent.groups;
     * ```
     */
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
     public groups: QueryList<IgxTabsGroupComponent>;
+
+    /**
+    * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
+    * ```typescript
+    * const tabItems = this.myTabComponent.tabsAsContentChildren;
+    * ```
+    */
+    @ContentChildren(forwardRef(() => IgxTabItemComponent))
+    public tabsAsContentChildren: QueryList<IgxTabItemComponent>;
 
     /**
     * An @Input property that sets the value of the `selectedIndex`.
@@ -162,6 +171,13 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public tabs: QueryList<IgxTabItemComponent>;
 
     /**
+     *@hidden
+     */
+    public get inTabsRoutingMode(): boolean {
+        return (this.tabsAsContentChildren && this.tabsAsContentChildren.toArray().length > 0);
+    }
+
+    /**
      * @hidden
      */
     public calculatedWidth: number;
@@ -213,21 +229,32 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @HostListener('onTabItemSelected', ['$event'])
     public selectedGroupHandler(args) {
-        const prevSelectedIndex = this.selectedIndex;
-        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
-            this.onTabItemDeselected.emit(
-                {
-                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
-                    group: this.groups.toArray()[prevSelectedIndex]
-                });
-        }
-
-        this.selectedIndex = args.group.index;
-        this.groups.forEach((p) => {
-            if (p.index !== this.selectedIndex) {
-                this.deselectGroup(p);
+        if (this.inTabsRoutingMode) {
+            this.tabsAsContentChildren.forEach((theTab) => {
+                if (theTab.isSelected) {
+                    theTab.isSelected = false;
+                    this.onTabItemDeselected.emit({
+                        tab: theTab,
+                        group: null
+                    });
+                }
+            });
+        } else {
+            const prevSelectedIndex = this.selectedIndex;
+            if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
+                this.onTabItemDeselected.emit(
+                    {
+                        tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
+                        group: this.groups.toArray()[prevSelectedIndex]
+                    });
             }
-        });
+            this.selectedIndex = args.group.index;
+            this.groups.forEach((p) => {
+                if (p.index !== this.selectedIndex) {
+                    this.deselectGroup(p);
+                }
+            });
+        }
     }
 
     /**
@@ -264,6 +291,26 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
+    }
+
+    /**
+     * @hidden
+     */
+    get tabItemsContainer1Class(): string {
+        if (this.inTabsRoutingMode) {
+            return 'igx-tabs__header';
+        }
+        return 'igx-tabs__content-fixed';
+    }
+
+    /**
+     * @hidden
+     */
+    get tabItemsContainer2Class(): string {
+        if (this.inTabsRoutingMode) {
+            return 'igx-tabs__header-wrapper-fixed igx-tabs__header-wrapper-fluid';
+        }
+        return 'igx-tabs__content-fluid';
     }
 
     constructor(private _element: ElementRef) {
