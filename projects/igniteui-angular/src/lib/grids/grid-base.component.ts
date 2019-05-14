@@ -4878,7 +4878,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
+                return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
             } else {
                 return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
             }
@@ -4910,7 +4910,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex};
+                return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
             } else {
                 return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
             }
