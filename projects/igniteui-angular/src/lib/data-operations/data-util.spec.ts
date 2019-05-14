@@ -555,7 +555,7 @@ function testMerging() {
                 { id: addChildRow2.ID, newValue: addChildRow2, type: TransactionType.ADD, path: [addRootRow.ID] },
             ];
 
-            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', false);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', null, false);
             expect(data.length).toBe(4);
 
             expect(data[3].Age).toBe(addRootRow.Age);
@@ -597,7 +597,7 @@ function testMerging() {
                 },
             ];
 
-            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', false);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', null, false);
             expect(data[1].Name).toBe(updateRootRow.Name);
             expect(data[1].Age).toBe(updateRootRow.Age);
 
@@ -621,7 +621,7 @@ function testMerging() {
                 { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] }
             ];
 
-            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', true);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', null, true);
 
             expect(data.length).toBe(1);
             expect(data[0].Employees.length).toBe(1);
