@@ -4139,13 +4139,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.resetCaches();
-        this.cdr.detectChanges();
-        this.calculateGridHeight();
 
         if (this.showRowCheckboxes) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
+
+        this.resetCaches();
+        this.cdr.detectChanges();
+        this.calculateGridHeight();
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
