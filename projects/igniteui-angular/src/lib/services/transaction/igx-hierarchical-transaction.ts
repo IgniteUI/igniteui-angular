@@ -60,11 +60,11 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
      */
     public commit(data: any[], primaryKey?: any, childDataKey?: any, id?: any): void {
         if (childDataKey) {
-            DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, true);
+            DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, id, true);
         } else {
-            super.commit(data);
+            super.commit(data, id);
         }
-        this.clear();
+        this.clear(id);
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
