@@ -223,7 +223,6 @@
         align-items: center;
         justify-content: center;
         align-self: flex-start;
-        min-height: rem(48px);
 
         > %igx-icon-display {
             margin: map-get($list-icon-padding, 'comfortable');
