@@ -28,7 +28,7 @@ export interface IgxTimePickerBase {
     scrollHourIntoView(item: string): void;
     scrollMinuteIntoView(item: string): void;
     scrollAmPmIntoView(item: string): void;
-    hideOverlay(): void;
+    close(): void;
     parseMask(preserveAmPm?: boolean): string;
 }
 
