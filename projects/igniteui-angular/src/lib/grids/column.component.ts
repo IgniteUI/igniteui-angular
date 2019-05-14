@@ -1869,9 +1869,12 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *@hidden
     */
     public populateVisibleIndexes() {
-        const orderedCols = this.grid.columns
+        this.childrenVisibleIndexes = [];
+        const grid = this.gridAPI.grid;
+        const columns = grid && grid.columnList ? grid.columnList.toArray() : [];
+        const orderedCols = columns
         .filter(x => !x.columnGroup && !x.hidden)
-        .sort((a, b) => a.rowStart - b.rowStart || a.parent.visibleIndex - b.parent.visibleIndex || a.colStart - b.colStart);
+        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;
