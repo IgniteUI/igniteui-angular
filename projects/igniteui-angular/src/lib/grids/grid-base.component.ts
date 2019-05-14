@@ -4807,7 +4807,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * this method allows you to navigate to a position
+     * This method allows you to navigate to a position
      * in the grid based on provided `rowindex` and `visibleColumnIndex`,
      * also to execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
@@ -4854,10 +4854,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
      /**
-     * returns `ICellPosition` which defines the next cell,
+     * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
      * You can pass callback function as a third parameter of `getPreviousCell` method.
-     * The callback fuction accepts IgxColumnComponent as a param
+     * The callback function accepts IgxColumnComponent as a param
      * ```typescript
      *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
      * ```
@@ -4886,10 +4886,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
      /**
-     * returns `ICellPosition` which defines the previous cell,
+     * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.
      * You can pass callback function as a third parameter of `getPreviousCell` method.
-     * The callback fuction accepts IgxColumnComponent as a param
+     * The callback function accepts IgxColumnComponent as a param
      * ```typescript
      *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
      * ```
