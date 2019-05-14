@@ -879,6 +879,108 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     }));
+
+    it('should scroll focused cell fully in view when navigating with arrow keys.', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+        {
+            group: 'group1',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        },
+        {
+            group: 'group2',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        },
+        {
+            group: 'group3',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }];
+        const grid = fix.componentInstance.grid;
+        grid.height = '400px';
+        fix.detectChanges();
+
+        // focus 3rd row, first cell
+        let cell = grid.getCellByColumn(2, 'ContactName');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        // arrow down
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused and is fully in view
+        cell = grid.getCellByColumn(2, 'Phone');
+        expect(cell.focused).toBe(true);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        expect(diff).toBe(0);
+
+        // focus 1st row, 2nd cell
+        cell = grid.getCellByColumn(0, 'Phone');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        // arrow up
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused and is fully in view
+        cell = grid.getCellByColumn(0, 'ContactName');
+        expect(cell.focused).toBe(true);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
+        expect(diff).toBe(0);
+
+        // focus 3rd row, first cell
+        cell = grid.getCellByColumn(2, 'ContactName');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        // arrow right
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused and is fully in view
+        cell = grid.getCellByColumn(2, 'Address');
+        expect(cell.focused).toBe(true);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        expect(diff).toBe(0);
+
+        // focus 1st row, Address
+        cell = grid.getCellByColumn(0, 'Address');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        // arrow left
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused and is fully in view
+        cell = grid.getCellByColumn(0, 'ContactName');
+        expect(cell.focused).toBe(true);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
+        expect(diff).toBe(0);
+    }));
 });
 
 @Component({
