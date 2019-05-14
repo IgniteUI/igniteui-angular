@@ -1086,7 +1086,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     });
 
-    it('should scroll focused cell fully in view when navigating with arrow keys.', (async () => {
+    it('should scroll focused cell fully in view when navigating with arrow keys and row is partially visible.', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
         {
@@ -1185,6 +1185,57 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(cell.focused).toBe(true);
         expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
+        expect(diff).toBe(0);
+    }));
+
+    it('should scroll focused cell fully in view when navigating with arrow keys and column is partially visible.', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 5 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                { field: 'Address', rowStart: 2, colStart: 3 },
+                { field: 'Country', rowStart: 2, colStart: 4 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 5 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        grid.columnWidth = '300px';
+        grid.width = '300px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        // focus 1st row, 2nd row cell
+        let cell = grid.getCellByColumn(0, 'Phone');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        // arrow right
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused
+        cell = grid.getCellByColumn(0, 'City');
+        expect(cell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(300);
+        let diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
+        expect(diff).toBe(0);
+
+        // arrow left
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check next cell is focused
+        cell = grid.getCellByColumn(0, 'Phone');
+        expect(cell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
     }));
 
