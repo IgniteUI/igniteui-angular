@@ -14,7 +14,7 @@ import {
     TemplateRef,
     ViewChild,
     Optional,
-    Inject
+    Inject, Directive
 } from '@angular/core';
 
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -67,6 +67,48 @@ export interface IListItemPanningEventArgs {
  * </igx-list>
  * ```
  */
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListThumbnail]'
+})
+
+export class IgxListThumbnailDirective {}
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListAction]'
+})
+
+export class IgxListActionDirective {}
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLine]'
+})
+
+export class IgxListLineDirective {}
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLineTitle]'
+})
+
+export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list__item-line-title')
+    public cssClass = 'igx-list__item-line-title';
+}
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLineSubTitle]'
+})
+
+export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list__item-line-subtitle')
+    public cssClass = 'igx-list__item-line-subtitle';
+}
+
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
@@ -390,13 +432,36 @@ export class IgxListComponent extends IgxListBase {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxListComponent, IgxListItemComponent,
-        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
-    exports: [IgxListComponent, IgxListItemComponent,
-        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
-    imports: [CommonModule, IgxRippleModule]
+    declarations: [
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListThumbnailDirective,
+        IgxListActionDirective,
+        IgxListLineDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxDataLoadingTemplateDirective,
+        IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective,
+        IgxListItemRightPanningTemplateDirective
+    ],
+    exports: [
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListThumbnailDirective,
+        IgxListActionDirective,
+        IgxListLineDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxDataLoadingTemplateDirective,
+        IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective,
+        IgxListItemRightPanningTemplateDirective
+    ],
+    imports: [
+        CommonModule,
+        IgxRippleModule
+    ]
 })
 export class IgxListModule {
 }

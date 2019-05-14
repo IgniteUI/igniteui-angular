@@ -107,14 +107,6 @@
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
-
-    $list-item-height: (
-        comfortable: rem(48px),
-        cosy: rem(32px),
-        compact: rem(24px)
-    );
-
     $list-empty-padding: (
         comfortable: rem(16px),
         cosy: rem(8px),
@@ -125,6 +117,18 @@
         comfortable: rem(8px) rem(16px),
         cosy: rem(4px) rem(8px),
         compact: rem(2px) rem(4px)
+    );
+
+    $list-icon-padding: (
+        comfortable: 0 rem(32px) 0 0,
+        cosy: 0 rem(16px) 0 0,
+        compact: 0 rem(8px) 0 0
+    );
+
+    $list-thumbnail-padding: (
+        comfortable: 0 rem(16px) 0 0,
+        cosy: 0 rem(8px) 0 0,
+        compact: 0 rem(4px) 0 0
     );
 
     %igx-list {
@@ -156,11 +160,11 @@
         z-index: 1;
     }
 
-    %igx-list-empty-message--cosy{
+    %igx-list-empty-message--cosy {
         padding: map-get($list-empty-padding, 'cosy');
     }
 
-    %igx-list-empty-message--compact{
+    %igx-list-empty-message--compact {
         padding: map-get($list-empty-padding, 'compact');
     }
 
@@ -197,25 +201,65 @@
 
     %igx-list-item-content {
         display: flex;
+        align-items: center;
         position: relative;
-        flex-flow: column wrap;
-        justify-content: center;
         padding: map-get($list-item-padding, 'comfortable');
-        min-height: map-get($list-item-height, 'comfortable');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
-        z-index: 2;
         border-radius: --var($theme, 'item-border-radius');
+        z-index: 2;
     }
 
     %igx-list-item-content--compact {
         padding: map-get($list-item-padding, 'compact');
-        min-height: map-get($list-item-height, 'compact');
     }
 
     %igx-list-item-content--cosy {
         padding: map-get($list-item-padding, 'cosy');
-        min-height: map-get($list-item-height, 'cosy');
+    }
+
+    %igx-list__item-thumbnail {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: flex-start;
+        min-height: rem(48px);
+
+        > %igx-icon-display {
+            margin: map-get($list-icon-padding, 'comfortable');
+        }
+
+        > %igx-avatar-display {
+            margin: map-get($list-thumbnail-padding, 'comfortable');
+
+            > %igx-icon-display {
+                margin: 0;
+            }
+        }
+    }
+
+    %igx-list__item-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        > * {
+            margin-left: rem(8px);
+
+            &:first-of-type {
+                margin-left: 0;
+            }
+        }
+    }
+
+    %igx-list__item-lines {
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 0%;
+    }
+
+    %igx-list__item-lines + %igx-list__item-actions {
+        margin-left: rem(16px);
     }
 
     %igx-list-item-content--active {
@@ -240,11 +284,15 @@
     $type-scale,
     $categories: (
         header: 'overline',
-        item: 'subtitle-1'
+        item: 'subtitle-1',
+        title: 'subtitle-1',
+        subtitle: 'caption'
     )
 ) {
     $header: map-get($categories, 'header');
     $item: map-get($categories, 'item');
+    $title: map-get($categories, 'title');
+    $subtitle: map-get($categories, 'subtitle');
 
     @include igx-scope('.igx-typography') {
         %igx-list-header {
@@ -255,6 +303,19 @@
 
         %igx-list-item {
             @include igx-type-style($type-scale, $item) {
+                margin: 0;
+            }
+        }
+
+        %igx-list__item-line,
+        %igx-list__item-line-title {
+            @include igx-type-style($type-scale, $title) {
+                margin: 0;
+            }
+        }
+
+        %igx-list__item-line-subtitle {
+            @include igx-type-style($type-scale, $subtitle) {
                 margin: 0;
             }
         }

@@ -1,6 +1,64 @@
 <div class="sample-wrapper">
     <app-page-header title="List">Displays rows of identical items. Each list can contain one or more header items.</app-page-header>
     <section class="sample-content">
+
+
+        <article class="sample-column">
+
+            <div class="list-sample">
+                <igx-card>
+                    <igx-list>
+                        <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
+                        <igx-list-item>
+                            <igx-avatar igxListThumbnail>
+                                <igx-icon>face</igx-icon>
+                            </igx-avatar>
+                            <h4 igxListLine igxListLineTitle>Marin Popov</h4>
+                            <p igxListLine igxListLineSubTitle>Web designer</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            <igx-avatar igxListThumbnail>
+                                <igx-icon>face</igx-icon>
+                            </igx-avatar>
+                            <h4 igxListLine igxListLineTitle >Stefan Ivanov</h4>
+                            <p igxListLine igxListLineSubTitle>UX Architect</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            <igx-avatar igxListThumbnail>
+                                <igx-icon>face</igx-icon>
+                            </igx-avatar>
+                            <h4 igxListLine igxListLineTitle>Simeon Simeonov</h4>
+                            <p igxListLine igxListLineSubTitle>Front-end developer</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            <igx-avatar igxListThumbnail>
+                                <igx-icon>face</igx-icon>
+                            </igx-avatar>
+                            <h4 igxListLine igxListLineTitle>Svilen Dimchevski</h4>
+                            <p igxListLine igxListLineSubTitle>Graphic Designer</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            <igx-avatar igxListThumbnail>
+                                <igx-icon>face</igx-icon>
+                            </igx-avatar>
+                            <h4 igxListLine igxListLineTitle>Danail Marinov</h4>
+                            <p igxListLine igxListLineSubTitle>UX Architect</p>
+                            <igx-icon igxListAction>more_horiz</igx-icon>
+                        </igx-list-item>
+                    </igx-list>
+                </igx-card>
+            </div>
+        </article>
+
+
         <article class="sample-column">
             <h4 class="sample-title">Declarative filtered list</h4>
             <igx-switch [checked]="true" #checkbox>Filter</igx-switch>

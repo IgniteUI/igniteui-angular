@@ -45,6 +45,26 @@
         }
     }
 
+    @include e(item-thumbnail) {
+        @extend %igx-list__item-thumbnail !optional;
+    }
+
+    @include e(item-actions) {
+        @extend %igx-list__item-actions !optional;
+    }
+
+    @include e(item-lines) {
+        @extend %igx-list__item-lines !optional;
+    }
+
+    @include e(item-line-title) {
+        @extend %igx-list__item-line-title !optional;
+    }
+
+    @include e(item-line-subtitle) {
+        @extend %igx-list__item-line-subtitle !optional;
+    }
+
     @include e(empty) {
         @extend %igx-list !optional;
         @extend %igx-list-empty !optional;
