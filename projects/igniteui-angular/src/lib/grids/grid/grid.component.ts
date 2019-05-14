@@ -4,7 +4,7 @@ import {
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable, FilterMode } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -709,7 +709,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 defaultExpanded: this.groupsExpanded
             };
 
-            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
         } else {
             return null;
         }
@@ -844,6 +844,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public ngAfterContentInit() {
+        if (this.allowFiltering && this.hasColumnLayouts) {
+            this.filterMode = FilterMode.excelStyleFilter;
+        }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }

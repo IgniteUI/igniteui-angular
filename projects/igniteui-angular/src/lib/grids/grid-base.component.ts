@@ -521,12 +521,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
-        if (this.gridAPI.grid) {
+        if (this.gridAPI.grid && this.columnList) {
 
             // should selection persist?
             this.allRowsSelected = false;
             this.deselectAllRows();
-            this.resetCachedWidths();
             this.calculateGridSizes();
         }
     }
@@ -545,8 +544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
-        if (this.gridAPI.grid) {
-            this.resetCachedWidths();
+        if (this.gridAPI.grid && this.columnList) {
             this.calculateGridSizes();
         }
     }
@@ -2485,6 +2483,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowHeight;
     private _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
+    private _multiRowLayoutRowSize = 1;
 
     // Caches
     private _totalWidth = NaN;
@@ -2700,6 +2699,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    public resetForOfCache() {
+        const firstVirtRow = this.dataRowList.first;
+        if (firstVirtRow) {
+            firstVirtRow.virtDirRow.assumeMaster();
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public resetColumnCollections() {
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
@@ -2721,6 +2731,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCaches() {
+        this.resetForOfCache();
         this.resetColumnsVisibleIndexCache();
         this.resetColumnCollections();
         this.resetCachedWidths();
@@ -3910,6 +3921,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    get multiRowLayoutRowSize() {
+        return this._multiRowLayoutRowSize;
+    }
+
+    /**
+     * @hidden
+     */
     protected get rowBasedHeight() {
             return this.dataLength * this.rowHeight;
         }
@@ -3939,7 +3957,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
             this.columnList.forEach((column: IgxColumnComponent) => {
-                column.defaultWidth = this._columnWidth;
+                if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
+                    const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+                    column.defaultWidth = columnWidthCombined + 'px';
+                } else {
+                    column.defaultWidth = this._columnWidth;
+                }
             });
         }
     }
@@ -4083,7 +4106,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Column layouts related
         let visibleCols = [];
         const columnBlocks = this.visibleColumns.filter(c => c.columnGroup);
-        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children.toArray()));
+        const colsPerBlock = columnBlocks.map(block => block.getInitialChildColumnSizes(block.children));
         const combinedBlocksSize = colsPerBlock.reduce((acc, item) => acc + item.length, 0);
         colsPerBlock.forEach(blockCols => visibleCols = visibleCols.concat(blockCols));
         //
@@ -4365,6 +4388,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
         this._columnGroups = this.columnList.some(col => col.columnGroup);
+        if (this.hasColumnLayouts) {
+            // Set overall row layout size
+            this.columnList.forEach((col) => {
+                if (col.columnLayout) {
+                    const layoutSize = col.children ?
+                     col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
+                     1;
+                     this._multiRowLayoutRowSize = Math.max(layoutSize, this._multiRowLayoutRowSize);
+                }
+            });
+        }
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
