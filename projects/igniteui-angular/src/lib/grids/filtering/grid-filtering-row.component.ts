@@ -274,7 +274,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isEdge() || this.isKeyPressed) {
+        if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
             this.value = eventArgs.target.value;
         }
     }
