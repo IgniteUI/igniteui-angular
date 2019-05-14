@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { DataParent } from '../../test-utils/sample-test-data.spec';
+import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { Point } from '../../services';
 
 import { IgxGridModule } from './grid.module';
@@ -14,12 +14,14 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IRowDragEndEventArgs, IgxGridBaseComponent } from '../grid-base.component';
+import { IRowDragStartEventArgs, IgxGridBaseComponent } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
@@ -40,13 +42,15 @@ describe('IgxGrid - Row Drag Tests', () => {
             declarations: [
                 IgxGridRowDraggableComponent,
                 IgxGridFeaturesRowDragComponent,
-                IgxHierarchicalGridTestComponent
+                IgxHierarchicalGridTestComponent,
+                IgxTreeGridTestComponent
             ],
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxHierarchicalGridModule
+                IgxHierarchicalGridModule,
+                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -788,6 +792,67 @@ describe('IgxGrid - Row Drag Tests', () => {
             verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
         }));
     });
+    describe('Tree Grid Tests', () => {
+        let dragGrid: IgxTreeGridComponent;
+        let dropGrid: IgxGridComponent;
+        let dragRows: DebugElement[];
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxTreeGridTestComponent);
+            fixture.detectChanges();
+            dragGrid = fixture.componentInstance.treeGrid;
+            dropGrid = fixture.componentInstance.dropGrid;
+            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+        }));
+        configureTestSuite();
+        it('should be able to drag row on every hiearchical level', (async () => {
+            // first level row
+            let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
+            let rowToDrag = dragGrid.getRowByIndex(0);
+            let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+
+            let startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+
+            // second level row
+            dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            rowToDrag = dragGrid.getRowByIndex(1);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 2);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 2);
+
+            // third level row
+            dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+            rowToDrag = dragGrid.getRowByIndex(2);
+            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 3);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 3);
+        }));
+    });
 });
 
 
@@ -936,6 +1001,36 @@ export class IgxHierarchicalGridTestComponent {
     public onRowDrop(args) {
         args.cancel = true;
         this.hDropGrid.addRow(args.dragData.rowData);
+    }
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="500px" [rowDraggable]="true">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" ></igx-column>
+    </igx-tree-grid>
+    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <igx-grid #dropGrid [data]="newData" [primaryKey]="'employeeID'"
+        [width]="'900px'" [height]="'300px'">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" ></igx-column>
+    </igx-grid></div>
+    `
+})
+export class IgxTreeGridTestComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent) public dropGrid: IgxGridComponent;
+    public data = SampleTestData.employeeScrollingData();
+    newData = [];
+
+    public onRowDrop(args) {
+        args.cancel = true;
+        this.dropGrid.addRow(args.dragData.rowData);
     }
 }
 
