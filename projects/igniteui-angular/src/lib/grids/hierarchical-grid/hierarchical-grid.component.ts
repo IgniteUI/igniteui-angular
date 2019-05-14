@@ -470,18 +470,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxHierarchicalGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
      */
-    public getPinnedWidth(takeHidden = false) {
-        let width = super.getPinnedWidth(takeHidden);
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
+
         if (this.hasExpandableChildren) {
             width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
         }
+
         return width;
     }
 

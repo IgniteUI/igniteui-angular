@@ -23,7 +23,7 @@
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow>
         <div class="igx-grid__tr" [style.width.px]='calcWidth + 1' role="row">
-            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerFixedWidth"></span>
+            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" #headerDragContainer>
