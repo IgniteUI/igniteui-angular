@@ -735,7 +735,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(cell.visibleColumnIndex).toBe(0);
      }));
 
-     fit('Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+     it('Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -786,7 +786,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
        }
      }));
 
-     fit('Shift+Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+     it('Shift+Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
