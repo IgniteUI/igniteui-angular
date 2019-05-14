@@ -14,20 +14,15 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../grid-base.component';
-import {
-    IgxDropDirective,
-    IgxDropEventArgs,
-    IgxDropEnterEventArgs
-} from '../../directives/dragdrop/dragdrop.directive';
-import { getHostElement } from '@angular/core/src/render3';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs, IgxGridBaseComponent } from '../grid-base.component';
+import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { Grid10x30WithSummariesComponent } from '../../test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
+import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
-const CSS_CLASS_GRID_ROW = 'igx-grid__tr';
 const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
 const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
@@ -35,7 +30,7 @@ const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
 
-fdescribe('IgxGrid - Row Drag Tests', () => {
+describe('IgxGrid - Row Drag Tests', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
@@ -44,12 +39,14 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowDraggableComponent,
-                IgxGridFeaturesRowDragComponent
+                IgxGridFeaturesRowDragComponent,
+                IgxHierarchicalGridTestComponent
             ],
             imports: [
                 FormsModule,
                 NoopAnimationsModule,
-                IgxGridModule
+                IgxGridModule,
+                IgxHierarchicalGridModule
             ]
         }).compileComponents();
     }));
@@ -88,15 +85,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
-            const dragStartArgs: IRowDragStartEventArgs = {
-                owner: rowDragDirective,
-                dragData: row,
-                cancel: false
-            };
-            const dragEndArgs: IRowDragEndEventArgs = {
-                owner: rowDragDirective,
-                dragData: row
-            };
+
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
 
@@ -104,8 +93,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+            verifyRowDragStartEvent(grid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeTruthy();
@@ -114,8 +102,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
+            verifyRowDragEndEvent(grid, row, rowDragDirective);
         }));
         it('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -127,11 +114,6 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const rowPoint = UIInteractions.getPointFromElement(rowElement);
             const movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
             spyOn(grid.onRowDragStart, 'emit');
-            const dragStartArgs: IRowDragStartEventArgs = {
-                owner: rowDragDirective,
-                dragData: row,
-                cancel: false
-            };
 
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
@@ -146,9 +128,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
-
+            verifyRowDragStartEvent(grid, row, rowDragDirective);
             await pointerUp(dragIndicatorElement, movePoint, fixture);
         }));
         it('should not be able to drag grid header', (async () => {
@@ -285,8 +265,8 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should fire drag events with correct values of event arguments.', (async () => {
             const rowToDrag: IgxGridRowComponent = rows[2];
-            const dragIndicatorElement: Element = dragIndicatorElements[rowToDrag.index].nativeElement;
-            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+            const rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+            const dragIndicatorElement: Element = dragIndicatorElements[3].nativeElement;
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const endPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
@@ -296,24 +276,15 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, endPoint, fixture);
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
-                dragData: jasmine.any(IgxGridRowComponent),
-                owner: rowDragDirective,
-                cancel: false
-            });
+            verifyRowDragStartEvent(grid, rowToDrag, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, endPoint, fixture);
             await pointerUp(dragIndicatorElement, endPoint, fixture);
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-                owner: rowDragDirective,
-                dragData: jasmine.any(IgxGridRowComponent)
-            });
+            verifyRowDragEndEvent(grid, rowToDrag, rowDragDirective);
         }));
         it('should emit dragdrop events if dropping a row on a non-interactive area', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            const row = rows[1];
+            const dragRow = rows[1];
             const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -322,34 +293,24 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             spyOn(grid.onRowDragStart, 'emit');
             spyOn(grid.onRowDragEnd, 'emit');
-            const dragStartArgs: IRowDragStartEventArgs = {
-                owner: rowDragDirective,
-                dragData: row,
-                cancel: false
-            };
-            const dragEndArgs: IRowDragEndEventArgs = {
-                owner: rowDragDirective,
-                dragData: row
-            };
-            expect(row.dragging).toBeFalsy();
-            expect(row.grid.rowDragging).toBeFalsy();
+
+            expect(dragRow.dragging).toBeFalsy();
+            expect(dragRow.grid.rowDragging).toBeFalsy();
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            expect(row.dragging).toBeTruthy();
-            expect(row.grid.rowDragging).toBeTruthy();
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragStart.emit).toHaveBeenCalledWith(dragStartArgs);
+            expect(dragRow.dragging).toBeTruthy();
+            expect(dragRow.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(grid, dragRow, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
-            expect(row.dragging).toBeTruthy();
-            expect(row.grid.rowDragging).toBeTruthy();
+            expect(dragRow.dragging).toBeTruthy();
+            expect(dragRow.grid.rowDragging).toBeTruthy();
 
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            expect(row.dragging).toBeFalsy();
-            expect(row.grid.rowDragging).toBeFalsy();
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith(dragEndArgs);
+            expect(dragRow.dragging).toBeFalsy();
+            expect(dragRow.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(grid, dragRow, rowDragDirective);
         }));
         it('should be able to cancel onRowDragStart event.', (async () => {
             grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
@@ -378,6 +339,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
         let dropGrid: IgxGridComponent;
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
+        let dragRows: DebugElement[];
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
@@ -396,6 +358,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             dragGridRows = dragGrid.rowList.toArray();
             dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
         configureTestSuite();
         it('should drop row data in the proper grid columns', (async () => {
@@ -418,20 +381,26 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const dragRowCells = row.cells.toArray();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -446,20 +415,26 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const dragRowCells = row.cells.toArray();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -477,19 +452,25 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[2].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(dragGrid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(dragGrid.rowDragging).toBeFalsy();
             expect(dropGrid.rowList.length).toEqual(1);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
 
             const hiddenDropCellValue = dropGrid.getCellByColumn(0, 'Downloads').value;
             expect(hiddenDropCellValue).toEqual(hiddenDragCellValue);
@@ -500,19 +481,25 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
@@ -521,19 +508,25 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
@@ -545,21 +538,27 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             expect(row.isSelected).toBeTruthy();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(row.isSelected).toBeTruthy();
         }));
@@ -604,6 +603,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             const rowCells = row.cells.toArray();
             verifyCellSelection();
 
@@ -611,15 +611,20 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyCellSelection();
         }));
@@ -629,6 +634,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
 
             const dragIndicatorElement = dragIndicatorElements[3].nativeElement;
             const row = dragGridRows[2];
+            const rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
             const rowCells = row.cells.toArray();
             const groupHeader = dragGrid.groupsRecords.find(function (element) {
                 return element.value === rowCells[2].value;
@@ -643,15 +649,20 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
             const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
 
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(groupHeader.records.length).toEqual(2);
             groupRow = groupHeader.records.find(function (element) {
@@ -674,6 +685,8 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const cellElement = dragCell.nativeElement;
             let cellInput = null;
 
+            spyOn(dragGrid, 'endEdit').and.callThrough();
+
             cellElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
@@ -686,7 +699,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             cellInput.dispatchEvent(new Event('input'));
             fixture.detectChanges();
             expect(row.inEditMode).toBeTruthy();
-            expect(dragCell.inEditMode).toBeTruthy();
+            expect(dragCell.editMode).toEqual(true);
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
@@ -694,7 +707,7 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             expect(row.grid.rowDragging).toBeTruthy();
             expect(dragGrid.endEdit).toHaveBeenCalled();
             expect(row.inEditMode).toBeFalsy();
-            expect(dragCell.inEditMode).toBeFalsy();
+            expect(dragCell.editMode).toEqual(false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
@@ -704,6 +717,75 @@ fdescribe('IgxGrid - Row Drag Tests', () => {
             const dropCell = dropGrid.getCellByColumn(0, 'Downloads');
             expect(dropCell.value).toEqual(newCellValue);
             expect(dragCell.value).toEqual(newCellValue);
+        }));
+    });
+    describe('Hiearchical Grid Tests', () => {
+        let dragGrid: IgxHierarchicalGridComponent;
+        let dropGrid: IgxHierarchicalGridComponent;
+        let dragRows: DebugElement[];
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
+            fixture.detectChanges();
+            dragGrid = fixture.componentInstance.hDragGrid;
+            dropGrid = fixture.componentInstance.hDropGrid;
+            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+        }));
+        configureTestSuite();
+        it('should be able to drag row on every hiearchical level', (async () => {
+            // first level row
+            let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
+            let rowToDrag = dragGrid.getRowByIndex(0);
+            let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+
+            let startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+
+            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+
+            // second level row
+            dragIndicatorElement = dragIndicatorElements[8].nativeElement;
+            const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
+            rowToDrag = childGrid.getRowByIndex(0);
+            rowDragDirective = dragRows[4].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+
+            spyOn(childGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(childGrid.onRowDragEnd, 'emit').and.callThrough();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(childGrid, rowToDrag, rowDragDirective, 1);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, 1);
+
+            // third level row
+            dragIndicatorElement = dragIndicatorElements[10].nativeElement;
+            const nestedChildGrid = childGrid.hgridAPI.getChildGrids(false)[0];
+            rowToDrag = nestedChildGrid.getRowByIndex(0);
+            rowDragDirective = dragRows[5].injector.get(IgxRowDragDirective);
+            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+
+            spyOn(nestedChildGrid.onRowDragStart, 'emit').and.callThrough();
+            spyOn(nestedChildGrid.onRowDragEnd, 'emit').and.callThrough();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            verifyRowDragStartEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
         }));
     });
 });
@@ -768,8 +850,8 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [height]="'300px'"
             [data]="data"
             [primaryKey]="'ID'"
-            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
-            [rowEditable]="true" [rowDraggable]="enableRowDraggable"
+            [autoGenerate]="true" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="true" [rowDraggable]="true"
             >
         </igx-grid>
         <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
@@ -789,28 +871,71 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     @ViewChild('dropGrid', { read: IgxGridComponent })
     public dropGrid: IgxGridComponent;
     newData = [];
-    public enableSorting = false;
-    public enableFiltering = false;
-    public enableResizing = false;
-    public enableEditing = true;
-    public enableGrouping = true;
-    public enableRowEditing = true;
-    public enableRowDraggable = true;
     public currentSortExpressions;
 
-    public columnsCreated(column: IgxColumnComponent) {
-        column.sortable = this.enableSorting;
-        column.filterable = this.enableFiltering;
-        column.resizable = this.enableResizing;
-        column.editable = this.enableEditing;
-        column.groupable = this.enableGrouping;
-    }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
     public onRowDrop(args) {
         args.cancel = true;
         this.dropGrid.addRow(args.dragData.rowData);
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalDragGrid [data]="data"
+     [autoGenerate]="true" [height]="'500px'" [width]="'1500px'"
+      primaryKey="ID" [expandChildren]='true' [rowDraggable]="true">
+        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" #rowIsland>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2 >
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+        <igx-hierarchical-grid #hierarchicalDropGrid [data]="newData" [primaryKey]="'ID'"
+            [width]="'1500px'" [height]="'500px'">
+            <igx-column [field]="'ID'"></igx-column>
+            <igx-column [field]="'ChildLevels'"></igx-column>
+            <igx-column [field]="'ProductName'"></igx-column>
+            <igx-column [field]="'Col1'"></igx-column>
+            <igx-column [field]="'Col2'"></igx-column>
+            <igx-column [field]="'Col3'"></igx-column>
+        </igx-hierarchical-grid>
+        </div>`
+})
+export class IgxHierarchicalGridTestComponent {
+    public data;
+    newData = [];
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent }) public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+
+    constructor() {
+        this.data = this.generateData(2, 3);
+    }
+    generateData(count: number, level: number) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const item = {
+                ID: i, ChildLevels: currLevel, ProductName: 'Product: A' + i, 'Col1': i,
+                'Col2': i, 'Col3': i
+            };
+            if (currLevel > 1) {
+                children = this.generateData(count / 2, currLevel - 1);
+                const childProp = currLevel === 3 ? 'childData' : 'childData2';
+                item[childProp] = children;
+            }
+            prods.push(item);
+        }
+        return prods;
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+        this.hDropGrid.addRow(args.dragData.rowData);
     }
 }
 
@@ -861,4 +986,45 @@ async function pointerUp(element: Element, startPoint: Point, fixture: Component
     await wait(DEBOUNCE_TIME);
     fixture.detectChanges();
     return pointerEvent;
+}
+
+/**
+ * Verifies weather the onRowDragStart event has been emitted with the correct arguments
+ * @param grid IgxGrid from which a row is being dragged
+ * @param dragRow Grid row which is being dragged
+ * @param dragDirective IgxRowDragDirective of the dragged row
+ * @param timesCalled The number of times the onRowDragStart event has been emitted. Defaults to 1.
+ * @param cancel Indicates weather the onRowDragStart event is cancelled. Default value is false.
+ */
+function verifyRowDragStartEvent(
+    grid: IgxGridBaseComponent,
+    dragRow: IgxRowComponent<any>,
+    dragDirective: IgxRowDragDirective,
+    timesCalled: number = 1,
+    cancel = false) {
+    expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
+    expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
+        dragData: dragRow,
+        owner: dragDirective,
+        cancel: cancel
+    });
+}
+
+/**
+ * Verifies weather the onRowDragEnd event has been emitted with the correct arguments
+ * @param grid IgxGrid from which a row is being dragged
+ * @param dragRow Grid row which is being dragged
+ * @param dragDirective IgxRowDragDirective of the dragged row
+ * @param timesCalled The number of times the onRowDragEnd event has been emitted. Defaults to 1.
+ */
+function verifyRowDragEndEvent(
+    grid: IgxGridBaseComponent,
+    dragRow: IgxRowComponent<any>,
+    dragDirective: IgxRowDragDirective,
+    timesCalled: number = 1) {
+    expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
+    expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
+        owner: dragDirective,
+        dragData: dragRow
+    });
 }
