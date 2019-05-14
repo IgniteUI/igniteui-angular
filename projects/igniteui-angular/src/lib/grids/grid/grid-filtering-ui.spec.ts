@@ -3630,7 +3630,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('should keep newly added filter expression in view', fakeAsync(() => {
-        // Open excel style custom filtering dialog.
+        // Open excel style custom filter dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
         fix.detectChanges();
         GridFunctions.clickExcelFilterCascadeButton(fix);
