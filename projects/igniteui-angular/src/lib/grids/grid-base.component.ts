@@ -225,7 +225,8 @@ export enum FilterMode {
 export enum GridKeydownTargetType {
     dataCell = 'dataCell',
     summaryCell = 'summaryCell',
-    groupRow = 'groupRow'
+    groupRow = 'groupRow',
+    hierarchicalRow = 'hierarchicalRow'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -4822,7 +4823,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
         this.wheelHandler();
-        if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression)) {
+        if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
@@ -4877,7 +4878,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                                 columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
-                .find(rec => !rec.expression && !rec.summaries) && nextCellIndex !== undefined) {
+                .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
@@ -4909,7 +4910,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                                 columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
         if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
-                .find(rec => !rec.expression && !rec.summaries) && prevCellIndex !== undefined) {
+                .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
             return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
         } else {
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
@@ -4935,6 +4936,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 target = visibleColIndex !== -1 ?
                     row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
                 break;
+            case 'igx-child-grid-row':
+                targetType = GridKeydownTargetType.hierarchicalRow;
+                target = row;
+                break;
             default:
                 targetType = GridKeydownTargetType.dataCell;
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
@@ -4948,7 +4953,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (currentRowIndex <= 0) { return currentRowIndex; }
 
         const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
-            .find(rec => !rec.expression && !rec.summaries);
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
         return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
     }
 
@@ -4956,7 +4961,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) {return currentRowIndex; }
 
         const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
-            .find(rec => !rec.expression && !rec.summaries);
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
         return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
     }
 
