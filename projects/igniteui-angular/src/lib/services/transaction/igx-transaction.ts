@@ -136,36 +136,43 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public commit(data: any[], id?: any): void {
-        this._states.forEach((s: S) => {
-            const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
-            switch (s.type) {
-                case TransactionType.ADD:
-                    data.push(s.value);
-                    break;
-                case TransactionType.DELETE:
-                    if (0 <= index && index < data.length) {
-                        data.splice(index, 1);
-                    }
-                    break;
-                case TransactionType.UPDATE:
-                    if (0 <= index && index < data.length) {
-                        data[index] = this.updateValue(s);
-                    }
-                    break;
+        if (id) {
+            const state = this.getState(id);
+            if (state) {
+                this.updateRecord(data, state);
             }
-        });
-        this.clear();
+        } else {
+            this._states.forEach((s: S) => {
+                this.updateRecord(data, s);
+            });
+        }
+        this.clear(id);
     }
 
     /**
      * @inheritdoc
      */
     public clear(id?: any): void {
-        this._transactions = [];
-        this._states.clear();
-        this._redoStack = [];
-        this._undoStack = [];
-        this.onStateUpdate.emit();
+        if (id) {
+            const filteredTransactions = this._transactions.filter((t: T) => t.id !== id);
+            const filteredStates: Map<any, S> = new Map();
+            this._states.forEach((state: S, key: any) => {
+                if (key !== id) {
+                    filteredStates.set(key, state);
+                }
+            });
+            this.clear();
+            for (const transaction of filteredTransactions) {
+                const state = filteredStates.get(transaction.id);
+                this.addTransaction(transaction, this._states, state.recordRef);
+            }
+        } else {
+            this._transactions = [];
+            this._states.clear();
+            this._redoStack = [];
+            this._undoStack = [];
+            this.onStateUpdate.emit();
+        }
     }
 
     /**
@@ -318,6 +325,30 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     states.delete(id);
                 }
             }
+        }
+    }
+
+    /**
+     * Updates state related record in the provided data
+     * @param data Data source to update
+     * @param state State to update data from
+     */
+    protected updateRecord(data: any[], state: S) {
+        const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(state.recordRef || {}));
+        switch (state.type) {
+            case TransactionType.ADD:
+                data.push(state.value);
+                break;
+            case TransactionType.DELETE:
+                if (0 <= index && index < data.length) {
+                    data.splice(index, 1);
+                }
+                break;
+            case TransactionType.UPDATE:
+                if (0 <= index && index < data.length) {
+                    data[index] = this.updateValue(state);
+                }
+                break;
         }
     }
 }
