@@ -1832,7 +1832,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this.populateVisibleIndexes();
+            this.grid.columns.filter(x => x.columnGroup).forEach( x => x.populateVisibleIndexes());
         }
     }
 

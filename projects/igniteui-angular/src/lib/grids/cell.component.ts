@@ -43,6 +43,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
     templateUrl: './cell.component.html'
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+    private _vIndex = -1;
+
     /**
      * Gets the column of the cell.
      * ```typescript
@@ -232,7 +234,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('attr.data-visibleIndex')
     @Input()
-    visibleColumnIndex = -1;
+    get visibleColumnIndex() {
+        return this.column.parent && this.column.parent.columnLayout ? this.column.visibleIndex : this._vIndex;
+    }
+
+    set visibleColumnIndex(val) {
+        this._vIndex = val;
+    }
 
     /**
      * Gets the ID of the cell.

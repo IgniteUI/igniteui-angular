@@ -1448,12 +1448,90 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
     }));
+
+    it('should navigate correctly with column group is hidden.', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+        // hide second group
+        const secondGroup = grid.getColumnByName('group2');
+        secondGroup.hidden = true;
+        fix.detectChanges();
+
+        // check visible indexes are correct
+        expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(0);
+        expect(grid.getCellByColumn(0, 'Address').visibleColumnIndex).toBe(1);
+        expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(2);
+        // focus last
+        let cell = grid.getCellByColumn(0, 'Address');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // shift+tab
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait();
+        fix.detectChanges();
+        // check correct cell has focus
+        cell = grid.getCellByColumn(0, 'ID');
+        expect(cell.focused).toBe(true);
+
+        // tab
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+        // check correct cell has focus
+        cell = grid.getCellByColumn(0, 'Address');
+        expect(cell.focused).toBe(true);
+
+
+        // arrow left
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check correct cell has focus
+        cell = grid.getCellByColumn(0, 'ID');
+        expect(cell.focused).toBe(true);
+
+        // arrow rigth
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check correct cell has focus
+        expect(grid.getCellByColumn(0, 'Address').focused).toBe(true);
+    }));
 });
 
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px" (onSelection)="cellSelected($event)">
-        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned'>
+        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
