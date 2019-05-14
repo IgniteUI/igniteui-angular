@@ -1302,6 +1302,50 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     });
+
+    it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            pinned: true,
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'ContactName', rowStart: 2, colStart: 1 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 2 }
+            ]
+        }];
+        fix.detectChanges();
+
+        let firstCell;
+        let secondCell;
+        let thirdCell;
+        [
+            firstCell, secondCell,
+            thirdCell,
+        ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+        thirdCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+
+        thirdCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value)
+            .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].ContactTitle);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+
+        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+    }));
 });
 
 @Component({
