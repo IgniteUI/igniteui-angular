@@ -47,6 +47,7 @@ export class FilterListItem {
     public label: any;
     public isSelected: boolean;
     public indeterminate: boolean;
+    public isSpecial = false;
 }
 
 @Directive({
@@ -427,6 +428,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         selectAll.value = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.label = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.indeterminate = this.selectAllIndeterminate;
+        selectAll.isSpecial = true;
         this.listData.unshift(selectAll);
     }
 
@@ -446,6 +448,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         blanks.value = null;
         blanks.label = this.grid.resourceStrings.igx_grid_excel_blanks;
         blanks.indeterminate = false;
+        blanks.isSpecial = true;
         this.listData.unshift(blanks);
     }
 
