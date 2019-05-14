@@ -4822,6 +4822,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
         this.wheelHandler();
+        if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression)) {
+            visibleColIndex = -1;
+        }
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
             && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
             if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
