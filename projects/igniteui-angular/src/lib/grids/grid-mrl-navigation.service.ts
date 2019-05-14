@@ -50,18 +50,17 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
         const nextElementColumn = cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex + 1);
         if (nextElementColumn) {
-            if (!(this.isColumnFullyVisible(nextElementColumn.visibleIndex) &&
-             this.isColumnLeftFullyVisible(nextElementColumn.visibleIndex))) {
+            let nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+            if (!nextCell) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                    nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
                     this._focusCell(nextCell.nativeElement);
                 });
                 this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
             } else {
-                const nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
@@ -78,17 +77,17 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const prevElementColumn =
          cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex - 1 && !x.hidden);
         if (prevElementColumn) {
-            if (!this.isColumnLeftFullyVisible(prevElementColumn.visibleIndex)) {
+            let nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+            if (!nextCell) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                    nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
                     this._focusCell(nextCell.nativeElement);
                 });
                 this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
             } else {
-                const nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
@@ -376,6 +375,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const gridBoundingClientRect = this.grid.tbody.nativeElement.getBoundingClientRect();
         const diffTop = cellElem.getBoundingClientRect().top - gridBoundingClientRect.top;
         const diffBottom = cellElem.getBoundingClientRect().bottom - gridBoundingClientRect.bottom;
+        const diffLeft = cellElem.getBoundingClientRect().left - gridBoundingClientRect.left;
+        const diffRight = cellElem.getBoundingClientRect().right - gridBoundingClientRect.right;
+        const horizontalVirt =  this.grid.headerContainer;
+        const horizontalScroll = horizontalVirt.getHorizontalScroll();
         if (diffTop < 0) {
             // cell is above grid top - not visible
             this.grid.nativeElement.focus({ preventScroll: true });
@@ -394,6 +397,29 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     cellElem.focus({ preventScroll: true });
             });
             this.grid.verticalScrollContainer.addScrollTop(diffBottom);
+        }  else {
+            // cell is visible
+            cellElem.focus({ preventScroll: true });
+        }
+
+        if (diffRight > 0) {
+            // cell is left of grid left edge - not visible
+            this.grid.nativeElement.focus({ preventScroll: true });
+            this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    cellElem.focus({ preventScroll: true });
+            });
+            horizontalScroll.scrollLeft += diffRight;
+        } else if (diffLeft < 0) {
+            // cell is right of grid right edge - not visible
+            this.grid.nativeElement.focus({ preventScroll: true });
+            this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    cellElem.focus({ preventScroll: true });
+            });
+            horizontalScroll.scrollLeft += diffLeft;
         } else {
             // cell is visible
             cellElem.focus({ preventScroll: true });
