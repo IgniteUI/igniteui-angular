@@ -161,22 +161,23 @@ export class GridCellEditingComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
-    changeFocus(event) {
-        console.log(event);
-        const cell = event.cell;
-        const target = event.event.target.tagName.toLowerCase() === 'igx-grid-cell';
-        if (cell && cell.inEditMode && target) {
-            let focusTarget;
-            if (cell.column.dataType === 'date') {
-                event.cancel = true;
-                focusTarget  = cell.nativeElement.querySelector('input');
-            } else if (cell.column.dataType === 'boolean') {
-                event.cancel = true;
-                focusTarget  = cell.nativeElement.querySelector('.igx-checkbox__input');
+    customKeydown(args) {
+        const target = args.target;
+        const type = args.targetType;
+        if (type === 'dataCell'  && target.inEditMode && args.event.key.toLowerCase() === 'tab') {
+            args.event.preventDefault();
+            args.cancel = true;
+            if (target.column.dataType === 'number' && target.editValue < 10) {
+                alert('The value should be bigger than 10');
+                return;
             }
-            console.log(cell.nativeElement, focusTarget);
-            if (focusTarget) { focusTarget.focus(); }
-            console.log(document.activeElement);
+            const cell = args.event.shiftKey ?
+                this.gridWithPK.getPreviousCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable) :
+                this.gridWithPK.getNextCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable);
+            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+        } else if (type === 'dataCell'  && args.event.key.toLowerCase() === 'enter') {
+            args.cancel = true;
+            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
         }
     }
 }
