@@ -309,7 +309,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             (this.expressionsList[0].expression.condition.name === 'equals' ||
              this.expressionsList[0].expression.condition.name === 'true' ||
              this.expressionsList[0].expression.condition.name === 'false' ||
-             this.expressionsList[0].expression.condition.name === 'empty'||
+             this.expressionsList[0].expression.condition.name === 'empty' ||
              this.expressionsList[0].expression.condition.name === 'in')) {
             return true;
         }
