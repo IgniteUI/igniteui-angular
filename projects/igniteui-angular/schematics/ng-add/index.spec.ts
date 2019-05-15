@@ -83,7 +83,7 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
 
     const newContent = tree.read('src/main.ts').toString();
-    expect(newContent.split('\n').length).toEqual(1);
+    expect(newContent.split('import \'hammerjs\';\n// test comment').length).toEqual(1);
   });
 
   it('should not add hammer.js if it exists in main.ts', () => {
@@ -93,7 +93,7 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
 
     const newContent = tree.read(mainTsPath).toString();
-    expect(newContent.split('\n').length).toEqual(2);
+    expect(newContent.split('import \'hammerjs\';\n// test comment').length).toEqual(2);
   });
 
   it('should add hammer.js to package.json dependencies', () => {
