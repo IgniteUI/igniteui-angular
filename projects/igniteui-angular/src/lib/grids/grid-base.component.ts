@@ -3356,6 +3356,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
+        if (this.hasColumnLayouts) {
+            this.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
 
         const args = {
             source: column,

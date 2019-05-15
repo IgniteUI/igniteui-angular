@@ -1383,7 +1383,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();
-        if (this.columnLayout) {
+        if (this.parent && this.parent.columnLayout) {
             this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
