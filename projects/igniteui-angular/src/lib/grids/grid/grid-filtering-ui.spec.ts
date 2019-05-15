@@ -3579,7 +3579,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
-  
+
     it('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[0].nativeElement;
@@ -3603,7 +3603,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
         expect(checkBoxes.length).toBe(0);
     }));
-  
+
     it('should keep newly added filter expression in view', fakeAsync(() => {
         // Open excel style custom filtering dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
