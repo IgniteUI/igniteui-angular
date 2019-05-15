@@ -221,7 +221,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     constructor(private cdr: ChangeDetectorRef,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-                private element: ElementRef,
+                public element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 }

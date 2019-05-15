@@ -32,10 +32,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const forOfDir =  this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
-        if (!horizontalScroll.clientWidth || column.pinned) {
+        if (!horizontalScroll.clientWidth || (column && column.pinned)) {
             return true;
+        } else if (column) {
+            return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.parent.visibleIndex) - this.displayContainerScrollLeft;
         }
-        return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(column.parent.visibleIndex) - this.displayContainerScrollLeft;
+        return false;
     }
 
     public isColumnLeftFullyVisible(visibleColumnIndex: number) {

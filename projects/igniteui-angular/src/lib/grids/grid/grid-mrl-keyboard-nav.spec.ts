@@ -14,6 +14,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
+const CELL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     configureTestSuite();
@@ -1809,6 +1810,76 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
         diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
+    });
+
+    describe('Pinning', () => {
+        it('should navigate to the last block with one pinned group and unpinned area has scrollbar', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    pinned: true,
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const secondBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
+            const thirdBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[2];
+
+            let secondCell;
+            let thirdCell;
+            let fourthCell;
+            [   secondCell,
+                thirdCell,
+                fourthCell  ] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
+            const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+            fix.componentInstance.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+            await wait();
+            fix.detectChanges();
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', secondCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
+            expect(document.activeElement).toEqual(thirdCell.nativeElement);
+        });
     });
 });
 
