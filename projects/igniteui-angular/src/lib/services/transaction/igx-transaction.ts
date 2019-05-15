@@ -154,25 +154,20 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public clear(id?: any): void {
         if (id) {
-            const filteredTransactions = this._transactions.filter((t: T) => t.id !== id);
-            const filteredStates: Map<any, S> = new Map();
-            this._states.forEach((state: S, key: any) => {
-                if (key !== id) {
-                    filteredStates.set(key, state);
-                }
-            });
-            this.clear();
-            for (const transaction of filteredTransactions) {
-                const state = filteredStates.get(transaction.id);
-                this.addTransaction(transaction, this._states, state.recordRef);
-            }
+            this._transactions = this._transactions.filter(t => t.id !== id);
+            this._states.delete(id);
+            //  Undo stack is an array of actions. Each action is array of transaction like objects
+            //  We are going trough all the actions. For each action we are filtering out transactions
+            //  with provided id. Finally if any action ends up as empty array we are removing it from
+            //  undo stack
+            this._undoStack = this._undoStack.map(a => a.filter(t => t.transaction.id !== id)).filter(a => a.length > 0);
         } else {
             this._transactions = [];
             this._states.clear();
-            this._redoStack = [];
             this._undoStack = [];
-            this.onStateUpdate.emit();
         }
+        this._redoStack = [];
+        this.onStateUpdate.emit();
     }
 
     /**
