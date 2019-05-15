@@ -3614,13 +3614,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         GridFunctions.clickExcelFilterCascadeButton(fix);
         fix.detectChanges();
         GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-        // await wait(200);
         tick(200);
         fix.detectChanges();
 
         // Click 'Add Filter' button.
         GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
-        // await wait(3000);
         tick(200);
         fix.detectChanges();
 
