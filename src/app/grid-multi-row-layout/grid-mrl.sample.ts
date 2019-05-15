@@ -71,4 +71,8 @@ export class GridMRLSampleComponent {
         const col = this.grid.getColumnByName('group2');
         col.hidden = !col.hidden;
     }
+    pinGroup() {
+        const col = this.grid.getColumnByName('group2');
+        col.pinned = !col.pinned;
+    }
 }

@@ -1320,6 +1320,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.resetCaches();
         grid.cdr.detectChanges();
+        if (this.parent && this.parent.columnLayout) {
+            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
         return true;
@@ -1380,6 +1383,9 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();
+        if (this.columnLayout) {
+            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
 
@@ -1871,7 +1877,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const grid = this.gridAPI.grid;
-        const columns = grid && grid.columnList ? grid.columnList.toArray() : [];
+        const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
         const orderedCols = columns
         .filter(x => !x.columnGroup && !x.hidden)
         .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);

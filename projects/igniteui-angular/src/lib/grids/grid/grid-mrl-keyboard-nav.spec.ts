@@ -1577,6 +1577,50 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check correct cell has focus
         expect(grid.getCellByColumn(0, 'Address').focused).toBe(true);
     }));
+
+    it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+        // hide second group
+        const secondGroup = grid.getColumnByName('group2');
+        secondGroup.pinned = true;
+        fix.detectChanges();
+
+        // check visible indexes are correct
+        expect(grid.getCellByColumn(0, 'ContactName').visibleColumnIndex).toBe(0);
+        expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(1);
+        expect(grid.getCellByColumn(0, 'Address').visibleColumnIndex).toBe(2);
+        expect(grid.getCellByColumn(0, 'Phone').visibleColumnIndex).toBe(3);
+        expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
+        expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
+        expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
+
+    });
 });
 
 @Component({
