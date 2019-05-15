@@ -4,9 +4,9 @@
         <div class="density-chooser" style="margin-bottom: 16px">
             <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
         </div>
-        <igx-grid [rowSelectable]="false" [primaryKey]="'PostalCode'" #grid [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true">
-            <igx-column-layout>
-                <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'300px'"></igx-column>
+        <igx-grid [rowSelectable]="false" [primaryKey]="'PostalCode'" #grid [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true" >
+            <igx-column-layout field='group1'>
+                <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'800px'"  [groupable]='true' ></igx-column>
             </igx-column-layout>
             <igx-column-layout field='group2'>
                 <igx-column editable="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
@@ -25,5 +25,7 @@
             </igx-column-layout>
         </igx-grid>
         <span igxButton (click)="hideGroup()">Hide/Show second group</span>
+        <span igxButton (click)="pinGroup()">Pin/Unpin second group</span>
+        <span igxButton (click)="moveGroup()">Move second group</span>
     </section>
 </div>

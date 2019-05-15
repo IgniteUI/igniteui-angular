@@ -8,6 +8,8 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -1577,6 +1579,237 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check correct cell has focus
         expect(grid.getCellByColumn(0, 'Address').focused).toBe(true);
     }));
+
+    it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+        // hide second group
+        const secondGroup = grid.getColumnByName('group2');
+        secondGroup.pinned = true;
+        fix.detectChanges();
+
+        // check visible indexes are correct
+        expect(grid.getCellByColumn(0, 'ContactName').visibleColumnIndex).toBe(0);
+        expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(1);
+        expect(grid.getCellByColumn(0, 'Address').visibleColumnIndex).toBe(2);
+        expect(grid.getCellByColumn(0, 'Phone').visibleColumnIndex).toBe(3);
+        expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
+        expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
+        expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
+
+    });
+
+    it('should allow navigation through group rows with arrow keys.', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        // group by city
+        const grid =  fix.componentInstance.grid;
+        grid.groupBy({
+            fieldName: 'City',
+            dir: SortingDirection.Asc,
+            ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
+        });
+        fix.detectChanges();
+
+        let groupRow = grid.getRowByIndex(0);
+        groupRow.nativeElement.focus();
+        await wait();
+        fix.detectChanges();
+
+        // arrow down
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', groupRow.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+        // check first data cell is focused
+        let cell = grid.getCellByColumn(1, 'ID');
+        expect(cell.focused).toBe(true);
+
+        // arrow down
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+        // check next group row is focused
+        groupRow = grid.getRowByIndex(2);
+        expect(groupRow.focused).toBe(true);
+
+        // arrow up
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', groupRow.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+        // check prev cell is focused
+        cell = grid.getCellByColumn(1, 'ID');
+        expect(cell.focused).toBe(true);
+
+        // arrow up
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+        // check first group row is focused
+        groupRow = grid.getRowByIndex(0);
+        expect(groupRow.focused).toBe(true);
+    });
+
+    it('tab navigation should follow correct sequence if a column is moved.', () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        fix.detectChanges();
+        const grid =  fix.componentInstance.grid;
+        // move second group
+        const col1 = grid.getColumnByName('group3');
+        const col2 = grid.getColumnByName('group1');
+        grid.moveColumn(col2, col1);
+        fix.detectChanges();
+
+        // check visible indexes are correct
+        expect(grid.getCellByColumn(0, 'ContactName').visibleColumnIndex).toBe(0);
+        expect(grid.getCellByColumn(0, 'Address').visibleColumnIndex).toBe(1);
+        expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(2);
+        expect(grid.getCellByColumn(0, 'Phone').visibleColumnIndex).toBe(3);
+        expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
+        expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
+        expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
+
+    });
+
+    it(`should navigate to the last cell from the layout by pressing Ctrl + ArrowLeft/ArrowRight key
+     in grid with horizontal virtualization`, async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        grid.columnWidth = '300px';
+        grid.width = '400px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        let firstCell = grid.getCellByColumn(0, 'ID');
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // ctrl+arrow right
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check correct cell is focused and is fully in view
+        const lastCell =  grid.getCellByColumn(0, 'Address');
+        expect(lastCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(800);
+        let diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        expect(diff).toBe(0);
+
+        // ctrl+arrow left
+        lastCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // first cell should be focused and is fully in view
+        firstCell = grid.getCellByColumn(0, 'ID');
+        expect(firstCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+    });
 });
 
 @Component({

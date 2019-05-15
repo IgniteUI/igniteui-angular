@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, DropPosition } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-sample',
@@ -70,5 +70,15 @@ export class GridMRLSampleComponent {
     hideGroup() {
         const col = this.grid.getColumnByName('group2');
         col.hidden = !col.hidden;
+    }
+    pinGroup() {
+        const col = this.grid.getColumnByName('group2');
+        col.pinned = !col.pinned;
+    }
+
+    moveGroup() {
+        const col1 = this.grid.getColumnByName('group2');
+        const col2 = this.grid.getColumnByName('group1');
+        this.grid.moveColumn(col2, col1);
     }
 }
