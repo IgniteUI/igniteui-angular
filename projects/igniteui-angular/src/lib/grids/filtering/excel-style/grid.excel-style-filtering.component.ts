@@ -28,7 +28,7 @@ import {
     IgxDateFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { cloneArray, KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
@@ -78,6 +78,24 @@ export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
+class InFilteringOperation implements IFilteringOperation {
+    name = 'in';
+    isUnary = false;
+    iconName = 'is_in';
+    logic = (target: any, searchVal: Set<any>) => {
+        return searchVal.has(target);
+    }
+}
+
+class InDateFilteringOperation extends InFilteringOperation {
+    logic = (target: any, searchVal: Set<any>) => {
+        if (target instanceof Date) {
+            return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
+        }
+        return searchVal.has(target);
+    }
+}
+
 /**
  * @hidden
  */
@@ -95,7 +113,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     private containsNullOrEmpty = false;
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
-    private filterValues = [];
+    private filterValues = new Set<any>();
 
     protected columnMoving = new Subscription();
 
@@ -178,7 +196,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     ngAfterViewInit(): void {
         this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
-        this.customDialog.expressionsList = this.expressionsList;
+        if (this.expressionsList && this.expressionsList.length &&
+            this.expressionsList[0].expression.condition.name !== 'in') {
+            this.customDialog.expressionsList = this.expressionsList;
+        }
         this.populateColumnData();
 
         if (this.excelStyleSorting) {
@@ -288,7 +309,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             (this.expressionsList[0].expression.condition.name === 'equals' ||
              this.expressionsList[0].expression.condition.name === 'true' ||
              this.expressionsList[0].expression.condition.name === 'false' ||
-             this.expressionsList[0].expression.condition.name === 'empty')) {
+             this.expressionsList[0].expression.condition.name === 'empty'||
+             this.expressionsList[0].expression.condition.name === 'in')) {
             return true;
         }
 
@@ -297,7 +319,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             (exp.expression.condition.name === 'equals' ||
              exp.expression.condition.name === 'true' ||
              exp.expression.condition.name === 'false' ||
-             exp.expression.condition.name === 'empty')).length;
+             exp.expression.condition.name === 'empty' ||
+             exp.expression.condition.name === 'in')).length;
 
         return selectableExpressionsCount === this.expressionsList.length;
     }
@@ -306,15 +329,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         if (this.column.dataType === DataType.Boolean) {
             return true;
         }
-        let sameElements = 0;
 
-        for (let index = 0; index < this.filterValues.length; index++) {
-            if (this.uniqueValues.indexOf(this.filterValues[index]) !== -1) {
-                sameElements ++;
+        for (let index = 0; index < this.filterValues.size; index++) {
+            if (this.filterValues.has(this.uniqueValues[index])) {
+                return true;
             }
         }
 
-        return sameElements > 0;
+        return false;
     }
 
     public populateColumnData() {
@@ -326,11 +348,21 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         if (this.column.dataType === DataType.Date) {
             this.uniqueValues = Array.from(new Set(data.map(record =>
                 record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
-            this.filterValues = this.expressionsList.map(exp =>
-                exp.expression.searchVal ? exp.expression.searchVal.toDateString() : exp.expression.searchVal);
+            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
+                        new Date(v).toDateString()) ];
+                }
+                return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toDateString() : e.expression.searchVal] ];
+            }, []));
         } else {
             this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
-            this.filterValues = this.expressionsList.map(exp => exp.expression.searchVal);
+            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()) ];
+                }
+                return [ ...arr, ...[e.expression.searchVal] ];
+            }, []));
         }
         this.listData = new Array<FilterListItem>();
 
@@ -394,7 +426,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 const filterListItem = new FilterListItem();
                 if (this.column.filteringExpressionsTree) {
                     if (shouldUpdateSelection) {
-                        if (this.filterValues.indexOf(element) !== -1) {
+                        if (this.filterValues.has(element)) {
                             filterListItem.isSelected = true;
                         } else {
                             filterListItem.isSelected = false;
@@ -436,7 +468,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         const blanks =  new FilterListItem();
         if (this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {
-                if (this.filterValues.indexOf(null) !== -1) {
+                if (this.filterValues.has(null)) {
                     blanks.isSelected = true;
                 } else {
                     blanks.isSelected = false;
@@ -514,24 +546,60 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
 
         if (unselectedItem) {
-            selectedItems.forEach(element => {
-                let condition = null;
-                if (element.value !== null && element.value !== undefined) {
-                    if (this.column.dataType === DataType.Boolean) {
-                        condition = this.createCondition(element.value.toString());
+            if (selectedItems.length < 3) {
+                selectedItems.forEach(element => {
+                    let condition = null;
+                    if (element.value !== null && element.value !== undefined) {
+                        if (this.column.dataType === DataType.Boolean) {
+                            condition = this.createCondition(element.value.toString());
+                        } else {
+                            condition = this.createCondition('equals');
+                        }
                     } else {
-                        condition = this.createCondition('equals');
+                        condition = this.createCondition('empty');
                     }
-                } else {
-                    condition = this.createCondition('empty');
-                }
-                filterTree.filteringOperands.push({
-                    condition: condition,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.filteringIgnoreCase,
-                    searchVal: element.value
+                    filterTree.filteringOperands.push({
+                        condition: condition,
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.filteringIgnoreCase,
+                        searchVal: element.value
+                    });
                 });
-            });
+            } else {
+                const blanksItemIndex = selectedItems.findIndex(e => e.value === null || e.value === undefined);
+                let blanksItem: any;
+                if (blanksItemIndex >= 0) {
+                    blanksItem = selectedItems[blanksItemIndex];
+                    selectedItems.splice(blanksItemIndex, 1);
+                }
+
+                if (this.column.dataType === DataType.Date) {
+                    filterTree.filteringOperands.push({
+                        condition: new InDateFilteringOperation(),
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.filteringIgnoreCase,
+                        searchVal: new Set(selectedItems.map(d =>
+                            new Date(d.value.getFullYear(), d.value.getMonth(), d.value.getDate()).toISOString()))
+                    });
+                } else {
+                    filterTree.filteringOperands.push({
+                        condition: new InFilteringOperation(),
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.filteringIgnoreCase,
+                        searchVal: new Set(selectedItems.map(e => e.value))
+                    });
+                }
+
+                if (blanksItem) {
+                    filterTree.filteringOperands.push({
+                        condition: this.createCondition('empty'),
+                        fieldName: this.column.field,
+                        ignoreCase: this.column.filteringIgnoreCase,
+                        searchVal: blanksItem.value
+                    });
+                }
+            }
+
             this.expressionsList = new Array<ExpressionUI>();
             this.filteringService.filterInternal(this.column.field, filterTree);
         } else {
@@ -564,6 +632,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         if (eventArgs.key === KEYS.ENTER) {
             this.clearFilter();
         }
+    }
+
+    public showCustomFilterItem(): boolean {
+        const exprTree = this.column.filteringExpressionsTree;
+        return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
+            !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
+            (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
     }
 
     private createCondition(conditionName: string) {
