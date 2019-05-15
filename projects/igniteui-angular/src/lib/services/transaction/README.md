@@ -43,7 +43,7 @@ and then inject it in the component's constructor:
    |getAggregatedChanges   | Returns aggregated changes from all transactions              | mergeChanges              |
    |getState               | Returns the state of the record with provided id              | id                        |
    |getAggregatedValue     | Returns value of the required id including all uncommitted changes| id, mergeChanges      |
-   |commit                 | Applies all transactions over the provided data               | data                      |
-   |clear                  | Clears all transactions                                       | -                         |
+   |commit                 | Applies all transactions over the provided data               | data, id?                 |
+   |clear                  | Clears all transactions                                       | id?                       |
    |startPending           | Starts pending transactions. All transactions passed after call to startPending will not be added to transaction log | - |
    |endPending             | Clears all pending transactions and aggregated pending state. If commit is set to true commits pending states as single transaction | commit |
