@@ -833,6 +833,37 @@ describe('IgxGrid - Keyboard navigation', () => {
             currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
             expect(currScrollTop).toEqual(0);
         });
+
+        it('Custom KB navigation: should be able to scroll to a random cell in the grid', async () => {
+            fix.componentInstance.columns = fix.componentInstance.generateCols(25);
+            fix.componentInstance.data = fix.componentInstance.generateData(25);
+            fix.detectChanges();
+
+            grid.navigateTo(15, 1, (args) => { args.target.nativeElement.focus(); });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const target = grid.getCellByColumn(15, '1');
+            expect(target).toBeDefined();
+            expect(target.focused).toBe(true);
+        });
+
+
+        it('Custom KB navigation: onGridKeydown should be emitted', async () => {
+            fix.componentInstance.columns = fix.componentInstance.generateCols(25);
+            fix.componentInstance.data = fix.componentInstance.generateData(25);
+            fix.detectChanges();
+            const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
+
+            const cell = grid.getCellByColumn(1, '2');
+            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: false }));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(gridKeydown).toHaveBeenCalledTimes(1);
+            expect(gridKeydown).toHaveBeenCalledWith({
+                targetType: 'dataCell', target: cell, cancel: false, event: new KeyboardEvent ('keydown') });
+        });
     });
 
     describe('Group By navigation ', () => {
@@ -1319,6 +1350,61 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(row.focused).toBe(true);
             expect(cell.selected).toBe(true);
         });
+
+        it('Custom KB navigation:  should be able to scroll to a random row and pass a cb', async () => {
+            fix.componentInstance.width = '600px';
+            fix.componentInstance.height = '500px';
+            grid.columnWidth = '200px';
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            fix.detectChanges();
+
+            grid.navigateTo(9, -1, (args) => { args.target.nativeElement.focus(); });
+            await wait(100);
+            fix.detectChanges();
+
+            const target = grid.rowList.find(r => r.index === 9);
+            expect(target).toBeDefined();
+            expect(target.focused).toBe(true);
+        });
+
+        it('Custom KB navigation: onGridKeydown should be emitted for ', async () => {
+            fix.componentInstance.width = '600px';
+            fix.componentInstance.height = '500px';
+            grid.columnWidth = '200px';
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc,
+                ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            fix.detectChanges();
+            const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
+
+            const rowEl = grid.rowList.find(r => r.index === 0);
+            rowEl.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: false }));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(gridKeydown).toHaveBeenCalledTimes(1);
+            expect(gridKeydown).toHaveBeenCalledWith({
+                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent ('keydown') });
+
+            rowEl.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: false }));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(gridKeydown).toHaveBeenCalledTimes(2);
+            expect(gridKeydown).toHaveBeenCalledWith({
+                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent ('keydown') });
+        });
+
     });
 
 });

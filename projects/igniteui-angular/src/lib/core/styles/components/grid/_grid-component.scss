@@ -481,6 +481,10 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        @include e(drag-indicator) {
+            @extend %igx-grid__drag-indicator--cosy !optional;
+        }
+
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
         }
@@ -576,6 +580,10 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
+
+        @include e(drag-indicator) {
+            @extend %igx-grid__drag-indicator--compact !optional;
+        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
