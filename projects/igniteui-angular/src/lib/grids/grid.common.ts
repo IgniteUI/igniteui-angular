@@ -78,16 +78,26 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                 fromEvent(this.element.nativeElement, 'mousedown').pipe(
                     debounceTime(DEBOUNCE_TIME),
                     takeUntil(this.destroy$)
-                ).subscribe((event) => {
+                ).subscribe((event: MouseEvent) => {
 
                     if (this._dblClick) {
                         this._dblClick = false;
                         return;
                     }
 
-                    this._onResizeAreaMouseDown(event);
-                    this.column.grid.resizeLine.resizer.onMousedown(event);
+                    if (event.button === 0) {
+                        this._onResizeAreaMouseDown(event);
+                        this.column.grid.resizeLine.resizer.onMousedown(event);
+                    }
                 });
+            });
+
+            fromEvent(this.element.nativeElement, 'mouseup').pipe(
+                debounceTime(DEBOUNCE_TIME),
+                takeUntil(this.destroy$)
+            ).subscribe(() => {
+                this.colResizingService.showResizer = false;
+                this.column.grid.cdr.detectChanges();
             });
         }
     }
@@ -114,13 +124,12 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
      * @hidden
      */
     private _onResizeAreaMouseDown(event) {
-        if (event.button === 0) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-            this.colResizingService.showResizer = true;
-            this.column.grid.cdr.detectChanges();
-        }
+        this.colResizingService.column = this.column;
+        this.colResizingService.isColumnResizing = true;
+        this.colResizingService.startResizePos = event.clientX;
+
+        this.colResizingService.showResizer = true;
+        this.column.grid.cdr.detectChanges();
     }
 }
 
@@ -334,8 +343,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private subscription$: Subscription;
     private _column: IgxColumnComponent;
     private _ghostImageClass = 'igx-grid__drag-ghost-image';
-    private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
-    private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+    private dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
     constructor(
         _element: ElementRef,
@@ -389,7 +398,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         event.preventDefault();
         super.onPointerMove(event);
 
-        if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
+        if (this._dragStarted && this.dragGhost && !this.column.grid.draggedColumn) {
             this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
         }
@@ -432,10 +441,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             pageY = event.touches[0].pageY;
         }
 
-        this._dragGhost.style.height = null;
-        this._dragGhost.style.minWidth = null;
-        this._dragGhost.style.flexBasis = null;
-        this._dragGhost.style.position = null;
+        this.dragGhost.style.height = null;
+        this.dragGhost.style.minWidth = null;
+        this.dragGhost.style.flexBasis = null;
+        this.dragGhost.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -448,20 +457,20 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         const hostElemTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
 
         if (!this.column.columnGroup) {
-            this.renderer.addClass(icon, this._dragGhostImgIconClass);
+            this.renderer.addClass(icon, this.dragGhostImgIconClass);
 
-            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
+            this.dragGhost.insertBefore(icon, this.dragGhost.firstElementChild);
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         } else {
-            this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
+            this.dragGhost.insertBefore(icon, this.dragGhost.childNodes[0]);
 
-            this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
-            this._dragGhost.children[0].style.paddingLeft = '0px';
+            this.renderer.addClass(icon, this.dragGhostImgIconGroupClass);
+            this.dragGhost.children[0].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         }
     }
 
@@ -652,7 +661,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
-
 @Directive({
     selector: '[igxGridBody]',
     providers: [IgxForOfSyncService]

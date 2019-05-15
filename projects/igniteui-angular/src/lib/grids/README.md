@@ -207,6 +207,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`exportCsvText`| string | Returns the textual content for the CSV export button.|
 |`locale`| string | Determines the locale of the grid. Default value is `en`. |
 | `isLoading` | bool | Sets if the grid is waiting for data - default value false. |
+| `rowDraggable` | bool | Sets if the grid rows can be dragged |
 
 ### Outputs
 
@@ -242,6 +243,8 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
 |`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
 |`onToolbarExporting`| Emitted when an export process is initiated by the user.|
+| `onRowDragStart` | Emitted when the user starts dragging a row. |
+| `onRowDragEnd` | Emitted when the user drops a row or cancel the drag. |
 
 
 Defining handlers for these event emitters is done using declarative event binding:
