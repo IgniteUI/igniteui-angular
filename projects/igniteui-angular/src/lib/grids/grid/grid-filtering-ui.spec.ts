@@ -3652,7 +3652,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
         expect(checkBoxes.length).toBe(0);
     }));
-  
+
     it('should keep newly added filter expression in view', fakeAsync(() => {
         // Open excel style custom filter dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
