@@ -222,7 +222,6 @@ export class DataUtil {
      * @param childDataKey Data key of child collections
      * @param primaryKey Primary key of the collection, if any
      * @param deleteRows Should delete rows with DELETE transaction type from data
-     * @param id Id for transactions to merge
      * @returns Provided data collections updated with all provided transactions
      */
     public static mergeHierarchicalTransactions(
@@ -230,16 +229,37 @@ export class DataUtil {
         transactions: HierarchicalTransaction[],
         childDataKey: any,
         primaryKey?: any,
-        id?: any,
         deleteRows: boolean = false): any[] {
-        if (id) {
-            const transaction = transactions.find(t => t.id === id);
-            if (transaction) {
-                this.mergeHierarchicalTransaction(data, transaction, childDataKey, primaryKey, deleteRows);
-            }
-        } else {
-            for (const transaction of transactions) {
-                this.mergeHierarchicalTransaction(data, transaction, childDataKey, primaryKey, deleteRows);
+        for (const transaction of transactions) {
+            if (transaction.path) {
+                const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
+                let collection: any[] = parent ? parent[childDataKey] : data;
+                switch (transaction.type) {
+                    case TransactionType.ADD:
+                        //  if there is no parent this is ADD row at root level
+                        if (parent && !parent[childDataKey]) {
+                            parent[childDataKey] = collection = [];
+                        }
+                        collection.push(transaction.newValue);
+                        break;
+                    case TransactionType.UPDATE:
+                        const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
+                        if (updateIndex !== -1) {
+                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                        }
+                        break;
+                    case TransactionType.DELETE:
+                        if (deleteRows) {
+                            const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
+                            if (deleteIndex !== -1) {
+                                collection.splice(deleteIndex, 1);
+                            }
+                        }
+                        break;
+                }
+            } else {
+                //  if there is no path this is ADD row in root. Push the newValue to data
+                data.push(transaction.newValue);
             }
         }
         return data;
@@ -260,36 +280,6 @@ export class DataUtil {
         childDataKey: any,
         primaryKey?: any,
         deleteRows: boolean = false) {
-        if (transaction.path) {
-            const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
-            let collection: any[] = parent ? parent[childDataKey] : data;
-            switch (transaction.type) {
-                case TransactionType.ADD:
-                    //  if there is no parent this is ADD row at root level
-                    if (parent && !parent[childDataKey]) {
-                        parent[childDataKey] = collection = [];
-                    }
-                    collection.push(transaction.newValue);
-                    break;
-                case TransactionType.UPDATE:
-                    const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
-                    if (updateIndex !== -1) {
-                        collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
-                    }
-                    break;
-                case TransactionType.DELETE:
-                    if (deleteRows) {
-                        const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
-                        if (deleteIndex !== -1) {
-                            collection.splice(deleteIndex, 1);
-                        }
-                    }
-                    break;
-            }
-        } else {
-            //  if there is no path this is ADD row in root. Push the newValue to data
-            data.push(transaction.newValue);
-        }
     }
 
     private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {

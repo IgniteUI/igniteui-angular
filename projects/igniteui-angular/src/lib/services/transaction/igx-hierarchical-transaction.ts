@@ -60,7 +60,11 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
      */
     public commit(data: any[], primaryKey?: any, childDataKey?: any, id?: any): void {
         if (childDataKey) {
-            DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, id, true);
+            let transactions = this.getAggregatedChanges(true);
+            if (id) {
+                transactions = transactions.filter(t => t.id === id);
+            }
+            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKey, true);
         } else {
             super.commit(data, id);
         }
