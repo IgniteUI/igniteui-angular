@@ -63,10 +63,10 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, groupsRecords: any[] = []): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, grid: any = null, groupsRecords: any[] = []): IGroupByResult {
         const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
-        return grouping.groupBy(data, state.expressions, groupsRecords);
+        return grouping.groupBy(data, state.expressions, grid, groupsRecords);
     }
     public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
         if (state.expressions.length === 0) {
@@ -87,7 +87,9 @@ export class DataUtil {
             // break off if the parent is already added
             while (pointer && added[0] !== pointer) {
                 chain.push(pointer);
-                added.shift();
+                if (added[0] && added[0].level === pointer.level) {
+                    added.shift();
+                }
                 pointer = pointer.groupParent;
             }
             for (j = chain.length - 1; j >= 0; j--) {

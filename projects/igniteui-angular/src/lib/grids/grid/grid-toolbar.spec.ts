@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, async, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -428,6 +428,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
         expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
         fixture.detectChanges();
@@ -436,6 +437,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
         expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
         fixture.detectChanges();
@@ -444,6 +446,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
         expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
     }));
 
     it('display density is properly applied through the grid.', fakeAsync(() => {
@@ -454,6 +457,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
         fixture.detectChanges();
@@ -461,6 +465,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
         fixture.detectChanges();
@@ -468,12 +473,14 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
 
         grid.displayDensity = DisplayDensity.comfortable;
         fixture.detectChanges();
         tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
     }));
 
     it('test \'filterColumnsPrompt\' property.', () => {
@@ -598,6 +605,30 @@ function getExportButton(fixture) {
 function getExportOptions(fixture) {
     const div = getOverlay(fixture);
     return (div) ? div.querySelectorAll('li') : null;
+}
+
+function verifyButtonsDisplayDensity(parentDebugEl: DebugElement, expectedDisplayDensity: DisplayDensity) {
+    const flatButtons = parentDebugEl.queryAll(By.css('.igx-button--flat'));
+    const raisedButtons = parentDebugEl.queryAll(By.css('.igx-button--raised'));
+    const fabButtons = parentDebugEl.queryAll(By.css('.igx-button--fab'));
+    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons)).concat(Array.from(fabButtons));
+
+    let expectedDensityClass;
+    switch (expectedDisplayDensity) {
+        case DisplayDensity.compact: expectedDensityClass = 'igx-button--compact'; break;
+        case DisplayDensity.cosy: expectedDensityClass = 'igx-button--cosy'; break;
+        default: expectedDensityClass = ''; break;
+    }
+
+    buttons.forEach((button: DebugElement) => {
+        if (expectedDisplayDensity === DisplayDensity.comfortable) {
+            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
+            expect(button.nativeElement.classList.contains('igx-button--compact')).toBe(false, 'incorrect button density');
+            expect(button.nativeElement.classList.contains('igx-button--cosy')).toBe(false, 'incorrect button density');
+        } else {
+            expect(button.nativeElement.classList.contains(expectedDensityClass)).toBe(true, 'incorrect button density');
+        }
+    });
 }
 
 @Component({
