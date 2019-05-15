@@ -2821,7 +2821,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         UIInteractions.clearOverlay();
     });
 
-    it('Should sorts the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
+    it('Should sort the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
 
         grid.columns[2].sortable = true;
         fix.detectChanges();
@@ -2947,7 +2947,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     it('Should hide column when click on button.', fakeAsync(() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[2].children[0].nativeElement;
-
         const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
         filterIcon.click();
         fix.detectChanges();
@@ -2955,9 +2954,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
         const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
 
+        spyOn(grid.onColumnVisibilityChanged, 'emit');
         hideComponent.click();
         fix.detectChanges();
 
+        expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
         expect(grid.columns[2].hidden).toBeTruthy();
     }));
 
