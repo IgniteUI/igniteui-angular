@@ -506,7 +506,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected get selectionNode(): ISelectionNode {
         return {
             row: this.rowIndex,
-            column: this.column.parent && this.column.parent.columnLayout ? this.column.parent.index : this.visibleColumnIndex };
+            column: this.column.parent && this.column.parent.columnLayout ? this.column.parent.visibleIndex : this.visibleColumnIndex };
     }
 
     protected isInCompositionMode = false;

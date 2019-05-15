@@ -12,11 +12,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public grid: IgxGridBaseComponent;
 
     public navigateUp(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
-        this.focusCellUpFromLayout(cell);
+        if (cell) {
+            this.focusCellUpFromLayout(cell);
+        } else {
+            super.navigateUp(rowElement, currentRowIndex, visibleColumnIndex);
+        }
     }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
-        this.focusCellDownFromLayout(cell);
+        if (cell) {
+            this.focusCellDownFromLayout(cell);
+        } else {
+            super.navigateDown(rowElement, currentRowIndex, visibleColumnIndex);
+        }
+
     }
 
     public isColumnFullyVisible(visibleColumnIndex: number) {
@@ -137,6 +146,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                         prevRow = this.grid.getRowByIndex(prevIndex);
                         if (prevRow && prevRow.cells) {
                             this._focusCell(prevRow.cells.toArray()[columnIndex].nativeElement);
+                        } else if (prevRow) {
+                            prevRow.nativeElement.focus({ preventScroll: true });
                         }
                     });
                 this.grid.verticalScrollContainer.scrollTo(prevIndex);
@@ -144,6 +155,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 prevRow = this.grid.getRowByIndex(prevIndex);
                 if (prevRow && prevRow.cells) {
                     this._focusCell(prevRow.cells.toArray()[columnIndex].nativeElement);
+                } else if (prevRow) {
+                    prevRow.nativeElement.focus({ preventScroll: true });
                 }
             }
             return;
@@ -189,6 +202,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                         nextRow = this.grid.getRowByIndex(nextIndex);
                         if (nextRow && nextRow.cells) {
                             this._focusCell(nextRow.cells.toArray()[columnIndex].nativeElement);
+                        } else if (nextRow) {
+                            nextRow.nativeElement.focus({ preventScroll: true });
                         }
                     });
                 this.grid.verticalScrollContainer.scrollTo(nextIndex);
@@ -196,6 +211,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 nextRow = this.grid.getRowByIndex(nextIndex);
                 if (nextRow && nextRow.cells) {
                     this._focusCell(nextRow.cells.toArray()[columnIndex].nativeElement);
+                } else if (nextRow) {
+                    nextRow.nativeElement.focus({ preventScroll: true });
                 }
             }
             return;
