@@ -24,7 +24,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection, IgxChipComponent } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../grid-base.component';
 
@@ -1060,7 +1060,37 @@ describe('IgxGrid - Summaries', () => {
             expect(cell.focused).toBe(true);
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(false);
+        });
 
+        it('should navigate with tab to filter row if the grid is empty', async () => {
+            grid.allowFiltering = true;
+            await wait();
+            fix.detectChanges();
+
+            grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
+
+            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const stringCellChip = initialChips[1].nativeElement;
+
+            stringCellChip.click();
+            await wait();
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 0, 0);
+
+            await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
+            await wait();
+
+            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+            const allButtons = filterUIRow.queryAll(By.css('button'));
+            const closeButton = allButtons[allButtons.length - 1];
+            expect(document.activeElement).toEqual(closeButton.nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterUIRow.nativeElement, true);
+            await wait();
+            fix.detectChanges();
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
         });
     });
 
