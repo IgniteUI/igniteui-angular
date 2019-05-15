@@ -3,7 +3,7 @@ import { Transaction, TransactionType, HierarchicalTransaction } from './transac
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
-describe('IgxTransaction', () => {
+fdescribe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
             const trans = new IgxTransactionService();
@@ -878,7 +878,69 @@ describe('IgxTransaction', () => {
         });
 
         it('Should update data for provided id', () => {
-            fail('update hierarchical transaction commit method to accept and optional id');
+            const data = SampleTestData.employeeTreeData();
+
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const addTransaction: HierarchicalTransaction = {
+                id: 999,
+                type: TransactionType.ADD,
+                newValue: {
+                    ID: 999,
+                    Name: 'Root Add Transaction',
+                    HireDate: new Date(2018, 3, 20),
+                    Age: 45,
+                    OnPTO: false,
+                    Employees: []
+                },
+                path: null
+            };
+            transaction.add(addTransaction);
+
+            const updateTransaction: HierarchicalTransaction = {
+                id: 475,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Age: 60
+                },
+                path: [data[0].ID]
+            };
+            transaction.add(updateTransaction, data[0].Employees[0]);
+
+            const deleteTransaction: HierarchicalTransaction = {
+                id: 711,
+                type: TransactionType.DELETE,
+                newValue: {},
+                path: [data[0].ID, data[0].Employees[2].ID]
+            };
+            transaction.add(deleteTransaction, data[0].Employees[2].Employees[0]);
+
+            updateTransaction.newValue = { Name: 'New Name'};
+            transaction.add(updateTransaction, data[0].Employees[0]);
+
+            expect(data.find(i => i.ID === 999)).toBeUndefined();
+            expect(data.length).toBe(4);
+            transaction.commit(data, 'ID', 'Employees', 999);
+            expect(data.find(i => i.ID === 999)).toBeDefined();
+            expect(data.find(i => i.ID === 999).Name).toBe('Root Add Transaction');
+            expect(data.length).toBe(5);
+            expect(transaction.canUndo).toBeTruthy();
+            expect(transaction.getAggregatedChanges(false).length).toBe(2);
+
+            expect(data[0].Employees[0].Age).toBe(43);
+            expect(data[0].Employees[0].Name).toBe('Michael Langdon');
+            transaction.commit(data, 'ID', 'Employees', 475);
+            expect(data[0].Employees[0].Age).toBe(60);
+            expect(data[0].Employees[0].Name).toBe('New Name');
+            expect(transaction.canUndo).toBeTruthy();
+            expect(transaction.getAggregatedChanges(false).length).toBe(1);
+
+            expect(data[0].Employees[2].Employees.length).toBe(2);
+            transaction.commit(data, 'ID', 'Employees', 711);
+            expect(data[0].Employees[2].Employees.length).toBe(1);
+            expect(transaction.canUndo).toBeFalsy();
+            expect(transaction.getAggregatedChanges(false).length).toBe(0);
         });
     });
 });
