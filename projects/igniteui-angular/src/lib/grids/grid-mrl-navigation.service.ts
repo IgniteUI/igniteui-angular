@@ -337,19 +337,21 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
 
-        if (!this.isColumnFullyVisible(nextElementColumn.index)) {
+        if (!this.isColumnFullyVisible(nextElementColumn.parent.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
-                allBlocks[allBlocks.length - 1].children[indexInLayout].focus({ preventScroll: true });
+                const cell = allBlocks[allBlocks.length - 1].children[indexInLayout];
+                this._focusCell(cell);
             });
             this.horizontalScroll(rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
             return;
         } else {
             const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
-            allBlocks[allBlocks.length - 1].children[indexInLayout].focus({ preventScroll: true });
+            const cell =  allBlocks[allBlocks.length - 1].children[indexInLayout];
+            this._focusCell(cell);
         }
     }
 
@@ -368,19 +370,21 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
 
-        if (!this.isColumnLeftFullyVisible(nextElementColumn.index)) {
+        if (!this.isColumnLeftFullyVisible(nextElementColumn.parent.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
-                allBlocks[0].children[indexInLayout].focus({ preventScroll: true });
+                const cell = allBlocks[0].children[indexInLayout];
+                this._focusCell(cell);
             });
             this.horizontalScroll(rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
             return;
         } else {
             const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
-            allBlocks[0].children[indexInLayout].focus({ preventScroll: true });
+            const cell =  allBlocks[0].children[indexInLayout];
+            this._focusCell(cell);
         }
     }
 

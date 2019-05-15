@@ -1746,6 +1746,70 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
 
     });
+
+    it(`should navigate to the last cell from the layout by pressing Ctrl + ArrowLeft/ArrowRight key
+     in grid with horizontal virtualization`, async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        grid.columnWidth = '300px';
+        grid.width = '400px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        let firstCell = grid.getCellByColumn(0, 'ID');
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // ctrl+arrow right
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check correct cell is focused and is fully in view
+        const lastCell =  grid.getCellByColumn(0, 'Address');
+        expect(lastCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(800);
+        let diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        expect(diff).toBe(0);
+
+        // ctrl+arrow left
+        lastCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // first cell should be focused and is fully in view
+        firstCell = grid.getCellByColumn(0, 'ID');
+        expect(firstCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+    });
 });
 
 @Component({
