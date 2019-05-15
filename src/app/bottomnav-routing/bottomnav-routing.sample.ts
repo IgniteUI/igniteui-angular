@@ -16,9 +16,6 @@ templateUrl: 'bottomnav-routing.sample.html'
 })
 export class BottomNavRoutingSampleComponent implements AfterViewInit {
 
-@ViewChildren('tabbarEl')
-tabbar: QueryList<ElementRef>;
-
 @ViewChild(IgxBottomNavComponent)
 bottomNavComp: IgxBottomNavComponent;
 
@@ -77,31 +74,6 @@ contacts = [{
 
     constructor(private router: Router, private renderer: Renderer2) { }
 
-    route(event) {
-        if (event.panel.index === 2) {
-            this.router.navigate(['/bottom-navigation/tabbar', { outlets: { tabPanelOutlet: ['tabbarInnerPath'] } }]);
-        }
-    }
-
     ngAfterViewInit() {
-        this.tabbar.map((e) => {
-            menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
-            this.renderer.setStyle(menubar, 'position', 'absolute');
-        });
-    }
-
-    public sel1() {
-        const theTabs = this.bottomNavComp.tabsAsContentChildren.toArray();
-        theTabs[0].select();
-    }
-
-    public sel2() {
-        const theTabs = this.bottomNavComp.tabsAsContentChildren.toArray();
-        theTabs[1].select();
-    }
-
-    public sel3() {
-        const theTabs = this.bottomNavComp.tabsAsContentChildren.toArray();
-        theTabs[2].select();
     }
 }
