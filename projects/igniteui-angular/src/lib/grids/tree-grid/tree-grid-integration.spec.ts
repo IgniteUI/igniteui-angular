@@ -877,7 +877,7 @@ describe('IgxTreeGrid - Integration ', () => {
             expect(treeGrid.getRowByKey(13).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
         }));
 
-        it('Add a child node to a previously added parent node - Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
+        fit('Add a child node to a previously added parent node - Hierarchical DS', fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
@@ -897,7 +897,7 @@ describe('IgxTreeGrid - Integration ', () => {
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).toEqual(-1);
             expect(treeGrid.transactions.getAggregatedChanges(true).length).toEqual(2);
             // 4. Commit
-            treeGrid.transactions.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
+            treeGrid.transactions.commit(treeGrid.data);
             // 5. verify the rows are committed, the styles are OK
             expect(treeGrid.data.findIndex(e => e.ID === rowData.parent.ID)).not.toEqual(-1);
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).not.toEqual(-1);
