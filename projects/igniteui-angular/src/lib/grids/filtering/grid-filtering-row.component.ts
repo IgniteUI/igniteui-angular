@@ -627,8 +627,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private showHideArrowButtons() {
-        if (this.filteringService.isFilterRowVisible) {
-            requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            if (this.filteringService.isFilterRowVisible) {
                 const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
                 this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
@@ -636,8 +636,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 this.cdr.detectChanges();
-            });
-        }
+            }
+        });
     }
 
     private transformValue(value): any {
