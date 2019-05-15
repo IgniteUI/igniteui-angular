@@ -265,23 +265,6 @@ export class DataUtil {
         return data;
     }
 
-    /**
-     * Merges all changes from provided transaction into provided hierarchical data collection
-     * @param data Collection to merge
-     * @param transactions Transactions to merge into data
-     * @param childDataKey Data key of child collections
-     * @param primaryKey Primary key of the collection, if any
-     * @param deleteRows Should delete rows with DELETE transaction type from data
-     * @returns Provided data collections updated with all provided transactions
-     */
-    private static mergeHierarchicalTransaction(
-        data: any[],
-        transaction: HierarchicalTransaction,
-        childDataKey: any,
-        primaryKey?: any,
-        deleteRows: boolean = false) {
-    }
-
     private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
         let collection: any[] = data;
         let result: any;
