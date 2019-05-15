@@ -484,6 +484,13 @@ export class GridFunctions {
         applyButton.click();
     }
 
+    public static clickAddFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+        const addFilterButton = customFilterMenu.querySelector('.igx-excel-filter__add-filter');
+        addFilterButton.click();
+    }
+
     public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>) {
         const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
         const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
@@ -552,5 +559,15 @@ export class GridFunctions {
         operator.click();
         tick();
         fix.detectChanges();
+    }
+
+    public static sortNativeElementsVertically(arr) {
+        return arr.sort((a, b) =>
+            (<HTMLElement>a).getBoundingClientRect().top - (<HTMLElement>b).getBoundingClientRect().top);
+    }
+
+    public static sortNativeElementsHorizontally(arr) {
+        return arr.sort((a, b) =>
+            (<HTMLElement>a).getBoundingClientRect().left - (<HTMLElement>b).getBoundingClientRect().left);
     }
 }
