@@ -10,7 +10,6 @@ import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
-import { IgxListComponent } from '../../../list';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 
 /**
