@@ -38,9 +38,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChild('searchList', { read: IgxListComponent })
-    protected searchList: IgxListComponent;
-
     @ViewChild(IgxForOfDirective)
     protected virtDir: IgxForOfDirective<any>;
 
