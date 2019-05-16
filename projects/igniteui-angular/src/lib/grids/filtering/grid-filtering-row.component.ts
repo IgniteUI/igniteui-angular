@@ -95,6 +95,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
+            this.showHideArrowButtons();
         } else {
             this.expression.searchVal = this.transformValue(val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
@@ -274,10 +275,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         if (isEdge() || this.isKeyPressed) {
             this.value = eventArgs.target.value;
-
-            if (!this.value) {
-                this.showHideArrowButtons();
-            }
         }
     }
 
