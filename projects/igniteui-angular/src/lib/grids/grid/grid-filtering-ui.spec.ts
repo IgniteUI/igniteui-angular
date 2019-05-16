@@ -3629,6 +3629,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
 
+    it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
+        grid.columns[4].formatter = (val: Date) => {
+            return new Intl.DateTimeFormat('bg-BG').format(val);
+        };
+        grid.cdr.detectChanges();
+
+        // Open excel style filtering component
+        try {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            fix.detectChanges();
+        } catch (ex) { expect(ex).toBeNull(); }
+    }));
+
     it('should keep newly added filter expression in view', fakeAsync(() => {
         // Open excel style custom filter dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
