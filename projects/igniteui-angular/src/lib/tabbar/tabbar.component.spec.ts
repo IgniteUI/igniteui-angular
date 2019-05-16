@@ -1,20 +1,33 @@
 import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBottomNavComponent,
          IgxBottomNavModule,
          IgxTabComponent,
          IgxTabPanelComponent,
          IgxTabTemplateDirective } from './tabbar.component';
-
+import { RouterTestingModule } from '@angular/router/testing';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { RoutingViewComponentsModule,
+    RoutingView1Component,
+    RoutingView2Component,
+    RoutingView3Component } from './routing-view-components';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 describe('TabBar', () => {
     configureTestSuite();
     beforeEach(async(() => {
+
+        const testRoutes = [
+            { path: 'view1', component: RoutingView1Component },
+            { path: 'view2', component: RoutingView2Component },
+            { path: 'view3', component: RoutingView3Component }
+        ];
+
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],
-            imports: [IgxBottomNavModule]
+            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent],
+            imports: [IgxBottomNavModule, RoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
             .compileComponents();
     }));
@@ -148,6 +161,65 @@ describe('TabBar', () => {
 
         tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
     });
+
+    it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
+        const router = TestBed.get(Router);
+        const location = TestBed.get(Location);
+        const fixture = TestBed.createComponent(TabBarRoutingTestComponent);
+        const bottomNav = fixture.componentInstance.bottomNavComp;
+        fixture.detectChanges();
+
+        fixture.ngZone.run(() => { router.initialNavigation(); });
+        tick();
+        expect(location.path()).toBe('/');
+
+        const theTabs = bottomNav.contentTabs.toArray();
+
+        fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+        tick();
+        expect(location.path()).toBe('/view3');
+
+        fixture.ngZone.run(() => { theTabs[1].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+        tick();
+        expect(location.path()).toBe('/view2');
+
+        fixture.ngZone.run(() => { theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+        tick();
+        expect(location.path()).toBe('/view1');
+    }));
+
+    it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
+        const router = TestBed.get(Router);
+        const location = TestBed.get(Location);
+        const fixture = TestBed.createComponent(TabBarRoutingTestComponent);
+        const bottomNav = fixture.componentInstance.bottomNavComp;
+        fixture.detectChanges();
+
+        fixture.ngZone.run(() => { router.initialNavigation(); });
+        tick();
+        expect(location.path()).toBe('/');
+
+        fixture.ngZone.run(() => { router.navigate(['/view3']); });
+        tick();
+        expect(location.path()).toBe('/view3');
+        fixture.detectChanges();
+        expect(bottomNav.selectedIndex).toBe(2);
+        expect(bottomNav.contentTabs.toArray()[2].isSelected).toBe(true);
+
+        fixture.ngZone.run(() => { router.navigate(['/view2']); });
+        tick();
+        expect(location.path()).toBe('/view2');
+        fixture.detectChanges();
+        expect(bottomNav.selectedIndex).toBe(1);
+        expect(bottomNav.contentTabs.toArray()[1].isSelected).toBe(true);
+
+        fixture.ngZone.run(() => { router.navigate(['/view1']); });
+        tick();
+        expect(location.path()).toBe('/view1');
+        fixture.detectChanges();
+        expect(bottomNav.selectedIndex).toBe(0);
+        expect(bottomNav.contentTabs.toArray()[0].isSelected).toBe(true);
+    }));
 });
 
 @Component({
@@ -254,4 +326,26 @@ class BottomTabBarTestComponent {
 class TemplatedTabBarTestComponent {
     @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
     @ViewChild('wrapperDiv') public wrapperDiv: any;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+            <igx-bottom-nav>
+                <igx-tab label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                </igx-tab>
+                <igx-tab label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
+                </igx-tab>
+                <igx-tab label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
+                </igx-tab>
+            </igx-bottom-nav>
+        </div>
+    `
+})
+class TabBarRoutingTestComponent {
+    @ViewChild(IgxBottomNavComponent)
+    public bottomNavComp: IgxBottomNavComponent;
 }
