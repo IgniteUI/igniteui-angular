@@ -1216,7 +1216,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 export class EmptyVirtualComponent {
     public data = [];
 
-    @VViewChild('container', /* TODO: add static flag */ {})public container;
+    @ViewChild('container', { static: true })public container;
 }
 
 /** Only vertically virtualized component */
@@ -1251,9 +1251,9 @@ export class VerticalVirtualComponent {
     ];
     public data = [];
 
-    @VViewChild('container', /* TODO: add static flag */ {})public container;
+    @ViewChild('container', { static: true })public container;
 
-    @VViewChild('scrollContainer', /* TODO: add static flag */ { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public scrollTop(newScrollTop) {
@@ -1294,7 +1294,7 @@ export class HorizontalVirtualComponent implements OnInit {
     public data = [];
     public scrollContainer = { _viewContainer: null };
 
-    @VViewChild('container', /* TODO: add static flag */ { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
@@ -1342,10 +1342,10 @@ export class VirtualComponent {
     public cols = [];
     public data = [];
 
-    @VViewChild('container', /* TODO: add static flag */ { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
-    @VViewChild('scrollContainer', /* TODO: add static flag */ { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
@@ -1407,9 +1407,10 @@ export class VirtualVariableSizeComponent {
     public height = '0px';
     public data = [];
 
-    @VViewChild('container', /* TODO: add static flag */ {})public container;
+    @ViewChild('container', { static: true })
+    public container;
 
-    @VViewChild('scrollContainer', /* TODO: add static flag */ { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public generateData(count) {
@@ -1492,10 +1493,10 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     public height = '500px';
     public data;
 
-    @VViewChild('scrollContainer', /* TODO: add static flag */ { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
-    @VViewChild('container', /* TODO: add static flag */ { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     constructor(private localService: LocalService) { }

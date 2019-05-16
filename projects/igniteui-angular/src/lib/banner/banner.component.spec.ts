@@ -516,7 +516,7 @@ describe('igxBanner', () => {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
 export class IgxBannerEmptyComponent {
-    @ViewChild(IgxBannerComponent, /* TODO: add static flag */ { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -534,7 +534,7 @@ export class IgxBannerEmptyComponent {
     `
 })
 export class IgxBannerOneButtonComponent {
-    @ViewChild(IgxBannerComponent, /* TODO: add static flag */ { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -554,7 +554,7 @@ export class IgxBannerOneButtonComponent {
     `
 })
 export class IgxBannerSampleComponent {
-    @ViewChild(IgxBannerComponent, /* TODO: add static flag */ { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -586,7 +586,7 @@ export class IgxBannerSampleComponent {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
 export class IgxBannerCustomTemplateComponent {
-    @ViewChild(IgxBannerComponent, /* TODO: add static flag */ { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -599,7 +599,7 @@ export class IgxBannerCustomTemplateComponent {
 })
 export class SimpleBannerEventsComponent {
     public cancelFlag = false;
-    @ViewChild(IgxBannerComponent, /* TODO: add static flag */ { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 
     public handleOpening(event: any) {

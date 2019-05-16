@@ -852,10 +852,10 @@ describe('IgxAutocomplete', () => {
     </igx-drop-down>`
 })
 class AutocompleteComponent {
-    @ViewChild(IgxAutocompleteDirective, /* TODO: add static flag */ {}) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent, /* TODO: add static flag */ {}) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent, /* TODO: add static flag */ {}) public dropDown: IgxDropDownComponent;
+    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
     townSelected;
     public towns;
     settings: AutocompleteOverlaySettings = null;

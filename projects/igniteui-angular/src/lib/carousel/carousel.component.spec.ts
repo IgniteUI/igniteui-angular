@@ -304,7 +304,7 @@ describe('Carousel', () => {
 })
 class CarouselTestComponent {
 
-    @ViewChild('carousel', /* TODO: add static flag */ {}) public carousel: IgxCarouselComponent;
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
 
     public loop = true;
     public pause = true;

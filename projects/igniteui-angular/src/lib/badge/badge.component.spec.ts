@@ -96,20 +96,20 @@ describe('Badge', () => {
 
 @Component({ template: `<igx-badge type="error" value="22"></igx-badge>` })
 class InitBadgeComponent {
-    @ViewChild(IgxBadgeComponent, /* TODO: add static flag */ {}) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge></igx-badge>` })
 class InitBadgeWithDefaultsComponent {
-    @ViewChild(IgxBadgeComponent, /* TODO: add static flag */ {}) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person" type="info"></igx-badge>` })
 class InitBadgeWithIconComponent {
-    @ViewChild(IgxBadgeComponent, /* TODO: add static flag */ {}) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
 @Component({ template: `<igx-badge icon="person"></igx-badge>` })
 class InitBadgeWithIconARIAComponent {
-    @ViewChild(IgxBadgeComponent, /* TODO: add static flag */ {}) public badge: IgxBadgeComponent;
+    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
