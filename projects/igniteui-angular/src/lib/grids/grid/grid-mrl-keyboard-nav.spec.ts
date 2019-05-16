@@ -1810,6 +1810,89 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
     });
+
+    it('when navigating from pinned to unpinned area cell should be fully scrolled in view.', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        grid.columnWidth = '300px';
+        grid.width = '500px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        // pin col
+        grid.getColumnByName('ID').pinned = true;
+        fix.detectChanges();
+
+        // scroll right
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 800;
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // focus first pinned cell
+        const firstCell = grid.getCellByColumn(0, 'ID');
+
+        firstCell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // arrow right
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // check if first unpinned cell is focused and is in view
+        let firstUnpinnedCell = grid.getCellByColumn(0, 'ContactName');
+        expect(firstUnpinnedCell.focused).toBe(true);
+        let diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
+         grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+
+        // arrow left
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstUnpinnedCell.nativeElement, true);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(firstCell.focused).toBe(true);
+
+        // scroll right
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 800;
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        firstCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        firstUnpinnedCell = grid.getCellByColumn(0, 'ContactName');
+        expect(firstUnpinnedCell.focused).toBe(true);
+        diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
+         grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+    });
 });
 
 @Component({

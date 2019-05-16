@@ -68,7 +68,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
                     this._focusCell(nextCell.nativeElement);
                 });
-                this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
+                const hScroll = this.horizontalScroll(cell.rowIndex);
+                const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
+                hScroll.scrollTo(scrIndex);
             } else {
                 this._focusCell(nextCell.nativeElement);
             }
@@ -95,7 +97,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
                     this._focusCell(nextCell.nativeElement);
                 });
-                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
+                const hScroll = this.horizontalScroll(cell.rowIndex);
+                const scrIndex = hScroll.igxForOf.indexOf(prevElementColumn.parent);
+                hScroll.scrollTo(scrIndex);
             } else {
                 this._focusCell(nextCell.nativeElement);
             }
@@ -206,7 +210,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                             nextRow.nativeElement.focus({ preventScroll: true });
                         }
                     });
-                this.grid.verticalScrollContainer.scrollTo(nextIndex);
+                    this.grid.verticalScrollContainer.scrollTo(nextIndex);
             } else {
                 nextRow = this.grid.getRowByIndex(nextIndex);
                 if (nextRow && nextRow.cells) {
@@ -260,7 +264,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     nextElement = element.nextElementSibling.children[columnIndex];
                     this._focusCell(nextElement);
                 });
-                this.horizontalScroll(cell.rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
+                const hScroll = this.horizontalScroll(cell.rowIndex);
+                const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
+                hScroll.scrollTo(scrIndex);
                 return;
             } else {
                 nextElement = element.nextElementSibling.children[columnIndex];
@@ -309,7 +315,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     prevElement = element.previousElementSibling.children[columnIndex];
                     this._focusCell(prevElement);
                 });
-                this.horizontalScroll(cell.rowIndex).scrollTo(prevElementColumn.parent.visibleIndex);
+                const hScroll = this.horizontalScroll(cell.rowIndex);
+                const scrIndex = hScroll.igxForOf.indexOf(prevElementColumn.parent);
+                hScroll.scrollTo(scrIndex);
                 return;
             } else {
                 prevElement = !element.previousElementSibling && this.grid.pinnedColumns.length ?
@@ -346,7 +354,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 const cell = allBlocks[allBlocks.length - 1].children[indexInLayout];
                 this._focusCell(cell);
             });
-            this.horizontalScroll(rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
+            const hScroll = this.horizontalScroll(rowIndex);
+            const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
+            hScroll.scrollTo(scrIndex);
             return;
         } else {
             const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
@@ -379,7 +389,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 const cell = allBlocks[0].children[indexInLayout];
                 this._focusCell(cell);
             });
-            this.horizontalScroll(rowIndex).scrollTo(nextElementColumn.parent.visibleIndex);
+            const hScroll = this.horizontalScroll(rowIndex);
+            const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
+            hScroll.scrollTo(scrIndex);
             return;
         } else {
             const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
@@ -396,8 +408,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const gridBoundingClientRect = this.grid.tbody.nativeElement.getBoundingClientRect();
         const diffTop = cellElem.getBoundingClientRect().top - gridBoundingClientRect.top;
         const diffBottom = cellElem.getBoundingClientRect().bottom - gridBoundingClientRect.bottom;
-        const diffLeft = cellElem.getBoundingClientRect().left - gridBoundingClientRect.left;
-        const diffRight = cellElem.getBoundingClientRect().right - gridBoundingClientRect.right;
+        const vIndex = parseInt(cellElem.getAttribute('data-visibleIndex'), 10);
+        const isPinned = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === vIndex).pinned;
+        const diffLeft = !isPinned ? cellElem.getBoundingClientRect().left - this.grid.pinnedWidth - gridBoundingClientRect.left : 0;
+        const diffRight = !isPinned ? cellElem.getBoundingClientRect().right - gridBoundingClientRect.right : 0;
         const horizontalVirt =  this.grid.headerContainer;
         const horizontalScroll = horizontalVirt.getHorizontalScroll();
         if (diffTop < 0) {
