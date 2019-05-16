@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.3.1
+- `IgxGrid` Custom keyboard navigation
+    - `onFocusChange` event is deprecated.
+    - `onGridKeydown` event is exposed which is emitted when `keydown` is triggered over element inside grid's body
+    - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
+    - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
+    - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+
 ## 7.3.0
 
 ### Features
