@@ -1008,7 +1008,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    private _vIndex = NaN;
+    protected _vIndex = NaN;
     /**
      *@hidden
      */
@@ -1835,7 +1835,22 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
-        return this.grid.columnList.filter(c => c.columnLayout && !c.hidden).indexOf(this);
+        if (!isNaN(this._vIndex)) {
+            return this._vIndex;
+        }
+
+        const unpinnedColumns = this.grid.unpinnedColumns.filter(c => c.columnLayout && !c.hidden);
+        const pinnedColumns = this.grid.pinnedColumns.filter(c => c.columnLayout && !c.hidden);
+        let vIndex = -1;
+
+        if (!this.pinned) {
+            const indexInCollection = unpinnedColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
+        } else {
+            vIndex = pinnedColumns.indexOf(this);
+        }
+        this._vIndex = vIndex;
+        return vIndex;
     }
 
     /*
