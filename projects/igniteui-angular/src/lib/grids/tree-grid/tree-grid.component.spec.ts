@@ -98,16 +98,16 @@ describe('IgxTreeGrid Component Tests', () => {
                 expect(grid.rowList.length).toEqual(11);
         }));
 
-        it('should display horizontal scroll bar when column width is set in %', async() => {
+        fit('should display horizontal scroll bar when column width is set in %', async () => {
             fix.detectChanges();
 
             grid.columns[0].width = '50%';
-            grid.cdr.detectChanges();
-            await wait(16);
+            grid.reflow();
+            await wait();
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
-            expect(horizontalScroll.style.width).toBe('785px');
-            expect(horizontalScroll.children[0].style.width).toBe('980px');
+            expect(horizontalScroll.style.width).toBe('783px');
+            expect(horizontalScroll.children[0].style.width).toBe('799px');
         });
     });
 
