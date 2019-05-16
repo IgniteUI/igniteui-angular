@@ -5,7 +5,7 @@
     </div>
     <div *ngIf="relatedPanel.label" ngClass="tab-label">{{relatedPanel.label}}</div>
 </ng-template>
-<ng-template #defaultTabTemplateNoPanel>
+<ng-template #defaultContentTabTemplate>
     <div *ngIf="icon" class="tab-icon">
         <igx-icon fontSet="material">{{icon}}</igx-icon>
         <igx-badge [value]="changesCount" [hidden]="changesCount === 0"></igx-badge>

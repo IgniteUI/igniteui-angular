@@ -82,7 +82,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      * @memberof IgxBottomNavComponent
      */
     @ContentChildren(forwardRef(() => IgxTabComponent))
-    public tabsAsContentChildren: QueryList<IgxTabComponent>;
+    public contentTabs: QueryList<IgxTabComponent>;
 
     /**
      * Gets the `IgxTabPanelComponent` elements in the tab bar component.
@@ -152,16 +152,15 @@ export class IgxBottomNavComponent implements AfterViewInit {
     /**
      *@hidden
      */
-    public get inTabsRoutingMode(): boolean {
-        return (this.tabsAsContentChildren && this.tabsAsContentChildren.toArray().length > 0);
+    public get hasContentTabs(): boolean {
+        return (this.contentTabs && this.contentTabs.toArray().length > 0);
     }
 
-    public get tabsAsContentChildClass(): string {
-        if (this.inTabsRoutingMode) {
+    public get contentTabsClass(): string {
+        if (this.hasContentTabs) {
             return 'igx-bottom-nav__menu igx-bottom-nav__menu--bottom';
-        } else {
-            return '';
         }
+        return '';
     }
 
     /**
@@ -207,8 +206,9 @@ export class IgxBottomNavComponent implements AfterViewInit {
      */
     @HostListener('onTabSelected', ['$event'])
     public _selectedPanelHandler(args) {
-        if (this.inTabsRoutingMode) {
-            this.tabsAsContentChildren.forEach((t) => {
+        if (this.hasContentTabs) {
+            this.selectedIndex = args.tab.index;
+            this.contentTabs.forEach((t) => {
                 if (t !== args.tab) {
                     this._deselectTab(t);
                 }
@@ -510,11 +510,7 @@ export class IgxTabComponent {
      */
     @Input()
     get disabled(): boolean {
-        if (this.relatedPanel) {
-            return this.relatedPanel.disabled;
-        } else {
-            return this._disabled;
-        }
+        return this.relatedPanel ? this.relatedPanel.disabled : this._disabled;
     }
     set disabled(newValue: boolean) {
         if (this.relatedPanel) {
@@ -537,30 +533,29 @@ export class IgxTabComponent {
     set isSelected(newValue: boolean) {
         if (this.relatedPanel) {
             this.relatedPanel.isSelected = newValue;
-        } else {
+        } else if (this._selected !== newValue) {
             this._selected = newValue;
+            if (this._selected) {
+                this._tabBar.onTabSelected.emit({ tab: this, panel: null });
+            }
         }
     }
     get isSelected(): boolean {
-        if (this.relatedPanel) {
-            return this.relatedPanel.isSelected;
-        } else {
-            return this._selected;
-        }
+        return this.relatedPanel ? this.relatedPanel.isSelected : this._selected;
     }
 
     @HostBinding('class.igx-bottom-nav__menu-item--selected')
-    public get provideCssClassSelected(): boolean {
+    public get cssClassSelected(): boolean {
         return this.isSelected;
     }
 
     @HostBinding('class.igx-bottom-nav__menu-item--disabled')
-    public get provideCssClassDisabled(): boolean {
+    public get cssClassDisabled(): boolean {
         return this.disabled;
     }
 
     @HostBinding('class.igx-bottom-nav__menu-item')
-    public get provideCssClass(): boolean {
+    public get cssClass(): boolean {
         return (!this.disabled && !this.isSelected);
     }
 
@@ -572,8 +567,8 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     public get index(): number {
-        if (this._tabBar && this._tabBar.inTabsRoutingMode) {
-            return this._tabBar.tabsAsContentChildren.toArray().indexOf(this);
+        if (this._tabBar && this._tabBar.hasContentTabs) {
+            return this._tabBar.contentTabs.toArray().indexOf(this);
         }
         if (this._tabBar && this._tabBar.tabs) {
             return this._tabBar.tabs.toArray().indexOf(this);
@@ -586,8 +581,8 @@ export class IgxTabComponent {
     protected defaultTabTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ViewChild('defaultTabTemplateNoPanel', { read: TemplateRef })
-    protected defaultTabTemplateNoPanel: TemplateRef<any>;
+    @ViewChild('defaultContentTabTemplate', { read: TemplateRef })
+    protected defaultContentTabTemplate: TemplateRef<any>;
 
     /**
      * Returns the `template` for this IgxTabComponent.
@@ -597,14 +592,13 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     public get template(): TemplateRef<any> {
-        // relatedPanel.customTabTemplate ? relatedPanel.customTabTemplate : defaultTabTemplate; context: { $implicit: relatedPanel }
-        if (this.relatedPanel && this.relatedPanel.customTabTemplate) {
-            return this.relatedPanel.customTabTemplate;
-        } else if (this.relatedPanel) {
+        if (this.relatedPanel) {
+            if (this.relatedPanel.customTabTemplate) {
+                return this.relatedPanel.customTabTemplate;
+            }
             return this.defaultTabTemplate;
-        } else {
-            return this.defaultTabTemplateNoPanel;
         }
+        return this.defaultContentTabTemplate;
     }
 
     /**
@@ -616,9 +610,8 @@ export class IgxTabComponent {
     public get context(): any {
         if (this.relatedPanel) {
             return { $implicit: this.relatedPanel };
-        } else {
-            return { $implicit: this };
         }
+        return { $implicit: this };
     }
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
@@ -635,9 +628,13 @@ export class IgxTabComponent {
         if (this.relatedPanel) {
             this.relatedPanel.select();
         } else {
-            this.isSelected = true;
+            this._selected = true;
             this._tabBar.onTabSelected.emit({ tab: this, panel: null });
         }
+    }
+
+    public elementRef(): ElementRef {
+        return this._element;
     }
 }
 

@@ -51,8 +51,8 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     protected defaultTabTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ViewChild('defaultTabTemplateNoPanel', { read: TemplateRef })
-    protected defaultTabTemplateNoPanel: TemplateRef<any>;
+    @ViewChild('defaultContentTabTemplate', { read: TemplateRef })
+    protected defaultContentTabTemplate: TemplateRef<any>;
 
     private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
@@ -235,13 +235,13 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      * @hidden
      */
     public get template(): TemplateRef<any> {
-        if (this.relatedGroup && this.relatedGroup.customTabTemplate) {
-            return this.relatedGroup.customTabTemplate;
-        } else if (this.relatedGroup) {
+        if (this.relatedGroup) {
+            if (this.relatedGroup.customTabTemplate) {
+                return this.relatedGroup.customTabTemplate;
+            }
             return this.defaultTabTemplate;
-        } else {
-            return this.defaultTabTemplateNoPanel;
         }
+        return this.defaultContentTabTemplate;
     }
 
     /**
@@ -250,8 +250,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     public get context(): any {
         if (this.relatedGroup) {
             return { $implicit: this.relatedGroup };
-        } else {
-            return { $implicit: this };
         }
+        return { $implicit: this };
     }
 }
