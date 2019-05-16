@@ -459,10 +459,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             });
         }
 
+        this.filteringService.isFilterRowVisible = false;
+
         this.filteringService.updateFilteringCell(this.column);
         this.filteringService.focusFilterCellChip(this.column, true);
 
-        this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
@@ -630,13 +631,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
-            const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
-            this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
+            if (this.filteringService.isFilterRowVisible) {
+                const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
+                this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
             this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
-            // TODO: revise the cdr.detectChanges() usage here
-            this.cdr.detectChanges();
+                // TODO: revise the cdr.detectChanges() usage here
+                this.cdr.detectChanges();
+            }
         });
     }
 
