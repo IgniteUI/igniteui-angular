@@ -25,7 +25,9 @@ import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand
+    IgxDateFilteringOperand,
+    InFilteringOperation,
+    InDateFilteringOperation
 } from '../../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -77,24 +79,6 @@ export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
-class InFilteringOperation implements IFilteringOperation {
-    name = 'in';
-    isUnary = false;
-    iconName = 'is_in';
-    logic = (target: any, searchVal: Set<any>) => {
-        return searchVal.has(target);
-    }
-}
-
-class InDateFilteringOperation extends InFilteringOperation {
-    logic = (target: any, searchVal: Set<any>) => {
-        if (target instanceof Date) {
-            return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
-        }
-        return searchVal.has(target);
-    }
-}
-
 /**
  * @hidden
  */
@@ -105,6 +89,7 @@ class InDateFilteringOperation extends InFilteringOperation {
     templateUrl: './grid.excel-style-filtering.component.html'
 })
 export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
+    private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
     private expressionsList = new Array<ExpressionUI>();
@@ -543,7 +528,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
 
         if (unselectedItem) {
-            if (selectedItems.length < 3) {
+            if (selectedItems.length <= IgxGridExcelStyleFilteringComponent.filterOptimizationThreshold) {
                 selectedItems.forEach(element => {
                     let condition = null;
                     if (element.value !== null && element.value !== undefined) {
