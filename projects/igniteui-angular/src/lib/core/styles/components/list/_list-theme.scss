@@ -115,20 +115,32 @@
 
     $list-item-padding: (
         comfortable: rem(8px) rem(16px),
-        cosy: rem(4px) rem(8px),
-        compact: rem(2px) rem(4px)
+        cosy: rem(4px) rem(10px),
+        compact: rem(2px) rem(8px)
     );
 
     $list-icon-padding: (
-        comfortable: 0 rem(32px) 0 0,
-        cosy: 0 rem(16px) 0 0,
-        compact: 0 rem(8px) 0 0
+        comfortable: rem(8px) rem(32px) rem(8px) 0,
+        cosy: rem(8px) rem(16px) rem(8px) 0,
+        compact: rem(8px) rem(8px) rem(8px) 0
+    );
+
+    $list-icon-padding-rtl: (
+        comfortable: rem(8px) 0 rem(8px) rem(32px) ,
+        cosy: rem(8px) 0 rem(8px) rem(16px),
+        compact: rem(8px) 0 rem(8px) rem(8px)
     );
 
     $list-thumbnail-padding: (
         comfortable: 0 rem(16px) 0 0,
         cosy: 0 rem(8px) 0 0,
         compact: 0 rem(4px) 0 0
+    );
+
+    $list-thumbnail-padding-rtl: (
+        comfortable: 0 0 0 rem(16px),
+        cosy: 0 0 0 rem(8px),
+        compact: 0 0 0 rem(4px)
     );
 
     %igx-list {
@@ -223,6 +235,7 @@
         align-items: center;
         justify-content: center;
         align-self: flex-start;
+        padding: 0;
 
         > %igx-icon-display {
             margin: map-get($list-icon-padding, 'comfortable');
@@ -235,19 +248,25 @@
                 margin: 0;
             }
         }
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-list__item-actions {
         display: flex;
         align-items: center;
         justify-content: center;
+        align-self: flex-start;
+        padding: rem(8px) 0;
 
         > * {
             margin-left: rem(8px);
+        }
 
-            &:first-of-type {
-                margin-left: 0;
-            }
+        &:empty {
+            display: none;
         }
     }
 
@@ -255,10 +274,42 @@
         display: flex;
         flex-direction: column;
         flex: 1 0 0%;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-list__item-lines + %igx-list__item-actions {
-        margin-left: rem(16px);
+        margin-left: rem(8px);
+    }
+
+    [dir='rtl'] {
+        %igx-list__item-thumbnail {
+            > %igx-icon-display {
+                margin: map-get($list-icon-padding-rtl, 'comfortable');
+            }
+
+            > %igx-avatar-display {
+                margin: map-get($list-thumbnail-padding-rtl, 'comfortable');
+
+                > %igx-icon-display {
+                    margin: 0;
+                }
+            }
+        }
+
+        %igx-list__item-actions {
+            > * {
+                margin-left: 0;
+                margin-right: rem(8px);
+            }
+        }
+
+        %igx-list__item-lines + %igx-list__item-actions {
+            margin-left: 0;
+            margin-right: rem(8px);
+        }
     }
 
     %igx-list-item-content--active {
