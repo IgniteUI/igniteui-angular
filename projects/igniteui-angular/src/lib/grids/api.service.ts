@@ -235,12 +235,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             return args;
         }
 
-        if (!args.newValue) {
-            return args;
-        }
-
         if (rowInEditMode) {
             grid.transactions.endPending(false);
+        }
+
+        if (!args.newValue) {
+            return args;
         }
 
         if (hasSummarized) {
@@ -312,6 +312,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     public filter_global(term, condition, ignoreCase) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
+        grid.endEdit(false);
         if (grid.paging) {
             grid.page = 0;
         }
@@ -336,6 +337,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         const grid = this.grid;
+        grid.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
         const index = filteringState.findIndex(fieldName);
 
@@ -345,7 +347,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             filteringState.filteringOperands = [];
         }
 
-        grid.filteredData = null;
         grid.filteringExpressionsTree = filteringState;
     }
 

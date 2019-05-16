@@ -1454,6 +1454,73 @@ export class SampleTestData {
         }
     ])
 
+    public static excelFilteringData = () => ([
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15),
+            Released: false,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 127,
+            ID: 2,
+            ProductName: 'NetAdvantage',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1),
+            Released: true,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: 'Ignite UI for Angular',
+            ReleaseDate: null,
+            Released: null,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: null,
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', -1),
+            Released: true,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: '',
+            ReleaseDate: undefined,
+            Released: false,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 702,
+            ID: 6,
+            ProductName: 'Some other item with Script',
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            Released: null,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
+            Released: true,
+            AnotherField: 'a'
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: null,
+            ReleaseDate: SampleTestData.today,
+            Released: undefined,
+            AnotherField: 'custom'
+        }
+    ])
+
 
     /**
      * Generates simple array of primitve values
