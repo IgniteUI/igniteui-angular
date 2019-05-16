@@ -1,51 +1,42 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point } from './../utilities';
-import { IPositionStrategy } from './IPositionStrategy';
-import { BaseFitPositionStrategy } from './base-fit-position-strategy';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings } from './../utilities';
+import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
 
 /**
  * Positions the element as in **Connected** positioning strategy and re-positions the element in
  * the view port (calculating a different start point) in case the element is partially getting out of view
  */
 export class AutoPositionStrategy extends BaseFitPositionStrategy {
-    protected fitHorizontal(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
-        const targetRect: ClientRect = this.calculateTargetRect(settings);
-        if (this.canFlipHorizontal(settings, targetRect, innerRect, outerRect)) {
-            this.flipHorizontal(settings);
-            this.positionElement(element, settings);
-        } else {
-            const horizontalPush = this.pushHorizontal(innerRect, outerRect);
-            element.style.transform += ` translateX(${horizontalPush}px)`;
+
+    /** @inheritdoc */
+    protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
+        const transformString: string[] = [];
+        if (!connectedFit.fitHorizontal) {
+            if (this.canFlipHorizontal(connectedFit)) {
+                this.flipHorizontal();
+            } else {
+                const horizontalPush = this.horizontalPush(connectedFit);
+                transformString.push(`translateX(${horizontalPush}px)`);
+            }
         }
+
+        if (!connectedFit.fitVertical) {
+            if (this.canFlipVertical(connectedFit)) {
+                this.flipVertical();
+            } else {
+                const verticalPush = this.verticalPush(connectedFit);
+                transformString.push(`translateY(${verticalPush}px)`);
+            }
+        }
+
+        element.style.transform = transformString.join(' ').trim();
     }
 
-    protected fitVertical(element: HTMLElement, settings: PositionSettings, innerRect: ClientRect, outerRect: ClientRect, minSize: Size) {
-        const targetRect: ClientRect = this.calculateTargetRect(settings);
-        if (this.canFlipVertical(settings, targetRect, innerRect, outerRect)) {
-            this.flipVertical(settings);
-            this.positionElement(element, settings);
-        } else {
-            const verticalPush = this.pushVertical(innerRect, outerRect);
-            element.style.transform += ` translateY(${verticalPush}px)`;
-        }
-    }
-
-    calculateTargetRect(settings: PositionSettings): ClientRect {
-        if (settings.target instanceof HTMLElement) {
-            return (settings.target as HTMLElement).getBoundingClientRect();
-        } else {
-            const targetPoint = settings.target as Point;
-            return {
-                bottom: targetPoint.y,
-                height: 0,
-                left: targetPoint.x,
-                right: targetPoint.x,
-                top: targetPoint.y,
-                width: 0
-            };
-        }
-    }
-
-    private canFlipHorizontal(settings: PositionSettings, targetRect: ClientRect, innerRect: ClientRect, outerRect: ClientRect): boolean {
+    /**
+     * Checks if element can be flipped without get off the viewport
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns true if element can be flipped and stain in viewport
+     */
+    private canFlipHorizontal(connectedFit: ConnectedFit): boolean {
         //  HorizontalAlignment can be Left = -1; Center = -0.5 or Right = 0.
         //  To virtually flip direction and start point (both are HorizontalAlignment) we can do this:
         //  flippedAlignment = (-1) * (HorizontalAlignment + 1)
@@ -53,64 +44,82 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         //  (-1) * (Left + 1) = 0 = Right
         //  (-1) * (Center + 1) = -0.5 = Center
         //  (-1) * (Right + 1) = -1 = Left
-        const flippedStartPoint = (-1) * (settings.horizontalStartPoint + 1);
-        const flippedDirection = (-1) * (settings.horizontalDirection + 1);
+        const flippedStartPoint = (-1) * (this.settings.horizontalStartPoint + 1);
+        const flippedDirection = (-1) * (this.settings.horizontalDirection + 1);
 
-        const leftBorder = targetRect.right + flippedStartPoint * targetRect.width + flippedDirection * innerRect.width;
-        const rightBorder = leftBorder + innerRect.width;
-        return outerRect.left < leftBorder && rightBorder < outerRect.right;
+        const leftBorder = this.calculateLeft(
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+        const rightBorder = leftBorder + connectedFit.contentElementRect.width;
+        return connectedFit.viewPortRect.left < leftBorder && rightBorder < connectedFit.viewPortRect.right;
     }
 
-    private canFlipVertical(settings: PositionSettings, targetRect: ClientRect, innerRect: ClientRect, outerRect: ClientRect): boolean {
-        const flippedStartPoint = (-1) * (settings.verticalStartPoint + 1);
-        const flippedDirection = (-1) * (settings.verticalDirection + 1);
+    /**
+     * Checks if element can be flipped without get off the viewport
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns true if element can be flipped and stain in viewport
+     */
+    private canFlipVertical(connectedFit: ConnectedFit): boolean {
+        const flippedStartPoint = (-1) * (this.settings.verticalStartPoint + 1);
+        const flippedDirection = (-1) * (this.settings.verticalDirection + 1);
 
-        const topBorder = targetRect.bottom + flippedStartPoint * targetRect.height + flippedDirection * innerRect.height;
-        const bottomBorder = topBorder + innerRect.height;
-        return outerRect.top < topBorder && bottomBorder < outerRect.bottom;
+        const topBorder = this.calculateTop(
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+        const bottomBorder = topBorder + connectedFit.contentElementRect.height;
+        return connectedFit.viewPortRect.top < topBorder && bottomBorder < connectedFit.viewPortRect.bottom;
     }
 
-    private flipHorizontal(settings: PositionSettings) {
-        switch (settings.horizontalDirection) {
+    /**
+     * Flips direction and start point of the position settings
+     */
+    private flipHorizontal() {
+        switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
-                settings.horizontalDirection = HorizontalAlignment.Right;
+                this.settings.horizontalDirection = HorizontalAlignment.Right;
                 break;
             case HorizontalAlignment.Right:
-                settings.horizontalDirection = HorizontalAlignment.Left;
+                this.settings.horizontalDirection = HorizontalAlignment.Left;
                 break;
         }
-        switch (settings.horizontalStartPoint) {
+        switch (this.settings.horizontalStartPoint) {
             case HorizontalAlignment.Left:
-                settings.horizontalStartPoint = HorizontalAlignment.Right;
+                this.settings.horizontalStartPoint = HorizontalAlignment.Right;
                 break;
             case HorizontalAlignment.Right:
-                settings.horizontalStartPoint = HorizontalAlignment.Left;
+                this.settings.horizontalStartPoint = HorizontalAlignment.Left;
                 break;
         }
     }
 
-    private flipVertical(settings: PositionSettings) {
-        switch (settings.verticalDirection) {
+    /**
+     * Flips direction and start point of the position settings
+     */
+    private flipVertical() {
+        switch (this.settings.verticalDirection) {
             case VerticalAlignment.Top:
-                settings.verticalDirection = VerticalAlignment.Bottom;
+                this.settings.verticalDirection = VerticalAlignment.Bottom;
                 break;
             case VerticalAlignment.Bottom:
-                settings.verticalDirection = VerticalAlignment.Top;
+                this.settings.verticalDirection = VerticalAlignment.Top;
                 break;
         }
-        switch (settings.verticalStartPoint) {
+        switch (this.settings.verticalStartPoint) {
             case VerticalAlignment.Top:
-                settings.verticalStartPoint = VerticalAlignment.Bottom;
+                this.settings.verticalStartPoint = VerticalAlignment.Bottom;
                 break;
             case VerticalAlignment.Bottom:
-                settings.verticalStartPoint = VerticalAlignment.Top;
+                this.settings.verticalStartPoint = VerticalAlignment.Top;
                 break;
         }
     }
 
-    private pushHorizontal(innerRect: ClientRect, outerRect: ClientRect): number {
-        const leftExtend = innerRect.left;
-        const rightExtend = innerRect.right - outerRect.right;
+    /**
+     * Calculates necessary horizontal push according to provided connectedFit
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns amount of necessary translation which will push the element into viewport
+     */
+    private horizontalPush(connectedFit: ConnectedFit): number {
+        const leftExtend = connectedFit.left;
+        const rightExtend = connectedFit.right - connectedFit.viewPortRect.right;
         //  if leftExtend < 0 overlay goes beyond left end of the screen. We should push it back with exactly
         //  as much as it is beyond the screen.
         //  if rightExtend > 0 overlay goes beyond right end of the screen. We should push it back with the
@@ -120,20 +129,25 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return Math.abs(leftExtend);
         } else if (rightExtend > 0) {
             return - Math.min(rightExtend, leftExtend);
+        } else {
+            return 0;
         }
     }
 
-    private pushVertical(innerRect: ClientRect, outerRect: ClientRect): number {
-        const topExtend = innerRect.top;
-        const bottomExtend = innerRect.bottom - outerRect.bottom;
+    /**
+     * Calculates necessary vertical push according to provided connectedFit
+     * @param connectedFit connectedFit object containing all necessary parameters
+     * @returns amount of necessary translation which will push the element into viewport
+     */
+    private verticalPush(connectedFit: ConnectedFit): number {
+        const topExtend = connectedFit.top;
+        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.bottom;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {
             return - Math.min(bottomExtend, topExtend);
+        } else {
+            return 0;
         }
-    }
-
-    private positionElement(element: HTMLElement, settings: PositionSettings) {
-        super.position(element, null);
     }
 }
