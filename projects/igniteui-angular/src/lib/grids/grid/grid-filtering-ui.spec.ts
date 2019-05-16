@@ -3670,6 +3670,37 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         fix.detectChanges();
     }));
+
+    it('should not display search scrollbar when not needed for the current display density', fakeAsync(() => {
+        // Verify scrollbar is visible for 'comfortable'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.cosy;
+        tick(200);
+        fix.detectChanges();
+
+        // Verify scrollbar is NOT visible for 'cosy'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.compact;
+        tick(200);
+        fix.detectChanges();
+
+        // Verify scrollbar is NOT visible for 'compact'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+    }));
 });
 
 const expectedResults = [];
@@ -3694,6 +3725,11 @@ function verifyFilterUIPosition(filterUIContainer, grid) {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
         filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
+}
+
+function isExcelSearchScrollBarVisible(fix) {
+    const searchScrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+    return searchScrollbar.offsetHeight < searchScrollbar.children[0].offsetHeight;
 }
 
 // Fill expected results for 'date' filtering conditions based on the current date
