@@ -55,7 +55,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public getTransactionLog(id?: any): T[] {
-        if (id) {
+        if (id !== undefined) {
             return this._transactions.filter(t => t.id === id);
         }
         return [...this._transactions];
@@ -136,7 +136,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public commit(data: any[], id?: any): void {
-        if (id) {
+        if (id !== undefined) {
             const state = this.getState(id);
             if (state) {
                 this.updateRecord(data, state);
@@ -153,7 +153,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public clear(id?: any): void {
-        if (id) {
+        if (id !== undefined) {
             this._transactions = this._transactions.filter(t => t.id !== id);
             this._states.delete(id);
             //  Undo stack is an array of actions. Each action is array of transaction like objects
