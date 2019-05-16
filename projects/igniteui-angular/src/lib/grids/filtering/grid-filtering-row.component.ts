@@ -276,6 +276,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
             this.value = eventArgs.target.value;
+
+            if (!this.value) {
+                this.showHideArrowButtons();
+            }
         }
     }
 
@@ -765,6 +769,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private get isColumnFiltered() {
-        return this.expressionsList.length > 0;
+        return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
     }
 }
