@@ -416,6 +416,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const diffRight = !isPinned ? cellElem.getBoundingClientRect().right - gridBoundingClientRect.right : 0;
         const horizontalVirt =  this.grid.headerContainer;
         const horizontalScroll = horizontalVirt.getHorizontalScroll();
+        let shouldFocus = false;
         if (diffTop < 0) {
             // cell is above grid top - not visible
             this.grid.nativeElement.focus({ preventScroll: true });
@@ -436,7 +437,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.grid.verticalScrollContainer.addScrollTop(diffBottom);
         }  else {
             // cell is visible
-            cellElem.focus({ preventScroll: true });
+            shouldFocus = true;
         }
 
         if (diffRight > 0) {
@@ -459,6 +460,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             horizontalScroll.scrollLeft += diffLeft;
         } else {
             // cell is visible
+            shouldFocus = true;
+        }
+
+        if (shouldFocus) {
             cellElem.focus({ preventScroll: true });
         }
     }
