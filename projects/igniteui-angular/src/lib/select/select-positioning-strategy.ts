@@ -55,7 +55,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
         contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop += (outBoundsAmount + this.itemTextToInputTextDiff) + this.defaultWindowToListOffset;
+        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.itemTextToInputTextDiff + this.defaultWindowToListOffset;
         this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
