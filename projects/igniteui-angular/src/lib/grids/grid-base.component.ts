@@ -4265,7 +4265,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.width, 10);
+                sum += parseInt(col.calcWidth, 10);
             }
         }
         sum += this.headerFixedWidth;

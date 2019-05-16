@@ -297,17 +297,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     public get calcWidth(): any {
-        const colWidth = this.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
-        } else if (!colWidth) {
-            // no width
-            return this.defaultWidth || this.grid.getPossibleColumnWidth();
-        } else {
-            return this.width;
-        }
+        return this.getCalcWidth();
     }
 
     /**
@@ -1468,6 +1462,22 @@ export class IgxColumnComponent implements AfterContentInit {
 
     /**
      * @hidden
+     */
+    public getCalcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+        } else if (!colWidth) {
+            // no width
+            return this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            return this.width;
+        }
+    }
+
+    /**
+     * @hidden
      * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
@@ -1800,6 +1810,20 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
 
     get columnLayout() {
         return true;
+    }
+
+    /**
+     * @hidden
+     */
+    public getCalcWidth(): any {
+        let borderWidth = 0;
+
+        if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
+            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement.children[0]);
+            borderWidth = parseInt(headerStyles.borderRightWidth, 10);
+        }
+
+        return super.getCalcWidth() + borderWidth;
     }
 
     /**
