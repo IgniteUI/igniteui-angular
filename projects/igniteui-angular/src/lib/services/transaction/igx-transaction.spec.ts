@@ -3,7 +3,7 @@ import { Transaction, TransactionType, HierarchicalTransaction } from './transac
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
-fdescribe('IgxTransaction', () => {
+describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
             const trans = new IgxTransactionService();
@@ -126,7 +126,10 @@ fdescribe('IgxTransaction', () => {
 
         it('Should get a transaction by transaction id', () => {
             const trans = new IgxTransactionService();
-            let transaction: Transaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
+            let transaction: Transaction = { id: '0', type: TransactionType.ADD, newValue: 0 };
+            trans.add(transaction);
+            expect(trans.getTransactionLog('0').pop()).toEqual(transaction);
+            transaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
             trans.add(transaction);
             expect(trans.getTransactionLog('1').pop()).toEqual(transaction);
             transaction = { id: '2', type: TransactionType.ADD, newValue: 2 };
@@ -167,10 +170,10 @@ fdescribe('IgxTransaction', () => {
             expect(trans).toBeDefined();
 
             // ADD
-            const addTransaction: Transaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
+            const addTransaction: Transaction = { id: 0, type: TransactionType.ADD, newValue: 1 };
             trans.add(addTransaction);
-            expect(trans.getAggregatedValue('1', true)).toEqual(1);
-            expect(trans.getTransactionLog('1').pop()).toEqual(addTransaction);
+            expect(trans.getAggregatedValue(0, true)).toEqual(1);
+            expect(trans.getTransactionLog(0).pop()).toEqual(addTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction]);
             expect(trans.getState(addTransaction.id)).toEqual({
                 value: addTransaction.newValue,
@@ -180,8 +183,8 @@ fdescribe('IgxTransaction', () => {
             expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
 
             trans.clear();
-            expect(trans.getState('1')).toBeUndefined();
-            expect(trans.getAggregatedValue('1', true)).toBeNull();
+            expect(trans.getState(0)).toBeUndefined();
+            expect(trans.getAggregatedValue(0, true)).toBeNull();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
             expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(2);
@@ -213,7 +216,7 @@ fdescribe('IgxTransaction', () => {
 
             // ADD -> DELETE
             trans.add(addTransaction);
-            const deleteTransaction: Transaction = { id: '1', type: TransactionType.DELETE, newValue: 1 };
+            const deleteTransaction: Transaction = { id: 0, type: TransactionType.DELETE, newValue: 1 };
             trans.add(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
@@ -263,7 +266,7 @@ fdescribe('IgxTransaction', () => {
 
             // ADD -> UPDATE
             trans.add(addTransaction);
-            const updateTransaction: Transaction = { id: '1', type: TransactionType.UPDATE, newValue: 2 };
+            const updateTransaction: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: 2 };
             trans.add(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction, updateTransaction]);
             expect(trans.getState(addTransaction.id)).toEqual({
@@ -552,7 +555,7 @@ fdescribe('IgxTransaction', () => {
             const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
-            const item0Update1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            const item0Update1: Transaction = { id: 0, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
             trans.add(item0Update1, originalData[1]);
 
             const item10Delete: Transaction = { id: 10, type: TransactionType.DELETE, newValue: null };
@@ -588,7 +591,7 @@ fdescribe('IgxTransaction', () => {
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
             expect(originalData.length).toBe(49);
 
-            trans.commit(originalData, 1);
+            trans.commit(originalData, 0);
             expect(originalData.find(i => i.ID === 1).Category).toBe('Some new value');
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
             expect(originalData.length).toBe(49);
@@ -884,7 +887,7 @@ fdescribe('IgxTransaction', () => {
             expect(transaction).toBeDefined();
 
             const addTransaction: HierarchicalTransaction = {
-                id: 999,
+                id: 0,
                 type: TransactionType.ADD,
                 newValue: {
                     ID: 999,
@@ -921,7 +924,7 @@ fdescribe('IgxTransaction', () => {
 
             expect(data.find(i => i.ID === 999)).toBeUndefined();
             expect(data.length).toBe(4);
-            transaction.commit(data, 'ID', 'Employees', 999);
+            transaction.commit(data, 'ID', 'Employees', 0);
             expect(data.find(i => i.ID === 999)).toBeDefined();
             expect(data.find(i => i.ID === 999).Name).toBe('Root Add Transaction');
             expect(data.length).toBe(5);
