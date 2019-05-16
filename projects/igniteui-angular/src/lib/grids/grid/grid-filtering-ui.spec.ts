@@ -3556,12 +3556,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
 
         grid.displayDensity = DisplayDensity.compact;
-        await wait(200);
+        await wait(100);
         fix.detectChanges();
 
         // Open excel style filtering component
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-        await wait(200);
+        await wait(16);
         fix.detectChanges();
 
         // Scroll the search list to the bottom.
@@ -3570,7 +3570,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
         const scrollbar = searchComponent.querySelector('igx-virtual-helper');
         scrollbar.scrollTop = 3000;
-        await wait(200);
+        await wait(100);
         fix.detectChanges();
 
         // Verify scrollbar's scrollTop.
@@ -3674,7 +3674,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     it('should not display search scrollbar when not needed for the current display density', (async() => {
         // Verify scrollbar is visible for 'comfortable'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-        await wait(100);
+        await wait(16);
         fix.detectChanges();
         expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
         GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -3686,7 +3686,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         // Verify scrollbar is NOT visible for 'cosy'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-        await wait(100);
+        await wait(16);
         fix.detectChanges();
         expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
         GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -3698,7 +3698,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         // Verify scrollbar is NOT visible for 'compact'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-        await wait(100);
+        await wait(16);
         fix.detectChanges();
         expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
         GridFunctions.clickApplyExcelStyleFiltering(fix);
