@@ -345,6 +345,8 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, endPoint, fixture);
             await pointerUp(dragIndicatorElement, endPoint, fixture);
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(0);
+            const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(0);
         }));
         it('multi-row layout integration.', (async () => {
         }));
