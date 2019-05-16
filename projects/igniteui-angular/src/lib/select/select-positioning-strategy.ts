@@ -48,14 +48,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
-        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff }px`;
+        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff}px`;
         this.deltaY = CURRENT_POSITION_Y -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top - this.itemTextToInputTextDiff;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
         contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.itemTextToInputTextDiff + this.defaultWindowToListOffset;
+        contentElement.firstElementChild.scrollTop += (outBoundsAmount + this.itemTextToInputTextDiff) + this.defaultWindowToListOffset;
         this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
@@ -197,7 +197,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                         if (currentScroll === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
-                        // (more than 5 items) and current scroll
+                            // (more than 5 items) and current scroll
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                             return;
