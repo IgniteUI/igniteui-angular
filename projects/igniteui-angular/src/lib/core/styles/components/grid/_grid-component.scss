@@ -116,6 +116,10 @@
         @extend %igx-grid__drag-indicator !optional;
     }
 
+    @include e(drag-indicator, $m: 'header') {
+        @extend %igx-grid__drag-indicator--header !optional;
+    }
+
     @include e(drag-indicator, $m: 'off') {
         @extend %igx-grid__drag-indicator--off !optional;
     }
@@ -393,6 +397,10 @@
         @extend %igx-grid__header-indentation !optional;
     }
 
+    @include e(header-indentation, $m: 'no-border') {
+        @extend %igx-grid__header-indentation--no-border !optional;
+    }
+
     @include e(group-expand-btn) {
         @extend %igx-grid__group-expand-btn !optional;
     }
@@ -456,6 +464,10 @@
 
     @include e(hierarchical-expander, $m: push) {
         @extend %igx-grid__hierarchical-expander--push !optional;
+    }
+
+    @include e(hierarchical-expander, $m: no-border) {
+        @extend %igx-grid__hierarchical-expander--no-border !optional;
     }
 
     @include e(hierarchical-indent, $m: scroll) {
