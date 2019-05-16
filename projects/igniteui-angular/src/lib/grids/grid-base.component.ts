@@ -3998,7 +3998,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
-        if (height === 0 || isNaN(gridHeight)) {
+        if (height === 0 || isNaN(gridHeight) || this.dataLength === 0) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
