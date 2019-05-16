@@ -95,7 +95,7 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
 
             verifySummaryForRow317(fix, 5);
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
         });
 
         it('should be able to change summaryPosition at runtime', () => {
@@ -110,9 +110,9 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
 
-            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([0, 1, 5]);
+            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([0, 1, 5, 9]);
 
             treeGrid.summaryPosition = 'bottom';
             fix.detectChanges();
@@ -142,8 +142,8 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
             await wait(50);
 
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
-            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7]);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
+            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, 12, 13]);
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             expect(summaryRow).toBeNull();
 
@@ -1595,7 +1595,7 @@ describe('IgxTreeGrid - Summaries', () => {
         fix.detectChanges();
         await wait(16);
 
-        expect(treeGrid.dataRowList.length).toEqual(9);
+        expect(treeGrid.dataRowList.length).toEqual(10);
     });
 
     function verifySummaryForRow147(fixture, visibleIndex) {
