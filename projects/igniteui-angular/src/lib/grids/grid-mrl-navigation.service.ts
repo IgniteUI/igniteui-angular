@@ -107,6 +107,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             }
         } else {
             // end of layout reached
+            if (this.isRowInEditMode(rowIndex)) {
+                this.grid.rowEditTabs.last.element.nativeElement.focus();
+                return;
+            }
             let lastVisibleIndex = 0;
             cell.grid.unpinnedColumns.forEach((col) => {
                 lastVisibleIndex = Math.max(lastVisibleIndex, col.visibleIndex);
