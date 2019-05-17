@@ -3108,10 +3108,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(grid.filteredData.length).toEqual(1);
 
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
-        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const checkbox: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
 
-        expect(checkbox[0].getAttribute('aria-checked')).toEqual('false');
-        expect(checkbox[1].getAttribute('aria-checked')).toEqual('false');
+        expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false]);
     }));
 
     it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
@@ -3135,11 +3134,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(grid.filteredData.length).toEqual(2);
 
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
-        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const checkbox: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
 
-        expect(checkbox[0].getAttribute('aria-checked')).toEqual('false');
-        expect(checkbox[1].getAttribute('aria-checked')).toEqual('false');
-        expect(checkbox[2].getAttribute('aria-checked')).toEqual('false');
+        expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false]);
     }));
 
     it('Should select values in list if two values with Or operator are entered and they are in the list below.', fakeAsync(() => {
@@ -3163,11 +3160,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(grid.filteredData.length).toEqual(2);
 
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
-        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const checkbox: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
 
-        expect(checkbox[0].getAttribute('aria-checked')).toEqual('true');
-        expect(checkbox[1].getAttribute('aria-checked')).toEqual('true');
-        expect(checkbox[2].getAttribute('aria-checked')).toEqual('true');
+        expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true]);
+        expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false]);
     }));
 
     it('Should change filter when changing And/Or operator.', fakeAsync(() => {
