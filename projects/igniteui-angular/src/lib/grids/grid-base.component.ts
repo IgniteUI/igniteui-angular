@@ -2641,8 +2641,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetColumnsVisibleIndexCache() {
-        this.columnList.forEach(column => column.resetVisibleIndex());
+    public resetColumnsCaches() {
+        this.columnList.forEach(column => column.resetCaches());
     }
 
     /**
@@ -2682,7 +2682,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public resetCaches() {
         this.resetForOfCache();
-        this.resetColumnsVisibleIndexCache();
+        this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
         this._columnGroups = this.columnList.some(col => col.columnGroup);
@@ -4154,13 +4154,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.cdr.detectChanges();
-        this.resetCaches();
-        this.calculateGridHeight();
 
         if (this.showRowCheckboxes) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
+
+        this.resetCaches();
+        this.cdr.detectChanges();
+        this.calculateGridHeight();
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
@@ -4708,7 +4709,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.calcWidth;
+        return col.field + col._calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
