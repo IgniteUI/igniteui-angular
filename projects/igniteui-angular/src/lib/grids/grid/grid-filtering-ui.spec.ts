@@ -30,7 +30,7 @@ import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 import { FilterMode } from '../tree-grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
@@ -2821,7 +2821,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         UIInteractions.clearOverlay();
     });
 
-    it('Should sorts the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
+    it('Should sort the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
 
         grid.columns[2].sortable = true;
         fix.detectChanges();
@@ -2947,7 +2947,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     it('Should hide column when click on button.', fakeAsync(() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[2].children[0].nativeElement;
-
         const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
         filterIcon.click();
         fix.detectChanges();
@@ -2955,9 +2954,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
         const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
 
+        spyOn(grid.onColumnVisibilityChanged, 'emit');
         hideComponent.click();
         fix.detectChanges();
 
+        expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
         expect(grid.columns[2].hidden).toBeTruthy();
     }));
 
@@ -3708,6 +3709,111 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
     }));
 
+    it('Should generate "equals" conditions when selecting two values.', fakeAsync(() => {
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[0].nativeElement;
+
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const applyButton = excelMenu.querySelector('.igx-button--raised');
+
+        checkbox[0].click(); // Select All
+        tick();
+        fix.detectChanges();
+
+        checkbox[2].click(); // Ignite UI for Angular
+        checkbox[3].click(); // Ignite UI for JavaScript
+        tick();
+        fix.detectChanges();
+
+        applyButton.click();
+        tick();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toBe(2);
+        const operands = grid.filteringExpressionsTree.filteringOperands[0].filteringOperands;
+        expect(operands.length).toBe(2);
+        verifyFilteringExpression(operands[0], 'ProductName', 'equals', 'Ignite UI for Angular');
+        verifyFilteringExpression(operands[1], 'ProductName', 'equals', 'Ignite UI for JavaScript');
+    }));
+
+    it('Should generate "in" condition when selecting more than two values.', fakeAsync(() => {
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[0].nativeElement;
+
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const applyButton = excelMenu.querySelector('.igx-button--raised');
+
+        checkbox[0].click(); // Select All
+        tick();
+        fix.detectChanges();
+
+        checkbox[2].click(); // Ignite UI for Angular
+        checkbox[3].click(); // Ignite UI for JavaScript
+        checkbox[4].click(); // NetAdvantage
+        tick();
+        fix.detectChanges();
+
+        applyButton.click();
+        tick();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toBe(3);
+        const operands = grid.filteringExpressionsTree.filteringOperands[0].filteringOperands;
+        expect(operands.length).toBe(1);
+        verifyFilteringExpression(operands[0], 'ProductName', 'in',
+            new Set(['Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']));
+    }));
+
+    it('Should generate "in" and "empty" conditions when selecting more than two values including (Blanks).', fakeAsync(() => {
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[0].nativeElement;
+
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+        const applyButton = excelMenu.querySelector('.igx-button--raised');
+
+        checkbox[0].click(); // Select All
+        tick();
+        fix.detectChanges();
+
+        checkbox[1].click(); // (Blanks)
+        checkbox[2].click(); // Ignite UI for Angular
+        checkbox[3].click(); // Ignite UI for JavaScript
+        tick();
+        fix.detectChanges();
+
+        applyButton.click();
+        tick();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toBe(6);
+        const operands = grid.filteringExpressionsTree.filteringOperands[0].filteringOperands;
+        expect(operands.length).toBe(2);
+        verifyFilteringExpression(operands[0], 'ProductName', 'in',
+            new Set(['Ignite UI for Angular', 'Ignite UI for JavaScript']));
+        verifyFilteringExpression(operands[1], 'ProductName', 'empty', null);
+    }));
+
     it('should not display search scrollbar when not needed for the current display density', (async() => {
         // Verify scrollbar is visible for 'comfortable'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
@@ -4155,4 +4261,10 @@ function getButtonDensityClass(displayDensity: DisplayDensity) {
         default: densityClass = ''; break;
     }
     return densityClass;
+}
+
+function verifyFilteringExpression(operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) {
+    expect(operand.fieldName).toBe(fieldName);
+    expect(operand.condition.name).toBe(conditionName);
+    expect(operand.searchVal).toEqual(searchVal);
 }
