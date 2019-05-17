@@ -126,9 +126,9 @@ export class IgxCardHeaderTitleDirective {
  * Use it to tag text nodes.
  */
 @Directive({
-    selector: '[igxCardHeaderSubTitle]'
+    selector: '[igxCardHeaderSubtitle]'
 })
-export class IgxCardHeaderSubTitleDirective {
+export class IgxCardHeaderSubtitleDirective {
     /**
      * @hidden
      */
@@ -351,7 +351,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         IgxCardActionsComponent,
         IgxCardFooterDirective,
         IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubTitleDirective,
+        IgxCardHeaderSubtitleDirective,
         IgxCardThumbnailDirective,
     ],
     exports: [
@@ -362,7 +362,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         IgxCardActionsComponent,
         IgxCardFooterDirective,
         IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubTitleDirective,
+        IgxCardHeaderSubtitleDirective,
         IgxCardThumbnailDirective,
     ],
     imports: [CommonModule, IgxButtonModule]

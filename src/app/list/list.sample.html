@@ -13,6 +13,49 @@
             <div class="list-sample">
                 <igx-card>
                     <igx-list [displayDensity]="density">
+                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            Lorem ipsum dolor sit amet.
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            Lorem ipsum dolor sit amet.
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item>
+                            Lorem ipsum dolor sit amet.
+                        </igx-list-item>
+                        <igx-divider></igx-divider>
+                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
+                    </igx-list>
+                </igx-card>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <div class="list-sample">
+                <igx-card>
+                    <igx-list [displayDensity]="density">
+                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
+                        <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
+                            <igx-list-item>
+                                <igx-icon igxListThumbnail>face</igx-icon>
+                                <p igxListLine igxListLineTitle>{{employee.position}}</p>
+                                <igx-checkbox igxListAction></igx-checkbox>
+                                <igx-icon igxListAction>info</igx-icon>
+                            </igx-list-item>
+                            <igx-divider *ngIf="!last"></igx-divider>
+                        </ng-template>
+                    </igx-list>
+                </igx-card>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <div class="list-sample">
+                <igx-card>
+                    <igx-list [displayDensity]="density">
                         <igx-list-item [isHeader]="true">Custom List template</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
@@ -123,32 +166,13 @@
             <div class="list-sample">
                 <igx-card>
                     <igx-list [displayDensity]="density">
-                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
-                        <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item>
-                                <igx-icon igxListThumbnail>face</igx-icon>
-                                <p igxListLine igxListLineTitle>{{employee.position}}</p>
-                                <igx-checkbox igxListAction></igx-checkbox>
-                                <igx-icon igxListAction>info</igx-icon>
-                            </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
-                        </ng-template>
-                    </igx-list>
-                </igx-card>
-            </div>
-        </article>
-
-        <article class="sample-column">
-            <div class="list-sample">
-                <igx-card>
-                    <igx-list [displayDensity]="density">
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
                                 <p igxListLine igxListLineSubTitle>{{employee.description}}</p>
-                                <igx-icon igxListAction>more_horiz</igx-icon>
+                                <igx-checkbox igxListAction></igx-checkbox>
                             </igx-list-item>
                         </ng-template>
                     </igx-list>
@@ -235,12 +259,14 @@
             </igx-input-group>
 
             <div class="list-sample list-sample--add">
-                <igx-list [displayDensity]="density" [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
-                    <igx-list-item *ngFor="let fruit of fruits" [attr.data-fruit-id]="fruit.id">
-                        <span igxListLine>{{ fruit.name }}</span>
-                        <igx-icon igxListAction class="delete-item" (click)="deleteFruit(fruit.id)">close</igx-icon>
-                    </igx-list-item>
-                </igx-list>
+                <igx-card>
+                    <igx-list [displayDensity]="density" [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
+                        <igx-list-item *ngFor="let fruit of fruits" [attr.data-fruit-id]="fruit.id">
+                            <span igxListLine>{{ fruit.name }}</span>
+                            <igx-icon igxListAction class="delete-item" (click)="deleteFruit(fruit.id)">close</igx-icon>
+                        </igx-list-item>
+                    </igx-list>
+                </igx-card>
                 <div class="igx-list__empty--custom" [hidden]="fruitsFilteredItemsCount > 0 || searchFruits.value === ''">
                     No filtered items.
                 </div>
@@ -252,14 +278,16 @@
         </article>
 
         <article class="sample-column">
-            <igx-list [displayDensity]="density" [isLoading]="true">
-                <igx-list-item *ngFor="let fruit of fruits">
-                    {{ fruit.name }}
-                </igx-list-item>
-                <ng-template igxDataLoading>
-                    <p>Loading...</p>
-                </ng-template>
-            </igx-list>
+            <igx-card>
+                <igx-list [displayDensity]="density" [isLoading]="true">
+                    <igx-list-item *ngFor="let fruit of fruits">
+                        {{ fruit.name }}
+                    </igx-list-item>
+                    <ng-template igxDataLoading>
+                        <div style="text-align: center">Loading...</div>
+                    </ng-template>
+                </igx-list>
+            </igx-card>
         </article>
 
         <article class="sample-column">
@@ -268,16 +296,18 @@
                 <i class="light">w/ Custom template</i>
             </h4>
             <div class="list-sample">
-                <igx-list [displayDensity]="density" #fruitList>
-                    <igx-list-item *ngFor="let fruit of fruits">
-                        {{ fruit.name }}
-                    </igx-list-item>
-                    <ng-template igxEmptyList>
-                        <div style="text-align: center">
-                            <button type="button" igxButton="flat" (click)="loadFruits()">Load data</button>
-                        </div>
-                    </ng-template>
-                </igx-list>
+                <igx-card>
+                    <igx-list [displayDensity]="density" #fruitList>
+                        <igx-list-item *ngFor="let fruit of fruits">
+                            {{ fruit.name }}
+                        </igx-list-item>
+                        <ng-template igxEmptyList>
+                            <div style="text-align: center">
+                                <button type="button" igxButton="flat" (click)="loadFruits()">Load data</button>
+                            </div>
+                        </ng-template>
+                    </igx-list>
+                </igx-card>
             </div>
         </article>
         
