@@ -171,7 +171,7 @@ describe('TabBar', () => {
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
         tick();
-        expect(location.path()).toBe('/');
+        expect(location.path()).toBe('/view1');
 
         const theTabs = bottomNav.contentTabs.toArray();
 
@@ -197,7 +197,7 @@ describe('TabBar', () => {
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
         tick();
-        expect(location.path()).toBe('/');
+        expect(location.path()).toBe('/view1');
 
         fixture.ngZone.run(() => { router.navigate(['/view3']); });
         tick();
