@@ -3540,7 +3540,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
     }));
 
-    it('should scroll items in search list correctly', fakeAsync(() => {
+    it('should scroll items in search list correctly', (async() => {
         // Add additional rows as prerequisite for the test
         for (let index = 0; index < 30; index++) {
             const newRow = {
@@ -3556,12 +3556,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
 
         grid.displayDensity = DisplayDensity.compact;
-        tick(200);
+        await wait(100);
         fix.detectChanges();
 
         // Open excel style filtering component
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-        tick(200);
+        await wait(16);
         fix.detectChanges();
 
         // Scroll the search list to the bottom.
@@ -3570,11 +3570,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
         const scrollbar = searchComponent.querySelector('igx-virtual-helper');
         scrollbar.scrollTop = 3000;
-        tick(200);
+        await wait(100);
         fix.detectChanges();
 
         // Verify scrollbar's scrollTop.
-        expect(scrollbar.scrollTop >= 955 && scrollbar.scrollTop <= 960).toBe(true,
+        expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 675).toBe(true,
             'search scrollbar has incorrect scrollTop');
         // Verify display container height.
         const displayContainer = searchComponent.querySelector('igx-display-container');
@@ -3653,6 +3653,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(checkBoxes.length).toBe(0);
     }));
 
+    it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
+        grid.columns[4].formatter = (val: Date) => {
+            return new Intl.DateTimeFormat('bg-BG').format(val);
+        };
+        grid.cdr.detectChanges();
+
+        // Open excel style filtering component
+        try {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            fix.detectChanges();
+        } catch (ex) { expect(ex).toBeNull(); }
+    }));
+
     it('should keep newly added filter expression in view', fakeAsync(() => {
         // Open excel style custom filter dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
@@ -3694,6 +3707,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         fix.detectChanges();
     }));
+
+    it('should not display search scrollbar when not needed for the current display density', (async() => {
+        // Verify scrollbar is visible for 'comfortable'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await wait(16);
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.cosy;
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify scrollbar is NOT visible for 'cosy'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await wait(16);
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+
+        grid.displayDensity = DisplayDensity.compact;
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify scrollbar is NOT visible for 'compact'.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await wait(16);
+        fix.detectChanges();
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        fix.detectChanges();
+    }));
 });
 
 const expectedResults = [];
@@ -3718,6 +3765,11 @@ function verifyFilterUIPosition(filterUIContainer, grid) {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
         filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
+}
+
+function isExcelSearchScrollBarVisible(fix) {
+    const searchScrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+    return searchScrollbar.offsetHeight < searchScrollbar.children[0].offsetHeight;
 }
 
 // Fill expected results for 'date' filtering conditions based on the current date

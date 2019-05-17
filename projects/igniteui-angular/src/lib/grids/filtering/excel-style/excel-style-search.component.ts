@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     ChangeDetectionStrategy,
     Input,
@@ -9,6 +10,7 @@ import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
+import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 
 /**
  * @hidden
@@ -19,7 +21,7 @@ import { DisplayDensity } from '../../../core/density';
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html'
 })
-export class IgxExcelStyleSearchComponent {
+export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     public searchValue: any;
 
@@ -35,7 +37,16 @@ export class IgxExcelStyleSearchComponent {
     @Input()
     public displayDensity: DisplayDensity;
 
+    @ViewChild(IgxForOfDirective)
+    protected virtDir: IgxForOfDirective<any>;
+
     constructor() {}
+
+    public ngAfterViewInit() {
+        requestAnimationFrame(() => {
+            this.virtDir.recalcUpdateSizes();
+        });
+    }
 
     get filterOptions() {
         const fo = new IgxFilterOptions();
