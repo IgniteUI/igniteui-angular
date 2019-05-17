@@ -274,7 +274,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isEdge() || this.isKeyPressed) {
+        if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
             this.value = eventArgs.target.value;
         }
     }
@@ -457,10 +457,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             });
         }
 
+        this.filteringService.isFilterRowVisible = false;
         this.filteringService.updateFilteringCell(this.column);
         this.filteringService.focusFilterCellChip(this.column, true);
 
-        this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
@@ -628,13 +628,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
-            const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
-            this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
+            if (this.filteringService.isFilterRowVisible) {
+                const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
+                this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
-            this.showArrows = this.chipsAreaWidth >= containerWidth;
+                this.showArrows = this.chipsAreaWidth >= containerWidth;
 
-            // TODO: revise the cdr.detectChanges() usage here
-            this.cdr.detectChanges();
+                // TODO: revise the cdr.detectChanges() usage here
+                this.cdr.detectChanges();
+            }
         });
     }
 
