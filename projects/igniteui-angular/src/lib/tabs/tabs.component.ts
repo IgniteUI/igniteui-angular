@@ -54,7 +54,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     * ```
     */
     @ContentChildren(forwardRef(() => IgxTabItemComponent))
-    public tabsAsContentChildren: QueryList<IgxTabItemComponent>;
+    public contentTabs: QueryList<IgxTabItemComponent>;
 
     /**
     * An @Input property that sets the value of the `selectedIndex`.
@@ -173,8 +173,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      *@hidden
      */
-    public get inTabsRoutingMode(): boolean {
-        return (this.tabsAsContentChildren && this.tabsAsContentChildren.toArray().length > 0);
+    public get hasContentTabs(): boolean {
+        return (this.contentTabs && this.contentTabs.toArray().length > 0);
     }
 
     /**
@@ -229,8 +229,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @HostListener('onTabItemSelected', ['$event'])
     public selectedGroupHandler(args) {
-        if (this.inTabsRoutingMode) {
-            this.tabsAsContentChildren.forEach((theTab) => {
+        if (this.hasContentTabs) {
+            this.contentTabs.forEach((theTab) => {
                 if (theTab.isSelected) {
                     theTab.isSelected = false;
                     this.onTabItemDeselected.emit({
@@ -297,7 +297,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     get tabItemsContainer1Class(): string {
-        if (this.inTabsRoutingMode) {
+        if (this.hasContentTabs) {
             return 'igx-tabs__header';
         }
         return 'igx-tabs__content-fixed';
@@ -307,7 +307,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     get tabItemsContainer2Class(): string {
-        if (this.inTabsRoutingMode) {
+        if (this.hasContentTabs) {
             return 'igx-tabs__header-wrapper-fixed igx-tabs__header-wrapper-fluid';
         }
         return 'igx-tabs__content-fluid';

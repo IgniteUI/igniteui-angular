@@ -191,11 +191,22 @@ export class IgxBottomNavComponent implements AfterViewInit {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                const selectablePanels = this.panels.filter((p) => !p.disabled);
-                const panel = selectablePanels[0];
+                if (this.hasContentTabs) {
+                    const selectableTabs = this.contentTabs.filter((p) => !p.disabled);
+                    if (selectableTabs[0]) {
+                        selectableTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
 
-                if (panel) {
-                    panel.select();
+                        // selectableTabs[0].
+                        // const theTabs = bottomNav.contentTabs.toArray();
+                        // fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+
+                    }
+                } else {
+                    const selectablePanels = this.panels.filter((p) => !p.disabled);
+                    const panel = selectablePanels[0];
+                    if (panel) {
+                        panel.select();
+                    }
                 }
             }
         }, 0);

@@ -167,9 +167,8 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     get disabled(): boolean {
         if (this.relatedGroup) {
             return this.relatedGroup.disabled;
-        } else {
-            return this._disabled;
         }
+        return this._disabled;
     }
     set disabled(newValue: boolean) {
         if (this.relatedGroup) {
@@ -189,9 +188,8 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     get isSelected(): boolean {
         if (this.relatedGroup) {
             return this.relatedGroup.isSelected;
-        } else {
-            return this._isSelected;
         }
+        return this._isSelected;
     }
     set isSelected(newValue: boolean) {
         if (this.relatedGroup) {
