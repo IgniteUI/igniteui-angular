@@ -50,6 +50,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
             this.row.grid.onRowDragStart.emit(args);
             if (args.cancel) {
+                this.dragGhost.parentNode.removeChild(this.dragGhost);
+                this.dragGhost = null;
+                this._dragStarted = false;
                 this._clicked = false;
                 return;
             }
