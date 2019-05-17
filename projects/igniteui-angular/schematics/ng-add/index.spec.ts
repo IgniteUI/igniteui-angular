@@ -18,7 +18,10 @@ describe('ng-add schematics', () => {
         architect: {
           serve: {},
           build: {
-            options: {}
+            options: {
+              main: 'src/main.ts',
+              scripts: []
+            }
           }
         }
       }
@@ -39,6 +42,7 @@ describe('ng-add schematics', () => {
     tree = new UnitTestTree(new EmptyTree());
     tree.create('/angular.json', JSON.stringify(ngJsonConfig));
     tree.create('/package.json', JSON.stringify(pkgJsonConfig));
+    tree.create('src/main.ts', '// test comment');
   });
 
   it('should create the needed files correctly', () => {
@@ -65,18 +69,31 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
-  it('should add hammer.js to the workspace', () => {
+  it('should add hammer.js to the main.ts file', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+    const mainTs = tree.read('src/main.ts').toString();
+    expect(mainTs).toContain('import \'hammerjs\';');
+  });
+
+  it('should not add hammer.js if it exists in angular.json', () => {
     const workspace = getWorkspace(tree) as any;
     const currentProjectName = workspace.defaultProject;
-    expect(
-      workspace.projects[currentProjectName].architect.test.options.scripts.filter(d => d.includes('hammerjs')).length
-    )
-      .toBeGreaterThan(0);
-    expect(
-      workspace.projects[currentProjectName].architect.build.options.scripts.filter(d => d.includes('hammerjs')).length
-    )
-      .toBeGreaterThan(0);
+    workspace.projects[currentProjectName].architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
+    tree.overwrite('angular.json', JSON.stringify(workspace));
+    runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+
+    const newContent = tree.read('src/main.ts').toString();
+    expect(newContent.split('import \'hammerjs\';\n// test comment').length).toEqual(1);
+  });
+
+  it('should not add hammer.js if it exists in main.ts', () => {
+    const mainTsPath = 'src/main.ts';
+    const content = tree.read(mainTsPath).toString();
+    tree.overwrite(mainTsPath, 'import \'hammerjs\';\n' + content);
+    runner.runSchematic('ng-add', { normalizeCss: false }, tree);
+
+    const newContent = tree.read(mainTsPath).toString();
+    expect(newContent.split('import \'hammerjs\';\n// test comment').length).toEqual(2);
   });
 
   it('should add hammer.js to package.json dependencies', () => {
