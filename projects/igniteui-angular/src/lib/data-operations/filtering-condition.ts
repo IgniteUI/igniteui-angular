@@ -569,6 +569,9 @@ export interface IDateParts {
     milliseconds: number;
 }
 
+/**
+ * @hidden
+ */
 export class InFilteringOperation implements IFilteringOperation {
     name = 'in';
     isUnary = false;
@@ -578,6 +581,9 @@ export class InFilteringOperation implements IFilteringOperation {
     }
 }
 
+/**
+ * @hidden
+ */
 export class InDateFilteringOperation extends InFilteringOperation {
     logic = (target: any, searchVal: Set<any>) => {
         if (target instanceof Date) {
