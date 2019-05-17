@@ -405,6 +405,38 @@ describe('IgxGrid - Grid Paging', () => {
         testPagingAPI(fix, grid, (pageIndex) => grid.page = pageIndex);
     }));
 
+    it('should hide paginator when there is no data or all records are filtered out.', fakeAsync(() => {
+        const fix = TestBed.createComponent(PagingComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        verifyGridPager(fix, 3, '1', '1 of 4', [true, true, false, false]);
+
+        // Filter out all records
+        grid.filter('ID', 1000, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+        tick();
+        fix.detectChanges();
+
+        const paginator = '.igx-paginator.igx-grid-paginator';
+        expect(gridElement.querySelector(paginator)).toBeNull();
+
+        grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+        tick();
+        fix.detectChanges();
+        expect(gridElement.querySelector(paginator)).not.toBeNull();
+
+        grid.data = null;
+        tick();
+        fix.detectChanges();
+        expect(gridElement.querySelector(paginator)).toBeNull();
+
+        grid.data = fix.componentInstance.data;
+        tick();
+        fix.detectChanges();
+        expect(gridElement.querySelector(paginator)).not.toBeNull();
+    }));
+
     function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
         const disabled = 'igx-button--disabled';
         const grid = fix.componentInstance.grid;
