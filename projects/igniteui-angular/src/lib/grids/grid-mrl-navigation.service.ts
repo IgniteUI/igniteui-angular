@@ -351,8 +351,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public onKeydownEnd(rowIndex, isSummary = false, cellRowStart?) {
-        const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).length;
-        const lastLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[layouts - 1];
+        const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).sort((a, b) => a.visibleIndex - b.visibleIndex);
+        const lastLayout = layouts[layouts.length - 1];
         const lastLayoutChildren = lastLayout.children;
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
         const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
