@@ -10,12 +10,12 @@ import {
     OnInit,
     OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'igx-thumb',
-    templateUrl: 'thumb-slider.component.html'
+    templateUrl: 'thumb-slider.component.html',
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
@@ -46,18 +46,33 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public step: number;
 
+    @Input()
+    public fromHandler: boolean;
+
     @Output()
     public onThumbValueChange = new EventEmitter<number>();
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
+    @HostBinding('class.igx-slider__thumb-from')
+    public get thumbFromClass() {
+        return this.fromHandler;
+    }
+
     @HostBinding('class.igx-slider__thumb-to')
-    public sliderThumbToClass = true;
+    public get thumbToClass() {
+        return !this.fromHandler;
+    }
+
+    @HostBinding('class.igx-slider__thumb-from--active')
+    public get thumbFromActiveClass() {
+        return this.fromHandler && this._isActiveLabel;
+    }
 
     @HostBinding('class.igx-slider__thumb-to--active')
     public get thumbToActiveClass() {
-        return this._isActiveLabel;
+        return !this.fromHandler && this._isActiveLabel;
     }
 
     public get nativeElement() {
@@ -92,6 +107,10 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent) {
+        if (this.disabled) {
+            return;
+        }
+
         let increment = 0;
         if (event.key.endsWith('Left')) {
             increment = this.step * - 1;
