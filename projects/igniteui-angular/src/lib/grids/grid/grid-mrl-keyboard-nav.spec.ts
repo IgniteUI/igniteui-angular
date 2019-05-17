@@ -2012,6 +2012,348 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
             expect(document.activeElement).toEqual(thirdCell.nativeElement);
         });
+
+        it('should navigate left from unpinned to pinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[0];
+            const secondBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   secondCell
+                                        ,
+                dummyCell  , dummyCell ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   dummyCell               ,
+                firstCell  , dummyCell  ,
+                dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
+
+        it('should navigate down to next row inside pinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[0];
+            const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[0];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   dummyCell               ,
+                firstCell  , dummyCell ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   secondCell               ,
+                dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].City);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
+
+        it('should navigate down to next row inside unpinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
+            const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[1];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   firstCell               ,
+                secondCell  , dummyCell ,
+                firstCell               ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   secondCell               ,
+                dummyCell  , dummyCell  ,
+                dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].CompanyName);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
+
+        it('should navigate up to next row inside pinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[0];
+            const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[0];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   dummyCell               ,
+                secondCell  , dummyCell ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   firstCell               ,
+                dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Region);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
+
+
+        it('should navigate up to next row inside unpinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '600px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
+            const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[1];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   dummyCell               ,
+                dummyCell  , dummyCell  ,
+                secondCell              ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   firstCell               ,
+                dummyCell  , dummyCell  ,
+                dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
+
+        it('should navigate up to next row inside unpinned area when pinning second block in template', async() => {
+            const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+            fix.componentInstance.colGroups = [
+                {
+                    group: 'group1',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px' },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 },
+                    ]
+                },
+                {
+                    group: 'group2',
+                    pinned: true,
+                    columns: [
+                        { field: 'Col1', rowStart: 1, colStart: 1 },
+                        { field: 'Col2', rowStart: 1, colStart: 2 },
+                        { field: 'Col3', rowStart: 1, colStart: 3 },
+                        { field: 'City', rowStart: 2, colStart: 1, colEnd: 4, width: '400px' },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 4 }
+                    ]
+                },
+                {
+                    group: 'group3',
+                    columns: [
+                        { field: 'Phone', rowStart: 1, colStart: 1, width: '200px' },
+                        { field: 'Fax', rowStart: 2, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 1 }
+                    ]
+                }
+            ];
+            fix.componentInstance.grid.width = '1000px';
+            fix.detectChanges();
+            const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
+            const secondBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[2];
+            let dummyCell;
+            let firstCell;
+            let secondCell;
+            [   dummyCell               ,
+                dummyCell  , firstCell  ,
+                dummyCell              ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+            [   dummyCell,
+                secondCell,
+                dummyCell   ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
+            expect(document.activeElement).toEqual(secondCell.nativeElement);
+        });
     });
 
     it('shift+tab navigation should go through edit row buttons when navigating in row edit mode. ', async () => {
