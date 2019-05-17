@@ -509,6 +509,24 @@ export class GridFunctions {
         element.nativeElement.dispatchEvent(new KeyboardEvent(eventName, { key: inputKey }));
     }
 
+    public static getExcelStyleFilteringComponent(fix) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        return excelMenu;
+    }
+
+    public static getExcelStyleSearchComponent(fix) {
+        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        return searchComponent;
+    }
+
+    public static getExcelStyleSearchComponentScrollbar(fix) {
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const scrollbar = searchComponent.querySelector('igx-virtual-helper');
+        return scrollbar;
+    }
+
     public static getColumnHeader(columnField: string, fix: ComponentFixture<any>) {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
             return header.componentInstance.column.field === columnField;
