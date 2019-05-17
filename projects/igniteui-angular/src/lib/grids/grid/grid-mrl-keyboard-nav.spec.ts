@@ -2076,6 +2076,66 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         targetCell = grid.getCellByColumn(0, 'ID');
         expect(targetCell.focused).toBe(true);
     });
+
+    it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+            {
+                group: 'group1',
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px', editable: true },
+                    { field: 'ContactName', rowStart: 2, colStart: 1, editable: false  },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true  },
+                    { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true  }
+                ]
+            },
+            {
+                group: 'group2',
+                columns: [
+                    { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true  },
+                    { field: 'Region', rowStart: 3, colStart: 1, editable: true  },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true  }
+                ]
+            },
+            {
+                group: 'group3',
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1, width: '200px', editable: true  },
+                    { field: 'Fax', rowStart: 2, colStart: 1, editable: true  },
+                    { field: 'ID', rowStart: 3, colStart: 1, editable: true  }
+                ]
+            }
+        ];
+        const grid = fix.componentInstance.grid;
+        grid.primaryKey = 'ID';
+        grid.rowEditable = true;
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(0, 'CompanyName');
+        cell.nativeElement.focus();
+        fix.detectChanges();
+        cell.onKeydownEnterEditMode();
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];
+        // tab through cols and check order is correct - ContactName should be skipped.
+        for (let i = 1; i < order.length; i++) {
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[i]);
+            expect(cell.editMode).toBe(true);
+        }
+
+        // shift+tab through  cols and check order is correct - ContactName should be skipped.
+        for (let j = order.length - 2; j >= 0; j--) {
+            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[j]);
+            expect(cell.editMode).toBe(true);
+        }
+    });
 });
 
 @Component({

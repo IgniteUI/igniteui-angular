@@ -57,6 +57,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
         this.focusPrevCellFromLayout(cell);
     }
+    public get gridOrderedColumns(): IgxColumnComponent[] {
+        return [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup)
+        .sort((a, b) => a.visibleIndex - b.visibleIndex);
+    }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
         const nextElementColumn = cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex + 1);
@@ -68,12 +72,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                    if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                        this.moveNextEditable(nextCell.nativeElement, rowIndex, visibleColumnIndex);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.moveNextEditable(nextCell.nativeElement, rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
@@ -97,12 +109,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                    if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                        this.movePreviousEditable(rowIndex, visibleColumnIndex);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(prevElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.movePreviousEditable(rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
