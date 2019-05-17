@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.2.9
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
+
 ## 7.2.8
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
