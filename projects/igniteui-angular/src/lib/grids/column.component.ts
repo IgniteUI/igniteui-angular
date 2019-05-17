@@ -29,7 +29,8 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
-    IgxFilteringOperand } from '../data-operations/filtering-condition';
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -291,23 +292,22 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set width(value: string) {
         if (value) {
+            this._calcWidth = null;
             this.widthSetByUser = true;
             this._width = value;
         }
     }
 
     public get calcWidth(): any {
-        const colWidth = this.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
-        } else if (!colWidth) {
-            // no width
-            return this.defaultWidth || this.grid.getPossibleColumnWidth();
-        } else {
-            return this.width;
+        if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
+            return this._calcWidth;
         }
+        this.cacheCalcWidth();
+        return this._calcWidth;
     }
+
+    private _calcWidth = null;
+    public calcPixelWidth: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -1023,8 +1023,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public resetVisibleIndex() {
+    public resetCaches() {
         this._vIndex = NaN;
+        this.cacheCalcWidth();
     }
 
     /**
@@ -1490,7 +1491,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.headerCell) {
             let headerCell;
             if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+                headerCell = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
                     .map((child) => getNodeSizeViaRange(range, child)));
             } else {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
@@ -1539,6 +1540,24 @@ export class IgxColumnComponent implements AfterContentInit {
         } else {
             return colWidth;
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected cacheCalcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            this._calcWidth = parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+        } else if (!colWidth) {
+            // no width
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            this._calcWidth = this.width;
+        }
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
     }
 }
 

@@ -78,7 +78,7 @@
                 [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
         </div>
     </ng-container>
-    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         <div class="igx-grid__mrl-block"
         [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),
      'grid-template-columns':col.getGridTemplate(false, false),
