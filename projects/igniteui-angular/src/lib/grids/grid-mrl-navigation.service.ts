@@ -68,12 +68,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                    if (this.isRowInEditMode(rowIndex) && !nextCell.editable) {
+                        this.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow, nextCell);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.isRowInEditMode(rowIndex) && !nextCell.editable) {
+                    this.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow, nextCell);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
@@ -97,12 +105,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                    if (this.isRowInEditMode(rowIndex) && !nextCell.editable) {
+                        this.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow, nextCell);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(prevElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.isRowInEditMode(rowIndex) && !nextCell.editable) {
+                    this.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow, nextCell);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
