@@ -841,6 +841,55 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
          }
      }));
 
+     it('Shift+Tab Navigation should scroll last cell fully in view.',  async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        setupGridScrollDetection(fix, grid);
+        grid.columnWidth = '300px';
+        grid.width = '300px';
+        fix.detectChanges();
+
+        // focus 1st in 2nd row
+        const cell = grid.getCellByColumn(1, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // shift + tab
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+        const lastCell = grid.getCellByColumn(0, 'ContactTitle');
+        expect(lastCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(600);
+        const diff = lastCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+     });
+
     it('should navigate to unpinned area when the column layout is bigger than the display container', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{

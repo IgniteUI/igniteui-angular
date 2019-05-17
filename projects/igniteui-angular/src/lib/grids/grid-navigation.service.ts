@@ -555,7 +555,7 @@ export class IgxGridNavigationService {
             }
         }
     }
-    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
+    protected performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
