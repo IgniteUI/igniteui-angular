@@ -1,3 +1,10 @@
+@mixin nav-logo($url, $background) {
+    background: url(#{$url}) no-repeat;
+    background-color: darken($background, 4%);
+    background-size: calc(100% - 32px) auto;
+    background-position: center center;
+}
+
 @mixin scrollbar-love($scrollbar-color: null) {
     $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
     $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
