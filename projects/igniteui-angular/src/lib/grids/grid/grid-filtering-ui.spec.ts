@@ -3538,7 +3538,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
     it('should correctly display all items in search list after filtering it', (async () => {
         // Add additional rows as prerequisite for the test
-        for (let index = 0; index < 5; index++) {
+        for (let index = 0; index < 4; index++) {
             const newRow = {
                 Downloads: index,
                 ID: index + 100,
@@ -3578,6 +3578,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const listRect = listNativeElement.getBoundingClientRect();
         expect(displayContainerRect.top >= listRect.top).toBe(true, 'displayContainer starts above list');
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
+    }));
+
+    it('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[0].nativeElement;
+        const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+        filterIcon.click();
+        fix.detectChanges();
+
+        const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+        const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
+        const input = searchComponent.querySelector('.igx-input-group__input');
+        let checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(6);
+
+        sendInputNativeElement(input, 'a', fix);
+        tick(100);
+        checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(4);
+
+        sendInputNativeElement(input, 'al', fix);
+        tick(100);
+        checkBoxes = excelMenu.querySelectorAll('.igx-checkbox');
+        expect(checkBoxes.length).toBe(0);
     }));
 
     it('should keep newly added filter expression in view', fakeAsync(() => {

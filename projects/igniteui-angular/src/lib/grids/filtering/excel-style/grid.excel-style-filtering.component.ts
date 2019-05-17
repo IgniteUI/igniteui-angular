@@ -525,10 +525,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.column.field);
-        const selectedItems = this.listData.filter(el =>
-            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === true);
-        const unselectedItem = this.listData.find(el =>
-            el.value !== this.grid.resourceStrings.igx_grid_excel_select_all && el.isSelected === false);
+        const selectedItems = this.listData.slice(1, this.listData.length).filter(el => el.isSelected === true);
+        const unselectedItem = this.listData.slice(1, this.listData.length).find(el => el.isSelected === false);
 
         if (unselectedItem) {
             if (selectedItems.length <= IgxGridExcelStyleFilteringComponent.filterOptimizationThreshold) {
