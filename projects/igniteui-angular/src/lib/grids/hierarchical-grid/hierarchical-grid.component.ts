@@ -68,19 +68,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
 
     /**
-     * @inheritdoc
-     */
-    public get rowDraggable(): boolean {
-        return this.parent ? this.parent.rowDraggable : this._rowDrag;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public set rowDraggable(val: boolean) {
-        this._rowDrag = val;
-    }
-    /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-hierarchical-grid [id]="'igx-hgrid-1'" [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
