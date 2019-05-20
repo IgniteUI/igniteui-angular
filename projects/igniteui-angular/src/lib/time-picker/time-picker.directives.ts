@@ -157,7 +157,7 @@ export class IgxItemListDirective {
         event.preventDefault();
 
         if (this.timePicker.mode === InteractionMode.DropDown) {
-            this.timePicker.close();
+            this.timePicker.hideOverlay();
             return;
         }
         this.timePicker.okButtonClick();
