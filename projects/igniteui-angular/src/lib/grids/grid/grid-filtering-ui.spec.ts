@@ -3870,6 +3870,68 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         GridFunctions.clickApplyExcelStyleFiltering(fix);
         fix.detectChanges();
     }));
+
+    it('Should cascade filter the available filter options.', fakeAsync(() => {
+        fix.detectChanges();
+
+        openExcelMenu(fix, 2);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', '0', '20', '100', '127', '254' ],
+            [ true, true, true, true, true, true, true ]);
+
+        openExcelMenu(fix, 4);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Apr 20, 2019', 'May 19, 2019', 'May 20, 2019', 'May 21, 2019', 'Jun 4, 2019' ],
+            [ true, true, true, true, true, true, true ]);
+
+        openExcelMenu(fix, 1);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+              'NetAdvantage', 'Some other item with Script' ],
+            [ true, true, true, true, true, true ]);
+
+
+        toggleExcelStyleFilteringItems(fix, grid, false, 0);
+        toggleExcelStyleFilteringItems(fix, grid, true, 2, 3);
+
+        expect(grid.rowList.length).toBe(2);
+
+        openExcelMenu(fix, 1);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+              'NetAdvantage', 'Some other item with Script' ],
+            [ null, false, true, true, false, false ]);
+
+        openExcelMenu(fix, 2);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '20', '254' ],
+            [ true, true, true ]);
+
+        openExcelMenu(fix, 4);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Jun 4, 2019' ],
+            [ true, true, true ]);
+
+        toggleExcelStyleFilteringItems(fix, grid, true, 1);
+
+        expect(grid.rowList.length).toBe(1);
+
+        openExcelMenu(fix, 4);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Jun 4, 2019' ],
+            [ null, false, true ]);
+
+        openExcelMenu(fix, 1);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+              'NetAdvantage', 'Some other item with Script' ],
+            [ null, false, true, true, false, false ]);
+
+        openExcelMenu(fix, 2);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '254' ],
+            [ true, true ]);
+    }));
 });
 
 const expectedResults = [];
@@ -4290,4 +4352,44 @@ function verifyFilteringExpression(operand: IFilteringExpression, fieldName: str
     expect(operand.fieldName).toBe(fieldName);
     expect(operand.condition.name).toBe(conditionName);
     expect(operand.searchVal).toEqual(searchVal);
+}
+
+function verifyExcelStyleFilterAvailableOptions(grid, labels: string[], checked: boolean[]) {
+    const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+    const labelElements: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__label'));
+    const checkboxElements: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
+
+    expect(labelElements.map(c => c.innerText)).toEqual(labels);
+    expect(checkboxElements.map(c => c.indeterminate ? null : c.checked)).toEqual(checked);
+}
+
+function openExcelMenu(fix, columnIndex: number) {
+    const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+    const headerResArea = headers[columnIndex].children[0].nativeElement;
+
+    let filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+    if (!filterIcon) {
+        filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
+    }
+    filterIcon.click();
+    tick();
+    fix.detectChanges();
+}
+
+function toggleExcelStyleFilteringItems(fix, grid, shouldApply: boolean, ...itemIndices: number[]) {
+    const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+    const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+
+    for (const index of itemIndices) {
+        checkbox[index].click();
+    }
+    tick();
+    fix.detectChanges();
+
+    if (shouldApply) {
+        const applyButton = excelMenu.querySelector('.igx-button--raised');
+        applyButton.click();
+        tick();
+        fix.detectChanges();
+    }
 }
