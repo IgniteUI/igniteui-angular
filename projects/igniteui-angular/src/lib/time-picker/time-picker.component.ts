@@ -45,12 +45,15 @@ import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS } from '../core/utils';
 import { InteractionMode } from '../core/enums';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
 const AMPM_POS = [6, 7, 8];
+
+const ITEMS_COUNT = 7;
 
 @Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -1091,8 +1094,8 @@ export class IgxTimePickerComponent implements
 
     private _initializeContainer() {
         if (this.value) {
-            const foramttedTime = this._formatTime(this.value, this.format);
-            const sections = foramttedTime.split(/[\s:]+/);
+            const formttedTime = this._formatTime(this.value, this.format);
+            const sections = formttedTime.split(/[\s:]+/);
 
             this.selectedHour = sections[0];
             this.selectedMinute = sections[1];
@@ -1118,9 +1121,9 @@ export class IgxTimePickerComponent implements
 
         this._onTouchedCallback();
 
-        this._updateHourView(0, 7);
-        this._updateMinuteView(0, 7);
-        this._updateAmPmView(0, 7);
+        this._updateHourView(0, ITEMS_COUNT);
+        this._updateMinuteView(0, ITEMS_COUNT);
+        this._updateAmPmView(0, ITEMS_COUNT);
 
         if (this.selectedHour) {
             this.scrollHourIntoView(this.selectedHour);
@@ -1205,7 +1208,6 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        // debugger;
         if (this.toggleRef.collapsed) {
             let settings;
             if (this.mode === InteractionMode.Dialog && this.overlaySettings ) {
@@ -1457,10 +1459,18 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * @hidden
+     * Closes the dropdown/dialog.
      */
     public close(): void {
         this.toggleRef.close();
+    }
+
+    /**
+     * @hidden
+     */
+    @DeprecateMethod('IgxTimePicker hideOverlay method is deprecated. Use close() instead.')
+    public hideOverlay(): void {
+        this.close();
     }
 
     /**
