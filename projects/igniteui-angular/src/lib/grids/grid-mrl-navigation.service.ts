@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
-import { IgxGridCellComponent } from './tree-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
 /** @hidden */
