@@ -14,34 +14,10 @@
                 <igx-card>
                     <igx-list [displayDensity]="density">
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
-                        <igx-divider></igx-divider>
-                        <igx-list-item>
-                            Lorem ipsum dolor sit amet.
-                        </igx-list-item>
-                        <igx-divider></igx-divider>
-                        <igx-list-item>
-                            Lorem ipsum dolor sit amet.
-                        </igx-list-item>
-                        <igx-divider></igx-divider>
-                        <igx-list-item>
-                            Lorem ipsum dolor sit amet.
-                        </igx-list-item>
-                        <igx-divider></igx-divider>
-                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
-                    </igx-list>
-                </igx-card>
-            </div>
-        </article>
-
-        <article class="sample-column">
-            <div class="list-sample">
-                <igx-card>
-                    <igx-list [displayDensity]="density">
-                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-icon igxListThumbnail>face</igx-icon>
-                                <p igxListLine igxListLineTitle>{{employee.position}}</p>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-checkbox igxListAction></igx-checkbox>
                                 <igx-icon igxListAction>info</igx-icon>
                             </igx-list-item>
@@ -71,13 +47,43 @@
             <div class="list-sample">
                 <igx-card>
                     <igx-list [displayDensity]="density">
-                        <igx-list-item [isHeader]="true">Avatar | Text line | Action icon </igx-list-item>
+                        <igx-list-item [isHeader]="true">Thumbnail | Title | Subtitle | Action icon   </igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                                <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
-                                <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
-                                <p igxListLine igxListLineSubTitle>{{employee.description}}</p>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
+                                <p igxListLineSubTitle>{{employee.description}}</p>
+                                <igx-icon igxListAction>more_horiz</igx-icon>
+                            </igx-list-item>
+                            <igx-divider></igx-divider>
+                        </ng-template>
+                        <igx-list-item [isHeader]="true">Icon | Title | Subtitle | Action icon  </igx-list-item>
+                        <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
+                            <igx-list-item>
+                                <igx-icon igxListThumbnail>face</igx-icon>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
+                                <igx-icon igxListAction>more_horiz</igx-icon>
+                                <igx-icon igxListAction>info</igx-icon>
+                            </igx-list-item>
+                            <igx-divider *ngIf="!last"></igx-divider>
+                        </ng-template>
+                    </igx-list>
+                </igx-card>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <div class="list-sample">
+                <igx-card>
+                    <igx-list [displayDensity]="density">
+                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
+                        <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
+                            <igx-list-item>
+                                <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
                             <igx-divider *ngIf="!last"></igx-divider>
@@ -95,27 +101,8 @@
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                                <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
-                                <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
-                                <igx-icon igxListAction>more_horiz</igx-icon>
-                            </igx-list-item>
-                            <igx-divider *ngIf="!last"></igx-divider>
-                        </ng-template>
-                    </igx-list>
-                </igx-card>
-            </div>
-        </article>
-
-        <article class="sample-column">
-            <div class="list-sample">
-                <igx-card>
-                    <igx-list [displayDensity]="density">
-                        <igx-list-item [isHeader]="true">Job positions</igx-list-item>
-                        <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
-                            <igx-list-item>
-                                <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                                <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
-                                <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
                         </ng-template>
@@ -132,9 +119,9 @@
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                                <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
-                                <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
-                                <p igxListLine igxListLineSubTitle>{{employee.description}}</p>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
+                                <p igxListLineSubTitle>{{employee.description}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
                             </igx-list-item>
                             <igx-divider *ngIf="!last"></igx-divider>
@@ -152,7 +139,7 @@
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-icon igxListThumbnail>face</igx-icon>
-                                <p igxListLine igxListLineTitle>{{employee.position}}</p>
+                                <p igxListLineTitle>{{employee.position}}</p>
                                 <igx-checkbox igxListAction></igx-checkbox>
                             </igx-list-item>
                             <igx-divider *ngIf="!last"></igx-divider>
@@ -169,9 +156,9 @@
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item>
                                 <igx-avatar roundShape="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                                <h4 igxListLine igxListLineTitle>{{employee.name}}</h4>
-                                <p igxListLine igxListLineSubTitle>{{employee.position}}</p>
-                                <p igxListLine igxListLineSubTitle>{{employee.description}}</p>
+                                <h4 igxListLineTitle>{{employee.name}}</h4>
+                                <p igxListLineSubTitle>{{employee.position}}</p>
+                                <p igxListLineSubTitle>{{employee.description}}</p>
                                 <igx-checkbox igxListAction></igx-checkbox>
                             </igx-list-item>
                         </ng-template>
@@ -310,7 +297,7 @@
                 </igx-card>
             </div>
         </article>
-        
+
     </section>
 
 </div>

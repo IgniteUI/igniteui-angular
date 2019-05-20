@@ -17,19 +17,19 @@
 
 <ng-template #itemThumbnails>
     <div class="igx-list__item-thumbnail">
-        <ng-content select="[igxListThumbnail]"></ng-content>
+        <ng-content select="[igxListThumbnail], igx-list__item-thumbnail"></ng-content>
     </div>
 </ng-template>
 
 <ng-template #itemLines>
     <div class="igx-list__item-lines">
-        <ng-content select="[igxListLine]"></ng-content>
+        <ng-content select="[igxListLine], .igx-list__item-lines, [igxListLineTitle], [igxListLineSubTitle], .igx-list__item-line-title, .igx-list__item-line-subtitle"></ng-content>
     </div>
 </ng-template>
 
 <ng-template #itemActions>
     <div class="igx-list__item-actions">
-        <ng-content select="[igxListAction]"></ng-content>
+        <ng-content select="[igxListAction], .igx-list__item-actions"></ng-content>
     </div>
 </ng-template>
 
