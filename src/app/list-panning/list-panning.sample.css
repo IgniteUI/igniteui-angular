@@ -1,3 +1,6 @@
+::ng-deep .igx-list__item-actions .igx-icon.favorite {
+    color: orange;
+}
 
 .listItemLeftPanningStyle {
     display: flex;
