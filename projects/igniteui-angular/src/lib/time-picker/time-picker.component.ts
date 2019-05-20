@@ -1386,7 +1386,7 @@ export class IgxTimePickerComponent implements
     public okButtonClick(): boolean {
         const time = this._getSelectedTime();
         if (this._isValueValid(time)) {
-            this.close();
+            this.hideOverlay();
             this.value = time;
             return true;
         } else {
@@ -1409,7 +1409,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public cancelButtonClick(): void {
-        this.close();
+        this.hideOverlay();
 
         this.selectedHour = this._prevSelectedHour;
         this.selectedMinute = this._prevSelectedMinute;
@@ -1461,16 +1461,8 @@ export class IgxTimePickerComponent implements
     /**
      * Closes the dropdown/dialog.
      */
-    public close(): void {
-        this.toggleRef.close();
-    }
-
-    /**
-     * @hidden
-     */
-    @DeprecateMethod('IgxTimePicker hideOverlay method is deprecated. Use close() instead.')
     public hideOverlay(): void {
-        this.close();
+        this.toggleRef.close();
     }
 
     /**
@@ -1504,7 +1496,7 @@ export class IgxTimePickerComponent implements
                 this.onValueChanged.emit(args);
             }
         } else {
-            this.close();
+            this.hideOverlay();
         }
     }
 
