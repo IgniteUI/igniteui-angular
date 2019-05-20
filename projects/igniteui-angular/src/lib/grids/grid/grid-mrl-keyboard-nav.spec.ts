@@ -10,6 +10,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { first } from 'rxjs/operators';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -2477,6 +2478,55 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             cell = grid.getCellByColumn(0, order[j]);
             expect(cell.editMode).toBe(true);
         }
+    });
+
+    fit('Shift + tab navigation should scroll to the approprate cell', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+            {
+                group: 'group1', pinned: true,
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px', editable: true },
+                    { field: 'ContactName', rowStart: 2, colStart: 1, editable: false  },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true  },
+                    { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true  }
+                ]
+            },
+            {
+                group: 'group2',
+                columns: [
+                    { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true  },
+                    { field: 'Region', rowStart: 3, colStart: 1, editable: true  },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true  }
+                ]
+            },
+            {
+                group: 'group3',
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1, width: '200px', editable: true  },
+                    { field: 'Fax', rowStart: 2, colStart: 1, editable: true  },
+                    { field: 'ID', rowStart: 3, colStart: 1, editable: true  }
+                ]
+            }
+        ];
+        fix.componentInstance.grid.width = '500px';
+        fix.detectChanges();
+
+        const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
+        const firstRowCells = rows[1].queryAll(By.css(CELL_CSS_CLASS));
+        const secondRowCells = rows[2].queryAll(By.css(CELL_CSS_CLASS));
+
+        secondRowCells[0].nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        secondRowCells[0].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            await wait(100);
+            fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+        expect(document.activeElement).toEqual(firstRowCells[firstRowCells.length - 1].nativeElement);
     });
 });
 
