@@ -156,13 +156,6 @@ export class IgxBottomNavComponent implements AfterViewInit {
         return (this.contentTabs && this.contentTabs.toArray().length > 0);
     }
 
-    public get contentTabsClass(): string {
-        if (this.hasContentTabs) {
-            return 'igx-bottom-nav__menu igx-bottom-nav__menu--bottom';
-        }
-        return '';
-    }
-
     /**
      *@hidden
      */
@@ -195,11 +188,6 @@ export class IgxBottomNavComponent implements AfterViewInit {
                     const selectableTabs = this.contentTabs.filter((p) => !p.disabled);
                     if (selectableTabs[0]) {
                         selectableTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
-
-                        // selectableTabs[0].
-                        // const theTabs = bottomNav.contentTabs.toArray();
-                        // fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
-
                     }
                 } else {
                     const selectablePanels = this.panels.filter((p) => !p.disabled);

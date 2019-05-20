@@ -1,7 +1,6 @@
 <div class="sample-wrapper">
         <app-page-header title="Tabbar">
-            Allows the user to navigate between different content displayed in one view. Supports 3 to 5 panels identified with an icon
-            and/or text.
+            Allows the user to use the control for routing.
         </app-page-header>
         <div class="sample-content">
             <article class="sample-column">
@@ -10,7 +9,23 @@
                 </div>
                 <div class="tabbar-wrapper" #tabbarEl>
                     <igx-bottom-nav>
-    
+
+                        <!-- <igx-tab-panel></igx-tab-panel>
+                        <igx-tab-panel></igx-tab-panel>
+                        <igx-tab-panel></igx-tab-panel>
+                        <igx-tab-container>
+                            <igx-tab></igx-tab>
+                            <igx-tab></igx-tab>
+                            <igx-tab></igx-tab>
+                        </igx-tab-container>
+
+                        
+                        <igx-tab-container>?
+                            <igx-tab>
+                                <igx-tab-panel></igx-tab-panel> content projection ?
+                            </igx-tab>
+                        </igx-tab-container> -->
+
                         <igx-tab icon="phone" label="Dial"
                             routerLink="/bottom-navigation-routing/view1"
                             routerLinkActive #rla1="routerLinkActive"
