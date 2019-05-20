@@ -218,8 +218,9 @@ export class IgxGridGroupByRowComponent {
                     if (this.index === 0) {
                         this.grid.navigation.moveFocusToFilterCell();
                     } else {
+                        const orderedColumns = this.grid.navigation.gridOrderedColumns;
                         this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                            orderedColumns[orderedColumns.length - 1].visibleIndex);
                     }
                 } else {
                     if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
