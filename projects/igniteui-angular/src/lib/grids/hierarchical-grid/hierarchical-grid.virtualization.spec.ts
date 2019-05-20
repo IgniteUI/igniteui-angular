@@ -352,7 +352,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(1184);
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(954);
                 done();
             }
         );
@@ -416,7 +416,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID">
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]="true" #rowIsland>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]="true" #rowIsland [height]="'400px'">
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>

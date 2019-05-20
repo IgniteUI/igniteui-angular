@@ -568,3 +568,27 @@ export interface IDateParts {
     seconds: number;
     milliseconds: number;
 }
+
+/**
+ * @hidden
+ */
+export class InFilteringOperation implements IFilteringOperation {
+    name = 'in';
+    isUnary = false;
+    iconName = 'is_in';
+    logic = (target: any, searchVal: Set<any>) => {
+        return searchVal.has(target);
+    }
+}
+
+/**
+ * @hidden
+ */
+export class InDateFilteringOperation extends InFilteringOperation {
+    logic = (target: any, searchVal: Set<any>) => {
+        if (target instanceof Date) {
+            return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
+        }
+        return searchVal.has(target);
+    }
+}
