@@ -136,7 +136,7 @@ export class IgxSummaryCellComponent {
     }
 
     get itemHeight() {
-        return this.column.grid.defaultRowHeight;
+        return this.column.grid.defaultSummaryHeight;
     }
 
     /**
