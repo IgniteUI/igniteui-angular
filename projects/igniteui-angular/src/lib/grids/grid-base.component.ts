@@ -4405,7 +4405,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
-            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || (col.parent && col.parent.columnLayout));
+            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
         this._columns = this.columnList.toArray();

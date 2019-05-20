@@ -235,7 +235,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('attr.data-visibleIndex')
     @Input()
     get visibleColumnIndex() {
-        return this.column.parent && this.column.parent.columnLayout ? this.column.visibleIndex : this._vIndex;
+        return this.column.columnLayoutChild ? this.column.visibleIndex : this._vIndex;
     }
 
     set visibleColumnIndex(val) {
@@ -506,7 +506,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected get selectionNode(): ISelectionNode {
         return {
             row: this.rowIndex,
-            column: this.column.parent && this.column.parent.columnLayout ? this.column.parent.visibleIndex : this.visibleColumnIndex };
+            column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex };
     }
 
     protected isInCompositionMode = false;

@@ -204,7 +204,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.filteringService.refreshExpressions();
             }
 
-            if (this.parent && this.parent.columnLayout && this.parent.hidden !== value) {
+            if (this.columnLayoutChild && this.parent.hidden !== value) {
                 this.parent.hidden = value;
             }
         }
@@ -760,7 +760,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
         }
-        if (this.parent && this.parent.columnLayout) {
+        if (this.columnLayoutChild) {
             return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
@@ -792,6 +792,17 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get columnLayout() {
         return false;
+    }
+
+     /**
+     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnLayoutChild =  this.column.columnLayoutChild;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayoutChild() {
+        return this.parent && this.parent.columnLayout;
     }
 
     /**
@@ -1224,7 +1235,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
-        if (this.columnLayout || !this.parent.columnLayout || this.columnGroup) {
+        if (this.columnLayout || !this.columnLayoutChild || this.columnGroup) {
             return [{ target: this, spanUsed: 1 }];
         }
 
@@ -1314,7 +1325,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.resetCaches();
         grid.cdr.detectChanges();
-        if (this.parent && this.parent.columnLayout) {
+        if (this.columnLayoutChild) {
             this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
@@ -1377,7 +1388,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();
-        if (this.parent && this.parent.columnLayout) {
+        if (this.columnLayoutChild) {
             this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
@@ -1544,7 +1555,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.parent && this.parent.columnLayout) {
+        if (this.columnLayoutChild) {
             return '';
         }
 
