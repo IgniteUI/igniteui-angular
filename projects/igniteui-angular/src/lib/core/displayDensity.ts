@@ -32,7 +32,11 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
  */
 export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
-    public initialDensity : string;
+
+     /**
+     * @hidden
+     */
+    public initialDensity: DisplayDensity;
 
     /**
      * Returns the theme of the component.
