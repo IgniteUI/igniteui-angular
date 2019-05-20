@@ -45,7 +45,6 @@ import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS } from '../core/utils';
 import { InteractionMode } from '../core/enums';
-import { DeprecateMethod } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -574,7 +573,6 @@ export class IgxTimePickerComponent implements
 
     set displayValue(value: string) {
         this._displayValue = value;
-
     }
 
     /**
@@ -1459,7 +1457,7 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * Closes the dropdown/dialog.
+     * @hidden
      */
     public hideOverlay(): void {
         this.toggleRef.close();
