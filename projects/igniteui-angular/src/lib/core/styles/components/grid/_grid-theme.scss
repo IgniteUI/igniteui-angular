@@ -700,6 +700,10 @@
 
     %grid-row--mrl {
         border-bottom: none !important;
+
+        %grid__cbx-selection {
+            border-bottom: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
+        }
     }
 
     %grid-tbody {
