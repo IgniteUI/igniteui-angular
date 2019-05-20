@@ -147,7 +147,6 @@
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
     $group-item-min-width: 24px;
-    $group-item-min-height: 36px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
 
@@ -167,7 +166,6 @@
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
         min-width: $group-item-min-width;
-        min-height: $group-item-min-height;
         display: flex;
         flex: 1 0 0%;
         justify-content: center;
