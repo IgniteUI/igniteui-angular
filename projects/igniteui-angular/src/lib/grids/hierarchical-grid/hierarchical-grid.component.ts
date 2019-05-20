@@ -89,6 +89,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @Input()
     public set data(value: any[]) {
         this._data = value;
+        if (this.parent) {
+            this.calculateGridHeight();
+        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -259,11 +262,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     /**
      * @hidden
-     */
+    
     protected get rowBasedHeight() {
         const rbh = this.dataLength * this.rowHeight;
         return this.parent ? rbh || null : rbh;
-    }
+    } */
 
     /**
      * @hidden
@@ -674,6 +677,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected _calculateGridBodyHeight() {
+        if (!this.parent || !this.isPercentHeight) {
+            return super._calculateGridBodyHeight();
+        }
+        const bodyHeight = this.defaultTargetBodyHeight;
+        return bodyHeight > 0 ? bodyHeight : null;
     }
 
     private hg_verticalScrollHandler(event) {
