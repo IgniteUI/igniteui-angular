@@ -431,16 +431,16 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return this.grid.pinnedColumns.length ? this.grid.unpinnedColumns.filter((c) => c.columnLayout).indexOf(column) :
             visibleColumnIndex;
     }
-
     protected performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
         const col = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex);
-        const unpinnedIndex = this.getParentUnpinnedIndex(col.parent.visibleIndex);
+        const hScroll = this.horizontalScroll(rowIndex);
+        const scrIndex = hScroll.igxForOf.indexOf(col.parent);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
             });
-        this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+        hScroll.scrollTo(scrIndex);
     }
 
     protected _focusCell(cellElem) {

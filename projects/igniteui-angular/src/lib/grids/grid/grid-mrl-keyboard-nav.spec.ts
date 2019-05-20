@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2480,7 +2480,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         }
     });
 
-    fit('Shift + tab navigation should scroll to the approprate cell', async () => {
+    it('Shift + tab navigation should scroll to the approprate cell', async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
             {
