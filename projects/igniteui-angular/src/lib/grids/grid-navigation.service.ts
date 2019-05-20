@@ -3,7 +3,6 @@ import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
-import { IgxGridCellComponent } from './tree-grid';
 
 enum MoveDirection {
     LEFT = 'left',
