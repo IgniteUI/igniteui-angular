@@ -841,6 +841,55 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
          }
      }));
 
+     it('Shift+Tab Navigation should scroll last cell fully in view.',  async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }];
+        const grid =  fix.componentInstance.grid;
+        setupGridScrollDetection(fix, grid);
+        grid.columnWidth = '300px';
+        grid.width = '300px';
+        fix.detectChanges();
+
+        // focus 1st in 2nd row
+        const cell = grid.getCellByColumn(1, 'ID');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait();
+        fix.detectChanges();
+
+        // shift + tab
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+        const lastCell = grid.getCellByColumn(0, 'ContactTitle');
+        expect(lastCell.focused).toBe(true);
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(600);
+        const diff = lastCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+     });
+
     it('should navigate to unpinned area when the column layout is bigger than the display container', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
@@ -2306,6 +2355,129 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             expect(document.activeElement).toEqual(secondCell.nativeElement);
         });
     });
+
+    it('shift+tab navigation should go through edit row buttons when navigating in row edit mode. ', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+            {
+                group: 'group1',
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px', editable: true },
+                    { field: 'ContactName', rowStart: 2, colStart: 1, editable: true  },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true  },
+                    { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true  }
+                ]
+            },
+            {
+                group: 'group2',
+                columns: [
+                    { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true  },
+                    { field: 'Region', rowStart: 3, colStart: 1, editable: true  },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true  }
+                ]
+            },
+            {
+                group: 'group3',
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1, width: '200px', editable: true  },
+                    { field: 'Fax', rowStart: 2, colStart: 1, editable: true  },
+                    { field: 'ID', rowStart: 3, colStart: 1, editable: true  }
+                ]
+            }
+        ];
+        const grid = fix.componentInstance.grid;
+        grid.primaryKey = 'ID';
+        grid.rowEditable = true;
+        fix.detectChanges();
+
+        let targetCell = grid.getCellByColumn(0, 'CompanyName');
+        targetCell.nativeElement.focus();
+        fix.detectChanges();
+        targetCell.onKeydownEnterEditMode();
+        fix.detectChanges();
+        await wait(100);
+
+        const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+        const doneButtonElement = rowEditingBannerElement.lastElementChild;
+        const cancelButtonElement = rowEditingBannerElement.firstElementChild;
+
+        // shift+tab into Done button
+        targetCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        fix.detectChanges();
+        expect(document.activeElement).toEqual(doneButtonElement);
+
+        // shift+ tab into Cancel
+        doneButtonElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        fix.detectChanges();
+
+        // shift+ tab into last cell
+        cancelButtonElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+
+        targetCell = grid.getCellByColumn(0, 'ID');
+        expect(targetCell.focused).toBe(true);
+    });
+
+    it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+            {
+                group: 'group1',
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px', editable: true },
+                    { field: 'ContactName', rowStart: 2, colStart: 1, editable: false  },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true  },
+                    { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true  }
+                ]
+            },
+            {
+                group: 'group2',
+                columns: [
+                    { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true  },
+                    { field: 'Region', rowStart: 3, colStart: 1, editable: true  },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true  }
+                ]
+            },
+            {
+                group: 'group3',
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1, width: '200px', editable: true  },
+                    { field: 'Fax', rowStart: 2, colStart: 1, editable: true  },
+                    { field: 'ID', rowStart: 3, colStart: 1, editable: true  }
+                ]
+            }
+        ];
+        const grid = fix.componentInstance.grid;
+        grid.primaryKey = 'ID';
+        grid.rowEditable = true;
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(0, 'CompanyName');
+        cell.nativeElement.focus();
+        fix.detectChanges();
+        cell.onKeydownEnterEditMode();
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];
+        // tab through cols and check order is correct - ContactName should be skipped.
+        for (let i = 1; i < order.length; i++) {
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[i]);
+            expect(cell.editMode).toBe(true);
+        }
+
+        // shift+tab through  cols and check order is correct - ContactName should be skipped.
+        for (let j = order.length - 2; j >= 0; j--) {
+            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, order[j]);
+            expect(cell.editMode).toBe(true);
+        }
+    });
 });
 
 @Component({
@@ -2314,7 +2486,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
     `

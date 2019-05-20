@@ -57,6 +57,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
         this.focusPrevCellFromLayout(cell);
     }
+    public get gridOrderedColumns(): IgxColumnComponent[] {
+        return [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup)
+        .sort((a, b) => a.visibleIndex - b.visibleIndex);
+    }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cell?) {
         const nextElementColumn = cell.grid.columns.find(x => !x.columnGroup && x.visibleIndex === cell.column.visibleIndex + 1);
@@ -68,12 +72,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === nextElementColumn);
+                    if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                        this.moveNextEditable(nextCell.nativeElement, rowIndex, visibleColumnIndex);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(nextElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.moveNextEditable(nextCell.nativeElement, rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
@@ -97,16 +109,28 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     nextCell = cell.row.cells.find(currCell => currCell.column === prevElementColumn);
+                    if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                        this.movePreviousEditable(rowIndex, visibleColumnIndex);
+                        return;
+                    }
                     this._focusCell(nextCell.nativeElement);
                 });
                 const hScroll = this.horizontalScroll(cell.rowIndex);
                 const scrIndex = hScroll.igxForOf.indexOf(prevElementColumn.parent);
                 hScroll.scrollTo(scrIndex);
             } else {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.movePreviousEditable(rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this._focusCell(nextCell.nativeElement);
             }
         } else {
             // end of layout reached
+            if (this.isRowInEditMode(rowIndex)) {
+                this.grid.rowEditTabs.last.element.nativeElement.focus();
+                return;
+            }
             let lastVisibleIndex = 0;
             cell.grid.unpinnedColumns.forEach((col) => {
                 lastVisibleIndex = Math.max(lastVisibleIndex, col.visibleIndex);
@@ -327,8 +351,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public onKeydownEnd(rowIndex, isSummary = false, cellRowStart?) {
-        const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).length;
-        const lastLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[layouts - 1];
+        const layouts = this.grid.columns.filter(c => c.columnLayout && !c.hidden).sort((a, b) => a.visibleIndex - b.visibleIndex);
+        const lastLayout = layouts[layouts.length - 1];
         const lastLayoutChildren = lastLayout.children;
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
         const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
@@ -400,6 +424,17 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     protected getColumnLayoutSelector() {
         return '.igx-grid__mrl-block';
+    }
+
+    protected performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
+        const col = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex);
+        const unpinnedIndex = this.getColumnUnpinnedIndex(col.parent.visibleIndex);
+        this.grid.parentVirtDir.onChunkLoad
+            .pipe(first())
+            .subscribe(() => {
+                this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
+            });
+        this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
     }
 
     protected _focusCell(cellElem) {
