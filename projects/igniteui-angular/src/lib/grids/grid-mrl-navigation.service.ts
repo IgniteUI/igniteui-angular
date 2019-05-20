@@ -426,11 +426,6 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return '.igx-grid__mrl-block';
     }
 
-    public getParentUnpinnedIndex(visibleColumnIndex: number) {
-        const column = this.grid.unpinnedColumns.find((col) => col.columnLayout && col.visibleIndex === visibleColumnIndex);
-        return this.grid.pinnedColumns.length ? this.grid.unpinnedColumns.filter((c) => c.columnLayout).indexOf(column) :
-            visibleColumnIndex;
-    }
     protected performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
         const col = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex);
         const hScroll = this.horizontalScroll(rowIndex);
