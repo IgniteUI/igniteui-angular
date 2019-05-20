@@ -3855,8 +3855,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
 
     /**
      * @hidden
@@ -3997,7 +3997,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
-        if (height === 0 || isNaN(gridHeight) || this.dataLength === 0) {
+        if (height === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
