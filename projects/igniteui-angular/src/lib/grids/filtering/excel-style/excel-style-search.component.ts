@@ -45,18 +45,18 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        const selectAll = this.column.grid.resourceStrings.igx_grid_excel_select_all;
-        if (eventArgs.checkbox.value.value === selectAll) {
+        const selectedIndex = this.data.indexOf(eventArgs.checkbox.value);
+        if (selectedIndex === 0) {
             this.data.forEach(element => {
                 element.isSelected = eventArgs.checked;
                 this.data[0].indeterminate = false;
             });
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
-            if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === false)) {
+            if (!this.data.slice(1, this.data.length).find(el => el.isSelected === false)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = true;
-            } else if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === true)) {
+            } else if (!this.data.slice(1, this.data.length).find(el => el.isSelected === true)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = false;
             } else {
