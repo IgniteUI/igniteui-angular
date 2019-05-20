@@ -261,6 +261,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
+    protected get rowBasedHeight() {
+        const rbh = this.dataLength * this.rowHeight;
+        return this.parent ? rbh || null : rbh;
+    }
+
+    /**
+     * @hidden
+     */
     public childLayoutKeys = [];
 
     /**
