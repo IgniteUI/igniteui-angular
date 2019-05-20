@@ -2916,6 +2916,33 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         tick();
         expect(document.activeElement).toBe(cell.nativeElement);
     }));
+
+    it('should hide chip arrows when the grid is narrow and column is not filtered', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.width = '400px';
+        tick(200);
+        fix.detectChanges();
+
+        // Click string filter chip to show filter row.
+        const filterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent));
+        const stringFilterCell = filterCells.find((fc) => fc.componentInstance.column.field === 'ProductName');
+        const stringFilterCellChip = stringFilterCell.query(By.directive(IgxChipComponent));
+        stringFilterCellChip.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+
+        // Verify arrows and chip area are not visible because there is no active filtering for the column.
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const leftArrowButton = filteringRow.query(By.css('.igx-grid__filtering-row-scroll-start'));
+        const rightArrowButton = filteringRow.query(By.css('.igx-grid__filtering-row-scroll-end'));
+        const chipArea = filteringRow.query(By.css('igx-chip-area'));
+        expect(leftArrowButton).toBeNull('leftArrowButton is present');
+        expect(rightArrowButton).toBeNull('rightArrowButton is present');
+        expect(chipArea).toBeNull('chipArea is present');
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {

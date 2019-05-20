@@ -95,6 +95,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
+            this.showHideArrowButtons();
         } else {
             this.expression.searchVal = this.transformValue(val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
@@ -632,7 +633,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
                 this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
-                this.showArrows = this.chipsAreaWidth >= containerWidth;
+                this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
                 // TODO: revise the cdr.detectChanges() usage here
                 this.cdr.detectChanges();
@@ -764,5 +765,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private filter() {
         this.filteringService.filterInternal(this.column.field);
+    }
+
+    private get isColumnFiltered() {
+        return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
     }
 }
