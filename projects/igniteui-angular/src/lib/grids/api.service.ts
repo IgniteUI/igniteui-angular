@@ -305,7 +305,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
 
-        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
+        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         grid.filteringExpressionsTree = filteringTree;
     }
 
@@ -360,7 +360,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
 
         let newExpressionsTree;
         const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
@@ -373,7 +373,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (oldExpressionsTreeIndex === -1) {
             // no expressions tree found for this field
             if (expressionsTree) {
-                filteringState.filteringOperands.push(expressionsTree);
+                if (insertAtIndex > -1) {
+                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
+                } else {
+                    filteringState.filteringOperands.push(expressionsTree);
+                }
             } else if (condition) {
                 // create expressions tree for this field and add the new expression to it
                 newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
