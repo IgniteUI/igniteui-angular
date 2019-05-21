@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.3.1
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation
@@ -13,29 +16,35 @@ All notable changes for each version of this project will be documented in this 
 ## 7.3.0
 
 ### Features
-- **New feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Grid---Multi-Row-Layout). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
-    - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colstart) - column index from which the field is starting. This property is **mandatory**.
-    - [`rowStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowstart) - row index from which the field is starting. This property is **mandatory**.
-    - [`colEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colend) - column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. This property is **optional**. If not set defaults to `colStart + 1`.
-    - [`rowEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowend) - row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. This property is **optional**. If not set defaults to `rowStart + 1`.
-    ```html
-    <igx-column-layout>
-        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
-        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
-        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" field="Address"></igx-column>
-    </igx-column-layout>
-    ```
-- **New feature** `igxGridComponent` now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
+- `igxGrid`
+    - **Feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Grid---Multi-Row-Layout). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+        - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colstart) - column index from which the field is starting. This property is **mandatory**.
+         - [`rowStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowstart) - row index from which the field is starting. This property is **mandatory**.
+         - [`colEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colend) - column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. This property is **optional**. If not set defaults to `colStart + 1`.
+         - [`rowEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowend) - row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. This property is **optional**. If not set defaults to `rowStart + 1`.
+         ```html
+        <igx-column-layout>
+             <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+             <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+             <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" field="Address"></igx-column>
+        </igx-column-layout>
+        ```
+- `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
+    - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
-- `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
+    - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
+- `igxTreeGrid` 
+    - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `igxButtonGroup`
+    - **Feature** The `igxButtonGroup` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button group. The buttons within the group will have the same density as the button group. If a button has the `displayDensity` set in the template, it is not changed by the density of the group where the button is placed.
 - `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
 - `IgxDropDown`
-    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    - now supports virtualized items. Use in conjunction with `IgxForOf` directive, with the following syntax, to display very large list of data:
     ```html
     <igx-drop-down>
         <div class="wrapping-div">
@@ -52,7 +61,7 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
 
 ## 7.2.5
-- `igxDrop` 
+- `igxDrop`
     - `onEnter`, `onLeave` and `onDrop` events now have new arguments for `originalEvent`, `offsetX` and `offsetY` relative to the container the igxDrop is instanced.
 - `IgxList`
     - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
@@ -85,9 +94,9 @@ All notable changes for each version of this project will be documented in this 
 ### New feature
 - [Multi-cell selection](https://github.com/IgniteUI/igniteui-angular/wiki/Grid-Multi-cell-selection-Specification) - Enables range selection of cells in the grid.
 
-### Grids Performance improvements 
+### Grids Performance improvements
 - Grid rendering speed
-- Grid grouping rendering speed 
+- Grid grouping rendering speed
 - Grid vertical scrolling using the scroll arrows
 - Grid horizontal scrolling using the scroll arrows
 - Grid cell focusing time
@@ -126,7 +135,7 @@ All notable changes for each version of this project will be documented in this 
 - Update child summaries correctly when CRUD operations are performed #4408
 - Add igxQuickFilterTemplate directive #4377
 - Resizing: move resize handle logic in a directive #4378
-- No event emitted when column is unpinned #3799 
+- No event emitted when column is unpinned #3799
 - When update a cell in the grouped column the child summaries are not updated #4324
 - Column Group border is misaligned with its children's in some cases #4387
 - Expanding last row of HierarchicalGrid via keyboard(Alt + downArrow) leads to cell losing its focus. #4080
@@ -137,7 +146,7 @@ All notable changes for each version of this project will be documented in this 
 ## 7.2.2
 ### Features
 - **Components' Display Type** - All components now have their CSS display property explicitly set on the host element to ensure width, padding, and margins are applied when set directly on the host selectors.
-- **Themes** 
+- **Themes**
     - Add support for gradients and images as values for component themes via the component theme functions.
     - `Palettes` - added surface color to the palette. The surface color is used by cards, pickers, dialog windows, etc. as the default background.
 
@@ -362,13 +371,13 @@ All notable changes for each version of this project will be documented in this 
 - IgxCombo - Keyboard navigation ArrowDown stutters on chunk load #3999
 - Row editing overlay banner not shown when enter row editing #4117
 - IgxToggle open method always tries to get id even when it has one #3971
-- Last (right-aligned) column is cut off when no widths are set for the columns #3396 
+- Last (right-aligned) column is cut off when no widths are set for the columns #3396
 - The selection in the last grid column does not span in the whole cell. #1115
 - Last column header is a bit wider than the cells #1230
 
 ## 7.1.11
 ### Improvements
-- Row and Cell editing Docs improvements #4055 
+- Row and Cell editing Docs improvements #4055
 
 ## 7.1.10
 ### Features
