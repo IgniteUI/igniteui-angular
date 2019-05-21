@@ -954,8 +954,8 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     <igx-hierarchical-grid #hierarchicalDragGrid [data]="data"
      [autoGenerate]="true" [height]="'500px'" [width]="'1500px'"
       primaryKey="ID" [expandChildren]='true' [rowDraggable]="true">
-        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" #rowIsland>
-            <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2 >
+        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" [rowDraggable]="true" #rowIsland>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowDraggable]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
@@ -1034,13 +1034,6 @@ export class IgxTreeGridTestComponent {
         args.cancel = true;
         this.dropGrid.addRow(args.dragData.rowData);
     }
-}
-
-function getWindowScrollLeft() {
-    return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
-}
-function getWindowScrollTop() {
-    return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
 }
 
 /**
