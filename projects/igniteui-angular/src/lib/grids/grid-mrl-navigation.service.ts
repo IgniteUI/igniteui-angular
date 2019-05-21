@@ -426,13 +426,14 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     protected performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
         const col = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex);
-        const unpinnedIndex = this.getColumnUnpinnedIndex(col.parent.visibleIndex);
+        const hScroll = this.horizontalScroll(rowIndex);
+        const scrIndex = hScroll.igxForOf.indexOf(col.parent);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
             });
-        this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+        hScroll.scrollTo(scrIndex);
     }
 
     protected _focusCell(cellElem) {
