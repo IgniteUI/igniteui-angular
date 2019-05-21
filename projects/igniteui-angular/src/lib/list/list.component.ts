@@ -68,6 +68,10 @@ export interface IListItemPanningEventArgs {
  * ```
  */
 
+/**
+ * igxListThumbnail is container for the List media
+ * Use it to wrap anything you want to be used as a thumbnail.
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[igxListThumbnail]'
@@ -75,6 +79,10 @@ export interface IListItemPanningEventArgs {
 
 export class IgxListThumbnailDirective {}
 
+/**
+ * igxListAction is container for the List action
+ * Use it to wrap anything you want to be used as a list action: icon, checkbox...
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[igxListAction]'
@@ -82,6 +90,10 @@ export class IgxListThumbnailDirective {}
 
 export class IgxListActionDirective {}
 
+/**
+ * igxListLine is container for the List text content
+ * Use it to wrap anything you want to be used as a plane text.
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLine]'
@@ -89,6 +101,10 @@ export class IgxListActionDirective {}
 
 export class IgxListLineDirective {}
 
+/**
+ * igxListLineTitle is a directive that add class to the target element
+ * Use it to make anything to look like list Title.
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLineTitle]'
@@ -99,6 +115,10 @@ export class IgxListLineTitleDirective {
     public cssClass = 'igx-list__item-line-title';
 }
 
+/**
+ * igxListLineSubTitle is a directive that add class to the target element
+ * Use it to make anything to look like list Subtitle.
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLineSubTitle]'

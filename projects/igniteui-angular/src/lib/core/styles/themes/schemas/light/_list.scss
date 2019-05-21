@@ -12,7 +12,7 @@
 /// @property {Color} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
 /// @property {Map} item-background [igx-color: 'surface'] - The list item background color.
 /// @property {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
-/// @property {Map} item-background-active [igx-color: ('grays', 200)] - The active list item background color.
+/// @property {Map} item-background-active [igx-color: 'surface'] - The active list item background color.
 /// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: ()] - The active list item text color.
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
@@ -44,7 +44,6 @@ $_light-list: (
     item-text-color: (
         igx-color: 'surface',
         text-contrast: (),
-        rgba: .74
     ),
 
     item-background-active: (

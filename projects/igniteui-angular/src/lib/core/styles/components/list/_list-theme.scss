@@ -114,7 +114,7 @@
     );
 
     $list-item-padding: (
-        comfortable: rem(8px) rem(16px),
+        comfortable: rem(12px) rem(16px),
         cosy: rem(6px) rem(10px),
         compact: rem(4px) rem(8px)
     );
@@ -135,6 +135,12 @@
         comfortable: 0 0 0 rem(16px),
         cosy: 0 0 0 rem(12px),
         compact: 0 0 0 rem(8px)
+    );
+
+    $list-line-margin-rtl: (
+        comfortable: 0 rem(16px) 0 0 ,
+        cosy: 0 rem(12px) 0 0 ,
+        compact: 0 rem(8px) 0 0
     );
 
     %igx-list {
@@ -333,6 +339,10 @@
     }
 
     [dir='rtl'] {
+        %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
+            margin: map-get($list-line-margin-rtl, 'comfortable');
+        }
+
         %igx-list__item-thumbnail {
             > %igx-icon-display {
                 margin: map-get($list-icon-margin-rtl, 'comfortable');
