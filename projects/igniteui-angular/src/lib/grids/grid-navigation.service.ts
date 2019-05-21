@@ -3,6 +3,7 @@ import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
+import { ISelectionNode } from '../core/grid-selection';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -100,7 +101,10 @@ export class IgxGridNavigationService {
             `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
     }
 
-    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
+    public onKeydownArrowRight(element, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
+        const isSummary = selectedNode.isSummaryRow;
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
@@ -126,7 +130,10 @@ export class IgxGridNavigationService {
         }
     }
 
-    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false, cell?) {
+    public onKeydownArrowLeft(element, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
+        const isSummary = selectedNode.isSummaryRow;
         if (visibleColumnIndex === 0) {
             return;
         }
@@ -163,7 +170,9 @@ export class IgxGridNavigationService {
         }
     }
 
-    public moveNextEditable(element, rowIndex, visibleColumnIndex) {
+    public moveNextEditable(element, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
         let addedIndex = 0;
         addedIndex = this.isColumnEditable(visibleColumnIndex + 1) ?
             0 :
@@ -271,7 +280,9 @@ export class IgxGridNavigationService {
         }
     }
 
-    public navigateUp(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
+    public navigateUp(rowElement, selectedNode: ISelectionNode) {
+        const currentRowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
         if (currentRowIndex === 0) {
             return;
         }
@@ -302,7 +313,9 @@ export class IgxGridNavigationService {
         this.focusElem(currentRowEl.previousElementSibling, visibleColumnIndex);
     }
 
-    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex, cell?) {
+    public navigateDown(rowElement, selectedNode: ISelectionNode) {
+        const currentRowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
         if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
             return;
         }
@@ -414,7 +427,10 @@ export class IgxGridNavigationService {
         }
     }
 
-    public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false, cellComponent?) {
+    public performTab(currentRowEl, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
+        const isSummaryRow = selectedNode.isSummaryRow;
         if (isSummaryRow && rowIndex === 0 &&
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
                 return;
@@ -433,16 +449,16 @@ export class IgxGridNavigationService {
                 return;
             }
             if (rowEl) {
-                this.navigateDown(currentRowEl, rowIndex, 0);
+                this.navigateDown(currentRowEl, { row: rowIndex, column: 0});
             }
         } else {
             const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummaryRow);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
-                    this.moveNextEditable(cell, rowIndex, visibleColumnIndex);
+                    this.moveNextEditable(cell, selectedNode);
                     return;
                 }
-                this.onKeydownArrowRight(cell, rowIndex, visibleColumnIndex, isSummaryRow);
+                this.onKeydownArrowRight(cell, selectedNode);
             }
         }
     }
@@ -527,7 +543,10 @@ export class IgxGridNavigationService {
         return this.grid.pinnedColumns.filter(col => !(col.columnGroup) && col.filterable)[0];
     }
 
-    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false, cellComponent?) {
+    public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
+        const isSummary = selectedNode.isSummaryRow;
         if (isSummary && rowIndex === 0 && visibleColumnIndex === 0 && this.grid.rowList.length) {
             this.goToLastBodyElement();
             return;
@@ -540,8 +559,11 @@ export class IgxGridNavigationService {
             if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
             } else {
-                this.navigateUp(currentRowEl, rowIndex,
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                this.navigateUp(currentRowEl,
+                     {
+                         row: rowIndex,
+                         column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex
+                    });
             }
         } else {
             const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary);
@@ -550,7 +572,7 @@ export class IgxGridNavigationService {
                     this.movePreviousEditable(rowIndex, visibleColumnIndex);
                     return;
                 }
-                this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex, isSummary);
+                this.onKeydownArrowLeft(cell, selectedNode);
             }
         }
     }
