@@ -2869,6 +2869,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    get defaultSummaryHeight(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 30;
+            case DisplayDensity.compact:
+                return 24;
+            default:
+                return 36;
+        }
+    }
+
     /**
      * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
      * Used internally for restricting header group component width.
