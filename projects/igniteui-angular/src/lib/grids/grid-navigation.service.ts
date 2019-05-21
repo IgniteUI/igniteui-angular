@@ -149,7 +149,9 @@ export class IgxGridNavigationService {
 
     }
 
-    public movePreviousEditable(rowIndex, visibleColumnIndex) {
+    public movePreviousEditable(element, selectedNode: ISelectionNode) {
+        const rowIndex = selectedNode.row;
+        const visibleColumnIndex = selectedNode.column;
         const addedIndex = this.isColumnEditable(visibleColumnIndex - 1) ?
             0 :
             this.findNextEditable(MoveDirection.LEFT, visibleColumnIndex - 1);
