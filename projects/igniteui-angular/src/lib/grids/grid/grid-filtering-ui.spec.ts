@@ -3788,7 +3788,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         verifyFilteringExpression(operands[1], 'ProductName', 'empty', null);
     }));
 
-    fit('Should cascade filter the available filter options.', fakeAsync(() => {
+    it('Should cascade filter the available filter options.', fakeAsync(() => {
         fix.detectChanges();
 
         openExcelMenu(fix, 2);
