@@ -3879,58 +3879,55 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ 'Select All', '(Blanks)', '0', '20', '100', '127', '254' ],
             [ true, true, true, true, true, true, true ]);
 
-        openExcelMenu(fix, 4);
-        verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Apr 20, 2019', 'May 19, 2019', 'May 20, 2019', 'May 21, 2019', 'Jun 4, 2019' ],
-            [ true, true, true, true, true, true, true ]);
-
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
             [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
               'NetAdvantage', 'Some other item with Script' ],
             [ true, true, true, true, true, true ]);
 
+        openExcelMenu(fix, 3);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'false', 'true' ],
+            [ true, true, true, true ]);
+
+        toggleExcelStyleFilteringItems(fix, grid, true, 3);
+
+        expect(grid.rowList.length).toBe(5);
+
+        openExcelMenu(fix, 3);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'false', 'true' ],
+            [ null, true, true, false ]);
+
+        openExcelMenu(fix, 2);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All',  '20', '100', '254', '702', '1,000' ],
+            [ true, true, true, true, true, true ]);
+
+        openExcelMenu(fix, 1);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script' ],
+            [ true, true, true, true, true ]);
 
         toggleExcelStyleFilteringItems(fix, grid, false, 0);
         toggleExcelStyleFilteringItems(fix, grid, true, 2, 3);
 
         expect(grid.rowList.length).toBe(2);
 
+        openExcelMenu(fix, 3);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'false', 'true' ],
+            [ null, true, true, false ]);
+
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
-              'NetAdvantage', 'Some other item with Script' ],
-            [ null, false, true, true, false, false ]);
+            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script' ],
+            [ null, false, true, true, false ]);
 
         openExcelMenu(fix, 2);
         verifyExcelStyleFilterAvailableOptions(grid,
             [ 'Select All', '20', '254' ],
             [ true, true, true ]);
-
-        openExcelMenu(fix, 4);
-        verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Jun 4, 2019' ],
-            [ true, true, true ]);
-
-        toggleExcelStyleFilteringItems(fix, grid, true, 1);
-
-        expect(grid.rowList.length).toBe(1);
-
-        openExcelMenu(fix, 4);
-        verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Jun 4, 2019' ],
-            [ null, false, true ]);
-
-        openExcelMenu(fix, 1);
-        verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
-              'NetAdvantage', 'Some other item with Script' ],
-            [ null, false, true, true, false, false ]);
-
-        openExcelMenu(fix, 2);
-        verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '254' ],
-            [ true, true ]);
     }));
 });
 
