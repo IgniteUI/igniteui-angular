@@ -11,7 +11,7 @@ import {
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -175,6 +175,13 @@ export class IgxGridGroupByRowComponent {
         }
     }
 
+    protected get selectionNode(): ISelectionNode {
+        return {
+            row: this.index,
+            column: this.gridSelection.activeElement ? this.gridSelection.activeElement.column : 0
+        };
+    }
+
     /**
      * @hidden
      */
@@ -202,31 +209,29 @@ export class IgxGridGroupByRowComponent {
         if (args.cancel) {
             return;
         }
-
-        const visibleColumnIndex = selection.activeElement ? selection.activeElement.column : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+                this.grid.navigation.navigateDown(this.nativeElement, this.selectionNode);
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+                this.grid.navigation.navigateUp(this.nativeElement, this.selectionNode);
                 break;
             case 'tab':
                 if (event.shiftKey) {
                     if (this.index === 0) {
                         this.grid.navigation.moveFocusToFilterCell();
                     } else {
-                        this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                        this.grid.navigation.navigateUp(this.nativeElement, { row: this.index,
+                            column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex});
                     }
                 } else {
                     if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
                         this.grid.navigation.onKeydownHome(0, true);
                         return;
                     }
-                    this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
+                    this.grid.navigation.navigateDown(this.nativeElement, { row: this.index, column: 0 });
                 }
                 break;
         }
