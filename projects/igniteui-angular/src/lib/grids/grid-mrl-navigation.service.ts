@@ -228,10 +228,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             let nextRow;
 
             const rowHeight = this.grid.verticalScrollContainer.getSizeAt(nextIndex);
-            const row = this.grid.getRowByIndex(selectedNode.row);
             const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-            const targetEndTopOffset = row.nativeElement.nextElementSibling ?
-            row.nativeElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
+            const targetEndTopOffset = rowElement.nextElementSibling ?
+            rowElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
                 containerHeight + rowHeight;
             if (containerHeight && containerHeight < targetEndTopOffset) {
                 this.grid.nativeElement.focus({ preventScroll: true });
