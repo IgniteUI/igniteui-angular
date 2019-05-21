@@ -98,7 +98,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
                 return;
             }
-            super.navigateDown(currentRowEl, selectedNode);
+            super.navigateDown(currentRowEl, {row: rowIndex, column: 0});
         }
     }
 
@@ -142,16 +142,18 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.grid.unpinnedColumns.forEach((col) => {
                 lastVisibleIndex = Math.max(lastVisibleIndex, col.visibleIndex);
             });
-            super.navigateUp(currentRowEl, selectedNode);
+            super.navigateUp(currentRowEl, {row: rowIndex, column: lastVisibleIndex});
         }
     }
 
-    private focusCellUpFromLayout(element, selectedNode: ISelectionNode) {
+    private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
-
+        const cell = this.grid.getRowByIndex(selectedNode.row).cells
+        .find(x => x.visibleColumnIndex === selectedNode.layout.columnVisibleIndex);
         const currentRowStart = selectedNode.layout.rowStart;
         const currentColStart = selectedNode.layout.colStart;
+        const element = cell.nativeElement.parentElement;
 
         // element up is from the same layout
         let upperElementColumn = columnLayout.children.find(c =>
@@ -171,7 +173,6 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
             const prevIndex = selectedNode.row - 1;
             let prevRow;
-            const rowElement = this.grid.getRowByIndex(selectedNode.row).nativeElement;
             const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
             if (prevIndex >= 0 && (!rowElement.previousElementSibling ||
                 rowElement.previousElementSibling.offsetTop < Math.abs(containerTopOffset))) {
@@ -200,11 +201,14 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this._focusCell(upperElement);
     }
 
-    private focusCellDownFromLayout(element, selectedNode: ISelectionNode) {
+    private focusCellDownFromLayout(rowElement, selectedNode: ISelectionNode) {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
-        const currentRowEnd = selectedNode.layout.rowEnd || 1;
+        const currentRowEnd = selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1;
         const currentColStart = selectedNode.layout.colStart;
+        const cell = this.grid.getRowByIndex(selectedNode.row).cells
+        .find(x => x.visibleColumnIndex === selectedNode.layout.columnVisibleIndex);
+        const element = cell.nativeElement.parentElement;
 
         // element down is from the same layout
         let nextElementColumn = columnLayout.children.find(c => c.rowStart === currentRowEnd &&
@@ -255,13 +259,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this._focusCell(nextElement);
     }
 
-    private focusNextCellFromLayout(element, selectedNode: ISelectionNode) {
+    private focusNextCellFromLayout(cellElement, selectedNode: ISelectionNode) {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
-        const currentColEnd = selectedNode.layout.colEnd || 1;
+        const currentColEnd = selectedNode.layout.colEnd || selectedNode.layout.colStart + 1;
         const currentRowStart = selectedNode.layout.rowStart;
         const rowIndex = selectedNode.row;
-
+        const element = cellElement.parentElement;
         // next element is from the same layout
         let nextElementColumn = columnLayout.children.find(c => c.colStart === currentColEnd &&
             c.rowStart <= currentRowStart &&
@@ -305,7 +309,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this._focusCell(nextElement);
     }
 
-    private focusPrevCellFromLayout(element, selectedNode: ISelectionNode) {
+    private focusPrevCellFromLayout(cellElement, selectedNode: ISelectionNode) {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentColStart = selectedNode.layout.colStart;
@@ -319,6 +323,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             (currentRowStart < c.rowEnd || currentRowStart < c.rowStart + c.gridRowSpan));
 
         let columnIndex = columnLayout.children.toArray().indexOf(prevElementColumn);
+        const element = cellElement.parentElement;
         let prevElement = element.children[columnIndex];
 
         if (!prevElement) {
