@@ -651,11 +651,11 @@ export class IgxSliderComponent implements
      *```
      */
     public get lowerValue(): number {
-        if (!Number.isNaN(this._lowerValue) && this._lowerValue !== undefined) {
+        if (!Number.isNaN(this._lowerValue) && this._lowerValue !== undefined && this._lowerValue >= this.lowerBound) {
             return this._lowerValue;
         }
 
-        return this._lowerValue || this.lowerBound;
+        return this.lowerBound;
     }
 
     /**
@@ -685,7 +685,7 @@ export class IgxSliderComponent implements
      *```
      */
     public get upperValue() {
-        if (!Number.isNaN(this._upperValue) && this._upperValue !== undefined) {
+        if (!Number.isNaN(this._upperValue) && this._upperValue !== undefined && this._upperValue <= this.upperBound) {
             return this._upperValue;
         }
 
@@ -797,6 +797,10 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public writeValue(value: any): void {
+        if (!value) {
+            return;
+        }
+
         this.value = value;
     }
 
@@ -982,11 +986,15 @@ export class IgxSliderComponent implements
         }
 
         let interval;
+        const trackProgress = 100;
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
-            interval = ((100 / (labels.length - 1) * 10)) / 10;
+            interval = ((trackProgress / (labels.length - 1) * 10)) / 10;
         } else {
-            interval = this.step > 1 ? this.step : null;
+            const trackRange = this.maxValue - this.minValue;
+            interval = this.step > 1 ?
+                (trackProgress / ((trackRange / this.step)) * 10) / 10
+                : null;
         }
         this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
     }
