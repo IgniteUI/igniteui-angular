@@ -206,25 +206,28 @@ export class IgxGridGroupByRowComponent {
         }
         const args = { cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
+        const activeNode = Object.assign({}, selection.activeElement);
+        activeNode.row = this.index;
         if (args.cancel) {
             return;
         }
         switch (key) {
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(this.nativeElement, this.selectionNode);
+                this.grid.navigation.navigateDown(this.nativeElement, activeNode);
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(this.nativeElement, this.selectionNode);
+                this.grid.navigation.navigateUp(this.nativeElement, activeNode);
                 break;
             case 'tab':
                 if (event.shiftKey) {
                     if (this.index === 0) {
                         this.grid.navigation.moveFocusToFilterCell();
                     } else {
+                        const orderedColumns = this.grid.navigation.gridOrderedColumns;
                         this.grid.navigation.navigateUp(this.nativeElement, { row: this.index,
-                            column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex});
+                            column: orderedColumns[orderedColumns.length - 1].visibleIndex});
                     }
                 } else {
                     if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
