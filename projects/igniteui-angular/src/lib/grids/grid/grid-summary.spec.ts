@@ -2225,7 +2225,7 @@ describe('IgxGrid - Summaries', () => {
 })
 export class SummaryColumnsWithIdenticalWidthsComponent {
 
-    @VViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();
@@ -2307,7 +2307,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
 export class CustomSummariesComponent {
     public data = SampleTestData.foodProductData();
-    @VViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
@@ -2332,7 +2332,7 @@ export class CustomSummariesComponent {
 })
 export class SummaryColumnsWithSpecificWidthsComponent {
 
-    @VViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();
