@@ -271,7 +271,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerTemplateDirective, /* TODO: add static flag */ { read: IgxNavDrawerTemplateDirective })
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective, static: true })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
     /**

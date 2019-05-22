@@ -418,9 +418,7 @@ describe('igxOverlay', () => {
             const mockItem = document.createElement('div');
             mockElement.append(mockItem);
             spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
-                return {
-                    width, height, right, bottom
-                };
+                return new DOMRect(right, bottom, width, height);
             });
 
             const mockPositioningSettings1: PositionSettings = {

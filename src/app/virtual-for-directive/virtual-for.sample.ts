@@ -1,7 +1,4 @@
-import { Component, ElementRef, ViewChild, Injectable, OnInit, AfterViewInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Http } from '@angular/http';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxForOfDirective } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 

@@ -74,7 +74,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public children: QueryList<IgxSelectItemComponent>;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), /* TODO: add static flag */ {}) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) label: IgxLabelDirective;
 
     /** @hidden @internal */
     public allowItemsFocus = false;
@@ -181,7 +181,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *  </igx-select>
      * ```
      */
-    @ContentChild(IgxSelectToggleIconDirective, /* TODO: add static flag */ { read: TemplateRef })
+    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef, static: true })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */

@@ -1,5 +1,4 @@
-import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
     IgxCsvExporterOptions, IgxExcelExporterOptions, CsvFileTypes } from 'igniteui-angular';
 

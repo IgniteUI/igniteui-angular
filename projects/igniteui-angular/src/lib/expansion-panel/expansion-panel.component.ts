@@ -145,13 +145,15 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), /* TODO: add static flag */ { read: forwardRef(() => IgxExpansionPanelBodyComponent) })
+    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent),
+        { read: forwardRef(() => IgxExpansionPanelBodyComponent), static: true })
     public body: IgxExpansionPanelBodyComponent;
 
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), /* TODO: add static flag */ { read: forwardRef(() => IgxExpansionPanelHeaderComponent) })
+    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent),
+        { read: forwardRef(() => IgxExpansionPanelHeaderComponent), static: true })
     public header: IgxExpansionPanelHeaderComponent;
 
 

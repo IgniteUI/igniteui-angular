@@ -956,7 +956,6 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items).toBeDefined();
 
             spyOn(combo.dropdown, 'selectItem').and.callThrough();
-            spyOn(combo.dropdown, 'selectedItem').and.callThrough();
             spyOn(combo.onSelectionChange, 'emit');
 
             // items are only accessible when the combo dropdown is opened;

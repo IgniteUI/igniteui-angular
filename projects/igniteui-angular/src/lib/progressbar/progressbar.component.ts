@@ -537,7 +537,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
-    @ContentChild(IgxProcessBarTextTemplateDirective, /* TODO: add static flag */ { read: IgxProcessBarTextTemplateDirective })
+    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective, static: true })
     public textTemplate: IgxProcessBarTextTemplateDirective;
 
     /**

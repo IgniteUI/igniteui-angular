@@ -559,15 +559,15 @@ class RequiredTwoWayDataBoundInputComponent {
                         </igx-input-group>
                         `})
 class InitiallyFilledInputComponent {
-    @ViewChild('igxInputGroupNotFilledUndefined', /* TODO: add static flag */ {}) public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledNull', /* TODO: add static flag */ {}) public igxInputGroupNotFilledNull: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledEmpty', /* TODO: add static flag */ {}) public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledUndefined', { static: true }) public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledNull', { static: true }) public igxInputGroupNotFilledNull: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledEmpty', { static: true }) public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
 
-    @ViewChild('igxInputGroupFilledString', /* TODO: add static flag */ {}) public igxInputGroupFilledString: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledNumber', /* TODO: add static flag */ {}) public igxInputGroupFilledNumber: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolFalse', /* TODO: add static flag */ {}) public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolTrue', /* TODO: add static flag */ {}) public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledDate', /* TODO: add static flag */ {}) public igxInputGroupFilledDate: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledString', { static: true }) public igxInputGroupFilledString: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledNumber', { static: true }) public igxInputGroupFilledNumber: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolFalse', { static: true }) public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolTrue', { static: true }) public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledDate', { static: true }) public igxInputGroupFilledDate: IgxInputGroupComponent;
 
     public notFilledUndefined = undefined;
     public notFilledNull = null;

@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Http } from '@angular/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
     IgxColumnComponent,
     IgxGridComponent,
@@ -10,7 +8,6 @@ import {
     SortingDirection,
     CsvFileTypes,
     IgxBaseExporter,
-    IgxColumnHidingComponent,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
