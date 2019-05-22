@@ -54,7 +54,6 @@ import { KEYS } from '../core/utils';
 import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
-import { getViewportRect } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 
 let NEXT_ID = 0;
@@ -634,7 +633,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
-    @ContentChild('dropDownTarget', /* TODO: add static flag */ { read: ElementRef })
+    @ContentChild('dropDownTarget', { read: ElementRef, static: false })
     protected templateDropDownTarget: ElementRef;
 
     /*
@@ -652,25 +651,25 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
     * @hidden
     */
-    @ContentChild(IgxInputDirective, /* TODO: add static flag */ {})
+    @ContentChild(IgxInputDirective, { static: true })
     protected input: IgxInputDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerTemplateDirective, /* TODO: add static flag */ { read: IgxDatePickerTemplateDirective })
+    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective, static: true })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, /* TODO: add static flag */ { read: IgxCalendarHeaderTemplateDirective })
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective, static: true })
     public headerTemplate: IgxCalendarHeaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, /* TODO: add static flag */ { read: IgxCalendarSubheaderTemplateDirective })
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective, static: true })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     public calendar: IgxCalendarComponent;
@@ -686,7 +685,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private readonly spinDelta = 1;
     private readonly defaultLocale = 'en';
-    private readonly calendarHeight = 400;
 
     private _formatOptions = {
         day: 'numeric',

@@ -274,14 +274,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), /* TODO: add static flag */ { read: IgxCalendarHeaderTemplateDirective })
+    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: false  })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
     /**
      * @hidden
      */
     // tslint:disable-next-line:max-line-length
-    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), /* TODO: add static flag */ { read: IgxCalendarSubheaderTemplateDirective })
+    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: false  })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
     /**
