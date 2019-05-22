@@ -1753,6 +1753,100 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(groupRow.focused).toBe(true);
     });
 
+    it('should allow navigation through group rows with arrow keys starting from middle of grid row', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
+                { field: 'PostalCode', rowStart: 3, colStart: 1 }
+            ]
+        }];
+
+         fix.detectChanges();
+        // group by city
+        const grid =  fix.componentInstance.grid;
+        grid.height = '700px';
+        grid.groupBy({
+            fieldName: 'City',
+            dir: SortingDirection.Asc,
+            ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
+        });
+        fix.detectChanges();
+
+         const firstBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[0].queryAll(By.css(CELL_BLOCK))[1];
+        const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[1];
+        let dummyCell;
+        let firstCell;
+        let secondCell;
+        [   dummyCell               ,
+            dummyCell  , dummyCell  ,
+            firstCell               ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+        [   secondCell               ,
+            dummyCell  , dummyCell  ,
+            dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+         firstCell.nativeElement.focus();
+        await wait();
+        fix.detectChanges();
+
+         // arrow down
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+         // check next group row is focused
+        let groupRow = grid.getRowByIndex(2);
+        expect(groupRow.focused).toBe(true);
+
+         // arrow down
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', groupRow.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+         // check first data cell is focused
+        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+        expect(document.activeElement).toEqual(secondCell.nativeElement);
+
+         // arrow up
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+         // check group row is focused
+        groupRow = grid.getRowByIndex(2);
+        expect(groupRow.focused).toBe(true);
+
+         // arrow up
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', groupRow.nativeElement, true);
+        await wait();
+        fix.detectChanges();
+
+         // check last cell in group 1 layout is focused
+        expect(fix.componentInstance.selectedCell.value).toEqual('Order Administrator');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+        expect(document.activeElement).toEqual(firstCell.nativeElement);
+    });
+
     it('should allow navigation through group rows with Tab/Shift+Tab key', async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
