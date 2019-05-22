@@ -91,7 +91,7 @@ let NEXT_ID = 0;
  * ```html
  * <igx-slider id="slider"
  *            [minValue]="0" [maxValue]="100"
- *            [isContinuous]=true [(ngModel)]="volume">
+ *            [continuous]=true [(ngModel)]="volume">
  * </igx-slider>
  * ```
  */
@@ -352,7 +352,7 @@ export class IgxSliderComponent implements
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
      * ngAfterViewInit(){
-     *     let continuous = this.slider.isCountinuous;
+     *     let continuous = this.slider.continuous;
      * }
      * ```
      */
@@ -366,7 +366,7 @@ export class IgxSliderComponent implements
      * By default is considered that the {@link IgxSliderComponent} is discrete.
      * Discrete {@link IgxSliderComponent} does not have ticks and does not shows bubble labels for values.
      * ```html
-     * <igx-slider #slider [isContinuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+     * <igx-slider #slider [continuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
      */
     public set continuous(continuous: boolean) {
@@ -418,6 +418,7 @@ export class IgxSliderComponent implements
         // recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
+        this.setTickInterval(null);
     }
 
     /**
@@ -463,6 +464,7 @@ export class IgxSliderComponent implements
         // Recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
+        this.setTickInterval(null);
     }
 
     /**
@@ -476,7 +478,11 @@ export class IgxSliderComponent implements
      *```
      */
     public get lowerBound(): number {
-        return this.valueInRange(this._lowerBound, this.minValue, this.maxValue);
+        if (!Number.isNaN(this._lowerBound) && this._lowerBound !== undefined) {
+            return this._lowerBound;
+        }
+
+        return this._minValue;
     }
 
     /**
@@ -511,7 +517,11 @@ export class IgxSliderComponent implements
      * ```
      */
     public get upperBound(): number {
-        return this.valueInRange(this._upperBound, this.minValue, this.maxValue);
+        if (!Number.isNaN(this._upperBound) && this._upperBound !== undefined) {
+            return this._upperBound;
+        }
+
+        return this._maxValue;
     }
 
     /**
@@ -577,6 +587,7 @@ export class IgxSliderComponent implements
         if (!this.isRange) {
             this.upperValue = value as number;
         } else {
+            value = this.validateInputRange(value as IRangeSliderValue);
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
         }
@@ -603,7 +614,7 @@ export class IgxSliderComponent implements
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
 
-    constructor(private renderer: Renderer2, private _cdr: ChangeDetectorRef) {}
+    constructor(private renderer: Renderer2) { }
 
     @HostListener('mousedown')
     public onMouseDown() {
@@ -640,7 +651,11 @@ export class IgxSliderComponent implements
      *```
      */
     public get lowerValue(): number {
-        return this.valueInRange(this._lowerValue, this.lowerBound, this.upperBound);
+        if (!Number.isNaN(this._lowerValue) && this._lowerValue !== undefined) {
+            return this._lowerValue;
+        }
+
+        return this._lowerValue || this.lowerBound;
     }
 
     /**
@@ -655,12 +670,7 @@ export class IgxSliderComponent implements
      */
     public set lowerValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
-
-        if (this.isRange && value > this.upperValue) {
-            this._lowerValue = this._upperValue;
-        } else {
-            this._lowerValue = value;
-        }
+        this._lowerValue = value;
 
     }
 
@@ -675,7 +685,11 @@ export class IgxSliderComponent implements
      *```
      */
     public get upperValue() {
-        return this.valueInRange(this._upperValue, this.lowerBound, this.upperBound);
+        if (!Number.isNaN(this._upperValue) && this._upperValue !== undefined) {
+            return this._upperValue;
+        }
+
+        return this.upperBound;
     }
 
     /**
@@ -690,13 +704,7 @@ export class IgxSliderComponent implements
      */
     public set upperValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
-
-        if (this.isRange && value < this.lowerValue) {
-            this._upperValue = this._lowerValue;
-        } else {
-            this._upperValue = value;
-        }
-
+        this._upperValue = value;
     }
 
     /**
@@ -744,12 +752,8 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public ngOnInit() {
-        /**
-         * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
-         */
-        if (!this.isRange) {
-            this.value = this.lowerValue;
-        }
+        this.sliderSetup();
+
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
@@ -780,8 +784,6 @@ export class IgxSliderComponent implements
     public ngAfterContentInit() {
         // Calculates the distance between every step in pixels.
         this.stepDistance = this.calculateStepDistance();
-
-        this.sliderSetup();
     }
 
     /**
@@ -814,7 +816,7 @@ export class IgxSliderComponent implements
 
     /** @hidden */
     public getEditElement() {
-        return this.slider.nativeElement;
+        return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
     /**
@@ -903,21 +905,13 @@ export class IgxSliderComponent implements
     }
 
     private sliderSetup() {
-        if (!this.lowerBound) {
-            this.lowerBound = this._minValue;
+        /**
+         * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
+         */
+        if (!this.isRange) {
+            this.value = this.minValue;
         }
 
-        if (!this.upperBound) {
-            this.upperBound = this._maxValue;
-        }
-
-        if (!this.lowerValue && this.isRange) {
-            this.lowerValue = this.lowerBound;
-        }
-
-        if (!this.upperValue) {
-            this.upperValue = this.upperBound;
-        }
     }
 
     private calculateStepDistance() {
@@ -1031,6 +1025,25 @@ export class IgxSliderComponent implements
         } else {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
         }
+    }
+
+    private validateInputRange(value: IRangeSliderValue) {
+        if (value.lower < this.lowerBound && value.upper < this.lowerBound) {
+            value.upper = this.lowerBound;
+            value.lower = this.lowerBound;
+        }
+
+        if (value.lower > this.upperBound && value.upper > this.upperBound) {
+            value.upper = this.upperBound;
+            value.lower = this.upperBound;
+        }
+
+        if (value.upper < value.lower) {
+            value.upper = this.upperValue;
+            value.lower = this.lowerValue;
+        }
+
+        return value;
     }
 
     private hasValueChanged(oldValue) {
