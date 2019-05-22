@@ -206,7 +206,7 @@ export class IgxGridGroupByRowComponent {
         }
         const args = { cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
-        const activeNode = Object.assign({}, selection.activeElement);
+        const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
         activeNode.row = this.index;
         if (args.cancel) {
             return;
@@ -226,15 +226,17 @@ export class IgxGridGroupByRowComponent {
                         this.grid.navigation.moveFocusToFilterCell();
                     } else {
                         const orderedColumns = this.grid.navigation.gridOrderedColumns;
-                        this.grid.navigation.navigateUp(this.nativeElement, { row: this.index,
-                            column: orderedColumns[orderedColumns.length - 1].visibleIndex});
+                        const lastCol =  orderedColumns[orderedColumns.length - 1];
+                        activeNode.column = lastCol.columnLayoutChild ? lastCol.parent.visibleIndex : lastCol.visibleIndex;
+                        this.grid.navigation.navigateUp(this.nativeElement, activeNode);
                     }
                 } else {
                     if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
                         this.grid.navigation.onKeydownHome(0, true);
                         return;
                     }
-                    this.grid.navigation.navigateDown(this.nativeElement, { row: this.index, column: 0 });
+                    activeNode.column = 0;
+                    this.grid.navigation.navigateDown(this.nativeElement, activeNode);
                 }
                 break;
         }
