@@ -85,9 +85,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             } else {
                 if (this.grid.rowEditable && this.isRowInEditMode(row.index)) {
                     if (dir === 'next') {
-                        this.moveNextEditable(nextCell.nativeElement, selectedNode);
+                        this.moveNextEditable(nextCell.nativeElement, { row: row.index, column: selectedNode.layout.columnVisibleIndex});
                     } else {
-                        this.movePreviousEditable(nextCell.nativeElement, selectedNode);
+                        this.movePreviousEditable(nextCell.nativeElement,
+                             { row: row.index, column: selectedNode.layout.columnVisibleIndex});
                     }
                     return;
                 }
@@ -126,8 +127,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
         const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
-        const currentRowStart = selectedNode.layout.rowStart;
-        const currentColStart = selectedNode.layout.colStart;
+        const currentRowStart = selectedNode.layout ?  selectedNode.layout.rowStart : 1;
+        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         let element;
@@ -187,8 +188,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
-        const currentRowEnd = selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1;
-        const currentColStart = selectedNode.layout.colStart;
+        const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
+        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
         let element;
         if (!isGroupRow) {
             const cell = this.grid.getRowByIndex(selectedNode.row).cells
