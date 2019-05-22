@@ -2428,12 +2428,12 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(async () => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['dragGhost'], 250, 30);
+            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['_dragGhost'], 250, 30);
             await wait();
         }).not.toThrow();
 
         fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['_dragGhost'], 250, 30);
         await wait();
 
         const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));
