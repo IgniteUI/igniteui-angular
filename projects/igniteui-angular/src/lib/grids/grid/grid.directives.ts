@@ -60,7 +60,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped && !column.columnGroup) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
-                    strategy: column.sortStrategy });
+                    strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
             }
         }
     }
