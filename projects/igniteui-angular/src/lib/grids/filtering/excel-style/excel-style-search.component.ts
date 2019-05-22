@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -23,7 +24,7 @@ export class IgxExcelStyleSearchComponent {
     public searchValue: any;
 
     @Input()
-    public data: any[];
+    public data: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -32,13 +33,6 @@ export class IgxExcelStyleSearchComponent {
     public searchInput: IgxInputDirective;
 
     constructor() {}
-
-    get filterOptions() {
-        const fo = new IgxFilterOptions();
-        fo.key = 'value';
-        fo.inputValue = this.searchValue;
-        return fo;
-    }
 
     public clearInput() {
         this.searchValue = null;
