@@ -1675,7 +1675,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
     });
 
-    it('should allow navigation through group rows with arrow keys.', async () => {
+    it('should allow navigation through group rows with arrow keys starting from group row.', async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1752,6 +1752,97 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         groupRow = grid.getRowByIndex(0);
         expect(groupRow.focused).toBe(true);
     });
+
+    it('should allow navigation through group rows with Tab/Shift+Tab key', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            // row span 3
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                 // col span 2
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'Phone', rowStart: 2, colStart: 1 },
+                { field: 'City', rowStart: 2, colStart: 2 },
+                // col span 2
+                { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                 // row span 2
+                { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 4 }
+            ]
+        }];
+        fix.detectChanges();
+        // group by city
+        const grid =  fix.componentInstance.grid;
+        grid.height = '700px';
+        grid.groupBy({
+            fieldName: 'City',
+            dir: SortingDirection.Asc,
+            ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
+        });
+        fix.detectChanges();
+
+         const firstBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[0].queryAll(By.css(CELL_BLOCK))[1];
+        const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[0];
+        let dummyCell;
+        let firstCell;
+        let secondCell;
+        [   dummyCell               ,
+            dummyCell  , dummyCell  ,
+            firstCell               ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
+        [   secondCell  ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+
+         firstCell.nativeElement.focus();
+        await wait();
+        fix.detectChanges();
+
+         // Tab
+        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false }));
+        await wait();
+        fix.detectChanges();
+
+         // check next group row is focused
+        let groupRow = grid.getRowByIndex(2);
+        expect(groupRow.focused).toBe(true);
+
+         // Tab
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false }));
+        await wait();
+        fix.detectChanges();
+
+         // check first data cell is focused
+        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+        expect(document.activeElement).toEqual(secondCell.nativeElement);
+
+         // Shift + Tab
+        secondCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait();
+        fix.detectChanges();
+
+         // check group row is focused
+        groupRow = grid.getRowByIndex(2);
+        expect(groupRow.focused).toBe(true);
+
+         // Shift + Tab
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+        await wait();
+        fix.detectChanges();
+
+         // check last cell in group 1 layout is focused
+        expect(fix.componentInstance.selectedCell.value).toEqual('Order Administrator');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+        expect(document.activeElement).toEqual(firstCell.nativeElement);
+    });
+
 
     it('tab navigation should follow correct sequence if a column is moved.', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
