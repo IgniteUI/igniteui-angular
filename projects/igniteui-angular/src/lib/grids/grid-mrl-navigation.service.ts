@@ -60,7 +60,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
     }
 
-    protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir){
+    protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir) {
         if (nextElementColumn) {
             let nextCell = row.cells.find(currCell => currCell.column === nextElementColumn);
             if (!nextCell) {

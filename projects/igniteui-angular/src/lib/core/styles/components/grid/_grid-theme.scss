@@ -496,10 +496,14 @@
         compact: 0 rem(6px)
     );
 
+    $cell-padding-comfortable: rem(24px);
+    $cell-padding-cosy: rem(16px);
+    $cell-padding-compact: rem(12px);
+
     $grid-cell-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 $cell-padding-comfortable,
+        cosy: 0 $cell-padding-cosy,
+        compact: 0 $cell-padding-compact
     );
 
     $hierarchical-grid-indent: (
@@ -529,6 +533,7 @@
     );
 
     $indicator-icon-width: rem(24px);
+    $drag-icon-size: rem(24px);
     $grouping-padding-right: rem(12px);
 
     %grid-display {
@@ -697,7 +702,6 @@
         border-bottom: none !important;
     }
 
-
     %grid-tbody {
         position: relative;
         background: --var($theme, 'content-background');
@@ -793,9 +797,40 @@
         justify-content: center;
         padding: map-get($grid-cell-padding, 'comfortable');
         padding-right: 0;
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
         background: inherit;
         z-index: 4;
         cursor: move;
+
+        %igx-icon-display {
+            width: $drag-icon-size;
+            height: $drag-icon-size;
+            font-size: $drag-icon-size;
+        }
+    }
+
+    %igx-grid__drag-indicator--cosy{
+        padding: map-get($grid-cell-padding, 'cosy');
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-cosy});
+        padding-right: 0;
+    }
+
+    %igx-grid__drag-indicator--compact {
+        padding: map-get($grid-cell-padding, 'compact');
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-compact});
+        padding-right: 0;
+    }
+
+    %igx-grid__drag-indicator--header {
+        border-right: $grid-header-border;
+    }
+
+    %igx-grid__hierarchical-expander + %igx-grid__drag-indicator {
+        padding-left: 0;
+        min-width: $drag-icon-size;
     }
 
     %igx-grid__drag-indicator--off {
@@ -2111,6 +2146,11 @@
         igx-icon {
             min-height: map-get($grid-header-height, 'compact');
         }
+    }
+
+    %igx-grid__hierarchical-expander--no-border,
+    %igx-grid__header-indentation--no-border {
+        border-right: 1px solid transparent;
     }
 
     %igx-grid__hierarchical-indent {
