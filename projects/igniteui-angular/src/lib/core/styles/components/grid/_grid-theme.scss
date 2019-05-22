@@ -699,7 +699,7 @@
     }
 
     %grid-row--mrl {
-        border-bottom: none !important;
+        border-bottom: 1px solid transparent;
     }
 
     %grid-tbody {
@@ -902,6 +902,13 @@
             %form-group-border {
                 background: --var($theme, 'edit-mode-color') !important;
             }
+        }
+    }
+
+    %grid-row--edit-mrl {
+        &:first-of-type::after {
+            top: 0;
+            z-index: 1;
         }
     }
 
