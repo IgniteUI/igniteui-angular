@@ -106,7 +106,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator>
+<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalRecords" #paginator>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
