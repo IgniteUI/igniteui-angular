@@ -2432,7 +2432,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _ngAfterViewInitPassed = false;
+    protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
 
     // Caches
@@ -3866,8 +3866,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
 
     /**
      * @hidden
@@ -3917,7 +3917,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    private get defaultTargetBodyHeight(): number {
+    protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
@@ -4008,7 +4008,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
-        if (height === 0 || isNaN(gridHeight) || this.dataLength === 0) {
+        if (height === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
