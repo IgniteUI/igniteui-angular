@@ -45,7 +45,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             const args: IRowDragStartEventArgs = {
                 owner: this,
                 dragData: this.row,
-                cancel: false
+                cancel: false,
+                hasAnimation: false
             };
 
             this.row.grid.onRowDragStart.emit(args);
@@ -70,22 +71,44 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public onPointerUp(event) {
+        const transationDuration = parseFloat(this.defaultReturnDuration) * 1000;
+
         if (!this._clicked) {
             return;
         }
-        super.onPointerUp(event);
-        this.row.dragging = false;
-        this.row.grid.rowDragging = false;
-        this.row.grid.markForCheck();
 
         const args: IRowDragEndEventArgs = {
             owner: this,
-            dragData: this.row
+            dragData: this.row,
+            hasAnimation: true
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);
         });
-        this._unsubscribe();
+
+        if (args.hasAnimation) {
+            this.animateOnRelease = true;
+        }
+
+        if (!this._lastDropArea) {
+            requestAnimationFrame(() => {
+                super.onPointerUp(event);
+                setTimeout(() => {
+                    this.onTransitionEnd(null);
+                    this.row.dragging = false;
+                    this.row.grid.rowDragging = false;
+                    this.row.grid.markForCheck();
+                    this._unsubscribe();
+                }, transationDuration);
+            });
+        }   else {
+                super.onPointerUp(event);
+                this.onTransitionEnd(null);
+                this.row.dragging = false;
+                this.row.grid.rowDragging = false;
+                this.row.grid.markForCheck();
+                this._unsubscribe();
+            }
     }
 
     protected createDragGhost(event) {
