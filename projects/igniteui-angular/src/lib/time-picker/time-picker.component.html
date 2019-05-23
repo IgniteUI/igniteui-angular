@@ -24,7 +24,7 @@
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
-<div #container [hidden]="collapsed" class="igx-time-picker"
+<div #container igxToggle class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': mode === 'dropdown', 'igx-time-picker--vertical': vertical && mode === 'dialog'}">
     <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
