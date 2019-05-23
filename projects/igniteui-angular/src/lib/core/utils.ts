@@ -226,6 +226,13 @@ export function isFirefox(): boolean {
     return firefoxBrowser;
 }
 
+/**
+ * @hidden
+ */
+export function isLeftClick(event: PointerEvent) {
+    return event.buttons === 1;
+}
+
 /** @hidden */
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',

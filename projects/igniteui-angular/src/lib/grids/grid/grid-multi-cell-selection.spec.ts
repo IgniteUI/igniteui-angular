@@ -87,6 +87,20 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
 
+        it('Should not lose selection on right clicking', () => {
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
+            grid.setSelection(range);
+            detect();
+
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
+
+            const endCell = grid.getCellByColumn(4, 'ID');
+            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { buttons: 2 }));
+            detect();
+
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
+        });
+
         it('Should be able to select multiple ranges with Ctrl key and mouse drag', () => {
             let firstCell = grid.getCellByColumn(1, 'ParentID');
             let secondCell = grid.getCellByColumn(2, 'Name');
