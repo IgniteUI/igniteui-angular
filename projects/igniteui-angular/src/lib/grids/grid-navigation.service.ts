@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnLayoutComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 
 enum MoveDirection {
@@ -22,8 +22,13 @@ export class IgxGridNavigationService {
         return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
     }
 
-    get verticalDisplayContainerElement() {
-        return this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+    get verticalDCTopOffset() {
+        return  parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+    }
+
+    public getColunmByVisibleIndex(visibleColIndex: number): IgxColumnComponent {
+        visibleColIndex = visibleColIndex < 0 ? 0 : visibleColIndex;
+        return this.grid.columnList.find((col) => !col.columnLayout && col.visibleIndex === visibleColIndex);
     }
 
     public horizontalScroll(rowIndex) {
@@ -41,13 +46,51 @@ export class IgxGridNavigationService {
             visibleColumnIndex;
     }
 
+    public getChildColumnScrollPositions(visibleColIndex: number) {
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        const targetCol: IgxColumnComponent = this.getColunmByVisibleIndex(visibleColIndex);
+        const parent = targetCol.parent;
+        const parentVIndex = forOfDir.igxForOf.indexOf(parent);
+        let leftScroll = forOfDir.getColumnScrollLeft(parentVIndex), rightScroll = 0;
+        parent.children.forEach((c) => {
+            const rowEnd = c.rowEnd !== undefined ? c.rowEnd : c.rowStart + 1;
+            const targetRowEnd = targetCol.rowEnd !== undefined ? targetCol.rowEnd : targetCol.rowStart + 1;
+            if (c.rowStart >= targetCol.rowStart && rowEnd >= targetRowEnd && c.visibleIndex < targetCol.visibleIndex) {
+                leftScroll += parseInt(c.width, 10);
+            }
+        });
+        rightScroll = leftScroll + parseInt(targetCol.width, 10);
+        return {leftScroll, rightScroll};
+    }
+
+    public getVerticalScrollPositions(rowIndex: number, visibleColIndex: number) {
+        const targetCol: IgxColumnComponent = this.getColunmByVisibleIndex(visibleColIndex);
+        const topOffset = (targetCol.rowStart - 1)  * this.grid.defaultRowHeight;
+        const rowTop = this.grid.verticalScrollContainer.sizesCache[rowIndex] + topOffset;
+        const rowBottom = rowTop + (this.grid.defaultRowHeight * targetCol.gridRowSpan);
+        return { rowTop, rowBottom, topOffset };
+    }
+
+    public isChildColumnVisible(visibleColIndex: number): boolean { // returns if column inside MRL is fullyVisible
+        const targetCol = this.grid.columnList.find((col) => !col.columnLayout && !col.columnGroup && col.visibleIndex === visibleColIndex);
+        if (this.isParentColumnFullyVisible(targetCol.parent)) { return true; }
+        const scrollPos = this.getChildColumnScrollPositions(visibleColIndex);
+        return this.displayContainerWidth >= scrollPos.rightScroll - this.displayContainerScrollLeft &&
+        this.displayContainerScrollLeft <= scrollPos.leftScroll;
+    }
+
+    private isParentColumnFullyVisible(parent: IgxColumnLayoutComponent): boolean { // returns if parent layout is fullyVisible
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        const horizontalScroll = forOfDir.getHorizontalScroll();
+        if (!horizontalScroll.clientWidth || parent.pinned) { return true; }
+        const index = forOfDir.igxForOf.indexOf(parent);
+        return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft &&
+            this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(index);
+    }
+
+
     public isColumnFullyVisible(visibleColumnIndex: number) {
-        let forOfDir;
-        if (this.grid.dataRowList.length > 0) {
-            forOfDir = this.grid.dataRowList.first.virtDirRow;
-        } else {
-            forOfDir = this.grid.headerContainer;
-        }
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
         if (!horizontalScroll.clientWidth ||
             this.grid.columnList.filter(c => !c.columnGroup).find((column) => column.visibleIndex === visibleColumnIndex).pinned) {
@@ -58,12 +101,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnLeftFullyVisible(visibleColumnIndex) {
-        let forOfDir;
-        if (this.grid.dataRowList.length > 0) {
-            forOfDir = this.grid.dataRowList.first.virtDirRow;
-        } else {
-            forOfDir = this.grid.headerContainer;
-        }
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
         if (!horizontalScroll.clientWidth ||
             this.grid.columnList.filter(c => !c.columnGroup).find((column) => column.visibleIndex === visibleColumnIndex).pinned) {
@@ -271,9 +309,7 @@ export class IgxGridNavigationService {
         if (currentRowIndex === 0) {
             return;
         }
-        const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
-        if (!rowElement.previousElementSibling ||
-            rowElement.previousElementSibling.offsetTop < Math.abs(containerTopOffset)) {
+        if (!rowElement.previousElementSibling || rowElement.previousElementSibling.offsetTop < Math.abs(this.verticalDCTopOffset)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(currentRowIndex - 1);
             this.grid.verticalScrollContainer.onChunkLoad
@@ -305,9 +341,8 @@ export class IgxGridNavigationService {
         }
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex + 1);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const targetEndTopOffset = rowElement.nextElementSibling ?
-            rowElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
-            containerHeight + rowHeight;
+        const targetEndTopOffset = !rowElement.nextElementSibling ? containerHeight + rowHeight :
+            rowElement.nextElementSibling.offsetTop + rowHeight + this.verticalDCTopOffset;
         this.grid.nativeElement.focus({ preventScroll: true });
         if (containerHeight && containerHeight < targetEndTopOffset) {
             const nextIndex = currentRowIndex + 1;
@@ -554,19 +589,92 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(targetRowIndex): boolean {
-        const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
         const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
             .concat(this.grid.rowList.toArray()).find(r => r.index === targetRowIndex);
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const targetEndTopOffset = targetRow ? targetRow.nativeElement.offsetTop + rowHeight + containerTopOffset :
+        const targetEndTopOffset = targetRow ? targetRow.nativeElement.offsetTop + rowHeight + this.verticalDCTopOffset :
                 containerHeight + rowHeight;
-        if (!targetRow || targetRow.nativeElement.offsetTop < Math.abs(containerTopOffset)
+        if (!targetRow || targetRow.nativeElement.offsetTop < Math.abs(this.verticalDCTopOffset)
                 || containerHeight && containerHeight < targetEndTopOffset) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public shouldPerformVerticalScrollMRL(rowIndex: number, visibleColumnIndex: number): boolean {
+         if (!this.shouldPerformVerticalScroll(rowIndex)) {return false; }
+        const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
+            .concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
+        const scrollTop =  Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
+        const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
+        const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
+        if (!targetRow || targetRow.nativeElement.offsetTop + scrollPos.topOffset < Math.abs(this.verticalDCTopOffset)
+            || containerHeight && containerHeight < scrollPos.rowBottom - scrollTop) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public performVerticalScrollMRL(rowIndex: number, visibleColumnIndex: number) {
+        const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
+        const scrollTop = Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
+        const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
+        const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
+            .concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
+        const isPrevious =  (scrollTop > scrollPos.rowTop) && (!targetRow ||
+                targetRow.nativeElement.offsetTop + scrollPos.topOffset < Math.abs(this.verticalDCTopOffset));
+        const scrollAmount = isPrevious ? scrollPos.rowTop : Math.abs(scrollTop + containerHeight - scrollPos.rowBottom);
+        if (isPrevious) {
+            this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = scrollAmount;
+        } else {
+            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
+        }
+    }
+
+    public performHorizontalScrollInMRL(visibleColumnIndex: number) {
+        const scrollPos = this.getChildColumnScrollPositions(visibleColumnIndex);
+        const nextScroll = !(this.displayContainerScrollLeft <= scrollPos.leftScroll) &&
+        this.displayContainerWidth >= scrollPos.rightScroll - this.displayContainerScrollLeft ?
+        scrollPos.leftScroll : scrollPos.rightScroll - this.displayContainerWidth;
+        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = nextScroll;
+    }
+
+    // TODO: navigate to any element an focus it when we have a Grid with MRL
+    public scrollToElemenTMRL(rowIndex, visibleColIndex, isSummary = false) {
+        let groupRow = false;
+        if (this.grid.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
+            groupRow = true;
+            visibleColIndex = -1;
+        }
+        if (groupRow || this.isChildColumnVisible(visibleColIndex)) {
+            if (this.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
+                this.performVerticalScrollMRL(rowIndex, visibleColIndex);
+                this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
+                });
+            } else {
+                this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
+            }
+        } else {
+            this.performHorizontalScrollInMRL(visibleColIndex);
+            this.grid.parentVirtDir.onChunkLoad
+            .pipe(first()).subscribe(() => {
+                if (this.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
+                    this.performVerticalScrollMRL(rowIndex, visibleColIndex);
+                    this.grid.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
+                    });
+                } else {
+                    this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
+                }
+            });
+        }
+        return;
     }
 
     private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
