@@ -18,7 +18,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE } from '../core/utils';
+import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
@@ -668,6 +668,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerdown = (event: PointerEvent) => {
+        if (!isLeftClick(event)) { return; }
         this.selectionService.pointerDown(this.selectionNode,
             event.shiftKey, event.ctrlKey);
     }
@@ -678,7 +679,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
-        const dragMode = this.selectionService.pointerEnter(this.selectionNode, event.buttons === 1);
+        const dragMode = this.selectionService.pointerEnter(this.selectionNode, isLeftClick(event));
         if (dragMode) {
             this.grid.cdr.detectChanges();
         }
@@ -688,7 +689,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @hidden
      * @internal
      */
-    pointerup = () => {
+    pointerup = (event: PointerEvent) => {
+        if (!isLeftClick(event)) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
         }
