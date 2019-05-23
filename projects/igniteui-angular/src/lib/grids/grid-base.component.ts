@@ -4848,8 +4848,38 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
         this.wheelHandler();
+        let groupRow = false;
         if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
+            groupRow = true;
             visibleColIndex = -1;
+        }
+        if (!groupRow && this.hasColumnLayouts) {
+            if (visibleColIndex === -1 || this.navigation.isChildColumnVisible(visibleColIndex)) {
+                if (this.navigation.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
+                    this.navigation.performVerticalScrollMRL(rowIndex, visibleColIndex);
+                    this.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
+                    });
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }
+            } else {
+                this.navigation.performHorizontalScrollInMRL(visibleColIndex);
+                this.parentVirtDir.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    if (this.navigation.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
+                        this.navigation.performVerticalScrollMRL(rowIndex, visibleColIndex);
+                        this.verticalScrollContainer.onChunkLoad
+                        .pipe(first()).subscribe(() => {
+                            this.executeCallback(rowIndex, visibleColIndex, cb);
+                        });
+                    } else {
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
+                    }
+                });
+            }
+            return;
         }
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
             && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
@@ -4948,8 +4978,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
+        debugger;
         let targetType, target;
         const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        console.log(row);
         if (!row) { return; }
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
