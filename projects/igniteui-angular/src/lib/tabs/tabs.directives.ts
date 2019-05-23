@@ -35,9 +35,6 @@ export class IgxRightButtonStyleDirective {
     }
 
     private getRightButtonStyle(): string {
-        if (this.tabs.hasContentTabs) {
-            return ButtonStyle.NOT_DISPLAYED;
-        }
         if (this.tabs.viewPort && this.tabs.itemsContainer && this.tabs.headerContainer) {
             const viewPortWidth = this.tabs.viewPort.nativeElement.offsetWidth;
 
@@ -95,9 +92,6 @@ export class IgxLeftButtonStyleDirective {
     private getLeftButtonStyle(): string {
         // We use this hacky way to get the width of the itemsContainer,
         // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        if (this.tabs.hasContentTabs) {
-            return ButtonStyle.NOT_DISPLAYED;
-        }
         if (this.tabs.itemsContainer && this.tabs.headerContainer) {
             const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
             let itemsContainerWidth = 0;

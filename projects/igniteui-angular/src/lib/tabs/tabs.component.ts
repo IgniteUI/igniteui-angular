@@ -164,11 +164,25 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * ```typescript
-     * const tabItems = this.myTabComponent.tabs;
+     * const tabItems = this.myTabComponent.viewTabs;
      * ```
      */
     @ViewChildren(forwardRef(() => IgxTabItemComponent))
-    public tabs: QueryList<IgxTabItemComponent>;
+    public viewTabs: QueryList<IgxTabItemComponent>;
+
+    /**
+     * Provides an observable collection of all `IgxTabItemComponent`s.
+     * First try to get them as content children if not available get them as view children.
+     * ```typescript
+     * const tabItems = this.myTabComponent.tabs;
+     * ```
+     */
+    public get tabs(): QueryList<IgxTabItemComponent> {
+        if (this.hasContentTabs) {
+            return this.contentTabs;
+        }
+        return this.viewTabs;
+    }
 
     /**
      *@hidden
@@ -230,15 +244,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     @HostListener('onTabItemSelected', ['$event'])
     public selectedGroupHandler(args) {
         if (this.hasContentTabs) {
-            this.contentTabs.forEach((theTab) => {
-                if (theTab.isSelected) {
-                    theTab.isSelected = false;
-                    this.onTabItemDeselected.emit({
-                        tab: theTab,
-                        group: null
-                    });
-                }
-            });
+            const theTabsArray = this.tabs.toArray();
+            if (this.selectedIndex !== -1 && theTabsArray[this.selectedIndex] !== undefined) {
+                this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
+            }
+            this.selectedIndex = args.tab.index;
+            this.onTabItemDeselected.emit({ tab: args.tab, group: null });
         } else {
             const prevSelectedIndex = this.selectedIndex;
             if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {

@@ -50,10 +50,6 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /**@hidden*/
-    @ViewChild('defaultContentTabTemplate', { read: TemplateRef })
-    protected defaultContentTabTemplate: TemplateRef<any>;
-
     private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
     private _isSelected = false;
@@ -186,16 +182,16 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      */
     @Input()
     get isSelected(): boolean {
-        if (this.relatedGroup) {
-            return this.relatedGroup.isSelected;
-        }
-        return this._isSelected;
+        return this.relatedGroup ? this.relatedGroup.isSelected : this._isSelected;
     }
     set isSelected(newValue: boolean) {
         if (this.relatedGroup) {
             this.relatedGroup.isSelected = newValue;
-        } else {
+        } else if (this._isSelected !== newValue) {
             this._isSelected = newValue;
+            if (this._isSelected) {
+                this._tabs.onTabItemSelected.emit({ tab: this, group: null });
+            }
         }
     }
 
@@ -213,7 +209,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         if (this.relatedGroup) {
             this.relatedGroup.select(focusDelay);
         } else {
-            this.isSelected = true;
+            this._isSelected = true;
             this._tabs.onTabItemSelected.emit({ tab: this, group: null });
         }
     }
@@ -233,13 +229,10 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      * @hidden
      */
     public get template(): TemplateRef<any> {
-        if (this.relatedGroup) {
-            if (this.relatedGroup.customTabTemplate) {
-                return this.relatedGroup.customTabTemplate;
-            }
-            return this.defaultTabTemplate;
+        if (this.relatedGroup && this.relatedGroup.customTabTemplate) {
+            return this.relatedGroup.customTabTemplate;
         }
-        return this.defaultContentTabTemplate;
+        return this.defaultTabTemplate;
     }
 
     /**
@@ -247,8 +240,8 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      */
     public get context(): any {
         if (this.relatedGroup) {
-            return { $implicit: this.relatedGroup };
+            return this.relatedGroup;
         }
-        return { $implicit: this };
+        return this;
     }
 }

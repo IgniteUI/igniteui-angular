@@ -65,24 +65,39 @@ export class IgxTabTemplateDirective {
 export class IgxBottomNavComponent implements AfterViewInit {
 
     /**
-     * Gets the `IgxTabComponent` elements in the tab bar component.
+     * Gets the `IgxTabComponent` elements in the tab bar component created based on the provided panels.
      * ```typescript
-     * let tabs: QueryList<IgxTabComponent> =  this.tabBar.tabs;
+     * let tabs: QueryList<IgxTabComponent> =  this.tabBar.viewTabs;
      * ```
      * @memberof IgxBottomNavComponent
      */
     @ViewChildren(forwardRef(() => IgxTabComponent))
-    public tabs: QueryList<IgxTabComponent>;
+    public viewTabs: QueryList<IgxTabComponent>;
 
     /**
-     * Gets the `IgxTabComponent` elements in the tab bar component.
+     * Gets the `IgxTabComponent` elements in the tab bar component defined as content child.
      * ```typescript
-     * let tabs: QueryList<IgxTabComponent> =  this.tabBar.tabs;
+     * let tabs: QueryList<IgxTabComponent> =  this.tabBar.contentTabs;
      * ```
      * @memberof IgxBottomNavComponent
      */
     @ContentChildren(forwardRef(() => IgxTabComponent))
     public contentTabs: QueryList<IgxTabComponent>;
+
+    /**
+     * Gets the `IgxTabComponent` elements for this bottom navigation component.
+     * First try to get them as content children if not available get them as view children.
+     * ```typescript
+     * let tabs: QueryList<IgxTabComponent> =  this.tabBar.tabs;
+     * ```
+     * @memberof IgxBottomNavComponent
+     */
+    public get tabs(): QueryList<IgxTabComponent> {
+        if (this.hasContentTabs) {
+            return this.contentTabs;
+        }
+        return this.viewTabs;
+    }
 
     /**
      * Gets the `IgxTabPanelComponent` elements in the tab bar component.
@@ -184,17 +199,10 @@ export class IgxBottomNavComponent implements AfterViewInit {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                if (this.hasContentTabs) {
-                    const selectableTabs = this.contentTabs.filter((p) => !p.disabled);
-                    if (selectableTabs[0]) {
-                        selectableTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
-                    }
-                } else {
-                    const selectablePanels = this.panels.filter((p) => !p.disabled);
-                    const panel = selectablePanels[0];
-                    if (panel) {
-                        panel.select();
-                    }
+                const selectablePanels = this.panels.filter((p) => !p.disabled);
+                const panel = selectablePanels[0];
+                if (panel) {
+                    panel.select();
                 }
             }
         }, 0);
@@ -346,6 +354,15 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
         }
+    }
+
+    /**
+     * Gets the changes and updates accordingly applied to the tab/panel.
+     *
+     * @memberof IgxTabComponent
+     */
+    get changesCount(): number {
+        return this.relatedTab ? this.relatedTab.changesCount : 0;
     }
 
     /**
@@ -579,10 +596,6 @@ export class IgxTabComponent {
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /**@hidden*/
-    @ViewChild('defaultContentTabTemplate', { read: TemplateRef })
-    protected defaultContentTabTemplate: TemplateRef<any>;
-
     /**
      * Returns the `template` for this IgxTabComponent.
      * ```typescript
@@ -591,26 +604,23 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     public get template(): TemplateRef<any> {
-        if (this.relatedPanel) {
-            if (this.relatedPanel.customTabTemplate) {
-                return this.relatedPanel.customTabTemplate;
-            }
-            return this.defaultTabTemplate;
+        if (this.relatedPanel && this.relatedPanel.customTabTemplate) {
+            return this.relatedPanel.customTabTemplate;
         }
-        return this.defaultContentTabTemplate;
+        return this.defaultTabTemplate;
     }
 
     /**
      * Returns the `context` object for the template of this `IgxTabComponent`.
      * ```typescript
-     * let tabItemContext =  this.tabItem.context;
+     * let tabItemContext = this.tabItem.context;
      * ```
      */
     public get context(): any {
         if (this.relatedPanel) {
-            return { $implicit: this.relatedPanel };
+            return this.relatedPanel;
         }
-        return { $implicit: this };
+        return this;
     }
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
