@@ -4978,7 +4978,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
-        debugger;
         let targetType, target;
         const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
         console.log(row);
