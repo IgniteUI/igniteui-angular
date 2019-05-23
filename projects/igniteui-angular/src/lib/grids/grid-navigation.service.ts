@@ -644,37 +644,6 @@ export class IgxGridNavigationService {
 
     // TODO: navigate to any element an focus it when we have a Grid with MRL
     public scrollToElemenTMRL(rowIndex, visibleColIndex, isSummary = false) {
-        let groupRow = false;
-        if (this.grid.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
-            groupRow = true;
-            visibleColIndex = -1;
-        }
-        if (groupRow || this.isChildColumnVisible(visibleColIndex)) {
-            if (this.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
-                this.performVerticalScrollMRL(rowIndex, visibleColIndex);
-                this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
-                    this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
-                });
-            } else {
-                this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
-            }
-        } else {
-            this.performHorizontalScrollInMRL(visibleColIndex);
-            this.grid.parentVirtDir.onChunkLoad
-            .pipe(first()).subscribe(() => {
-                if (this.shouldPerformVerticalScrollMRL(rowIndex, visibleColIndex)) {
-                    this.performVerticalScrollMRL(rowIndex, visibleColIndex);
-                    this.grid.verticalScrollContainer.onChunkLoad
-                    .pipe(first()).subscribe(() => {
-                        this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
-                    });
-                } else {
-                    this.getCellElementByVisibleIndex(rowIndex, visibleColIndex, isSummary).focus({ preventScroll: true });
-                }
-            });
-        }
-        return;
     }
 
     private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
