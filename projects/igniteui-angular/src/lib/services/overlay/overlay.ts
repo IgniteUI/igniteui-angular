@@ -627,10 +627,8 @@ export class IgxOverlayService implements OnDestroy {
                     let clickOnPositionTarget = false;
                     if (positionTarget) {
                         const positionTargetRect = positionTarget.getBoundingClientRect();
-                        if (ev.clientX >= positionTargetRect.left && ev.clientX <= positionTargetRect.right &&
-                            ev.clientY >= positionTargetRect.top && ev.clientY <= positionTargetRect.bottom) {
-                                clickOnPositionTarget = true;
-                            }
+                        clickOnPositionTarget = ev.clientX >= positionTargetRect.left && ev.clientX <= positionTargetRect.right &&
+                                                ev.clientY >= positionTargetRect.top && ev.clientY <= positionTargetRect.bottom;
                     }
 
                     if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {

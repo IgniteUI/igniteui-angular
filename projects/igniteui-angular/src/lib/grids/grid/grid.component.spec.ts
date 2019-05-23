@@ -2835,13 +2835,16 @@ describe('IgxGrid Component Tests', () => {
 
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
+                tick();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
+                tick();
                 // show column
-                grid.toolbar.columnHidingButton.nativeElement.click();
                 targetCheckbox.nativeElement.click();
+                tick();
+                grid.toolbar.toggleColumnHidingUI();
                 tick();
 
                 expect(targetCell.value).toEqual('Chai');
