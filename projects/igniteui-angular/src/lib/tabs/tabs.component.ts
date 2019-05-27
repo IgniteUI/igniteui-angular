@@ -50,7 +50,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
     * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
     * ```typescript
-    * const tabItems = this.myTabComponent.tabsAsContentChildren;
+    * const tabItems = this.myTabComponent.contentTabs;
     * ```
     */
     @ContentChildren(forwardRef(() => IgxTabItemComponent))
@@ -249,7 +249,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
                 this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
             }
             this.selectedIndex = args.tab.index;
-            this.onTabItemDeselected.emit({ tab: args.tab, group: null });
         } else {
             const prevSelectedIndex = this.selectedIndex;
             if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
@@ -304,26 +303,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * @hidden
-     */
-    get tabItemsContainer1Class(): string {
-        if (this.hasContentTabs) {
-            return 'igx-tabs__header';
-        }
-        return 'igx-tabs__content-fixed';
-    }
-
-    /**
-     * @hidden
-     */
-    get tabItemsContainer2Class(): string {
-        if (this.hasContentTabs) {
-            return 'igx-tabs__header-wrapper-fixed igx-tabs__header-wrapper-fluid';
-        }
-        return 'igx-tabs__content-fluid';
-    }
-
     constructor(private _element: ElementRef) {
     }
 
@@ -353,7 +332,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         requestAnimationFrame(() => {
             if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
                 // if nothing is selected - select the first tabs group
-                this.selectGroupByIndex(0);
+                if (!this.hasContentTabs) {
+                    this.selectGroupByIndex(0);
+                }
             } else {
                 this.selectGroupByIndex(this.selectedIndex);
             }
@@ -375,11 +356,17 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     private selectGroupByIndex(selectedIndex: number): void {
-        const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
-        const group = selectableGroups[selectedIndex];
-
-        if (group) {
-            group.select(0);
+        if (this.hasContentTabs) {
+            const aTab = this.tabs.toArray()[selectedIndex];
+            if (aTab) {
+                aTab.select();
+            }
+        } else {
+            const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
+            const group = selectableGroups[selectedIndex];
+            if (group) {
+                group.select(0);
+            }
         }
     }
 

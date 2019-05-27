@@ -35,33 +35,29 @@ export class IgxRightButtonStyleDirective {
     }
 
     private getRightButtonStyle(): string {
-        if (this.tabs.viewPort && this.tabs.itemsContainer && this.tabs.headerContainer) {
-            const viewPortWidth = this.tabs.viewPort.nativeElement.offsetWidth;
+        const viewPortWidth = this.tabs.viewPort.nativeElement.offsetWidth;
 
-            // We use this hacky way to get the width of the itemsContainer,
-            // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-            const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
-            let itemsContainerWidth = 0;
-            if (itemsContainerChildrenCount > 1) {
-                const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
-                itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
-            }
-            const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
-            const offset = this.tabs.offset;
-            const total = offset + viewPortWidth;
+        // We use this hacky way to get the width of the itemsContainer,
+        // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
+        const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
+        let itemsContainerWidth = 0;
+        if (itemsContainerChildrenCount > 1) {
+            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
+            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+        }
+        const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
+        const offset = this.tabs.offset;
+        const total = offset + viewPortWidth;
 
-            // Fix for IE 11, a difference is accumulated from the widths calculations.
-            if (itemsContainerWidth - headerContainerWidth <= 1 && offset === 0) {
-                return ButtonStyle.NOT_DISPLAYED;
-            }
-
-            if (itemsContainerWidth > total) {
-                return ButtonStyle.VISIBLE;
-            } else {
-                return ButtonStyle.HIDDEN;
-            }
-        } else {
+        // Fix for IE 11, a difference is accumulated from the widths calculations.
+        if (itemsContainerWidth - headerContainerWidth <= 1 && offset === 0) {
             return ButtonStyle.NOT_DISPLAYED;
+        }
+
+        if (itemsContainerWidth > total) {
+            return ButtonStyle.VISIBLE;
+        } else {
+            return ButtonStyle.HIDDEN;
         }
     }
 }
@@ -92,26 +88,22 @@ export class IgxLeftButtonStyleDirective {
     private getLeftButtonStyle(): string {
         // We use this hacky way to get the width of the itemsContainer,
         // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        if (this.tabs.itemsContainer && this.tabs.headerContainer) {
-            const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
-            let itemsContainerWidth = 0;
-            if (itemsContainerChildrenCount > 1) {
-                const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
-                itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+        const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
+        let itemsContainerWidth = 0;
+        if (itemsContainerChildrenCount > 1) {
+            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
+            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+        }
+        const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
+        const offset = this.tabs.offset;
+        if (offset === 0) {
+            // Fix for IE 11, a difference is accumulated from the widths calculations.
+            if (itemsContainerWidth - headerContainerWidth <= 1) {
+                return ButtonStyle.NOT_DISPLAYED;
             }
-            const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
-            const offset = this.tabs.offset;
-            if (offset === 0) {
-                // Fix for IE 11, a difference is accumulated from the widths calculations.
-                if (itemsContainerWidth - headerContainerWidth <= 1) {
-                    return ButtonStyle.NOT_DISPLAYED;
-                }
-                return ButtonStyle.HIDDEN;
-            } else {
-                return ButtonStyle.VISIBLE;
-            }
+            return ButtonStyle.HIDDEN;
         } else {
-            return ButtonStyle.NOT_DISPLAYED;
+            return ButtonStyle.VISIBLE;
         }
     }
 }
