@@ -242,7 +242,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         }
         const cb = () => {
             const nextElement = nextElementColumn.cells.find((c) => c.rowIndex === rowIndex).nativeElement;
-            nextElement.focus({ preventScroll: true });
+           this._focusCell(nextElement);
         };
         if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
@@ -281,7 +281,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
         const cb = () => {
             const prevElement = prevElementColumn.cells.find((c) => c.rowIndex === rowIndex).nativeElement;
-            prevElement.focus({ preventScroll: true });
+            this._focusCell(prevElement);
         };
         if (!this.isColumnLeftFullyVisible(prevElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
@@ -372,7 +372,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 leftScroll += parseInt(c.calcWidth, 10);
             }
         });
-        rightScroll = leftScroll + parseInt(targetCol.width, 10);
+        rightScroll = leftScroll + parseInt(targetCol.calcWidth, 10);
         return {leftScroll, rightScroll};
     }
 
@@ -442,9 +442,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
                 }
         });
-        const nextScroll = !(this.displayContainerScrollLeft <= scrollPos.leftScroll) &&
-        this.displayContainerWidth >= scrollPos.rightScroll - this.displayContainerScrollLeft ?
-        scrollPos.leftScroll : scrollPos.rightScroll - this.displayContainerWidth;
+        const isPrevItem =  hScroll.getHorizontalScroll().scrollLeft > scrollPos.leftScroll;
+        const containerSize = parseInt(hScroll.igxForContainerSize, 10);
+        const nextScroll = isPrevItem ? scrollPos.leftScroll : scrollPos.rightScroll - containerSize;
         hScroll.getHorizontalScroll().scrollLeft = nextScroll;
     }
 

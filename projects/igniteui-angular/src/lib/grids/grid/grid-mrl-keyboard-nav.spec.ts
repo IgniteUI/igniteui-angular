@@ -886,8 +886,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         const lastCell = grid.getCellByColumn(0, 'ContactTitle');
         expect(lastCell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(600);
-        const diff = lastCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(600);
+        // check if cell right edge is visible
+        const diff = lastCell.nativeElement.getBoundingClientRect().right -
+        parseInt(grid.width, 10) + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
      });
 
@@ -1276,7 +1278,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell = grid.getCellByColumn(0, 'City');
         expect(cell.focused).toBe(true);
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(300);
-        let diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
+        let diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
         // arrow left
