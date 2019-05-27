@@ -68,19 +68,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
 
     /**
-     * @inheritdoc
-     */
-    public get rowDraggable(): boolean {
-        return this.parent ? this.parent.rowDraggable : this._rowDrag;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public set rowDraggable(val: boolean) {
-        this._rowDrag = val;
-    }
-    /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-hierarchical-grid [id]="'igx-hgrid-1'" [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
@@ -103,6 +90,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @Input()
     public set data(value: any[]) {
         this._data = value;
+        if (this.parent) {
+            this.calculateGridHeight();
+        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -693,6 +683,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected _calculateGridBodyHeight() {
+        if (!this.parent || !this.isPercentHeight) {
+            return super._calculateGridBodyHeight();
+        }
+        const bodyHeight = this.defaultTargetBodyHeight;
+        return bodyHeight > 0 ? bodyHeight : null;
     }
 
     private hg_verticalScrollHandler(event) {

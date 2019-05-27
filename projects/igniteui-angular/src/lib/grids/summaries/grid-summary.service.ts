@@ -99,7 +99,7 @@ export class IgxGridSummaryService {
             }
         });
         this.maxSummariesLenght = maxSummaryLength;
-        this.summaryHeight =  maxSummaryLength * this.grid.defaultRowHeight;
+        this.summaryHeight =  maxSummaryLength * this.grid.defaultSummaryHeight;
         return this.summaryHeight;
     }
 

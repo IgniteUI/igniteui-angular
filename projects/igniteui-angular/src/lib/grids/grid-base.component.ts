@@ -2508,7 +2508,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _ngAfterViewInitPassed = false;
+    protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2946,6 +2946,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return 32;
             default:
                 return 50;
+        }
+    }
+
+    get defaultSummaryHeight(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 30;
+            case DisplayDensity.compact:
+                return 24;
+            default:
+                return 36;
         }
     }
 
@@ -3955,15 +3966,29 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
+
+    /**
+     * @hidden
+     */
+    protected get isPercentWidth() {
+        return this._width && this._width.indexOf('%') !== -1;
+    }
+
+    /**
+     * @hidden
+     */
+    protected get isPercentHeight() {
+        return this._height && this._height.indexOf('%') !== -1;
+    }
 
     /**
      * @hidden
      * Sets this._height
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom) {
+        if (!this.isPercentHeight || !this._height || !this.isAttachedToDom || this.rowBasedHeight === 0) {
             return;
         }
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
@@ -3990,13 +4015,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     column.defaultWidth = this._columnWidth;
                 }
             });
+            this.resetCachedWidths();
         }
     }
 
     /**
      * @hidden
      */
-    private get defaultTargetBodyHeight(): number {
+    protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
@@ -4071,7 +4097,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupAreaHeight = this.getGroupAreaHeight();
         let gridHeight;
 
-        if (this._height && this._height.indexOf('%') !== -1) {
+        if (this.isPercentHeight) {
             /*height in %*/
             if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
                 gridHeight = parseInt(computed.getPropertyValue('height'), 10);
@@ -4088,7 +4114,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
-            return this.defaultTargetBodyHeight;
+            const bodyHeight = this.defaultTargetBodyHeight;
+            return bodyHeight > 0 ? bodyHeight : null;
         }
 
         return height;
@@ -4171,7 +4198,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const el = this.document.getElementById(this.nativeElement.id);
 
-        if (this._width && this._width.indexOf('%') !== -1) {
+        if (this.isPercentWidth) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
                 parseInt(computed.getPropertyValue('width'), 10) : null;
@@ -4303,11 +4330,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const isPercentage = this._width && this._width.indexOf('%') !== -1;
-        let width = isPercentage ?
+        let width = this.isPercentWidth ?
             this.calcWidth :
             parseInt(this._width, 10);
-        if (this.hasVerticalSroll() && !isPercentage) {
+        if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);
