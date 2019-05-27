@@ -95,13 +95,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, selectedNode: ISelectionNode) {
-        const layout = selectedNode.layout;
-        const visibleColumnIndex = layout.columnVisibleIndex;
+        const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
         const nextElementColumn = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex + 1);
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
-        this.resetStartNavigationCell(layout.colStart, layout.rowStart, null);
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
+        this.resetStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
     }
 
     protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir) {
@@ -161,14 +160,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
-        const layout = selectedNode.layout;
         const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
-        this.resetStartNavigationCell(layout.colStart, layout.rowStart, null);
         const prevElementColumn =
          this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex - 1 && !x.hidden);
          this._moveFocusToCell(currentRowEl, prevElementColumn, row, selectedNode, 'prev');
+        this.resetStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
     }
 
     private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
