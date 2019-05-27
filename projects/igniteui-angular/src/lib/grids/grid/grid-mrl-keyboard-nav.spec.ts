@@ -581,7 +581,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     }));
 
-    it('should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key and then Arrow Down + Up to same cell', (async () => {
+    it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
+        and then Arrow Down + Up to same cell`, (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -641,7 +642,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    it('should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key and then Arrow Up + Down to same cell', (async () => {
+    it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
+        and then Arrow Up + Down to same cell`, (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -702,7 +704,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
     }));
 
-    it('should navigate to the first cell from the layout by pressing Ctrl + Arrow Left key and then Arrow Up + Down to same cell', (async () => {
+    it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left key
+        and then Arrow Up + Down to same cell`, (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -2093,22 +2096,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             }];
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-    
+
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait();
             fix.detectChanges();
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         }));
@@ -2218,26 +2221,26 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             fix.componentInstance.grid.width = '600px';
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-    
+
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait();
             fix.detectChanges();
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         }));
-    
+
         it('should navigate from pinned to unpinned area and backwards using Home/End', (async () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
@@ -2259,26 +2262,26 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             }];
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-    
+
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait();
             fix.detectChanges();
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('End', firstCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('Home', fix.componentInstance.selectedCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         }));
-    
+
         it('should navigate from pinned to unpinned area and backwards using Ctrl+Left/Right', (async () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
@@ -2300,7 +2303,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             }];
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-    
+
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait();
             fix.detectChanges();
@@ -2308,11 +2311,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-            fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
+            fix.componentInstance.selectedCell.nativeElement
+                .dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -2352,7 +2356,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             const secondGroup = grid.getColumnByName('group2');
             secondGroup.pinned = true;
             fix.detectChanges();
-    
+
             // check visible indexes are correct
             expect(grid.getCellByColumn(0, 'ContactName').visibleColumnIndex).toBe(0);
             expect(grid.getCellByColumn(0, 'ID').visibleColumnIndex).toBe(1);
@@ -2361,7 +2365,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
             expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
             expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
-    
+
         });
 
         it('should navigate to the last block with one pinned group and unpinned area has scrollbar', async() => {
