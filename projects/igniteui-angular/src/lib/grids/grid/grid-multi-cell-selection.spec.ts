@@ -88,17 +88,31 @@ describe('IgxGrid - Multi Cell selection', () => {
         });
 
         it('Should not lose selection on right clicking', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
             grid.setSelection(range);
             detect();
 
             HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
 
+            // Simulate right-click
             const endCell = grid.getCellByColumn(4, 'ID');
-            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { buttons: 2 }));
+            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+            endCell.nativeElement.dispatchEvent(new Event('focus'));
+            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
             detect();
 
             HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+
+            const c = grid.getCellByColumn(0, 'ID');
+            c.nativeElement.dispatchEvent(new PointerEvent('pointerdown'));
+            c.nativeElement.dispatchEvent(new Event('focus'));
+            c.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+            detect();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 0, 1);
         });
 
         it('Should be able to select multiple ranges with Ctrl key and mouse drag', () => {

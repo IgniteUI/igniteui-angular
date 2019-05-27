@@ -23,6 +23,7 @@ interface ISelectionKeyboardState {
 
 interface ISelectionPointerState extends ISelectionKeyboardState {
     ctrl: boolean;
+    primaryButton: boolean;
 }
 
 type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
@@ -219,6 +220,14 @@ export class IgxGridSelectionService {
         return ranges;
     }
 
+    get primaryButton(): boolean {
+        return this.pointerState.primaryButton;
+    }
+
+    set primaryButton(value: boolean) {
+        this.pointerState.primaryButton = value;
+    }
+
     constructor(private zone: NgZone) {
         this.initPointerState();
         this.initKeyboardState();
@@ -242,6 +251,7 @@ export class IgxGridSelectionService {
         this.pointerState.ctrl = false;
         this.pointerState.shift = false;
         this.pointerState.range = null;
+        this.pointerState.primaryButton = true;
     }
 
     /**
@@ -401,8 +411,9 @@ export class IgxGridSelectionService {
         }
     }
 
-    pointerEnter(node: ISelectionNode, dragEnabled: boolean): boolean {
-        this.dragMode = dragEnabled;
+    pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
+        // https://www.w3.org/TR/pointerevents/#the-button-property
+        this.dragMode = event.buttons === 1 && event.button === -1;
         if (!this.dragMode) {
             return false;
         }

@@ -230,7 +230,7 @@ export function isFirefox(): boolean {
  * @hidden
  */
 export function isLeftClick(event: PointerEvent) {
-    return event.buttons === 1;
+    return event.button === 0;
 }
 
 /** @hidden */
