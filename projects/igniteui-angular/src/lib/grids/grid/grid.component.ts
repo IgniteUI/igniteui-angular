@@ -795,20 +795,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public getPinnedWidth(takeHidden = false) {
-        let sum = super.getPinnedWidth(takeHidden);
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
 
-        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.offsetWidth;
+        if (this.groupingExpressions.length && this.headerGroupContainer) {
+            width += this.headerGroupContainer.nativeElement.offsetWidth;
         }
-        return sum;
+
+        return width;
     }
 
     /**
