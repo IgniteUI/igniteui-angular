@@ -101,6 +101,7 @@ export class UIInteractions {
             cancelable: true,
             pointerId: 1,
             buttons: 1,
+            button: eventName === 'pointerenter' ? -1 : 0,
             shiftKey: shift,
             ctrlKey: ctrl
         };
