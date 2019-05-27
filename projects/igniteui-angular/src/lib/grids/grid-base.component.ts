@@ -3015,6 +3015,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
      */
     public get featureColumnsWidth() {
         return this.getFeatureColumnsWidth();
@@ -4299,6 +4300,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
      * Method used to override the calculations.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
     public getFeatureColumnsWidth() {
         let width = 0;

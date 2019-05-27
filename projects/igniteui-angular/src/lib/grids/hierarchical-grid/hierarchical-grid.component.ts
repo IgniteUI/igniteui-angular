@@ -462,6 +462,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
     public getFeatureColumnsWidth() {
         let width = super.getFeatureColumnsWidth();
