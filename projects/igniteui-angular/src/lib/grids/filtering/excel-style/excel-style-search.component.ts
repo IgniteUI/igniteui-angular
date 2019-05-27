@@ -11,6 +11,7 @@ import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
+import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -26,7 +27,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     public searchValue: any;
 
     @Input()
-    public data: any[];
+    public data: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -46,13 +47,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
         });
-    }
-
-    get filterOptions() {
-        const fo = new IgxFilterOptions();
-        fo.key = 'value';
-        fo.inputValue = this.searchValue;
-        return fo;
     }
 
     public clearInput() {
