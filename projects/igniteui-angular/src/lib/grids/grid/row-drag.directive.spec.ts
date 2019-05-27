@@ -32,7 +32,7 @@ const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
 
-describe('IgxGrid - Row Drag Tests', () => {
+fdescribe('IgxGrid - Row Drag Tests', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
@@ -97,7 +97,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(grid, row, rowDragDirective);
+            verifyRowDragStartEvent(grid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeTruthy();
@@ -106,7 +106,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(grid, row, rowDragDirective);
+            verifyRowDragEndEvent(grid, row, rowDragDirective, false);
         }));
         it('should be able to drag row only by drag icon', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -132,7 +132,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(grid, row, rowDragDirective);
+            verifyRowDragStartEvent(grid, row, rowDragDirective, false);
             await pointerUp(dragIndicatorElement, movePoint, fixture);
         }));
         it('should not be able to drag grid header', (async () => {
@@ -280,11 +280,11 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, endPoint, fixture);
-            verifyRowDragStartEvent(grid, rowToDrag, rowDragDirective);
+            verifyRowDragStartEvent(grid, rowToDrag, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, endPoint, fixture);
             await pointerUp(dragIndicatorElement, endPoint, fixture);
-            verifyRowDragEndEvent(grid, rowToDrag, rowDragDirective);
+            verifyRowDragEndEvent(grid, rowToDrag, rowDragDirective, false);
         }));
         it('should emit dragdrop events if dropping a row on a non-interactive area', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -305,7 +305,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(dragRow.dragging).toBeTruthy();
             expect(dragRow.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(grid, dragRow, rowDragDirective);
+            verifyRowDragStartEvent(grid, dragRow, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             expect(dragRow.dragging).toBeTruthy();
@@ -314,7 +314,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(dragRow.dragging).toBeFalsy();
             expect(dragRow.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(grid, dragRow, rowDragDirective);
+            verifyRowDragEndEvent(grid, dragRow, rowDragDirective, false);
         }));
         it('should be able to cancel onRowDragStart event.', (async () => {
             grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
@@ -401,12 +401,12 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -435,12 +435,12 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
 
             dropGridRows = dropGrid.rowList.toArray();
             const dropRowCells = dropGridRows[0].cells.toArray();
@@ -470,13 +470,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(dragGrid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(dragGrid.rowDragging).toBeFalsy();
             expect(dropGrid.rowList.length).toEqual(1);
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
 
             const hiddenDropCellValue = dropGrid.getCellByColumn(0, 'Downloads').value;
             expect(hiddenDropCellValue).toEqual(hiddenDragCellValue);
@@ -499,13 +499,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
@@ -526,13 +526,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyDragAndDropRowCellValues(1, 0);
         }));
@@ -558,13 +558,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(row.isSelected).toBeTruthy();
         }));
@@ -624,13 +624,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             verifyCellSelection();
         }));
@@ -662,13 +662,13 @@ describe('IgxGrid - Row Drag Tests', () => {
             await pointerMove(dragIndicatorElement, movePoint, fixture);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            verifyRowDragStartEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragStartEvent(dragGrid, row, rowDragDirective, false);
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             expect(row.dragging).toBeFalsy();
             expect(row.grid.rowDragging).toBeFalsy();
-            verifyRowDragEndEvent(dragGrid, row, rowDragDirective);
+            verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(groupHeader.records.length).toEqual(2);
             groupRow = groupHeader.records.find(function (element) {
@@ -754,10 +754,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
 
             // second level row
             dragIndicatorElement = dragIndicatorElements[8].nativeElement;
@@ -771,10 +771,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(childGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragStartEvent(childGrid, rowToDrag, rowDragDirective, false, 1);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, false, 1);
 
             // third level row
             dragIndicatorElement = dragIndicatorElements[10].nativeElement;
@@ -788,10 +788,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragStartEvent(nestedChildGrid, rowToDrag, rowDragDirective, false, 1);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, false, 1);
         }));
     });
     describe('Tree Grid Tests', () => {
@@ -823,10 +823,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
 
             // second level row
             dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -836,10 +836,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 2);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, false, 2);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 2);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 2);
 
             // third level row
             dragIndicatorElement = dragIndicatorElements[3].nativeElement;
@@ -849,10 +849,10 @@ describe('IgxGrid - Row Drag Tests', () => {
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);
             await pointerMove(dragIndicatorElement, movePoint, fixture);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 3);
+            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, false, 3);
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, 3);
+            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 3);
         }));
     });
 });
@@ -1090,13 +1090,15 @@ function verifyRowDragStartEvent(
     grid: IgxGridBaseComponent,
     dragRow: IgxRowComponent<any>,
     dragDirective: IgxRowDragDirective,
+    animations: boolean,
     timesCalled: number = 1,
     cancel = false) {
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
         owner: dragDirective,
-        cancel: cancel
+        cancel: cancel,
+        hasAnimation: animations
     });
 }
 
@@ -1111,10 +1113,12 @@ function verifyRowDragEndEvent(
     grid: IgxGridBaseComponent,
     dragRow: IgxRowComponent<any>,
     dragDirective: IgxRowDragDirective,
+    animations: boolean,
     timesCalled: number = 1) {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
         owner: dragDirective,
-        dragData: dragRow
+        dragData: dragRow,
+        hasAnimation: animations
     });
 }

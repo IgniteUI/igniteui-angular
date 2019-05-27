@@ -80,7 +80,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const args: IRowDragEndEventArgs = {
             owner: this,
             dragData: this.row,
-            hasAnimation: true
+            hasAnimation: false
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);
@@ -90,16 +90,16 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.animateOnRelease = true;
         }
 
-        if (!this._lastDropArea) {
+        if (!this._lastDropArea && this.animateOnRelease) {
             requestAnimationFrame(() => {
                 super.onPointerUp(event);
-                setTimeout(() => {
+                this.dragGhost.addEventListener('transitionend',  () => {
                     this.onTransitionEnd(null);
                     this.row.dragging = false;
                     this.row.grid.rowDragging = false;
                     this.row.grid.markForCheck();
                     this._unsubscribe();
-                }, transationDuration);
+                }, false);
             });
         }   else {
                 super.onPointerUp(event);
