@@ -419,46 +419,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     }));
 
-    it('should navigate up correctly though column with smaller colStart and same colEnd', (async () => {
-        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
-        fix.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                { field: 'Phone', rowStart: 2, colStart: 1 },
-                { field: 'City', rowStart: 2, colStart: 2 }
-            ]
-        }];
-        fix.detectChanges();
-        let firstCell;
-        let secondCell;
-        let thirdCell;
-        let dummyCell;
-        const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
-        [   dummyCell               ,
-            dummyCell, thirdCell    ] = rows[1].queryAll(By.css(CELL_CSS_CLASS));
-        [   secondCell              ,
-            dummyCell, firstCell    ] = rows[2].queryAll(By.css(CELL_CSS_CLASS));
-
-        firstCell.nativeElement.dispatchEvent(new Event('focus'));
-        await wait();
-        fix.detectChanges();
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    }));
-
     it('navigate to right and left with hidden columns', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
