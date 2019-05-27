@@ -1,14 +1,56 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { ISelectionNode } from '../core/grid-selection';
 
+
+export interface IStartNavigationCell {
+    rowStart: number;
+    colStart: number;
+    direction: NavigationDirection;
+}
+
+export enum NavigationDirection {
+    horizontal = 'horizontal',
+    vertical = 'vertical'
+}
+
+
 /** @hidden */
 @Injectable()
 export class IgxGridMRLNavigationService extends IgxGridNavigationService {
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public startNavigationCell: IStartNavigationCell;
+
     public grid: IgxGridBaseComponent;
+
+
+    private resetStartNavigationCell(colStart, rowStart, dir) {
+        this.startNavigationCell = {
+            colStart: colStart,
+            rowStart: rowStart,
+            direction: dir
+        };
+    }
+
+    private applyNavigationCell(colStart, rowStart, navDirection) {
+        const oppositeDir = navDirection === NavigationDirection.vertical ?
+            NavigationDirection.horizontal : NavigationDirection.vertical;
+        if (this.startNavigationCell.direction !== navDirection) {
+            this.startNavigationCell.direction = oppositeDir;
+        } else {
+            this.resetStartNavigationCell(colStart, rowStart, oppositeDir);
+        }
+
+        return navDirection === NavigationDirection.vertical ?
+            this.startNavigationCell.colStart : this.startNavigationCell.rowStart;
+    }
 
     public navigateUp(rowElement, selectedNode: ISelectionNode) {
         this.focusCellUpFromLayout(rowElement, selectedNode);
@@ -53,10 +95,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, selectedNode: ISelectionNode) {
-        const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
+        const layout = selectedNode.layout;
+        const visibleColumnIndex = layout.columnVisibleIndex;
         const nextElementColumn = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex + 1);
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
+        this.resetStartNavigationCell(layout.colStart, layout.rowStart, null);
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
     }
 
@@ -117,9 +161,11 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
+        const layout = selectedNode.layout;
         const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
+        this.resetStartNavigationCell(layout.colStart, layout.rowStart, null);
         const prevElementColumn =
          this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex - 1 && !x.hidden);
          this._moveFocusToCell(currentRowEl, prevElementColumn, row, selectedNode, 'prev');
@@ -128,7 +174,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
         const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
         const currentRowStart = selectedNode.layout ?  selectedNode.layout.rowStart : 1;
-        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
+        const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
+            currentRowStart,
+            NavigationDirection.vertical);
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         let element;
@@ -189,7 +237,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
-        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
+        const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
+            selectedNode.layout.rowStart,
+            NavigationDirection.vertical);
         let element;
         if (!isGroupRow) {
             const cell = this.grid.getRowByIndex(selectedNode.row).cells
@@ -249,7 +299,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentColEnd = selectedNode.layout.colEnd || selectedNode.layout.colStart + 1;
-        const currentRowStart = selectedNode.layout.rowStart;
+        const currentRowStart = this.applyNavigationCell(selectedNode.layout.colStart,
+            selectedNode.layout.rowStart,
+            NavigationDirection.horizontal);
         const rowIndex = selectedNode.row;
         const element = cellElement.parentElement;
         // next element is from the same layout
@@ -299,7 +351,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentColStart = selectedNode.layout.colStart;
-        const currentRowStart = selectedNode.layout.rowStart;
+        const currentRowStart = this.applyNavigationCell(currentColStart,
+            selectedNode.layout.rowStart,
+            NavigationDirection.horizontal);
         const rowIndex = selectedNode.row;
 
         // previous element is from the same layout
