@@ -608,6 +608,15 @@
         %igx-grid__drag-indicator {
             cursor: default;
         }
+
+        %grid-row--mrl {
+            %igx-grid__hierarchical-expander--header,
+            %igx-grid__header-indentation,
+            %igx-grid__row-indentation,
+            %grid__cbx-selection {
+                border-bottom: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
+            }
+        }
     }
 
     %grid-thead--cosy {
@@ -700,6 +709,12 @@
 
     %grid-row--mrl {
         border-bottom: none !important;
+
+        %grid__cbx-selection,
+        %igx-grid__row-indentation,
+        %igx-grid__drag-indicator {
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
     }
 
     %grid-tbody {

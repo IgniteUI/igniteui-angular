@@ -2912,21 +2912,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    get headerFixedWidth() {
-        let width = 0;
-        if (this.headerCheckboxContainer) {
-            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
-        }
-        if (this.headerDragContainer) {
-            width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
-        }
-
-        return width;
-    }
-
-    /**
-     * @hidden
-     */
     protected get outlet() {
         return this.outletDirective;
     }
@@ -3029,9 +3014,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
+     */
+    public get featureColumnsWidth() {
+        return this.getFeatureColumnsWidth();
+    }
+
+    /**
+     * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable || this.rowDraggable ? this.headerFixedWidth : 0;
+        return this.rowSelectable || this.rowDraggable ? this.featureColumnsWidth : 0;
     }
 
     /**
@@ -4303,6 +4297,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * Method used to override the calculations.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
+     */
+    public getFeatureColumnsWidth() {
+        let width = 0;
+
+        if (this.headerCheckboxContainer) {
+            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
+        }
+        if (this.headerDragContainer) {
+            width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
+        }
+        return width;
+    }
+
+    /**
      * Gets calculated width of the pinned area.
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
@@ -4318,7 +4330,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        sum += this.headerFixedWidth;
+        sum += this.featureColumnsWidth;
 
         return sum;
     }
