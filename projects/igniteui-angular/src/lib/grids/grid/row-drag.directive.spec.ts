@@ -14,7 +14,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent } from '../grid-base.component';
+import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -25,6 +25,7 @@ import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = 'igx-grid__drag-indicator';
+const CSS_CLASS_DRAG_INDICATOR_OFF = 'igx-grid__drag-indicator--off';
 const CSS_CLASS_DRAG_ROW = 'igx-grid__tr--drag';
 const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
@@ -316,6 +317,45 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(dragRow.grid.rowDragging).toBeFalsy();
             verifyRowDragEndEvent(grid, dragRow, rowDragDirective, false);
         }));
+
+        it('should destroy the drag ghost if dropping a row on a non-interactive area when animations are enabled', (async () => {
+            grid.onRowDragEnd.subscribe((e: IRowDragEndEventArgs) => {
+                e.hasAnimation = true;
+            });
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const dragRow = rows[1];
+            const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+
+            spyOn(grid.onRowDragStart, 'emit');
+            spyOn(grid.onRowDragEnd, 'emit');
+
+            expect(dragRow.dragging).toBeFalsy();
+            expect(dragRow.grid.rowDragging).toBeFalsy();
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            expect(dragRow.dragging).toBeTruthy();
+            expect(dragRow.grid.rowDragging).toBeTruthy();
+            verifyRowDragStartEvent(grid, dragRow, rowDragDirective, false);
+
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            expect(dragRow.dragging).toBeTruthy();
+            expect(dragRow.grid.rowDragging).toBeTruthy();
+
+            await pointerUp(dragIndicatorElement, dropPoint, fixture);
+            expect(dragRow.dragging).toBeFalsy();
+            expect(dragRow.grid.rowDragging).toBeFalsy();
+            verifyRowDragEndEvent(grid, dragRow, rowDragDirective, false);
+            const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(0);
+            const dragIndicatorsOff = document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF);
+            expect(dragIndicatorsOff.length).toEqual(0);
+        }));
+
         it('should be able to cancel onRowDragStart event.', (async () => {
             grid.onRowDragStart.subscribe((e: IRowDragStartEventArgs) => {
                 e.cancel = true;
