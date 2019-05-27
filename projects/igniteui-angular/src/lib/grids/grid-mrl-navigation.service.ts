@@ -42,7 +42,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     private applyNavigationCell(colStart, rowStart, navDirection) {
         const oppositeDir = navDirection === NavigationDirection.vertical ?
             NavigationDirection.horizontal : NavigationDirection.vertical;
-        if (this.startNavigationCell.direction !== navDirection) {
+        if (this.startNavigationCell && this.startNavigationCell.direction !== navDirection) {
             this.startNavigationCell.direction = oppositeDir;
         } else {
             this.resetStartNavigationCell(colStart, rowStart, oppositeDir);
@@ -100,7 +100,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
-        this.resetStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
+        if (nextElementColumn) {
+            this.resetStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
+        }
     }
 
     protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir) {
@@ -166,7 +168,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const prevElementColumn =
          this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex - 1 && !x.hidden);
          this._moveFocusToCell(currentRowEl, prevElementColumn, row, selectedNode, 'prev');
-        this.resetStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
+        if (prevElementColumn) {
+            this.resetStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
+        }
     }
 
     private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
@@ -236,7 +240,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
         const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
-            selectedNode.layout.rowStart,
+            selectedNode.layout ? selectedNode.layout.rowStart : 1,
             NavigationDirection.vertical);
         let element;
         if (!isGroupRow) {
