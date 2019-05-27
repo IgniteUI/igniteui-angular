@@ -20,7 +20,8 @@ import {
     AfterContentInit,
     Optional,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -41,6 +42,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
 
@@ -242,6 +244,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChild('hierarchical_record_template', { read: TemplateRef })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
