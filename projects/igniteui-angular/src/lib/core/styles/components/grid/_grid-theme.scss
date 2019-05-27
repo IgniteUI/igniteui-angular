@@ -708,7 +708,9 @@
     }
 
     %grid-row--mrl {
-        border-bottom: 1px solid transparent;
+        &%grid-row {
+            border-bottom-color: transparent;
+        }
 
         %grid__cbx-selection,
         %igx-grid__row-indentation,
@@ -907,6 +909,10 @@
             background: --var($theme, 'edit-mode-color');
         }
 
+        &%grid-row {
+            border-bottom: 1px solid --var($theme, 'edit-mode-color');
+        }
+
         %igx-grid__td--editing {
             border: none;
 
@@ -923,7 +929,7 @@
     %grid-row--edit-mrl {
         &:first-of-type::after {
             top: 0;
-            z-index: 1;
+            z-index: 5;
         }
     }
 
