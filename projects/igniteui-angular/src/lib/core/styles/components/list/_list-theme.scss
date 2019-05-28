@@ -40,9 +40,14 @@
     $header-background: null,
     $header-text-color: null,
     $item-background: null,
-    $item-text-color: null,
+    $item-background-hover: null,
     $item-background-active: null,
-    $item-text-color-active: null
+    $item-text-color: null,
+    $item-text-color-hover: null,
+    $item-text-color-active: null,
+    $item-subtitle-color: null,
+    $item-subtitle-color-hover: null,
+    $item-subtitle-color-active: null,
 ) {
     $name: 'igx-list';
     $list-schema: map-get($schema, $name);
@@ -60,18 +65,24 @@
         $header-background: $background;
     }
 
+    @if not($header-background) and $item-background {
+        $header-background: $item-background;
+    }
+
     @if not($item-background) and $background {
         $item-background: $background;
     }
 
-    @if not($item-background-active) and $background {
-        @if type-of($background) == 'color' {
-            @if lightness($background) > 50 {
-                $item-background-active: rgba(text-contrast($background), .04);
-            } @else {
-                $item-background-active: rgba(text-contrast($background), .12);
-            }
-        }
+    @if not($background) and $item-background {
+        $background: $item-background;
+    }
+
+    @if not($item-background-hover) and $item-background {
+        $item-background-hover: rgba(text-contrast($item-background), .1);
+    }
+
+    @if not($item-background-active) and $item-background {
+        $item-background-active: rgba(text-contrast($item-background), .1);
     }
 
     @if not($header-text-color) and $header-background {
@@ -82,9 +93,38 @@
         $item-text-color: text-contrast($item-background);
     }
 
-    @if not($item-text-color-active) and $item-text-color {
-        $item-text-color-active: $item-text-color;
+    @if not($item-text-color-hover) and $item-background {
+        $item-text-color-hover: text-contrast($item-background);
     }
+
+    @if not($item-text-color-hover) and $item-background-hover {
+        $item-text-color-hover: text-contrast($item-background-hover);
+    }
+
+    @if not($item-subtitle-color) and $item-background {
+        $item-subtitle-color: rgba(text-contrast($item-background), .74);
+    }
+
+    @if not($item-subtitle-color-hover) and $item-background {
+        $item-subtitle-color-hover: rgba(text-contrast($item-background), .74);
+    }
+
+    @if not($item-subtitle-color-hover) and $item-background-hover {
+        $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+    }
+
+    @if not($item-subtitle-color-active) and $item-background {
+        $item-subtitle-color-active: rgba(text-contrast($item-background), .74);
+    }
+
+    @if not($item-text-color-active) and $item-background {
+        $item-text-color-active: text-contrast($item-background);
+    }
+
+    @if not($item-text-color-active) and $item-background-active {
+        $item-text-color-active: text-contrast($item-background-active);
+    }
+
 
     @return extend($theme, (
         name: $name,
@@ -95,9 +135,14 @@
         header-background: $header-background,
         header-text-color: $header-text-color,
         item-background: $item-background,
-        item-text-color: $item-text-color,
+        item-background-hover: $item-background-hover,
         item-background-active: $item-background-active,
-        item-text-color-active: $item-text-color-active
+        item-text-color: $item-text-color,
+        item-text-color-hover: $item-text-color-hover,
+        item-text-color-active: $item-text-color-active,
+        item-subtitle-color: $item-subtitle-color,
+        item-subtitle-color-hover: $item-subtitle-color-hover,
+        item-subtitle-color-active: $item-subtitle-color-active,
     ));
 }
 
@@ -107,6 +152,12 @@
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
 
+    $list-padding: (
+        comfortable: rem(8px) 0,
+        cosy: rem(4px) 0,
+        compact: rem(2px) 0
+    );
+
     $list-empty-padding: (
         comfortable: rem(16px),
         cosy: rem(8px),
@@ -114,9 +165,9 @@
     );
 
     $list-item-padding: (
-        comfortable: rem(12px) rem(16px),
-        cosy: rem(6px) rem(10px),
-        compact: rem(4px) rem(8px)
+        comfortable: rem(8px) rem(16px),
+        cosy: rem(4px) rem(8px),
+        compact: rem(2px) rem(4px)
     );
 
     $list-icon-margin: (
@@ -152,8 +203,11 @@
         overflow: hidden;
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
-        padding: rem(8px) 0;
+        padding: map-get($list-padding, 'comfortable');
     }
+
+    %igx-list--cosy {padding: map-get($list-padding, 'cosy');}
+    %igx-list--compact {padding: map-get($list-padding, 'compact');}
 
     %igx-list-empty {
         justify-content: center;
@@ -211,6 +265,10 @@
         z-index: 1;
     }
 
+    %igx-list__item-line-subtitle {
+        color: --var($theme, 'item-subtitle-color')
+    }
+
     %igx-list-item-content {
         display: flex;
         align-items: center;
@@ -220,6 +278,33 @@
         background: --var($theme, 'item-background');
         border-radius: --var($theme, 'item-border-radius');
         z-index: 2;
+
+        %igx-list__item-line-title,
+        %igx-list__item-lines {
+            color: --var($theme, 'item-text-color');
+        }
+
+        &:hover {
+            color: --var($theme, 'item-text-color-hover');
+            background: --var($theme, 'item-background-hover');
+
+            %igx-list__item-line-title,
+            %igx-list__item-lines {
+                color: --var($theme, 'item-text-color-hover');
+            }
+
+            %igx-list__item-line-subtitle {
+                color: --var($theme, 'item-subtitle-color-hover');
+            }
+
+            %igx-list__item-actions {
+                color: --var($theme, 'item-text-color-hover');
+
+                %igx-icon-display {
+                    color: --var($theme, 'item-text-color-hover')
+                }
+            }
+        }
     }
 
     %igx-list-item-content--compact {
@@ -228,6 +313,10 @@
 
     %igx-list-item-content--cosy {
         padding: map-get($list-item-padding, 'cosy');
+    }
+
+    %igx-list__item-line-title {
+        color: --var($theme, 'item-text-color')
     }
 
     %igx-list__item-thumbnail {
@@ -256,33 +345,23 @@
         margin: map-get($list-line-margin, 'comfortable');
     }
 
+    %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
+        margin: map-get($list-line-margin, 'cosy');
+    }
+
+    %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
+        margin: map-get($list-line-margin, 'compact');
+    }
+
     %igx-list__item-thumbnail--cosy {
         > %igx-icon-display {
-            //width: rem(18px);
-            //height: rem(18px);
-            //font-size: rem(18px);
             margin: map-get($list-icon-margin, 'cosy');
-        }
-
-        > %igx-avatar-display {
-            //width: rem(32px);
-            //height: rem(32px);
-            //min-width: rem(32px);
         }
     }
 
     %igx-list__item-thumbnail--compact {
         > %igx-icon-display {
-            //width: rem(16px);
-            //height: rem(16px);
-            //font-size: rem(16px);
             margin: map-get($list-icon-margin, 'compact');
-        }
-
-        > %igx-avatar-display {
-            //width: rem(24px);
-            //height: rem(24px);
-            //min-width: rem(24px);
         }
     }
 
@@ -290,6 +369,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        color: --var($theme, 'item-text-color');
 
         > * {
             margin-left: rem(8px);
@@ -298,33 +378,26 @@
         &:empty {
             display: none;
         }
+
+        %igx-icon-display {
+            color: --var($theme, 'item-text-color')
+        }
     }
 
     %igx-list__item-actions--cosy {
-        %igx-icon-display {
-            //width: rem(18px);
-            //height: rem(18px);
-            //font-size: rem(18px);
-        }
-
         > * {
             margin-left: rem(6px);
         }
     }
 
     %igx-list__item-actions--compact {
-        %igx-icon-display {
-            //width: rem(16px);
-            //height: rem(16px);
-            //font-size: rem(16px);
-        }
-
         > * {
             margin-left: rem(4px);
         }
     }
 
     %igx-list__item-lines {
+        color: --var($theme, 'item-text-color');
         display: flex;
         flex-direction: column;
         flex: 1 0 0%;
@@ -336,6 +409,28 @@
 
     %igx-list__item-lines + %igx-list__item-actions {
         margin-left: rem(8px);
+    }
+
+    %igx-list-item-content--active {
+        %igx-list__item-line-title {
+            color: --var($theme, 'item-text-color-active')
+        }
+
+        %igx-list__item-line-subtitle {
+            color: --var($theme, 'item-subtitle-color-active')
+        }
+
+        %igx-list__item-actions {
+            color: --var($theme, 'item-text-color-active');
+
+            %igx-icon-display {
+                color: --var($theme, 'item-text-color-active')
+            }
+        }
+
+        color: --var($theme, 'item-text-color-active');
+        background: --var($theme, 'item-background-active');
+        z-index: 3;
     }
 
     [dir='rtl'] {
@@ -380,12 +475,6 @@
             margin-left: 0;
             margin-right: rem(8px);
         }
-    }
-
-    %igx-list-item-content--active {
-        color: --var($theme, 'item-text-color-active');
-        background: --var($theme, 'item-background-active');
-        z-index: 3;
     }
 
     %igx-list-item-content--inactive {
@@ -441,3 +530,4 @@
         }
     }
 }
+
