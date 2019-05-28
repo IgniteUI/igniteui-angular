@@ -69,47 +69,11 @@ export class GridMRLCustomNavigationSampleComponent {
 
     public customNavigation(args) {
         const target = args.target;
-        const type = args.targetType;
         if (args.event.key.toLowerCase() === 'enter') {
             args.event.preventDefault();
             args.cancel = true;
             const rowIndex = target.rowIndex === undefined ? target.index : target.rowIndex;
-            this.grid.navigateTo(rowIndex + 1 , -1 , (obj) => { obj.target.nativeElement.focus(); });
-        }
-        if (type === 'dataCell'  && args.event.key.toLowerCase() === 'arrowright') {
-            args.event.preventDefault();
-            args.cancel = true;
-            this.grid.navigateTo(target.rowIndex, target.visibleColumnIndex + 1, (obj) => { obj.target.nativeElement.focus(); });
-        }
-        if (type === 'dataCell'  && args.event.key.toLowerCase() === 'arrowleft') {
-            args.event.preventDefault();
-            args.cancel = true;
-            this.grid.navigateTo(target.rowIndex, target.visibleColumnIndex - 1, (obj) => { obj.target.nativeElement.focus(); });
-        }
-        if (type === 'dataCell'  && args.event.key.toLowerCase() === 'arrowdown') {
-            args.event.preventDefault();
-            args.cancel = true;
-            // const cell = this.grid.getNextCell(target.rowIndex, target.visibleColumnIndex, (col) => col.field === 'City');
-            this.grid.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
-        }
-        if (type === 'dataCell'  && args.event.key.toLowerCase() === 'arrowup') {
-            args.event.preventDefault();
-            args.cancel = true;
-            // const cell = this.grid.getPreviousCell(target.rowIndex, target.visibleColumnIndex, (col) => col.field === 'City');
-            this.grid.navigateTo(target.rowIndex - 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
-        }
-        if (type === 'dataCell' && args.event.shiftKey && args.event.key.toLowerCase() === 'tab') {
-            args.event.preventDefault();
-            args.cancel = true;
-            const cell = this.grid.getPreviousCell(target.rowIndex, target.visibleColumnIndex);
-            this.grid.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
-            return;
-        }
-        if (type === 'dataCell'  && args.event.key.toLowerCase() === 'tab') {
-            args.event.preventDefault();
-            args.cancel = true;
-            const cell = this.grid.getNextCell(target.rowIndex, target.visibleColumnIndex);
-            this.grid.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+            this.grid.navigateTo(args.event.shiftKey ? rowIndex - 1 : rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
         }
     }
 }
