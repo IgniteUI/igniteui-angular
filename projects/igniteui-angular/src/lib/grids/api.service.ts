@@ -326,6 +326,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         grid.filteringExpressionsTree = filteringTree;
+        if (!condition) {
+            throw Error('Invalid condition!');
+        }
     }
 
     public clear_filter(fieldName: string) {

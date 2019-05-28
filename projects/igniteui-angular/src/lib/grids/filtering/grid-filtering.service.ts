@@ -150,7 +150,9 @@ export class IgxFilteringService implements OnDestroy {
             this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+            if (!expressionsTreeForColumn) {
+                throw Error('Invalid condition or Expression Tree!');
+            } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
                 this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
