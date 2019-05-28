@@ -31,7 +31,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public grid: IgxGridBaseComponent;
 
 
-    private resetStartNavigationCell(colStart, rowStart, dir) {
+    private setStartNavigationCell(colStart, rowStart, dir) {
         this.startNavigationCell = {
             colStart: colStart,
             rowStart: rowStart,
@@ -45,7 +45,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (this.startNavigationCell && this.startNavigationCell.direction !== navDirection) {
             this.startNavigationCell.direction = oppositeDir;
         } else {
-            this.resetStartNavigationCell(colStart, rowStart, oppositeDir);
+            this.setStartNavigationCell(colStart, rowStart, oppositeDir);
         }
 
         return navDirection === NavigationDirection.vertical ?
@@ -101,7 +101,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const row = this.grid.getRowByIndex(rowIndex);
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
         if (nextElementColumn) {
-            this.resetStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
+            this.setStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
         }
     }
 
@@ -169,7 +169,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
          this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex - 1 && !x.hidden);
          this._moveFocusToCell(currentRowEl, prevElementColumn, row, selectedNode, 'prev');
         if (prevElementColumn) {
-            this.resetStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
+            this.setStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
         }
     }
 
@@ -410,7 +410,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const lastLayout = layouts[layouts.length - 1];
         const lastLayoutChildren = lastLayout.children;
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
-        const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
+        const currentRowStart = this.applyNavigationCell(
+            this.startNavigationCell ? this.startNavigationCell.colStart : 1,
+            cellRowStart || this.grid.multiRowLayoutRowSize,
+            NavigationDirection.horizontal);
         const nextElementColumn = lastLayout.children.find(c =>
             (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
             c.rowStart <= currentRowStart &&
@@ -445,7 +448,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public onKeydownHome(rowIndex, isSummary = false, cellRowStart = 1) {
         const firstLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[0];
         const lastLayoutChildren = firstLayout.children.toArray();
-        const currentRowStart =  cellRowStart;
+        const currentRowStart = this.applyNavigationCell(
+            this.startNavigationCell ? this.startNavigationCell.colStart : 1,
+            cellRowStart,
+            NavigationDirection.horizontal);
         const nextElementColumn = firstLayout.children.find(c =>
             c.colStart === 1 &&
             c.rowStart <= currentRowStart &&
@@ -553,5 +559,15 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (shouldFocus) {
             cellElem.focus({ preventScroll: true });
         }
+    }
+
+    public goToFirstCell() {
+        this.startNavigationCell = null;
+        super.goToFirstCell();
+    }
+
+    public goToLastCell() {
+        this.startNavigationCell = null;
+        super.goToLastCell();
     }
 }
