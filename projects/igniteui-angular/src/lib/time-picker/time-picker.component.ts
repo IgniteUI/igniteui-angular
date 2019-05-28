@@ -14,7 +14,6 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    Inject,
     ContentChild,
     Injectable,
     AfterViewInit
@@ -34,14 +33,13 @@ import {
 import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { IgxOverlayService } from '../services/overlay/overlay';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
-import { ConnectedPositioningStrategy } from '../services/overlay/position';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
-import { takeUntil, filter, throttle } from 'rxjs/operators';
+import { AutoPositionStrategy } from '../services/overlay/position';
+import { OverlaySettings } from '../services/overlay/utilities';
+import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -53,6 +51,8 @@ let NEXT_ID = 0;
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
 const AMPM_POS = [6, 7, 8];
+
+const ITEMS_COUNT = 7;
 
 @Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -221,7 +221,7 @@ export class IgxTimePickerComponent implements
 
     /**
     * An accessor that returns the label of cancel button.
-   */
+    */
     get cancelButtonLabel(): string {
         return this._cancelButtonLabel || this.resourceStrings.igx_time_picker_cancel;
     }
@@ -462,6 +462,12 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
+    @ViewChild(IgxToggleDirective)
+    public toggleRef: IgxToggleDirective;
+
+    /**
+     * @hidden
+     */
     @ViewChild('input', { read: ElementRef })
     private input: ElementRef;
 
@@ -476,6 +482,12 @@ export class IgxTimePickerComponent implements
      */
     @ViewChild('dropdownInputTemplate', { read: TemplateRef })
     private dropdownInputTemplate: TemplateRef<any>;
+
+    /*
+     * @hidden
+     */
+    @ContentChild('dropDownTarget', { read: ElementRef })
+    protected templateDropDownTarget: ElementRef;
 
     /**
      * @hidden
@@ -502,10 +514,6 @@ export class IgxTimePickerComponent implements
      * @hidden
     */
     public isNotEmpty = false;
-    /**
-     * @hidden
-    */
-    public collapsed = true;
     /**
      * @hidden
     */
@@ -542,12 +550,9 @@ export class IgxTimePickerComponent implements
     private _minuteView = [];
     private _ampmView = [];
 
-    private _overlayId: string;
     private _dateFromModel: Date;
     private _destroy$ = new Subject<boolean>();
-    private _positionSettings: PositionSettings;
     private _dropDownOverlaySettings: OverlaySettings;
-    private _dialogOverlaySettings: OverlaySettings;
 
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
@@ -666,13 +671,46 @@ export class IgxTimePickerComponent implements
         };
     }
 
-    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
+    /**
+     * @hidden
+     */
+    public ngOnInit(): void {
+        this._generateHours();
+        this._generateMinutes();
+        if (this.format.indexOf('tt') !== -1) {
+            this._generateAmPm();
+        }
 
-        this.overlayService.onClosed.pipe(
-            filter(event => event.id === this._overlayId),
-            takeUntil(this._destroy$)).subscribe(() => {
+        this._dropDownOverlaySettings = {
+            modal: false,
+            closeOnOutsideClick: true,
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            positionStrategy: new AutoPositionStrategy()
+        };
+    }
 
-                this.collapsed = true;
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit(): void {
+        if (this.mode === InteractionMode.DropDown && this.input) {
+            fromEvent(this.input.nativeElement, 'keydown').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroy$)
+            ).subscribe((event: KeyboardEvent) => {
+                if (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE ||
+                    event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE) {
+                    this.spinOnEdit(event);
+                }
+            });
+        }
+
+        if (this.container && this.group) {
+            this.container.nativeElement.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
+        }
+
+        if (this.toggleRef) {
+            this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
 
                 if (this._input) {
                     this._input.nativeElement.focus();
@@ -685,53 +723,9 @@ export class IgxTimePickerComponent implements
                 this.onClose.emit(this);
             });
 
-        this.overlayService.onOpened.pipe(
-            filter(event => event.id === this._overlayId),
-            takeUntil(this._destroy$)).subscribe(() => {
-
-                this.collapsed = false;
+            this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.onOpen.emit(this);
             });
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnInit(): void {
-        this._generateHours();
-        this._generateMinutes();
-        if (this.format.indexOf('tt') !== -1) {
-            this._generateAmPm();
-        }
-
-        this._positionSettings = {
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom
-        };
-
-        this._dropDownOverlaySettings = {
-            modal: false,
-            closeOnOutsideClick: true,
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
-        };
-
-        this._dialogOverlaySettings = {};
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown) {
-            fromEvent(this.input.nativeElement, 'keydown').pipe(
-                throttle(() => interval(0, animationFrameScheduler)),
-                takeUntil(this._destroy$)
-            ).subscribe((res) => this.onKeydown(res));
-        }
-
-        if (this.container && this.group) {
-            this.container.nativeElement.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
         }
     }
 
@@ -739,10 +733,6 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngOnDestroy(): void {
-        if (this._overlayId) {
-            this.hideOverlay();
-        }
-
         this._destroy$.next(true);
         this._destroy$.complete();
     }
@@ -755,6 +745,14 @@ export class IgxTimePickerComponent implements
     public onKeydownSpace(event) {
         this.openDialog();
         event.preventDefault();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.Alt.ArrowDown')
+    public onAltArrowDown() {
+        this.openDialog();
     }
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
@@ -1092,6 +1090,59 @@ export class IgxTimePickerComponent implements
         return currentVal;
     }
 
+    private _initializeContainer() {
+        if (this.value) {
+            const formttedTime = this._formatTime(this.value, this.format);
+            const sections = formttedTime.split(/[\s:]+/);
+
+            this.selectedHour = sections[0];
+            this.selectedMinute = sections[1];
+
+            if (this._ampmItems !== null) {
+                this.selectedAmPm = sections[2];
+            }
+        }
+
+        if (this.selectedHour === undefined) {
+            this.selectedHour = `${this._hourItems[3]}`;
+        }
+        if (this.selectedMinute === undefined) {
+            this.selectedMinute = '0';
+        }
+        if (this.selectedAmPm === undefined && this._ampmItems !== null) {
+            this.selectedAmPm = this._ampmItems[3];
+        }
+
+        this._prevSelectedHour = this.selectedHour;
+        this._prevSelectedMinute = this.selectedMinute;
+        this._prevSelectedAmPm = this.selectedAmPm;
+
+        this._onTouchedCallback();
+
+        this._updateHourView(0, ITEMS_COUNT);
+        this._updateMinuteView(0, ITEMS_COUNT);
+        this._updateAmPmView(0, ITEMS_COUNT);
+
+        if (this.selectedHour) {
+            this.scrollHourIntoView(this.selectedHour);
+        }
+        if (this.selectedMinute) {
+            this.scrollMinuteIntoView(this.selectedMinute);
+        }
+        if (this.selectedAmPm) {
+            this.scrollAmPmIntoView(this.selectedAmPm);
+        }
+
+        requestAnimationFrame(() => {
+            this.hourList.nativeElement.focus();
+        });
+    }
+
+    private _closeDropDown() {
+        this.toggleRef.close();
+        this._onDropDownClosed();
+    }
+
     private _onDropDownClosed(): void {
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
@@ -1147,27 +1198,31 @@ export class IgxTimePickerComponent implements
     /**
      * opens the dialog.
      * ```html
-     *<igx-time-picker #tp></igx-time-picker>
+     *<igx-time-picker #timePicker></igx-time-picker>
      * ```
      * ```typescript
-     * @ViewChild('tp', { read: IgxTimePickerComponent }) tp: IgxTimePickerComponent;
-     * tp.openDialog();
+     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
+     * picker.openDialog();
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-
-        if (this.collapsed) {
-            this.collapsed = false;
-
+        if (this.toggleRef.collapsed) {
             let settings;
-            if (this.mode === InteractionMode.Dialog) {
-                settings = this.overlaySettings || this._dialogOverlaySettings;
+            if (this.mode === InteractionMode.Dialog && this.overlaySettings ) {
+                settings = this.overlaySettings;
             }
 
             if (this.mode === InteractionMode.DropDown) {
                 settings = this.overlaySettings || this._dropDownOverlaySettings;
-                if (settings.positionStrategy && settings.positionStrategy.settings) {
-                    settings.positionStrategy.settings.target = this.group.element.nativeElement;
+                const posStrategy = settings.positionStrategy;
+
+                if (this.group && posStrategy) {
+                    posStrategy.settings.target = this.group.element.nativeElement;
+                } else if (this.templateDropDownTarget && posStrategy) {
+                    posStrategy.settings.target = this.templateDropDownTarget.nativeElement;
+                } else if (!posStrategy || (posStrategy && !posStrategy.settings.target)) {
+                    throw new Error('There is no target element for the dropdown to attach.' +
+                        'Mark a DOM element with #dropDownTarget ref variable or provide correct overlay positionStrategy.');
                 }
             }
 
@@ -1175,69 +1230,23 @@ export class IgxTimePickerComponent implements
                 settings.outlet = this.outlet;
             }
 
-            this._overlayId = this.overlayService.attach(this.container, settings);
-            this.overlayService.show(this._overlayId);
+            this.toggleRef.open(settings);
+            this._initializeContainer();
 
         } else if (this.mode === InteractionMode.DropDown) {
-            this._onDropDownClosed();
+            this._closeDropDown();
         }
-
-        if (this.value) {
-            const foramttedTime = this._formatTime(this.value, this.format);
-            const sections = foramttedTime.split(/[\s:]+/);
-
-            this.selectedHour = sections[0];
-            this.selectedMinute = sections[1];
-
-            if (this._ampmItems !== null) {
-                this.selectedAmPm = sections[2];
-            }
-        }
-
-        if (this.selectedHour === undefined) {
-            this.selectedHour = `${this._hourItems[3]}`;
-        }
-        if (this.selectedMinute === undefined) {
-            this.selectedMinute = '0';
-        }
-        if (this.selectedAmPm === undefined && this._ampmItems !== null) {
-            this.selectedAmPm = this._ampmItems[3];
-        }
-
-        this._prevSelectedHour = this.selectedHour;
-        this._prevSelectedMinute = this.selectedMinute;
-        this._prevSelectedAmPm = this.selectedAmPm;
-
-        this._onTouchedCallback();
-
-        this._updateHourView(0, 7);
-        this._updateMinuteView(0, 7);
-        this._updateAmPmView(0, 7);
-
-        if (this.selectedHour) {
-            this.scrollHourIntoView(this.selectedHour);
-        }
-        if (this.selectedMinute) {
-            this.scrollMinuteIntoView(this.selectedMinute);
-        }
-        if (this.selectedAmPm) {
-            this.scrollAmPmIntoView(this.selectedAmPm);
-        }
-
-        requestAnimationFrame(() => {
-            this.hourList.nativeElement.focus();
-        });
     }
 
     /**
      * Scrolls a hour item into view.
      * ```typescript
-     *scrhintoView(tp) {
-     *tp.scrollHourIntoView('2');
+     *scrhintoView(picker) {
+     *picker.scrollHourIntoView('2');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrhintoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrhintoView(picker)"></igx-time-picker>
      *```
      *@param item to be scrolled in view.
      */
@@ -1253,12 +1262,12 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a minute item into view.
      * ```typescript
-     *scrMintoView(tp) {
-     *tp.scrollMinuteIntoView('3');
+     *scrMintoView(picker) {
+     *picker.scrollMinuteIntoView('3');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrMintoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
      *```
      * @param item to be scrolled in view.
      */
@@ -1274,12 +1283,12 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls an ampm item into view.
      * ```typescript
-     *scrAmPmIntoView(tp) {
-     *tp.scrollAmPmIntoView('PM');
+     *scrAmPmIntoView(picker) {
+     *picker.scrollAmPmIntoView('PM');
      *}
      * ```
      *```html
-     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrAmPmIntoView(tp)"></igx-time-picker>
+     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrAmPmIntoView(picker)"></igx-time-picker>
      *```
      * @param item to be scrolled in view.
      */
@@ -1451,7 +1460,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public hideOverlay(): void {
-        this.overlayService.hide(this._overlayId);
+        this.toggleRef.close();
     }
 
     /**
@@ -1468,7 +1477,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public clear(): void {
-        if (this.collapsed) {
+        if (this.toggleRef.collapsed) {
             this.cleared = true;
             this.isNotEmpty = false;
 
@@ -1484,28 +1493,8 @@ export class IgxTimePickerComponent implements
                 };
                 this.onValueChanged.emit(args);
             }
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public onKeydown(event): void {
-        switch (event.key) {
-            case KEYS.UP_ARROW:
-            case KEYS.UP_ARROW_IE:
-                this.spinOnEdit(event);
-                break;
-            case KEYS.DOWN_ARROW:
-            case KEYS.DOWN_ARROW_IE:
-                if (event.altKey) {
-                    this.openDialog();
-                } else {
-                    this.spinOnEdit(event);
-                }
-                break;
-            default:
-                return;
+        } else {
+            this.hideOverlay();
         }
     }
 
@@ -1669,7 +1658,8 @@ export class IgxTimePickerComponent implements
         IgxInputGroupModule,
         IgxIconModule,
         IgxButtonModule,
-        IgxMaskModule
+        IgxMaskModule,
+        IgxToggleModule
     ],
     providers: []
 })

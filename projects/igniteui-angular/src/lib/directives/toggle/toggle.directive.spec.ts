@@ -609,6 +609,7 @@ export class IgxToggleTestComponent {
 }
 @Component({
     template: `
+    <p>Test</p>
     <button [igxToggleAction]="toggleRef" [overlaySettings]="settings">Open/Close Toggle</button>
     <div igxToggle #toggleRef="toggle">
       <ul>
@@ -618,7 +619,6 @@ export class IgxToggleTestComponent {
         <li>4</li>
       </ul>
     </div>
-    <p>Test</p>
     `
 })
 export class IgxToggleActionTestComponent {

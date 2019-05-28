@@ -2,15 +2,15 @@
     <app-page-header title="Button Group">
         A group of buttons tied together in a single component. It provides exclusive, multiple and toggle selections.
     </app-page-header>
+
     <section class="sample-content">
 
         <article class="sample-column">
             <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
-            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions"></igx-buttongroup>
+            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" displayDensity="compact"></igx-buttongroup>
             <br>
             <span class="igx-typography__body-2"><b>First button is selected: </b>{{alignOptions[0].selected}}</span>
         </article>
-
 
         <article class="sample-column">
             <h4 class="sample-title">Multiple Selection <i class="light">Horizontal</i></h4>
@@ -53,8 +53,8 @@
 
         <article class="sample-column">
             <h4 class="sample-title">Templated buttons. <i class="light">Vertical</i></h4>
-            <igx-buttongroup [multiSelection]="false" [alignment]="alignment">
-                <button igxButton><igx-icon>alarm_on</igx-icon>Button 1 text</button>
+            <igx-buttongroup [multiSelection]="false" [alignment]="alignment" displayDensity="compact">
+                <button igxButton displayDensity="comfortable"><igx-icon>alarm_on</igx-icon>Button 1 text</button>
                 <button igxButton><igx-icon>autorenew</igx-icon>Button 2 text</button>
             </igx-buttongroup>
         </article>

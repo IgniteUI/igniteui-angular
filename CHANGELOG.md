@@ -5,34 +5,6 @@ All notable changes for each version of this project will be documented in this 
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
-- `IgxList` - The list component has been refactored. It now includes several new supporting directives:
-    - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list;
-    - `igxListAction` - Use it to mark the target as list action which will be automatically positioned as a last item in the list;
-    - `igxListLine` - Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
-    - `igxListLineTitle` - Use it to mark the target as list title which will be automatically formatted as a list-item title;
-    - `igxListLineSubTitle` - Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
-
-    ```html
-        <igx-list>
-            <igx-list-item [isHeader]="true">List items</igx-list-item>
-            <igx-list-item>
-              <igx-avatar igxListThumbnail></igx-avatar>
-              <h1 igxListLineTitle>List item title</h1>
-              <h3 igxListLineSubTitle>List item subtitle</h3>
-              <igx-icon igxListAction>info</igx-icon>
-            </igx-list-item>
-        </igx-list>
-        
-        <igx-list>
-          <igx-list-item [isHeader]="true">List items</igx-list-item>
-          <igx-list-item>
-            <igx-avatar igxListThumbnail></igx-avatar>
-            <span igxListLine>Some content</span>
-            <igx-icon igxListAction>info</igx-icon>
-          </igx-list-item>
-        </igx-list>
-    ```
-
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
@@ -44,30 +16,35 @@ All notable changes for each version of this project will be documented in this 
 ## 7.3.0
 
 ### Features
+- `igxGrid`
+    - **Feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Grid---Multi-Row-Layout). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
+        - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colstart) - column index from which the field is starting. This property is **mandatory**.
+         - [`rowStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowstart) - row index from which the field is starting. This property is **mandatory**.
+         - [`colEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colend) - column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. This property is **optional**. If not set defaults to `colStart + 1`.
+         - [`rowEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowend) - row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. This property is **optional**. If not set defaults to `rowStart + 1`.
+         ```html
+        <igx-column-layout>
+             <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
+             <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
+             <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" field="Address"></igx-column>
+        </igx-column-layout>
+        ```
+- `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
+    - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
-- **New feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Grid---Multi-Row-Layout). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
-    - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colstart) - column index from which the field is starting. This property is **mandatory**.
-    - [`rowStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowstart) - row index from which the field is starting. This property is **mandatory**.
-    - [`colEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colend) - column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. This property is **optional**. If not set defaults to `colStart + 1`.
-    - [`rowEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowend) - row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. This property is **optional**. If not set defaults to `rowStart + 1`.
-    ```html
-    <igx-column-layout>
-        <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
-        <igx-column [rowStart]="1" [colStart]="2" field="City"></igx-column>
-        <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" field="Address"></igx-column>
-    </igx-column-layout>
-    ```
-- **New feature** `igxGridComponent` now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
-
-- `igxTreeGrid` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
+    - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
+- `igxTreeGrid` 
+    - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
 - `igxButton`
     - **Feature** The `igxButton` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button directive.
+- `igxButtonGroup`
+    - **Feature** The `igxButtonGroup` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the button group. The buttons within the group will have the same density as the button group. If a button has the `displayDensity` set in the template, it is not changed by the density of the group where the button is placed.
 - `igxGrid`, `igxTreeGrid`, `igxHierarchicalGrid`
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
 - `IgxDropDown`
-    - now supports virtualized items. Use in conjuction with `IgxForOf` directive, with the following syntax, to display very large list of data:
+    - now supports virtualized items. Use in conjunction with `IgxForOf` directive, with the following syntax, to display very large list of data:
     ```html
     <igx-drop-down>
         <div class="wrapping-div">

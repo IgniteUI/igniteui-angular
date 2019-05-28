@@ -70,7 +70,7 @@ describe('IgxGrid - Summaries', () => {
             const grid = fixture.componentInstance.grid;
             expect(grid.hasSummarizedColumns).toBe(false);
             let tFoot = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-            expect(tFoot < grid.defaultRowHeight).toBe(true);
+            expect(tFoot < grid.defaultSummaryHeight).toBe(true);
 
             grid.enableSummaries([{ fieldName: 'ProductName' }, { fieldName: 'ProductID' }]);
             fixture.detectChanges();
@@ -87,7 +87,7 @@ describe('IgxGrid - Summaries', () => {
             expect(grid.getColumnByName('OrderDate').hasSummary).toBe(false);
 
             tFoot = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-            expect(tFoot).toEqual(grid.defaultRowHeight);
+            expect(tFoot).toEqual(grid.defaultSummaryHeight);
         });
 
         it(`should recalculate grid sizes correctly when the column is outside of the viewport`, (async () => {
@@ -104,7 +104,7 @@ describe('IgxGrid - Summaries', () => {
             fixture.detectChanges();
 
             const tFoot = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-            expect(tFoot).toEqual(5 * grid.defaultRowHeight);
+            expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
             expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeDefined();
         }));
 
@@ -198,12 +198,12 @@ describe('IgxGrid - Summaries', () => {
             const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
-            HelperUtils.verifyVisibleSummariesHeight(fixture, 3, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fixture, 3, grid.defaultSummaryHeight);
             grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.dealsSummaryMinMax;
             tick(100);
             fixture.detectChanges();
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '20,000']);
-            HelperUtils.verifyVisibleSummariesHeight(fixture, 2, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fixture, 2, grid.defaultSummaryHeight);
         }));
 
         it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', (async () => {
@@ -222,7 +222,7 @@ describe('IgxGrid - Summaries', () => {
 
             rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
             tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-            expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
+            expectedRowLenght = Math.round(parseFloat(tbody) / grid.defaultRowHeight) + 1;
             expect(rowsRendered.length).toEqual(expectedRowLenght);
 
             grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
@@ -312,7 +312,7 @@ describe('IgxGrid - Summaries', () => {
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '20,000']);
-                HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultRowHeight);
+                HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultSummaryHeight);
             }));
 
             it('should have summary per each column that \'hasSummary\'= true', () => {
@@ -415,7 +415,7 @@ describe('IgxGrid - Summaries', () => {
                     .nativeElement.getBoundingClientRect().height;
                 const tfootSize = +footerRow;
 
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
+                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
 
                 expect(tfootSize).toBe(expectedHeight);
             });
@@ -436,7 +436,7 @@ describe('IgxGrid - Summaries', () => {
                     el.nativeElement.classList.contains('igx-grid-summary--empty') === false);
                 const tfootSize = +fix.debugElement.query(By.css('.igx-grid__summaries'))
                     .nativeElement.getBoundingClientRect().height;
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
+                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
                 expect(tfootSize).toBe(expectedHeight);
 
                 grid.getColumnByName('ProductName').hasSummary = false;
@@ -566,14 +566,14 @@ describe('IgxGrid - Summaries', () => {
 
             it('Hiding: should recalculate summary area after column with enabled summary is hidden', fakeAsync(() => {
                 let tFoot = fix.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-                expect(tFoot).toEqual(5 * grid.defaultRowHeight);
+                expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
 
                 grid.getColumnByName('UnitsInStock').hidden = true;
                 tick();
                 fix.detectChanges();
 
                 tFoot = fix.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-                expect(tFoot).toEqual(3 * grid.defaultRowHeight);
+                expect(tFoot).toEqual(3 * grid.defaultSummaryHeight);
                 expect(grid.hasSummarizedColumns).toBe(true);
 
                 let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
@@ -588,7 +588,7 @@ describe('IgxGrid - Summaries', () => {
 
                 expect(grid.hasSummarizedColumns).toBe(true);
                 tFoot = fix.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
-                expect(tFoot).toEqual(5 * grid.defaultRowHeight);
+                expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
                 summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
                 HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
@@ -1729,7 +1729,7 @@ describe('IgxGrid - Summaries', () => {
             grid.getColumnByName('ParentID').hasSummary = false;
             fix.detectChanges();
 
-            HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultSummaryHeight);
 
             let summaries = HelperUtils.getAllVisibleSummaries(fix);
             summaries.forEach(summary => {
@@ -1752,7 +1752,7 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(5);
-            HelperUtils.verifyVisibleSummariesHeight(fix, 1, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fix, 1, grid.defaultSummaryHeight);
             summaries = HelperUtils.getAllVisibleSummaries(fix);
             summaries.forEach(summary => {
                 HelperUtils.verifyColumnSummaries(summary, 0, [], []);
@@ -1794,7 +1794,7 @@ describe('IgxGrid - Summaries', () => {
             grid.getColumnByName('ParentID').hasSummary = false;
             fix.detectChanges();
 
-            HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fix, 3, grid.defaultSummaryHeight);
 
             let summaries = HelperUtils.getAllVisibleSummaries(fix);
             summaries.forEach(summary => {
@@ -1817,7 +1817,7 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(5);
-            HelperUtils.verifyVisibleSummariesHeight(fix, 1, grid.defaultRowHeight);
+            HelperUtils.verifyVisibleSummariesHeight(fix, 1, grid.defaultSummaryHeight);
             summaries = HelperUtils.getAllVisibleSummaries(fix);
             summaries.forEach(summary => {
                 HelperUtils.verifyColumnSummaries(summary, 0, [], []);
