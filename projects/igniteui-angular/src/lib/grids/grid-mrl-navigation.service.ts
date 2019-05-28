@@ -365,14 +365,17 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parent = targetCol.parent;
         const parentVIndex = forOfDir.igxForOf.indexOf(parent);
         let leftScroll = forOfDir.getColumnScrollLeft(parentVIndex), rightScroll = 0;
-        parent.children.forEach((c) => {
-            const rowEnd = c.rowEnd !== undefined ? c.rowEnd : c.rowStart + 1;
-            const targetRowEnd = targetCol.rowEnd !== undefined ? targetCol.rowEnd : targetCol.rowStart + 1;
-            if (c.rowStart >= targetCol.rowStart && rowEnd >= targetRowEnd && c.visibleIndex < targetCol.visibleIndex) {
-                leftScroll += parseInt(c.calcWidth, 10);
-            }
-        });
-        rightScroll = leftScroll + parseInt(targetCol.calcWidth, 10);
+        // caculate offset from parent based on target column colStart and colEnd and the resolved child column sizes.
+        const childSizes = parent.getFilledChildColumnSizes(parent.children);
+        const colStart = targetCol.colStart || 1;
+        const colEnd = targetCol.colEnd || colStart + 1;
+        for (let i = 1; i < colStart; i++) {
+            leftScroll += parseInt(childSizes[i - 1], 10);
+        }
+        rightScroll += leftScroll;
+        for (let j = colStart; j < colEnd; j++) {
+            rightScroll +=  parseInt(childSizes[j - 1], 10);
+        }
         return {leftScroll, rightScroll};
     }
 

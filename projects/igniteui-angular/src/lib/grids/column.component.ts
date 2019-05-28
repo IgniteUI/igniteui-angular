@@ -1214,7 +1214,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return columnSizes;
     }
 
-    protected getFilledChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<string> {
+    public getFilledChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<string> {
         const columnSizes = this.getInitialChildColumnSizes(children);
 
         // fill the gaps if there are any
