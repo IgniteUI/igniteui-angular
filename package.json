@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --configuration hmr --host 0.0.0.0",
+    "start": "ng serve --open --configuration hmr",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
