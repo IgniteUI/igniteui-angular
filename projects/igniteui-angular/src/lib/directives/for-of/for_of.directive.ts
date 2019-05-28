@@ -1235,6 +1235,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return this.igxForOf;
     }
 
+    /**
+     * @hidden @internal
+     * An event that is emitted after data has been changed but before the view is refreshed
+     */
+    @Output()
+    public onDataChanging = new EventEmitter<any>();
+
     ngOnInit() {
         this.syncService.setMaster(this);
         super.ngOnInit();
@@ -1412,6 +1419,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 //  re-init cache.
+                this.onDataChanging.emit();
                 if (!this.igxForOf) {
                     return;
                 }
