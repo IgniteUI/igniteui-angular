@@ -1,7 +1,7 @@
 <div  class="sample-wrapper">
     <app-page-header title="Grid MRL"></app-page-header>
     <section style="height: 800px" class="sample-content">
-        <igx-grid [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnHiding]='true'>
+        <igx-grid [rowSelectable]="true" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnHiding]='true'>
             <igx-column-layout [movable]="false" [pinned]="true" field='group1'>
                 <igx-column [rowStart]="1" [colStart]="1" [colEnd]="5" field="ContactName"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="5" field="ContactTitle"></igx-column>
