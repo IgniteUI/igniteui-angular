@@ -2715,6 +2715,116 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
         expect(document.activeElement).toEqual(firstRowCells[firstRowCells.length - 1].nativeElement);
     });
+
+    it('navigateTo method should work in multi-row layout grid.', async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [
+            {
+                group: 'group1',
+                columns: [
+                    { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, editable: true },
+                    { field: 'ContactName', rowStart: 2, colStart: 1, editable: false, width: '100px'  },
+                    { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true, width: '100px'  },
+                    { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true, width: '100px'  }
+                ]
+            },
+            {
+                group: 'group2',
+                columns: [
+                    { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true  },
+                    { field: 'Region', rowStart: 3, colStart: 1, editable: true  },
+                    { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true  }
+                ]
+            },
+            {
+                group: 'group3',
+                columns: [
+                    { field: 'Phone', rowStart: 1, colStart: 1, width: '200px', editable: true  },
+                    { field: 'Fax', rowStart: 2, colStart: 1, editable: true, width: '200px' },
+                    { field: 'ID', rowStart: 3, colStart: 1, editable: true, width: '200px'  }
+                ]
+            }
+        ];
+        const grid = fix.componentInstance.grid;
+        grid.width = '500px';
+        setupGridScrollDetection(fix, grid);
+        fix.detectChanges();
+
+        // navigate down to cell in a row that is in the DOM but is not in view (half-visible row)
+        let col = grid.getColumnByName('ContactTitle');
+        grid.navigateTo(2, col.visibleIndex);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        // cell should be at bottom of grid
+        let cell =  grid.getCellByColumn(2, 'ContactTitle');
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        expect(diff).toBe(0);
+
+        // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
+        col = grid.getColumnByName('CompanyName');
+        grid.navigateTo(0, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        // cell should be at top of grid
+        cell =  grid.getCellByColumn(0, 'CompanyName');
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
+        expect(diff).toBe(0);
+
+        // navigate to cell in a row is not in the DOM
+        col = grid.getColumnByName('CompanyName');
+        grid.navigateTo(10, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        // cell should be at bottom of grid
+        cell =  grid.getCellByColumn(10, 'CompanyName');
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50 * 10);
+        diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        expect(diff).toBe(0);
+
+        // navigate right to cell in column that is in DOM but is not in view
+        col = grid.getColumnByName('City');
+        grid.navigateTo(10, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // cell should be at right edge of grid
+        cell =  grid.getCellByColumn(10, 'City');
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(100);
+        // check if cell right edge is visible
+        diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        expect(diff).toBe(0);
+
+        // navigate left to cell in column that is in DOM but is not in view
+        col = grid.getColumnByName('CompanyName');
+        grid.navigateTo(10, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // cell should be at left edge of grid
+        cell =  grid.getCellByColumn(10, 'CompanyName');
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        // check if cell right left is visible
+        diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
+        expect(diff).toBe(0);
+
+        // navigate to cell in column that is not in DOM
+
+        col = grid.getColumnByName('ID');
+        grid.navigateTo(9, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        // cell should be at right edge of grid
+        cell =  grid.getCellByColumn(9, 'ID');
+        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(250);
+        // check if cell right right is visible
+        diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        expect(diff).toBe(0);
+
+    });
 });
 
 @Component({

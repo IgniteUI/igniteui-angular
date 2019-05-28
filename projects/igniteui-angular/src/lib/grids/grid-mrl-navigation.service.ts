@@ -172,7 +172,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         };
         if (this.shouldPerformVerticalScroll(rowIndex, upperElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
-                this.performVerticalScroll(rowIndex, upperElementColumn.visibleIndex, cb);
+                this.performVerticalScrollToCell(rowIndex, upperElementColumn.visibleIndex, cb);
         } else {
             cb();
         }
@@ -212,7 +212,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         };
         if (this.shouldPerformVerticalScroll(rowIndex, nextElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
-                this.performVerticalScroll(rowIndex, nextElementColumn.visibleIndex, cb);
+                this.performVerticalScrollToCell(rowIndex, nextElementColumn.visibleIndex, cb);
         } else {
             cb();
         }
@@ -400,7 +400,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return  parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
     }
 
-    public performVerticalScroll(rowIndex: number, visibleColumnIndex: number, cb?) {
+    public performVerticalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?) {
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const scrollTop = Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
         const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
