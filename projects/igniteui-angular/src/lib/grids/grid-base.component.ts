@@ -2508,7 +2508,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _ngAfterViewInitPassed = false;
+    protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2912,21 +2912,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    get headerFixedWidth() {
-        let width = 0;
-        if (this.headerCheckboxContainer) {
-            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
-        }
-        if (this.headerDragContainer) {
-            width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
-        }
-
-        return width;
-    }
-
-    /**
-     * @hidden
-     */
     protected get outlet() {
         return this.outletDirective;
     }
@@ -3029,9 +3014,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
+     */
+    public get featureColumnsWidth() {
+        return this.getFeatureColumnsWidth();
+    }
+
+    /**
+     * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable || this.rowDraggable ? this.headerFixedWidth : 0;
+        return this.rowSelectable || this.rowDraggable ? this.featureColumnsWidth : 0;
     }
 
     /**
@@ -3966,8 +3960,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
 
     /**
      * @hidden
@@ -4022,7 +4016,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    private get defaultTargetBodyHeight(): number {
+    protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
@@ -4113,7 +4107,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
-        if (height === 0 || isNaN(gridHeight) || this.dataLength === 0) {
+        if (height === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
@@ -4303,6 +4297,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * Method used to override the calculations.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
+     */
+    public getFeatureColumnsWidth() {
+        let width = 0;
+
+        if (this.headerCheckboxContainer) {
+            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
+        }
+        if (this.headerDragContainer) {
+            width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
+        }
+        return width;
+    }
+
+    /**
      * Gets calculated width of the pinned area.
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
@@ -4318,7 +4330,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        sum += this.headerFixedWidth;
+        sum += this.featureColumnsWidth;
 
         return sum;
     }

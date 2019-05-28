@@ -608,6 +608,15 @@
         %igx-grid__drag-indicator {
             cursor: default;
         }
+
+        %grid-row--mrl {
+            %igx-grid__hierarchical-expander--header,
+            %igx-grid__header-indentation,
+            %igx-grid__row-indentation,
+            %grid__cbx-selection {
+                border-bottom: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
+            }
+        }
     }
 
     %grid-thead--cosy {
@@ -700,6 +709,12 @@
 
     %grid-row--mrl {
         border-bottom: none !important;
+
+        %grid__cbx-selection,
+        %igx-grid__row-indentation,
+        %igx-grid__drag-indicator {
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
     }
 
     %grid-tbody {
@@ -2007,6 +2022,15 @@
         }
     }
 
+    %filtering-scroll-mask {
+        display: block;
+        position: absolute;
+        content: '';
+        top: -2px;
+        bottom: -2px;
+        width: 10px;
+    }
+
     %igx-grid__filtering-scroll-start {
         width: 24px;
         height: 24px;
@@ -2016,12 +2040,9 @@
         z-index: 1;
 
         &::after {
-            position: absolute;
-            content: '';
-            left: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to right, white, transparent);
+            @extend %filtering-scroll-mask;
+            left: calc(100% + 6px);
+            background: linear-gradient(to right, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 
@@ -2034,12 +2055,9 @@
         z-index: 1;
 
         &::before {
-            position: absolute;
-            content: '';
-            right: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to left, white, transparent);
+            @extend %filtering-scroll-mask;
+            right: calc(100% + 6px);
+            background: linear-gradient(to left, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 
