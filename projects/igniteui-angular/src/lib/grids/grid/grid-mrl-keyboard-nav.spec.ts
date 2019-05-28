@@ -888,8 +888,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(lastCell.focused).toBe(true);
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(600);
         // check if cell right edge is visible
-        const diff = lastCell.nativeElement.getBoundingClientRect().right -
-        parseInt(grid.width, 10) + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        const diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
      });
 
