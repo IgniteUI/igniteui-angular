@@ -1,12 +1,12 @@
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent } from './select.component';
+import { IgxSelectComponent, IgxSelectState } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -83,16 +83,19 @@ describe('igxSelect', () => {
                 IgxSelectMiddleComponent,
                 IgxSelectTopComponent,
                 IgxSelectBottomComponent,
-                IgxSelectAffixComponent
+                IgxSelectAffixComponent,
+                IgxSelectReactiveFormComponent,
+                IgxSelectTemplateFormComponent
             ],
             imports: [
                 FormsModule,
+                ReactiveFormsModule,
                 IgxDropDownModule,
                 IgxIconModule,
                 IgxInputGroupModule,
                 IgxSelectModule,
                 IgxToggleModule,
-                NoopAnimationsModule,
+                NoopAnimationsModule
             ]
         }).compileComponents();
     }));
@@ -438,6 +441,120 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
+        it('Should properly initialize when used as a reactive form control - with validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toEqual('');
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            select.toggle();
+            expect(select.collapsed).toEqual(false);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INVALID);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.value).toEqual('Option 5');
+            expect(selectComp.valid).toEqual(IgxSelectState.VALID);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.value = 'Option 1';
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+        }));
+        it('Should properly initialize when used as a reactive form control - without validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            fix.componentInstance.removeValidators(formGroup);
+            const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toEqual('');
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            document.documentElement.dispatchEvent(new Event('click'));
+            expect(select.collapsed).toEqual(true);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+        }));
+
+        it('Should properly initialize when used as a form control - with validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.ngForm.form;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            tick();
+            fix.detectChanges();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toBeNull();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            select.toggle();
+            expect(select.collapsed).toEqual(false);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INVALID);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.value).toEqual('Option 5');
+            expect(selectComp.valid).toEqual(IgxSelectState.VALID);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.value = 'Option 1';
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+        }));
+        it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.ngForm.form;
+            selectFormReference.clearValidators();
+            selectComp.required = false;
+
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toBeUndefined();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            document.documentElement.dispatchEvent(new Event('click'));
+            expect(select.collapsed).toEqual(true);
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+        }));
+
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -2245,6 +2362,7 @@ class IgxSelectBottomComponent {
 })
 class IgxSelectAffixComponent {
     @ViewChild('select', { read: IgxSelectComponent })
+    public value = 'Option 1';
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2255,3 +2373,120 @@ class IgxSelectAffixComponent {
         'Option 6',
         'Option 7'];
 }
+
+
+@Component({
+    template: `
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+    <p>
+    <label>First Name:</label>
+    <input type="text" formControlName="firstName">
+    </p>
+    <p>
+    <label>Password:</label>
+    <input type="password" formControlName="password">
+    </p>
+    <p>
+    <igx-select formControlName="optionsSelect" #selectReactive>
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            {{ item }}
+        </igx-select-item>
+    </igx-select>
+    </p>
+    <p>
+    <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+    </p>
+</form>
+`
+})
+class IgxSelectReactiveFormComponent {
+    @ViewChild('selectReactive', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    reactiveForm: FormGroup;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'
+    ];
+
+    public validationType = {
+        'firstName': new FormControl(Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')),
+        'password': [Validators.required, Validators.maxLength(12)],
+        'optionsSelect': [ Validators.required]
+        };
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'optionsSelect': ['', Validators.required]
+        });
+    }
+    onSubmitReactive() { }
+
+    public removeValidators(form: FormGroup) {
+        // tslint:disable-next-line:forin
+        for (const key in form.controls) {
+             form.get(key).clearValidators();
+             form.get(key).updateValueAndValidity();
+        }
+    }
+
+    public addValidators(form: FormGroup) {
+            // tslint:disable-next-line:forin
+            for (const key in form.controls) {
+                 form.get(key).setValidators(this.validationType[key]);
+                 form.get(key).updateValueAndValidity();
+            }
+    }
+}
+
+@Component({
+    template: `
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <p>
+    <igx-select #selectInForm [(ngModel)]="model.option" [required]="true" name="option">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            {{ item }}
+        </igx-select-item>
+    </igx-select>
+    </p>
+    <p>
+    <button type="submit" [disabled]="!form.valid">Submit</button>
+    </p>
+</form>
+`
+})
+class IgxSelectTemplateFormComponent {
+    @ViewChild('selectInForm', { read: IgxSelectComponent })
+    public select: IgxSelectComponent;
+    @ViewChild(NgForm) ngForm: NgForm;
+
+    model = {
+        option: null
+    };
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'
+    ];
+
+    onSubmit() { }
+}
+
