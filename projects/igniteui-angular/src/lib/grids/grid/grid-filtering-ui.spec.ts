@@ -3560,6 +3560,119 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 
+    it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
+        const productNameCol = grid.columns.find((col) => col.field === 'ProductName');
+        productNameCol.movable = true;
+        productNameCol.pinned = true;
+        fix.detectChanges();
+
+        const idCol = grid.columns.find((col) => col.field === 'ID');
+        idCol.movable = true;
+        idCol.pinned = true;
+        fix.detectChanges();
+
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
+        expect(productNameCol.pinned).toBe(true);
+
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(100);
+        fix.detectChanges();
+
+        // Move 'ProductName' one step to the right. (should move)
+        GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ID');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ProductName');
+        expect(productNameCol.pinned).toBe(true);
+
+        // Move 'ProductName' one step to the left. (should move)
+        GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
+        expect(productNameCol.pinned).toBe(true);
+
+        // Try move 'ProductName' one step to the left. (should not move since it's already first)
+        GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
+        expect(productNameCol.pinned).toBe(true);
+
+        // Move 'ProductName' two steps to the right. (should move)
+        GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ID');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ProductName');
+        expect(productNameCol.pinned).toBe(false);
+    }));
+
+    it('Should move unpinned column correctly by using move buttons', fakeAsync(() => {
+        const productNameCol = grid.columns.find((col) => col.field === 'ProductName');
+        productNameCol.movable = true;
+        productNameCol.pinned = true;
+        fix.detectChanges();
+
+        const downloadsCol = grid.columns.find((col) => col.field === 'Downloads');
+        downloadsCol.movable = true;
+        fix.detectChanges();
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 2).innerText).toBe('Downloads');
+        expect(downloadsCol.pinned).toBe(false);
+
+        GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+        tick(100);
+        fix.detectChanges();
+
+        GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
+        expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('Downloads');
+        expect(downloadsCol.pinned).toBe(true);
+    }));
+
+    it('Should filter and clear the excel search component correctly', fakeAsync(() => {
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(100);
+        fix.detectChanges();
+
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        let listItems = searchComponent.querySelectorAll('igx-list-item');
+        expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+
+        // Type string in search box.
+        const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+        sendInputNativeElement(inputNativeElement, 'ignite', fix);
+        tick(100);
+        fix.detectChanges();
+
+        listItems = searchComponent.querySelectorAll('igx-list-item');
+        expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+        // Clear filtering of ESF search.
+        const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
+                        .find((icon: any) => icon.innerText === 'clear');
+        clearIcon.click();
+        fix.detectChanges();
+
+        listItems = searchComponent.querySelectorAll('igx-list-item');
+        expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+        tick(100);
+    }));
+
     it('should correctly display all items in search list after filtering it', (async () => {
         // Add additional rows as prerequisite for the test
         for (let index = 0; index < 4; index++) {
