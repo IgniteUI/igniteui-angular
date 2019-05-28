@@ -1,9 +1,11 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
+    Injector, OnInit, AfterViewInit, OnDestroy
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, FormControlName, NgModel } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
 
 import { IgxDropDownItemBase } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
@@ -25,6 +27,22 @@ import { IgxSelectionAPIService } from '../core/selection';
     selector: '[igxSelectToggleIcon]'
 })
 export class IgxSelectToggleIconDirective {
+}
+
+/** @hidden @internal */
+export enum IgxSelectState {
+    /**
+     * Select with initial state.
+     */
+    INITIAL,
+    /**
+     * Select with valid state.
+     */
+    VALID,
+    /**
+     * Select with invalid state.
+     */
+    INVALID
 }
 
 const noop = () => { };
@@ -57,11 +75,27 @@ const noop = () => { };
         }
     `]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit,
-    EditorProvider {
+export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
+    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
 
     /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-input-group--valid')
+    public get validClass(): boolean {
+        return this.valid === IgxSelectState.VALID;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-input-group--invalid')
+    public get invalidClass(): boolean {
+        return this.valid === IgxSelectState.INVALID;
+    }
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
@@ -81,6 +115,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public height: string;
+
+    /** @hidden @internal */
+    private ngControl: NgControl = null;
+    private _statusChanges$: Subscription;
+    protected destroy$ = new Subject<any>();
 
     private _overlayDefaults: OverlaySettings;
 
@@ -119,6 +158,31 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      */
     @Input() public placeholder = '';
+    /**
+     * Sets/gets whether item selection is required.
+     * If not set, `required` will have value `false`.
+     * ```html
+     * <igx-select [required] = "true"></igx-select>
+     * ```
+     * ```typescript
+     * let isRequired =  this.select.required;
+     */
+    @Input() public required = false;
+
+    /**
+     * Gets/Sets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // get
+     * let valid = this.select.valid;
+     * ```
+     * ```typescript
+     * // set
+     * this.select.valid = IgxSelectState.INVALID;
+     * ```
+    */
+    public valid: IgxSelectState = IgxSelectState.INITIAL;
+
     /**
      * An @Input property that disables the `IgxSelectComponent`.
      * ```html
@@ -198,7 +262,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
+        protected selection: IgxSelectionAPIService,
+        @Optional() private _injector: Injector) {
         super(elementRef, cdr, selection);
     }
 
@@ -312,8 +377,50 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public onBlur(): void {
+        if (this.ngControl && !this.ngControl.valid) {
+            this.valid = IgxSelectState.INVALID;
+        } else {
+            this.valid = IgxSelectState.INITIAL;
+        }
+
         if (!this.collapsed) {
             this.toggleDirective.close();
+        }
+    }
+
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            this.valid = this.ngControl.valid ? IgxSelectState.VALID : IgxSelectState.INVALID;
+        }
+    }
+    /**
+     * @hidden @internal
+     */
+    public ngOnInit() {
+        try {
+            this.ngControl = this._injector.get(NgControl);
+        } catch (e) { }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit() {
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnDestroy() {
+        this.destroy$.complete();
+        this.selection.clear(this.id);
+
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
         }
     }
 }
