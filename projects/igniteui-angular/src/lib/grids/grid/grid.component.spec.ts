@@ -1342,6 +1342,36 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         describe('Row Editing - General tests', () => {
+            it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                grid.primaryKey = null;
+                grid.rowEditable = false;
+                tick();
+                fix.detectChanges();
+
+                spyOn(console, 'warn');
+                grid.rowEditable = true;
+                tick();
+                fix.detectChanges();
+                expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
+                expect(console.warn).toHaveBeenCalledTimes(1);
+                // Throws warinig but still sets the property correctly
+                expect(grid.rowEditable).toBeTruthy();
+
+                tick();
+                fix.detectChanges();
+                grid.primaryKey = 'ProductID';
+                grid.rowEditable = false;
+                tick();
+                fix.detectChanges();
+                grid.rowEditable = true;
+                tick();
+                fix.detectChanges();
+                expect(console.warn).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditable).toBeTruthy();
+            }));
             it('Should be able to enter edit mode on dblclick, enter and f2', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -2835,13 +2865,16 @@ describe('IgxGrid Component Tests', () => {
 
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
+                tick();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
+                tick();
                 // show column
-                grid.toolbar.columnHidingButton.nativeElement.click();
                 targetCheckbox.nativeElement.click();
+                tick();
+                grid.toolbar.toggleColumnHidingUI();
                 tick();
 
                 expect(targetCell.value).toEqual('Chai');
