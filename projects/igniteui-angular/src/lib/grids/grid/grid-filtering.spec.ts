@@ -597,6 +597,20 @@ describe('IgxGrid - Filtering actions', () => {
         verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
         verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
     }));
+
+    it('Should throw descriptive error when filter() is called without condition', fakeAsync(() => {
+        expect(() => {
+            grid.filter('Downloads', 100);
+            fix.detectChanges();
+        }).toThrowError('Invalid condition or Expression Tree!');
+    }));
+
+    it('Should throw descriptive error when filterGlobal() is called without condition', fakeAsync(() => {
+        expect(() => {
+            grid.filterGlobal(100);
+            fix.detectChanges();
+        }).toThrowError('Invalid condition!');
+    }));
 });
 
 const expectedResults = [];
