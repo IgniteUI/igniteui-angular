@@ -3662,7 +3662,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(200);
+            expect(grid.calcHeight).toBe(204);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
@@ -3672,7 +3672,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator'));
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
     });
