@@ -3847,7 +3847,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ true, true, true ]);
     }));
 
-    it('TEST', async() => {
+    it('Should display the ESF based on the filterIcon within the grid', async() => {
         // Test prerequisites
         grid.width = '800px';
         fix.detectChanges();
