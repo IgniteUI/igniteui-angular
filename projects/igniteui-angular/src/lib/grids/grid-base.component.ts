@@ -3907,6 +3907,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
+        /* the real row height is the host bound rowHeight + border size
+        users can't normally change the border size so this is safe in supported scenarios */
         return (this.rowHeight + 1) * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }

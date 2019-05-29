@@ -1425,7 +1425,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 //  re-init cache.
                 const args: IForOfDataChangingEventArgs = {
                     containerSize: this.igxForContainerSize
-                }
+                };
                 this.onDataChanging.emit(args);
                 if (!this.igxForOf) {
                     return;
