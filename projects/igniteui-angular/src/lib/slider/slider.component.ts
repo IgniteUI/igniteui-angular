@@ -273,6 +273,7 @@ export class IgxSliderComponent implements
             this.minValue = this._minValue;
         }
         if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
             this.positionHandlesAndUpdateTrack();
             this.setTickInterval(labels);
         }
@@ -482,7 +483,7 @@ export class IgxSliderComponent implements
             return this._lowerBound;
         }
 
-        return this._minValue;
+        return this.minValue;
     }
 
     /**
@@ -521,7 +522,7 @@ export class IgxSliderComponent implements
             return this._upperBound;
         }
 
-        return this._maxValue;
+        return this.maxValue;
     }
 
     /**
@@ -616,12 +617,12 @@ export class IgxSliderComponent implements
 
     constructor(private renderer: Renderer2) { }
 
-    @HostListener('mousedown')
+    @HostListener('pointerdown')
     public onMouseDown() {
         this.showThumbLabels();
     }
 
-    @HostListener('mouseup')
+    @HostListener('pointerup')
     public onMouseUp() {
         this.hideThumbLabels();
     }
@@ -851,21 +852,27 @@ export class IgxSliderComponent implements
     public thumbChanged(value: number, thumb: number) {
         const oldValue = this.value;
 
+        let newVal: IRangeSliderValue;
         if (this.isRange) {
             if (thumb === SliderHandle.FROM) {
-                this.value = {
+                newVal = {
                     lower: (this.value as IRangeSliderValue).lower + value,
                     upper: (this.value as IRangeSliderValue).upper
                 };
             } else {
-                this.value = {
+                newVal = {
                     lower: (this.value as IRangeSliderValue).lower,
                     upper: (this.value as IRangeSliderValue).upper + value
                 };
             }
 
             // Swap the thumbs if a collision appears.
-            this.swapThumb();
+            if (newVal.lower > newVal.upper) {
+                this.value = this.swapThumb(newVal);
+            } else {
+                this.value = newVal;
+            }
+
         } else {
             this.value = this.value as number + value;
         }
@@ -875,12 +882,18 @@ export class IgxSliderComponent implements
         }
     }
 
-    public swapThumb() {
-        if (this.lowerValue !== this.upperValue) {
-            return;
+    public swapThumb(value: IRangeSliderValue) {
+        if (this.thumbFrom.isActive) {
+            value.upper = this.upperValue;
+            value.lower = this.upperValue;
+        } else {
+            value.upper = this.lowerValue;
+            value.lower = this.lowerValue;
         }
 
         this.toggleThumb();
+
+        return value;
     }
 
     /**
@@ -989,7 +1002,7 @@ export class IgxSliderComponent implements
         const trackProgress = 100;
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
-            interval = ((trackProgress / (labels.length - 1) * 10)) / 10;
+            interval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
         } else {
             const trackRange = this.maxValue - this.minValue;
             interval = this.step > 1 ?
@@ -1000,12 +1013,20 @@ export class IgxSliderComponent implements
     }
 
     private showThumbLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         return this.thumbTo.isActive ?
             this.thumbTo.showThumbLabel() :
             this.thumbFrom.showThumbLabel();
     }
 
     private hideThumbLabels() {
+        if (this.disabled) {
+            return;
+        }
+
         return this.thumbTo.isActive ?
             this.thumbTo.hideThumbLabel() :
             this.thumbFrom.hideThumbLabel();
@@ -1026,10 +1047,13 @@ export class IgxSliderComponent implements
         const toPosition = this.valueToFraction(this.upperValue);
         const positionGap = toPosition - fromPosition;
 
+        let trackLeftIndention = fromPosition;
         if (this.isRange) {
-            this.track.nativeElement.style.transform = `scaleX(${1})`;
-            this.track.nativeElement.style.left = `${fromPosition * 100}%`;
-            this.track.nativeElement.style.width = `${positionGap * 100}%`;
+            if (positionGap) {
+                trackLeftIndention = Math.round((1 / positionGap * fromPosition) * 100);
+            }
+
+            this.track.nativeElement.style.transform = `scaleX(${positionGap.toFixed(2)}) translateX(${trackLeftIndention}%)`;
         } else {
             this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
         }
