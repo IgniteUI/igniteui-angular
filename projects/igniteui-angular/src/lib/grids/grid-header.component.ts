@@ -203,7 +203,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     private toggleFilterDropdown() {
         if (!this._componentOverlayId) {
             const headerTarget = this.elementRef.nativeElement;
-            const filterIconTarget = headerTarget.querySelector('.igx-excel-filter__icon');
+            const filterIconTarget = headerTarget.querySelector('.' + this.filterIconClassName);
 
             const gridRect = this.grid.nativeElement.getBoundingClientRect();
             const filterIconRect = filterIconTarget.getBoundingClientRect();
