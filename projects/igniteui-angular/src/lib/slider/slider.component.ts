@@ -264,14 +264,10 @@ export class IgxSliderComponent implements
     public set labels(labels: Array<number|string|boolean|null|undefined>) {
         this._labels = labels;
 
-        if (this.upperValue > labels.length - 1) {
-            this.upperValue = labels.length - 1;
+        if (this.upperBound > labels.length - 1) {
+            this.upperBound = labels.length - 1;
         }
 
-        if (!this.labelsViewEnabled) {
-            this.maxValue = this._maxValue;
-            this.minValue = this._minValue;
-        }
         if (this._hasViewInit) {
             this.stepDistance = this.calculateStepDistance();
             this.positionHandlesAndUpdateTrack();
@@ -618,12 +614,20 @@ export class IgxSliderComponent implements
     constructor(private renderer: Renderer2) { }
 
     @HostListener('pointerdown')
-    public onMouseDown() {
+    public onPointerDown() {
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
         this.showThumbLabels();
     }
 
     @HostListener('pointerup')
-    public onMouseUp() {
+    public onPointerUp() {
+        if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
+            return;
+        }
+
         this.hideThumbLabels();
     }
 
