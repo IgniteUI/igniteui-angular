@@ -300,7 +300,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+            return parseInt(colWidth, 10) / 100 * (this.grid.calcWidth - this.grid.featureColumnsWidth);
         } else if (!colWidth) {
             // no width
             return this.defaultWidth || this.grid.getPossibleColumnWidth();
