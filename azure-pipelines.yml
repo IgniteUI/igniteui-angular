@@ -10,11 +10,8 @@ steps:
 - script: npm run lint:lib
   displayName: 'Run lint'
 
-- script: ng build igniteui-angular --prod
-  displayName: 'Build source code'
-
-- script: npm run build:style
-  displayName: 'Build styles'
+- script: npm run build:lib
+  displayName: 'Build source code and styles'
 
 - script: npm run test:lib:azure
   displayName: 'Run tests'
