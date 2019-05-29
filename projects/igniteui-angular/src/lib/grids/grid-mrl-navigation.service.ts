@@ -22,16 +22,15 @@ export enum NavigationDirection {
 @Injectable()
 export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
+    private startNavigationCell: IStartNavigationCell;
+
+    public grid: IgxGridBaseComponent;
+
     /**
      * @hidden
      * @internal
      */
-    public startNavigationCell: IStartNavigationCell;
-
-    public grid: IgxGridBaseComponent;
-
-
-    private setStartNavigationCell(colStart, rowStart, dir) {
+    public setStartNavigationCell(colStart, rowStart, dir) {
         this.startNavigationCell = {
             colStart: colStart,
             rowStart: rowStart,
