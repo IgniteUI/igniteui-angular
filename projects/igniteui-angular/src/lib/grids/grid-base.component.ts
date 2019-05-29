@@ -591,11 +591,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
     * Sets whether rows can be edited.
     * ```html
-    * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
+    * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
     * ```
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
+        if (val && (this.primaryKey === undefined || this.primaryKey === null)) {
+            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
+        }
         this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
