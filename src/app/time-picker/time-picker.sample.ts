@@ -54,7 +54,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     }
 
     public onBlur(inputValue, timePickerValue) {
-        const parts = inputValue.split(":");
+        const parts = inputValue.split(':');
 
         if (parts.length === 2) {
             timePickerValue.setHours(parts[0], parts[1]);

@@ -27,7 +27,7 @@ export class ListSampleComponent implements OnInit {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
-    
+
     density = 'comfortable';
     displayDensities;
 

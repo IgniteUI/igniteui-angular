@@ -975,10 +975,10 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
 export class IgxHierarchicalGridTestComponent {
     public data;
     newData = [];
-    @ViewChild('hierarchicalDragGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hDragGrid: IgxHierarchicalGridComponent;
-    @ViewChild('hierarchicalDropGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hDropGrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         this.data = this.generateData(2, 3);

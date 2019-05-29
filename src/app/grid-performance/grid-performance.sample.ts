@@ -37,7 +37,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         }
 
         for (let i = 0; i < 100000; i++) {
-            var newObj = Object.create(obj);
+            const newObj = Object.create(obj);
             newObj['ID'] = i;
             this.localData.push(newObj);
         }

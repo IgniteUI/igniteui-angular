@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { 
-    IgxCalendarComponent, 
-    DateRangeType, 
-    IgxDaysViewComponent, 
+import {
+    IgxCalendarComponent,
+    DateRangeType,
+    IgxDaysViewComponent,
     IgxMonthPickerComponent
 } from 'igniteui-angular';
 

@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { 
+import {
     IgxGridComponent,
     DataType,
     IgxNumberFilteringOperand,

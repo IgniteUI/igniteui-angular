@@ -139,7 +139,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             this.grid1.enableSummaries([{ fieldName: name, customSummary: MySummaryOperand }]);
         }
     }
-  
+
     public undo() {
         this.grid1.transactions.undo();
     }

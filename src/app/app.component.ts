@@ -409,8 +409,8 @@ export class AppComponent implements OnInit {
             });
 
         // register custom SVG icons
-        this.iconService.addSvgIcon("rain", "../assets/images/card/icons/rain.svg", "weather-icons");
-        this.iconService.addSvgIcon("breeze", "../assets/images/card/icons/breeze.svg", "weather-icons");
+        this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
+        this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
 
     }
 }
