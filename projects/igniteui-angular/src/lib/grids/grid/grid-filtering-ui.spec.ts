@@ -3846,6 +3846,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ 'Select All', '20', '254' ],
             [ true, true, true ]);
     }));
+
+    it('Should cascade filter the available filter options.', fakeAsync(() => {
+        fix.detectChanges();
+
+        grid.data[0].AnotherField = '';
+        fix.detectChanges();
+
+        openExcelMenu(fix, 5);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'a', 'custom' ],
+            [ true, true, true, true ]);
+
+        toggleExcelStyleFilteringItems(fix, grid, true, 2, 3);
+
+        expect(grid.rowList.length).toBe(1);
+
+        openExcelMenu(fix, 5);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'a', 'custom' ],
+            [ null, true, false, false ]);
+    }));
 });
 
 const expectedResults = [];
