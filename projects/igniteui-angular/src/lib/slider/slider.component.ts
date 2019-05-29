@@ -148,19 +148,19 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
 
     private activeHandle: SliderHandle = SliderHandle.TO;
 
-    @ViewChild('slider')
+    @ViewChild('slider', { static: true })
     private slider: ElementRef;
 
-    @ViewChild('track')
+    @ViewChild('track', { static: true })
     private track: ElementRef;
 
-    @ViewChild('ticks')
+    @ViewChild('ticks', { static: true })
     private ticks: ElementRef;
 
-    @ViewChild('thumbFrom')
+    @ViewChild('thumbFrom', { static: false })
     private thumbFrom: ElementRef;
 
-    @ViewChild('thumbTo')
+    @ViewChild('thumbTo', { static: true })
     private thumbTo: ElementRef;
 
 

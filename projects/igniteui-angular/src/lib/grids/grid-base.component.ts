@@ -1524,7 +1524,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild(IgxGridColumnResizerComponent)
+    @ViewChild(IgxGridColumnResizerComponent, { static: false })
     public resizeLine: IgxGridColumnResizerComponent;
 
     /**
@@ -1536,25 +1536,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleSortingTemplateDirective })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleMovingTemplateDirective })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleHidingTemplateDirective })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
+    @ContentChild(IgxExcelStylePinningTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
 
@@ -1669,7 +1669,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    @ViewChild('emptyFilteredGrid', { read: TemplateRef })
+    @ViewChild('emptyFilteredGrid', { read: TemplateRef, static: true })
     public emptyFilteredGridTemplate: TemplateRef<any>;
 
     /**
@@ -1679,16 +1679,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    @ViewChild('defaultEmptyGrid', { read: TemplateRef })
+    @ViewChild('defaultEmptyGrid', { read: TemplateRef, static: true })
     public emptyGridDefaultTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultLoadingGrid', { read: TemplateRef })
+    @ViewChild('defaultLoadingGrid', { read: TemplateRef, static: true })
     public loadingGridDefaultTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
+    @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
@@ -1708,86 +1708,86 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
+    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
         /**
      * @hidden
      */
-    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective })
+    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
     public verticalScroll: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('scr', { read: ElementRef })
+    @ViewChild('scr', { read: ElementRef, static: true })
     public scr: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('paginator', { read: ElementRef })
+    @ViewChild('paginator', { read: ElementRef, static: false })
     public paginator: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxGridForOfDirective })
+    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('headerCheckboxContainer')
+    @ViewChild('headerCheckboxContainer', { static: false })
     public headerCheckboxContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerDragContainer')
+    @ViewChild('headerDragContainer', { static: false })
     public headerDragContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerGroupContainer')
+    @ViewChild('headerGroupContainer', { static: false })
     public headerGroupContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerCheckbox', { read: IgxCheckboxComponent })
+    @ViewChild('headerCheckbox', { read: IgxCheckboxComponent, static: false })
     public headerCheckbox: IgxCheckboxComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
+    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent, static: false })
     public filteringRow: IgxGridFilteringRowComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('theadRow')
+    @ViewChild('theadRow', { static: true })
     public theadRow: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('tbody')
+    @ViewChild('tbody', { static: true })
     public tbody: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('tfoot')
+    @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
 
     /**
      * @hidden
      */
-    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective })
+    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
 
     /**
@@ -1800,7 +1800,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
+    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
@@ -1821,18 +1821,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
+    @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
     private defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
+    @ContentChild(IgxRowEditTemplateDirective, /* TODO: add static flag */ { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
     /** @hidden */
@@ -1840,10 +1840,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
     /** @hidden */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
+    @ContentChild(IgxRowEditTextDirective, /* TODO: add static flag */ { read: TemplateRef })
     public rowEditText: TemplateRef<any>;
     /** @hidden */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
+    @ContentChild(IgxRowEditActionsDirective, /* TODO: add static flag */ { read: TemplateRef })
     public rowEditActions: TemplateRef<any>;
 
     /**
@@ -1894,7 +1894,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: false })
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
@@ -2119,10 +2119,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    @ViewChild('toolbar', { read: IgxGridToolbarComponent })
+    @ViewChild('toolbar', { read: IgxGridToolbarComponent, static: false })
     public toolbar: IgxGridToolbarComponent = null;
 
-    @ViewChild('toolbar', { read: ElementRef })
+    @ViewChild('toolbar', { read: ElementRef, static: false })
     private toolbarHtml: ElementRef = null;
 
     /**

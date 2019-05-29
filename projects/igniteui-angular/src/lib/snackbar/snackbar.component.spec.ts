@@ -144,7 +144,7 @@ describe('IgxSnackbar with custom content', () => {
 })
 class SnackbarInitializeTestComponent {
     public text: string;
-    @ViewChild(IgxSnackbarComponent) public snackbar: IgxSnackbarComponent;
+    @ViewChild(IgxSnackbarComponent, /* TODO: add static flag */ {}) public snackbar: IgxSnackbarComponent;
 }
 
 @Component({
@@ -154,5 +154,5 @@ class SnackbarInitializeTestComponent {
 })
 class SnackbarCustomContentComponent {
     public text: string;
-    @ViewChild(IgxSnackbarComponent) public snackbar: IgxSnackbarComponent;
+    @ViewChild(IgxSnackbarComponent, /* TODO: add static flag */ {}) public snackbar: IgxSnackbarComponent;
 }

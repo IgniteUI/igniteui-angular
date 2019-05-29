@@ -2597,10 +2597,10 @@ export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: TemplateRef })
+    @VViewChild('dropArea', /* TODO: add static flag */ { read: TemplateRef })
     public dropAreaTemplate: TemplateRef<any>;
 
     public enableSorting = false;
@@ -2643,7 +2643,7 @@ export class GroupableGridComponent extends DataParent {
     public width = '800px';
     public height = '700px';
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 }
 
@@ -2668,7 +2668,7 @@ export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 }
 
@@ -2703,7 +2703,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 }
 

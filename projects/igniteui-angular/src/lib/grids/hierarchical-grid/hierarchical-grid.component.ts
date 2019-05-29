@@ -233,13 +233,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ViewChild('hierarchical_record_template', { read: TemplateRef })
+    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
 
-    @ViewChild('child_record_template', { read: TemplateRef })
+    @ViewChild('child_record_template', { read: TemplateRef, static: true })
     protected childTemplate: TemplateRef<any>;
 
-    @ViewChild('headerHierarchyExpander', { read: ElementRef })
+    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected headerHierarchyExpander: ElementRef;
 
     /**

@@ -9,7 +9,7 @@ import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDe
 })
 export class GridToolbarSampleComponent implements OnInit {
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public igxGrid1: IgxGridComponent;
 
     public _displayDensity = [DisplayDensity.comfortable, DisplayDensity.cosy, DisplayDensity.compact];

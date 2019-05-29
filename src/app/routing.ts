@@ -156,7 +156,7 @@ const appRoutes = [
     },
     {
         path: 'lazyIconModule',
-        loadChildren: './icon/LazyModule/lazyIcon.module#LazyIconModule'
+        loadChildren: () => import('./icon/LazyModule/lazyIcon.module').then(m => m.LazyIconModule)
     },
     {
         path: 'inputs',

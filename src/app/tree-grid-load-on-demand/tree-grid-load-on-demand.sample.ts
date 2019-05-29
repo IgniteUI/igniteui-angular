@@ -33,7 +33,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
 
-    @ViewChild('grid1') public grid1: IgxTreeGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public density = '';
     public displayDensities;

@@ -2113,7 +2113,7 @@ describe('igxSelect', () => {
 `
 })
 class IgxSelectSimpleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
         'New York',
@@ -2152,7 +2152,7 @@ class IgxSelectSimpleComponent {
 `
 })
 class IgxSelectGroupsComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public locations: {
         continent: string,
@@ -2177,7 +2177,7 @@ class IgxSelectGroupsComponent {
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })
 class IgxSelectMiddleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2194,7 +2194,7 @@ class IgxSelectMiddleComponent {
 `
 })
 class IgxSelectTopComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2215,7 +2215,7 @@ class IgxSelectTopComponent {
 `
 })
 class IgxSelectBottomComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2244,7 +2244,7 @@ class IgxSelectBottomComponent {
 `
 })
 class IgxSelectAffixComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', /* TODO: add static flag */ { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',

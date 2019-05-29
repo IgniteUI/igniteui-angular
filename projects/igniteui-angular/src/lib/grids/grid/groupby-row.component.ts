@@ -86,7 +86,7 @@ export class IgxGridGroupByRowComponent {
      * const groupRowContent = this.grid1.rowList.first.groupContent;
      * ```
      */
-    @ViewChild('groupContent')
+    @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
 
     /**

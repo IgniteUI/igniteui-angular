@@ -13,7 +13,7 @@ export class GridCellStylingSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     condition = (rowData: any): boolean => {
         return rowData[this.grid1.primaryKey] === "BLONP";

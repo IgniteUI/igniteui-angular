@@ -11,7 +11,7 @@ import {
 })
 export class TooltipSampleComponent implements OnInit, AfterViewInit {
 
-    @ViewChild("target") public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild("target", { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
 
     public settings: OverlaySettings = {
         // positionStrategy: new AutoPositionStrategy(),

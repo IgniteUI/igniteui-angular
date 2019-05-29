@@ -9,7 +9,7 @@ import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
      public data: Array<any>;
      public data1: Array<any>;
 
-     @ViewChild("grid1", { read: IgxGridComponent })
+     @ViewChild("grid1", { read: IgxGridComponent, static: true })
      public grid1: IgxGridComponent;
 
      public ngOnInit(): void {

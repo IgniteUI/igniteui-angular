@@ -8,7 +8,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 
 export class GridPerformanceSampleComponent implements OnInit {
 
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
     localData: any[] = [];

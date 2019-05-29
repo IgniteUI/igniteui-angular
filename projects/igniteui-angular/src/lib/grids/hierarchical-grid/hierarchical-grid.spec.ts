@@ -733,9 +733,9 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         // 3 level hierarchy
@@ -777,8 +777,8 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     public height = '100px';
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland1: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('rowIsland1', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland1: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 }
 
 @Component({
@@ -797,16 +797,16 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
 export class IgxHGridRemoteOnDemandComponent {
     public data;
 
-    @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent })
+    @ViewChild(IgxHierarchicalGridComponent, /* TODO: add static flag */ { read: IgxHierarchicalGridComponent })
     public instance: IgxHierarchicalGridComponent;
 
-    @ViewChild('customTemplate', { read: TemplateRef })
+    @ViewChild('customTemplate', /* TODO: add static flag */ { read: TemplateRef })
     public customTemaplate: TemplateRef<any>;
 
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent })
+    @ViewChild('rowIsland1', /* TODO: add static flag */ { read: IgxRowIslandComponent })
     public rowIsland: IgxRowIslandComponent;
 
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent })
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent })
     public rowIsland2: IgxRowIslandComponent;
 
     constructor(public cdr: ChangeDetectorRef) { }

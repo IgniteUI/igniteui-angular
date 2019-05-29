@@ -14,7 +14,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     log(event) {
         console.log(event);

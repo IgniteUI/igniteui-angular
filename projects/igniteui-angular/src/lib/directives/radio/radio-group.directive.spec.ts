@@ -193,7 +193,7 @@ describe('IgxRadioGroupDirective', () => {
 `
 })
 class RadioGroupComponent {
-    @ViewChild('radioGroup', { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroup', /* TODO: add static flag */ { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
 }
 
 class Person {
@@ -217,7 +217,7 @@ class RadioGroupWithModelComponent {
         'Autumn',
     ];
 
-    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroupSeasons', /* TODO: add static flag */ { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
 
     personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
 }

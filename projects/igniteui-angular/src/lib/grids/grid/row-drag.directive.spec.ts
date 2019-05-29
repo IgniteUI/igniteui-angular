@@ -880,10 +880,10 @@ export class IgxGridRowDraggableComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: IgxDropDirective })
+    @ViewChild('dropArea', /* TODO: add static flag */ { read: IgxDropDirective })
     public dropArea: IgxDropDirective;
 
     public enableSorting = false;
@@ -933,9 +933,9 @@ export class IgxGridRowDraggableComponent extends DataParent {
     `
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
-    @ViewChild('dragGrid', { read: IgxGridComponent })
+    @ViewChild('dragGrid', /* TODO: add static flag */ { read: IgxGridComponent })
     public dragGrid: IgxGridComponent;
-    @ViewChild('dropGrid', { read: IgxGridComponent })
+    @ViewChild('dropGrid', /* TODO: add static flag */ { read: IgxGridComponent })
     public dropGrid: IgxGridComponent;
     newData = [];
     public currentSortExpressions;
@@ -974,10 +974,10 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
 export class IgxHierarchicalGridTestComponent {
     public data;
     newData = [];
-    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent }) public hDragGrid: IgxHierarchicalGridComponent;
-    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent }) public hDropGrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalDragGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         this.data = this.generateData(2, 3);
@@ -1025,8 +1025,8 @@ export class IgxHierarchicalGridTestComponent {
     `
 })
 export class IgxTreeGridTestComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
-    @ViewChild(IgxGridComponent) public dropGrid: IgxGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
     newData = [];
 

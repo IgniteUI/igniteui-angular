@@ -10,7 +10,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 })
 export class AppComponent implements OnInit {
 
-    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent })
+    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     navdrawer;
 
     @HostBinding('attr.id')

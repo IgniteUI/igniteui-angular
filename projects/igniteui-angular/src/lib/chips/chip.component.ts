@@ -313,25 +313,25 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      */
-    @ViewChild('chipArea', { read: ElementRef })
+    @VViewChild('chipArea', { read: ElementRef, static: true })
     public chipArea: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('chipArea', { read: IgxDragDirective })
+    @VViewChild('chipArea', { read: IgxDragDirective, static: true })
     public dragDir: IgxDragDirective;
 
     /**
      * @hidden
      */
-    @ViewChild('defaultRemoveIcon', { read: TemplateRef })
+    @VViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('defaultSelectIcon', { read: TemplateRef })
+    @VViewChild('defaultSelectIcon', { read: TemplateRef, static: true })
     public defaultSelectIcon: TemplateRef<any>;
 
     /**

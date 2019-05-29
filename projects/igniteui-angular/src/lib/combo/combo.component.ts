@@ -151,25 +151,25 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.comboAPI.register(this);
     }
 
-    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
     protected virtDir: IgxForOfDirective<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
+    @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent, static: true })
     public dropdown: IgxComboDropDownComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('searchInput')
+    @ViewChild('searchInput', { static: false })
     public searchInput: ElementRef<HTMLInputElement> = null;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('comboInput')
+    @ViewChild('comboInput', { static: true })
     public comboInput: ElementRef<HTMLInputElement> = null;
 
     /**
@@ -200,7 +200,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboItemDirective, { read: TemplateRef })
+    @ContentChild(IgxComboItemDirective, /* TODO: add static flag */ { read: TemplateRef })
     public itemTemplate: TemplateRef<any> = null;
 
     /**
@@ -223,7 +223,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
+    @ContentChild(IgxComboHeaderDirective, /* TODO: add static flag */ { read: TemplateRef })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
@@ -246,7 +246,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
+    @ContentChild(IgxComboFooterDirective, /* TODO: add static flag */ { read: TemplateRef })
     public footerTemplate: TemplateRef<any> = null;
 
     /**
@@ -267,7 +267,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
+    @ContentChild(IgxComboHeaderItemDirective, /* TODO: add static flag */ { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -290,7 +290,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
+    @ContentChild(IgxComboAddItemDirective, /* TODO: add static flag */ { read: TemplateRef })
     public addItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -313,7 +313,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
+    @ContentChild(IgxComboEmptyDirective, /* TODO: add static flag */ { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
 
     /**
@@ -334,7 +334,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
+    @ContentChild(IgxComboToggleIconDirective, /* TODO: add static flag */ { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -355,19 +355,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
+    @ContentChild(IgxComboClearIconDirective, /* TODO: add static flag */ { read: TemplateRef })
     public clearIconTemplate: TemplateRef<any> = null;
 
-    @ViewChild('primitive', { read: TemplateRef })
+    @ViewChild('primitive', { read: TemplateRef, static: true })
     protected primitiveTemplate: TemplateRef<any>;
 
-    @ViewChild('complex', { read: TemplateRef })
+    @ViewChild('complex', { read: TemplateRef, static: true })
     protected complexTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: true })
     public virtualScrollContainer: IgxForOfDirective<any>;
 
     /**
@@ -375,7 +375,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#emptyTemplate' is deprecated.\n` +
         `Use \`igxComboEmpty\` directive instead.`)
-    @ContentChild('emptyTemplate', { read: TemplateRef })
+    @ContentChild('emptyTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldEmptyTemplate(template: TemplateRef<any>) {
         if (template) {
             this.emptyTemplate = template;
@@ -387,7 +387,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#headerTemplate' is deprecated.\n` +
         `Use \`igxComboHeader\` directive instead.`)
-    @ContentChild('headerTemplate', { read: TemplateRef })
+    @ContentChild('headerTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldHeaderTemplate(template: TemplateRef<any>) {
         if (template) {
             this.headerTemplate = template;
@@ -399,7 +399,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#footerTemplate' is deprecated.\n` +
         `Use \`igxComboFooter\` directive instead.`)
-    @ContentChild('footerTemplate', { read: TemplateRef })
+    @ContentChild('footerTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldFooterTemplate(template: TemplateRef<any>) {
         if (template) {
             this.footerTemplate = template;
@@ -411,7 +411,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#itemTemplate' is deprecated.\n` +
         `Use \`igxComboItem\` directive instead.`)
-    @ContentChild('itemTemplate', { read: TemplateRef })
+    @ContentChild('itemTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldItemTemplate(template: TemplateRef<any>) {
         if (template) {
             this.itemTemplate = template;
@@ -423,7 +423,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#addItemTemplate' is deprecated.\n` +
         `Use \`igxComboAddItem\` directive instead.`)
-    @ContentChild('addItemTemplate', { read: TemplateRef })
+    @ContentChild('addItemTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldAddItemTemplate(template: TemplateRef<any>) {
         if (template) {
             this.addItemTemplate = template;
@@ -435,14 +435,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @DeprecateProperty(`Setting combo item template with '#headerItemTemplate' is deprecated.\n` +
         `Use \`igxComboHeaderItem\` directive instead.`)
-    @ContentChild('headerItemTemplate', { read: TemplateRef })
+    @ContentChild('headerItemTemplate', /* TODO: add static flag */ { read: TemplateRef })
     private set oldHeaderItemTemplate(template: TemplateRef<any>) {
         if (template) {
             this.headerItemTemplate = template;
         }
     }
 
-    @ViewChild('dropdownItemContainer')
+    @ViewChild('dropdownItemContainer', { static: true })
     protected dropdownContainer: ElementRef = null;
 
     /**

@@ -1124,7 +1124,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     `
 })
 export class ColumnLayouHidingTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1165,7 +1165,7 @@ export class ColumnLayouHidingTestComponent {
     `
 })
 export class ColumnLayoutPinningTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1246,7 +1246,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 })
 export class ColumnLayoutResizingTestComponent {
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @VViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     grid: IgxGridComponent;
 
     cols: Array<any> = [

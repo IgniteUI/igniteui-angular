@@ -420,73 +420,73 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('hourList')
+    @ViewChild('hourList', { static: true })
     public hourList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('minuteList')
+    @ViewChild('minuteList', { static: true })
     public minuteList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ampmList')
+    @ViewChild('ampmList', { static: true })
     public ampmList: ElementRef;
 
     /*
      * @hidden
      */
-    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef })
+    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef, static: true })
     protected defaultTimePickerTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
+    @ContentChild(IgxTimePickerTemplateDirective, /* TODO: add static flag */ { read: IgxTimePickerTemplateDirective })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxInputDirective, { read: ElementRef })
+    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
     private _input: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('container')
+    @ViewChild('container', { static: true })
     public container: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
     /**
      * @hidden
      */
-    @ViewChild('input', { read: ElementRef })
+    @ViewChild('input', { read: ElementRef, static: false })
     private input: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('group', { read: IgxInputGroupComponent })
+    @ViewChild('group', { read: IgxInputGroupComponent, static: false })
     private group: IgxInputGroupComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('dropdownInputTemplate', { read: TemplateRef })
+    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
     private dropdownInputTemplate: TemplateRef<any>;
 
     /*
      * @hidden
      */
-    @ContentChild('dropDownTarget', { read: ElementRef })
+    @ContentChild('dropDownTarget', /* TODO: add static flag */ { read: ElementRef })
     protected templateDropDownTarget: ElementRef;
 
     /**

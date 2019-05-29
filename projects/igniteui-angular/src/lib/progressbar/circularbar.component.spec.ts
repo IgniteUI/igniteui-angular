@@ -456,7 +456,7 @@ describe('IgCircularBar', () => {
 });
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
 class InitCircularProgressBarComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public circularBar: IgxCircularProgressBarComponent;
+    @ViewChild(IgxCircularProgressBarComponent, /* TODO: add static flag */ {}) public circularBar: IgxCircularProgressBarComponent;
 }
 
 @Component({
@@ -467,9 +467,9 @@ class InitCircularProgressBarComponent {
     </div>`
 })
 class CircularBarComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
-    @ViewChild('wrapper') public wrapper;
-    @ViewChild('circularBar') public circularBar;
+    @ViewChild(IgxCircularProgressBarComponent, /* TODO: add static flag */ {}) public progressbar: IgxCircularProgressBarComponent;
+    @ViewChild('wrapper', /* TODO: add static flag */ {}) public wrapper;
+    @ViewChild('circularBar', /* TODO: add static flag */ {}) public circularBar;
 
     public value: string | number = 30;
     public max = 100;
@@ -486,5 +486,5 @@ class CircularBarComponent {
         </igx-circular-bar>`
 })
 class CircularBarTemplateComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
+    @ViewChild(IgxCircularProgressBarComponent, /* TODO: add static flag */ {}) public progressbar: IgxCircularProgressBarComponent;
 }

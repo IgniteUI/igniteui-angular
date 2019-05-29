@@ -390,8 +390,8 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
 
     public data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-    @ViewChild('nameColumn') public nameColumn;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
+    @ViewChild('nameColumn', /* TODO: add static flag */ {}) public nameColumn;
     public width = '800px';
 }
 

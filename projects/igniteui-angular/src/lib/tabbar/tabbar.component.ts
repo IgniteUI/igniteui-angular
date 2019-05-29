@@ -329,7 +329,7 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     /**
      *@hidden
      */
-    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
+    @ContentChild(IgxTabTemplateDirective, /* TODO: add static flag */ { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {

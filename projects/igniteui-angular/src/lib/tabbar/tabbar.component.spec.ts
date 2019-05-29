@@ -182,8 +182,8 @@ describe('TabBar', () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, /* TODO: add static flag */ {}) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
     }
@@ -221,8 +221,8 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, /* TODO: add static flag */ {}) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
 }
 
 @Component({
@@ -252,6 +252,6 @@ class BottomTabBarTestComponent {
         </div>`
 })
 class TemplatedTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, /* TODO: add static flag */ {}) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
 }

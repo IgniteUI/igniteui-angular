@@ -146,7 +146,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /**
      * @hidden
      */
-    @ContentChild(IgxInputDirective, { read: IgxInputDirective })
+    @ContentChild(IgxInputDirective, /* TODO: add static flag */ { read: IgxInputDirective })
     protected input: IgxInputDirective;
 
     /**

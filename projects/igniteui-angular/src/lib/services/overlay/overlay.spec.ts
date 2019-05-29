@@ -3414,7 +3414,7 @@ export class SimpleDynamicComponent {
     template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
 })
 export class SimpleRefComponent {
-    @ViewChild('item')
+    @ViewChild('item', /* TODO: add static flag */ {})
     public item: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
@@ -3452,7 +3452,7 @@ export class SimpleBigSizeComponent {
 export class SimpleDynamicWithDirectiveComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {})
     private _overlay: IgxToggleDirective;
 
     public get overlay(): IgxToggleDirective {
@@ -3488,8 +3488,8 @@ export class SimpleDynamicWithDirectiveComponent {
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    @ViewChild('div') divElement: ElementRef;
+    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
+    @ViewChild('div', /* TODO: add static flag */ {}) divElement: ElementRef;
 
     click(event) {
         this.overlay.show(SimpleDynamicComponent);
@@ -3514,7 +3514,7 @@ export class DownRightButtonComponent {
 
     public positionStrategy: IPositionStrategy;
 
-    @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
 
     public ButtonPositioningSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -3549,7 +3549,7 @@ export class TopLeftOffsetComponent {
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
     click(event) {
         this.overlay.show(SimpleDynamicComponent);
     }
@@ -3606,8 +3606,8 @@ export class WidthTestOverlayComponent {
         public elementRef: ElementRef
     ) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    @ViewChild('myCustomComponent') customComponent: ElementRef;
+    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
+    @ViewChild('myCustomComponent', /* TODO: add static flag */ {}) customComponent: ElementRef;
     public overlaySettings: OverlaySettings = {};
     click(event) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
@@ -3639,7 +3639,7 @@ export class WidthTestOverlayComponent {
 export class ScrollableComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {})
     private _toggle: IgxToggleDirective;
 
     public get toggle(): IgxToggleDirective {
@@ -3672,7 +3672,7 @@ export class FlexContainerComponent {
     public overlaySettings: OverlaySettings = {};
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
     click(event) {
         this.overlay.show(SimpleDynamicComponent, this.overlaySettings);
     }

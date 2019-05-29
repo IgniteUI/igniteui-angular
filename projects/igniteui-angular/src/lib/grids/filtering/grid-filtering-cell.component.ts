@@ -40,25 +40,25 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @Input()
     public column: IgxColumnComponent;
 
-    @ViewChild('emptyFilter', { read: TemplateRef })
+    @ViewChild('emptyFilter', { read: TemplateRef, static: true })
     protected emptyFilter: TemplateRef<any>;
 
-    @ViewChild('defaultFilter', { read: TemplateRef })
+    @ViewChild('defaultFilter', { read: TemplateRef, static: true })
     protected defaultFilter: TemplateRef<any>;
 
-    @ViewChild('complexFilter', { read: TemplateRef })
+    @ViewChild('complexFilter', { read: TemplateRef, static: true })
     protected complexFilter: TemplateRef<any>;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: false })
     protected chipsArea: IgxChipsAreaComponent;
 
-    @ViewChild('moreIcon', { read: ElementRef })
+    @ViewChild('moreIcon', { read: ElementRef, static: false })
     protected moreIcon: ElementRef;
 
-    @ViewChild('ghostChip', { read: IgxChipComponent })
+    @ViewChild('ghostChip', { read: IgxChipComponent, static: false })
     protected ghostChip: IgxChipComponent;
 
-    @ViewChild('complexChip', { read: IgxChipComponent })
+    @ViewChild('complexChip', { read: IgxChipComponent, static: false })
     protected complexChip: IgxChipComponent;
 
     @HostBinding('class.igx-grid__filtering-cell')

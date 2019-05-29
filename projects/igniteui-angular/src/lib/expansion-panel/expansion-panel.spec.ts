@@ -1084,9 +1084,9 @@ describe('igxExpansionPanel', () => {
 })
 export class IgxExpansionPanelGridComponent {
 
-    @ViewChild('expansionPanel', { read: IgxExpansionPanelComponent })
+    @ViewChild('expansionPanel', /* TODO: add static flag */ { read: IgxExpansionPanelComponent })
     public expansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
     public width = '800px';
@@ -1128,9 +1128,9 @@ export class IgxExpansionPanelGridComponent {
 `
 })
 export class IgxExpansionPanelListComponent {
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, /* TODO: add static flag */ { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, /* TODO: add static flag */ { read: IgxExpansionPanelComponent })
     public expansionPanel: IgxExpansionPanelComponent;
 }
 
@@ -1160,11 +1160,11 @@ export class IgxExpansionPanelSampleComponent {
     public showBody = true;
     public showHeader = true;
     public customIcon = false;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, /* TODO: add static flag */ { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, /* TODO: add static flag */ { read: IgxExpansionPanelComponent })
     public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
+    @ViewChild(IgxExpansionPanelTitleDirective, /* TODO: add static flag */ { read: IgxExpansionPanelTitleDirective })
     public title: IgxExpansionPanelTitleDirective;
     public handleExpanded(event?) {
     }
@@ -1194,9 +1194,9 @@ export class IgxExpansionPanelImageComponent {
     public imagePath = 'http://milewalk.com/wp-content/uploads/2016/01/My-2-Morning-Tricks-to-Eating-the-Frog.jpg';
     // tslint:disable-next-line:max-line-length
     public text = 'A frog is any member of a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order Anura. The oldest fossil \"proto-frog\" appeared in the early Triassic of Madagascar, but molecular clock dating suggests their origins may extend further back to the Permian, 265 million years ago. Frogs are widely distributed, ranging from the tropics to subarctic regions, but the greatest concentration of species diversity is in tropical rainforests. There are approximately 4,800 recorded species, accounting for over 85% of extant amphibian species. They are also one of the five most diverse vertebrate orders. The body plan of an adult frog is generally characterized by a stout body, protruding eyes, cleft tongue, limbs folded underneath, and the absence of a tail. Besides living in fresh water and on dry land, the adults of some species are adapted for living underground or in trees. The skins of frogs are glandular, with secretions ranging from distasteful to toxic. Warty species of frog tend to be called toads but the distinction between frogs and toads is based on informal naming conventions concentrating on the warts rather than taxonomy or evolutionary history.';
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, /* TODO: add static flag */ { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, /* TODO: add static flag */ { read: IgxExpansionPanelComponent })
     public panel: IgxExpansionPanelComponent;
 }
 

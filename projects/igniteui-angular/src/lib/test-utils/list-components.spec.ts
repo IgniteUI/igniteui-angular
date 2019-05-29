@@ -12,8 +12,8 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
     </div>`
 })
 export class BasicListComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('wrapper') public wrapper;
+    @ViewChild(IgxListComponent, /* TODO: add static flag */ {}) public list: IgxListComponent;
+    @ViewChild('wrapper', /* TODO: add static flag */ {}) public wrapper;
 }
 
 @Component({
@@ -149,10 +149,10 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     styles: [`.item-container { display: flex; }`]
 })
 export class ListWithIgxForAndScrollingComponent {
-    @ViewChild('forOfList', { read: IgxListComponent })
+    @ViewChild('forOfList', /* TODO: add static flag */ { read: IgxListComponent })
     public forOfList: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, /* TODO: add static flag */ {})
     public igxFor: IgxForOfDirective<any>;
 
     public data = [

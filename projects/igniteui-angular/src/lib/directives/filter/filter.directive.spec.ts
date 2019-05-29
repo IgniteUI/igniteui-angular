@@ -159,8 +159,8 @@ class DeclarativeListTestComponent {
     public filteringArgs: FilteringArgs;
     public filteredArgs: FilteringArgs;
 
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('logInput') public logInput: any;
+    @ViewChild(IgxListComponent, /* TODO: add static flag */ {}) public list: IgxListComponent;
+    @ViewChild('logInput', /* TODO: add static flag */ {}) public logInput: any;
 
     get fo() {
         const options = new IgxFilterOptions();
@@ -193,7 +193,7 @@ class DynamicListTestComponent {
     public filterValue: string;
     public isCanceled = false;
 
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
+    @ViewChild(IgxListComponent, /* TODO: add static flag */ {}) public list: IgxListComponent;
 
     protected dataSourceItems: object[] = [
         { key: '1', text: 'Nav1' },

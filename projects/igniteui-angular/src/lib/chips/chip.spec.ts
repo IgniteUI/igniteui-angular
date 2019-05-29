@@ -40,7 +40,7 @@ class TestChipComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @VViewChild('chipsArea', /* TODO: add static flag */ { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -73,7 +73,7 @@ class TestChipsLabelAndSuffixComponent {
         { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true},
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @VViewChild('chipsArea', /* TODO: add static flag */ { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})

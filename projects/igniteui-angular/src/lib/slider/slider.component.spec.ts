@@ -700,7 +700,7 @@ describe('IgxSlider', () => {
     </igx-slider>`
 })
 class SliderInitializeTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, /* TODO: add static flag */ {}) public slider: IgxSliderComponent;
 }
 
 @Component({
@@ -709,7 +709,7 @@ class SliderInitializeTestComponent {
     `
 })
 export class SliderMinMaxComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, /* TODO: add static flag */ {}) public slider: IgxSliderComponent;
 
     public minValue = 150;
     public maxValue = 300;
@@ -725,7 +725,7 @@ export class SliderMinMaxComponent {
                 </div>`
 })
 class SliderTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, /* TODO: add static flag */ {}) public slider: IgxSliderComponent;
 
     minValue = 0;
     maxValue = 10;

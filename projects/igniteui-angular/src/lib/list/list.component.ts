@@ -110,7 +110,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
+    @ContentChild(IgxEmptyListTemplateDirective, /* TODO: add static flag */ { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
 
     /**
@@ -120,7 +120,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
+    @ContentChild(IgxDataLoadingTemplateDirective, /* TODO: add static flag */ { read: IgxDataLoadingTemplateDirective })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     /**
@@ -134,7 +134,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
+    @ContentChild(IgxListItemLeftPanningTemplateDirective, /* TODO: add static flag */ { read: IgxListItemLeftPanningTemplateDirective })
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
@@ -148,7 +148,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
+    @ContentChild(IgxListItemRightPanningTemplateDirective, /* TODO: add static flag */ { read: IgxListItemRightPanningTemplateDirective })
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
@@ -162,11 +162,11 @@ export class IgxListComponent extends IgxListBase {
     public panEndTriggeringThreshold = 0.5;
 
     /**@hidden*/
-    @ViewChild('defaultEmptyList', { read: TemplateRef })
+    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ViewChild('defaultDataLoading', { read: TemplateRef })
+    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     /**

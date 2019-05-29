@@ -614,7 +614,7 @@ describe('Navigation Drawer', () => {
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponent {
-    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
+    @ViewChild(IgxNavigationDrawerComponent, /* TODO: add static flag */ {}) public viewChild: IgxNavigationDrawerComponent;
 }
 
 @Component({
@@ -625,7 +625,7 @@ class TestComponent {
 class TestComponentDIComponent {
     public drawerMiniWidth: string | number;
     public drawerWidth: string | number;
-    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
+    @ViewChild(IgxNavigationDrawerComponent, /* TODO: add static flag */ {}) public viewChild: IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDIComponent {

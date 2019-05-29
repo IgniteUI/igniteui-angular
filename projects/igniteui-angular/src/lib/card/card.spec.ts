@@ -272,7 +272,7 @@ class InitCardComponent { }
     template: `<igx-card type="outlined"></igx-card>`
 })
 class InitOutlinedCardComponent {
-    @ViewChild(IgxCardComponent)
+    @ViewChild(IgxCardComponent, /* TODO: add static flag */ {})
     public card: IgxCardComponent;
 }
 
@@ -306,7 +306,7 @@ class CardWithHeaderComponent { }
     <igx-card>`
 })
 class VerticalCardComponent {
-    @ViewChild(IgxCardMediaDirective) public media: IgxCardMediaDirective;
+    @ViewChild(IgxCardMediaDirective, /* TODO: add static flag */ {}) public media: IgxCardMediaDirective;
 }
 
 @Component({
@@ -320,6 +320,6 @@ class VerticalCardComponent {
     </igx-card>`
 })
 class HorizontalCardComponent {
-    @ViewChild(IgxCardComponent) public card: IgxCardComponent;
-    @ViewChild(IgxCardActionsComponent) public actions: IgxCardActionsComponent;
+    @ViewChild(IgxCardComponent, /* TODO: add static flag */ {}) public card: IgxCardComponent;
+    @ViewChild(IgxCardActionsComponent, /* TODO: add static flag */ {}) public actions: IgxCardActionsComponent;
 }

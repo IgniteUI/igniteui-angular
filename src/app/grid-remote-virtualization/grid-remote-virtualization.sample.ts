@@ -13,7 +13,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public prevRequest: any;
     public columns: any;
 
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;
 
     constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {

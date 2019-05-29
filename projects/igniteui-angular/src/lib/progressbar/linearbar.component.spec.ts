@@ -474,7 +474,7 @@ describe('IgLinearBar', () => {
 
 @Component({ template: `<igx-linear-bar [animate]="true"></igx-linear-bar>` })
 class InitLinearProgressBarComponent {
-    @ViewChild(IgxLinearProgressBarComponent) public linearBar: IgxLinearProgressBarComponent;
+    @ViewChild(IgxLinearProgressBarComponent, /* TODO: add static flag */ {}) public linearBar: IgxLinearProgressBarComponent;
 }
 
 @Component({
@@ -484,8 +484,8 @@ class InitLinearProgressBarComponent {
                             </igx-linear-bar>
                         </div>` })
 class LinearBarComponent {
-    @ViewChild(IgxLinearProgressBarComponent) public progressbar: IgxLinearProgressBarComponent;
-    @ViewChild('linearBar') public linearBar;
+    @ViewChild(IgxLinearProgressBarComponent, /* TODO: add static flag */ {}) public progressbar: IgxLinearProgressBarComponent;
+    @ViewChild('linearBar', /* TODO: add static flag */ {}) public linearBar;
 
     public value: string | number = 30;
     public max = 100;

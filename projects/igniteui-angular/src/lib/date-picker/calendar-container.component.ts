@@ -11,7 +11,7 @@ import { InteractionMode } from '../core/enums';
     templateUrl: 'calendar-container.component.html'
 })
 export class IgxCalendarContainerComponent {
-    @ViewChild('calendar')
+    @ViewChild('calendar', { static: true })
     public calendar: IgxCalendarComponent;
 
     @Input()

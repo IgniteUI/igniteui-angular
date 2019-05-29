@@ -36,7 +36,7 @@ export class DatePickerSampleComponent {
         new Date(new Date().getFullYear(), new Date().getMonth(), 8)
     ];
 
-    @ViewChild('retemplated')
+    @ViewChild('retemplated', { static: true })
     private retemplatedDP;
 
     formatter = (_: Date) => {

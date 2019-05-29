@@ -652,7 +652,7 @@ export class GridToolbarTestPage1Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
 }
@@ -688,7 +688,7 @@ export class GridToolbarTestPage2Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', /* TODO: add static flag */ { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
 }

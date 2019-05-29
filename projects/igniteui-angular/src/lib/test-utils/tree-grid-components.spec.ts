@@ -18,7 +18,7 @@ import { DisplayDensity } from '../core/displayDensity';
     `
 })
 export class IgxTreeGridSortingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -33,7 +33,7 @@ export class IgxTreeGridSortingComponent {
     `
 })
 export class IgxTreeGridFilteringComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -48,7 +48,7 @@ export class IgxTreeGridFilteringComponent {
     `
 })
 export class IgxTreeGridSimpleComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -64,7 +64,7 @@ export class IgxTreeGridSimpleComponent {
     `
 })
 export class IgxTreeGridWithScrollsComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeAllTypesTreeData();
 }
 
@@ -80,7 +80,7 @@ export class IgxTreeGridWithScrollsComponent {
     `
 })
 export class IgxTreeGridWithNoScrollsComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeAllTypesTreeData();
 }
 
@@ -96,7 +96,7 @@ export class IgxTreeGridWithNoScrollsComponent {
     `
 })
 export class IgxTreeGridPrimaryForeignKeyComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
 }
 
@@ -112,7 +112,7 @@ export class IgxTreeGridPrimaryForeignKeyComponent {
     `
 })
 export class IgxTreeGridExpandingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -128,7 +128,7 @@ export class IgxTreeGridExpandingComponent {
     `
 })
 export class IgxTreeGridCellSelectionComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -144,7 +144,7 @@ export class IgxTreeGridCellSelectionComponent {
     `
 })
 export class IgxTreeGridStringTreeColumnComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -160,7 +160,7 @@ export class IgxTreeGridStringTreeColumnComponent {
     `
 })
 export class IgxTreeGridDateTreeColumnComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -177,7 +177,7 @@ export class IgxTreeGridDateTreeColumnComponent {
     `
 })
 export class IgxTreeGridBooleanTreeColumnComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeAllTypesTreeData();
 }
 
@@ -194,7 +194,7 @@ export class IgxTreeGridBooleanTreeColumnComponent {
     `
 })
 export class IgxTreeGridCrudComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -210,7 +210,7 @@ export class IgxTreeGridCrudComponent {
     `
 })
 export class IgxTreeGridRowEditingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -226,7 +226,7 @@ export class IgxTreeGridRowEditingComponent {
     `
 })
 export class IgxTreeGridFilteringRowEditingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -241,7 +241,7 @@ export class IgxTreeGridFilteringRowEditingComponent {
     `
 })
 export class IgxTreeGridSelectionRowEditingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -260,7 +260,7 @@ export class IgxTreeGridSelectionRowEditingComponent {
     `
 })
 export class IgxTreeGridMultiColHeadersComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
 
@@ -277,7 +277,7 @@ export class IgxTreeGridMultiColHeadersComponent {
     `
 })
 export class IgxTreeGridSummariesComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
     public ageSummary = AgeSummary;
     public ageSummaryTest = AgeSummaryTest;
@@ -297,7 +297,7 @@ export class IgxTreeGridSummariesComponent {
     `
 })
 export class IgxTreeGridSummariesKeyScroliingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
 }
 
@@ -314,7 +314,7 @@ export class IgxTreeGridSummariesKeyScroliingComponent {
     `
 })
 export class IgxTreeGridSummariesKeyComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
@@ -336,7 +336,7 @@ export class IgxTreeGridSummariesKeyComponent {
     , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
 export class IgxTreeGridSummariesTransactionsComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummaryMinMax;
@@ -413,7 +413,7 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
 })
 export class IgxTreeGridRowEditingTransactionComponent {
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
-    @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('treeGrid', /* TODO: add static flag */ { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
     public paging = false;
 }
 
@@ -429,7 +429,7 @@ export class IgxTreeGridRowEditingTransactionComponent {
     `
 })
 export class IgxTreeGridCustomSummariesComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
     public ageSummary = AgeSummary;
     public ageSummaryTest = AgeSummaryTest;
@@ -448,7 +448,7 @@ export class IgxTreeGridCustomSummariesComponent {
 })
 export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
     public data = SampleTestData.employeeAllTypesTreeData();
-    @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('treeGrid', /* TODO: add static flag */ { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
     public paging = false;
 }
 
@@ -466,7 +466,7 @@ export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
 })
 
 export class IgxTreeGridWrappedInContComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 
     public height = null;
@@ -515,7 +515,7 @@ export class IgxTreeGridWrappedInContComponent {
     `
 })
 export class IgxTreeGridSummariesScrollingComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeScrollingData();
 }
 
@@ -531,7 +531,7 @@ export class IgxTreeGridSummariesScrollingComponent {
     `
 })
 export class IgxTreeGridSearchComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSearchTreeData();
 }
 
@@ -549,7 +549,7 @@ export class IgxTreeGridSearchComponent {
     `
 })
 export class IgxTreeGridLoadOnDemandComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
     public data = [];
 
@@ -575,7 +575,7 @@ export class IgxTreeGridLoadOnDemandComponent {
     `
 })
 export class IgxTreeGridSelectionKeyComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
 }
 
@@ -593,7 +593,7 @@ export class IgxTreeGridSelectionKeyComponent {
     `
 })
 export class IgxTreeGridLoadOnDemandChildDataComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
     public data = [];
 
@@ -620,7 +620,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
     `
 })
 export class IgxTreeGridSelectionComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -638,7 +638,7 @@ export class IgxTreeGridSelectionComponent {
     `
 })
 export class IgxTreeGridLoadOnDemandHasChildrenComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
     public data = [];
 
@@ -675,7 +675,7 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
     `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
 })
 export class IgxTreeGridSelectionWithTransactionComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
 
@@ -691,7 +691,7 @@ export class IgxTreeGridSelectionWithTransactionComponent {
     `, providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
 export class IgxTreeGridFKeySelectionWithTransactionComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
 }
 
@@ -702,7 +702,7 @@ export class IgxTreeGridFKeySelectionWithTransactionComponent {
     `
 })
 export class IgxTreeGridAutoGenerateComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
 }
 
@@ -718,7 +718,7 @@ export class IgxTreeGridAutoGenerateComponent {
     `
 })
 export class IgxTreeGridDefaultLoadingComponent implements OnInit {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
     public data = [];
 
     ngOnInit(): void {

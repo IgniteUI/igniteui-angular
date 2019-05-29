@@ -58,7 +58,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('checkbox') public nativeCheckbox: ElementRef;
+    @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
@@ -66,7 +66,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('label') public nativeLabel;
+    @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -74,7 +74,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('placeholderLabel') public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
 
     /**
      * Sets/gets the `id` of the switch component.

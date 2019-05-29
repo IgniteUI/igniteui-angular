@@ -897,7 +897,7 @@ export class DefaultGridComponent {
     public selectedCell: IgxGridCellComponent;
     public clickedCell: IgxGridCellComponent;
     public eventCounter = 0;
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
     public cellSelected(event: IGridCellEventArgs) {
@@ -929,7 +929,7 @@ export class DefaultGridComponent {
 })
 export class VirtualGridComponent {
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
     public gridWidth = '700px';
@@ -993,7 +993,7 @@ export class VirtualGridComponent {
 })
 export class NoColumnWidthGridComponent {
     public data = [];
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
     constructor() {
         this.data = this.generateData();
@@ -1019,7 +1019,7 @@ export class NoColumnWidthGridComponent {
 })
 export class GridWithEditableColumnComponent {
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
 
     public data = [
         { FirstName: 'John', LastName: 'Brown', age: 20 },
@@ -1041,7 +1041,7 @@ export class GridWithEditableColumnComponent {
 })
 export class CellEditingTestComponent {
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
 
     public data = [
         { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
@@ -1064,7 +1064,7 @@ export class CellEditingTestComponent {
 })
 export class CellEditingScrollTestComponent {
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
 
     public data = [
         { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001'), fullName: 'John Brown' },
@@ -1108,7 +1108,7 @@ export class ConditionalCellStyleTestComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
-    @ViewChild('grid') public grid: IgxGridComponent;
+    @ViewChild('grid', /* TODO: add static flag */ {}) public grid: IgxGridComponent;
 
     cellClasses;
     cellClasses1;
@@ -1156,7 +1156,7 @@ export class ConditionalCellStyleTestComponent implements OnInit {
     `
 })
 export class ColumnEditablePropertyTestComponent {
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
     public data = [
         { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
@@ -1179,7 +1179,7 @@ export class ColumnEditablePropertyTestComponent {
 })
 export class GridColumnWidthsComponent {
     public static COLUMN_WIDTH;
-    @ViewChild('grid', { read: IgxGridComponent })
+    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent })
     public instance: IgxGridComponent;
     public data;
     public columns;

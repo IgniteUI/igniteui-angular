@@ -46,10 +46,10 @@ class TestDragDropComponent {
     @ViewChildren(IgxDragDirective)
     public dragElems: QueryList<IgxDragDirective>;
 
-    @ViewChild('dropArea', { read: IgxDropDirective })
+    @ViewChild('dropArea', /* TODO: add static flag */ { read: IgxDropDirective })
     public dropArea: IgxDropDirective;
 
-    @ViewChild('container', { read: ElementRef })
+    @ViewChild('container', /* TODO: add static flag */ { read: ElementRef })
     public container: ElementRef;
 }
 

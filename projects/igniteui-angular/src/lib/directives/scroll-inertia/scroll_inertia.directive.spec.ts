@@ -421,10 +421,10 @@ export class ScrollInertiaComponent implements AfterViewInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-    @ViewChild('container') public container: ElementRef;
-    @ViewChild('scrBar') public scrollContainer: ElementRef;
+    @ViewChild('container', /* TODO: add static flag */ {}) public container: ElementRef;
+    @ViewChild('scrBar', /* TODO: add static flag */ {}) public scrollContainer: ElementRef;
 
-    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective })
+    @ViewChild('scrInertiaContainer', /* TODO: add static flag */ { read: IgxTestScrollInertiaDirective })
     public scrInertiaDir: IgxTestScrollInertiaDirective;
 
     ngAfterViewInit() {

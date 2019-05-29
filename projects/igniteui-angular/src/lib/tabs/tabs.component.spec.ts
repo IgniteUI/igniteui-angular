@@ -431,8 +431,8 @@ describe('IgxTabs', () => {
         </div>`
 })
 class TabsTestComponent {
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ {}) public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
     }
@@ -447,8 +447,8 @@ class TabsTestComponent {
         </div>`
 })
 class TabsTest2Component {
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ {}) public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
     public collection: any[];
 
     public tabSelectedHandler(args) {
@@ -518,8 +518,8 @@ class TabsTest2Component {
         </div>`
 })
 class TemplatedTabsTestComponent {
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ {}) public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', /* TODO: add static flag */ {}) public wrapperDiv: any;
 }
 
 @Component({
@@ -531,7 +531,7 @@ class TemplatedTabsTestComponent {
         </div>`
 })
 class TabsTestSelectedTabComponent {
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ {}) public tabs: IgxTabsComponent;
     public collection: any[];
 
     public constructor() {
@@ -582,5 +582,5 @@ class TabsTestCustomStylesComponent {
         `
 })
 class TabsTestBug4420Component {
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ {}) public tabs: IgxTabsComponent;
 }

@@ -610,67 +610,67 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
     * @hidden
     */
-    @ViewChild('datePickerOutlet', { read: ElementRef })
+    @ViewChild('datePickerOutlet', { read: ElementRef, static: true })
     public outletDirective: ElementRef;
 
     /*
      * @hidden
      */
-    @ViewChild('readOnlyDatePickerTemplate', { read: TemplateRef })
+    @ViewChild('readOnlyDatePickerTemplate', { read: TemplateRef, static: true })
     protected readOnlyDatePickerTemplate: TemplateRef<any>;
 
     /*
      * @hidden
      */
-    @ViewChild('editableDatePickerTemplate', { read: TemplateRef })
+    @ViewChild('editableDatePickerTemplate', { read: TemplateRef, static: true })
     protected editableDatePickerTemplate: TemplateRef<any>;
 
     /*
      * @hidden
      */
-    @ViewChild('editableInputGroup', { read: ElementRef })
+    @ViewChild('editableInputGroup', { read: ElementRef, static: false })
     protected editableInputGroup: ElementRef;
 
     /*
      * @hidden
      */
-    @ContentChild('dropDownTarget', { read: ElementRef })
+    @ContentChild('dropDownTarget', /* TODO: add static flag */ { read: ElementRef })
     protected templateDropDownTarget: ElementRef;
 
     /*
      * @hidden
      */
-    @ViewChild('editableInput', { read: ElementRef })
+    @ViewChild('editableInput', { read: ElementRef, static: false })
     protected editableInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ViewChild('readonlyInput', { read: ElementRef })
+    @ViewChild('readonlyInput', { read: ElementRef, static: false })
     protected readonlyInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ContentChild(IgxInputDirective)
+    @ContentChild(IgxInputDirective, /* TODO: add static flag */ {})
     protected input: IgxInputDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
+    @ContentChild(IgxDatePickerTemplateDirective, /* TODO: add static flag */ { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
+    @ContentChild(IgxCalendarHeaderTemplateDirective, /* TODO: add static flag */ { read: IgxCalendarHeaderTemplateDirective })
     public headerTemplate: IgxCalendarHeaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, /* TODO: add static flag */ { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     public calendar: IgxCalendarComponent;

@@ -19,7 +19,7 @@ import { DisplayDensity } from '../../../core/density';
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
 
-    @ViewChild('datePicker', { read: IgxDatePickerComponent })
+    @ViewChild('datePicker', { read: IgxDatePickerComponent, static: true })
     private datePicker: IgxDatePickerComponent;
 
     protected get inputValuesElement() {

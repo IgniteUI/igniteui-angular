@@ -85,13 +85,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild(IgxGridHeaderComponent)
+    @ViewChild(IgxGridHeaderComponent, { static: false })
     public headerCell: IgxGridHeaderComponent;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxGridFilteringCellComponent)
+    @ViewChild(IgxGridFilteringCellComponent, { static: false })
     public filterCell: IgxGridFilteringCellComponent;
 
     /**

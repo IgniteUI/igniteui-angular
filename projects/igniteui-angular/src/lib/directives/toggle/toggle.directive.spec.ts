@@ -603,7 +603,7 @@ describe('IgxToggle', () => {
     `
 })
 export class IgxToggleTestComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {}) public toggle: IgxToggleDirective;
     public open() { }
     public close() { }
 }
@@ -623,8 +623,8 @@ export class IgxToggleTestComponent {
 })
 export class IgxToggleActionTestComponent {
     public settings: OverlaySettings = {};
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {}) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, /* TODO: add static flag */ {}) public toggleAction: IgxToggleActionDirective;
     constructor() {
         this.settings.closeOnOutsideClick = true;
     }
@@ -648,8 +648,8 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
     `
 })
 export class IgxToggleServiceInjectComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {}) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, /* TODO: add static flag */ {}) public toggleAction: IgxToggleActionDirective;
 }
 
 @Component({
@@ -664,8 +664,8 @@ export class IgxToggleServiceInjectComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxOverlayServiceComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(`other`) public other: ElementRef;
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {}) public toggle: IgxToggleDirective;
+    @ViewChild(`other`, /* TODO: add static flag */ {}) public other: ElementRef;
     /**
      *
      */
@@ -682,7 +682,7 @@ export class IgxOverlayServiceComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestWithOnPushComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {}) public toggle: IgxToggleDirective;
 }
 
 @Component({
@@ -710,9 +710,9 @@ export class TestWithOnPushComponent {
     `
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {
-    @ViewChild('button1') public button1: ElementRef;
-    @ViewChild('button2') public button2: ElementRef;
-    @ViewChild('button3') public button3: ElementRef;
+    @ViewChild('button1', /* TODO: add static flag */ {}) public button1: ElementRef;
+    @ViewChild('button2', /* TODO: add static flag */ {}) public button2: ElementRef;
+    @ViewChild('button3', /* TODO: add static flag */ {}) public button3: ElementRef;
 
     overlaySettings: OverlaySettings = {};
 

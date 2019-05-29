@@ -33,7 +33,7 @@ class TestChipComponent {
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @VViewChild('chipsArea', /* TODO: add static flag */ { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -80,7 +80,7 @@ class TestChipReorderComponent {
         { id: 'FirstName', text: 'First Name' },
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @VViewChild('chipsArea', /* TODO: add static flag */ { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})

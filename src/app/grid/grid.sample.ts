@@ -29,19 +29,19 @@ import { LocalService } from '../shared/local.service';
     templateUrl: 'grid.sample.html'
 })
 export class GridSampleComponent implements OnInit, AfterViewInit {
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
-    @ViewChild('grid2')
+    @ViewChild('grid2', { static: true })
     grid2: IgxGridComponent;
 
-    @ViewChild('grid3')
+    @ViewChild('grid3', { static: true })
     grid3: IgxGridComponent;
 
-    @ViewChild('toast')
+    @ViewChild('toast', { static: true })
     toast: IgxToastComponent;
 
-    @ViewChild('snax')
+    @ViewChild('snax', { static: true })
     snax: IgxSnackbarComponent;
 
     data: Observable<any[]>;

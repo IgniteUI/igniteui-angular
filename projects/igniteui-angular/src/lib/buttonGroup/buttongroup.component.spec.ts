@@ -236,7 +236,7 @@ describe('IgxButtonGroup', () => {
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroupComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];
 
@@ -266,7 +266,7 @@ class InitButtonGroupComponent implements OnInit {
                             [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
 
     private cities: Button[];
 
@@ -306,7 +306,7 @@ class InitButtonGroupWithValuesComponent implements OnInit {
                             [values]="buttons" [alignment]="alignment">
                         </igx-buttongroup>` })
 class ButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
 
     private buttons: Button[];
 
@@ -344,7 +344,7 @@ class ButtonGroupWithValuesComponent implements OnInit {
                             <button igxButton [disabled]="'true'">Tokio</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupComponent {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
 
     private alignment = ButtonGroupAlignment.vertical;
     public multiselection = true;
@@ -355,5 +355,5 @@ class TemplatedButtonGroupComponent {
                             <button igxButton>London</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupDesplayDensityComponent {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
 }

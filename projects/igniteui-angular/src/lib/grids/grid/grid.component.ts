@@ -420,7 +420,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
+    @ContentChild(IgxGroupByRowTemplateDirective, /* TODO: add static flag */ { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
@@ -441,7 +441,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    @ContentChild(IgxDragIndicatorIconDirective, /* TODO: add static flag */ { read: TemplateRef })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
@@ -450,7 +450,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ViewChild('defaultDropArea', { read: TemplateRef })
+    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
     public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
@@ -475,7 +475,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ViewChild('groupArea')
+    @ViewChild('groupArea', { static: false })
     public groupArea: ElementRef;
 
     /**

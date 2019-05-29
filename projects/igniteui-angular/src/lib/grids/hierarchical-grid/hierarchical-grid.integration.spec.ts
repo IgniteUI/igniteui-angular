@@ -882,9 +882,9 @@ describe('IgxHierarchicalGrid Integration', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         // 3 level hierarchy
@@ -932,9 +932,9 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', /* TODO: add static flag */ { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland1', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', /* TODO: add static flag */ { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         this.data = this.generateData(10, 2);

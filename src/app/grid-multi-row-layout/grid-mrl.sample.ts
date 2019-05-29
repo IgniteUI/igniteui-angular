@@ -6,7 +6,7 @@ import { IgxGridComponent } from 'igniteui-angular';
     templateUrl: 'grid-mrl.sample.html'
 })
 export class GridMRLSampleComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     width = null;
     cols: Array<any> = [
