@@ -12,6 +12,8 @@ before_install:
 - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 - sudo dpkg -i google-chrome*.deb
 - sleep 3
+install:
+- npm install | n
 before_script:
 # more heap mem per https://github.com/angular/angular-cli/issues/12645, https://github.com/npm/npm/issues/12238#issuecomment-367147962
 - export NODE_OPTIONS="--max_old_space_size=4096"

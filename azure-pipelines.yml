@@ -7,9 +7,6 @@ steps:
   env:
     AZURE_PIPELINES: "true"
 
-- script: sudo npm install -g @angular/cli
-  displayName: 'Install Angular CLI'
-
 - script: npm run lint:lib
   displayName: 'Run lint'
 
