@@ -1,6 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 8.0.0
+- `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
+    - `#emptyTemplate`
+    - `#headerTemplate`
+    - `#footerTemplate`
+    - `#itemTemplate`
+    - `#addItemTemplate`
+    - `#headerItemTemplate`
+
 ## 7.3.1
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
