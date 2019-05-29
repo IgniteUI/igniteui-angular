@@ -54,7 +54,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
-    @ContentChild(IgxForOfDirective, /* TODO: add static flag */ { read: IgxForOfDirective })
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective, static: false })
     protected virtDir: IgxForOfDirective<any>;
 
     @ViewChild(IgxToggleDirective, { static: true })

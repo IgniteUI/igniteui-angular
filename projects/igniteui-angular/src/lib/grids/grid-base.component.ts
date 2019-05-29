@@ -1539,25 +1539,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleSortingTemplateDirective })
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: true })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleMovingTemplateDirective })
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: true })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStyleHidingTemplateDirective })
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: true })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, /* TODO: add static flag */ { read: IgxExcelStylePinningTemplateDirective })
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: true })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
 
@@ -1835,7 +1835,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ContentChild(IgxRowEditTemplateDirective, /* TODO: add static flag */ { read: TemplateRef })
+    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: true })
     public rowEditCustom: TemplateRef<any>;
 
     /** @hidden */
@@ -1843,10 +1843,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
     /** @hidden */
-    @ContentChild(IgxRowEditTextDirective, /* TODO: add static flag */ { read: TemplateRef })
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: true })
     public rowEditText: TemplateRef<any>;
     /** @hidden */
-    @ContentChild(IgxRowEditActionsDirective, /* TODO: add static flag */ { read: TemplateRef })
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: true })
     public rowEditActions: TemplateRef<any>;
 
     /**

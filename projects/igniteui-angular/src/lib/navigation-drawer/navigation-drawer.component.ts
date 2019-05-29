@@ -260,7 +260,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerMiniTemplateDirective, /* TODO: add static flag */ { read: IgxNavDrawerMiniTemplateDirective })
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective, static: true })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
         if (!this.isOpen) {
             this.setDrawerWidth(v ? this.miniWidth : '');

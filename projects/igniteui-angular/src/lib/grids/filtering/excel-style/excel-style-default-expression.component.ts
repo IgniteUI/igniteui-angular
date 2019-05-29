@@ -70,7 +70,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent, static: true })
     protected inputGroupConditions: IgxInputGroupComponent;
 
-    @ViewChild('inputValues', /* TODO: add static flag */ { read: IgxInputDirective })
+    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
     protected inputValuesDirective: IgxInputDirective;
 
     @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })

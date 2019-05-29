@@ -69,7 +69,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    @ViewChild('igxDirRef', /* TODO: add static flag */ { read: IgxGridForOfDirective })
+    @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
     /**

@@ -486,7 +486,7 @@ export class IgxTimePickerComponent implements
     /*
      * @hidden
      */
-    @ContentChild('dropDownTarget', /* TODO: add static flag */ { read: ElementRef })
+    @ContentChild('dropDownTarget', { read: ElementRef, static: false })
     protected templateDropDownTarget: ElementRef;
 
     /**

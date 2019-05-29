@@ -300,7 +300,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
      * @hidden
      */
-    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, /* TODO: add static flag */ { read: IgxRowLoadingIndicatorTemplateDirective })
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: true })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
     /**
@@ -321,7 +321,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, /* TODO: add static flag */ { read: TemplateRef })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**

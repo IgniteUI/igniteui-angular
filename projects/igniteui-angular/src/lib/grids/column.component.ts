@@ -997,24 +997,24 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, /* TODO: add static flag */ { read: IgxCellTemplateDirective })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: true })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
      */
-    @ContentChild(IgxCellHeaderTemplateDirective, /* TODO: add static flag */ { read: IgxCellHeaderTemplateDirective })
+    @ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, static: true })
     protected headTemplate: IgxCellHeaderTemplateDirective;
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, /* TODO: add static flag */ { read: IgxCellEditorTemplateDirective })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: true })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     private _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, /* TODO: add static flag */ { read: IgxFilterCellTemplateDirective })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: true })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
