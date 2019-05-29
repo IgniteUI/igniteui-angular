@@ -2305,13 +2305,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 ]
             }];
             fix.detectChanges();
-            const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-            UIInteractions.clickElement(firstCell);
+            UIInteractions.clickElement(secondCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('End', firstCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('End', secondCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -2322,8 +2322,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
         }));
 
         it('should navigate from pinned to unpinned area and backwards using Ctrl+Left/Right', (async () => {
@@ -2346,13 +2346,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 ]
             }];
             fix.detectChanges();
-            const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-            UIInteractions.clickElement(firstCell);
+            UIInteractions.clickElement(secondCell);
             await wait();
             fix.detectChanges();
 
-            firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
+            secondCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -2364,8 +2364,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+            expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
         }));
 
         it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
