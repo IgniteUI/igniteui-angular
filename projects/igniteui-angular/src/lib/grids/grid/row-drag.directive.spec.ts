@@ -863,6 +863,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         <igx-grid #grid
             [width]='width'
             [height]='height'
+            primaryKey="ID"
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
@@ -916,7 +917,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [width]="'800px'"
             [height]="'300px'"
             [data]="data"
-            [primaryKey]="'ID'"
+            primaryKey="ID"
             [autoGenerate]="true" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="true"
             >
@@ -954,8 +955,8 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     <igx-hierarchical-grid #hierarchicalDragGrid [data]="data"
      [autoGenerate]="true" [height]="'500px'" [width]="'1500px'"
       primaryKey="ID" [expandChildren]='true' [rowDraggable]="true">
-        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" #rowIsland>
-            <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2 >
+        <igx-row-island [key]="'childData'" [expandChildren]='true' [autoGenerate]="true" [rowDraggable]="true" #rowIsland>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowDraggable]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
@@ -1034,13 +1035,6 @@ export class IgxTreeGridTestComponent {
         args.cancel = true;
         this.dropGrid.addRow(args.dragData.rowData);
     }
-}
-
-function getWindowScrollLeft() {
-    return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
-}
-function getWindowScrollTop() {
-    return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
 }
 
 /**
