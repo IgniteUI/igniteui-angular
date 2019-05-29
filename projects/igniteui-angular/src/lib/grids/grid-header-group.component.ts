@@ -176,6 +176,10 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
+    get mrlBlockHeight() {
+        return this.grid.hasColumnLayouts && this.column.children && isIE() ? '100%' : '';
+    }
+
     /**
      * Gets whether the header group is stored in a pinned column.
      * @memberof IgxGridHeaderGroupComponent
