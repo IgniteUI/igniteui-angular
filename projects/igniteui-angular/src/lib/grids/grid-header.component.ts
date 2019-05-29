@@ -203,11 +203,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     private toggleFilterDropdown() {
         if (!this._componentOverlayId) {
             const headerTarget = this.elementRef.nativeElement;
+            const filterIconTarget = headerTarget.querySelector('.igx-excel-filter__icon');
 
             const gridRect = this.grid.nativeElement.getBoundingClientRect();
-            const headerRect = headerTarget.getBoundingClientRect();
+            const filterIconRect = filterIconTarget.getBoundingClientRect();
 
-            let x = headerRect.left;
+            let x = filterIconRect.left;
             let x1 = gridRect.left + gridRect.width;
             x += window.pageXOffset;
             x1 += window.pageXOffset;
@@ -219,7 +220,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                 this._filterMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
 
-            this._filterMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
+            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = this.grid.outlet;
 
             this._componentOverlayId =
