@@ -30,7 +30,6 @@ import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService } from './for_of.sync.service';
-import { CancelableEventArgs } from '../../core/utils';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -1211,6 +1210,10 @@ export interface IForOfState {
     chunkSize?: number;
 }
 
+export interface IForOfDataChangingEventArgs {
+    containerSize: number;
+}
+
 @Directive({
     selector: '[igxGridFor][igxGridForOf]'
 })
@@ -1241,7 +1244,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * An event that is emitted after data has been changed but before the view is refreshed
      */
     @Output()
-    public onDataChanging = new EventEmitter<CancelableEventArgs>();
+    public onDataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
 
     ngOnInit() {
         this.syncService.setMaster(this);
@@ -1420,8 +1423,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 //  re-init cache.
-                const args = {
-                    cancel: false
+                const args: IForOfDataChangingEventArgs = {
+                    containerSize: this.igxForContainerSize
                 }
                 this.onDataChanging.emit(args);
                 if (!this.igxForOf) {
@@ -1435,11 +1438,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);
+                this.igxForContainerSize = args.containerSize;
                 this._updateSizeCache(changes);
-                if (!args.cancel) {
-                    this._applyChanges();
-                    this._updateScrollOffset();
-                }
+                this._applyChanges();
+                this._updateScrollOffset();
                 this.onDataChanged.emit();
             }
         }
