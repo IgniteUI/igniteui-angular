@@ -123,10 +123,6 @@
         }
     }
 
-    %grid-excel-move--compact {
-        @extend %grid-excel-action--compact;
-    }
-
     %grid-excel-move__buttons {
         display: flex;
         justify-content: space-between;
@@ -232,6 +228,7 @@
 
         %grid-excel-move {
             @extend %grid-excel-action--compact;
+            margin-bottom: 0;
         }
 
         %grid-excel-actions {
@@ -262,6 +259,42 @@
         background: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 12);
         border-radius: rem(4px);
+    }
+
+    %grid-excel-menu__secondary--cosy {
+        %grid-excel-menu__header {
+            padding: rem(8px);
+        }
+
+        %grid-excel-menu__condition {
+            padding: 0 rem(8px);
+        }
+
+        %grid-excel-menu__add-filter {
+            margin: 0 rem(8px) rem(8px);
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px);
+        }
+    }
+
+    %grid-excel-menu__secondary--compact {
+        %grid-excel-menu__header {
+            padding: rem(4px);
+        }
+
+        %grid-excel-menu__condition {
+            padding: 0 rem(4px);
+        }
+
+        %grid-excel-menu__add-filter {
+            margin: 0 rem(4px) rem(4px);
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px) rem(4px);
+        }
     }
 
     %grid-excel-menu__secondary-header {
@@ -347,6 +380,12 @@
             }
         }
 
+        %grid-excel-menu__secondary {
+            %grid-excel-menu__header > h4 {
+                @include igx-type-style($type-scale, 'h6');
+            }
+        }
+
         %grid-excel-sort,
         %grid-excel-move {
             header {
@@ -384,20 +423,16 @@
             }
         }
 
-        // %grid-excel-sort,
-        // %grid-excel-move {
-        //     header {
-        //         @include igx-type-style($type-scale, $header-comfortable);
-        //     }
-        // }
+        %grid-excel-menu__secondary--cosy {
+            %grid-excel-menu__header > h4 {
+                @include igx-type-style($type-scale, 'h6');
+            }
+        }
 
-        // %grid-excel-sort--compact,
-        // %grid-excel-move--compact {
-        //     header {
-        //         @include igx-type-style($type-scale, $header-compact) {
-        //             text-transform: capitalize;
-        //         }
-        //     }
-        // }
+        %grid-excel-menu__secondary--compact {
+            %grid-excel-menu__header > h4 {
+                @include igx-type-style($type-scale, 'subtitle-1');
+            }
+        }
     }
 }

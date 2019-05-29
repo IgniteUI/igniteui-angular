@@ -1,5 +1,9 @@
 <article #toggle igxToggle
     class="igx-excel-filter__secondary"
+    [ngClass]="{
+        'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
+        'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
+    }"
     (keydown)="onKeyDown($event)"
     (onOpening)="onCustomDialogOpening()"
     (onOpened)="onCustomDialogOpened()">
