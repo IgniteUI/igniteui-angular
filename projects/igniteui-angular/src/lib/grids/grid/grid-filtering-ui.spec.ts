@@ -3847,9 +3847,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ true, true, true ]);
     }));
 
-    it('Should cascade filter the available filter options.', fakeAsync(() => {
-        fix.detectChanges();
-
+    it('Should select (Blanks) when the blank value is empty string.', fakeAsync(() => {
         grid.data[0].AnotherField = '';
         fix.detectChanges();
 
