@@ -1,5 +1,5 @@
-<header [ngClass]="(displayDensity==='compact')? 'igx-typography__subtitle-1': 'igx-typography__overline'">
-    <span>{{ grid.resourceStrings.igx_grid_excel_filter_sorting_header }}</span>
+<header>
+    {{ grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
 </header>
 <igx-buttongroup #sortButtonGroup [multiSelection]="false">
     <span tabindex="0" igxButton type="button" [displayDensity]="displayDensity" [attr.data-togglable]="true" (click)="onSortButtonClicked(1)">
