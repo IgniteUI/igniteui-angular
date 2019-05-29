@@ -45,8 +45,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             const args: IRowDragStartEventArgs = {
                 owner: this,
                 dragData: this.row,
-                cancel: false,
-                hasAnimation: false
+                cancel: false
             };
 
             this.row.grid.onRowDragStart.emit(args);
@@ -71,7 +70,6 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public onPointerUp(event) {
-        const transationDuration = parseFloat(this.defaultReturnDuration) * 1000;
 
         if (!this._clicked) {
             return;
@@ -80,34 +78,22 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const args: IRowDragEndEventArgs = {
             owner: this,
             dragData: this.row,
-            hasAnimation: false
+            animation: false
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);
         });
 
-        if (args.hasAnimation) {
+        if (args.animation) {
             this.animateOnRelease = true;
         }
 
         if (!this._lastDropArea && this.animateOnRelease) {
-            requestAnimationFrame(() => {
-                super.onPointerUp(event);
-                this.dragGhost.addEventListener('transitionend',  () => {
-                    this.onTransitionEnd(null);
-                    this.row.dragging = false;
-                    this.row.grid.rowDragging = false;
-                    this.row.grid.markForCheck();
-                    this._unsubscribe();
-                }, false);
-            });
+            super.onPointerUp(event);
+            this.dragGhost.addEventListener('transitionend',  this.transitionEndEvent, false);
         }   else {
                 super.onPointerUp(event);
-                this.onTransitionEnd(null);
-                this.row.dragging = false;
-                this.row.grid.rowDragging = false;
-                this.row.grid.markForCheck();
-                this._unsubscribe();
+                this.resetDragging();
             }
     }
 
@@ -138,6 +124,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         if (this.subscription$ && !this.subscription$.closed) {
             this.subscription$.unsubscribe();
         }
+    }
+
+    private resetDragging() {
+        this.onTransitionEnd(null);
+        this.row.dragging = false;
+        this.row.grid.rowDragging = false;
+        this.row.grid.markForCheck();
+        this._unsubscribe();
+    }
+
+    private transitionEndEvent = (evt?) => {
+        if (this.dragGhost) {
+            this.dragGhost.removeEventListener('transitionend', this.transitionEndEvent, false);
+        }
+        this.resetDragging();
     }
 }
 
