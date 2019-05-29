@@ -88,13 +88,13 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.animateOnRelease = true;
         }
 
-        if (!this._lastDropArea && this.animateOnRelease) {
-            super.onPointerUp(event);
+        const dropArea = this._lastDropArea;
+        super.onPointerUp(event);
+        if (!dropArea && this.animateOnRelease) {
             this.dragGhost.addEventListener('transitionend',  this.transitionEndEvent, false);
         }   else {
-                super.onPointerUp(event);
-                this.resetDragging();
-            }
+            this.endDragging();
+        }
     }
 
     protected createDragGhost(event) {
@@ -126,7 +126,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    private resetDragging() {
+    private endDragging() {
         this.onTransitionEnd(null);
         this.row.dragging = false;
         this.row.grid.rowDragging = false;
@@ -138,7 +138,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         if (this.dragGhost) {
             this.dragGhost.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
-        this.resetDragging();
+        this.endDragging();
     }
 }
 
