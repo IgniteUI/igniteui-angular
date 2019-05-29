@@ -15,6 +15,14 @@
             @extend %grid-excel-menu !optional;
         }
 
+        @include e(menu, $m: 'cosy') {
+            @extend %grid-excel-menu--cosy !optional;
+        }
+
+        @include e(menu, $m: 'compact') {
+            @extend %grid-excel-menu--compact !optional;
+        }
+
         @include e(icon) {
             @extend %grid-excel-icon !optional;
         }
