@@ -19,21 +19,21 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list [displayDensity]="displayDensity" [style.height.px]="250">
-    <div [style.overflow]="'hidden'" [style.position]="'relative'">
-        <igx-list-item
-            *igxFor="let item of data | igxFilter: filterOptions; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: itemSize">
-            <igx-checkbox
-            [value]="item"
-            tabindex="-1"
-            [checked]="item.isSelected"
-            [disableRipple]="true"
-            [indeterminate]="item.indeterminate"
-            [disableTransitions]="true"
-            (change)="onCheckboxChange($event)">
-                {{ column.formatter ? column.formatter(item.label) : column.dataType === 'number' ? (item.label | igxdecimal:
-                    column.grid.locale) : column.dataType === 'date' ? (item.label | igxdate: column.grid.locale) : item.label }}
-            </igx-checkbox>
-        </igx-list-item>
-    </div>
-</igx-list>
+        <igx-list [displayDensity]="displayDensity" [style.height.px]="250">
+            <div [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item
+                    *igxFor="let item of data | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: itemSize">
+                    <igx-checkbox
+                    [value]="item"
+                    tabindex="-1"
+                    [checked]="item.isSelected"
+                    [disableRipple]="true"
+                    [indeterminate]="item.indeterminate"
+                    [disableTransitions]="true"
+                    (change)="onCheckboxChange($event)">
+                        {{ column.formatter && !item.isSpecial ? column.formatter(item.label) : column.dataType === 'number' ? (item.label | igxdecimal:
+                            column.grid.locale) : column.dataType === 'date' ? (item.label | igxdate: column.grid.locale) : item.label }}
+                    </igx-checkbox>
+                </igx-list-item>
+            </div>
+        </igx-list>
