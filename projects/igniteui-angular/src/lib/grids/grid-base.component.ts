@@ -2759,8 +2759,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
 
-        this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
+            const oldHeight = this.calcHeight;
             this.calculateGridHeight();
+            if (oldHeight !== this.calcHeight) {
+                $event.cancel = true;
+            }
         });
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
@@ -3906,7 +3910,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
+        return (this.rowHeight + 1) * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
 
@@ -3983,7 +3987,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.isPercentHeight) {
             /*height in %*/
-            if (this.nativeElement.parentElement &&
+            if (!this.nativeElement.parentElement ||
                 this.nativeElement.parentElement.clientHeight === renderedHeight) {
                 /* parent element is sized by the rendered elements which means
                 the grid should attempt a content-box style rendering */
@@ -4010,22 +4014,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public get outerWidth() {
         return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
-
-    /**
-     * @hidden @internal
-     *
-    protected get autoSize(): boolean {
-        return this._autoSize;
-    }
-
-    protected set autoSize(value: boolean) {
-        if (this._autoSize !== value) {
-            this._autoSize = value;
-            if (!this._autoSize) {
-
-            }
-        }
-    }*/
 
     /**
      * @hidden

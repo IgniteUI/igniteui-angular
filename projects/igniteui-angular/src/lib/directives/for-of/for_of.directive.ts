@@ -30,6 +30,7 @@ import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService } from './for_of.sync.service';
+import { CancelableEventArgs } from '../../core/utils';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -1240,7 +1241,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * An event that is emitted after data has been changed but before the view is refreshed
      */
     @Output()
-    public onDataChanging = new EventEmitter<any>();
+    public onDataChanging = new EventEmitter<CancelableEventArgs>();
 
     ngOnInit() {
         this.syncService.setMaster(this);
@@ -1419,7 +1420,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 //  re-init cache.
-                this.onDataChanging.emit();
+                const args = {
+                    cancel: false
+                }
+                this.onDataChanging.emit(args);
                 if (!this.igxForOf) {
                     return;
                 }
@@ -1432,8 +1436,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
                 this.syncService.setMaster(this);
                 this._updateSizeCache(changes);
-                this._applyChanges();
-                this._updateScrollOffset();
+                if (!args.cancel) {
+                    this._applyChanges();
+                    this._updateScrollOffset();
+                }
                 this.onDataChanged.emit();
             }
         }

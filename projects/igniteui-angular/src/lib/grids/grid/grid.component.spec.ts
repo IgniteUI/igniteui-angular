@@ -118,7 +118,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        it('should initialize grid with remove virtualization', async () => {
+        it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             let rows = fix.componentInstance.instance.rowList.toArray();
@@ -145,7 +145,7 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('height/width should be calculated depending on number of records', fakeAsync(() => {
+        it('height/width should be based on parent container', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
 
@@ -160,7 +160,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(1);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('51px');
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('548px');
 
             for (let i = 2; i <= 30; i++) {
                 grid.addRow({ index: i, value: i });
@@ -168,9 +168,9 @@ describe('IgxGrid Component Tests', () => {
 
             fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(30);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1530px');
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+            expect(grid.rowList.length).toEqual(12);
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('548px');
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             grid.height = '200px';
             fix.detectChanges();
@@ -541,7 +541,7 @@ describe('IgxGrid Component Tests', () => {
             }
         });
 
-        it('should not keep a cached-out template as master after column resizing', async() => {
+        it('should not keep a cached-out template as master after column resizing', async () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             for (let i = 2; i < 100; i++) {
                 fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
@@ -1151,26 +1151,26 @@ describe('IgxGrid Component Tests', () => {
 
         it(`When edit a cell onto filtered data through grid method, the row should
             disapear and the new value should not persist onto the next row`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(5, 5);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            fix.detectChanges();
 
-                const grid = fix.componentInstance.grid;
-                const cols = fix.componentInstance.columns;
-                const editValue = 0;
+            const grid = fix.componentInstance.grid;
+            const cols = fix.componentInstance.columns;
+            const editValue = 0;
 
-                grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-                fix.detectChanges();
-                grid.getCellByColumn(0, cols[1].key).update(editValue);
-                fix.detectChanges();
-                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-                expect(gridRows.length).toEqual(1);
-                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-                const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
-                expect(firstCellInputValue).toEqual('4');
-            }));
+            grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+            grid.getCellByColumn(0, cols[1].key).update(editValue);
+            fix.detectChanges();
+            const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+            expect(gridRows.length).toEqual(1);
+            const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+            const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
+            expect(firstCellInputValue).toEqual('4');
+        }));
 
-        it(`GetNextCell: should return correctly next cell coordinates`, async() => {
+        it(`GetNextCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1186,25 +1186,25 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             // when the next cell is on the same row
             let nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the next cell is on the next row
             nextCellCoords = grid.getNextCell(0, 4, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 1, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 1, visibleColumnIndex: 2 });
             // when the next cell is not in the view
             nextCellCoords = grid.getNextCell(9, 4, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 10, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 10, visibleColumnIndex: 2 });
             // when the current row and column index are not valid
             nextCellCoords = grid.getNextCell(-10, 14, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: -10, visibleColumnIndex: 14});
+            expect(nextCellCoords).toEqual({ rowIndex: -10, visibleColumnIndex: 14 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
             nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 0});
+            expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 0 });
         });
 
-        it(`GetPreviousCell: should return correctly next cell coordinates`, async() => {
+        it(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1220,25 +1220,25 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             // when the previous cell is on the same row
             let prevCellCoords = grid.getPreviousCell(0, 4, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the previous cell is on the previous row
             prevCellCoords = grid.getPreviousCell(1, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 4});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 4 });
             // when the current row and column index are not valid
             prevCellCoords = grid.getPreviousCell(-110, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: -110, visibleColumnIndex: 2});
+            expect(prevCellCoords).toEqual({ rowIndex: -110, visibleColumnIndex: 2 });
             // when there is no previous cell
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
-             // when the filter function has no matching colums
-             prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
-             expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 3});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
+            // when the filter function has no matching colums
+            prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
             prevCellCoords = grid.getPreviousCell(99, 0, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 99, visibleColumnIndex: 0});
+            expect(prevCellCoords).toEqual({ rowIndex: 99, visibleColumnIndex: 0 });
         });
 
         it(`Should not commit added row to grid's data in grid with transactions`, fakeAsync(() => {
@@ -3091,7 +3091,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const initialDataLength = grid.data.length;
                 const productNameCell = fixture.debugElement.queryAll(By.css('.igx-grid__td'))[2];
-                const enterEvent = { key: 'enter', stopPropagation: () => {}, preventDefault: () => {} };
+                const enterEvent = { key: 'enter', stopPropagation: () => { }, preventDefault: () => { } };
                 productNameCell.triggerEventHandler('keydown', enterEvent);
                 tick();
                 fixture.detectChanges();
@@ -3305,7 +3305,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const expectedTransaction: Transaction = {
                     id: 1,
-                    newValue: {OrderDate: newValue},
+                    newValue: { OrderDate: newValue },
                     type: TransactionType.UPDATE
                 };
                 expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
@@ -3600,7 +3600,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(500);
+            expect(grid.calcHeight).toBe(510);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -4267,53 +4267,53 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     template: `
     <div style="width: 600px; height: 400px;">
     <igx-tabs #tabs>
-      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-      <igx-tabs-group label="Tab 2">
-        <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
+        <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+        <igx-tabs-group label="Tab 2">
+            <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
+                <igx-column
+                    *ngFor="let column of columns"
+                    [field]="column.field"
+                    [header]="column.field"
+                >
+            </igx-column>
         </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 3">
-        <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [width]="column.width"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 4">
-        <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
-            [paging]="true" [perPage]="3">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [hasSummary]="true"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 5">
-        <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-            [paging]="true" [perPage]="4">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
+        </igx-tabs-group>
+        <igx-tabs-group label="Tab 3">
+            <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
+                <igx-column
+                    *ngFor="let column of columns"
+                    [field]="column.field"
+                    [header]="column.field"
+                    [width]="column.width"
+                >
+                </igx-column>
+            </igx-grid>
+        </igx-tabs-group>
+        <igx-tabs-group label="Tab 4">
+            <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
+                [paging]="true" [perPage]="3">
+                <igx-column
+                    *ngFor="let column of columns"
+                    [field]="column.field"
+                    [header]="column.field"
+                    [hasSummary]="true"
+                >
+                </igx-column>
+            </igx-grid>
+        </igx-tabs-group>
+        <igx-tabs-group label="Tab 5">
+            <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+                [paging]="true" [perPage]="4">
+                <igx-column
+                    *ngFor="let column of columns"
+                    [field]="column.field"
+                    [header]="column.field"
+                >
+                </igx-column>
+            </igx-grid>
+        </igx-tabs-group>
     </igx-tabs>
-  </div>
+    </div>
     `
 })
 export class IgxGridInsideIgxTabsComponent {
