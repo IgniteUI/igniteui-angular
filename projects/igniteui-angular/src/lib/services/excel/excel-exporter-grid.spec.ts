@@ -640,5 +640,5 @@ describe('Excel Exporter', () => {
 export class GridWithEmtpyColumnsComponent {
     public data = SampleTestData.personJobDataFull();
 
-    @ViewChild('grid1', /* TODO: add static flag */ {}) public grid: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 }

@@ -3409,10 +3409,10 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+    template: `<div #item style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
 })
 export class SimpleRefComponent {
-    @ViewChild('item', /* TODO: add static flag */ {})
+    @ViewChild('item', { static: true })
     public item: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
@@ -3433,8 +3433,8 @@ export class SimpleBigSizeComponent {
 @Component({
     template: `
             <div igxToggle>
-                <div class='scrollableDiv' *ngIf='visible' style =\'position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red; \'>
+                <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
+        overflow-y: scroll; background-color: red;'>
             <p> AAAAA </p>
             <p> AAAAA </p>
             <p> AAAAA </p>
@@ -3450,7 +3450,7 @@ export class SimpleBigSizeComponent {
 export class SimpleDynamicWithDirectiveComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {})
+    @ViewChild(IgxToggleDirective, { static: true })
     private _overlay: IgxToggleDirective;
 
     public get overlay(): IgxToggleDirective {
@@ -3470,7 +3470,8 @@ export class SimpleDynamicWithDirectiveComponent {
 
 @Component({
     template: `
-        <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
+        <button #button (click)='click()' class='button'>Show Overlay</button>
+        <div #div></div>
     `,
     styles: [`button {
         position: absolute;
@@ -3486,10 +3487,10 @@ export class SimpleDynamicWithDirectiveComponent {
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
-    @ViewChild('div', /* TODO: add static flag */ {}) divElement: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('div', { static: true }) divElement: ElementRef;
 
-    click(event) {
+    click() {
         this.overlay.show(SimpleDynamicComponent);
     }
 }
@@ -3512,7 +3513,7 @@ export class DownRightButtonComponent {
 
     public positionStrategy: IPositionStrategy;
 
-    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
 
     public ButtonPositioningSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -3533,7 +3534,7 @@ export class DownRightButtonComponent {
     }
 }
 @Component({
-    template: `<button class='300_button' #button (click)=\'click($event)\'>Show Overlay</button>`,
+    template: `<button class='300_button' #button (click)='click()'>Show Overlay</button>`,
     styles: [`button {
         position: absolute;
         top: 300px;
@@ -3547,8 +3548,8 @@ export class TopLeftOffsetComponent {
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
-    click(event) {
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    click() {
         this.overlay.show(SimpleDynamicComponent);
     }
 }
@@ -3583,7 +3584,7 @@ export class TwoButtonsComponent {
 @Component({
     template: `
     <div style="width: 420px; height: 280px;">
-        <button class='300_button' igxToggle #button (click)=\'click($event)\'>Show Overlay</button>
+        <button class='300_button' igxToggle #button (click)='click($event)'>Show Overlay</button>
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
             Some Content
         </div>
@@ -3604,8 +3605,8 @@ export class WidthTestOverlayComponent {
         public elementRef: ElementRef
     ) { }
 
-    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
-    @ViewChild('myCustomComponent', /* TODO: add static flag */ {}) customComponent: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('myCustomComponent', { static: true }) customComponent: ElementRef;
     public overlaySettings: OverlaySettings = {};
     click(event) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
@@ -3621,7 +3622,7 @@ export class WidthTestOverlayComponent {
 @Component({
     template: `
     <div igxToggle>
-        <div class='scrollableDiv' *ngIf='visible' style=\'width:200px; height:200px; overflow-y:scroll;\'>
+        <div class='scrollableDiv' *ngIf='visible' style='width:200px; height:200px; overflow-y:scroll;'>
             <p>AAAAA</p>
             <p>AAAAA</p>
             <p>AAAAA</p>
@@ -3637,7 +3638,7 @@ export class WidthTestOverlayComponent {
 export class ScrollableComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective, /* TODO: add static flag */ {})
+    @ViewChild(IgxToggleDirective, { static: true })
     private _toggle: IgxToggleDirective;
 
     public get toggle(): IgxToggleDirective {
@@ -3659,8 +3660,8 @@ export class ScrollableComponent {
 
 @Component({
     template: `
-    <div style=\'display:flex; width:100%; height:500px; justify-content:center;\'>
-        <button #button style=\'display:inline-flex; width:150px; height:30px;\' (click)=\'click($event)\' class=\'button\'>
+    <div style='display:flex; width:100%; height:500px; justify-content:center;'>
+        <button #button style='display:inline-flex; width:150px; height:30px;' (click)='click()' class='button'>
             Show Overlay
         </button>
     </div>
@@ -3670,8 +3671,8 @@ export class FlexContainerComponent {
     public overlaySettings: OverlaySettings = {};
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button', /* TODO: add static flag */ {}) buttonElement: ElementRef;
-    click(event) {
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    click() {
         this.overlay.show(SimpleDynamicComponent, this.overlaySettings);
     }
 }

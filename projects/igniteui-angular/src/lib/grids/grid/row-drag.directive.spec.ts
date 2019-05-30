@@ -881,10 +881,10 @@ export class IgxGridRowDraggableComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', /* TODO: add static flag */ { read: IgxDropDirective })
+    @ViewChild('dropArea', { read: IgxDropDirective, static: true })
     public dropArea: IgxDropDirective;
 
     public enableSorting = false;
@@ -934,9 +934,9 @@ export class IgxGridRowDraggableComponent extends DataParent {
     `
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
-    @ViewChild('dragGrid', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('dragGrid', { read: IgxGridComponent, static: true })
     public dragGrid: IgxGridComponent;
-    @ViewChild('dropGrid', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('dropGrid', { read: IgxGridComponent, static: true })
     public dropGrid: IgxGridComponent;
     newData = [];
     public currentSortExpressions;
@@ -1026,8 +1026,8 @@ export class IgxHierarchicalGridTestComponent {
     `
 })
 export class IgxTreeGridTestComponent {
-    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public dropGrid: IgxGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
     newData = [];
 

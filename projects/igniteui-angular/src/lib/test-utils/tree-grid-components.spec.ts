@@ -638,7 +638,7 @@ export class IgxTreeGridSelectionComponent {
     `
 })
 export class IgxTreeGridLoadOnDemandHasChildrenComponent {
-    @ViewChild(IgxTreeGridComponent, /* TODO: add static flag */ {}) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
     public data = [];
 
