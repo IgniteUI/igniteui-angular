@@ -7,6 +7,7 @@ import { IgxGridHeaderComponent } from '../grids/grid-header.component';
 import { IgxChipComponent } from '../chips';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/column.component';
+import { IgxGridHeaderGroupComponent } from '../grids/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions } from './ui-interactions.spec';
@@ -566,6 +567,53 @@ export class GridFunctions {
         const columnHeader = GridFunctions.getColumnHeader(columnField, fix);
         const filterIcon = columnHeader.query(By.css('.igx-excel-filter__icon'));
         UIInteractions.clickElement(filterIcon);
+    }
+
+    /**
+     * Click the filter chip for the provided column in order to open the filter row for it.
+    */
+    public static clickFilterCellChip(fix: ComponentFixture<any>, columnField: string) {
+        const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
+        const filterCell = headerGroup.query(By.css('igx-grid-filtering-cell'));
+        const chip = filterCell.query(By.css('igx-chip'));
+
+        chip.nativeElement.click();
+        fix.detectChanges();
+    }
+
+    /**
+     * Presuming filter row is opened, click the filter condition chip based on ascending index (left to right).
+    */
+    public static clickFilterConditionChip(fix: ComponentFixture<any>, index: number) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const conditionChips = GridFunctions.sortNativeElementsHorizontally(
+            filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
+        return conditionChips[index];
+    }
+
+    /**
+     * Presuming filter row is opened, click the inter-chip operator based on its index.
+    */
+    public static clickChipOperator(fix: ComponentFixture<any>, index: number) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const allIcons = filterUIRow.queryAll(By.css('igx-icon')).map((icon) => icon.nativeElement);
+        const operatorIcons = GridFunctions.sortNativeElementsHorizontally(
+            allIcons.filter((icon) => icon.innerText === 'expand_more'));
+        const operatorIcon = operatorIcons[index];
+        operatorIcon.click();
+    }
+
+    /**
+     * Presuming chip operator dropdown is opened, set the inter-chip operator value. (should be 'And' or 'Or')
+    */
+    public static clickChipOperatorValue(fix: ComponentFixture<any>, operatorValue: string) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const operators = GridFunctions.sortNativeElementsVertically(
+            Array.from(gridNativeElement.querySelectorAll('.igx-drop-down__item')));
+        const operator = operators.find((op) => op.innerText.toLowerCase() === operatorValue.toLowerCase());
+        operator.click();
+        fix.detectChanges();
     }
 
     public static simulateKeyboardEvent(element, eventName, inputKey) {

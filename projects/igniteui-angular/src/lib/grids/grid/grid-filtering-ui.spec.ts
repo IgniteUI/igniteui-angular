@@ -2968,6 +2968,64 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(grid.rowList.length).toEqual(3);
         GridFunctions.closeFilterRow(fix);
     }));
+
+    it('Should remove middle chip and filter by the remaining ones.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        GridFunctions.filterBy('Contains', 'n', fix);
+        GridFunctions.filterBy('Contains', 'z', fix);
+        GridFunctions.filterBy('Contains', 'g', fix);
+        expect(grid.rowList.length).toEqual(0);
+
+        // remove middle chip
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        GridFunctions.removeFilterChipByIndex(1, filteringRow);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(3);
+        GridFunctions.closeFilterRow(fix);
+    }));
+
+    it('Should keep existing column filter after hiding another column.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        // Open filter row for 'ProductName' column and add 4 condition chips.
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.filterBy('Contains', 'x', fix);
+        GridFunctions.filterBy('Contains', 'y', fix);
+        GridFunctions.filterBy('Contains', 'i', fix);
+        GridFunctions.filterBy('Contains', 'g', fix);
+        GridFunctions.filterBy('Contains', 'n', fix);
+
+        // Change second operator to 'Or' and verify the results.
+        GridFunctions.clickChipOperator(fix, 1);
+        fix.detectChanges();
+        GridFunctions.clickChipOperatorValue(fix, 'Or');
+        tick(100);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+
+        // Hide another column and verify the filtering results remain the same.
+        const column = grid.columns.find((c) => c.field === 'Released');
+        column.hidden = true;
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
