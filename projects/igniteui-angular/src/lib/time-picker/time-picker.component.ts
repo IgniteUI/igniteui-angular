@@ -302,7 +302,7 @@ export class IgxTimePickerComponent implements
         this._format = formatValue;
         this.mask = this._format.indexOf('tt') !== -1 ? '00:00 LL' : '00:00';
 
-        if (!this.showHoursList || !this.showMinutesList) { 
+        if (!this.showHoursList || !this.showMinutesList) {
             this.mask = this.mask.slice(this.mask.indexOf(':') + 1, this.mask.length);
         }
 
@@ -904,7 +904,7 @@ export class IgxTimePickerComponent implements
             let formattedMinute, formattedHour;
 
             const minute = value.getMinutes();
-            const amPM =(hour > 11) ? 'PM' : 'AM';
+            const amPM = (hour > 11) ? 'PM' : 'AM';
 
             if (format.indexOf('h') !== -1) {
                 if (hour > 12) {
@@ -1009,7 +1009,7 @@ export class IgxTimePickerComponent implements
 
     private _getSelectedTime(): Date {
         const date = this.value ? new Date(this.value) : new Date();
-        if (this.selectedHour) { 
+        if (this.selectedHour) {
             date.setHours(parseInt(this.selectedHour, 10));
         }
         if (this.selectedMinute) {
@@ -1019,7 +1019,7 @@ export class IgxTimePickerComponent implements
         if (this.showHoursList && this.selectedAmPm === 'PM' && this.selectedHour !== '12') {
             date.setHours(date.getHours() + 12);
         }
-        if(!this.showHoursList && this.selectedAmPm === 'PM' && this.selectedHour <= '11') {
+        if (!this.showHoursList && this.selectedAmPm === 'PM' && this.selectedHour <= '11') {
             date.setHours(date.getHours() + 12);
         }
         if (!this.showHoursList && this.selectedAmPm === 'AM' && this.selectedHour > '11') {
@@ -1055,7 +1055,7 @@ export class IgxTimePickerComponent implements
                 date.setHours(date.getHours() + 12);
             }
 
-            if(!this.showHoursList && amPM === 'PM' && date.getHours().toString() <= '11') {
+            if (!this.showHoursList && amPM === 'PM' && date.getHours().toString() <= '11') {
                 date.setHours(date.getHours() + 12);
             }
             if (!this.showHoursList && amPM === 'AM' && date.getHours().toString() > '11') {
