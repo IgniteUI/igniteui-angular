@@ -60,7 +60,9 @@ export class IgxRowEditTabStopDirective {
     private focusNextCell(rowIndex, cellIndex) {
         const grid = this.grid as any;
         grid.parentVirtDir.onChunkLoad.pipe(first(), tap(() => grid.markForCheck())).subscribe(() => {
-            grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
+            const targetCell = grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex);
+            targetCell.setEditMode(true);
+            targetCell.element.nativeElement.focus();
         });
     }
     private move(event: KeyboardEvent) {
@@ -75,6 +77,7 @@ export class IgxRowEditTabStopDirective {
             horizontalScroll.scrollLeft =
             this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(targetIndex));
         } else {
+            targetCell.setEditMode(true);
             targetCell.nativeElement.focus();
         }
     }
