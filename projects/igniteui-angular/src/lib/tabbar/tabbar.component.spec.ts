@@ -8,10 +8,10 @@ import { IgxBottomNavComponent,
          IgxTabTemplateDirective } from './tabbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { RoutingViewComponentsModule,
-    RoutingView1Component,
-    RoutingView2Component,
-    RoutingView3Component } from './routing-view-components';
+import { BottomNavRoutingViewComponentsModule,
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component } from './routing-view-components';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -20,14 +20,14 @@ describe('TabBar', () => {
     beforeEach(async(() => {
 
         const testRoutes = [
-            { path: 'view1', component: RoutingView1Component },
-            { path: 'view2', component: RoutingView2Component },
-            { path: 'view3', component: RoutingView3Component }
+            { path: 'view1', component: BottomNavRoutingView1Component },
+            { path: 'view2', component: BottomNavRoutingView2Component },
+            { path: 'view3', component: BottomNavRoutingView3Component }
         ];
 
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent],
-            imports: [IgxBottomNavModule, RoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
+            imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
             .compileComponents();
     }));
@@ -171,7 +171,7 @@ describe('TabBar', () => {
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
         tick();
-        expect(location.path()).toBe('/view1');
+        expect(location.path()).toBe('/');
 
         const theTabs = bottomNav.contentTabs.toArray();
 
@@ -197,7 +197,7 @@ describe('TabBar', () => {
 
         fixture.ngZone.run(() => { router.initialNavigation(); });
         tick();
-        expect(location.path()).toBe('/view1');
+        expect(location.path()).toBe('/');
 
         fixture.ngZone.run(() => { router.navigate(['/view3']); });
         tick();

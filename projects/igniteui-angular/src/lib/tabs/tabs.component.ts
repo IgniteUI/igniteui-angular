@@ -217,7 +217,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         const defaultStyle = `igx-tabs`;
         const fixedStyle = `igx-tabs--fixed`;
         const iconStyle = `igx-tabs--icons`;
-        const iconLabelFound = this.groups.find((group) => group.icon != null && group.label != null);
+        const iconLabelFoundInGroups = this.groups.find((group) => group.icon != null && group.label != null);
+        const iconLabelFoundInTabs = this.contentTabs.find((tab) => tab.icon != null && tab.label != null);
         let css;
         switch (TabsType[this.tabsType.toUpperCase()]) {
             case TabsType.FIXED: {
@@ -231,7 +232,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
 
         // Layout fix for items with icons
-        if (iconLabelFound !== undefined) {
+        if (iconLabelFoundInGroups !== undefined || iconLabelFoundInTabs !== undefined) {
             css = `${css} ${iconStyle}`;
         }
 

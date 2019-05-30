@@ -1,11 +1,5 @@
-<ng-template #componentContentTemplate>
+<div *ngIf="!hasContentTabs">
     <ng-content></ng-content>
-</ng-template>
-<div>
-    <ng-container *ngIf="!hasContentTabs">
-        <ng-container *ngTemplateOutlet="componentContentTemplate">
-        </ng-container>
-    </ng-container>
 </div>
 <div #tablist class="{{itemStyle}}__menu {{itemStyle}}__menu--bottom" role="tablist" aria-orientation="horizontal">
     <ng-container *ngIf="!hasContentTabs">    
@@ -17,8 +11,5 @@
                 }" [relatedPanel]="panel" (click)="panel.select()" role="tab">
         </igx-tab>
     </ng-container>
-    <ng-container *ngIf="hasContentTabs">
-        <ng-container *ngTemplateOutlet="componentContentTemplate">
-        </ng-container>
-    </ng-container>
+    <ng-content select="igx-tab"></ng-content>
 </div>

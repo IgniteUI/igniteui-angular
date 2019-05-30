@@ -190,7 +190,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         } else if (this._isSelected !== newValue) {
             this._isSelected = newValue;
             if (this._isSelected) {
-                this._tabs.onTabItemSelected.emit({ tab: this, group: null });
+                this.select();
             }
         }
     }
@@ -211,7 +211,32 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         } else {
             this._isSelected = true;
             this._tabs.onTabItemSelected.emit({ tab: this, group: null });
+            this.handleTabSelectionAnimation();
         }
+    }
+
+    private handleTabSelectionAnimation(): void {
+        const tabElement = this.nativeTabItem.nativeElement;
+
+        // Scroll to the left
+        if (tabElement.offsetLeft < this._tabs.offset) {
+            this._tabs.scrollElement(tabElement, false);
+        }
+
+        // Scroll to the right
+        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
+        const delta = (tabElement.offsetLeft + tabElement.offsetWidth) - (viewPortOffsetWidth + this._tabs.offset);
+        // Fix for IE 11, a difference is accumulated from the widths calculations
+        if (delta > 1) {
+            this._tabs.scrollElement(tabElement, true);
+        }
+
+        this.transformIndicatorAnimation(tabElement);
+    }
+
+    private transformIndicatorAnimation(element: HTMLElement): void {
+        this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
     }
 
     private onKeyDown(isLeftArrow: boolean, index = null): void {
