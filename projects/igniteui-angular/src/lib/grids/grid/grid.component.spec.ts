@@ -3613,7 +3613,7 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(601);
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(601);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(500);
         });
 
         it('IgxTabs: should initialize a grid with correct width/height when there is no column width set', async () => {
