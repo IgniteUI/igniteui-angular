@@ -38,3 +38,39 @@
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
     }
 }
+
+@media print {
+    html,
+    body,
+    app-root {
+        min-height: 100vh;
+        min-width: 100vw;
+        margin: 0;
+        display: block;
+        background: transparent !important;
+    }
+
+    .sample-content,
+    .sample-column,
+    .wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .sample-header,
+    .sample-description,
+    .sample-title,
+    .no-print,
+    .igx-nav-drawer,
+    .form-title {
+        display: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        background-color: #fff !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #fff !important;
+    }
+}
