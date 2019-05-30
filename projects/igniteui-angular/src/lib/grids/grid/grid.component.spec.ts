@@ -39,6 +39,7 @@ describe('IgxGrid Component Tests', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CLASS = '.igx-grid__td';
     const BANNER = 'igx-banner';
+    const BANNER_TEXT = 'igx-banner__text';
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -1962,6 +1963,61 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
             }));
+
+            it(`Should update row changes when focus overlay buttons on tabbing`, (async() => {
+                let currentEditCell: IgxGridCellComponent;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                fixture.detectChanges();
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                await wait(300);
+
+                // go to first editable cell
+                targetCell.onKeydownEnterEditMode();
+                fixture.detectChanges();
+                await wait(300);
+
+                // change first editable cell value
+                targetCell.editValue = '500';
+                fixture.detectChanges();
+                await wait(300);
+
+                // go to Done
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                await wait(300);
+
+                let overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
+                expect(overlayText.textContent.trim()).toBe('You have 1 changes in this row');
+
+                // focus Cancel
+                const bannerRowElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+                const cancelButtonElement = bannerRowElement.firstElementChild;
+                cancelButtonElement.focus();
+                fixture.detectChanges();
+                await wait(300);
+
+                // go to last editable cell
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true }));
+                fixture.detectChanges();
+                await wait(300);
+
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(currentEditCell.column.field).toEqual('Test');
+
+                // change last editable cell value
+                targetCell.editValue = 'No test';
+                fixture.detectChanges();
+                await wait(300);
+
+                // move to Cancel
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                await wait(300);
+
+                overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
+                expect(overlayText.textContent.trim()).toBe('You have 2 changes in this row');
+            }));
         });
 
         describe('Row Editing - Exit row editing', () => {
@@ -3097,7 +3153,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
 
-                let overlayText: HTMLElement = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
+                let overlayText: HTMLElement = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(0);
                 fixture.componentInstance.cellInEditMode.editValue = 'Spiro';
                 fixture.componentInstance.moveNext(true);
@@ -3105,7 +3161,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
 
                 cell = grid.getCellByColumn(0, 'ReorderLevel');
-                overlayText = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
+                overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(1);
 
                 fixture.componentInstance.buttons.last.element.nativeElement.click();
