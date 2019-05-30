@@ -1,0 +1,116 @@
+$border-color: #ddd;
+$border-pin-color: #999;
+$print-background: #f9f9f9;
+$print-background: #eee;
+
+@mixin igx-grid-print {
+    %grid-display {
+        %form-group-display,
+        %cbx-display,
+        %radio-display,
+        %igx-grid__grouparea,
+        %tooltip-display,
+        %aside,
+        %overlay-display,
+        %igx-ripple-display,
+        %igx-slider-display,
+        %igx-snackbar-display,
+        %switch-display,
+        %time-picker-display,
+        %igx-toast-display,
+        %igx-tabs,
+        %igx-navbar-display,
+        %igx-button--flat,
+        %igx-button--raised,
+        %igx-button--fab,
+        %igx-button--icon,
+        %igx-button--disabled,
+        %grid-tbody-scrollbar,
+        %vhelper-display,
+        %igx-grid-paginator,
+        %igx-grid-toolbar__actions,
+        %grid__cbx-selection,
+        %igx-drop-area__icon,
+        %igx-drop-area__text,
+        %igx-grid__header-indentation,
+        %igx-grid__grouping-indicator,
+        %igx-grid__row-indentation,
+        %igx-grid__hierarchical-expander {
+            display: none !important;
+        }
+
+        %igx-grid__grouparea,
+        %igx-grid-paginator,
+        %igx-grid-toolbar__actions,
+        %igx-drop-area__icon,
+        %igx-drop-area__text,
+        %igx-grid__header-indentation,
+        %igx-grid__grouping-indicator,
+        %igx-grid__row-indentation,
+        %igx-grid__hierarchical-expander,
+        %igx-expansion-panel__header-icon--end,
+        %igx-expansion-panel__header-icon--start,
+        %grid-summaries-patch {
+            display: none !important;
+        }
+
+
+        %igx-grid__grouping-indicator {
+            igx-icon {
+                display: none !important;
+            }
+        }
+
+        %igx-grid__filtering-cell {
+            height: 0 !important;
+            border-top: none !important;
+            border-right: none !important;
+        }
+
+        %grid-tfoot,
+        %igx-grid__grouparea,
+        %igx-grid__filtering-cell,
+        %igx-grid__group-row,
+        %grid-cell-header,
+        %igx-grid-toolbar,
+        %grid-thead-title,
+        %grid-row,
+        %grid-thead {
+            border-color: $border-color !important;
+        }
+
+        %grid-display {
+            igx-icon {
+                color: #666 !important;
+            }
+        }
+
+        %grid-thead,
+        %igx-grid-toolbar,
+        %igx-grid__group-row,
+        %grid-tfoot {
+            background: $print-background !important;
+        }
+
+        %grid-cell-header-title,
+        %grid-cell-text {
+            white-space: unset !important;
+            text-overflow: initial !important;
+            overflow: visible !important;
+        }
+
+        %grid-cell-display {
+            igx-icon {
+                display: none;
+            }
+        }
+
+        %grid-summaries-patch {
+            display: none;
+        }
+
+        %grid-cell--pinned-last {
+            border-right: 2px solid red !important;
+        }
+    }
+}
