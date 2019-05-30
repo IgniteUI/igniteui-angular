@@ -456,6 +456,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const gridBoundingClientRect = this.grid.tbody.nativeElement.getBoundingClientRect();
         const diffTop = cellElem.getBoundingClientRect().top - gridBoundingClientRect.top;
         const diffBottom = cellElem.getBoundingClientRect().bottom - gridBoundingClientRect.bottom;
+        const canScrollDown = !(this.grid.verticalScrollContainer as any)._isScrolledToBottom;
+
         if (diffTop < 0) {
             // cell is above grid top - not visible
             this.grid.nativeElement.focus({ preventScroll: true });
@@ -465,7 +467,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     cellElem.focus({ preventScroll: true });
             });
             this.grid.verticalScrollContainer.addScrollTop(diffTop);
-        } else if (diffBottom > 0) {
+        } else if (diffBottom > 0 && canScrollDown) {
             // cell is below grid bottom - not visible
             this.grid.nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.onChunkLoad
