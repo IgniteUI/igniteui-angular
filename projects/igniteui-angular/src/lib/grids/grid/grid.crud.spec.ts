@@ -380,7 +380,7 @@ export class DefaultCRUDGridComponent {
     public rowsAdded = 0;
     public rowsDeleted = 0;
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public rowAdded(event) {

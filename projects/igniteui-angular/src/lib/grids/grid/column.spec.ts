@@ -310,7 +310,7 @@ export class ColumnsFromIterableComponent {
     public data = SampleTestData.personIDNameData();
     public columns = ['ID', 'Name'];
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -328,13 +328,13 @@ export class ColumnsFromIterableComponent {
 export class TemplatedColumnsComponent {
     public data = SampleTestData.personIDNameData();
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('newHeader', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
-    @ViewChild('newCell', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 }
 
@@ -365,7 +365,7 @@ export class TemplatedInputColumnsComponent {
     data = SampleTestData.personIDNameRegionData();
     columns = Object.keys(this.data[0]);
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -389,6 +389,6 @@ export class ColumnHaederClassesComponent {
         { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
     ];
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 }

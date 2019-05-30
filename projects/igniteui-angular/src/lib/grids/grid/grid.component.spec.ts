@@ -3724,7 +3724,7 @@ export class IgxGridTestComponent {
         { field: 'index', header: 'index', dataType: 'number', width: null, hasSummary: false },
         { field: 'value', header: 'value', dataType: 'number', width: null, hasSummary: false }
     ];
-    @ViewChild('grid', /* TODO: add static flag */ {}) public grid: IgxGridComponent;
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
 
     public autoGenerate = false;
 
@@ -3791,7 +3791,7 @@ export class IgxGridDefaultRenderingComponent {
 
     public changeInitColumns = false;
 
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     public initColumnsRows(rowsNumber: number, columnsNumber: number): void {
@@ -3916,7 +3916,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
         { ID: 2, Name: 'Sally' },
         { ID: 3, Name: 'Tim' }
     ];
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -3931,7 +3931,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
     public data = [];
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 }
 
@@ -3977,7 +3977,7 @@ export class LocalService {
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
     public data;
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
@@ -4011,9 +4011,9 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 })
 export class IgxGridRemoteOnDemandComponent {
     public data;
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
-    @ViewChild('customTemplate', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemaplate: TemplateRef<any>;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
@@ -4049,7 +4049,7 @@ export class IgxGridRemoteOnDemandComponent {
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ {}) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
     public width = '600px';
     public height = '400px';
     public value: any;
@@ -4072,7 +4072,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 export class IgxBasicGridRowEditingComponent {
     public data = SampleTestData.foodProductData();
 
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -4089,7 +4089,7 @@ export class IgxBasicGridRowEditingComponent {
 })
 export class IgxGridRowEditingComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -4097,7 +4097,7 @@ export class IgxGridRowEditingComponent {
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+                <button>Delete</button>
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -4108,7 +4108,7 @@ export class IgxGridRowEditingComponent {
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid',  { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -4149,7 +4149,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
     public hiddenFlag = false;
     public columnGroupingFlag = false;
     public data = SampleTestData.generateProductData(11);
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
     public moveNext(shiftKey: boolean): void {
         this.getCurrentEditCell().dispatchEvent(new KeyboardEvent('keydown', {
             key: 'tab',
@@ -4195,8 +4195,8 @@ export class IgxGridWithEditingAndFeaturesComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                    <button igxButton igxRowEditTabStop>Cancel</button>
+                    <button igxButton igxRowEditTabStop>Done</button>
                 </div>
             </div>
         </ng-template>
@@ -4205,7 +4205,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
 })
 export class IgxGridCustomOverlayComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
     @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
 
     public get gridAPI() {
@@ -4245,7 +4245,7 @@ export class IgxGridCustomOverlayComponent {
 })
 export class IgxGridRowEditingTransactionComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid', /* TODO: add static flag */ { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
 
     public paging = false;
 }
@@ -4268,10 +4268,10 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
     public enableSorting = false;
@@ -4348,15 +4348,15 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     `
 })
 export class IgxGridInsideIgxTabsComponent {
-    @ViewChild('grid2', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid2', { read: IgxGridComponent, static: true })
     public grid2: IgxGridComponent;
-    @ViewChild('grid3', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid3', { read: IgxGridComponent, static: true })
     public grid3: IgxGridComponent;
-    @ViewChild('grid4', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid4', { read: IgxGridComponent, static: true })
     public grid4: IgxGridComponent;
-    @ViewChild('grid5', /* TODO: add static flag */ { read: IgxGridComponent })
+    @ViewChild('grid5', { read: IgxGridComponent, static: true })
     public grid5: IgxGridComponent;
-    @ViewChild(IgxTabsComponent, /* TODO: add static flag */ { read: IgxTabsComponent })
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent, static: true })
     public tabs: IgxTabsComponent;
 
     public columns = [
