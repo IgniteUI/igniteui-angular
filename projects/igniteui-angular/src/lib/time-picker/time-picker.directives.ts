@@ -345,3 +345,13 @@ export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
+/**
+ * This directive can be used to add custom action buttons to the dropdownb/dialog.
+ */
+@Directive({
+    selector: 'igx-time-picker-actions,[igxTimePickerActions]'
+})
+export class IgxTimePickerActionsDirective {
+    @HostBinding('class.igx-time-picker__buttons')
+    public defaultClass = true;
+}
