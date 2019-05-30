@@ -462,9 +462,8 @@ describe('IgxGrid - Summaries', () => {
                 grid = fix.componentInstance.grid;
             });
 
-            it('Filtering: should calculate summaries only over filteredData', async () => {
+            it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
-                await wait();
                 fix.detectChanges();
 
                 let filterResult = grid.rowList.length;
@@ -478,7 +477,6 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['3', 'Jul 27, 2001', 'Oct 11, 2007']);
 
                 grid.filter('ProductID', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
-                await wait();
                 fix.detectChanges();
 
                 filterResult = grid.rowList.length;
@@ -492,7 +490,6 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
 
                 grid.clearFilter();
-                await wait();
                 fix.detectChanges();
 
                 filterResult = grid.rowList.length;
@@ -506,7 +503,7 @@ describe('IgxGrid - Summaries', () => {
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 4,
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
-            });
+            }));
 
             it('Moving: should move summaries when move colomn', () => {
                 const colUnitsInStock = grid.getColumnByName('UnitsInStock');
