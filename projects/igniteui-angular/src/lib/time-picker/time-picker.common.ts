@@ -6,7 +6,6 @@ export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
 
 /** @hidden */
 export interface IgxTimePickerBase {
-    _ampmItems: any[];
     hourList: ElementRef;
     minuteList: ElementRef;
     ampmList: ElementRef;
@@ -17,6 +16,9 @@ export interface IgxTimePickerBase {
     promptChar: string;
     cleared: boolean;
     mode: InteractionMode;
+    showHoursList: boolean;
+    showMinutesList: boolean;
+    showAmPmList: boolean;
     nextHour();
     prevHour();
     nextMinute();
