@@ -115,7 +115,7 @@ class NoFocusComponent { }
     `
 })
 class TriggerFocusOnClickComponent {
-    @ViewChild(IgxFocusDirective, /* TODO: add static flag */ {}) public focusRef: IgxFocusDirective;
+    @ViewChild(IgxFocusDirective, { static: true }) public focusRef: IgxFocusDirective;
 
     focus() {
         this.focusRef.trigger();
@@ -131,7 +131,7 @@ class TriggerFocusOnClickComponent {
     `
 })
 class CheckboxPickerComponent {
-    @ViewChild(IgxCheckboxComponent, /* TODO: add static flag */ {}) public checkbox: IgxCheckboxComponent;
-    @ViewChild(IgxDatePickerComponent, /* TODO: add static flag */ {}) public picker: IgxDatePickerComponent;
-    @ViewChild('picker', /* TODO: add static flag */ { read: IgxFocusDirective }) public pickerFocusRef: IgxFocusDirective;
+    @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public picker: IgxDatePickerComponent;
+    @ViewChild('picker', { read: IgxFocusDirective, static: true }) public pickerFocusRef: IgxFocusDirective;
 }

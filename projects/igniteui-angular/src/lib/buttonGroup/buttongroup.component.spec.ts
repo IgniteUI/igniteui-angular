@@ -320,5 +320,5 @@ class TemplatedButtonGroupComponent {
                             <button igxButton>London</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupDesplayDensityComponent {
-    @ViewChild(IgxButtonGroupComponent, /* TODO: add static flag */ {}) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }

@@ -889,8 +889,8 @@ class AutocompleteComponent {
     </igx-drop-down>`
 })
 class AutocompleteInputComponent extends AutocompleteComponent {
-    @ViewChild('plainInput', /* TODO: add static flag */ {}) public plainInput: ElementRef<HTMLInputElement>;
-    @ViewChild('textarea', /* TODO: add static flag */ {}) public textarea: ElementRef<HTMLTextAreaElement>;
+    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
+    @ViewChild('textarea', { static: true }) public textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
@@ -916,11 +916,11 @@ class AutocompleteInputComponent extends AutocompleteComponent {
 })
 
 class AutocompleteFormComponent {
-    @ViewChild(IgxAutocompleteDirective, /* TODO: add static flag */ {}) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent, /* TODO: add static flag */ {}) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent, /* TODO: add static flag */ {}) public dropDown: IgxDropDownComponent;
-    @ViewChild('plainInput', /* TODO: add static flag */ {}) public plainInput: ElementRef<HTMLInputElement>;
+    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
+    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
     towns;
 
     reactiveForm: FormGroup;

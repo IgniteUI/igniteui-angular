@@ -446,7 +446,7 @@ describe('IgxInput', () => {
                     </form>` })
 class InputsWithSameNameAttributesComponent {
     @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     model = {
         firstName: null
@@ -459,8 +459,8 @@ class InputsWithSameNameAttributesComponent {
                             <input name="test" #igxInput type="text" igxInput />
                         </igx-input-group>` })
 class InputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group>
@@ -475,7 +475,7 @@ class TextareaComponent {
                             <input name="test" placeholder="Test" #igxInput type="text" igxInput />
                         </igx-input-group>` })
 class InputWithPlaceholderComponent {
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -483,8 +483,8 @@ class InputWithPlaceholderComponent {
                             <input name="test" #igxInput type="text" igxInput value="Test" />
                         </igx-input-group>` })
 class FilledInputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -492,8 +492,8 @@ class FilledInputComponent {
                             <input name="test" #igxInput type="text" igxInput value="Test" disabled="disabled" />
                         </igx-input-group>` })
 class DisabledInputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -501,8 +501,8 @@ class DisabledInputComponent {
                             <input name="test" #igxInput type="text" igxInput required="required" />
                         </igx-input-group>` })
 class RequiredInputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -510,8 +510,8 @@ class RequiredInputComponent {
                             <input name="test" #igxInput type="text" igxInput [(ngModel)]="user.firstName" required="required" />
                         </igx-input-group>` })
 class RequiredTwoWayDataBoundInputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     public user = {
         firstName: ''
@@ -586,8 +586,8 @@ class InitiallyFilledInputComponent {
                             <input name="test" #igxInput type="text" igxInput [disabled]="disabled" />
                         </igx-input-group>` })
 class DataBoundDisabledInputComponent {
-    @ViewChild('igxInputGroup', /* TODO: add static flag */ {}) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, /* TODO: add static flag */ {}) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     public disabled = false;
 }
