@@ -82,7 +82,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private get _thumbPositionX() {
         const thumbBounderies = this.nativeElement.getBoundingClientRect();
         const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
-        return thumbBounderies.x + thumbCenter;
+        return thumbBounderies.left + thumbCenter;
     }
 
     constructor (private _elementRef: ElementRef) { }

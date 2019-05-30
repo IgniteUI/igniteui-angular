@@ -388,7 +388,7 @@ export class IgxSliderComponent implements
     @Input()
     @DeprecateProperty(`IgxSliderComponent \`isContinuous\` property is deprecated.\nUse \`continuous\` instead.`)
     public get isContinuous(): boolean {
-        return this._countinuous;
+        return this.continuous;
     }
 
     /**
@@ -396,11 +396,7 @@ export class IgxSliderComponent implements
      * @internal
      */
     public set isContinuous(continuous: boolean) {
-        if (this.labelsViewEnabled) {
-            return;
-        }
-
-        this._countinuous = continuous;
+        this.continuous = continuous;
     }
 
     /**
@@ -934,12 +930,12 @@ export class IgxSliderComponent implements
      */
     public findClosestThumb(event) {
         if (this.isRange) {
-            this.closestHandle(event.x);
+            this.closestHandle(event.clientX);
         } else {
             this.thumbTo.nativeElement.focus();
         }
 
-        this.update(event.x);
+        this.update(event.clientX);
 
         event.preventDefault();
     }
@@ -1016,7 +1012,7 @@ export class IgxSliderComponent implements
     private closestHandle(mouseX) {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
-        const xPointer = mouseX - this.slider.nativeElement.getBoundingClientRect().x;
+        const xPointer = mouseX - this.slider.nativeElement.getBoundingClientRect().left;
         const match = this.closestTo(xPointer, [fromOffset, toOffset]);
 
         if (match === fromOffset) {
