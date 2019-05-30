@@ -1171,6 +1171,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         }];
         const grid = fix.componentInstance.grid;
         grid.height = '400px';
+        setupGridScrollDetection(fix, grid);
         fix.detectChanges();
 
         // focus 3rd row, first cell
@@ -1180,7 +1181,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow down
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1197,7 +1198,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow up
         UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1214,7 +1215,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow right
         UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1231,7 +1232,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow left
         UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
