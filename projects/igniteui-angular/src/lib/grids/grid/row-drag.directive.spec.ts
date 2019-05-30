@@ -863,6 +863,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         <igx-grid #grid
             [width]='width'
             [height]='height'
+            primaryKey="ID"
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
@@ -916,7 +917,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [width]="'800px'"
             [height]="'300px'"
             [data]="data"
-            [primaryKey]="'ID'"
+            primaryKey="ID"
             [autoGenerate]="true" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="true"
             >
