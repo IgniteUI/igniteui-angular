@@ -69,8 +69,10 @@
     }
 }
 
-@mixin igx-core() {
+@mixin igx-core($print-layout:true) {
     @include igx-typography();
-    @include igx-print-layout();
-}
 
+    @if $print-layout == true {
+        @include igx-print-layout();
+    }
+}
