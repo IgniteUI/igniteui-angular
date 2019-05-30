@@ -858,7 +858,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public onTap($event) {
-        this.update($event.srcEvent.x);
+        this.update($event.srcEvent.clientX);
     }
     /**
      *

@@ -3,7 +3,7 @@
     class="igx-slider"
     [class.igx-slider--disabled]="disabled"
     (pointerdown)="findClosestThumb($event)"
-    (pan)="update($event.srcEvent.x)"
+    (pan)="update($event.srcEvent.clientX)"
     (tap)="onTap($event)">
     <div class="igx-slider__track">
         <div #track class="igx-slider__track-fill"></div>
