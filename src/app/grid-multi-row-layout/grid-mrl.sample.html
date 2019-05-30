@@ -1,7 +1,7 @@
 <div  class="sample-wrapper">
     <app-page-header title="Grid MRL"></app-page-header>
     <section style="height: 800px" class="sample-content">
-        <igx-grid [rowSelectable]="true" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnHiding]='true'>
+        <igx-grid [rowEditable]="true" [primaryKey]="'PostalCode'" [rowSelectable]="true" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnHiding]='true'>
             <igx-column-layout [movable]="false" [pinned]="true" field='group1'>
                 <igx-column [rowStart]="1" [colStart]="1" [colEnd]="5" field="ContactName"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="5" field="ContactTitle"></igx-column>
@@ -13,8 +13,8 @@
                 <igx-column [rowStart]="3" [colStart]="2"  field="PostalCode"></igx-column>
                 <igx-column [rowStart]="3" [colStart]="3" [colEnd]="7" field="Fax"></igx-column>
             </igx-column-layout>
-            <igx-column-layout [movable]="false" [pinned]="false" field='group2'>
-                <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" field="ContactName" [width]='"500px"'></igx-column>
+            <igx-column-layout [movable]="false" [pinned]="true" field='group2'>
+                <igx-column [rowStart]="1" [colStart]="1" [movable]="false" sortable="true" field="ContactName" [width]='"500px"'></igx-column>
                 <igx-column [rowStart]="1" [colStart]="2" [movable]="false" sortable="true" field="ContactTitle" [width]='"200px"'></igx-column>
                 <igx-column [rowStart]="1" [colStart]="3" [movable]="false" sortable="true" field="Country" [width]='"150px"'></igx-column>
                 <igx-column [rowStart]="1" [colStart]="4" [movable]="false" sortable="true" field="Phone" [width]='"150px"'></igx-column>
