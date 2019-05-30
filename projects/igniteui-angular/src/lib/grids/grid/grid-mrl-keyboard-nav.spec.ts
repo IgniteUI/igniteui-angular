@@ -2274,14 +2274,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    
+
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         }));
