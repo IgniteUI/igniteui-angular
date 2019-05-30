@@ -128,6 +128,9 @@
 
     %igx-grid-summary--pinned-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        @media print {
+            border-right: map-get($cell-pin, 'style') #999;
+        }
     }
 
     %igx-grid-summary__item {
