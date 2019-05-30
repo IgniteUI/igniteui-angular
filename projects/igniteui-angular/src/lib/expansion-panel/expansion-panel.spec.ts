@@ -1160,11 +1160,11 @@ export class IgxExpansionPanelSampleComponent {
     public showBody = true;
     public showHeader = true;
     public customIcon = false;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: false })
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective, static: true })
+    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective, static: false })
     public title: IgxExpansionPanelTitleDirective;
     public handleExpanded() {
     }
