@@ -329,7 +329,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             }
         }
 
-        grid.filteringExpressionsTree = filteringTree;      
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public clear_filter(fieldName: string) {
