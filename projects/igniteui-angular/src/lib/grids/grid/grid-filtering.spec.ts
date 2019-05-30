@@ -597,6 +597,28 @@ describe('IgxGrid - Filtering actions', () => {
         verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
         verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
     }));
+
+    it('Should do nothing when clearing filter of non-existing column.', fakeAsync(() => {
+        grid.filter('ProductName', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        grid.clearFilter('NonExistingColumnName');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+    }));
+
+    it('Should emit onFilteringDone when filtering globally', fakeAsync(() => {
+        spyOn(grid.onFilteringDone, 'emit');
+
+        grid.filteringLogic = FilteringLogic.Or;
+        grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
+        tick(100);
+        fix.detectChanges();
+
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
+    }));
+
 });
 
 const expectedResults = [];

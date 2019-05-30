@@ -2818,6 +2818,31 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(rightArrowButton).toBeNull('rightArrowButton is present');
         expect(chipArea).toBeNull('chipArea is present');
     }));
+
+    it('Should remove first chip and filter by the remaining ones.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        GridFunctions.filterBy('Contains', 'z', fix);
+        GridFunctions.filterBy('Contains', 'n', fix);
+        GridFunctions.filterBy('Contains', 'g', fix);
+        expect(grid.rowList.length).toEqual(0);
+
+        // remove first chip
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        GridFunctions.removeFilterChipByIndex(0, filteringRow);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(3);
+        GridFunctions.closeFilterRow(fix);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
