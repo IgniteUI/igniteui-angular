@@ -4877,32 +4877,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
             && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
-            if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
-                this.verticalScrollContainer.scrollTo(rowIndex);
-                this.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
-                    this.executeCallback(rowIndex, visibleColIndex, cb);
-                });
+            if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
+                this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                     () => { this.executeCallback(rowIndex, visibleColIndex, cb); } );
             } else {
                 this.executeCallback(rowIndex, visibleColIndex, cb);
             }
         } else {
-            const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
-            this.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
-                    this.verticalScrollContainer.scrollTo(rowIndex);
-                    this.verticalScrollContainer.onChunkLoad
-                    .pipe(first()).subscribe(() => {
-                        this.executeCallback(rowIndex, visibleColIndex, cb);
-                    });
-                } else {
-                    this.executeCallback(rowIndex, visibleColIndex, cb);
-                }
-
-            });
-            this.navigation.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
+                 () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
         }
     }
 
