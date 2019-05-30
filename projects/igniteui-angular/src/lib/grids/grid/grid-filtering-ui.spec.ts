@@ -3874,6 +3874,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(excelMenuRect.top >= gridRect.top).toBe(true, 'ESF spans outside the grid on the top');
         expect(excelMenuRect.right <= gridRect.right).toBe(true, 'ESF spans outside the grid on the right');
     });
+
+    it('Should select (Blanks) when the blank value is empty string.', fakeAsync(() => {
+        grid.data[0].AnotherField = '';
+        fix.detectChanges();
+
+        openExcelMenu(fix, 5);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'a', 'custom' ],
+            [ true, true, true, true ]);
+
+        toggleExcelStyleFilteringItems(fix, grid, true, 2, 3);
+
+        expect(grid.rowList.length).toBe(1);
+
+        openExcelMenu(fix, 5);
+        verifyExcelStyleFilterAvailableOptions(grid,
+            [ 'Select All', '(Blanks)', 'a', 'custom' ],
+            [ null, true, false, false ]);
+    }));
 });
 
 const expectedResults = [];
