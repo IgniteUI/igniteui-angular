@@ -566,8 +566,6 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'comfortable'));
-        border-top: rem(8px, map-get($base-scale-size, 'comfortable')) solid rgba(0, 0, 0, 0);
         line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
@@ -589,15 +587,11 @@
 
     %form-group-input--cosy {
         height: rem(32px, map-get($base-scale-size, 'cosy'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'cosy'));
-        border-top: rem(8px, map-get($base-scale-size, 'cosy')) solid rgba(0, 0, 0, 0);
     }
 
     %form-group-input--compact {
         font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'compact'));
-        border-top: rem(8px, map-get($base-scale-size, 'compact')) solid rgba(0, 0, 0, 0);
     }
 
     %chrome-autofill-fix {
