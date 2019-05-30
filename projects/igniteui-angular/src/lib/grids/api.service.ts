@@ -310,6 +310,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public filter_global(term, condition, ignoreCase) {
+        if (!condition) {
+            throw Error('Invalid condition!');
+        }
+
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         grid.endEdit(false);
@@ -325,10 +329,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             }
         }
 
-        grid.filteringExpressionsTree = filteringTree;
-        if (!condition) {
-            throw Error('Invalid condition!');
-        }
+        grid.filteringExpressionsTree = filteringTree;      
     }
 
     public clear_filter(fieldName: string) {

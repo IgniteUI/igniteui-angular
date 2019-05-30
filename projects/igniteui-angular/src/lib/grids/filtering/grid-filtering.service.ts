@@ -193,7 +193,7 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
-    public filterGlobal(value: any, condition?, ignoreCase?) {
+    public filterGlobal(value: any, condition, ignoreCase?) {
         this.gridAPI.filter_global(value, condition, ignoreCase);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
