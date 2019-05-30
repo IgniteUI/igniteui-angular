@@ -118,7 +118,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        it('should initialize grid with remove virtualization', async () => {
+        it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             let rows = fix.componentInstance.instance.rowList.toArray();
@@ -147,6 +147,7 @@ describe('IgxGrid Component Tests', () => {
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.grid.height = null;
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;

@@ -599,7 +599,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
