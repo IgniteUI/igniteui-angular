@@ -79,7 +79,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
         let itemSize = '48px';
         switch (this.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
-            case DisplayDensity.compact: itemSize = '28px'; break;
+            case DisplayDensity.compact: itemSize = '24px'; break;
             default: break;
         }
         return itemSize;
