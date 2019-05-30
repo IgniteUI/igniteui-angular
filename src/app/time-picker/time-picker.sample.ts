@@ -17,6 +17,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     mode = InteractionMode.DropDown;
 
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
+    val = new Date(0, 0, 0, 19, 35, 0, 0);
     today = new Date(Date.now());
 
     isRequired = true;
@@ -59,5 +60,10 @@ export class TimePickerSampleComponent implements AfterViewInit {
         if (parts.length === 2) {
             timePickerValue.setHours(parts[0], parts[1]);
         }
+    }
+
+    public selectToday(picker: IgxTimePickerComponent) {
+        picker.value = new Date(Date.now());
+        picker.hideOverlay();
     }
 }

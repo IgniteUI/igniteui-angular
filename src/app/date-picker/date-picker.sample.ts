@@ -76,4 +76,8 @@ export class DatePickerSampleComponent {
         const parsedDate = (input !== '') ? new Date(input) : '';
         this.retemplatedDP.value = parsedDate;
     }
+
+    public selectToday(picker: IgxDatePickerComponent) {
+        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
+    }
 }

@@ -44,13 +44,16 @@
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
-        <div *ngIf="mode === 'dialog'" class="igx-time-picker__buttons">
-            <button *ngIf="cancelButtonLabel.length" igxButton="flat" (click)="cancelButtonClick()">
+        <div *ngIf="!timePickerActionsDirective && (cancelButtonLabel || okButtonLabel)" class="igx-time-picker__buttons">
+            <button *ngIf="cancelButtonLabel" igxButton="flat" (click)="cancelButtonClick()">
                 {{cancelButtonLabel}}
             </button>
-            <button *ngIf="okButtonLabel.length" igxButton="flat" (click)="okButtonClick()">
+            <button *ngIf="okButtonLabel" igxButton="flat" (click)="okButtonClick()">
                 {{okButtonLabel}}
             </button>
         </div>
+        <ng-container *ngIf="timePickerActionsDirective">
+            <ng-content select="igx-time-picker-actions,[igxTimePickerActions]"></ng-content>
+        </ng-container>
     </div>
 </div>

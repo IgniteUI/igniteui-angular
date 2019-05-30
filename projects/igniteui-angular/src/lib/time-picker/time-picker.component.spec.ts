@@ -1416,14 +1416,84 @@ describe('IgxTimePicker', () => {
 
             expect(timePicker.onOpen.emit).toHaveBeenCalled();
         }));
-    });
 
-    describe('TimePicker DropDown retemplating', () => {
-        it('TimePicker with retemplated input group and dropDownTarget ref variable', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxTimePickerRetemplatedDropDownComponent);
+        it('should display OK and Cancel buttons by default.', fakeAsync(() => {
             fixture.detectChanges();
 
-            const dom = fixture.debugElement;
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            const buttons = document.getElementsByClassName('igx-time-picker__buttons')[0];
+            expect(buttons.children.length).toEqual(2);
+
+            const cancelBtn = buttons.children[0] as HTMLElement;
+            const okBtn = buttons.children[1] as HTMLElement;
+
+            expect(cancelBtn.innerText).toBe('Cancel');
+            expect(okBtn.innerText).toBe('OK');
+
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const keydownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true });
+
+            minuteColumn.nativeElement.dispatchEvent(keydownEvent);
+            fixture.detectChanges();
+
+            expect(minuteColumn.nativeElement.children[3].innerText).toEqual('50');
+
+            cancelBtn.click();
+            tick();
+            fixture.detectChanges();
+
+            const input = dom.query(By.directive(IgxInputDirective));
+            expect(input.nativeElement.value).toEqual('05:45 PM');
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            minuteColumn.nativeElement.dispatchEvent(keydownEvent);
+            fixture.detectChanges();
+
+            okBtn.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('05:50 PM');
+
+            timePicker.okButtonLabel = '';
+            timePicker.cancelButtonLabel = '';
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            expect(document.getElementsByClassName('igx-time-picker__buttons').length).toEqual(0);
+        }));
+    });
+
+    describe('TimePicker retemplating and customization', () => {
+        configureTestSuite();
+        let fixture;
+        let dom;
+
+        beforeEach(
+            async(() => {
+                fixture = TestBed.createComponent(IgxTimePickerRetemplatedDropDownComponent);
+                fixture.detectChanges();
+
+                dom = fixture.debugElement;
+            })
+        );
+
+        afterEach(async(() => {
+            UIInteractions.clearOverlay();
+        }));
+
+
+        it('TimePicker with retemplated input group and dropDownTarget ref variable', fakeAsync(() => {
             const icon = dom.query(By.css('.igx-icon'));
             const inputGroup = dom.query(By.css('.igx-input-group'));
 
@@ -1444,6 +1514,27 @@ describe('IgxTimePicker', () => {
 
             expect(dropdownClientRect.top).toEqual(inputGroupClientRect.bottom);
             expect(dropdownClientRect.left).toEqual(inputGroupClientRect.left);
+        }));
+
+        it('should be able to add custom buttons.', fakeAsync(() => {
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            const buttons = document.getElementsByClassName('igx-time-picker__buttons')[0];
+            expect(buttons.children.length).toEqual(1);
+
+            const customBtn = buttons.children[0] as HTMLElement;
+            expect(customBtn.innerText).toBe('SELECT');
+
+            customBtn.click();
+            tick();
+            fixture.detectChanges();
+
+            const input = dom.query(By.directive(IgxInputDirective));
+            expect(input.nativeElement.value).toEqual('10:45 AM');
         }));
     });
 });
@@ -1606,7 +1697,7 @@ export class IgxTimePickerDropDownNoValueComponent {
 
 @Component({
 template: `
-<igx-time-picker [mode]="'dropdown'">
+<igx-time-picker #picker [mode]="'dropdown'">
     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-displayTime="displayTime">
         <igx-input-group #dropDownTarget>
             <label igxLabel>Time</label>
@@ -1616,10 +1707,18 @@ template: `
             </igx-suffix>
         </igx-input-group>
     </ng-template>
+    <igx-time-picker-actions>
+        <button igxButton="flat" (click)="select(picker)">SELECT</button>
+    </igx-time-picker-actions>
 </igx-time-picker>
     `
 })
-export class IgxTimePickerRetemplatedDropDownComponent { }
+export class IgxTimePickerRetemplatedDropDownComponent { 
+    public select(picker: IgxTimePickerComponent) {
+        picker.value = new Date(2018, 10, 27, 10, 45, 0, 0);
+        picker.hideOverlay();
+    }
+}
 
 // helper functions
 function findByInnerText(collection, searchText) {

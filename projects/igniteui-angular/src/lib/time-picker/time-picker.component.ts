@@ -28,7 +28,8 @@ import {
     IgxHourItemDirective,
     IgxItemListDirective,
     IgxMinuteItemDirective,
-    IgxTimePickerTemplateDirective
+    IgxTimePickerTemplateDirective,
+    IgxTimePickerActionsDirective
 } from './time-picker.directives';
 import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
@@ -43,8 +44,9 @@ import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -204,7 +206,10 @@ export class IgxTimePickerComponent implements
      * An accessor that returns the label of ok button.
     */
     get okButtonLabel(): string {
-        return this._okButtonLabel || this.resourceStrings.igx_time_picker_ok;
+        if (this._okButtonLabel === null) {
+            return this.resourceStrings.igx_time_picker_ok;
+        }
+        return this._okButtonLabel;
     }
 
     /**
@@ -223,7 +228,10 @@ export class IgxTimePickerComponent implements
     * An accessor that returns the label of cancel button.
     */
     get cancelButtonLabel(): string {
-        return this._cancelButtonLabel || this.resourceStrings.igx_time_picker_cancel;
+        if (this._cancelButtonLabel === null) {
+            return this.resourceStrings.igx_time_picker_cancel;
+        }
+        return this._cancelButtonLabel;
     }
 
     /**
@@ -408,14 +416,34 @@ export class IgxTimePickerComponent implements
      *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
      * ```
      */
+    @DeprecateProperty(`'onOpen' @Ouput property is deprecated\nUse 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxTimePickerComponent>();
+
+    /**
+     * Emitted when a timePicker is opened.
+     */
+    @Output()
+    public onOpened = new EventEmitter<IgxTimePickerComponent>();
+
+    /**
+     * Emitted when a timePicker is being closed.
+     */
+    @DeprecateProperty(`'onClose' @Ouput property is deprecated\nUse 'onClosed' instead.`)
+    @Output()
+    public onClose = new EventEmitter<IgxTimePickerComponent>();
+
+    /**
+     * Emitted when a timePicker is closed.
+     */
+    @Output()
+    public onClosed = new EventEmitter<IgxTimePickerComponent>();
 
     /**
      * Emitted when a timePicker is being closed.
      */
     @Output()
-    public onClose = new EventEmitter<IgxTimePickerComponent>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
 
     /**
      * @hidden
@@ -446,6 +474,12 @@ export class IgxTimePickerComponent implements
      */
     @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
+    public timePickerActionsDirective: IgxTimePickerActionsDirective;
 
     /**
      * @hidden
@@ -720,11 +754,21 @@ export class IgxTimePickerComponent implements
                     this._onDropDownClosed();
                 }
 
+                this.onClosed.emit(this);
+
+                // TODO: remove this line after deprecating 'onClose'
                 this.onClose.emit(this);
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
+                this.onOpened.emit(this);
+
+                // TODO: remove this line after deprecating 'onOpen'
                 this.onOpen.emit(this);
+            });
+
+            this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
+                this.onClosing.emit(event);
             });
         }
     }
@@ -1407,6 +1451,10 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public cancelButtonClick(): void {
+        if (this.mode === InteractionMode.DropDown) {
+            this.displayValue = this._formatTime(this.value, this.format);
+        }
+
         this.hideOverlay();
 
         this.selectedHour = this._prevSelectedHour;
@@ -1457,7 +1505,14 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * @hidden
+     * Closes the dropdown/dialog.
+     * ```html
+     *<igx-time-picker #timePicker></igx-time-picker>
+     * ```
+     * ```typescript
+     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
+     * picker.hideOverlay();
+     * ```
      */
     public hideOverlay(): void {
         this.toggleRef.close();
@@ -1644,12 +1699,14 @@ export class IgxTimePickerComponent implements
         IgxMinuteItemDirective,
         IgxAmPmItemDirective,
         IgxTimePickerTemplateDirective,
+        IgxTimePickerActionsDirective,
         TimeDisplayFormatPipe,
         TimeInputFormatPipe
     ],
     exports: [
         IgxTimePickerComponent,
         IgxTimePickerTemplateDirective,
+        IgxTimePickerActionsDirective,
         TimeDisplayFormatPipe,
         TimeInputFormatPipe
     ],
