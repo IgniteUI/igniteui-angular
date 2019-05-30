@@ -3564,7 +3564,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
     }));
 
-    it('should scroll items in search list correctly', (async() => {
+    it('should scroll items in search list correctly', (async () => {
         // Add additional rows as prerequisite for the test
         for (let index = 0; index < 30; index++) {
             const newRow = {
@@ -3609,7 +3609,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(listItems.length).toBe(10, 'incorrect rendered list items count');
     }));
 
-    it('should correctly display all items in search list after filtering it', (async() => {
+    it('should correctly display all items in search list after filtering it', (async () => {
         // Add additional rows as prerequisite for the test
         for (let index = 0; index < 4; index++) {
             const newRow = {
@@ -3653,7 +3653,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
     }));
 
-    it('Should not treat \'Select All\' as a search result.', fakeAsync (() => {
+    it('Should not treat \'Select All\' as a search result.', fakeAsync(() => {
         const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerResArea = headers[1].children[0].nativeElement;
         const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
@@ -3837,7 +3837,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         verifyFilteringExpression(operands[1], 'ProductName', 'empty', null);
     }));
 
-    it('should not display search scrollbar when not needed for the current display density', (async() => {
+    it('should not display search scrollbar when not needed for the current display density', (async () => {
         // Verify scrollbar is visible for 'comfortable'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
         await wait(16);
@@ -3876,19 +3876,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         openExcelMenu(fix, 2);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', '0', '20', '100', '127', '254' ],
-            [ true, true, true, true, true, true, true ]);
+            ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
+            [true, true, true, true, true, true, true]);
 
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
-              'NetAdvantage', 'Some other item with Script' ],
-            [ true, true, true, true, true, true ]);
+            ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                'NetAdvantage', 'Some other item with Script'],
+            [true, true, true, true, true, true]);
 
         openExcelMenu(fix, 3);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'false', 'true' ],
-            [ true, true, true, true ]);
+            ['Select All', '(Blanks)', 'false', 'true'],
+            [true, true, true, true]);
 
         toggleExcelStyleFilteringItems(fix, grid, true, 3);
 
@@ -3896,18 +3896,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         openExcelMenu(fix, 3);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'false', 'true' ],
-            [ null, true, true, false ]);
+            ['Select All', '(Blanks)', 'false', 'true'],
+            [null, true, true, false]);
 
         openExcelMenu(fix, 2);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All',  '20', '100', '254', '702', '1,000' ],
-            [ true, true, true, true, true, true ]);
+            ['Select All', '20', '100', '254', '702', '1,000'],
+            [true, true, true, true, true, true]);
 
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script' ],
-            [ true, true, true, true, true ]);
+            ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script'],
+            [true, true, true, true, true]);
 
         toggleExcelStyleFilteringItems(fix, grid, false, 0);
         toggleExcelStyleFilteringItems(fix, grid, true, 2, 3);
@@ -3916,18 +3916,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         openExcelMenu(fix, 3);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'false', 'true' ],
-            [ null, true, true, false ]);
+            ['Select All', '(Blanks)', 'false', 'true'],
+            [null, true, true, false]);
 
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script' ],
-            [ null, false, true, true, false ]);
+            ['Select All', '(Blanks)', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'Some other item with Script'],
+            [null, false, true, true, false]);
 
         openExcelMenu(fix, 2);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '20', '254' ],
-            [ true, true, true ]);
+            ['Select All', '20', '254'],
+            [true, true, true]);
     }));
 });
 
@@ -4220,7 +4220,7 @@ function verifyPinningHidingDisplayDensity(gridNativeElement: HTMLElement, expec
             'headerArea column hiding icon is present');
         // Verify icons in actions area are present.
         expect((actionsAreaPinIcon !== null) || (actionsAreaUnpinIcon !== null)).toBe(true,
-             'actionsArea pin/unpin icon is  NOT present');
+            'actionsArea pin/unpin icon is  NOT present');
         expect(actionsAreaColumnHidingIcon).not.toBeNull('actionsArea column hiding icon is  NOT present');
     } else {
         // Verify icons in header are present.
@@ -4237,7 +4237,7 @@ function verifyPinningHidingDisplayDensity(gridNativeElement: HTMLElement, expec
         const columnHidingRect = headerAreaColumnHidingIcon.getBoundingClientRect();
 
         expect(pinUnpinIconRect.left >= headerTitleRect.right).toBe(true,
-             'pinUnpin icon is NOT on the right of top header');
+            'pinUnpin icon is NOT on the right of top header');
         expect(columnHidingRect.left > headerTitleRect.right).toBe(true,
             'columnHiding icon is NOT on the right of top header');
     }
@@ -4248,14 +4248,12 @@ function verifySortMoveDisplayDensity(gridNativeElement: HTMLElement, expectedDi
     const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
 
     // Get container of sort component and its header and buttons.
-    const sortContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__sort--compact' : 'igx-excel-filter__sort';
-    const sortContainer = excelMenu.querySelector('.' + sortContainerClass);
+    const sortContainer = excelMenu.querySelector('.igx-excel-filter__sort');
     const sortHeaderRect = sortContainer.querySelector('header').getBoundingClientRect();
     const sortButtons = sortContainer.querySelectorAll('.igx-button--flat');
 
     // Get container of move component and its header and buttons.
-    const moveContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__move--compact' : 'igx-excel-filter__move';
-    const moveContainer = excelMenu.querySelector('.' + moveContainerClass);
+    const moveContainer = excelMenu.querySelector('.igx-excel-filter__move');
     const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
     const moveButtons = moveContainer.querySelectorAll('.igx-button--flat');
 
@@ -4307,7 +4305,7 @@ function verifyExcelCustomFilterDisplayDensity(gridNativeElement: HTMLElement, e
     const inputGroups = customFilterMenu.querySelectorAll('igx-input-group');
     inputGroups.forEach((inputGroup) => {
         expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
-                'incorrect inputGroup density in custom filter dialog');
+            'incorrect inputGroup density in custom filter dialog');
     });
 }
 
