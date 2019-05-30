@@ -1447,8 +1447,8 @@ describe('IgxTimePicker', () => {
             tick();
             fixture.detectChanges();
 
-            const input = dom.query(By.directive(IgxInputDirective));
-            expect(input.nativeElement.value).toEqual('05:45 PM');
+            const inputGroup = dom.query(By.directive(IgxInputDirective));
+            expect(inputGroup.nativeElement.value).toEqual('05:45 PM');
 
             UIInteractions.clickElement(iconTime);
             tick();
@@ -1461,7 +1461,7 @@ describe('IgxTimePicker', () => {
             tick();
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('05:50 PM');
+            expect(inputGroup.nativeElement.value).toEqual('05:50 PM');
 
             timePicker.okButtonLabel = '';
             timePicker.cancelButtonLabel = '';
@@ -1713,7 +1713,7 @@ template: `
 </igx-time-picker>
     `
 })
-export class IgxTimePickerRetemplatedDropDownComponent { 
+export class IgxTimePickerRetemplatedDropDownComponent {
     public select(picker: IgxTimePickerComponent) {
         picker.value = new Date(2018, 10, 27, 10, 45, 0, 0);
         picker.hideOverlay();
