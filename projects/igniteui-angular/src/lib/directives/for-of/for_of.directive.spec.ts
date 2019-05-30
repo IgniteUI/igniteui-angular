@@ -1523,7 +1523,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         <ng-template igxForTest
             let-item [igxForOf]="items"
             [igxForScrollOrientation]="'horizontal'"
-            [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='width'
             [igxForItemSize]='itemSize'>
                 <div class="forOfElement" #child>{{item.text}}</div>

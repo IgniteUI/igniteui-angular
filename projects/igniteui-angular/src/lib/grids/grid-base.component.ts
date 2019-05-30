@@ -1691,7 +1691,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
+    @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: false })
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
@@ -1711,13 +1711,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
+    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: false })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
         /**
      * @hidden
      */
-    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
+    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: false })
     public verticalScroll: IgxGridForOfDirective<any>;
 
     /**
@@ -1735,7 +1735,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: true })
+    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: false })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
@@ -1790,7 +1790,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: false })
     protected _outletDirective: IgxOverlayOutletDirective;
 
     /**
