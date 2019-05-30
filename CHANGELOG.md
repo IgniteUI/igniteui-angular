@@ -12,6 +12,12 @@ All notable changes for each version of this project will be documented in this 
     - `#headerItemTemplate`
 
 ## 7.3.1
+`igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
+
+``` 
+@include igx-core($print-layout: false); 
+```
+
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
