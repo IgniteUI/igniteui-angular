@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbModule, IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -367,6 +368,34 @@ export class IgxSliderComponent implements
      * ```
      */
     public set continuous(continuous: boolean) {
+        if (this.labelsViewEnabled) {
+            return;
+        }
+
+        this._countinuous = continuous;
+    }
+
+    /**
+     * Returns if the {@link IgxSliderComponent} is set as continuous.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let continuous = this.slider.continuous;
+     * }
+     * ```
+     */
+    @Input()
+    @DeprecateProperty(`IgxSliderComponent \`isContinuous\` property is deprecated.\nUse \`continuous\` instead.`)
+    public get isContinuous(): boolean {
+        return this._countinuous;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public set isContinuous(continuous: boolean) {
         if (this.labelsViewEnabled) {
             return;
         }
@@ -929,8 +958,8 @@ export class IgxSliderComponent implements
         /**
          * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
          */
-        if (!this.isRange) {
-            this.value = this.minValue;
+        if (!this.isRange && this.value === this.upperBound) {
+            this.value = this.lowerBound;
         }
 
     }
