@@ -18,8 +18,8 @@ import {
         `
 })
 export class IgxTooltipSingleTargetComponent {
-    @ViewChild(IgxTooltipDirective, /* TODO: add static flag */ {}) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, /* TODO: add static flag */ {}) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
 
@@ -52,7 +52,7 @@ export class IgxTooltipSingleTargetComponent {
         `
 })
 export class IgxTooltipMultipleTargetsComponent {
-    @ViewChild('targetOne', /* TODO: add static flag */ { read: IgxTooltipTargetDirective }) public targetOne: IgxTooltipDirective;
-    @ViewChild('targetTwo', /* TODO: add static flag */ { read: IgxTooltipTargetDirective }) public targetTwo: IgxTooltipTargetDirective;
-    @ViewChild(IgxTooltipDirective, /* TODO: add static flag */ {}) public tooltip: IgxTooltipDirective;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
 }

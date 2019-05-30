@@ -97,10 +97,10 @@ export class ColumnsFromIterableComponent extends BasicGridComponent {
 export class TemplatedColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameData();
 
-    @ViewChild('newHeader', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
-    @ViewChild('newCell', /* TODO: add static flag */ { read: TemplateRef })
+    @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 }
 
@@ -519,7 +519,7 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild('nameColumn', /* TODO: add static flag */ {}) public nameColumn;
+    @ViewChild('nameColumn', { static: true }) public nameColumn;
 }
 
 @Component({
