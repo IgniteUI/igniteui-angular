@@ -30,7 +30,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
      * @hidden
      * @internal
      */
-    public setStartNavigationCell(colStart, rowStart, dir) {
+    public setStartNavigationCell(colStart: number, rowStart: number, dir: NavigationDirection) {
         this.startNavigationCell = {
             colStart: colStart,
             rowStart: rowStart,
@@ -38,7 +38,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         };
     }
 
-    private applyNavigationCell(colStart, rowStart, navDirection) {
+    private applyNavigationCell(colStart: number, rowStart: number, navDirection: NavigationDirection) {
         const oppositeDir = navDirection === NavigationDirection.vertical ?
             NavigationDirection.horizontal : NavigationDirection.vertical;
         if (this.startNavigationCell && this.startNavigationCell.direction !== navDirection) {
