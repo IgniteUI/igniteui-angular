@@ -427,7 +427,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
 
         const firstYear = document.getElementsByClassName('igx-calendar__year')[1];
-        const expectedResult = (firstYear as HTMLElement).innerText;
+        const expectedResult = (firstYear as HTMLElement).innerText.trim();
         firstYear.dispatchEvent(new Event('click'));
         tick();
         fixture.detectChanges();
