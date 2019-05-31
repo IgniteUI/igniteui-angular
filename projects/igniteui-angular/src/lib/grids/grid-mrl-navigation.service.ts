@@ -517,6 +517,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const gridBoundingClientRect = this.grid.tbody.nativeElement.getBoundingClientRect();
         const diffTop = cellElem.getBoundingClientRect().top - gridBoundingClientRect.top;
         const diffBottom = cellElem.getBoundingClientRect().bottom - gridBoundingClientRect.bottom;
+
         if (diffTop < 0) {
             // cell is above grid top - not visible
             this.grid.nativeElement.focus({ preventScroll: true });

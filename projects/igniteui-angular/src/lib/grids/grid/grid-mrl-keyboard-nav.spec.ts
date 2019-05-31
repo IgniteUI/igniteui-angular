@@ -1287,6 +1287,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         }];
         const grid = fix.componentInstance.grid;
         grid.height = '400px';
+        setupGridScrollDetection(fix, grid);
         fix.detectChanges();
 
         // focus 3rd row, first cell
@@ -1296,7 +1297,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow down
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1313,7 +1314,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow up
         UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1330,7 +1331,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow right
         UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1347,7 +1348,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // arrow left
         UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait(DEBOUNCETIME * 2);
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -3040,6 +3041,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         let cell =  grid.getCellByColumn(2, 'ContactTitle');
         expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
         let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        // there is 2px border at the bottom now
         expect(diff).toBe(0);
 
         // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
@@ -3062,6 +3064,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell =  grid.getCellByColumn(10, 'CompanyName');
         expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50 * 10);
         diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        // there is 2px border at the bottom now
         expect(diff).toBe(0);
 
         // navigate right to cell in column that is in DOM but is not in view
