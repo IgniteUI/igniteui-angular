@@ -8,12 +8,13 @@ import { DatePipe, formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-date-picker-sample',
-    styleUrls: ['date-picker.sample.css'],
+    styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html'
 })
 
 export class DatePickerSampleComponent {
     date = new Date('10/3/2018');
+    actionBtnCss = "action-buttons";
 
     public formatOptions = {
         day: 'numeric',

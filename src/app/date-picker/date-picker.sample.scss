@@ -6,3 +6,11 @@
     margin: 16px;
     width: 200px;
 }
+
+:host ::ng-deep {
+    .action-buttons {
+        display: flex;
+        flex-flow: column;
+        margin: 10px;
+    }
+}

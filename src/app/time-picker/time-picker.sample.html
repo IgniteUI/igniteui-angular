@@ -101,7 +101,7 @@
                             </igx-suffix>
                         </igx-input-group>
                     </ng-template>
-                    <igx-time-picker-actions>
+                    <igx-time-picker-actions [cssClasses]="actionBtnCss">
                         <button igxButton="flat" (click)="selectToday(picker)">Today</button>
                     </igx-time-picker-actions>
                 </igx-time-picker>
