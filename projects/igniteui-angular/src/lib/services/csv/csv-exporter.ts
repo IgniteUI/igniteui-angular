@@ -47,7 +47,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     protected exportDataImplementation(data: any[], options: IgxCsvExporterOptions) {
-        const csvData = new CharSeparatedValueData(data, options.valueDelimiter);
+        const csvData = new CharSeparatedValueData(data, options.valueDelimiter, 'rowData');
         this._stringData = csvData.prepareData();
 
         this.saveFile(options);
