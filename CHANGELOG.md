@@ -6,8 +6,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will now throw an error and will not clear the existing filters for all columns.
 
-## 7.3.1
-
 - `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
     ```
