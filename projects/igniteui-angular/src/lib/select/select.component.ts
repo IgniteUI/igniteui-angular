@@ -394,7 +394,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnInit() {
-        this.ngControl = this._injector.get(NgControl);
+        this.ngControl = this._injector.get(NgControl, null);
     }
 
     /**
