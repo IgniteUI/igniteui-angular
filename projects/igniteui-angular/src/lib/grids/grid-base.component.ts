@@ -4033,7 +4033,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden @internal
      * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
      */
-    protected get renderedRowHeight(): number {
+    public get renderedRowHeight(): number {
         return this.rowHeight + 1;
     }
 
