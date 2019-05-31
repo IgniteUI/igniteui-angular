@@ -2761,7 +2761,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
         let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         // there is 2px border at the bottom now
-        expect(diff).toBe(2);
+        expect(diff).toBe(0);
 
         // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
         col = grid.getColumnByName('CompanyName');
@@ -2784,7 +2784,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50 * 10);
         diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         // there is 2px border at the bottom now
-        expect(diff).toBe(2);
+        expect(diff).toBe(0);
 
         // navigate right to cell in column that is in DOM but is not in view
         col = grid.getColumnByName('City');
