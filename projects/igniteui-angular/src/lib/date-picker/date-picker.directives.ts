@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, Input } from '@angular/core';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -21,4 +21,7 @@ export class IgxDatePickerTemplateDirective {
 })
 export class IgxDatePickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
+
+    @Input()
+    public cssClasses = '';
 }

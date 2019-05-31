@@ -352,6 +352,11 @@ export class IgxTimePickerTemplateDirective {
     selector: 'igx-time-picker-actions,[igxTimePickerActions]'
 })
 export class IgxTimePickerActionsDirective {
-    @HostBinding('class.igx-time-picker__buttons')
-    public defaultClass = true;
+    @HostBinding('class')
+    get defaultClass(): string {
+        return this.cssClasses ? this.cssClasses : 'igx-time-picker__buttons';
+    };
+
+    @Input()
+    public cssClasses = '';
 }

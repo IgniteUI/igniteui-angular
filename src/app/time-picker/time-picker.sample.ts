@@ -3,12 +3,14 @@ import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositio
 
 @Component({
     selector: 'app-time-picker-sample',
-    styleUrls: ['time-picker.sample.css'],
+    styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html'
 })
 export class TimePickerSampleComponent implements AfterViewInit {
     max = '19:00';
     min = '09:00';
+
+    actionBtnCss = 'action-buttons';
 
     itemsDelta = { hours: 1, minutes: 5 };
     format = 'hh:mm tt';

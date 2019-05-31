@@ -8,7 +8,7 @@
 </ng-template>
 <div>
     <igx-calendar #calendar></igx-calendar>
-    <div class="igx-date-picker__buttons">
+    <div [class]="datePickerActions && datePickerActions.cssClasses ? datePickerActions.cssClasses : 'igx-date-picker__buttons'">
         <ng-container *ngTemplateOutlet="datePickerActions ? datePickerActions.template : defaultDatePickerActions"></ng-container>
     </div>
 </div>
