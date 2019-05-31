@@ -119,10 +119,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     private ngControl: NgControl = null;
     private _statusChanges$: Subscription;
-    protected destroy$ = new Subject<any>();
-
     private _overlayDefaults: OverlaySettings;
-
     private _value: any;
 
     /**
@@ -382,7 +379,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         } else {
             this.valid = IgxSelectState.INITIAL;
         }
-
         if (!this.collapsed) {
             this.toggleDirective.close();
         }
@@ -398,9 +394,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnInit() {
-        try {
-            this.ngControl = this._injector.get(NgControl);
-        } catch (e) { }
+        this.ngControl = this._injector.get(NgControl);
     }
 
     /**
@@ -416,7 +410,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnDestroy() {
-        this.destroy$.complete();
         this.selection.clear(this.id);
 
         if (this._statusChanges$) {
