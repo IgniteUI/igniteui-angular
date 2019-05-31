@@ -1029,6 +1029,11 @@
         %circular-outer {
             stroke: --var($theme, 'expand-icon-color');
         }
+
+        > %circular-display {
+            width: rem(24);
+            height: rem(24);
+        }
     }
 
     %grid-cell-display {

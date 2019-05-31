@@ -1,7 +1,7 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 7.3.1
+## 7.3.3
 
 - `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
