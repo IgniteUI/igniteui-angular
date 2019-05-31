@@ -79,7 +79,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this._elementRef.nativeElement;
     }
 
-    private get _thumbPositionX() {
+    private get thumbPositionX() {
         const thumbBounderies = this.nativeElement.getBoundingClientRect();
         const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
         return thumbBounderies.left + thumbCenter;
@@ -141,7 +141,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostListener('focus')
     public onFocus() {
-        this.toggleThumbLabel();
+        this.isActive = true;
     }
 
     public showThumbLabel() {
@@ -158,7 +158,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         }
 
         this._isActiveLabel = true;
-        this.isActive = true;
     }
 
 
@@ -185,7 +184,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     }
 
     private calculateTrackUpdate(mouseX: number): number {
-        const scaleX = mouseX - this._thumbPositionX;
+        const scaleX = mouseX - this.thumbPositionX;
         const stepDistanceCenter = this.stepDistance / 2;
 
         // If the thumb scale range (slider update) is less thàn a half step,
@@ -201,12 +200,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private stepToProceed(scaleX, stepDist) {
         return Math.round(scaleX / stepDist) * this.step;
     }
-
-    private toggleThumbLabel() {
-        this.showThumbLabel();
-        this.hideThumbLabel();
-    }
-
 }
 @NgModule({
     declarations: [IgxSliderThumbComponent],

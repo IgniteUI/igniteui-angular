@@ -609,7 +609,7 @@ export class IgxSliderComponent implements
         if (!this.isRange) {
             this.upperValue = value as number;
         } else {
-            value = this.validateInputRange(value as IRangeSliderValue);
+            value = this.validateInitialValue(value as IRangeSliderValue);
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
         }
@@ -654,6 +654,11 @@ export class IgxSliderComponent implements
         }
 
         this.hideThumbLabels();
+    }
+
+    @HostListener('focus')
+    public onFocus() {
+        this.toggleThumbLabel();
     }
 
     /**
@@ -921,6 +926,7 @@ export class IgxSliderComponent implements
         }
 
         this.toggleThumb();
+        this.showThumbLabels();
 
         return value;
     }
@@ -1046,9 +1052,10 @@ export class IgxSliderComponent implements
             return;
         }
 
-        return this.thumbTo.isActive ?
-            this.thumbTo.showThumbLabel() :
+        this.thumbTo.showThumbLabel();
+        if (this.thumbFrom) {
             this.thumbFrom.showThumbLabel();
+        }
     }
 
     private hideThumbLabels() {
@@ -1056,9 +1063,15 @@ export class IgxSliderComponent implements
             return;
         }
 
-        return this.thumbTo.isActive ?
-            this.thumbTo.hideThumbLabel() :
+        this.thumbTo.hideThumbLabel();
+        if (this.thumbFrom) {
             this.thumbFrom.hideThumbLabel();
+        }
+    }
+
+    private toggleThumbLabel() {
+        this.showThumbLabels();
+        this.hideThumbLabels();
     }
 
     private closestTo(goal: number, positions: number[]): number {
@@ -1082,13 +1095,13 @@ export class IgxSliderComponent implements
                 trackLeftIndention = Math.round((1 / positionGap * fromPosition) * 100);
             }
 
-            this.track.nativeElement.style.transform = `scaleX(${positionGap.toFixed(2)}) translateX(${trackLeftIndention}%)`;
+            this.renderer.setStyle(this.track.nativeElement, 'transform', `scaleX(${positionGap}) translateX(${trackLeftIndention}%)`);
         } else {
-            this.track.nativeElement.style.transform = `scaleX(${toPosition})`;
+            this.renderer.setStyle(this.track.nativeElement, 'transform', `scaleX(${toPosition})`);
         }
     }
 
-    private validateInputRange(value: IRangeSliderValue) {
+    private validateInitialValue(value: IRangeSliderValue) {
         if (value.lower < this.lowerBound && value.upper < this.lowerBound) {
             value.upper = this.lowerBound;
             value.lower = this.lowerBound;
