@@ -1,14 +1,55 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { ISelectionNode } from '../core/grid-selection';
 
+
+export interface IStartNavigationCell {
+    rowStart: number;
+    colStart: number;
+    direction: NavigationDirection;
+}
+
+export enum NavigationDirection {
+    horizontal = 'horizontal',
+    vertical = 'vertical'
+}
+
+
 /** @hidden */
 @Injectable()
 export class IgxGridMRLNavigationService extends IgxGridNavigationService {
+
+    private startNavigationCell: IStartNavigationCell;
+
     public grid: IgxGridBaseComponent;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setStartNavigationCell(colStart: number, rowStart: number, dir: NavigationDirection) {
+        this.startNavigationCell = {
+            colStart: colStart,
+            rowStart: rowStart,
+            direction: dir
+        };
+    }
+
+    private applyNavigationCell(colStart: number, rowStart: number, navDirection: NavigationDirection) {
+        const oppositeDir = navDirection === NavigationDirection.vertical ?
+            NavigationDirection.horizontal : NavigationDirection.vertical;
+        if (this.startNavigationCell && this.startNavigationCell.direction !== navDirection) {
+            this.startNavigationCell.direction = oppositeDir;
+        } else {
+            this.setStartNavigationCell(colStart, rowStart, oppositeDir);
+        }
+
+        return navDirection === NavigationDirection.vertical ?
+            this.startNavigationCell.colStart : this.startNavigationCell.rowStart;
+    }
 
     public navigateUp(rowElement, selectedNode: ISelectionNode) {
         this.focusCellUpFromLayout(rowElement, selectedNode);
@@ -71,6 +112,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
         this._moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, 'next');
+        if (nextElementColumn) {
+            this.setStartNavigationCell(nextElementColumn.colStart, nextElementColumn.rowStart, null);
+        }
     }
 
     protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir) {
@@ -133,12 +177,17 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const prevElementColumn =
          this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex - 1 && !x.hidden);
          this._moveFocusToCell(currentRowEl, prevElementColumn, row, selectedNode, 'prev');
+        if (prevElementColumn) {
+            this.setStartNavigationCell(prevElementColumn.colStart, prevElementColumn.rowStart, null);
+        }
     }
 
     private focusCellUpFromLayout(rowElement, selectedNode: ISelectionNode) {
         const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
         const currentRowStart = selectedNode.layout ?  selectedNode.layout.rowStart : 1;
-        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
+        const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
+            currentRowStart,
+            NavigationDirection.vertical);
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         let movePrev;
@@ -183,7 +232,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
-        const currentColStart = selectedNode.layout ? selectedNode.layout.colStart : 1;
+        const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
+            selectedNode.layout ? selectedNode.layout.rowStart : 1,
+            NavigationDirection.vertical);
         let moveNext;
         // check if element down is from the same layout
         let nextElementColumn = columnLayout.children.find(c => c.rowStart === currentRowEnd &&
@@ -222,7 +273,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         let columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentColEnd = selectedNode.layout.colEnd || selectedNode.layout.colStart + 1;
-        const currentRowStart = selectedNode.layout.rowStart;
+        const currentRowStart = this.applyNavigationCell(selectedNode.layout.colStart,
+            selectedNode.layout.rowStart,
+            NavigationDirection.horizontal);
         const rowIndex = selectedNode.row;
         // check if next element is from the same layout
         let nextElementColumn = columnLayout.children.find(c => c.colStart === currentColEnd &&
@@ -256,7 +309,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const parentIndex = selectedNode.column;
         let columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentColStart = selectedNode.layout.colStart;
-        const currentRowStart = selectedNode.layout.rowStart;
+        const currentRowStart = this.applyNavigationCell(currentColStart,
+            selectedNode.layout.rowStart,
+            NavigationDirection.horizontal);
         const rowIndex = selectedNode.row;
 
         // check previous element is from the same layout
@@ -296,7 +351,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const lastLayout = layouts[layouts.length - 1];
         const lastLayoutChildren = lastLayout.children;
         const layoutSize =  lastLayout.getInitialChildColumnSizes(lastLayoutChildren).length;
-        const currentRowStart =  cellRowStart || this.grid.multiRowLayoutRowSize;
+        const currentRowStart = this.applyNavigationCell(
+            this.startNavigationCell ? this.startNavigationCell.colStart : 1,
+            cellRowStart || this.grid.multiRowLayoutRowSize,
+            NavigationDirection.horizontal);
         const nextElementColumn = lastLayout.children.find(c =>
             (c.colEnd === layoutSize + 1 || c.colStart + c.gridColumnSpan === layoutSize + 1) &&
             c.rowStart <= currentRowStart &&
@@ -327,7 +385,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public onKeydownHome(rowIndex, isSummary = false, cellRowStart = 1) {
         const firstLayout = this.grid.columns.filter(c => c.columnLayout && !c.hidden)[0];
         const lastLayoutChildren = firstLayout.children.toArray();
-        const currentRowStart =  cellRowStart;
+        const currentRowStart = this.applyNavigationCell(
+            this.startNavigationCell ? this.startNavigationCell.colStart : 1,
+            cellRowStart,
+            NavigationDirection.horizontal);
         const nextElementColumn = firstLayout.children.find(c =>
             c.colStart === 1 &&
             c.rowStart <= currentRowStart &&
@@ -479,5 +540,15 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             // cell is visible
             cellElem.focus({ preventScroll: true });
         }
+    }
+
+    public goToFirstCell() {
+        this.startNavigationCell = null;
+        super.goToFirstCell();
+    }
+
+    public goToLastCell() {
+        this.startNavigationCell = null;
+        super.goToLastCell();
     }
 }
