@@ -589,7 +589,7 @@ export class GridFunctions {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const conditionChips = GridFunctions.sortNativeElementsHorizontally(
             filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
-        return conditionChips[index];
+        conditionChips[index].click();
     }
 
     /**
@@ -696,9 +696,25 @@ export class GridFunctions {
         return excelMenu.querySelector('igx-excel-style-column-moving');
     }
 
-    public static getColumnCells(fix, columnKey) {        
+    public static getColumnCells(fix, columnKey) {
         const allCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
         return allCells.filter((cell) => cell.componentInstance.column.field === columnKey);
+    }
+
+    public static getFilterRowLeftArrowButton(fix) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        return filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-start'));
+    }
+
+    public static getFilterRowRightArrowButton(fix) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        return filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-end'));
+    }
+
+    public static geteFilterCell(fix, columnKey) {
+        const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnKey);
+        return headerGroup.query(By.css('igx-grid-filtering-cell'));
     }
 
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {

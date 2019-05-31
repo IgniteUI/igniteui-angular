@@ -3026,6 +3026,38 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
     }));
+
+    it('Verify filter cell chip is scrolled into view on click.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.width = '470px';
+        tick(100);
+        fix.detectChanges();
+
+        // Verify 'ReleaseDate' filter chip is not fully visible.
+        let chip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0].nativeElement;
+        let chipRect = chip.getBoundingClientRect();
+        let gridRect = grid.nativeElement.getBoundingClientRect();
+        expect(chipRect.right > gridRect.right).toBe(true,
+            'chip should not be fully visible and thus not within grid');
+
+        GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+        tick(100);
+        fix.detectChanges();
+
+        GridFunctions.closeFilterRow(fix);
+        tick(100);
+        fix.detectChanges();
+
+        // Verify 'ReleaseDate' filter chip is fully visible.
+        chip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0].nativeElement;
+        chipRect = chip.getBoundingClientRect();
+        gridRect = grid.nativeElement.getBoundingClientRect();
+        expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right).toBe(true,
+            'chip should be fully visible and within grid');
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
