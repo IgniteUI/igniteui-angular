@@ -14,6 +14,7 @@ import { IgxStringFilteringOperand,
     IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
@@ -619,6 +620,27 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
     }));
 
+    it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
+        const expression1 = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+        const expression11 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+
+        // Verify results after filtering.
+        expression1.filteringOperands.push(expression11);
+        grid.filter('ProductName', null, expression1);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for Angular');
+
+        // Verify that passing null for expressionTree with a new searchVal will keep the existing expressionTree.
+        grid.filter('ProductName', 'ignite', null);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for Angular');
+    }));
 });
 
 const expectedResults = [];
