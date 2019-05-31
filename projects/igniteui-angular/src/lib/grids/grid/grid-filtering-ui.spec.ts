@@ -3929,6 +3929,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ 'Select All', '20', '254' ],
             [ true, true, true ]);
     }));
+
+    it('Should display the ESF based on the filterIcon within the grid', async() => {
+        // Test prerequisites
+        grid.width = '800px';
+        fix.detectChanges();
+        for (const column of grid.columns) {
+            column.width = '300px';
+        }
+        grid.cdr.detectChanges();
+        await wait(16);
+
+        // Scroll a bit to the right, so the ProductName column is not fully visible.
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+        await wait(100);
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Verify that the left, top and right borders of the ESF are within the grid.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const gridRect = gridNativeElement.getBoundingClientRect();
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        const excelMenuRect = excelMenu.getBoundingClientRect();
+        expect(excelMenuRect.left >= gridRect.left).toBe(true, 'ESF spans outside the grid on the left');
+        expect(excelMenuRect.top >= gridRect.top).toBe(true, 'ESF spans outside the grid on the top');
+        expect(excelMenuRect.right <= gridRect.right).toBe(true, 'ESF spans outside the grid on the right');
+    });
 });
 
 const expectedResults = [];
