@@ -3058,6 +3058,67 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right).toBe(true,
             'chip should be fully visible and within grid');
     }));
+
+    it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.width = '700px';
+        await wait(100);
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add second chip.
+        GridFunctions.typeValueInFilterRowInput('e', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add third chip.
+        GridFunctions.typeValueInFilterRowInput('i', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        verifyMultipleChipsVisibility(fix, [false, false, true]);
+
+        // Click left arrow 2 times.
+        const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+        leftArrowButton.click();
+        await wait(100);
+        leftArrowButton.click();
+        await wait(100);
+        verifyMultipleChipsVisibility(fix, [false, true, false]);
+
+        // Click left arrow 2 times.
+        leftArrowButton.click();
+        await wait(100);
+        leftArrowButton.click();
+        await wait(100);
+        verifyMultipleChipsVisibility(fix, [true, false, false]);
+
+        // Click right arrow 2 times.
+        const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
+        rightArrowButton.click();
+        await wait(100);
+        rightArrowButton.click();
+        await wait(100);
+        verifyMultipleChipsVisibility(fix, [false, true, false]);
+
+        // Click right arrow 2 times.
+        rightArrowButton.click();
+        await wait(100);
+        rightArrowButton.click();
+        await wait(100);
+        verifyMultipleChipsVisibility(fix, [false, false, true]);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
@@ -4385,4 +4446,30 @@ function toggleExcelStyleFilteringItems(fix, grid, shouldApply: boolean, ...item
         tick();
         fix.detectChanges();
     }
+}
+
+/**
+ * Verfiy multiple condition chips on their respective indices (asc order left to right)
+ * are whether fully visible or not.
+*/
+function verifyMultipleChipsVisibility(fix, expectedVisibilities: boolean[]) {
+    for (let index = 0; index < expectedVisibilities.length; index++) {
+        verifyChipVisibility(fix, index, expectedVisibilities[index]);
+    }
+}
+
+/**
+ * Verfiy that the condition chip on the respective index (asc order left to right)
+ * is whether fully visible or not.
+*/
+function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean) {
+    const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+    const visibleChipArea =  filteringRow.query(By.css('.igx-grid__filtering-row-main'));
+    const visibleChipAreaRect = visibleChipArea.nativeElement.getBoundingClientRect();
+
+    const chip = GridFunctions.getFilterConditionChip(fix, index);
+    const chipRect = chip.getBoundingClientRect();
+
+    expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
+        .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
 }
