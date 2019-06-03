@@ -14,7 +14,6 @@ import { DatePipe, formatDate } from '@angular/common';
 
 export class DatePickerSampleComponent {
     date = new Date('10/3/2018');
-    actionBtnCss = "action-buttons";
 
     public formatOptions = {
         day: 'numeric',

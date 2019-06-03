@@ -21,7 +21,4 @@ export class IgxDatePickerTemplateDirective {
 })
 export class IgxDatePickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
-
-    @Input()
-    public cssClasses = '';
 }
