@@ -3119,6 +3119,136 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         await wait(300);
         verifyMultipleChipsVisibility(fix, [false, false, true]);
     }));
+
+    it('Should navigate from left arrow button to first condition chip Tab.', (async() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.width = '700px';
+        await wait(100);
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add second chip.
+        GridFunctions.typeValueInFilterRowInput('e', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add third chip.
+        GridFunctions.typeValueInFilterRowInput('i', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        // Verify first chip is not in view.
+        verifyChipVisibility(fix, 0, false);
+
+        const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+        leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await wait(300);
+
+        // Verify first chip is in view.
+        verifyChipVisibility(fix, 0, true);
+    }));
+
+
+    it('Should toggle the selection of a condition chip when using \'Enter\' key.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        tick(100);
+        GridFunctions.submitFilterRowInput(fix);
+        tick(100);
+
+        // Verify chip is not selected.
+        let chip = GridFunctions.getFilterConditionChip(fix, 0);
+        let chipDiv = chip.querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
+
+        chip.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        tick(100);
+        fix.detectChanges();
+
+        // Verify chip is selected.
+        chip = GridFunctions.getFilterConditionChip(fix, 0);
+        chipDiv = chip.querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+
+        chip.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        tick(100);
+        fix.detectChanges();
+
+        // Verify chip is not selected.
+        chip = GridFunctions.getFilterConditionChip(fix, 0);
+        chipDiv = chip.querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
+    }));
+
+    it('Should commit the value in the input when pressing \'Enter\' on commit icon in input.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Type 'ang' in the filter row input.
+        GridFunctions.typeValueInFilterRowInput('ang', fix);
+
+        // Verify chip is selected (in edit mode).
+        let chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+
+        // Press 'Enter' on the commit icon.
+        const inputCommitIcon = GridFunctions.getFilterRowInputCommitIcon(fix);
+        inputCommitIcon.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        tick(200);
+        fix.detectChanges();
+
+        // Verify chip is not selected (it is committed).
+        chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
+    }));
+
+    it('Should clear the value in the input when pressing \'Enter\' on clear icon in input.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Type 'ang' in the filter row input.
+        GridFunctions.typeValueInFilterRowInput('ang', fix);
+
+        // Verify chip is selected (in edit mode).
+        const chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+
+        // Press 'Enter' on the clear icon.
+        const inputClearIcon = GridFunctions.getFilterRowInputClearIcon(fix);
+        inputClearIcon.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        tick(200);
+        fix.detectChanges();
+
+        // Verify there are no chips since we cleared the input.
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const conditionChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+        expect(conditionChips.length).toBe(0);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
