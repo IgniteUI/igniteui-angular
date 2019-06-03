@@ -8,10 +8,12 @@ import {
     Output,
     EventEmitter,
     OnInit,
-    OnDestroy} from '@angular/core';
+    OnDestroy,
+    TemplateRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective } from '../slider.component';
 
 @Component({
     selector: 'igx-thumb',
@@ -48,6 +50,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @Input()
     public fromHandler: boolean;
+
+    @Input()
+    public templateRef: TemplateRef<any>;
+
+    @Input()
+    public context: any;
 
     @Output()
     public onThumbValueChange = new EventEmitter<number>();

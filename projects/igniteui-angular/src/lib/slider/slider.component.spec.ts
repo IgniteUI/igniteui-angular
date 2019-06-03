@@ -8,7 +8,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 declare var Simulator: any;
 
-fdescribe('IgxSlider', () => {
+describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

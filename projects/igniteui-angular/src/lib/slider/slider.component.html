@@ -19,6 +19,8 @@
             [stepDistance]="stepDistance"
             [step]="step"
             [fromHandler]="true"
+            [templateRef]="thumbFromTemplateRef"
+            [context]="context"
             [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
         <igx-thumb
             #thumbTo
@@ -28,13 +30,8 @@
             [onPan]="onPan"
             [stepDistance]="stepDistance"
             [step]="step"
+            [templateRef]="thumbToTemplateRef"
+            [context]="context"
             [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
     </div>
 </div>
-<!--
-<ng-template #thumbFromDefaultTemplate>
-    {{ lowerLabel }}
-</ng-template>
-<ng-template #thumbToDefaultTemplate>
-    {{ upperLabel }}
-</ng-template> -->

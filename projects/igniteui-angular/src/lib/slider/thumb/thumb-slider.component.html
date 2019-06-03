@@ -1,10 +1,9 @@
 <span class="label">
-    <!-- <ng-container *ngTemplateOutlet="thumbFromTemplateRef ? thumbFromTemplateRef : thumbFromDefaultTemplate; context: context"></ng-container> -->
-    {{value}}
+    <ng-container *ngTemplateOutlet="templateRef ? templateRef : thumbFromDefaultTemplate; context: context"></ng-container>
 </span>
 <span class="dot"></span>
 
 
-<!-- <ng-template #thumbFromDefaultTemplate>
-    {{ upperLabel }}
-</ng-template> -->
+<ng-template #thumbFromDefaultTemplate>
+    {{ value }}
+</ng-template>
