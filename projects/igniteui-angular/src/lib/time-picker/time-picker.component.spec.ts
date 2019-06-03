@@ -1523,7 +1523,7 @@ describe('IgxTimePicker', () => {
             tick();
             fixture.detectChanges();
 
-            const buttons = document.getElementsByClassName('igx-time-picker__buttons')[0];
+            const buttons = document.getElementsByClassName('test')[0];
             expect(buttons.children.length).toEqual(1);
 
             const customBtn = buttons.children[0] as HTMLElement;
@@ -1707,9 +1707,11 @@ template: `
             </igx-suffix>
         </igx-input-group>
     </ng-template>
-    <igx-time-picker-actions>
-        <button igxButton="flat" (click)="select(picker)">SELECT</button>
-    </igx-time-picker-actions>
+    <ng-template igxTimePickerActions>
+        <div class="test">
+            <button igxButton="flat" (click)="select(picker)">SELECT</button>
+        </div>
+    </ng-template>
 </igx-time-picker>
     `
 })

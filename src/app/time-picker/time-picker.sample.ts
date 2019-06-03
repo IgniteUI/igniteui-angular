@@ -10,8 +10,6 @@ export class TimePickerSampleComponent implements AfterViewInit {
     max = '19:00';
     min = '09:00';
 
-    actionBtnCss = 'action-buttons';
-
     itemsDelta = { hours: 1, minutes: 5 };
     format = 'hh:mm tt';
     isSpinLoop = true;
