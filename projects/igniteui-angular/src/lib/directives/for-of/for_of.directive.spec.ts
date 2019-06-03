@@ -6,7 +6,6 @@ import {
     ComponentFactoryResolver,
     Directive,
     Injectable,
-    IterableChanges,
     IterableDiffers,
     NgZone,
     OnInit,
@@ -17,7 +16,7 @@ import {
     ViewContainerRef,
     DebugElement
 } from '@angular/core';
-import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
@@ -1251,9 +1250,10 @@ export class VerticalVirtualComponent {
     ];
     public data = [];
 
-    @ViewChild('container', { static: true })public container;
+    @ViewChild('container', { static: true })
+    public container;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public scrollTop(newScrollTop) {
@@ -1345,7 +1345,7 @@ export class VirtualComponent {
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
@@ -1410,7 +1410,7 @@ export class VirtualVariableSizeComponent {
     @ViewChild('container', { static: true })
     public container;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public generateData(count) {
@@ -1493,7 +1493,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     public height = '500px';
     public data;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChild('container', { read: ViewContainerRef, static: true })
