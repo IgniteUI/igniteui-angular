@@ -12,6 +12,21 @@ In order to turn them off, you need to pass an argument and set it to `false`
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
+- `igxTimePicker` changes
+    - `onOpen` event is renamed to `onOpened`.
+    - `onClose` event is renamed to `onClosed`.
+    - `onClosing` event is added.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxTimePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+
+- `igxDatePicker` changes
+    - `onOpen` event is renamed to `onOpened`.
+    - `onClose` event is renamed to `onClosed`.
+    - `onClosing` event is added.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
+
+
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
