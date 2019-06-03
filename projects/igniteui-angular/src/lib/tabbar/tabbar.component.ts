@@ -168,7 +168,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      *@hidden
      */
     public get hasContentTabs(): boolean {
-        return (this.contentTabs && this.contentTabs.toArray().length > 0);
+        return (this.contentTabs && this.contentTabs.length > 0);
     }
 
     /**
@@ -583,13 +583,9 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     public get index(): number {
-        if (this._tabBar && this._tabBar.hasContentTabs) {
-            return this._tabBar.contentTabs.toArray().indexOf(this);
-        }
-        if (this._tabBar && this._tabBar.tabs) {
+        if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray().indexOf(this);
         }
-        return 0;
     }
 
     /**@hidden*/

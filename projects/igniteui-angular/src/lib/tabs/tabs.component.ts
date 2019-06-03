@@ -188,7 +188,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      *@hidden
      */
     public get hasContentTabs(): boolean {
-        return (this.contentTabs && this.contentTabs.toArray().length > 0);
+        return (this.contentTabs && this.contentTabs.length > 0);
     }
 
     /**
@@ -207,7 +207,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public offset = 0;
 
     private _groupChanges$: Subscription;
-    private _selectedIndex = -1;
+    private _selectedIndex = 0;
 
     /**
      * @hidden
@@ -311,6 +311,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
+        if (this.hasContentTabs) {
+            // in content tabs mode there there is not first tab selected by default
+            this._selectedIndex = -1;
+        }
+
         requestAnimationFrame(() => {
             this.setSelectedGroup();
         });

@@ -266,9 +266,6 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      * @hidden
      */
     public get context(): any {
-        if (this.relatedGroup) {
-            return this.relatedGroup;
-        }
-        return this;
+        return this.relatedGroup ? this.relatedGroup : this;
     }
 }

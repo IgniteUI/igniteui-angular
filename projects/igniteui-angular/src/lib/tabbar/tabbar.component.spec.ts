@@ -199,26 +199,28 @@ describe('TabBar', () => {
         tick();
         expect(location.path()).toBe('/');
 
+        const theTabs = bottomNav.contentTabs.toArray();
+
         fixture.ngZone.run(() => { router.navigate(['/view3']); });
         tick();
         expect(location.path()).toBe('/view3');
         fixture.detectChanges();
         expect(bottomNav.selectedIndex).toBe(2);
-        expect(bottomNav.contentTabs.toArray()[2].isSelected).toBe(true);
+        expect(theTabs[2].isSelected).toBe(true);
 
         fixture.ngZone.run(() => { router.navigate(['/view2']); });
         tick();
         expect(location.path()).toBe('/view2');
         fixture.detectChanges();
         expect(bottomNav.selectedIndex).toBe(1);
-        expect(bottomNav.contentTabs.toArray()[1].isSelected).toBe(true);
+        expect(theTabs[1].isSelected).toBe(true);
 
         fixture.ngZone.run(() => { router.navigate(['/view1']); });
         tick();
         expect(location.path()).toBe('/view1');
         fixture.detectChanges();
         expect(bottomNav.selectedIndex).toBe(0);
-        expect(bottomNav.contentTabs.toArray()[0].isSelected).toBe(true);
+        expect(theTabs[0].isSelected).toBe(true);
     }));
 });
 
