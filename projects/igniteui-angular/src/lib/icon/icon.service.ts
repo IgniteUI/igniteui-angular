@@ -1,6 +1,5 @@
-import { Injectable, SecurityContext, Inject } from '@angular/core';
+import { Injectable, SecurityContext, Inject, NgZone, OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
 /**
@@ -19,13 +18,18 @@ import { DOCUMENT } from '@angular/common';
 @Injectable({
     providedIn: 'root'
 })
-export class IgxIconService {
+
+export class IgxIconService implements OnDestroy {
     private _fontSet = 'material-icons';
     private _fontSetAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
+    private _httpRequest: XMLHttpRequest;
+    private _loadListener = null;
 
-    constructor (private _sanitizer: DomSanitizer, private _httpClient: HttpClient, @Inject(DOCUMENT) private _document: any) { }
+    constructor(private _sanitizer: DomSanitizer,
+        private zone: NgZone,
+        @Inject(DOCUMENT) private _document: any) { }
 
     /**
      *  Returns the default font set.
@@ -108,7 +112,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Returns wheather a given SVG image is present in the cache.
+     *  Returns whether a given SVG image is present in the cache.
      *```typescript
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
@@ -129,17 +133,39 @@ export class IgxIconService {
     }
 
     /**
+   * @hidden
+   */
+    public ngOnDestroy(): void {
+        this.zone.runOutsideAngular(() => {
+            this._httpRequest.removeEventListener('load', this._loadListener);
+        });
+    }
+
+    /**
      * @hidden
      */
     private fetchSvg(iconName: string, url: string, fontSet: string = '') {
-        const request = this._httpClient.get(url, { responseType: 'text' });
-        const subscription = request.subscribe((value: string) => {
-            this.cacheSvgIcon(iconName, value, fontSet);
-        }, (error) => {
-            throw new Error(`Could not fetch SVG from url: ${url}; error: ${error.message}`);
-        }, () => {
-            subscription.unsubscribe();
+        this._httpRequest = new XMLHttpRequest();
+        const args = { iconName, url, fontSet };
+        this.zone.runOutsideAngular(() => {
+            this._loadListener = this.onLoad.bind(this, args);
+            this._httpRequest.addEventListener('load', this._loadListener);
         });
+
+        this._httpRequest.open('GET', url, true);
+        this._httpRequest.responseType = 'text';
+        this._httpRequest.send();
+    }
+
+    /**
+    * @hidden
+    */
+    private onLoad(args: any, event: ProgressEvent) {
+        if ((event.target as XMLHttpRequest).status === 200) {
+            this.cacheSvgIcon(args.iconName, (event.target as XMLHttpRequest).responseText, args.fontSet);
+        } else {
+            throw new Error(`Could not fetch SVG from url: ${args.url}; error: ${(event.target as XMLHttpRequest).status}`);
+        }
     }
 
     /**
