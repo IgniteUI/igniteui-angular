@@ -109,6 +109,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/virtual-dropdown',
+            icon: 'horizontal_split',
+            name: 'DropDown - Virtual'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -132,6 +137,16 @@ export class AppComponent implements OnInit {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
+        },
+        {
+            link: '/gridMRL',
+            icon: 'view_column',
+            name: 'Grid MRL'
+        },
+        {
+            link: '/gridMRLConfig',
+            icon: 'view_column',
+            name: 'Grid MRL Config'
         },
         {
             link: '/gridFilterTemplate',
@@ -187,6 +202,11 @@ export class AppComponent implements OnInit {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
+        },
+        {
+            link: '/gridRowDrag',
+            icon: 'view_column',
+            name: 'Grid Row Drag'
         },
         {
             link: '/gridSummary',
@@ -309,6 +329,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridLoadOnDemand',
+            icon: 'view_column',
+            name: 'Tree Grid Load On Demand'
         }
     ];
 

@@ -22,7 +22,7 @@ export enum RestrictDrag {
     NONE
 }
 
-export class IgxDragCustomEventDetails {
+export interface IgxDragCustomEventDetails {
     startX: number;
     startY: number;
     pageX: number;
@@ -31,7 +31,7 @@ export class IgxDragCustomEventDetails {
     originalEvent: any;
 }
 
-export class IgxDropEnterEventArgs {
+export interface IgxDropEnterEventArgs {
         /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -69,7 +69,7 @@ export class IgxDropEnterEventArgs {
     offsetY: number;
 }
 
-export class IgxDropLeaveEventArgs {
+export interface IgxDropLeaveEventArgs {
     /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -107,7 +107,7 @@ export class IgxDropLeaveEventArgs {
     offsetY: number;
 }
 
-export class IgxDropEventArgs {
+export interface IgxDropEventArgs {
     /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -117,6 +117,8 @@ export class IgxDropEventArgs {
     owner: IgxDropDirective;
     /** The igxDrag directive instanced on an element that entered the area of the igxDrop element */
     drag: IgxDragDirective;
+    /** The data contained for the draggable element in igxDrag directive. */
+    dragData: any;
     /**
      * The current position of the pointer on X axis relative to the container that initializes the igxDrop.
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
@@ -340,8 +342,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     public set left(val: number) {
         requestAnimationFrame(() => {
-            if (this._dragGhost) {
-                this._dragGhost.style.left = val + 'px';
+            if (this.dragGhost) {
+                this.dragGhost.style.left = val + 'px';
             }
         });
     }
@@ -350,7 +352,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @hidden
      */
     public get left() {
-        return parseInt(this._dragGhost.style.left, 10);
+        return parseInt(this.dragGhost.style.left, 10);
     }
 
     /**
@@ -358,8 +360,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     public set top(val: number) {
         requestAnimationFrame(() => {
-            if (this._dragGhost) {
-                this._dragGhost.style.top = val + 'px';
+            if (this.dragGhost) {
+                this.dragGhost.style.top = val + 'px';
             }
         });
     }
@@ -368,7 +370,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @hidden
      */
     public get top() {
-        return parseInt(this._dragGhost.style.top, 10);
+        return parseInt(this.dragGhost.style.top, 10);
     }
 
     /**
@@ -416,7 +418,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    protected _dragGhost;
+    protected dragGhost;
     /**
      * @hidden
      */
@@ -481,7 +483,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             } else if (this.touchEventsEnabled) {
-                // We don't have pointer events and touch events. Use then mouse events.
                 fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 
@@ -515,9 +516,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._destroy.next(true);
         this._destroy.complete();
 
-        if (this._dragGhost && this._removeOnDestroy) {
-            this._dragGhost.parentNode.removeChild(this._dragGhost);
-            this._dragGhost = null;
+        if (this.dragGhost && this._removeOnDestroy) {
+            this.dragGhost.parentNode.removeChild(this.dragGhost);
+            this.dragGhost = null;
         }
     }
 
@@ -613,7 +614,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     /**
      * @hidden
-     * Perform drag end logic when releasing the dragGhost and dispatchind drop event if igxDrop is under the pointer.
+     * Perform drag end logic when releasing the dragGhost and dispatching drop event if igxDrop is under the pointer.
      * This method is bound at first at the base element.
      * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
      * @param event PointerUp event captured
@@ -641,7 +642,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                     (this.left !== Math.floor(this._dragStartX) || this.top !== Math.floor(this._dragStartY))) {
                 // If the start positions are the same as the current the transition will not execute.
                 // return the ghost to start position before removing it. See onTransitionEnd.
-                this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
+                this.dragGhost.style.transitionDuration = this.defaultReturnDuration;
                 this.left = this._dragStartX;
                 this.top = this._dragStartY;
             } else {
@@ -667,38 +668,38 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @param node The Node object to be cloned.
      */
     protected createDragGhost(event, node: any = null) {
-        this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
-        this._dragGhost.style.transitionDuration = '0.0s';
-        this._dragGhost.style.position = 'absolute';
+        this.dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
+        this.dragGhost.style.transitionDuration = '0.0s';
+        this.dragGhost.style.position = 'absolute';
         const hostLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
         const hostTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
-        this._dragGhost.style.top = this._dragStartY - hostTop + 'px';
-        this._dragGhost.style.left = this._dragStartX - hostLeft + 'px';
+        this.dragGhost.style.top = this._dragStartY - hostTop + 'px';
+        this.dragGhost.style.left = this._dragStartX - hostLeft + 'px';
 
         if (this.ghostImageClass) {
-            this.renderer.addClass(this._dragGhost, this.ghostImageClass);
+            this.renderer.addClass(this.dragGhost, this.ghostImageClass);
         }
 
         if (this.dragGhostHost) {
-            this.dragGhostHost.appendChild(this._dragGhost);
+            this.dragGhostHost.appendChild(this.dragGhost);
         } else {
-            document.body.appendChild(this._dragGhost);
+            document.body.appendChild(this.dragGhost);
         }
 
         if (this.pointerEventsEnabled) {
             // The dragGhost takes control for moving and dragging after it has been shown.
-            this._dragGhost.setPointerCapture(this._pointerDownId);
-            this._dragGhost.addEventListener('pointermove', (args) => {
+            this.dragGhost.setPointerCapture(this._pointerDownId);
+            this.dragGhost.addEventListener('pointermove', (args) => {
                 this.onPointerMove(args);
             });
-            this._dragGhost.addEventListener('pointerup', (args) => {
+            this.dragGhost.addEventListener('pointerup', (args) => {
                 this.onPointerUp(args);
             });
         }
 
         if (this.animateOnRelease) {
             // Transition animation when the dragGhost is released and it returns to it's original position.
-            this._dragGhost.addEventListener('transitionend', (args) => {
+            this.dragGhost.addEventListener('transitionend', (args) => {
                 this.onTransitionEnd(args);
             });
         }
@@ -726,7 +727,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
         for (let i = 0; i < elementsFromPoint.length; i++) {
-            if (elementsFromPoint[i].getAttribute('droppable') === 'true' && elementsFromPoint[i] !== this._dragGhost) {
+            if (elementsFromPoint[i].getAttribute('droppable') === 'true' && elementsFromPoint[i] !== this.dragGhost) {
                 topDropArea = elementsFromPoint[i];
                 break;
             }
@@ -775,7 +776,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * Update relative positions
      */
     public updateDragRelativePos() {
-        if (!this._dragGhost) {
+        if (!this.dragGhost) {
             return;
         }
 
@@ -805,7 +806,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * ```
      */
     public dropFinished() {
-        if (this.animateOnRelease && this._dragGhost) {
+        if (this.animateOnRelease && this.dragGhost) {
             this.updateDragRelativePos();
 
             // Return the dragged element to the start. See onTransitionEnd next.
@@ -815,7 +816,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             const newPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
             const newPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
 
-            this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
+            this.dragGhost.style.transitionDuration = this.defaultReturnDuration;
             this.left = newPosX - marginLeft;
             this.top = newPosY - marginTop;
         }
@@ -829,9 +830,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             if (this.hideBaseOnDrag) {
                 this.visible = true;
             }
-
-            this._dragGhost.parentNode.removeChild(this._dragGhost);
-            this._dragGhost = null;
+            this.dragGhost.parentNode.removeChild(this.dragGhost);
+            this.dragGhost = null;
 
             this.element.nativeElement.style.transitionDuration = '0.0s';
             this._dragStarted = false;
@@ -1046,6 +1046,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             owner: this,
             originalEvent: event.detail.originalEvent,
             drag: event.detail.owner,
+            dragData: event.detail.owner.data,
             offsetX: offsetX,
             offsetY: offsetY,
             cancel: false

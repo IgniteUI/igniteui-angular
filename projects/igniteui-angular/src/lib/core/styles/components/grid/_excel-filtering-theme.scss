@@ -13,6 +13,7 @@
 @mixin _excel-filtering($theme, $palette) {
     %grid-excel-filter {
         height: rem(15px);
+        display: block;
     }
 
     %grid-excel-icon {
@@ -53,8 +54,19 @@
     }
 
     %grid-excel-menu__header {
+        display: flex;
+        align-items: center;
         padding: rem(16px);
         color: igx-color($palette, 'grays', 700);
+    }
+
+    %grid-excel-menu__header-actions {
+        display: flex;
+        margin-left: auto;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(4px);
+        }
     }
 
     %grid-excel-menu__footer {
@@ -88,6 +100,29 @@
         }
     }
 
+    %grid-excel-action--compact {
+        display: flex;
+        align-items: center;
+
+        header {
+            color: igx-color($palette, 'grays', 700);
+            margin-right: auto;
+        }
+    }
+
+    %grid-excel-sort--compact {
+        @extend %grid-excel-action--compact;
+        padding: rem(4px) rem(16px);
+
+        igx-buttongroup {
+            width: rem(208px);
+
+            [igxButton] > igx-icon + span {
+                margin-left: rem(8px);
+            }
+        }
+    }
+
     %grid-excel-actions {
         padding: rem(8px) rem(16px);
     }
@@ -101,16 +136,17 @@
         }
     }
 
+    %grid-excel-move--compact {
+        @extend %grid-excel-action--compact;
+    }
+
     %grid-excel-move__buttons {
         display: flex;
         justify-content: space-between;
 
         [igxButton] {
             flex-grow: 1;
-
-            + [igxButton] {
-                margin-left: rem(8px);
-            }
+            width: rem(104px);
         }
 
         igx-icon {
@@ -212,6 +248,40 @@
             height: rem(18px);
             font-size: rem(18px);
             margin-right: rem(8px);
+        }
+    }
+}
+
+/// Adds typography styles for the igx-input-group component.
+/// Uses the 'body-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @access private
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin _excel-filtering-typography($type-scale, $categories: (
+    header-comfortable: 'overline',
+    header-compact: 'subtitle-1')
+) {
+    $header-comfortable: map-get($categories, 'header-comfortable');
+    $header-compact: map-get($categories, 'header-compact');
+
+    @include igx-scope('.igx-typography') {
+        %grid-excel-sort,
+        %grid-excel-move {
+            header {
+                @include igx-type-style($type-scale, $header-comfortable);
+            }
+        }
+
+        %grid-excel-sort--compact,
+        %grid-excel-move--compact {
+            header {
+                @include igx-type-style($type-scale, $header-compact) {
+                    text-transform: capitalize;
+                }
+            }
         }
     }
 }

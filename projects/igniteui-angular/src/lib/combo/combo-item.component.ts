@@ -95,7 +95,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             }
             return;
         }
-        this.dropDown.navigateItem(this.itemIndex);
+        this.dropDown.navigateItem(this.index);
         this.comboAPI.set_selected_item(this.itemID, event);
     }
 

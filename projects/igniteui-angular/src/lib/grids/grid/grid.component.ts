@@ -4,7 +4,7 @@ import {
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable, FilterMode } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -29,6 +29,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
 
@@ -124,6 +125,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     public set data(value: any[]) {
         this._data = value;
+        if (this._ngAfterViewInitPassed &&
+            this.calcHeight === null &&
+            this.isPercentHeight) {
+            /* the body should be auto-sized in this case before igxFor renders the whole data */
+            const bodyHeight = this.defaultTargetBodyHeight;
+            this.calcHeight = bodyHeight > 0 ? bodyHeight : null;
+        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -302,7 +310,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public groupsExpanded = true;
 
     /**
-     * A hierarchical representation of the visible group by records.
+     * A hierarchical representation of the group by records.
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
@@ -414,6 +422,27 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -687,7 +716,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 defaultExpanded: this.groupsExpanded
             };
 
-            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
         } else {
             return null;
         }
@@ -766,20 +795,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public getPinnedWidth(takeHidden = false) {
-        let sum = super.getPinnedWidth(takeHidden);
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
 
-        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.offsetWidth;
+        if (this.groupingExpressions.length && this.headerGroupContainer) {
+            width += this.headerGroupContainer.nativeElement.offsetWidth;
         }
-        return sum;
+
+        return width;
     }
 
     /**
@@ -822,6 +849,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public ngAfterContentInit() {
+        if (this.allowFiltering && this.hasColumnLayouts) {
+            this.filterMode = FilterMode.excelStyleFilter;
+        }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }

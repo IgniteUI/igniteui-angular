@@ -7,7 +7,8 @@ import {
     AfterViewInit,
     TemplateRef,
     ViewChildren,
-    QueryList
+    QueryList,
+    ElementRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -32,6 +33,7 @@ import {
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -76,6 +78,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public overlayService: IgxOverlayService;
 
+    @Input()
+    public displayDensity: DisplayDensity;
+
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
     private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
 
@@ -90,6 +95,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @ViewChild('dateExpressionTemplate', { read: TemplateRef })
     protected dateExpressionTemplate: TemplateRef<any>;
+
+    @ViewChild('expressionsContainer')
+    protected expressionsContainer: ElementRef;
 
     constructor(private cdr: ChangeDetectorRef) {}
 
@@ -141,7 +149,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
-            element => element.expression.condition && (element.expression.searchVal || element.expression.condition.isUnary));
+            element => element.expression.condition &&
+            (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
             this.expressionsList[0].beforeOperator = null;
@@ -167,6 +176,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         this.expressionsList.push(exprUI);
 
         this.markChildrenForCheck();
+        this.scrollToBottom();
     }
 
     public onExpressionRemoved(event: ExpressionUI) {
@@ -251,5 +261,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         secondExprUI.beforeOperator = FilteringLogic.And;
 
         this.expressionsList.push(secondExprUI);
+    }
+
+    private scrollToBottom() {
+        requestAnimationFrame(() => {
+            this.expressionsContainer.nativeElement.scrollTop = this.expressionsContainer.nativeElement.scrollHeight;
+        });
     }
 }

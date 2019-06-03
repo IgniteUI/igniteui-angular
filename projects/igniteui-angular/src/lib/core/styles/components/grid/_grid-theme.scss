@@ -72,6 +72,8 @@
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
+/// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {color} $row-ghost-background [null] - The dragged row background color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -163,7 +165,9 @@
 
     $row-highlight: null,
     $grid-shadow: null,
-    $drag-shadow: null
+    $drag-shadow: null,
+    $row-ghost-background: null,
+    $row-drag-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -425,6 +429,8 @@
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
+        row-ghost-background: $row-ghost-background,
+        row-drag-color: $row-drag-color
     ));
 }
 
@@ -490,10 +496,14 @@
         compact: 0 rem(6px)
     );
 
+    $cell-padding-comfortable: rem(24px);
+    $cell-padding-cosy: rem(16px);
+    $cell-padding-compact: rem(12px);
+
     $grid-cell-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 $cell-padding-comfortable,
+        cosy: 0 $cell-padding-cosy,
+        compact: 0 $cell-padding-compact
     );
 
     $hierarchical-grid-indent: (
@@ -523,6 +533,7 @@
     );
 
     $indicator-icon-width: rem(24px);
+    $drag-icon-size: rem(24px);
     $grouping-padding-right: rem(12px);
 
     %grid-display {
@@ -593,6 +604,19 @@
     %grid-thead-container {
         grid-row: 3;
         display: flex;
+
+        %igx-grid__drag-indicator {
+            cursor: default;
+        }
+
+        %grid-row--mrl {
+            %igx-grid__hierarchical-expander--header,
+            %igx-grid__header-indentation,
+            %igx-grid__row-indentation,
+            %grid__cbx-selection {
+                border-bottom: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
+            }
+        }
     }
 
     %grid-thead--cosy {
@@ -661,6 +685,38 @@
     %grid-display-container-tr {
         width: 100%;
         overflow: visible;
+    }
+
+    %grid-mrl-block {
+        display: grid;
+        background: inherit;
+
+        %grid-thead-item {
+            display: flex;
+        }
+
+        %grid-cell-header {
+            align-items: center;
+            flex-grow: 1;
+            border-bottom: $grid-header-border;
+        }
+
+        %grid-cell-display {
+            border-right: 1px solid --var($theme, 'row-border-color');
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
+    }
+
+    %grid-row--mrl {
+        &%grid-row {
+            border-bottom-color: transparent;
+        }
+
+        %grid__cbx-selection,
+        %igx-grid__row-indentation,
+        %igx-grid__drag-indicator {
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
     }
 
     %grid-tbody {
@@ -746,6 +802,60 @@
             background: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
         }
+
+        &%igx-grid__tr--ghost {
+            background: --var($theme, 'row-ghost-background');
+        }
+    }
+
+    %igx-grid__drag-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: map-get($grid-cell-padding, 'comfortable');
+        padding-right: 0;
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
+        background: inherit;
+        z-index: 4;
+        cursor: move;
+
+        %igx-icon-display {
+            width: $drag-icon-size;
+            height: $drag-icon-size;
+            font-size: $drag-icon-size;
+        }
+    }
+
+    %igx-grid__drag-indicator--cosy{
+        padding: map-get($grid-cell-padding, 'cosy');
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-cosy});
+        padding-right: 0;
+    }
+
+    %igx-grid__drag-indicator--compact {
+        padding: map-get($grid-cell-padding, 'compact');
+        // Fix for IE 11
+        min-width: calc(#{$drag-icon-size} + #{$cell-padding-compact});
+        padding-right: 0;
+    }
+
+    %igx-grid__drag-indicator--header {
+        border-right: $grid-header-border;
+    }
+
+    %igx-grid__hierarchical-expander + %igx-grid__drag-indicator {
+        padding-left: 0;
+        min-width: $drag-icon-size;
+    }
+
+    %igx-grid__drag-indicator--off {
+        color: --var($theme, 'row-drag-color');
+    }
+
+    %igx-grid__tr--drag {
+        opacity: .5;
     }
 
     %grid-row--odd {
@@ -799,6 +909,10 @@
             background: --var($theme, 'edit-mode-color');
         }
 
+        &%grid-row {
+            border-bottom: 1px solid --var($theme, 'edit-mode-color');
+        }
+
         %igx-grid__td--editing {
             border: none;
 
@@ -809,6 +923,13 @@
             %form-group-border {
                 background: --var($theme, 'edit-mode-color') !important;
             }
+        }
+    }
+
+    %grid-row--edit-mrl {
+        &:first-of-type::after {
+            top: 0;
+            z-index: 5;
         }
     }
 
@@ -897,6 +1018,16 @@
 
         &:hover {
             color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
+    %igx-grid__tree-loading-indicator {
+        width: rem(24px, 16px);
+        height: rem(24px, 16px);
+        margin-right: rem(8px, 16px);
+
+        %circular-outer {
+            stroke: --var($theme, 'expand-icon-color');
         }
     }
 
@@ -1857,6 +1988,20 @@
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
         }
+
+        igx-suffix  {
+            igx-icon {
+                outline-style: none;
+
+                &:focus {
+                    color: igx-color($palette, 'secondary');
+                }
+
+                + igx-icon {
+                    margin-left: rem(4px);
+                }
+            }
+        }
     }
 
     %igx-grid__filtering-row-main {
@@ -1890,6 +2035,15 @@
         }
     }
 
+    %filtering-scroll-mask {
+        display: block;
+        position: absolute;
+        content: '';
+        top: -2px;
+        bottom: -2px;
+        width: 10px;
+    }
+
     %igx-grid__filtering-scroll-start {
         width: 24px;
         height: 24px;
@@ -1899,12 +2053,9 @@
         z-index: 1;
 
         &::after {
-            position: absolute;
-            content: '';
-            left: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to right, white, transparent);
+            @extend %filtering-scroll-mask;
+            left: calc(100% + 6px);
+            background: linear-gradient(to right, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 
@@ -1917,12 +2068,9 @@
         z-index: 1;
 
         &::before {
-            position: absolute;
-            content: '';
-            right: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to left, white, transparent);
+            @extend %filtering-scroll-mask;
+            right: calc(100% + 6px);
+            background: linear-gradient(to left, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 
@@ -2029,6 +2177,11 @@
         igx-icon {
             min-height: map-get($grid-header-height, 'compact');
         }
+    }
+
+    %igx-grid__hierarchical-expander--no-border,
+    %igx-grid__header-indentation--no-border {
+        border-right: 1px solid transparent;
     }
 
     %igx-grid__hierarchical-indent {

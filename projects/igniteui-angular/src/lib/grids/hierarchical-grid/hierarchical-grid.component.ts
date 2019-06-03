@@ -66,6 +66,7 @@ export interface HierarchicalStateRecord {
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
     implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
+
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -89,6 +90,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @Input()
     public set data(value: any[]) {
         this._data = value;
+        if (this.parent) {
+            this.calculateGridHeight();
+        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -456,22 +460,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxHierarchicalGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public getPinnedWidth(takeHidden = false) {
-        let width = super.getPinnedWidth(takeHidden);
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
+
         if (this.hasExpandableChildren) {
             width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
         }
+
         return width;
     }
 
-     private getDefaultExpanderWidth(): number {
+    private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 57;
@@ -557,6 +560,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             currGrid = currGrid.parent;
         }
         return currGrid;
+    }
+
+    /**
+     * @hidden
+    */
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - hierarchical grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
     }
 
     /**
@@ -666,6 +682,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected _calculateGridBodyHeight() {
+        if (!this.parent || !this.isPercentHeight) {
+            return super._calculateGridBodyHeight();
+        }
+        const bodyHeight = this.defaultTargetBodyHeight;
+        return bodyHeight > 0 ? bodyHeight : null;
     }
 
     private hg_verticalScrollHandler(event) {
