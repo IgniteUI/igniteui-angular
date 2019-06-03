@@ -764,6 +764,24 @@ export class GridFunctions {
         return conditionChips[index];
     }
 
+    public static getFilterRowInputCommitIcon(fix) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
+                                .find((icon: any) => icon.nativeElement.innerText === 'done');
+        return commitIcon;
+    }
+
+    public static getFilterRowInputClearIcon(fix) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
+        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
+                                .find((icon: any) => icon.nativeElement.innerText === 'clear');
+        return clearIcon;
+    }
+
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
         const input =
             customMenu.children[1].children[expressionIndex].children[2].querySelector('.igx-input-group__bundle-main').children[0];
