@@ -100,6 +100,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @HostListener('window:resize', ['$event'])
     public onResize(event) {
         if (this.isSelected) {
+            this._tabs.selectedIndicator.nativeElement.style.visibility = 'visible';
             this._tabs.selectedIndicator.nativeElement.style.width = `${this.nativeTabItem.nativeElement.offsetWidth}px`;
             this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${this.nativeTabItem.nativeElement.offsetLeft}px)`;
         }
@@ -235,6 +236,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     }
 
     private transformIndicatorAnimation(element: HTMLElement): void {
+        this._tabs.selectedIndicator.nativeElement.style.visibility = `visible`;
         this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
         this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
     }

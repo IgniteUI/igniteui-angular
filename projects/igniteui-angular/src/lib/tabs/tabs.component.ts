@@ -207,7 +207,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public offset = 0;
 
     private _groupChanges$: Subscription;
-    private _selectedIndex = 0;
+    private _selectedIndex = -1;
 
     /**
      * @hidden
@@ -331,13 +331,16 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     private setSelectedGroup(): void {
         requestAnimationFrame(() => {
-            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
-                // if nothing is selected - select the first tabs group
-                if (!this.hasContentTabs) {
-                    this.selectGroupByIndex(0);
+            if (this.hasContentTabs) {
+                if (this.selectedIndex < 0 || this.selectedIndex >= this.contentTabs.length) {
+                    this.selectedIndicator.nativeElement.style.visibility = 'hidden';
                 }
             } else {
-                this.selectGroupByIndex(this.selectedIndex);
+                if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
+                    this.selectGroupByIndex(0);
+                } else {
+                    this.selectGroupByIndex(this.selectedIndex);
+                }
             }
         });
     }
