@@ -202,9 +202,13 @@ export interface IGridDataBindable {
 export interface IRowDragEndEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    animation: boolean;
 }
 
-export interface IRowDragStartEventArgs extends IRowDragEndEventArgs, CancelableEventArgs { }
+export interface IRowDragStartEventArgs extends CancelableEventArgs {
+    owner: IgxDragDirective;
+    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+ }
 
 export enum GridSummaryPosition {
     top = 'top',
