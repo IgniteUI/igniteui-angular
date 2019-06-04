@@ -1691,7 +1691,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: false })
+    @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
@@ -1790,7 +1790,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: false })
+    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
 
     /**
