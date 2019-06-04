@@ -578,7 +578,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex, visibleColumnIndex): boolean {
+    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColumnIndex: number): boolean {
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
         const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
             .concat(this.grid.rowList.toArray()).find(r => r.index === targetRowIndex);
@@ -594,7 +594,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public performVerticalScrollToCell(rowIndex, visibleColIndex, cb?) {
+    public performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
         this.grid.verticalScrollContainer.scrollTo(rowIndex);
         this.grid.verticalScrollContainer.onChunkLoad
         .pipe(first()).subscribe(() => {
@@ -602,7 +602,7 @@ export class IgxGridNavigationService {
         });
     }
 
-    public performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false, cb?) {
+    public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: () => void) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         this.grid.nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
