@@ -4731,7 +4731,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return 0;
         }
 
-        this.endEdit(false);
+        const editModeCell = this.crudService.cell;
+        if (editModeCell) {
+            this.endEdit(false);
+        }
 
         if (!text) {
             this.clearSearch();
