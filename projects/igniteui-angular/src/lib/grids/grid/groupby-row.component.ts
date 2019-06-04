@@ -255,16 +255,15 @@ export class IgxGridGroupByRowComponent {
 
     private handleTabKey(shift, activeNode) {
         if (shift) {
-            const orderedColumns = this.grid.navigation.gridOrderedColumns;
-            const lastCol = orderedColumns[orderedColumns.length - 1];
-            activeNode.column = lastCol.columnLayoutChild ? lastCol.parent.visibleIndex : lastCol.visibleIndex;
-            this.grid.navigation.navigateUp(this.nativeElement, activeNode);
+            this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
         } else {
             if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
                 this.grid.navigation.onKeydownHome(0, true);
             } else {
-                activeNode.column = 0;
-                this.grid.navigation.navigateDown(this.nativeElement, activeNode);
+                const orderedColumns = this.grid.navigation.gridOrderedColumns;
+                const lastCol = orderedColumns[orderedColumns.length - 1];
+                activeNode.column = lastCol.columnLayoutChild ? lastCol.parent.visibleIndex : lastCol.visibleIndex;
+                this.grid.navigation.performTab(this.nativeElement, activeNode);
             }
         }
     }

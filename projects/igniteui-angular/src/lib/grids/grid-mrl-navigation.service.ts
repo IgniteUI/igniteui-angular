@@ -107,7 +107,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performTab(currentRowEl, selectedNode: ISelectionNode) {
-        const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
+        const visibleColumnIndex = selectedNode.layout ? selectedNode.layout.columnVisibleIndex : 0;
         const nextElementColumn = this.grid.columns.find(x => !x.columnGroup && x.visibleIndex === visibleColumnIndex + 1);
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
@@ -118,7 +118,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     protected _moveFocusToCell(currentRowEl, nextElementColumn, row, selectedNode, dir) {
-        if (nextElementColumn) {
+        if (nextElementColumn && row.cells) {
             let nextCell = row.cells.find(currCell => currCell.column === nextElementColumn);
             const isVisible = this.isColumnFullyVisible(nextElementColumn.visibleIndex);
             if (!nextCell || !isVisible) {
@@ -171,7 +171,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
-        const visibleColumnIndex = selectedNode.layout.columnVisibleIndex;
+        const visibleColumnIndex = selectedNode.layout ? selectedNode.layout.columnVisibleIndex : 0;
         const rowIndex = selectedNode.row;
         const row = this.grid.getRowByIndex(rowIndex);
         const prevElementColumn =
