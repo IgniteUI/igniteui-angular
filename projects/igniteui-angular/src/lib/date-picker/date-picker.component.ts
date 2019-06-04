@@ -15,7 +15,8 @@ import {
     ChangeDetectorRef,
     HostListener,
     NgModuleRef,
-    OnInit
+    OnInit,
+    AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -27,7 +28,7 @@ import {
     isDateInRanges
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '../input-group/index';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -137,7 +138,7 @@ export enum PredefinedFormatOptions {
         }
     `]
 })
-export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, OnDestroy {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -627,8 +628,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
-    @ViewChild('editableInputGroup', { read: ElementRef, static: false })
-    protected editableInputGroup: ElementRef;
+    @ViewChild(IgxInputGroupComponent, { static: false })
+    protected inputGroup: IgxInputGroupComponent;
 
     /*
      * @hidden
@@ -711,7 +712,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event: KeyboardEvent) {
-        this.openDialog(this.getEditElement());
+        this.openDialog(this.getInputGroupElement());
         event.preventDefault();
     }
 
@@ -747,6 +748,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public getEditElement() {
         const inputElement = this.editableInput || this.readonlyInput || this.input;
         return (inputElement) ? inputElement.nativeElement : null;
+    }
+
+    /** @hidden */
+    public getInputGroupElement() {
+        return this.inputGroup ? this.inputGroup.element.nativeElement : null;
     }
 
     /**
@@ -798,7 +804,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
         }
+    }
 
+    ngAfterViewInit() {
         if (this.mode === InteractionMode.DropDown && this.editableInput) {
             fromEvent(this.editableInput.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
@@ -874,7 +882,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Opens the date picker drop down or dialog.
-     * @param target HTMLElement - the target element to use for positioning the overlay container according to
+     * @param target HTMLElement - the target element to use for positioning the drop down container according to
      * ```html
      * <igx-date-picker [value]="date" mode="dropdown" #retemplated>
      *   <ng-template igxDatePickerTemplate let-openDialog="openDialog"
@@ -1004,7 +1012,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.openDialog(this.getEditElement());
+                    this.openDialog(this.getInputGroupElement());
                 } else {
                     event.preventDefault();
                     event.stopPropagation();

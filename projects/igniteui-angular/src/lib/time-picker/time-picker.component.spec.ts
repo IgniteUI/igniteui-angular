@@ -962,18 +962,6 @@ describe('IgxTimePicker', () => {
         expect(input.nativeElement.value).toBe('01:59 AM', 'MouseWheel Down on minutes failed');
     }));
 
-    describe('EditorProvider', () => {
-        it('Should return correct edit element', () => {
-            const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
-            fixture.detectChanges();
-
-            const instance = fixture.componentInstance.timePicker;
-            const editElement = fixture.debugElement.query(By.css('input[igxInput]')).nativeElement;
-
-            expect(instance.getEditElement()).toBe(editElement);
-        });
-    });
-
     describe('DropDown Mode', () => {
         configureTestSuite();
         let fixture;
