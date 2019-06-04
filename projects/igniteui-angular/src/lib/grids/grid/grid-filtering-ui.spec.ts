@@ -4665,6 +4665,170 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(excelMenuRect.top >= gridRect.top).toBe(true, 'ESF spans outside the grid on the top');
         expect(excelMenuRect.right <= gridRect.right).toBe(true, 'ESF spans outside the grid on the right');
     });
+
+    it('Should sort/unsort when clicking the sort ASC button.', async() => {
+        const column = grid.columns.find((c) => c.field === 'Downloads');
+        column.sortable = true;
+        fix.detectChanges();
+
+        // Verify data is not sorted initially.
+        let cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('254');
+        expect(cells[7].innerText).toBe('1,000');
+
+        // Click 'sort asc' button in ESF.
+        GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+        await wait(100);
+        fix.detectChanges();
+        GridFunctions.clickSortAscInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is sorted in ascending order.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('');
+        expect(cells[1].innerText).toBe('0');
+        expect(cells[7].innerText).toBe('1,000');
+
+        // Click 'sort asc' button in ESF.
+        GridFunctions.clickSortAscInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is not sorted.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('254');
+        expect(cells[7].innerText).toBe('1,000');
+    });
+
+    it('Should sort/unsort when clicking the sort DESC button.', async() => {
+        const column = grid.columns.find((c) => c.field === 'Downloads');
+        column.sortable = true;
+        fix.detectChanges();
+
+        // Verify data is not sorted initially.
+        let cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('254');
+        expect(cells[7].innerText).toBe('1,000');
+
+        // Click 'sort desc' button in ESF.
+        GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+        await wait(100);
+        fix.detectChanges();
+        GridFunctions.clickSortDescInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is sorted in descending order.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('1,000');
+        expect(cells[1].innerText).toBe('702');
+        expect(cells[7].innerText).toBe('');
+
+        // Click 'sort desc' button in ESF.
+        GridFunctions.clickSortDescInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is not sorted.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('254');
+        expect(cells[7].innerText).toBe('1,000');
+    });
+
+    it('Should (sort ASC)/(sort DESC) when clicking the respective sort button.', async() => {
+        const column = grid.columns.find((c) => c.field === 'Downloads');
+        column.sortable = true;
+        fix.detectChanges();
+
+        // Verify data is not sorted initially.
+        let cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('254');
+        expect(cells[7].innerText).toBe('1,000');
+
+        // Click 'sort desc' button in ESF.
+        GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+        await wait(100);
+        fix.detectChanges();
+        GridFunctions.clickSortDescInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is sorted in descending order.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('1,000');
+        expect(cells[1].innerText).toBe('702');
+        expect(cells[7].innerText).toBe('');
+
+        // Click 'sort asc' button in ESF.
+        GridFunctions.clickSortAscInExcelStyleFiltering(fix);
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify data is sorted in ascending order.
+        cells = GridFunctions.sortNativeElementsVertically(
+            GridFunctions.getColumnCells(fix, 'Downloads').map((c) => c.nativeElement));
+        expect(cells[0].innerText).toBe('');
+        expect(cells[1].innerText).toBe('0');
+        expect(cells[7].innerText).toBe('1,000');
+    });
+
+    it('Should add/remove expressions in custom filter dialog through UI correctly.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        // Verify expressions count.
+        let expressions = Array.from(GridFunctions.getExcelCustomFilteringDefaultExpressions(fix));
+        expect(expressions.length).toBe(2);
+
+        // Add two new expressions.
+        GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+        GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+
+        // Verify expressions count.
+        expressions = Array.from(GridFunctions.getExcelCustomFilteringDefaultExpressions(fix));
+        expect(expressions.length).toBe(4);
+
+        // Remove last expression by clicking its remove icon.
+        let expr: any = expressions[3];
+        let removeIcon: any = Array.from(expr.querySelectorAll('igx-icon'))
+                            .find((icon: any) => icon.innerText === 'cancel');
+        removeIcon.click();
+        fix.detectChanges();
+
+        // Verify expressions count.
+        expressions = Array.from(GridFunctions.getExcelCustomFilteringDefaultExpressions(fix));
+        expect(expressions.length).toBe(3);
+
+        // Remove second expression by clicking its remove icon.
+        expr = expressions[1];
+        removeIcon = Array.from(expr.querySelectorAll('igx-icon'))
+                            .find((icon: any) => icon.innerText === 'cancel');
+        removeIcon.click();
+        fix.detectChanges();
+
+        // Verify expressions count.
+        expressions = Array.from(GridFunctions.getExcelCustomFilteringDefaultExpressions(fix));
+        expect(expressions.length).toBe(2);
+    }));
 });
 
 const expectedResults = [];
