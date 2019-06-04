@@ -766,6 +766,23 @@ export class GridFunctions {
             Array.from(gridBody.queryAll(By.css('igx-grid-row'))).map((r: any) => r.nativeElement));
     }
 
+    public static getExcelStyleCustomFilteringDialog(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        return gridNativeElement.querySelector('.igx-excel-filter__secondary');
+    }
+
+    public static getExcelCustomFilteringDefaultExpressions(fix: ComponentFixture<any>) {
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+        return GridFunctions.sortNativeElementsVertically(
+            Array.from(customFilterMenu.querySelectorAll('igx-excel-style-default-expression')));
+    }
+
+    public static getExcelCustomFilteringDateExpressions(fix: ComponentFixture<any>) {
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+        return GridFunctions.sortNativeElementsVertically(
+            Array.from(customFilterMenu.querySelectorAll('igx-excel-style-date-expression')));
+    }
+
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
         const input =
             customMenu.children[1].children[expressionIndex].children[2].querySelector('.igx-input-group__bundle-main').children[0];
