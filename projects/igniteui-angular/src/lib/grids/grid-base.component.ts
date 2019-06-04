@@ -1711,7 +1711,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: false })
+    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
         /**

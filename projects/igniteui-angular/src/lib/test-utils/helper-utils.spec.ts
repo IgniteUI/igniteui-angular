@@ -20,7 +20,7 @@ export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: I
 }
 
 export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) {
-    this.setupGridScrollDetection(fixture, hierarchicalGrid);
+    setupGridScrollDetection(fixture, hierarchicalGrid);
 
     const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
     existingChildren.forEach(child =>  setupGridScrollDetection(fixture, child));
@@ -28,7 +28,7 @@ export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<a
     const layouts = hierarchicalGrid.allLayoutList.toArray();
     layouts.forEach((layout) => {
         layout.onGridCreated.subscribe(evt => {
-            this.setupGridScrollDetection(fixture, evt.grid);
+            setupGridScrollDetection(fixture, evt.grid);
         });
     });
 }
