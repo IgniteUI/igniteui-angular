@@ -15,7 +15,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxCalendarModule } from '../calendar';
 import { InteractionMode } from '../core/enums';
 
-describe('IgxDatePicker', () => {
+fdescribe('IgxDatePicker', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1167,7 +1167,7 @@ export class IgxDatePickerRetemplatedComponent { }
             <igx-input-group>
             <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"/>
             </igx-input-group>
-            <button igxButton>Select Date</button>
+            <button igxButton="flat" (click)="openDialog(dropDownTarget)">Select Date</button>
         </ng-template>
     </igx-date-picker>
     `
