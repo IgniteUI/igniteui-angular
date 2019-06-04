@@ -37,7 +37,8 @@ import {
     IgxGridFilteringComponent,
     IgxGridFilteringScrollComponent,
     IgxGridFilteringMCHComponent,
-    IgxTestExcelFilteringDatePickerComponent
+    IgxTestExcelFilteringDatePickerComponent,
+    IgxGridFilteringTemplateComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
 
@@ -1582,7 +1583,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
-                IgxTestExcelFilteringDatePickerComponent
+                IgxTestExcelFilteringDatePickerComponent,
+                IgxGridFilteringTemplateComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -3400,6 +3402,73 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         // Verify that 'clear' icon div of the new last chip is now active.
         const clearIconDiv = lastFilterCellChip.query(By.css('.igx-chip__remove'));
         expect(document.activeElement).toBe(clearIconDiv.nativeElement);
+    }));
+
+    it('Should open filterRow when clicking \'more\' icon', (async() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add second chip.
+        GridFunctions.typeValueInFilterRowInput('e', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        // Close filterRow
+        GridFunctions.closeFilterRow(fix);
+        await wait(100);
+
+        // Verify filterRow is not opened.
+        expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+
+        // Click 'more' icon
+        const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
+        const moreIcon: any = Array.from(filterCell.queryAll(By.css('igx-icon')))
+                            .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
+        moreIcon.nativeElement.click();
+        await wait(16);
+        fix.detectChanges();
+
+        // Verify filterRow is opened.
+        expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
+
+        // Verify first chip is selected (in edit mode).
+        const chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
+        expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+    }));
+
+    it('Should render custom filter template instead of default one.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
+        fix.detectChanges();
+
+        // Verify default filter template is not present.
+        expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.igx-filtering-chips'))).toBeNull(
+            '\`ProductName\` default filter chips area template was found.');
+        expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.igx-filtering-chips'))).toBeNull(
+            '\`Downloads\` default filter chips area template was found.');
+        expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.igx-filtering-chips'))).toBeNull(
+            '\`Released\` default filter chips area template was found.');
+        expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.igx-filtering-chips'))).toBeNull(
+            '\`ReleaseDate\` default filter chips area template was found.');
+
+        // Verify the custom filter template is present.
+        expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
+            '\`ProductName\` customer filter tempalte was not found.');
+        expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
+            '\`Downloads\` customer filter tempalte was not found.');
+        expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
+            '\`Released\` customer filter tempalte was not found.');
+        expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
+            '\`ReleaseDate\` customer filter tempalte was not found.');
     }));
 });
 
