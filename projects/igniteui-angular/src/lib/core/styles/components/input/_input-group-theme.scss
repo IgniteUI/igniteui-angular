@@ -505,8 +505,8 @@
         position: absolute;
         width: 100%;
         transform: translateY(50%); /* 8px, base is 16px */
-        line-height: rem(16px, map-get($base-scale-size, 'comfortable')) !important;
-        height: rem(18px, map-get($base-scale-size, 'comfortable'));
+        line-height: 1 !important;
+        height: rem(18px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
@@ -518,13 +518,11 @@
     }
 
     %form-group-label--cosy {
-        line-height: rem(16px, map-get($base-scale-size, 'cosy')) !important;
-        height: rem(18px, map-get($base-scale-size, 'cosy'));
+        margin-top: rem(-4.5px);
     }
 
     %form-group-label--compact {
-        line-height: rem(16px, map-get($base-scale-size, 'compact')) !important;
-        height: rem(18px, map-get($base-scale-size, 'compact'));
+        margin-top: rem(-4px);
     }
 
     %form-group-label--box {
@@ -574,6 +572,8 @@
         color: --var($theme, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
+        border-top: rem(3px) solid transparent;
+        padding-bottom: rem(3px);
 
         &::-webkit-input-placeholder {
             line-height: normal;
@@ -886,17 +886,6 @@
     $input-text-props: igx-type-scale-category($type-scale, $input-text);
 
     @include igx-scope('.igx-typography') {
-        %form-group-label {
-            @include igx-type-style($type-scale, $input-text) {
-                // This is embarrassing but there's no other
-                // way to extract the font-size the user sets
-                // in case they use custom typography :(
-                // We need the padding so that the text doesn't get
-                // cut off.
-                padding-bottom: map-get($input-text-props, 'font-size');
-            }
-        }
-
         %form-group-input {
             @include igx-type-style($type-scale, $input-text) {
                 margin: 0;
