@@ -476,7 +476,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         });
 
         it('should allow navigating up', async () => {
-            grid.verticalScrollContainer.addScrollTop(5000);
+            grid.verticalScrollContainer.addScrollTop(5100);
 
             await wait(200);
             fix.detectChanges();
@@ -624,8 +624,8 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
         });
 
-        it('should allow navigating first/last cell in column with down/up and Cntr key.', async () => {
-            grid.verticalScrollContainer.addScrollTop(5000);
+        it('should allow navigating first/last cell in column with down/up and Ctrl key.', async () => {
+            grid.verticalScrollContainer.addScrollTop(5100);
 
             await wait(DEBOUNCETIME);
             fix.detectChanges();
