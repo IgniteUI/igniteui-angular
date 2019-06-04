@@ -3249,6 +3249,158 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const conditionChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(conditionChips.length).toBe(0);
     }));
+
+    it('Should open filterRow for respective column when pressing \'Enter\' on its filterCell chip.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        // Verify filterRow is not opened.
+        expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+
+        const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
+        filterCellChip.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        tick(200);
+        fix.detectChanges();
+
+        // Verify filterRow is opened for the 'ReleaseDate' column.
+        expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
+        const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerGroupsFiltering = headerGroups.filter(
+            (hg) => hg.nativeElement.classList.contains('igx-grid__th--filtering'));
+        expect(headerGroupsFiltering.length).toBe(1);
+        expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
+    }));
+
+    it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
+        filterCellChip.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+        tick(200);
+        fix.detectChanges();
+
+        const firstRow = GridFunctions.getGridDataRows(fix)[0];
+        const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
+        expect(document.activeElement).toBe(firstCell);
+    }));
+
+    it('Should remove first condition chip when click \'clear\' button and focus \'more\' icon.', (async() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.width = '700px';
+        grid.columns.find((c) => c.field === 'ProductName').width = '160px';
+        await wait(100);
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add second chip.
+        GridFunctions.typeValueInFilterRowInput('e', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add third chip.
+        GridFunctions.typeValueInFilterRowInput('i', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        // Close filterRow
+        GridFunctions.closeFilterRow(fix);
+        await wait(100);
+
+        // Verify active chip and its text.
+        let filterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
+        const chipDiv = filterCellChip.nativeElement.querySelector('.igx-chip__item');
+        expect(document.activeElement).toBe(chipDiv);
+        expect(GridFunctions.getChipText(filterCellChip)).toBe('a');
+
+        // Remove active chip.
+        const clearIcon: any = Array.from(filterCellChip.queryAll(By.css('igx-icon')))
+                                .find((ic) => ic.nativeElement.innerText === 'cancel');
+        clearIcon.nativeElement.click();
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify that 'more' icon is now active.
+        const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
+        const moreIconDiv: any = filterCell.query(By.css('.igx-grid__filtering-cell-indicator'));
+        expect(document.activeElement).toBe(moreIconDiv.nativeElement);
+
+        // Verify new chip text.
+        filterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
+        expect(GridFunctions.getChipText(filterCellChip)).toBe('e');
+    }));
+
+    it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', (async() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.columns.find((c) => c.field === 'ProductName').width = '350px';
+        await wait(100);
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add second chip.
+        GridFunctions.typeValueInFilterRowInput('e', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+        // Add third chip.
+        GridFunctions.typeValueInFilterRowInput('i', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        // Close filterRow
+        GridFunctions.closeFilterRow(fix);
+        await wait(100);
+
+        // Verify first chip is active and its text.
+        const filterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
+        const chipDiv = filterCellChip.nativeElement.querySelector('.igx-chip__item');
+        expect(document.activeElement).toBe(chipDiv);
+        expect(GridFunctions.getChipText(filterCellChip)).toBe('a');
+        // Verify chips count.
+        expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length).toBe(3, 'incorrect chips count');
+
+        // Verify last chip text.
+        let lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[2];
+        expect(GridFunctions.getChipText(lastFilterCellChip)).toBe('i');
+        // Remove last chip.
+        const clearIcon: any = Array.from(lastFilterCellChip.queryAll(By.css('igx-icon')))
+                                .find((ic) => ic.nativeElement.innerText === 'cancel');
+        clearIcon.nativeElement.click();
+        await wait(100);
+        fix.detectChanges();
+
+        // Verify chips count.
+        expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length).toBe(2, 'incorrect chips count');
+        // Verify new last chip text.
+        lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[1];
+        expect(GridFunctions.getChipText(lastFilterCellChip)).toBe('e');
+
+        // Verify that 'clear' icon div of the new last chip is now active.
+        const clearIconDiv = lastFilterCellChip.query(By.css('.igx-chip__remove'));
+        expect(document.activeElement).toBe(clearIconDiv.nativeElement);
+    }));
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering', () => {
