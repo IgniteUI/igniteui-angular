@@ -751,7 +751,7 @@ export class GridFunctions {
         return filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-end'));
     }
 
-    public static geteFilterCell(fix, columnKey) {
+    public static getFilterCell(fix, columnKey) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnKey);
         return headerGroup.query(By.css('igx-grid-filtering-cell'));
@@ -780,6 +780,13 @@ export class GridFunctions {
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
                                 .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
+    }
+
+    public static getGridDataRows(fix) {
+        const grid = fix.debugElement.query(By.css('igx-grid'));
+        const gridBody = grid.query(By.css('.igx-grid__tbody'));
+        return GridFunctions.sortNativeElementsVertically(
+            Array.from(gridBody.queryAll(By.css('igx-grid-row'))).map((r: any) => r.nativeElement));
     }
 
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
