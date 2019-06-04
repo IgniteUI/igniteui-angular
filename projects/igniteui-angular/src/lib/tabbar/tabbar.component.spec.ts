@@ -162,66 +162,71 @@ describe('TabBar', () => {
         tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
     });
 
-    it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
-        const router = TestBed.get(Router);
-        const location = TestBed.get(Location);
-        const fixture = TestBed.createComponent(TabBarRoutingTestComponent);
-        const bottomNav = fixture.componentInstance.bottomNavComp;
-        fixture.detectChanges();
+    describe('Routing Navigation Tests', () => {
+        configureTestSuite();
 
-        fixture.ngZone.run(() => { router.initialNavigation(); });
-        tick();
-        expect(location.path()).toBe('/');
+        let router;
+        let location;
+        let fixture;
+        let bottomNav;
+        let theTabs;
 
-        const theTabs = bottomNav.contentTabs.toArray();
+        beforeEach(async(() => {
+            router = TestBed.get(Router);
+            location = TestBed.get(Location);
+            fixture = TestBed.createComponent(TabBarRoutingTestComponent);
+            bottomNav = fixture.componentInstance.bottomNavComp;
+            fixture.detectChanges();
+            theTabs = bottomNav.contentTabs.toArray();
+        }));
 
-        fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
-        tick();
-        expect(location.path()).toBe('/view3');
+        it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
+            fixture.ngZone.run(() => { router.initialNavigation(); });
+            tick();
+            expect(location.path()).toBe('/');
 
-        fixture.ngZone.run(() => { theTabs[1].elementRef().nativeElement.dispatchEvent(new Event('click')); });
-        tick();
-        expect(location.path()).toBe('/view2');
+            fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            tick();
+            expect(location.path()).toBe('/view3');
 
-        fixture.ngZone.run(() => { theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click')); });
-        tick();
-        expect(location.path()).toBe('/view1');
-    }));
+            fixture.ngZone.run(() => { theTabs[1].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            tick();
+            expect(location.path()).toBe('/view2');
 
-    it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
-        const router = TestBed.get(Router);
-        const location = TestBed.get(Location);
-        const fixture = TestBed.createComponent(TabBarRoutingTestComponent);
-        const bottomNav = fixture.componentInstance.bottomNavComp;
-        fixture.detectChanges();
+            fixture.ngZone.run(() => { theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            tick();
+            expect(location.path()).toBe('/view1');
+        }));
 
-        fixture.ngZone.run(() => { router.initialNavigation(); });
-        tick();
-        expect(location.path()).toBe('/');
+        it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
+            fixture.ngZone.run(() => { router.initialNavigation(); });
+            tick();
+            expect(location.path()).toBe('/');
 
-        const theTabs = bottomNav.contentTabs.toArray();
+            fixture.ngZone.run(() => { router.navigate(['/view3']); });
+            tick();
+            expect(location.path()).toBe('/view3');
+            fixture.detectChanges();
+            expect(bottomNav.selectedIndex).toBe(2);
+            expect(theTabs[2].isSelected).toBe(true);
 
-        fixture.ngZone.run(() => { router.navigate(['/view3']); });
-        tick();
-        expect(location.path()).toBe('/view3');
-        fixture.detectChanges();
-        expect(bottomNav.selectedIndex).toBe(2);
-        expect(theTabs[2].isSelected).toBe(true);
+            fixture.ngZone.run(() => { router.navigate(['/view2']); });
+            tick();
+            expect(location.path()).toBe('/view2');
+            fixture.detectChanges();
+            expect(bottomNav.selectedIndex).toBe(1);
+            expect(theTabs[1].isSelected).toBe(true);
 
-        fixture.ngZone.run(() => { router.navigate(['/view2']); });
-        tick();
-        expect(location.path()).toBe('/view2');
-        fixture.detectChanges();
-        expect(bottomNav.selectedIndex).toBe(1);
-        expect(theTabs[1].isSelected).toBe(true);
+            fixture.ngZone.run(() => { router.navigate(['/view1']); });
+            tick();
+            expect(location.path()).toBe('/view1');
+            fixture.detectChanges();
+            expect(bottomNav.selectedIndex).toBe(0);
+            expect(theTabs[0].isSelected).toBe(true);
+        }));
 
-        fixture.ngZone.run(() => { router.navigate(['/view1']); });
-        tick();
-        expect(location.path()).toBe('/view1');
-        fixture.detectChanges();
-        expect(bottomNav.selectedIndex).toBe(0);
-        expect(theTabs[0].isSelected).toBe(true);
-    }));
+    });
+
 });
 
 @Component({
