@@ -1181,7 +1181,8 @@ export class IgxTimePickerComponent implements
         }
 
         if (this.selectedHour === undefined) {
-            this.selectedHour = !this.showHoursList && this.value ? this.value.getHours().toString() : this.showHoursList ? `${this._hourItems[3]}` : '0';
+            this.selectedHour = !this.showHoursList && this.value ? this.value.getHours().toString() :
+                this.showHoursList ? `${this._hourItems[3]}` : '0';
         }
         if (this.selectedMinute === undefined) {
             this.selectedMinute = !this.showMinutesList && this.value ? this.value.getMinutes().toString() : '0';
