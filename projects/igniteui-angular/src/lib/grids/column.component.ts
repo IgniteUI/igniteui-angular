@@ -1091,7 +1091,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    getGridTemplate(isRow, isIE): string {
+    getGridTemplate(isRow: boolean, isIE: boolean): string {
         if (isRow) {
             const rowsCount = this.grid.multiRowLayoutRowSize;
             return isIE ?

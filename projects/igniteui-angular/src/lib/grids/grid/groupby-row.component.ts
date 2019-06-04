@@ -253,7 +253,7 @@ export class IgxGridGroupByRowComponent {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
-    private handleTabKey(shift, activeNode) {
+    private handleTabKey(shift: boolean, activeNode: ISelectionNode) {
         if (shift) {
             this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
         } else {
