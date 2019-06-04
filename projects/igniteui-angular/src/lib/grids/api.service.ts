@@ -311,7 +311,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
     public filter_global(term, condition, ignoreCase) {
         if (!condition) {
-            throw Error('Invalid condition!');
+            throw new Error('Invalid condition!');
         }
 
         const grid = this.grid;
