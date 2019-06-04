@@ -4195,8 +4195,8 @@ export class IgxGridWithEditingAndFeaturesComponent {
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop>Cancel</button>
-                    <button igxButton igxRowEditTabStop>Done</button>
+                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>
