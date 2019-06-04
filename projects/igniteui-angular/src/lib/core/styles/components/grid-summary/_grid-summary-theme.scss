@@ -15,7 +15,6 @@
 /// @param {Color} $pinned-border-width [null] - The border width of the summary panel.
 /// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
 /// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
-/// @param {Color} $inactive-color [null] - The summaries inactive label color.
 /// @param {Color} $label-hover-color [null] - The summaries hover label color.
 ///
 /// @requires $default-palette
@@ -42,7 +41,6 @@
     $pinned-border-width: null,
     $pinned-border-style: null,
     $pinned-border-color: null,
-    $inactive-color: null,
     $label-hover-color: null
 ) {
     $name: 'igx-grid-summary';
@@ -70,7 +68,6 @@
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
-        inactive-color: $inactive-color,
         label-hover-color: $label-hover-color
     ));
 }
@@ -164,16 +161,6 @@
         font-weight: 600;
         flex: 1 1 auto;
         text-align: right;
-    }
-
-    %igx-grid-summary__item--inactive {
-        %igx-grid-summary__label {
-            color: --var($theme, 'inactive-color');
-        }
-
-        %igx-grid-summary__result {
-            display: none;
-        }
     }
 
     %igx-grid-summary__label,
