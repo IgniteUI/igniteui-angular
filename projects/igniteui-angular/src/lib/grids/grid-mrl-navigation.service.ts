@@ -446,6 +446,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(rowIndex: number, visibleColumnIndex: number): boolean {
+        if (this._isGroupRecordAt(rowIndex)) {
+            return super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex);
+       }
         if (!super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex)) {return false; }
        const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
            .concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
@@ -464,7 +467,15 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return  parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
     }
 
+    private _isGroupRecordAt(rowIndex: number) {
+        const record = this.grid.verticalScrollContainer.igxForOf[rowIndex];
+        return record.records && record.records.length;
+    }
+
     public performVerticalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?) {
+        if (this._isGroupRecordAt(rowIndex)) {
+            return super.performVerticalScrollToCell(rowIndex, visibleColumnIndex, cb);
+        }
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const scrollTop = Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
         const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
