@@ -2515,7 +2515,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
-    private _autoSize = false;
+    protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
@@ -2532,7 +2532,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private _columnWidth: string;
 
-    private _defaultTargetRecordNumber = 10;
+    protected _defaultTargetRecordNumber = 10;
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -4028,14 +4028,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
         this.summariesHeight = 0;
-        if (!this._height) {
-            this.calcHeight = null;
-            if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
-                this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
-            }
-            return;
-        }
-
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
             this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         }
@@ -4076,7 +4068,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _calculateGridBodyHeight() {
+    protected _calculateGridBodyHeight(): number {
+        if (!this._height) {
+            return null;
+        }
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
         let gridHeight;
