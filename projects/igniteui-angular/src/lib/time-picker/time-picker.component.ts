@@ -509,10 +509,6 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
     */
-    public mask: string;
-    /**
-     * @hidden
-    */
     public cleared = false;
     /**
      * @hidden
@@ -545,6 +541,7 @@ export class IgxTimePickerComponent implements
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _format: string;
+    private _mask: string;
     private _displayValue: string;
 
     private _isHourListLoop = this.isSpinLoop;
@@ -564,6 +561,17 @@ export class IgxTimePickerComponent implements
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
+
+    /**
+     * @hidden
+    */
+    get mask(): string {
+        return this._mask || '00:00 LL';
+    }
+
+    set mask(val: string) {
+        this._mask = val;
+    }
 
     /**
      * @hidden
@@ -1173,7 +1181,7 @@ export class IgxTimePickerComponent implements
         }
 
         if (this.selectedHour === undefined) {
-            this.selectedHour = !this.showHoursList && this.value ? this.value.getHours().toString() : `${this._hourItems[3]}`;
+            this.selectedHour = !this.showHoursList && this.value ? this.value.getHours().toString() : this.showHoursList ? `${this._hourItems[3]}` : '0';
         }
         if (this.selectedMinute === undefined) {
             this.selectedMinute = !this.showMinutesList && this.value ? this.value.getMinutes().toString() : '0';
