@@ -12,6 +12,7 @@
     <div class="igx-slider__thumbs">
         <igx-thumb *ngIf="isRange"
             #thumbFrom
+            [type]="0"
             [value]="lowerLabel"
             [disabled]="disabled"
             [continuous]="continuous"
@@ -21,9 +22,11 @@
             [fromHandler]="true"
             [templateRef]="thumbFromTemplateRef"
             [context]="context"
+            (onChange)="onThumbChange()"
             [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
         <igx-thumb
             #thumbTo
+            [type]="1"
             [value]="upperLabel"
             [disabled]="disabled"
             [continuous]="continuous"
@@ -32,6 +35,7 @@
             [step]="step"
             [templateRef]="thumbToTemplateRef"
             [context]="context"
+            (onChange)="onThumbChange()"
             [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
     </div>
 </div>

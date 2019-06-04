@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective } from '../slider.component';
+import { SliderHandle } from '../slider.component';
 
 @Component({
     selector: 'igx-thumb',
@@ -23,7 +23,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     private _timer;
     private _isActiveLabel = false;
-    private _destroy$ = new Subject<boolean>();
+    public _destroy$ = new Subject<boolean>();
 
     public isActive = false;
 
@@ -57,8 +57,14 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public context: any;
 
+    @Input()
+    public type: SliderHandle;
+
     @Output()
     public onThumbValueChange = new EventEmitter<number>();
+
+    @Output()
+    public onChange = new EventEmitter<any>();
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -93,6 +99,10 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return thumbBounderies.left + thumbCenter;
     }
 
+    public get destroy(): Subject<boolean> {
+        return this._destroy$;
+    }
+
     constructor (private _elementRef: ElementRef) { }
 
     /**
@@ -111,6 +121,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
      */
     public ngOnDestroy() {
         this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     @HostListener('keydown', ['$event'])
@@ -128,28 +139,21 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.showThumbLabel();
+        this.onChange.emit();
         this.onThumbValueChange.emit(increment);
-    }
-
-    @HostListener('keyup')
-    public onKeyUp() {
-        this.hideThumbLabel();
     }
 
     @HostListener('blur')
     public onBlur() {
-        if (this._timer !== null) {
-            clearInterval(this._timer);
-        }
-
         this._isActiveLabel = false;
         this.isActive = false;
+        this.onChange.emit();
     }
 
     @HostListener('focus')
-    public onFocus() {
+    public onFocusListener() {
         this.isActive = true;
+        this.onChange.emit();
     }
 
     public showThumbLabel() {

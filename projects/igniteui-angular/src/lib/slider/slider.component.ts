@@ -9,13 +9,14 @@ import {
     AfterContentInit,
     OnDestroy,
     HostListener,
-    ChangeDetectorRef,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbModule, IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject } from 'rxjs';
+import { Subject, merge, concat } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 /**
@@ -61,7 +62,7 @@ export enum SliderType {
     RANGE
 }
 
-enum SliderHandle {
+export enum SliderHandle {
     FROM,
     TO
 }
@@ -151,11 +152,18 @@ export class IgxSliderComponent implements
     @ViewChild('ticks')
     private ticks: ElementRef;
 
-    @ViewChild('thumbFrom', { read: IgxSliderThumbComponent })
-    private thumbFrom: IgxSliderThumbComponent;
+    // @ViewChild('thumbFrom', { read: IgxSliderThumbComponent })
+    private get thumbFrom(): IgxSliderThumbComponent {
+        return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM);
+    }
 
-    @ViewChild('thumbTo', { read: IgxSliderThumbComponent })
-    private thumbTo: IgxSliderThumbComponent;
+    // @ViewChild('thumbTo', { read: IgxSliderThumbComponent })
+    private get thumbTo(): IgxSliderThumbComponent {
+        return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
+    }
+
+    @ViewChildren(IgxSliderThumbComponent)
+    private thumbs: QueryList<IgxSliderThumbComponent>;
 
     /**
      * @hidden
@@ -643,7 +651,7 @@ export class IgxSliderComponent implements
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
-
+        console.log('pointerdown');
         this.showThumbLabels();
     }
 
@@ -653,12 +661,13 @@ export class IgxSliderComponent implements
             return;
         }
 
+        console.log('pointerup');
         this.hideThumbLabels();
     }
 
     @HostListener('focus')
     public onFocus() {
-        this.toggleThumbLabel();
+        this.toggleThumbLabels();
     }
 
     /**
@@ -802,15 +811,13 @@ export class IgxSliderComponent implements
         this.positionHandlesAndUpdateTrack();
         this.setTickInterval(this.labels);
 
-        if (this.thumbFrom) {
-            this.thumbFrom.onThumbValueChange
-                .pipe(takeUntil(this._destroy$))
-                .subscribe(value => this.thumbChanged(value, SliderHandle.FROM));
-        }
+        this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
+        this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
 
-        this.thumbTo.onThumbValueChange
-            .pipe(takeUntil(this._destroy$))
-            .subscribe(value => this.thumbChanged(value, SliderHandle.TO));
+        this.thumbs.changes.pipe(takeUntil(this._destroy$)).subscribe(change => {
+            const t = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+            this.subscribeTo(t, this.thumbChanged.bind(this));
+        });
     }
 
     /**
@@ -883,12 +890,12 @@ export class IgxSliderComponent implements
         this._onTouchedCallback();
     }
 
-    public thumbChanged(value: number, thumb: number) {
+    public thumbChanged(value: number, thumbType: number) {
         const oldValue = this.value;
 
         let newVal: IRangeSliderValue;
         if (this.isRange) {
-            if (thumb === SliderHandle.FROM) {
+            if (thumbType === SliderHandle.FROM) {
                 newVal = {
                     lower: (this.value as IRangeSliderValue).lower + value,
                     upper: (this.value as IRangeSliderValue).upper
@@ -901,7 +908,7 @@ export class IgxSliderComponent implements
             }
 
             // Swap the thumbs if a collision appears.
-            if (newVal.lower > newVal.upper) {
+            if (newVal.lower >= newVal.upper) {
                 this.value = this.swapThumb(newVal);
             } else {
                 this.value = newVal;
@@ -917,17 +924,7 @@ export class IgxSliderComponent implements
     }
 
     public swapThumb(value: IRangeSliderValue) {
-        if (this.thumbFrom.isActive) {
-            value.upper = this.upperValue;
-            value.lower = this.upperValue;
-        } else {
-            value.upper = this.lowerValue;
-            value.lower = this.lowerValue;
-        }
-
         this.toggleThumb();
-        this.showThumbLabels();
-
         return value;
     }
 
@@ -944,6 +941,10 @@ export class IgxSliderComponent implements
         this.update(event.clientX);
 
         event.preventDefault();
+    }
+
+    public onThumbChange() {
+        this.toggleThumbLabels();
     }
 
     private updateLowerBoundAndMinTravelZone() {
@@ -1069,7 +1070,7 @@ export class IgxSliderComponent implements
         }
     }
 
-    private toggleThumbLabel() {
+    private toggleThumbLabels() {
         this.showThumbLabels();
         this.hideThumbLabels();
     }
@@ -1118,6 +1119,20 @@ export class IgxSliderComponent implements
         }
 
         return value;
+    }
+
+    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: number) => void) {
+        if (!thumb) {
+            return;
+        }
+
+        thumb.onThumbValueChange
+            .pipe(takeUntil(this.unsubscriber(thumb)))
+            .subscribe(value => callback(value, thumb.type));
+    }
+
+    private unsubscriber(thumb: IgxSliderThumbComponent) {
+        return merge(this._destroy$, thumb.destroy);
     }
 
     private hasValueChanged(oldValue) {
