@@ -27,6 +27,9 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @Input()
     public relatedGroup: IgxTabsGroupComponent;
 
+    /**@hidden*/
+    private _icon: string;
+
     /**
     * An @Input property that sets the value of the `icon`.
     * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
@@ -35,16 +38,35 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     *```
     */
     @Input()
-    public icon: string;
+    public get icon(): string {
+        return this.relatedGroup ? this.relatedGroup.icon : this._icon;
+    }
+    public set icon(newValue: string) {
+        if (this.relatedGroup) {
+            this.relatedGroup.icon = newValue;
+        }
+        this._icon = newValue;
+    }
+
+    /**@hidden*/
+    private _label: string;
 
     /**
     * An @Input property that sets the value of the `label`.
     *```html
-    *<igx-tabs-item label="Tab 1" icon="folder">
+    *<igx-tabs-item label="Tab 2" icon="folder">
     *```
     */
     @Input()
-    public label: string;
+    public get label(): string {
+        return this.relatedGroup ? this.relatedGroup.label : this._label;
+    }
+    public set label(newValue: string) {
+        if (this.relatedGroup) {
+            this.relatedGroup.label = newValue;
+        }
+        this._label = newValue;
+    }
 
     /**@hidden*/
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
@@ -162,10 +184,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     */
     @Input()
     get disabled(): boolean {
-        if (this.relatedGroup) {
-            return this.relatedGroup.disabled;
-        }
-        return this._disabled;
+        return this.relatedGroup ? this.relatedGroup.disabled : this._disabled;
     }
     set disabled(newValue: boolean) {
         if (this.relatedGroup) {

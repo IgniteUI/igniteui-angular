@@ -93,10 +93,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      * @memberof IgxBottomNavComponent
      */
     public get tabs(): QueryList<IgxTabComponent> {
-        if (this.hasContentTabs) {
-            return this.contentTabs;
-        }
-        return this.viewTabs;
+        return this.hasContentTabs ? this.contentTabs : this.viewTabs;
     }
 
     /**
@@ -476,6 +473,11 @@ export class IgxTabComponent {
     public relatedPanel: IgxTabPanelComponent;
 
     /**
+     *@hidden
+     */
+    private _label: string;
+
+    /**
      * Sets/gets the `label` of the tab panel.
      * ```html
      * <igx-tab [label] = "'Tab label'"><igx-tab>
@@ -486,12 +488,25 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     @Input()
-    public label: string;
+    public get label(): string {
+        return this.relatedPanel ? this.relatedPanel.label : this._label;
+    }
+    public set label(newValue: string) {
+        if (this.relatedPanel) {
+            this.relatedPanel.label = newValue;
+        }
+        this._label = newValue;
+    }
+
+    /**
+     *@hidden
+     */
+    private _icon: string;
 
     /**
      * Sets/gets  the `icon` of the tab panel.
      * ```html
-     * <igx-tab [icon] = "panel_icon"><igx-tab>
+     * <igx-tab [icon] = "tab_icon"><igx-tab>
      * ```
      * ```typescript
      * let tabIcon =  this.tab.icon;
@@ -499,7 +514,15 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     @Input()
-    public icon: string;
+    public get icon(): string {
+        return this.relatedPanel ? this.relatedPanel.icon : this._icon;
+    }
+    public set icon(newValue: string) {
+        if (this.relatedPanel) {
+            this.relatedPanel.icon = newValue;
+        }
+        this._icon = newValue;
+    }
 
     /**
      *@hidden
@@ -613,10 +636,7 @@ export class IgxTabComponent {
      * ```
      */
     public get context(): any {
-        if (this.relatedPanel) {
-            return this.relatedPanel;
-        }
-        return this;
+        return this.relatedPanel ? this.relatedPanel : this;
     }
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
