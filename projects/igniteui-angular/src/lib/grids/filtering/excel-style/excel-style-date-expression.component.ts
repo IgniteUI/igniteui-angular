@@ -32,8 +32,4 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     get inputDatePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
     }
-
-    public openDatePicker(openDialog: Function) {
-        openDialog();
-    }
 }

@@ -41,7 +41,7 @@
         </article>
 
         <article class="datepicker-column">
-            <h4 class="sample-title">DropDown Date Picker</h4>
+            <h4 class="sample-title" #TEST>DropDown Date Picker</h4>
             <p class="sample-description">Retemplated Date Picker using #dropDownTarget </p>
             <div class="preview">
                 <igx-date-picker [value]="date" mode="dropdown" #retemplated>
@@ -50,7 +50,7 @@
                         <igx-input-group>
                             <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"
                                 (blur)="changeDate($event)" />
-                            <igx-suffix (click)="openDialog()">
+                            <igx-suffix (click)="openDialog(TEST)">
                                 <igx-icon>alarm</igx-icon>
                             </igx-suffix>
                         </igx-input-group>

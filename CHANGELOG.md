@@ -10,6 +10,10 @@ All notable changes for each version of this project will be documented in this 
     - `#itemTemplate`
     - `#addItemTemplate`
     - `#headerItemTemplate`
+- `igxTimePicker` and `igxDatePicker`
+    - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
+    - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
+    - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
 
 ## 7.3.1
 `igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`

@@ -1167,7 +1167,7 @@ export class IgxDatePickerRetemplatedComponent { }
             <igx-input-group>
             <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"/>
             </igx-input-group>
-            <button igxButton (click)="openDialog()">Select Date</button>
+            <button igxButton="flat" (click)="openDialog(dropDownTarget)">Select Date</button>
         </ng-template>
     </igx-date-picker>
     `

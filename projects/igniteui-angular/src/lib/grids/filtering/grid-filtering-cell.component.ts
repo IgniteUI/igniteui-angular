@@ -12,13 +12,12 @@ import {
     ChangeDetectionStrategy,
     DoCheck
 } from '@angular/core';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent } from '../column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
 
 /**
  * @hidden

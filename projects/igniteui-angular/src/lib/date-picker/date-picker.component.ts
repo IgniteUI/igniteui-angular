@@ -7,7 +7,6 @@ import {
     Input,
     NgModule,
     OnDestroy,
-    OnInit,
     Output,
     ViewChild,
     ElementRef,
@@ -16,6 +15,7 @@ import {
     ChangeDetectorRef,
     HostListener,
     NgModuleRef,
+    OnInit,
     AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -28,7 +28,7 @@ import {
     isDateInRanges
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '../input-group/index';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -37,7 +37,8 @@ import {
     IgxOverlayService,
     PositionSettings,
     AbsoluteScrollStrategy,
-    AutoPositionStrategy
+    AutoPositionStrategy,
+    OverlayCancelableEventArgs
 } from '../services/index';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
@@ -345,11 +346,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     @Input()
     public get dropDownOverlaySettings(): OverlaySettings {
-        return this._dropDownOverlay;
+        return this._dropDownOverlaySettings || this._defaultDropDownOverlaySettings;
     }
 
     public set dropDownOverlaySettings(value: OverlaySettings) {
-        this._dropDownOverlay = value;
+        this._dropDownOverlaySettings = value;
     }
 
     /**
@@ -425,7 +426,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             mode: this.mode,
             specialDates: this.specialDates,
             value: this.value,
-            openDialog: () => { this.openDialog(); }
+            openDialog: (target?: HTMLElement) => this.openDialog(target)
         };
     }
 
@@ -627,14 +628,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
-    @ViewChild('editableInputGroup', { read: ElementRef, static: false })
-    protected editableInputGroup: ElementRef;
-
-    /*
-     * @hidden
-     */
-    @ContentChild('dropDownTarget', { read: ElementRef, static: false })
-    protected templateDropDownTarget: ElementRef;
+    @ViewChild(IgxInputGroupComponent, { static: false })
+    protected inputGroup: IgxInputGroupComponent;
 
     /*
      * @hidden
@@ -651,7 +646,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
     * @hidden
     */
-    @ContentChild(IgxInputDirective, { static: true })
+    @ContentChild(IgxInputDirective, { static: false })
     protected input: IgxInputDirective;
 
     /**
@@ -705,9 +700,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _disabledDates: DateRangeDescriptor[] = null;
     private _specialDates: DateRangeDescriptor[] = null;
     private _modalOverlay: OverlaySettings;
-    private _dropDownOverlay: OverlaySettings;
-    private _positionSettings: PositionSettings;
     private _dropDownOverlaySettings: OverlaySettings;
+    private _positionSettings: PositionSettings;
+    private _defaultDropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
 
@@ -717,7 +712,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event: KeyboardEvent) {
-        this.openDialog();
+        this.openDialog(this.getInputGroupElement());
         event.preventDefault();
     }
 
@@ -751,13 +746,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /** @hidden */
     public getEditElement() {
-        let inputElement;
-        if (this.mode === InteractionMode.DropDown) {
-            inputElement = (this.editableInput) ? this.editableInput : this.input;
-        } else {
-            inputElement = (this.readonlyInput) ? this.readonlyInput : this.input;
-        }
+        const inputElement = this.editableInput || this.readonlyInput || this.input;
         return (inputElement) ? inputElement.nativeElement : null;
+    }
+
+    /** @hidden */
+    public getInputGroupElement() {
+        return this.inputGroup ? this.inputGroup.element.nativeElement : null;
     }
 
     /**
@@ -770,7 +765,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         };
 
         const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
-        this._dropDownOverlaySettings = {
+        this._defaultDropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
@@ -792,8 +787,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this._overlayService.onOpened.pipe(
             filter((overlay) => overlay.id === this._componentID),
-            takeUntil(this._destroy$)).subscribe((eventArgs) => {
-                this._onOpened(eventArgs);
+            takeUntil(this._destroy$)).subscribe(() => {
+                this._onOpened();
             });
 
         this._overlayService.onClosed.pipe(
@@ -811,10 +806,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit(): void {
+    ngAfterViewInit() {
         if (this.mode === InteractionMode.DropDown && this.editableInput) {
             fromEvent(this.editableInput.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
@@ -889,11 +881,23 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     * Open the calendar.
-     *
-     * @hidden
+     * Opens the date picker drop down or dialog.
+     * @param target HTMLElement - the target element to use for positioning the drop down container according to
+     * ```html
+     * <igx-date-picker [value]="date" mode="dropdown" #retemplated>
+     *   <ng-template igxDatePickerTemplate let-openDialog="openDialog"
+     *                let-displayData="displayData">
+     *     <igx-input-group>
+     *       <input #dropDownTarget igxInput [value]="displayData" />
+     *       <igx-suffix (click)="openDialog(dropDownTarget)">
+     *         <igx-icon>alarm</igx-icon>
+     *       </igx-suffix>
+     *     </igx-input-group>
+     *   </ng-template>
+     * </igx-date-picker>
+     * ```
      */
-    public openDialog(): void {
+    public openDialog(target?: HTMLElement): void {
         if (!this.collapsed) {
             return;
         }
@@ -902,36 +906,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.hasHeader = true;
                 const modalOverlay = (this.modalOverlaySettings !== undefined) ? this._modalOverlay : this._modalOverlaySettings;
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, modalOverlay, this._moduleRef);
-                this._overlayService.show(this._componentID, modalOverlay);
+                this._overlayService.show(this._componentID);
                 break;
             }
             case InteractionMode.DropDown: {
                 this.hasHeader = false;
-                let dropDownOverlay;
-
-                // dropdown overlay settings are modified via input
-                if (this.dropDownOverlaySettings !== undefined) {
-                    dropDownOverlay = this._dropDownOverlay;
-                } else {
-                    dropDownOverlay = this._dropDownOverlaySettings;
-                    let dropDownTarget;
-
-                    if (this.editableInputGroup) {
-                        dropDownTarget = this.editableInputGroup.nativeElement;
-                    } else {
-                        if (this.templateDropDownTarget) {
-                            // if the date picker is re-templated, set an element marked with #dropDownTarget as a target to the drop-down
-                            dropDownTarget = this.templateDropDownTarget.nativeElement;
-                        } else {
-                            throw new Error('There is no target element for the dropdown to attach. Mark an element with #dropDownTarget.');
-                        }
-                    }
-
-                    dropDownOverlay.positionStrategy.settings.target = dropDownTarget;
+                if (target) {
+                    this.dropDownOverlaySettings.positionStrategy.settings.target = target;
                 }
-
-                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
-                this._overlayService.show(this._componentID, dropDownOverlay);
+                this._componentID = this._overlayService.attach(IgxCalendarContainerComponent,
+                    this.dropDownOverlaySettings, this._moduleRef);
+                this._overlayService.show(this._componentID);
                 break;
             }
         }
@@ -1027,7 +1012,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.openDialog();
+                    this.openDialog(this.getInputGroupElement());
                 } else {
                     event.preventDefault();
                     event.stopPropagation();
@@ -1150,12 +1135,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    private _onOpening(event) {
-        this._initializeCalendarContainer(event.componentRef.instance);
+    private _onOpening(event: OverlayCancelableEventArgs) {
+        this._initializeCalendarContainer(event.componentRef.instance as IgxCalendarContainerComponent);
         this.collapsed = false;
     }
 
-    private _onOpened(event): void {
+    private _onOpened(): void {
         this._onTouchedCallback();
         this.onOpen.emit(this);
 

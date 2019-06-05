@@ -1612,7 +1612,7 @@ template: `
             <label igxLabel>Time</label>
             <input igxInput [value]="displayTime" required/>
             <igx-suffix>
-                <igx-icon class="date-picker-icon" (click)="openDialog()">access_alarm</igx-icon>
+                <igx-icon class="date-picker-icon" (click)="openDialog(dropDownTarget.element.nativeElement)">access_alarm</igx-icon>
             </igx-suffix>
         </igx-input-group>
     </ng-template>
