@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, Inject, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, SecurityContext, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 
@@ -19,16 +19,13 @@ import { DOCUMENT } from '@angular/common';
     providedIn: 'root'
 })
 
-export class IgxIconService implements OnDestroy {
+export class IgxIconService {
     private _fontSet = 'material-icons';
     private _fontSetAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
-    private _httpRequest: XMLHttpRequest;
-    private _loadListener = null;
 
     constructor(private _sanitizer: DomSanitizer,
-        private zone: NgZone,
         @Inject(DOCUMENT) private _document: any) { }
 
     /**
@@ -133,39 +130,23 @@ export class IgxIconService implements OnDestroy {
     }
 
     /**
-   * @hidden
-   */
-    public ngOnDestroy(): void {
-        this.zone.runOutsideAngular(() => {
-            this._httpRequest.removeEventListener('load', this._loadListener);
-        });
-    }
-
-    /**
      * @hidden
      */
     private fetchSvg(iconName: string, url: string, fontSet: string = '') {
-        this._httpRequest = new XMLHttpRequest();
-        const args = { iconName, url, fontSet };
-        this.zone.runOutsideAngular(() => {
-            this._loadListener = this.onLoad.bind(this, args);
-            this._httpRequest.addEventListener('load', this._loadListener);
-        });
-
-        this._httpRequest.open('GET', url, true);
-        this._httpRequest.responseType = 'text';
-        this._httpRequest.send();
-    }
-
-    /**
-    * @hidden
-    */
-    private onLoad(args: any, event: ProgressEvent) {
-        if ((event.target as XMLHttpRequest).status === 200) {
-            this.cacheSvgIcon(args.iconName, (event.target as XMLHttpRequest).responseText, args.fontSet);
-        } else {
-            throw new Error(`Could not fetch SVG from url: ${args.url}; error: ${(event.target as XMLHttpRequest).status}`);
+        const instance = this;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onload = function (event: ProgressEvent) {
+            const request = event.target as XMLHttpRequest;
+            if (request.status === 200) {
+                instance.cacheSvgIcon(iconName, request.responseText, fontSet);
+            } else {
+                throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status}`);
+            }
         }
+
+        httpRequest.open('GET', url, true);
+        httpRequest.responseType = 'text';
+        httpRequest.send();
     }
 
     /**
