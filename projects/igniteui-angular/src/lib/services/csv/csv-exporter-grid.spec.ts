@@ -58,7 +58,7 @@ describe('CSV Grid Exporter', () => {
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyData(wrapper.simpleGridData);
         });
-    }, 10000);
+    });
 
     it('should honor \'ignoreFiltering\' option.', async () => {
 

@@ -48,7 +48,7 @@ describe('IgxTreeGrid Component Tests', () => {
             expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
             expect(grid.rowList.length).toBeGreaterThan(0);
-        }), 10000);
+        }));
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             fix.detectChanges();

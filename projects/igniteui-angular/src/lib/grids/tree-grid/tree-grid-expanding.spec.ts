@@ -1029,7 +1029,7 @@ describe('Row editing expanding/collapsing', () => {
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         tick();
         expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
-    }), 10000);
+    }));
 
     it('Hide banner with collapsing a node, using API', fakeAsync(() => {
         const cell = treeGrid.getCellByColumn(1, 'Name');

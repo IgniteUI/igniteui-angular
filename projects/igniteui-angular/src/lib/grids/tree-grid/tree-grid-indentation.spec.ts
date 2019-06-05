@@ -44,7 +44,7 @@ describe('IgxTreeGrid - Indentation', () => {
 
             // Verify the tree cell is the first cell for every row
             TreeGridFunctions.verifyCellsPosition(rows, 4);
-        }, 10000);
+        });
 
         it('should have correct indentation for every record of each level', () => {
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -201,7 +201,7 @@ describe('IgxTreeGrid - Indentation', () => {
 
             // Verify the tree cell is the first cell for every row
             TreeGridFunctions.verifyCellsPosition(rows, 5);
-        }, 10000);
+        });
 
         it('should have correct indentation for every record of each level', () => {
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
