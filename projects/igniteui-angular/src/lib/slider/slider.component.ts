@@ -270,9 +270,7 @@ export class IgxSliderComponent implements
     public set labels(labels: Array<number|string|boolean|null|undefined>) {
         this._labels = labels;
 
-        if (this.upperBound > labels.length - 1) {
-            this.upperBound = labels.length - 1;
-        }
+        this._pMax = 1;
 
         if (this._hasViewInit) {
             this.stepDistance = this.calculateStepDistance();
@@ -506,7 +504,7 @@ export class IgxSliderComponent implements
      */
     public get lowerBound(): number {
         if (!Number.isNaN(this._lowerBound) && this._lowerBound !== undefined) {
-            return this._lowerBound;
+            return this.valueInRange(this._lowerBound, this.minValue, this.maxValue);
         }
 
         return this.minValue;
@@ -545,7 +543,7 @@ export class IgxSliderComponent implements
      */
     public get upperBound(): number {
         if (!Number.isNaN(this._upperBound) && this._upperBound !== undefined) {
-            return this._upperBound;
+            return this.valueInRange(this._upperBound, this.minValue, this.maxValue);
         }
 
         return this.maxValue;
@@ -935,7 +933,6 @@ export class IgxSliderComponent implements
         }
 
         this.toggleThumb();
-        this.showThumbLabels();
 
         return value;
     }
