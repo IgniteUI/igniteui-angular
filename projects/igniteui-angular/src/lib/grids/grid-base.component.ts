@@ -4502,7 +4502,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        this._pinnedColumns = this.columnList.filter((c) => c.pinned).sort((a, b) => a.visibleIndex - b.visibleIndex);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
