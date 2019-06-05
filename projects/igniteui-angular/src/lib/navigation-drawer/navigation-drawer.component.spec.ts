@@ -221,7 +221,7 @@ describe('Navigation Drawer', () => {
     it('should update with dynamic min template', async(() => {
 
         // immediate requestAnimationFrame for testing
-        spyOn(window, 'requestAnimationFrame').and.callFake((callback) => 0);
+        spyOn(window, 'requestAnimationFrame').and.callFake(callback => { callback(0); return 0; });
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>

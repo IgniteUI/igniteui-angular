@@ -260,7 +260,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective, static: true })
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective, static: false })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
         if (!this.isOpen) {
             this.setDrawerWidth(v ? this.miniWidth : '');
@@ -271,7 +271,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective, static: true })
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective, static: false })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
     /**
@@ -602,7 +602,7 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             if (this.drawer) {
                 this.renderer.setElementStyle(this.drawer, 'width', width);
             }
