@@ -4829,6 +4829,142 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expressions = Array.from(GridFunctions.getExcelCustomFilteringDefaultExpressions(fix));
         expect(expressions.length).toBe(2);
     }));
+
+    it('Should keep selected operator of custom expression the same when clicking it.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        // Verify 'And' button is selected on first expression.
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+        let andButton: any = Array.from(expr.querySelectorAll('.igx-button-group__item'))
+                                 .find((b: any) => b.innerText === 'And');
+        expect(andButton.classList.contains('igx-button-group__item--selected')).toBe(true);
+
+        // Click the 'And' button.
+        andButton.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Verify that selected button remains the same.
+        const buttons = Array.from(expr.querySelectorAll('.igx-button-group__item'));
+        andButton = buttons.find((b: any) => b.innerText === 'And');
+        expect(andButton.classList.contains('igx-button-group__item--selected')).toBe(true);
+
+        const orButton: any = buttons.find((b: any) => b.innerText === 'Or');
+        expect(orButton.classList.contains('igx-button-group__item--selected')).toBe(false);
+    }));
+
+    it('Should select the button operator in custom expression when pressing \'Enter\' on it.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+        const buttons = Array.from(expr.querySelectorAll('.igx-button-group__item'));
+        const andButton: any = buttons.find((b: any) => b.innerText === 'And');
+        const orButton: any = buttons.find((b: any) => b.innerText === 'Or');
+
+        // Verify 'and' is selected.
+        expect(andButton.classList.contains('igx-button-group__item--selected')).toBe(true);
+        expect(orButton.classList.contains('igx-button-group__item--selected')).toBe(false);
+
+        // Press 'Enter' on 'or' button and verify it gets selected.
+        orButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        fix.detectChanges();
+        expect(andButton.classList.contains('igx-button-group__item--selected')).toBe(false);
+        expect(orButton.classList.contains('igx-button-group__item--selected')).toBe(true);
+
+        // Press 'Enter' on 'and' button and verify it gets selected.
+        andButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        fix.detectChanges();
+        expect(andButton.classList.contains('igx-button-group__item--selected')).toBe(true);
+        expect(orButton.classList.contains('igx-button-group__item--selected')).toBe(false);
+    }));
+
+    it('Should open conditions dropdown of custom expression with \'Alt + Arrow Down\' or click.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+        const inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+        const conditionsInput = inputs[0];
+
+        // Dropdown should be hidden.
+        let operatorsDropdownToggle = expr.querySelector('.igx-toggle--hidden');
+        expect(operatorsDropdownToggle).not.toBeNull();
+
+        // Press 'Alt + Arrow Down' to open operators dropdown.
+        conditionsInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+        tick(100);
+        fix.detectChanges();
+
+        // Dropdown should be visible.
+        operatorsDropdownToggle = expr.querySelector('.igx-toggle--hidden');
+        expect(operatorsDropdownToggle).toBeNull();
+
+        // Click-off to close dropdown.
+        expr.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Dropdown should be hidden.
+        operatorsDropdownToggle = expr.querySelector('.igx-toggle--hidden');
+        expect(operatorsDropdownToggle).not.toBeNull();
+    }));
+
+    it('Should open calendar when clicking date-picker of custom expression.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+        const datePicker = expr.querySelector('igx-date-picker');
+        const datePickerInput = datePicker.querySelector('input');
+
+        // Verify calendar is not opened.
+        let calendar = datePicker.querySelector('igx-calendar');
+        expect(calendar).toBeNull();
+
+        // Click date picker input to open calendar.
+        datePickerInput.dispatchEvent(new MouseEvent('click'));
+        tick(200);
+        fix.detectChanges();
+
+        // Verify calendar is opened.
+        calendar = datePicker.querySelector('igx-calendar');
+        expect(calendar).not.toBeNull();
+
+        // Click-off to close calendar.
+        expr.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Verify calendar is opened.
+        calendar = datePicker.querySelector('igx-calendar');
+        expect(calendar).toBeNull();
+    }));
 });
 
 const expectedResults = [];
