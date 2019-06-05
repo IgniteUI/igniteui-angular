@@ -510,7 +510,7 @@
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition: transform $transition-timing, color $transition-timing;
+        transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -518,7 +518,7 @@
     }
 
     %form-group-label--cosy {
-        margin-top: rem(-4.5px);
+        margin-top: rem(-2px);
     }
 
     %form-group-label--compact {
@@ -532,6 +532,7 @@
     %form-group-label--float {
         overflow: visible;
         transform: translateY(-50%) scale(.75);
+        margin-top: auto;
     }
 
     %form-group-label--fixed {
