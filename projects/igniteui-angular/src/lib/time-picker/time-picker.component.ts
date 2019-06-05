@@ -1222,7 +1222,7 @@ export class IgxTimePickerComponent implements
         }
         const settings = this.overlaySettings;
 
-        if (target && settings) {
+        if (target && settings && settings.positionStrategy) {
             settings.positionStrategy.settings.target = target;
         }
 
