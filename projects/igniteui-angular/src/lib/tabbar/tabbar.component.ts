@@ -615,6 +615,10 @@ export class IgxTabComponent {
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
     protected defaultTabTemplate: TemplateRef<any>;
 
+    /**@hidden*/
+    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
+    protected customTabTemplateDir: IgxTabTemplateDirective;
+
     /**
      * Returns the `template` for this IgxTabComponent.
      * ```typescript
@@ -625,6 +629,9 @@ export class IgxTabComponent {
     public get template(): TemplateRef<any> {
         if (this.relatedPanel && this.relatedPanel.customTabTemplate) {
             return this.relatedPanel.customTabTemplate;
+        }
+        if (this.customTabTemplateDir) {
+            return this.customTabTemplateDir.template;
         }
         return this.defaultTabTemplate;
     }

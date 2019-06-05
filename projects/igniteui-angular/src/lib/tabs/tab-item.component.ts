@@ -1,5 +1,6 @@
 import {
     Component,
+    ContentChild,
     ElementRef,
     HostBinding,
     HostListener,
@@ -10,6 +11,7 @@ import {
 
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabItemBase, IgxTabsBase } from './tabs.common';
+import { IgxTabItemTemplateDirective } from './tabs.directives';
 
 @Component({
     selector: 'igx-tab-item',
@@ -71,6 +73,10 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     /**@hidden*/
     @ViewChild('defaultTabTemplate', { read: TemplateRef })
     protected defaultTabTemplate: TemplateRef<any>;
+
+    /**@hidden*/
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    protected customTabTemplateDir: IgxTabItemTemplateDirective;
 
     private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
@@ -277,6 +283,9 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     public get template(): TemplateRef<any> {
         if (this.relatedGroup && this.relatedGroup.customTabTemplate) {
             return this.relatedGroup.customTabTemplate;
+        }
+        if (this.customTabTemplateDir) {
+            return this.customTabTemplateDir.template;
         }
         return this.defaultTabTemplate;
     }
