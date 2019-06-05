@@ -12,7 +12,6 @@ import {
     HostListener,
     ChangeDetectionStrategy
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
@@ -470,13 +469,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /*
-    * Opens date-picker if condition is not unary
+    * noop
     */
-    public openDatePicker(openDialog: Function) {
-        if (!this.expression.condition.isUnary) {
-            openDialog();
-        }
-    }
+    public noop() {}
 
     /**
      *  Event handler for date picker's selection.
