@@ -1135,11 +1135,6 @@ export class IgxTimePickerComponent implements
         });
     }
 
-    private _closeDropDown() {
-        this.toggleRef.close();
-        this._onDropDownClosed();
-    }
-
     private _onDropDownClosed(): void {
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
