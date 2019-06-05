@@ -64,7 +64,7 @@ describe('Excel Exporter', () => {
             TestMethods.testRawData(currentGrid, async (grid) => {
                 await exportAndVerify(grid, options, actualData.simpleGridData);
             });
-        });
+        }, 10000);
 
         it('should honor \'ignoreFiltering\' option.', async () => {
             const result = TestMethods.createGridAndFilter();

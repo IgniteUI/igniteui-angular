@@ -832,7 +832,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         await wait(100);
         fixture.detectChanges();
         expect(child2Cell.selected).toBe(true);
-    }));
+    }), 10000);
     it('should allow navigating with Tab/Shift+Tab between sibling child grids.', (async () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
