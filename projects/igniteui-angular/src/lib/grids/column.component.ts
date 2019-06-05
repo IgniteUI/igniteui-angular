@@ -388,7 +388,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.columns.indexOf(this);
     }
     /**
-     * When autogenerating columns, the formatter is used to format the display of the column data without modifing the underlying bound values.
+     * When autogenerating columns, the formatter is used to format the display of the column data without modifying the underlying bound values.
      * In this example, we check to see if the column name is Salary, and then provide a method as the column formatter to format the value into a currency string.
      * ```typescript
      * onColumnInit(column: IgxColumnComponent) {
