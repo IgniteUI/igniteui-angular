@@ -154,7 +154,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets input placeholder.
      *
      */
-    @Input() public placeholder = '';
+    @Input() public placeholder;
     /**
      * Sets/gets whether item selection is required.
      * If not set, `required` will have value `false`.
