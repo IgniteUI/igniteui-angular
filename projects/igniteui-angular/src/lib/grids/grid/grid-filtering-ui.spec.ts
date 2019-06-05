@@ -4812,7 +4812,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         expect(orButton.classList.contains('igx-button-group__item--selected')).toBe(false);
     }));
 
-    it('Should open conditions dropdown of custom expression with \'Alt + Arrow Down\' or click.', fakeAsync(() => {
+    it('Should open conditions dropdown of custom expression with \'Alt + Arrow Down\'.', fakeAsync(() => {
         // Open excel style custom filtering dialog.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
         fix.detectChanges();
@@ -4884,6 +4884,145 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         // Verify calendar is opened.
         calendar = datePicker.querySelector('igx-calendar');
         expect(calendar).toBeNull();
+    }));
+
+    it('Should filter grid through custom date filter dialog.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+        const datePicker = expr.querySelector('igx-date-picker');
+        const datePickerInput = datePicker.querySelector('input');
+
+        // Click date picker input to open calendar.
+        datePickerInput.dispatchEvent(new MouseEvent('click'));
+        tick(100);
+        fix.detectChanges();
+
+        // Click today item.
+        const calendar = datePicker.querySelector('igx-calendar');
+        const todayItem = calendar.querySelector('.igx-calendar__date--current');
+        todayItem.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Click 'apply' button to apply filter.
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        fix.detectChanges();
+
+        // Verify the results are with 'today' date.
+        const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+        expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+        expect(grid.filteredData.length).toEqual(1);
+    }));
+
+    it('Should correctly update \'SelectAll\' based on checkboxes.', fakeAsync(() => {
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(100);
+        fix.detectChanges();
+
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const visibleListItems = GridFunctions.sortNativeElementsVertically(
+            Array.from(searchComponent.querySelectorAll('igx-list-item')));
+        const thirdListItem = visibleListItems[2];
+        const thirdItemCbInput = thirdListItem.querySelector('.igx-checkbox__input');
+
+        // Verify 'Select All' checkbox is not indeterminate.
+        let selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
+        expect(selectAllCheckbox.classList.contains('igx-checkbox--indeterminate')).toBe(false);
+
+        // Uncheck third list item.
+        thirdItemCbInput.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Verify 'Select All' checkbox is indeterminate.
+        selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
+        expect(selectAllCheckbox.classList.contains('igx-checkbox--indeterminate')).toBe(true);
+
+        // Check third list item again.
+        thirdItemCbInput.click();
+        tick(100);
+        fix.detectChanges();
+
+        // Verify 'Select All' checkbox is not indeterminate.
+        selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
+        expect(selectAllCheckbox.classList.contains('igx-checkbox--indeterminate')).toBe(false);
+    }));
+
+    it('Should correctly update all items based on \'SelectAll\' checkbox.', fakeAsync(() => {
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        tick(100);
+        fix.detectChanges();
+
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const visibleListItems = GridFunctions.sortNativeElementsVertically(
+            Array.from(searchComponent.querySelectorAll('igx-list-item')));
+        const dataListItems = Array.from(visibleListItems).slice(1, visibleListItems.length);
+
+        // Verify all visible data list items are checked.
+        for (const dataListItem of dataListItems) {
+            const dataListItemCheckbox = (dataListItem as any).querySelector('igx-checkbox');
+            expect(dataListItemCheckbox.classList.contains('igx-checkbox--checked')).toBe(true);
+        }
+
+        // Click 'Select All' checkbox.
+        let selectAllCbInput = visibleListItems[0].querySelector('.igx-checkbox__input');
+        selectAllCbInput.click();
+        fix.detectChanges();
+
+        // Verify all visible data list items are unchecked.
+        for (const dataListItem of dataListItems) {
+            const dataListItemCheckbox = (dataListItem as any).querySelector('igx-checkbox');
+            expect(dataListItemCheckbox.classList.contains('igx-checkbox--checked')).toBe(false);
+        }
+
+        // Click 'Select All' checkbox.
+        selectAllCbInput = visibleListItems[0].querySelector('.igx-checkbox__input');
+        selectAllCbInput.click();
+        fix.detectChanges();
+
+        // Verify all visible data list items are checked.
+        for (const dataListItem of dataListItems) {
+            const dataListItemCheckbox = (dataListItem as any).querySelector('igx-checkbox');
+            expect(dataListItemCheckbox.classList.contains('igx-checkbox--checked')).toBe(true);
+        }
+    }));
+
+    it('Should correctly update all \'SelectAll\' checkbox when not a single item is checked.', fakeAsync(() => {
+        GridFunctions.clickExcelFilterIcon(fix, 'Released');
+        tick(100);
+        fix.detectChanges();
+
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const visibleListItems = GridFunctions.sortNativeElementsVertically(
+            Array.from(searchComponent.querySelectorAll('igx-list-item')));
+        expect(searchComponent.querySelectorAll('.igx-checkbox').length).toBe(4);
+
+        // Verify 'Select All' checkbox is checked.
+        let selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
+        expect(selectAllCheckbox.classList.contains('igx-checkbox--checked')).toBe(true);
+
+        // Uncheck second, third and fourth list items.
+        const secondListItemCbInput = visibleListItems[1].querySelector('.igx-checkbox__input');
+        const thirdListItemCbInput = visibleListItems[2].querySelector('.igx-checkbox__input');
+        const fourthListItemCbInput = visibleListItems[3].querySelector('.igx-checkbox__input');
+        secondListItemCbInput.click();
+        fix.detectChanges();
+        thirdListItemCbInput.click();
+        fix.detectChanges();
+        fourthListItemCbInput.click();
+        fix.detectChanges();
+
+        // Verify 'Select All' checkbox is unchecked.
+        selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
+        expect(selectAllCheckbox.classList.contains('igx-checkbox--checked')).toBe(false);
     }));
 });
 
