@@ -129,6 +129,12 @@ export class UIInteractions {
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
     }
 
+    public static simulateNonPrimaryClick(cell) {
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
+    }
+
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {

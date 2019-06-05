@@ -1,7 +1,7 @@
 /**
  *@hidden
  */
-export function cloneArray(array, deep?: boolean) {
+export function cloneArray(array: any[], deep?: boolean) {
     const arr = [];
     if (!array) {
         return arr;
