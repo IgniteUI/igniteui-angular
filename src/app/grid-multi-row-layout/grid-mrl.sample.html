@@ -3,7 +3,7 @@
     <section style="height: 800px" class="sample-content">
         <igx-grid [rowEditable]="true" [primaryKey]="'PostalCode'" [rowSelectable]="true" #grid [data]="data" displayDensity="compact" [width]="'100%'" [showToolbar]='true' [columnHiding]='true'>
             <igx-column-layout [movable]="false" [pinned]="true" field='group1'>
-                <igx-column [rowStart]="1" [colStart]="1" [colEnd]="5" field="ContactName"></igx-column>
+                <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [colEnd]="5" field="ContactName"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="5" field="ContactTitle"></igx-column>
                 <igx-column [rowStart]="1" [colStart]="6" field="Country"></igx-column>
                 <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" field="Phone"></igx-column>
