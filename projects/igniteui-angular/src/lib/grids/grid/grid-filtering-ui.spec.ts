@@ -1572,7 +1572,6 @@ describe('IgxGrid - Filtering actions', () => {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const datePicker = filterUIRow.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
-        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 });
 
@@ -2831,9 +2830,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxGridExcelStyleFilteringModule]
+                IgxGridExcelStyleFilteringModule
+            ]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
     let fix, grid;
@@ -3432,7 +3432,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
         const datePicker = dateExpression.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
-        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 
     it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
