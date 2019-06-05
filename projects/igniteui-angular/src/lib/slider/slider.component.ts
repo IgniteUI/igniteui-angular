@@ -139,10 +139,6 @@ export class IgxSliderComponent implements
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    public stepDistance = this._step;
-    public onPan: Subject<number> = new Subject<number>();
-
-
     @ViewChild('slider')
     private slider: ElementRef;
 
@@ -152,18 +148,19 @@ export class IgxSliderComponent implements
     @ViewChild('ticks')
     private ticks: ElementRef;
 
-    // @ViewChild('thumbFrom', { read: IgxSliderThumbComponent })
+    @ViewChildren(IgxSliderThumbComponent)
+    private thumbs: QueryList<IgxSliderThumbComponent> = new QueryList<IgxSliderThumbComponent>();
+
     private get thumbFrom(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM);
     }
 
-    // @ViewChild('thumbTo', { read: IgxSliderThumbComponent })
     private get thumbTo(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
     }
 
-    @ViewChildren(IgxSliderThumbComponent)
-    private thumbs: QueryList<IgxSliderThumbComponent>;
+    public stepDistance = this._step;
+    public onPan: Subject<number> = new Subject<number>();
 
     /**
      * @hidden
@@ -670,6 +667,11 @@ export class IgxSliderComponent implements
         this.toggleThumbLabels();
     }
 
+    @HostListener('blur')
+    public onBlur() {
+        this.hideThumbLabels();
+    }
+
     /**
      *Returns whether the `IgxSliderComponent` type is RANGE.
      *```typescript
@@ -924,7 +926,17 @@ export class IgxSliderComponent implements
     }
 
     public swapThumb(value: IRangeSliderValue) {
+        if (this.thumbFrom.isActive) {
+            value.upper = this.upperValue;
+            value.lower = this.upperValue;
+        } else {
+            value.upper = this.lowerValue;
+            value.lower = this.lowerValue;
+        }
+
         this.toggleThumb();
+        this.showThumbLabels();
+
         return value;
     }
 

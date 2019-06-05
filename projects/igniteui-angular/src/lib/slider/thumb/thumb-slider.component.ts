@@ -23,7 +23,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     private _timer;
     private _isActiveLabel = false;
-    public _destroy$ = new Subject<boolean>();
+    private _destroy$ = new Subject<boolean>();
 
     public isActive = false;
 
