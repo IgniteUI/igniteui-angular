@@ -646,7 +646,7 @@ export class IgxSliderComponent implements
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
-        console.log('pointerdown');
+
         this.showThumbLabels();
     }
 
@@ -656,7 +656,6 @@ export class IgxSliderComponent implements
             return;
         }
 
-        console.log('pointerup');
         this.hideThumbLabels();
     }
 
