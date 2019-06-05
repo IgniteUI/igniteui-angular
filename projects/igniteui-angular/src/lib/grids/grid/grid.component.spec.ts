@@ -2136,29 +2136,23 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
-            it(`Should exit row editing AND COMMIT on click on non-editable cell in same row`, fakeAsync(() => {
+            it(`Should NOT exit row editing on click on non-editable cell in same row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-
                 spyOn(grid, 'endEdit').and.callThrough();
-                // spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                cell.inEditMode = true;
+                cell.setEditMode(true);
                 tick();
                 fix.detectChanges();
                 const nonEditableCell = grid.getCellByColumn(0, 'ProductID');
                 nonEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
-                expect(grid.endEdit).toHaveBeenCalled();
-                expect(grid.endEdit).toHaveBeenCalledWith(true);
-                // expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                // expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
-                expect(cell.inEditMode).toBeFalsy();
+                expect(grid.endEdit).not.toHaveBeenCalled();
+                expect(cell.editMode).toEqual(true);
             }));
 
             it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, fakeAsync(() => {
@@ -2197,7 +2191,7 @@ describe('IgxGrid Component Tests', () => {
 
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                cell.inEditMode = true;
+                cell.setEditMode(true);
                 tick();
                 fix.detectChanges();
                 const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
@@ -2207,8 +2201,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.endEdit).toHaveBeenCalledWith(true);
                 // expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 // expect(gridAPI.escape_editMode).toHaveBeenCalledWith({ rowID: 1, columnID: 2, rowIndex: 0 });
-                expect(cell.inEditMode).toBeFalsy();
-                expect(otherEditableCell.inEditMode).toBeTruthy();
+                expect(cell.editMode).toBeFalsy();
+                expect(otherEditableCell.editMode).toBeTruthy();
             }));
 
             it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, fakeAsync(() => {
@@ -2219,7 +2213,7 @@ describe('IgxGrid Component Tests', () => {
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
-                targetCell.inEditMode = true;
+                targetCell.setEditMode(true);
                 tick();
 
                 spyOn(gridAPI, 'submit_value').and.callThrough();
@@ -2232,7 +2226,7 @@ describe('IgxGrid Component Tests', () => {
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(targetCell.inEditMode).toBeFalsy();
+                expect(targetCell.editMode).toBeFalsy();
             }));
 
             it(`Should exit row editing AND DISCARD on clicking the CANCEL button in row edit overlay`, fakeAsync(() => {
@@ -2299,7 +2293,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(0);
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
-                targetCell.onFocus({});
+                targetCell.nativeElement.dispatchEvent(new Event('focus'));
                 tick(100);
                 fixture.detectChanges();
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);

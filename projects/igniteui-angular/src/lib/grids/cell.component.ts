@@ -569,12 +569,24 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     _updateCRUDStatus() {
-        if (this.editable && this.crudService.inEditMode && !this.row.deleted) {
-            this.gridAPI.update_cell(this.crudService.cell, this.crudService.cell.editValue);
-            this.crudService.end();
+        const crud = this.crudService;
+        const editableCell = this.crudService.cell;
+        const editMode = !!(crud.row || crud.cell);
+
+
+        if (this.editable && editMode && !this.row.deleted) {
+            if (editableCell) {
+                this.gridAPI.update_cell(editableCell, editableCell.editValue);
+            }
+            crud.end();
             this.grid.cdr.markForCheck();
-            this.crudService.begin(this);
-        } else if (this.crudService.inEditMode) {
+            crud.begin(this);
+            return;
+        }
+
+        if (editableCell && crud.sameRow(this.cellID.rowID)) {
+            this.gridAPI.submit_value();
+        } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.endEdit(true);
         }
     }
@@ -589,7 +601,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         const node = this.selectionNode;
-
         this._updateCRUDStatus();
         this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection);
     }
@@ -669,6 +680,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     pointerdown = (event: PointerEvent) => {
         if (!isLeftClick(event)) {
+            this.selectionService.addKeyboardRange();
+            this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
             return;
         }
@@ -745,14 +758,23 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('focus', ['$event'])
     public onFocus(event: FocusEvent) {
+        const node = this.selectionNode;
+
         this.focused = true;
         this.row.focused = true;
-        this._updateCellSelectionStatus();
-        if (!this.selectionService.isActiveNode(this.selectionNode)) {
+
+        if (!this.selectionService.isActiveNode(node) && !this.editMode) {
             this.grid.onSelection.emit({ cell: this, event });
         }
+
         if (this.selectionService.primaryButton) {
-            this.selectionService.activeElement = this.selectionNode;
+            this._updateCellSelectionStatus();
+            this.selectionService.activeElement = node;
+        } else {
+            this.selectionService.activeElement = null;
+            if (this.crudService.inEditMode && !this.editMode) {
+                this.gridAPI.submit_value();
+            }
         }
         this.selectionService.primaryButton = true;
     }
@@ -824,7 +846,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
         this.grid.onGridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel) {
-            this.selectionService.keyboardStateOnKeydown(node, shift, shift && key === 'tab');
+            this.selectionService.clear();
+            this.selectionService.keyboardState.active = true;
             return;
         }
 

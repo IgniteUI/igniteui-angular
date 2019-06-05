@@ -97,18 +97,14 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             // Simulate right-click
             const endCell = grid.getCellByColumn(4, 'ID');
-            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
-            endCell.nativeElement.dispatchEvent(new Event('focus'));
-            endCell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
+            UIInteractions.simulateNonPrimaryClick(endCell);
             detect();
 
             HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
 
             const c = grid.getCellByColumn(0, 'ID');
-            c.nativeElement.dispatchEvent(new PointerEvent('pointerdown'));
-            c.nativeElement.dispatchEvent(new Event('focus'));
-            c.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+            UIInteractions.simulateClickAndSelectCellEvent(c);
             detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -815,6 +811,35 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
             HelperUtils.verifySelectedRange(grid, 1, 1, 0, 1);
             expect(grid.getSelectedData()).toEqual([{ID: 957, ParentID: 147}]);
+        });
+
+        it(`Should not clear selection from keyboard shift-state on non-primary click`, () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            let cell = grid.getCellByColumn(1, 'ParentID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+            HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
+
+            cell = grid.getCellByColumn(2, 'ParentID');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+
+            UIInteractions.simulateNonPrimaryClick(cell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
         });
 
         it(`Should not clear range when try to navigate out the grid with shift
@@ -2425,6 +2450,29 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('CRUD: Non-primary click with a cell in edit mode', () => {
+            grid.getColumnByName('Name').editable = true;
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(0, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            cell.setEditMode(true);
+            cell.editValue = 'No name';
+            fix.detectChanges();
+
+            const target = grid.getCellByColumn(0, 'Age');
+            UIInteractions.simulateNonPrimaryClick(target);
+            fix.detectChanges();
+
+            expect(cell.editMode).toEqual(false);
+            expect(cell.value).toMatch('No name');
+            expect(target.focused).toEqual(true);
+            expect(target.selected).toEqual(false);
+            expect(cell.selected).toEqual(true);
         });
 
         it('Search: selection range should be preserved when perform search', () => {
