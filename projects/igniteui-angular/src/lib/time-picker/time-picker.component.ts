@@ -1550,8 +1550,10 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public parseMask(preserveAmPm = true): string {
-        return preserveAmPm ? this.mask.replace(new RegExp('0', 'g'), this.promptChar).replace('LL', 'AM') :
-            this.mask.replace(new RegExp('0', 'g'), this.promptChar).replace(new RegExp('L', 'g'), this.promptChar);
+        const maskWithAmPm = this.mask.replace(new RegExp('0', 'g'), this.promptChar).replace('LL', 'AM');
+        const pureMask = this.mask.replace(new RegExp('0', 'g'), this.promptChar).replace(new RegExp('L', 'g'), this.promptChar);
+
+        return preserveAmPm ? maskWithAmPm : pureMask;
     }
 
     /**
