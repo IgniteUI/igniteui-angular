@@ -142,7 +142,7 @@ export class IgxIconService {
             } else {
                 throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status}`);
             }
-        }
+        };
 
         httpRequest.open('GET', url, true);
         httpRequest.responseType = 'text';
