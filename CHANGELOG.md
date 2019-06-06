@@ -63,6 +63,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ## 7.2.12
 ### New feature
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
  
 ## 7.2.9
 - `Pager`

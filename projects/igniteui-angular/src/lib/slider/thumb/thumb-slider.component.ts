@@ -15,6 +15,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.component';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html',
