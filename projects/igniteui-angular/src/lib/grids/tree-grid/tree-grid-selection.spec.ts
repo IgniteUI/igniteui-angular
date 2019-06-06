@@ -468,14 +468,18 @@ describe('IgxTreeGrid - Selection', () => {
         it('should not persist selection after paging', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
+            // Clicking on the pager buttons triggers a blur event.
+
             navigateToNextPage(fix);
+            treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
+            fix.detectChanges();
             navigateToFirstPage(fix);
             fix.detectChanges();
 
@@ -483,7 +487,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             rows = TreeGridFunctions.getAllRows(fix);
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -491,6 +495,8 @@ describe('IgxTreeGrid - Selection', () => {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
             navigateToLastPage(fix);
+            treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
+            fix.detectChanges();
             navigateToFirstPage(fix);
             fix.detectChanges();
 
@@ -619,7 +625,7 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedRows().length).toBeGreaterThan(0);
 
             // enter edit mode
-            targetCell.inEditMode = true;
+            targetCell.setEditMode(true);
             tick();
             fix.detectChanges();
 
