@@ -1842,7 +1842,8 @@ describe('IgxGrid - GroupBy', () => {
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
         UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 75, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
@@ -1908,9 +1909,11 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
@@ -1933,9 +1936,11 @@ describe('IgxGrid - GroupBy', () => {
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
