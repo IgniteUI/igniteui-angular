@@ -1,8 +1,5 @@
 # Ignite UI for Angular Change Log
 
-## 7.3.4
-
-
 All notable changes for each version of this project will be documented in this file.
 ## 7.3.3
 
