@@ -20,7 +20,8 @@ import {
     AfterContentInit,
     Optional,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -41,6 +42,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
 
@@ -90,6 +92,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @Input()
     public set data(value: any[]) {
         this._data = value;
+        if (this.parent) {
+            this.calculateGridHeight();
+        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -229,6 +234,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChild('hierarchical_record_template', { read: TemplateRef })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
@@ -457,18 +483,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxHierarchicalGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public getPinnedWidth(takeHidden = false) {
-        let width = super.getPinnedWidth(takeHidden);
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
+
         if (this.hasExpandableChildren) {
             width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
         }
+
         return width;
     }
 
@@ -567,7 +592,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
@@ -680,6 +705,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected _calculateGridBodyHeight() {
+        if (!this.parent || !this.isPercentHeight) {
+            return super._calculateGridBodyHeight();
+        }
+        const bodyHeight = this.defaultTargetBodyHeight;
+        return bodyHeight > 0 ? bodyHeight : null;
     }
 
     private hg_verticalScrollHandler(event) {

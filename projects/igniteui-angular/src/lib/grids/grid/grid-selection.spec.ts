@@ -793,7 +793,7 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridSummaries;
-        expect(grid.summariesMargin).toBe(grid.headerFixedWidth);
+        expect(grid.summariesMargin).toBe(grid.featureColumnsWidth);
     });
 
 

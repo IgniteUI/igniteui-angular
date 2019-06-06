@@ -176,6 +176,10 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
+    get mrlBlockHeight() {
+        return this.grid.hasColumnLayouts && this.column.children && isIE() ? '100%' : '';
+    }
+
     /**
      * Gets whether the header group is stored in a pinned column.
      * @memberof IgxGridHeaderGroupComponent
@@ -221,7 +225,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     constructor(private cdr: ChangeDetectorRef,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-                private element: ElementRef,
+                public element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 }
