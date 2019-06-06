@@ -284,11 +284,11 @@ describe('IgxGrid - Summaries', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            });
+            }));
 
             it('should disableSummaries through grid API ', () => {
                 const summariedColumns = [];

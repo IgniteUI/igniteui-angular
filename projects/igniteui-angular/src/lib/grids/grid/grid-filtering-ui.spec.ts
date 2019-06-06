@@ -2837,12 +2837,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     let fix, grid;
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();

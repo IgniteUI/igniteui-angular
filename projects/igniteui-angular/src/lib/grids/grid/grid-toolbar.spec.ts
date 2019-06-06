@@ -33,11 +33,11 @@ describe('IgxGrid - Grid Toolbar', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();

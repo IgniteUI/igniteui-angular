@@ -456,12 +456,12 @@ describe('IgxGrid - Keyboard navigation', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
-        });
+        }));
 
         it('should allow navigating down', async () => {
             const cell = grid.getCellByColumn(4, 'index');
@@ -870,7 +870,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         configureTestSuite();
         let fix;
         let grid: IgxGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(DefaultGroupBYGridComponent);
             grid = fix.componentInstance.grid;
             fix.componentInstance.width = '600px';
@@ -878,7 +878,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             grid.columnWidth = '100px';
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-        });
+        }));
 
         it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', async(() => {
             grid.groupBy({

@@ -237,11 +237,11 @@ describe('IgxGrid - Cell component', () => {
             configureTestSuite();
             let fixture;
             let grid: IgxGridComponent;
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(CellEditingTestComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
-            });
+            }));
 
             it('should be able to enter edit mode on dblclick, enter and f2', () => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));

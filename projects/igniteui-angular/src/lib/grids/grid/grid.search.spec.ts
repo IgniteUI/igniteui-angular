@@ -33,7 +33,7 @@ describe('IgxGrid - search API', () => {
 
     /* BasicGrid */
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
             fix.detectChanges();
@@ -41,7 +41,7 @@ describe('IgxGrid - search API', () => {
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should clear all highlights', () => {
             const count = grid.findNext('software');
@@ -964,14 +964,14 @@ describe('IgxGrid - search API', () => {
 
     /* GroupableGrid */
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
 
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should be able to navigate through highlights with grouping enabled', async () => {
             grid.groupBy({
@@ -1317,11 +1317,11 @@ describe('IgxGrid - search API', () => {
 
     /* Grid with Avatar */
     describe('', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(GridWithAvatarComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
-        });
+        }));
 
         it('Cells with no text should be excluded from the search', () => {
             const matches = grid.findNext('https');
