@@ -37,19 +37,6 @@ describe('IgxTreeGrid Component Tests', () => {
             grid = fix.componentInstance.treeGrid;
         }));
 
-        it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
-            fix.componentInstance.outerWidth = 800;
-            fix.componentInstance.outerHeight = 600;
-            grid.width = '50%';
-            grid.height = '50%';
-            tick();
-            fix.detectChanges();
-
-            expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
-            expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
-            expect(grid.rowList.length).toBeGreaterThan(0);
-        }));
-
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -58,6 +45,19 @@ describe('IgxTreeGrid Component Tests', () => {
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
+
+        it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
+            fix.componentInstance.outerWidth = 800;
+            fix.componentInstance.outerHeight = 600;
+            grid.width = '50%';
+            grid.height = '50%';
+            fix.detectChanges();
+            tick();
+
+            expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
+            expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
+            expect(grid.rowList.length).toBeGreaterThan(0);
+        }));
 
         it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
             grid.height = '600px';
