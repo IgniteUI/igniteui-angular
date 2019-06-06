@@ -726,6 +726,16 @@ export class IgxSliderComponent implements
         this.update($event.srcEvent.clientX)
     }
 
+    @HostListener('panstart')
+    public onPanStart() {
+        this.showThumbLabels();
+    }
+
+    @HostListener('panend')
+    public onPanEnd() {
+        this.hideThumbLabels();
+    }
+
     /**
      * @hidden
      */
@@ -880,6 +890,7 @@ export class IgxSliderComponent implements
 
         this.thumbs.changes.pipe(takeUntil(this._destroy$)).subscribe(change => {
             const t = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+            this.positionHandle(t, this.lowerValue);
             this.subscribeTo(t, this.thumbChanged.bind(this));
         });
     }

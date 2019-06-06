@@ -148,15 +148,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostListener('blur')
     public onBlur() {
-        this._isActiveLabel = false;
         this.isActive = false;
-        this.onChange.emit();
     }
 
     @HostListener('focus')
     public onFocusListener() {
         this.isActive = true;
-        this.onChange.emit();
     }
 
     public showThumbLabel() {
