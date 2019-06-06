@@ -3390,6 +3390,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
+        if (this.hasColumnLayouts) {
+            this.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
 
         const args = {
             source: column,
@@ -4330,7 +4333,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseInt(col.width, 10);
+                sum += parseInt(col.calcWidth, 10);
             }
         }
         sum += this.featureColumnsWidth;
@@ -4469,7 +4472,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.hasColumnLayouts && this.hasColumnGroups) {
             // invalid configuration - multi-row and column groups
             // remove column groups
-            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || (col.parent && col.parent.columnLayout));
+            const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
         this._columns = this.columnList.toArray();
@@ -4484,6 +4487,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.reinitPinStates();
+
+        if (this.hasColumnLayouts) {
+            collection.forEach((column: IgxColumnComponent) => {
+                column.populateVisibleIndexes();
+            });
+        }
     }
 
     private setColumnEditState(column: IgxColumnComponent) {
@@ -4868,32 +4877,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
             && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
-            if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
-                this.verticalScrollContainer.scrollTo(rowIndex);
-                this.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
-                    this.executeCallback(rowIndex, visibleColIndex, cb);
-                });
+            if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
+                this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                     () => { this.executeCallback(rowIndex, visibleColIndex, cb); } );
             } else {
                 this.executeCallback(rowIndex, visibleColIndex, cb);
             }
         } else {
-            const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
-            this.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
-                    this.verticalScrollContainer.scrollTo(rowIndex);
-                    this.verticalScrollContainer.onChunkLoad
-                    .pipe(first()).subscribe(() => {
-                        this.executeCallback(rowIndex, visibleColIndex, cb);
-                    });
-                } else {
-                    this.executeCallback(rowIndex, visibleColIndex, cb);
-                }
-
-            });
-            this.navigation.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
+                 () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
         }
     }
 
