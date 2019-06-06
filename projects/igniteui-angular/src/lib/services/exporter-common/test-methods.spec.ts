@@ -6,13 +6,13 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 
 export class TestMethods {
 
-    public static testRawData(myGrid: IgxGridComponent, action: (grid) => void) {
+    public static async testRawData(myGrid: IgxGridComponent, action: (grid) => Promise<void>) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         myGrid = fix.componentInstance.grid;
 
         expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
-        action(myGrid);
+        await action(myGrid);
     }
 
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,

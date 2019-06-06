@@ -61,7 +61,7 @@ describe('Excel Exporter', () => {
 
         it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
-            TestMethods.testRawData(currentGrid, async (grid) => {
+            await TestMethods.testRawData(currentGrid, async (grid) => {
                 await exportAndVerify(grid, options, actualData.simpleGridData);
             });
         });

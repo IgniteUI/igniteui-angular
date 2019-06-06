@@ -54,7 +54,7 @@ describe('CSV Grid Exporter', () => {
     it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;
 
-        TestMethods.testRawData(currentGrid, async (grid) => {
+        await TestMethods.testRawData(currentGrid, async (grid) => {
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyData(wrapper.simpleGridData);
         });
