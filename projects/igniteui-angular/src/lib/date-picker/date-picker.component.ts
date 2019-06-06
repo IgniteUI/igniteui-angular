@@ -54,7 +54,6 @@ import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
-import { getViewportRect } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
@@ -540,6 +539,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
+     * @deprecated Use 'onOpened' instead.
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
      *```typescript
      *public open(event){
@@ -561,6 +561,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public onOpened = new EventEmitter<IgxDatePickerComponent>();
 
     /**
+     * @deprecated Use 'onClosed' instead.
      *"An event that is emitted when the `IgxDatePickerComponent` is closed.
      *```typescript
      *public close(event){

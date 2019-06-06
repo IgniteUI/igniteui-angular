@@ -402,6 +402,7 @@ export class IgxTimePickerComponent implements
     public onValidationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
     /**
+     * @deprecated Use 'onOpened' instead.
      * Emitted when a timePicker is being opened.
      * ```html
      *@ViewChild("toast")
@@ -427,6 +428,7 @@ export class IgxTimePickerComponent implements
     public onOpened = new EventEmitter<IgxTimePickerComponent>();
 
     /**
+     * @deprecated Use 'onClosed' instead.
      * Emitted when a timePicker is being closed.
      */
     @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
@@ -1428,7 +1430,7 @@ export class IgxTimePickerComponent implements
     public okButtonClick(): boolean {
         const time = this._getSelectedTime();
         if (this._isValueValid(time)) {
-            this.hideOverlay();
+            this.close();
             this.value = time;
             return true;
         } else {
@@ -1455,7 +1457,7 @@ export class IgxTimePickerComponent implements
             this.displayValue = this._formatTime(this.value, this.format);
         }
 
-        this.hideOverlay();
+        this.close();
 
         this.selectedHour = this._prevSelectedHour;
         this.selectedMinute = this._prevSelectedMinute;
@@ -1511,10 +1513,10 @@ export class IgxTimePickerComponent implements
      * ```
      * ```typescript
      * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
-     * picker.hideOverlay();
+     * picker.close();
      * ```
      */
-    public hideOverlay(): void {
+    public close(): void {
         this.toggleRef.close();
     }
 
@@ -1549,7 +1551,7 @@ export class IgxTimePickerComponent implements
                 this.onValueChanged.emit(args);
             }
         } else {
-            this.hideOverlay();
+            this.close();
         }
     }
 
