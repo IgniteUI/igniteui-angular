@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -41,6 +41,8 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
+            fix.detectChanges();
+            tick();
         }));
 
         it('Search highlights should work within tree cell', () => {

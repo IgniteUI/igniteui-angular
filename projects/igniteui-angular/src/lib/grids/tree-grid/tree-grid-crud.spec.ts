@@ -40,6 +40,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
+                tick();
             }));
 
             it('should support adding root row through treeGrid API', () => {
