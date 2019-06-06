@@ -64,6 +64,6 @@ export class TimePickerSampleComponent implements AfterViewInit {
 
     public selectToday(picker: IgxTimePickerComponent) {
         picker.value = new Date(Date.now());
-        picker.hideOverlay();
+        picker.close();
     }
 }
