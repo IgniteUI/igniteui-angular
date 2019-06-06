@@ -550,7 +550,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
-    @DeprecateProperty(`'onOpen' @Ouput property is deprecated\nUse 'onOpened' instead.`)
+    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
@@ -571,12 +571,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
-    @DeprecateProperty(`'onClose' @Ouput property is deprecated\nUse 'onClosed' instead.`)
+    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
     public onClose = new EventEmitter<IgxDatePickerComponent>();
 
     /**
-     *An event that is emitted when the `IgxDatePickerComponent` is closed.
+     *An event that is emitted after the `IgxDatePickerComponent` is closed.
     */
     @Output()
     public onClosed = new EventEmitter<IgxDatePickerComponent>();

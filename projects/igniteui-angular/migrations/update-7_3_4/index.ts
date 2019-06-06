@@ -13,7 +13,7 @@ import { filterSourceDirs } from '../common/filterSourceDirs';
 import { getImportModulePositions } from '../common/tsUtils';
 import { UpdateChanges } from '../common/UpdateChanges';
 
-const version = '7.3.3';
+const version = '7.3.4';
 
 export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {

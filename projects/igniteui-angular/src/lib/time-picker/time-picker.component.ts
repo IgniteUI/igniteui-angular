@@ -416,7 +416,7 @@ export class IgxTimePickerComponent implements
      *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
      * ```
      */
-    @DeprecateProperty(`'onOpen' @Ouput property is deprecated\nUse 'onOpened' instead.`)
+    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxTimePickerComponent>();
 
@@ -429,7 +429,7 @@ export class IgxTimePickerComponent implements
     /**
      * Emitted when a timePicker is being closed.
      */
-    @DeprecateProperty(`'onClose' @Ouput property is deprecated\nUse 'onClosed' instead.`)
+    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
     public onClose = new EventEmitter<IgxTimePickerComponent>();
 

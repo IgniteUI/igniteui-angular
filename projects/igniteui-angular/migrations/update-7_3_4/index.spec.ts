@@ -6,7 +6,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 // tslint:disable-next-line:no-submodule-imports
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
-describe('Update 7.3.3', () => {
+describe('Update 7.3.4', () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
