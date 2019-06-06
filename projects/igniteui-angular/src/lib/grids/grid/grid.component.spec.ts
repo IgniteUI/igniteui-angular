@@ -4114,11 +4114,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
     public data = SampleTestData.generateProductData(11);
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
     public moveNext(shiftKey: boolean): void {
-        this.getCurrentEditCell().dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'tab',
-            code: 'tab',
-            shiftKey
-        }));
+        UIInteractions.triggerKeyDownWithBlur('tab', this.getCurrentEditCell().nativeElement, true, false, shiftKey);
     }
     public focusGridCell(rowIndex: number, columnName: string): IgxGridCellComponent {
         const targetCell = this.getCell(rowIndex, columnName);

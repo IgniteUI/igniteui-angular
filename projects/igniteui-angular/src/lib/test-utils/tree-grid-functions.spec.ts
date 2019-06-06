@@ -368,7 +368,7 @@ export class TreeGridFunctions {
                 const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
                 const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
 
-                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
@@ -392,7 +392,7 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
 
-                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
@@ -414,7 +414,7 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
@@ -469,20 +469,20 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(50);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
+                    expect(cell.editMode).toBe(false);
                 }
                 if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-                expect(newCell.inEditMode).toBe(true);
+                expect(newCell.editMode).toBe(true);
                 resolve();
             })
 
@@ -494,26 +494,26 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+                UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true, false, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
+                    expect(cell.editMode).toBe(false);
                 }
                 if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
-                expect(newCell.inEditMode).toBe(true);
+                expect(newCell.editMode).toBe(true);
                 resolve();
             })
 
     public static moveGridCellWithTab =
         (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 resolve();

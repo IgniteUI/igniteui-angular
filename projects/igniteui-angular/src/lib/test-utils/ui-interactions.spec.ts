@@ -31,6 +31,11 @@ export class UIInteractions {
         elem.dispatchEvent(keyboardEvent);
     }
 
+    public static triggerKeyDownWithBlur(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
+        UIInteractions.triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey, shift, ctrl);
+        elem.dispatchEvent(new Event('blur'));
+    }
+
     public static findCellByInputElem(elem, focusedElem) {
         if (!focusedElem.parentElement) {
             return null;

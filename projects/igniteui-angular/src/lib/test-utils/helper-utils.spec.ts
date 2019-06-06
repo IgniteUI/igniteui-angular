@@ -107,7 +107,7 @@ export class HelperUtils {
                     return;
                 }
 
-                UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, false, shift);
+                UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
 
                 if (nextRow) {
                     await wait(40);
@@ -145,7 +145,7 @@ export class HelperUtils {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
