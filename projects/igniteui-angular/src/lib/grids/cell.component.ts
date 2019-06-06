@@ -43,6 +43,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
     templateUrl: './cell.component.html'
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+    private _vIndex = -1;
 
     /**
      * Gets the column of the cell.
@@ -233,7 +234,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('attr.data-visibleIndex')
     @Input()
-    visibleColumnIndex = -1;
+    get visibleColumnIndex() {
+        return this.column.columnLayoutChild ? this.column.visibleIndex : this._vIndex;
+    }
+
+    set visibleColumnIndex(val) {
+        this._vIndex = val;
+    }
 
     /**
      * Gets the ID of the cell.
@@ -497,7 +504,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected get selectionNode(): ISelectionNode {
-        return { row: this.rowIndex, column: this.visibleColumnIndex };
+        return {
+            row: this.rowIndex,
+            column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex,
+            layout: this.column.columnLayoutChild ? {
+                rowStart: this.column.rowStart,
+                colStart: this.column.colStart,
+                rowEnd: this.column.rowEnd,
+                colEnd: this.column.colEnd,
+                columnVisibleIndex: this.visibleColumnIndex
+            } : null
+            };
     }
 
     protected isInCompositionMode = false;
@@ -697,6 +714,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = (event: PointerEvent) => {
+        if (this.grid.hasColumnLayouts) {
+            this.grid.navigation.setStartNavigationCell(this.colStart, this.rowStart, null);
+        }
         if (!isLeftClick(event)) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
@@ -797,9 +817,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     protected handleTab(shift: boolean) {
         if (shift) {
-            this.grid.navigation.performShiftTabKey(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
+            this.grid.navigation.performShiftTabKey(this.row.nativeElement, this.selectionNode);
         } else {
-            this.grid.navigation.performTab(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
+            this.grid.navigation.performTab(this.row.nativeElement, this.selectionNode);
         }
     }
 
@@ -807,7 +827,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (ctrl) {
             this.grid.navigation.goToLastCell();
         } else {
-            this.grid.navigation.onKeydownEnd(this.rowIndex);
+            this.grid.navigation.onKeydownEnd(this.rowIndex, false, this.rowStart);
         }
     }
 
@@ -815,7 +835,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (ctrl) {
             this.grid.navigation.goToFirstCell();
         } else {
-            this.grid.navigation.onKeydownHome(this.rowIndex);
+            this.grid.navigation.onKeydownHome(this.rowIndex, false, this.rowStart);
         }
     }
 
@@ -890,34 +910,34 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'arrowleft':
             case 'left':
                 if (ctrl) {
-                    this.grid.navigation.onKeydownHome(node.row);
+                    this.grid.navigation.onKeydownHome(node.row, false, this.rowStart);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, node.row, node.column);
+                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.selectionNode);
                 break;
             case 'arrowright':
             case 'right':
                 if (ctrl) {
-                    this.grid.navigation.onKeydownEnd(node.row);
+                    this.grid.navigation.onKeydownEnd(node.row, false, this.rowStart);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowRight(this.nativeElement, node.row, node.column);
+                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.selectionNode);
                 break;
             case 'arrowup':
             case 'up':
                 if (ctrl) {
-                    this.grid.navigation.navigateTop(node.column);
+                    this.grid.navigation.navigateTop(this.visibleColumnIndex);
                     break;
                 }
-                this.grid.navigation.navigateUp(this.row.nativeElement, node.row, node.column);
+                this.grid.navigation.navigateUp(this.row.nativeElement, this.selectionNode);
                 break;
             case 'arrowdown':
             case 'down':
                 if (ctrl) {
-                    this.grid.navigation.navigateBottom(node.column);
+                    this.grid.navigation.navigateBottom(this.visibleColumnIndex);
                     break;
                 }
-                this.grid.navigation.navigateDown(this.row.nativeElement, node.row, node.column);
+                this.grid.navigation.navigateDown(this.row.nativeElement, this.selectionNode);
                 break;
             case 'enter':
             case 'f2':
