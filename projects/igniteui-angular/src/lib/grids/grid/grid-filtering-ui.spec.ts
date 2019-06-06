@@ -5024,6 +5024,91 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
         expect(selectAllCheckbox.classList.contains('igx-checkbox--checked')).toBe(false);
     }));
+
+    it('Should open custom filter dropdown when pressing \'Enter\' on custom filter cascade button.', (async() => {
+        grid.width = '700px';
+        await wait(16);
+        fix.detectChanges();
+
+        GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+        await wait(100);
+        fix.detectChanges();
+
+        const excelMenuParent = grid.nativeElement.querySelector('igx-grid-excel-style-filtering');
+        const cascadeButton = excelMenuParent.querySelector('.igx-excel-filter__actions-filter');
+
+        // Verify that custom filter dropdown (the submenu) is not visible.
+        let subMenu = excelMenuParent.querySelector('.igx-drop-down__list.igx-toggle--hidden');
+        expect(subMenu).not.toBeNull();
+
+        cascadeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        await wait(16);
+        fix.detectChanges();
+
+        // Verify that custom filter dropdown (the submenu) is visible.
+        subMenu = excelMenuParent.querySelector('.igx-drop-down__list.igx-toggle--hidden');
+        expect(subMenu).toBeNull();
+    }));
+
+    it('Should close ESF when pressing \'Escape\'.', fakeAsync(() => {
+        // Verify ESF is not visible.
+        expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
+
+        GridFunctions.clickExcelFilterIcon(fix, 'Released');
+        tick(100);
+        fix.detectChanges();
+
+        // Verify ESF is visible.
+        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+        expect(excelMenu).not.toBeNull();
+
+        excelMenu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        tick(100);
+        fix.detectChanges();
+
+        // Verify ESF is not visible.
+        expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
+    }));
+
+    it('Should clear filter when pressing \'Enter\' on the clear filter button in ESF.', fakeAsync(() => {
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterCascadeButton(fix);
+        fix.detectChanges();
+        GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+        tick(200);
+        fix.detectChanges();
+
+        // Add filter condition through ESF custom filter dialog.
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+        const inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+        const filterValueInput = inputs[1];
+        sendInputNativeElement(filterValueInput, 'ign', fix);
+
+        // Apply filtering from custom dialog.
+        GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+        tick(200);
+        fix.detectChanges();
+
+        // Verify filter results.
+        expect(grid.filteredData.length).toEqual(2);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Press 'Enter' on the 'Clear Filter' button.
+        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+        const clearFilterContainer = excelMenu.querySelector('.igx-excel-filter__actions-clear');
+        clearFilterContainer.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        tick(100);
+        fix.detectChanges();
+
+        expect(grid.filteredData).toBeNull();
+    }));
 });
 
 const expectedResults = [];
