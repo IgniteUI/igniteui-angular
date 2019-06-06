@@ -723,7 +723,7 @@ export class IgxSliderComponent implements
      */
     @HostListener('pan', ['$event'])
     public onPanListener($event) {
-        this.update($event.srcEvent.clientX)
+        this.update($event.srcEvent.clientX);
     }
 
     @HostListener('panstart')
