@@ -592,7 +592,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
