@@ -17,7 +17,7 @@ import { Location } from '@angular/common';
 import { TabsRoutingViewComponentsModule,
     TabsRoutingView1Component,
     TabsRoutingView2Component,
-    TabsRoutingView3Component } from './tabs-routing-view-components';
+    TabsRoutingView3Component } from './tabs-routing-view-components.spec';
 
 describe('IgxTabs', () => {
     configureTestSuite();

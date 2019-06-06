@@ -11,7 +11,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { BottomNavRoutingViewComponentsModule,
     BottomNavRoutingView1Component,
     BottomNavRoutingView2Component,
-    BottomNavRoutingView3Component } from './routing-view-components';
+    BottomNavRoutingView3Component } from './routing-view-components.spec';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
