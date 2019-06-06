@@ -468,7 +468,9 @@ export class GridFunctions {
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
         const columnHeader = GridFunctions.getColumnHeader(columnField, fix);
         const filterIcon = columnHeader.query(By.css('.igx-excel-filter__icon'));
-        UIInteractions.clickElement(filterIcon);
+        const filterIconFiltered = columnHeader.query(By.css('.igx-excel-filter__icon--filtered'));
+        const icon = (filterIcon) ? filterIcon : filterIconFiltered;
+        UIInteractions.clickElement(icon);
     }
 
     public static clickApplyExcelStyleFiltering(fix: ComponentFixture<any>) {
