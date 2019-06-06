@@ -139,15 +139,21 @@ export class IgxSliderComponent implements
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    @ViewChild('slider')
-    private slider: ElementRef;
-
+    /**
+     * @hidden
+     */
     @ViewChild('track')
     private track: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('ticks')
     private ticks: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChildren(IgxSliderThumbComponent)
     private thumbs: QueryList<IgxSliderThumbComponent> = new QueryList<IgxSliderThumbComponent>();
 
@@ -159,7 +165,14 @@ export class IgxSliderComponent implements
         return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
     }
 
+    /**
+     * @hidden
+     */
     public stepDistance = this._step;
+
+    /**
+     * @hidden
+     */
     public onPan: Subject<number> = new Subject<number>();
 
     /**
@@ -204,6 +217,19 @@ export class IgxSliderComponent implements
         return this.disabled;
     }
 
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-slider')
+    public slierClass = true;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-slider--disabled')
+    public get disabledClass() {
+        return this.disabled;
+    }
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -217,6 +243,20 @@ export class IgxSliderComponent implements
     public id = `igx-slider-${NEXT_ID++}`;
 
     /**
+     * An @Input property that gets the type of the `IgxSliderComponent`. The slider can be SliderType.SLIDER(default) or SliderType.RANGE.
+     * ```typescript
+     * @ViewChild("slider2")
+     * public slider: IgxSliderComponent;
+     * ngAfterViewInit(){
+     *     let type = this.slider.type;
+     * }
+     */
+    @Input()
+    public get type() {
+        return this._type;
+    }
+
+    /**
      * An @Input property that sets the type of the `IgxSliderComponent`. The slider can be SliderType.SLIDER(default) or SliderType.RANGE.
      * ```typescript
      * sliderType: SliderType = SliderType.RANGE;
@@ -225,11 +265,6 @@ export class IgxSliderComponent implements
      * <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
      * ```
      */
-    @Input()
-    public get type() {
-        return this._type;
-    }
-
     public set type(type: SliderType) {
         this._type = type;
 
@@ -639,10 +674,15 @@ export class IgxSliderComponent implements
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
 
-    constructor(private renderer: Renderer2) { }
+    constructor(private renderer: Renderer2, private _el: ElementRef) { }
 
-    @HostListener('pointerdown')
-    public onPointerDown() {
+    /**
+     * @hidden
+     */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerDown($event) {
+        this.findClosestThumb($event);
+
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
@@ -650,6 +690,9 @@ export class IgxSliderComponent implements
         this.showThumbLabels();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('pointerup')
     public onPointerUp() {
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
@@ -659,14 +702,36 @@ export class IgxSliderComponent implements
         this.hideThumbLabels();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('focus')
     public onFocus() {
         this.toggleThumbLabels();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('blur')
     public onBlur() {
         this.hideThumbLabels();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('pan', ['$event'])
+    public onPanListener($event) {
+        this.update($event.srcEvent.clientX)
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('tap', ['$event'])
+    public onTapListener($event) {
+        this.onTap($event);
     }
 
     /**
@@ -889,6 +954,9 @@ export class IgxSliderComponent implements
         this._onTouchedCallback();
     }
 
+    /**
+     * @hidden
+     */
     public thumbChanged(value: number, thumbType: number) {
         const oldValue = this.value;
 
@@ -922,7 +990,14 @@ export class IgxSliderComponent implements
         }
     }
 
-    public swapThumb(value: IRangeSliderValue) {
+    /**
+     * @hidden
+     */
+    public onThumbChange() {
+        this.toggleThumbLabels();
+    }
+
+    private swapThumb(value: IRangeSliderValue) {
         if (this.thumbFrom.isActive) {
             value.upper = this.upperValue;
             value.lower = this.upperValue;
@@ -936,10 +1011,7 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    /**
-     * @hidden
-     */
-    public findClosestThumb(event) {
+    private findClosestThumb(event) {
         if (this.isRange) {
             this.closestHandle(event.clientX);
         } else {
@@ -949,10 +1021,6 @@ export class IgxSliderComponent implements
         this.update(event.clientX);
 
         event.preventDefault();
-    }
-
-    public onThumbChange() {
-        this.toggleThumbLabels();
     }
 
     private updateLowerBoundAndMinTravelZone() {
@@ -976,7 +1044,7 @@ export class IgxSliderComponent implements
     }
 
     private calculateStepDistance() {
-        return this.slider.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
+        return this._el.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
     private toggleThumb() {
@@ -1027,7 +1095,7 @@ export class IgxSliderComponent implements
     private closestHandle(mouseX) {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
-        const xPointer = mouseX - this.slider.nativeElement.getBoundingClientRect().left;
+        const xPointer = mouseX - this._el.nativeElement.getBoundingClientRect().left;
         const match = this.closestTo(xPointer, [fromOffset, toOffset]);
 
         if (match === fromOffset) {

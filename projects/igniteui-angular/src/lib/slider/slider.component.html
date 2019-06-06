@@ -1,41 +1,33 @@
-<div
-    #slider
-    class="igx-slider"
-    [class.igx-slider--disabled]="disabled"
-    (pointerdown)="findClosestThumb($event)"
-    (pan)="update($event.srcEvent.clientX)"
-    (tap)="onTap($event)">
-    <div class="igx-slider__track">
-        <div #track class="igx-slider__track-fill"></div>
-        <div #ticks class="igx-slider__track-ticks"></div>
-    </div>
-    <div class="igx-slider__thumbs">
-        <igx-thumb *ngIf="isRange"
-            #thumbFrom
-            [type]="0"
-            [value]="lowerLabel"
-            [disabled]="disabled"
-            [continuous]="continuous"
-            [onPan]="onPan"
-            [stepDistance]="stepDistance"
-            [step]="step"
-            [fromHandler]="true"
-            [templateRef]="thumbFromTemplateRef"
-            [context]="context"
-            (onChange)="onThumbChange()"
-            [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
-        <igx-thumb
-            #thumbTo
-            [type]="1"
-            [value]="upperLabel"
-            [disabled]="disabled"
-            [continuous]="continuous"
-            [onPan]="onPan"
-            [stepDistance]="stepDistance"
-            [step]="step"
-            [templateRef]="thumbToTemplateRef"
-            [context]="context"
-            (onChange)="onThumbChange()"
-            [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
-    </div>
+<div class="igx-slider__track">
+    <div #track class="igx-slider__track-fill"></div>
+    <div #ticks class="igx-slider__track-ticks"></div>
+</div>
+<div class="igx-slider__thumbs">
+    <igx-thumb *ngIf="isRange"
+        #thumbFrom
+        [type]="0"
+        [value]="lowerLabel"
+        [disabled]="disabled"
+        [continuous]="continuous"
+        [onPan]="onPan"
+        [stepDistance]="stepDistance"
+        [step]="step"
+        [fromHandler]="true"
+        [templateRef]="thumbFromTemplateRef"
+        [context]="context"
+        (onChange)="onThumbChange()"
+        [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
+    <igx-thumb
+        #thumbTo
+        [type]="1"
+        [value]="upperLabel"
+        [disabled]="disabled"
+        [continuous]="continuous"
+        [onPan]="onPan"
+        [stepDistance]="stepDistance"
+        [step]="step"
+        [templateRef]="thumbToTemplateRef"
+        [context]="context"
+        (onChange)="onThumbChange()"
+        [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>
