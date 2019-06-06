@@ -55,6 +55,7 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridStringTreeColumnComponent);
         fix.detectChanges();
+        tick();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
