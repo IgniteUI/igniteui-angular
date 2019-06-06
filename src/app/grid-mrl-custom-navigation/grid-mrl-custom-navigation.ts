@@ -6,7 +6,7 @@ import { IgxGridComponent, DropPosition } from 'igniteui-angular';
     templateUrl: 'grid-mrl-custom-navigation.sample.html'
 })
 export class GridMRLCustomNavigationSampleComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     width = null;
     cols: Array<any> = [
