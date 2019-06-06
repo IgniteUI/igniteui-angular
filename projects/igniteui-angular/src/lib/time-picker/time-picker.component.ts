@@ -1024,10 +1024,8 @@ export class IgxTimePickerComponent implements
             date.setMinutes(parseInt(this.selectedMinute, 10));
         }
         date.setSeconds(0);
-        if (this.showHoursList && this.selectedAmPm === 'PM' && this.selectedHour !== '12') {
-            date.setHours(date.getHours() + 12);
-        }
-        if (!this.showHoursList && this.selectedAmPm === 'PM' && this.selectedHour <= '11') {
+        if (((this.showHoursList && this.selectedHour !== '12') || (!this.showHoursList && this.selectedHour <= '11')) &&
+                this.selectedAmPm === 'PM') {
             date.setHours(date.getHours() + 12);
         }
         if (!this.showHoursList && this.selectedAmPm === 'AM' && this.selectedHour > '11') {
@@ -1059,13 +1057,11 @@ export class IgxTimePickerComponent implements
         if (this.showAmPmList) {
             amPM = sections[sections.length - 1];
 
-            if (this.showHoursList && amPM === 'PM' && date.getHours().toString() !== '12') {
-                date.setHours(date.getHours() + 12);
+            if (((this.showHoursList && date.getHours().toString() !== '12') ||
+                    (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
+                        date.setHours(date.getHours() + 12);
             }
 
-            if (!this.showHoursList && amPM === 'PM' && date.getHours().toString() <= '11') {
-                date.setHours(date.getHours() + 12);
-            }
             if (!this.showHoursList && amPM === 'AM' && date.getHours().toString() > '11') {
                 date.setHours(date.getHours() - 12);
             }
