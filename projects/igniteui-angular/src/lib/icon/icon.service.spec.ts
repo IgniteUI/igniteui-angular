@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -17,7 +16,6 @@ describe('Icon Service', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
             providers: [IgxIconService]
         }).compileComponents();
     });
@@ -60,7 +58,7 @@ describe('Icon Service', () => {
         const fontSet = 'svg-icons';
         const iconKey = fontSet + '_' + iconName;
 
-        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough(); // Jasmine 2.x
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send');
 
         iconService.addSvgIcon(iconName, 'test.svg', fontSet);
