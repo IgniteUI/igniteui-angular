@@ -126,15 +126,9 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('hourList') !== -1) {
-            if (this.timePicker.minuteList) {
-                this.timePicker.minuteList.nativeElement.focus();
-            } else if (this.timePicker.ampmList) {
-                this.timePicker.ampmList.nativeElement.focus();
-            }
-        }
-
-        if (listName.indexOf('minuteList') !== -1 && this.timePicker.ampmList) {
+        if (listName.indexOf('hourList') !== -1 && this.timePicker.minuteList) {
+            this.timePicker.minuteList.nativeElement.focus();
+        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.ampmList) {
             this.timePicker.ampmList.nativeElement.focus();
         }
     }
@@ -148,16 +142,10 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('minuteList') !== -1 && this.timePicker.hourList) {
+        if (listName.indexOf('ampmList') !== -1 && this.timePicker.minuteList) {
+            this.timePicker.minuteList.nativeElement.focus();
+        } else if ((listName.indexOf('ampmList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.hourList) {
             this.timePicker.hourList.nativeElement.focus();
-        }
-
-        if (listName.indexOf('ampmList') !== -1) {
-            if (this.timePicker.minuteList) {
-                this.timePicker.minuteList.nativeElement.focus();
-            } else if (this.timePicker.hourList) {
-                this.timePicker.hourList.nativeElement.focus();
-            }
         }
     }
 
