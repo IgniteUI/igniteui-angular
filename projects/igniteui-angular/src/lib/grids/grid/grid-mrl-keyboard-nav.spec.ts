@@ -3122,7 +3122,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     `
 })
 export class ColumnLayoutTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     public selectedCell: IgxGridCellComponent;
     cols: Array<any> = [
