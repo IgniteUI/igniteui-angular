@@ -39,7 +39,7 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('', () => {
         let fix;
         let treeGrid;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(async(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
