@@ -833,12 +833,12 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
     describe('Load On Demand', () => {
 
         describe('Primary/Foreign key', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 fix.detectChanges();
-            });
+            }));
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);
@@ -890,12 +890,12 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         describe('ChildDataKey', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandChildDataComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 fix.detectChanges();
-            });
+            }));
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);
@@ -947,12 +947,12 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         describe('HasChildrenKey', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 fix.detectChanges();
-            });
+            }));
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);

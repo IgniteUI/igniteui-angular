@@ -30,11 +30,11 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     describe('Navigation with no scroll', () => {
         configureTestSuite();
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {
             await testNavigationUpDown(fix, treeGrid, 'Name');
@@ -156,12 +156,12 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     describe('Navigation with scrolls', () => {
         configureTestSuite();
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-        });
+        }));
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {
             await testNavigationUpDown(fix, treeGrid, 'Name');
