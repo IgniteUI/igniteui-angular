@@ -13,13 +13,13 @@
 
             <article class="sample-column">
                 <h4 class="sample-title">Range slider</h4>
-                <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+                <igx-slider #slider2 [type]="sliderType" [disabled]="true" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
                 </igx-slider>
             </article>
 
             <article class="sample-column">
                 <h4 class="sample-title">Range label slider</h4>
-                <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeLabel"
+                <igx-slider #slider3 [type]="sliderType" [(ngModel)]="rangeLabel"
                     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
                     <ng-template igxSliderThumbFrom let-value let-labels="labels">
                         <span class="ellipsis">{{ labels[value.lower] }}</span>
