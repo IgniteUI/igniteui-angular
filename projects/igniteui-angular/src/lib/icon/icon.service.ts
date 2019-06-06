@@ -25,8 +25,7 @@ export class IgxIconService {
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
 
-    constructor(private _sanitizer: DomSanitizer,
-        @Inject(DOCUMENT) private _document: any) { }
+    constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) { }
 
     /**
      *  Returns the default font set.
