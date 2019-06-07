@@ -640,7 +640,7 @@ describe('IgxGrid Component Tests', () => {
             }));
 
         it(`should init columns with width >= 136px and a horizontal scrollbar
-            when 200 rows and 150 columns are rendered`,fakeAsync(() => {
+            when 200 rows and 150 columns are rendered`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.componentInstance.initColumnsRows(200, 150);
                 fix.detectChanges();
