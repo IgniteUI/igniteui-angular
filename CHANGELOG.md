@@ -1,11 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.3.4
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
 ## 7.3.1
 `igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
 
-``` 
-@include igx-core($print-layout: false); 
+```
+@include igx-core($print-layout: false);
 ```
 
 ## 7.3.1
@@ -36,7 +39,7 @@ All notable changes for each version of this project will be documented in this 
     - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
-- `igxTreeGrid` 
+- `igxTreeGrid`
     - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
@@ -60,10 +63,12 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 7.2.12
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
 ### New feature
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
- 
+
 ## 7.2.9
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
