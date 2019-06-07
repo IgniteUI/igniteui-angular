@@ -8,9 +8,6 @@ All notable changes for each version of this project will be documented in this 
 @include igx-core($print-layout: false); 
 ```
 
-- `Pager`
-    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
-
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
@@ -61,6 +58,16 @@ All notable changes for each version of this project will be documented in this 
         </div>
     </igx-drop-down>
     ```
+
+## 7.2.12
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
+ 
+## 7.2.9
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
+
 
 ## 7.2.6
 - `igxGrid`
