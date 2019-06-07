@@ -1,7 +1,12 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
 ## 7.3.4
+
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
 
 - `igxTimePicker` changes
     - `onClosing` event is added.
@@ -80,6 +85,15 @@ In order to turn them off, you need to pass an argument and set it to `false`
         </div>
     </igx-drop-down>
     ```
+
+## 7.2.12
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
+ 
+## 7.2.9
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
 ## 7.2.6
 - `igxGrid`
