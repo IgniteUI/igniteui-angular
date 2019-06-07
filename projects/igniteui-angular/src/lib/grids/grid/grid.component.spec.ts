@@ -1345,6 +1345,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
                 const grid = fix.componentInstance.grid;
                 grid.primaryKey = null;
                 grid.rowEditable = false;
@@ -1353,8 +1354,8 @@ describe('IgxGrid Component Tests', () => {
 
                 spyOn(console, 'warn');
                 grid.rowEditable = true;
-                tick();
                 fix.detectChanges();
+                tick();
                 expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
                 expect(console.warn).toHaveBeenCalledTimes(1);
                 // Throws warinig but still sets the property correctly
@@ -1364,18 +1365,18 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
                 grid.primaryKey = 'ProductID';
                 grid.rowEditable = false;
-                tick();
                 fix.detectChanges();
+                tick();
                 grid.rowEditable = true;
-                tick();
                 fix.detectChanges();
+                tick();
                 expect(console.warn).toHaveBeenCalledTimes(1);
                 expect(grid.rowEditable).toBeTruthy();
             }));
             it('Should be able to enter edit mode on dblclick, enter and f2', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-
+                tick();
                 const grid = fix.componentInstance.grid;
                 const rv = fix.debugElement.query(By.css(`${CELL_CLASS}:last-child`));
                 const row = grid.getRowByIndex(0);
@@ -1416,6 +1417,7 @@ describe('IgxGrid Component Tests', () => {
             it('Emit all events with proper arguments', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
@@ -1445,8 +1447,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDom, true);
-                flush();
                 fix.detectChanges();
+                flush();
 
                 expect(row.inEditMode).toBe(false);
                 cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: cell.value, cancel: false };
@@ -1456,8 +1458,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 
                 cellDom.dispatchEvent(new Event('dblclick'));
-                flush();
                 fix.detectChanges();
+                flush();
                 expect(row.inEditMode).toBe(true);
 
                 const newCellValue = 'Aaaaa';
@@ -1483,6 +1485,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should display the banner below the edited row if it is not the last one', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1506,6 +1509,7 @@ describe('IgxGrid Component Tests', () => {
                 const lastItemIndex = 6;
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(lastItemIndex, 'ProductName');
@@ -1528,6 +1532,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should display the banner above the edited row if it is the last one', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // have the grid display more items at once, so that there is no room after the last item
@@ -1555,6 +1560,7 @@ describe('IgxGrid Component Tests', () => {
                 // NOT APPLICABLE, SINCE GRID DOES NOT HAVE TRANSACTIONS
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1574,6 +1580,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should preserve updated value inside the cell when it enters edit mode again`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                await wait(DEBOUNCETIME);
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1598,6 +1605,8 @@ describe('IgxGrid Component Tests', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
+                tick();
+
                 grid = fixture.componentInstance.grid;
                 setupGridScrollDetection(fixture, grid);
             }));
@@ -1742,6 +1751,8 @@ describe('IgxGrid Component Tests', () => {
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.pinnedFlag = true;
                 fixture.detectChanges();
+                tick();
+
                 // from pinned to pinned
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.onKeydownEnterEditMode();
@@ -1780,6 +1791,7 @@ describe('IgxGrid Component Tests', () => {
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
                 fixture.detectChanges();
+
                 // jump over 3 hidden, both editable and not
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.onKeydownEnterEditMode();
@@ -1968,6 +1980,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 spyOn(grid, 'endEdit');
@@ -1997,6 +2010,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2020,6 +2034,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on add row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2044,6 +2059,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on delete row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2069,6 +2085,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should not allow editing a deleted row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2086,6 +2103,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND DISCARD on filter`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2111,6 +2129,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND DISCARD on sort`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2139,6 +2158,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on click on non-editable cell in same row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2164,6 +2184,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2188,6 +2209,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on click on editable cell in other row`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 // const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2198,8 +2220,8 @@ describe('IgxGrid Component Tests', () => {
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-                tick();
                 fix.detectChanges();
+                tick();
                 const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
                 otherEditableCell.onFocus(new FocusEvent('focus'));
                 fix.detectChanges();
@@ -2214,6 +2236,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2238,6 +2261,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND DISCARD on clicking the CANCEL button in row edit overlay`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2262,6 +2286,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2285,6 +2310,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit row editing when clicking on a cell from a deleted row`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid as any;
                 grid.deleteRow(1);
@@ -2315,6 +2341,7 @@ describe('IgxGrid Component Tests', () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.componentInstance.paging = true;
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
@@ -2344,6 +2371,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should preserve the changes after page navigation`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
@@ -2375,6 +2403,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should save changes when changing page while editing`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
@@ -2405,6 +2434,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when changing the page size while editing`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -2438,6 +2468,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
@@ -2481,6 +2512,8 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when edited row is being deleted`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
+                tick();
+
                 const grid = fixture.componentInstance.grid;
                 const row = grid.getRowByKey(0);
                 const targetCell = grid.getCellByKey(0, 'Downloads');
@@ -2504,6 +2537,7 @@ describe('IgxGrid Component Tests', () => {
                 const keyword = 'bob';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2527,6 +2561,7 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'My Awesome Product';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, targetColumnName);
@@ -2554,6 +2589,7 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'My Awesome Product';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 let targetCell = grid.getCellByColumn(0, targetColumnName);
@@ -2579,6 +2615,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when Grouping`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2604,6 +2641,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when Sorting`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 let cell = grid.getCellByColumn(0, 'Downloads');
@@ -2635,6 +2673,7 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'Don Juan De Marco';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -2661,6 +2700,7 @@ describe('IgxGrid Component Tests', () => {
                 // Sort any column
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2698,6 +2738,7 @@ describe('IgxGrid Component Tests', () => {
                 const newDate = new Date('01/01/1901');
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 grid.enableSummaries('OrderDate');
@@ -2723,6 +2764,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when moving a column`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2754,6 +2796,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when pinning/unpinning a column`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2790,6 +2833,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when resizing a column`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
 
@@ -2821,6 +2865,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when hiding a column`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
@@ -2842,6 +2887,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should close the row editing overlay on column hiding', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
@@ -2856,6 +2902,7 @@ describe('IgxGrid Component Tests', () => {
                 const targetCbText = 'Product Name';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
@@ -2885,6 +2932,7 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
@@ -2910,6 +2958,8 @@ describe('IgxGrid Component Tests', () => {
             xit(`Should properly emit 'onRowEditDone' event - Button Click`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
+                tick();
+
                 fixture.componentInstance.pinnedFlag = true;
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -3044,6 +3094,7 @@ describe('IgxGrid Component Tests', () => {
             it('Open overlay for top row', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
@@ -3089,6 +3140,7 @@ describe('IgxGrid Component Tests', () => {
             it('Custom overlay', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridCustomOverlayComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 let cell = grid.getCellByColumn(0, 'ProductName');
@@ -3118,6 +3170,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should properly exit pending state when committing row edit w/o changes', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const initialDataLength = grid.data.length;
@@ -3139,6 +3192,7 @@ describe('IgxGrid Component Tests', () => {
             it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const trans = grid.transactions;
@@ -3232,6 +3286,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should allow to change value of a cell with initial value of 0', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(3, 'UnitsInStock');
@@ -3246,6 +3301,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should allow to change value of a cell with initial value of false', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(3, 'InStock');
@@ -3260,6 +3316,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should allow to change value of a cell with initial value of empty string', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -3279,6 +3336,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should not log a transaction when a cell's value does not change`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -3308,6 +3366,7 @@ describe('IgxGrid Component Tests', () => {
             it(`Should not log a transaction when a cell's value does not change - Date`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 let cellDate = grid.getCellByColumn(0, 'OrderDate');
@@ -3345,6 +3404,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should allow to change of a cell in added row in grid with transactions', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const addRowData = {
@@ -3370,6 +3430,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should properly mark cell/row as dirty if new value evaluates to `false`', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 const targetRow = grid.getRowByIndex(0);
@@ -3391,6 +3452,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should change pages when the only item on the last page is a pending added row that gets deleted', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 expect(grid.data.length).toEqual(10);
@@ -3425,6 +3487,7 @@ describe('IgxGrid Component Tests', () => {
             it('Should change pages when commiting deletes on the last page', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
 
                 const grid = fixture.componentInstance.grid;
                 expect(grid.data.length).toEqual(10);
@@ -3453,6 +3516,8 @@ describe('IgxGrid Component Tests', () => {
             it('Should NOT change pages when deleting a row on the last page', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
+
                 const grid = fixture.componentInstance.grid;
                 grid.paging = true;
                 grid.perPage = 5;
@@ -3474,6 +3539,8 @@ describe('IgxGrid Component Tests', () => {
             it('Should not allow selecting rows that are deleted', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
+                tick();
+
                 const grid = fixture.componentInstance.grid;
                 grid.rowSelectable = true;
                 fixture.detectChanges();
@@ -3494,6 +3561,8 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.instance;
                 grid.primaryKey = 'ID';
                 fix.detectChanges();
+                tick();
+
                 grid.groupBy({
                     fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
                     strategy: DefaultSortingStrategy.instance()
@@ -3526,6 +3595,8 @@ describe('IgxGrid Component Tests', () => {
                     const grid = fix.componentInstance.instance;
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
+                    tick();
+
                     grid.groupBy({
                         fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
                         strategy: DefaultSortingStrategy.instance()
@@ -3583,6 +3654,7 @@ describe('IgxGrid Component Tests', () => {
                     const grid = fix.componentInstance.instance;
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
+                    tick();
                     grid.groupBy({
                         fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
                         strategy: DefaultSortingStrategy.instance()
@@ -3629,6 +3701,7 @@ describe('IgxGrid Component Tests', () => {
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
             const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
+            tick();
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(500);
@@ -3649,6 +3722,7 @@ describe('IgxGrid Component Tests', () => {
         it('IgxTabs: should initialize a grid with correct width/height when there is no column width set', async () => {
             const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
+            tick();
 
             const grid = fix.componentInstance.grid2;
             const tab = fix.componentInstance.tabs;
@@ -3669,6 +3743,7 @@ describe('IgxGrid Component Tests', () => {
         it('IgxTabs: should initialize a grid with correct height when paging and summaries are enabled', async () => {
             const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
+            tick();
 
             const grid = fix.componentInstance.grid4;
             const tab = fix.componentInstance.tabs;
@@ -3690,6 +3765,7 @@ describe('IgxGrid Component Tests', () => {
         it('IgxTabs: should initialize a grid with correct height when height = 100%', async () => {
             const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
+            tick();
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
