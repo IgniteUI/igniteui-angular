@@ -616,7 +616,7 @@ describe('IgxTimePicker', () => {
         const selectHour = hourColumn.children[3];
         const AMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
 
-        expect(AMPMColumn.children.length).toBe(0);
+        expect(AMPMColumn).toBeNull();
         expect(selectHour.nativeElement.innerText).toBe('00');
     }));
 
@@ -1446,6 +1446,242 @@ describe('IgxTimePicker', () => {
             expect(dropdownClientRect.left).toEqual(inputGroupClientRect.left);
         }));
     });
+
+    describe('Hour/minute only mode', () => {
+        configureTestSuite();
+        let fixture, timePicker, dom, input;
+
+        beforeEach(
+            async(() => {
+                fixture = TestBed.createComponent(IgxTimePickerDropDownSingleHourComponent);
+                fixture.detectChanges();
+
+                timePicker = fixture.componentInstance.timePicker;
+                dom = fixture.debugElement;
+                input = dom.query(By.directive(IgxInputDirective));
+            })
+        );
+
+        afterEach(async(() => {
+            UIInteractions.clearOverlay();
+        }));
+
+        it('Should render dropdown and input group correctly when format conatains only hours.', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const ampmColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+
+            expect(hourColumn).not.toBeNull();
+            expect(ampmColumn).not.toBeNull();
+            expect(minuteColumn).toBeNull();
+        }));
+
+        it('Should mask editable input correctly when format conatains only hours.', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
+
+            UIInteractions.clickElement(clearTime);
+            fixture.detectChanges();
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('');
+            expect(input.nativeElement.placeholder).toEqual('hh tt');
+
+            input.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('-- AM');
+        }));
+
+        it('Should navigate dropdown lists correctly when format conatains only hours.', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            dom.query(By.css('.igx-time-picker__hourList')).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement.classList).toContain('igx-time-picker__hourList');
+
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+            fixture.detectChanges();
+
+            expect(document.activeElement.classList).toContain('igx-time-picker__ampmList');
+
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('04 PM');
+            expect(timePicker.value).toEqual(new Date(2018, 10, 27, 16, 45, 0, 0));
+        }));
+
+        it('Should navigate dropdown lists correctly when format conatains only minutes.', fakeAsync(() => {
+            fixture.componentInstance.format = 'mm tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            dom.query(By.css('.igx-time-picker__minuteList')).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
+
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+            fixture.detectChanges();
+
+            expect(document.activeElement.classList).toContain('igx-time-picker__ampmList');
+
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('46 PM');
+            expect(timePicker.value).toEqual(new Date(2018, 10, 27, 17, 46, 0, 0));
+        }));
+
+        it('Should spin editable input correctly when format conatains only hours - 24 hour format.', fakeAsync(() => {
+            fixture.componentInstance.format = 'HH';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('17');
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(0, 0);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('18');
+            expect(timePicker.value).toEqual(new Date(2018, 10, 27, 18, 45, 0, 0));
+        }));
+
+        it('Should spin editable input correctly when format conatains only minutes.', fakeAsync(() => {
+            fixture.componentInstance.format = 'mm tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('45 PM');
+
+            input.nativeElement.setSelectionRange(0, 0);
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('46 PM');
+            expect(timePicker.value).toEqual(new Date(2018, 10, 27, 17, 46, 0, 0));
+        }));
+
+        it('Should spin editable input AM/PM correctly when format conatains only hours.', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('05 PM');
+
+            input.nativeElement.setSelectionRange(3, 3);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('05 AM');
+            expect(timePicker.value).toEqual(new Date(2018, 10, 27, 5, 45, 0, 0));
+        }));
+
+        it('Should render dialog and input group correctly when format conatains only minutes.', fakeAsync(() => {
+            fixture.componentInstance.format = 'mm';
+            fixture.componentInstance.mode = InteractionMode.Dialog;
+            fixture.detectChanges();
+
+            input = dom.query(By.directive(IgxInputDirective));
+            UIInteractions.clickElement(input);
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const ampmColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+
+            expect(hourColumn).toBeNull();
+            expect(ampmColumn).toBeNull();
+            expect(minuteColumn).not.toBeNull();
+
+            expect(input.nativeElement.value).toEqual('05');
+            expect(timePicker.mask).toEqual('00');
+            expect(timePicker.value).toEqual(fixture.componentInstance.customDate);
+
+            const headerHour = dom.query(By.css('.igx-time-picker__header-hour'));
+            const headerAmPm = dom.query(By.css('.igx-time-picker__header-ampm'));
+
+            expect(headerHour.nativeElement.innerText.replace(/\n/g, '')).toEqual('4:05');
+            expect(headerAmPm.nativeElement.innerText).toEqual('');
+        }));
+
+        it('Should render dialog and input group correctly when format conatains only hours.', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.mode = InteractionMode.Dialog;
+            fixture.detectChanges();
+
+            input = dom.query(By.directive(IgxInputDirective));
+            UIInteractions.clickElement(input);
+            tick();
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const ampmColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+
+            expect(hourColumn).not.toBeNull();
+            expect(ampmColumn).not.toBeNull();
+            expect(minuteColumn).toBeNull();
+
+            expect(input.nativeElement.value).toEqual('04 AM');
+            expect(timePicker.mask).toEqual('00 LL');
+            expect(timePicker.value).toEqual(fixture.componentInstance.customDate);
+
+            const headerHour = dom.query(By.css('.igx-time-picker__header-hour'));
+            const headerAmPm = dom.query(By.css('.igx-time-picker__header-ampm'));
+
+            expect(headerHour.nativeElement.innerText.replace(/\n/g, '')).toEqual('04:5');
+            expect(headerAmPm.nativeElement.innerText).toEqual('AM');
+        }));
+    });
 });
 
 @Component({
@@ -1579,13 +1815,14 @@ export class IgxTimePickerDropDownComponent {
     <igx-time-picker
                      [value]="customDate"
                      [mode]="mode"
-                     [format]="'H:m'">
+                     [format]="format">
                 </igx-time-picker>
     `
 })
 export class IgxTimePickerDropDownSingleHourComponent {
     customDate = new Date(2018, 10, 27, 4, 5);
     mode = InteractionMode.DropDown;
+    format = 'H:m';
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
