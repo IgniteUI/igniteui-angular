@@ -293,9 +293,11 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     }
 
     private transformIndicatorAnimation(element: HTMLElement): void {
-        this._tabs.selectedIndicator.nativeElement.style.visibility = `visible`;
-        this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
-        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
+        if (this._tabs && this._tabs.selectedIndicator) {
+            this._tabs.selectedIndicator.nativeElement.style.visibility = `visible`;
+            this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+            this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
+        }
     }
 
     private onKeyDown(isLeftArrow: boolean, index = null): void {

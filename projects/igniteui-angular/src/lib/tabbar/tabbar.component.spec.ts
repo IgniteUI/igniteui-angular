@@ -15,7 +15,7 @@ import { BottomNavRoutingViewComponentsModule,
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-describe('TabBar', () => {
+fdescribe('TabBar', () => {
     configureTestSuite();
     beforeEach(async(() => {
 
@@ -26,7 +26,8 @@ describe('TabBar', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent],
+            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
+                TabBarTabsOnlyModeTestComponent],
             imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
             .compileComponents();
@@ -227,6 +228,33 @@ describe('TabBar', () => {
 
     });
 
+    describe('Tabs-only Mode Tests', () => {
+        configureTestSuite();
+
+        let fixture;
+        let bottomNav;
+        let theTabs;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TabBarTabsOnlyModeTestComponent);
+            bottomNav = fixture.componentInstance.bottomNavComp;
+            fixture.detectChanges();
+            theTabs = bottomNav.contentTabs.toArray();
+        }));
+
+        it('should retain the correct initial selection status', () => {
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+
+            expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+
+            expect(theTabs[2].isSelected).toBe(false);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+        });
+
+    });
+
 });
 
 @Component({
@@ -353,6 +381,25 @@ class TemplatedTabBarTestComponent {
     `
 })
 class TabBarRoutingTestComponent {
+    @ViewChild(IgxBottomNavComponent)
+    public bottomNavComp: IgxBottomNavComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-bottom-nav>
+                <igx-tab label="Tab 1">
+                </igx-tab>
+                <igx-tab label="Tab 2" [isSelected]="true">
+                </igx-tab>
+                <igx-tab label="Tab 3">
+                </igx-tab>
+            </igx-bottom-nav>
+        </div>
+    `
+})
+class TabBarTabsOnlyModeTestComponent {
     @ViewChild(IgxBottomNavComponent)
     public bottomNavComp: IgxBottomNavComponent;
 }

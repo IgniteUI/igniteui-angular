@@ -19,7 +19,7 @@ import { TabsRoutingViewComponentsModule,
     TabsRoutingView2Component,
     TabsRoutingView3Component } from './tabs-routing-view-components.spec';
 
-describe('IgxTabs', () => {
+fdescribe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
 
@@ -31,7 +31,8 @@ describe('IgxTabs', () => {
 
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
-                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent],
+                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
+                TabsTabsOnlyModeTestComponent],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
@@ -478,6 +479,33 @@ describe('IgxTabs', () => {
 
     });
 
+    describe('Tabs-only Mode Tests', () => {
+        configureTestSuite();
+
+        let fixture;
+        let tabsComp;
+        let theTabs;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTestComponent);
+            tabsComp = fixture.componentInstance.tabs;
+            fixture.detectChanges();
+            theTabs = tabsComp.tabs.toArray();
+        }));
+
+        it('should retain the correct initial selection status', () => {
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item')).toBe(true);
+
+            expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item--selected')).toBe(true);
+
+            expect(theTabs[2].isSelected).toBe(false);
+            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item')).toBe(true);
+        });
+
+    });
+
 });
 
 @Component({
@@ -684,6 +712,25 @@ class TabsTestBug4420Component {
     `
 })
 class TabsRoutingTestComponent {
+    @ViewChild(IgxTabsComponent)
+    public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tab-item label="Tab 1">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 2" [isSelected]="true">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 3">
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+    `
+})
+class TabsTabsOnlyModeTestComponent {
     @ViewChild(IgxTabsComponent)
     public tabs: IgxTabsComponent;
 }

@@ -218,12 +218,14 @@ export class IgxBottomNavComponent implements AfterViewInit {
                 }
             });
         } else {
-            this.selectedIndex = args.panel.index;
-            this.panels.forEach((p) => {
-                if (p.index !== this.selectedIndex) {
-                    this._deselectPanel(p);
-                }
-            });
+            if (args.panel) {
+                this.selectedIndex = args.panel.index;
+                this.panels.forEach((p) => {
+                    if (p.index !== this.selectedIndex) {
+                        this._deselectPanel(p);
+                    }
+                });
+            }
         }
     }
 

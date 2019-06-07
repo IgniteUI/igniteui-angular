@@ -252,19 +252,23 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this.selectedIndex = args.tab.index;
         } else {
             const prevSelectedIndex = this.selectedIndex;
-            if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
+            if (prevSelectedIndex !== -1 && this.groups && this.groups.toArray()[prevSelectedIndex] !== undefined) {
                 this.onTabItemDeselected.emit(
                     {
                         tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
                         group: this.groups.toArray()[prevSelectedIndex]
                     });
             }
-            this.selectedIndex = args.group.index;
-            this.groups.forEach((p) => {
-                if (p.index !== this.selectedIndex) {
-                    this.deselectGroup(p);
-                }
-            });
+            if (args.group) {
+                this.selectedIndex = args.group.index;
+            }
+            if (this.groups) {
+                this.groups.forEach((p) => {
+                    if (p.index !== this.selectedIndex) {
+                        this.deselectGroup(p);
+                    }
+                });
+            }
         }
     }
 
