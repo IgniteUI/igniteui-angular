@@ -1353,7 +1353,7 @@ export class IgxTimePickerComponent implements
             this._initializeContainer();
 
         } else if (this.mode === InteractionMode.DropDown) {
-            this.hideOverlay();
+            this.close();
         }
     }
 
