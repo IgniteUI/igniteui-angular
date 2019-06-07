@@ -84,6 +84,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -196,6 +197,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -307,6 +309,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -1163,6 +1166,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 

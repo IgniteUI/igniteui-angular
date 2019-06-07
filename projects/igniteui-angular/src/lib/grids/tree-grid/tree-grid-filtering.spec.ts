@@ -27,6 +27,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
+        tick();
         grid = fix.componentInstance.treeGrid;
     }));
 
@@ -278,6 +279,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 

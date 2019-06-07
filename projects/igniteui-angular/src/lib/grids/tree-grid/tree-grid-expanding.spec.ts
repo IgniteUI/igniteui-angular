@@ -39,6 +39,7 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -442,6 +443,7 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.expansionDepth = 0;
             fix.detectChanges();
@@ -836,8 +838,8 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
-                fix.detectChanges();
             }));
 
             it('check expanding and collapsing a row with children', async () => {
@@ -893,8 +895,8 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandChildDataComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
-                fix.detectChanges();
             }));
 
             it('check expanding and collapsing a row with children', async () => {
@@ -950,8 +952,8 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
-                fix.detectChanges();
             }));
 
             it('check expanding and collapsing a row with children', async () => {
@@ -1008,6 +1010,7 @@ describe('Row editing expanding/collapsing', () => {
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
         fix.detectChanges();
+        tick();
         treeGrid = fix.componentInstance.treeGrid;
     }));
 

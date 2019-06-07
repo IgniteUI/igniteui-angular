@@ -201,6 +201,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
+                tick();
             }));
 
             it('should support adding root row through treeGrid API', () => {
@@ -303,6 +304,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -457,6 +459,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -683,6 +686,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -852,6 +856,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -1021,6 +1026,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -1122,6 +1128,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.cascadeOnDelete = false;
             }));

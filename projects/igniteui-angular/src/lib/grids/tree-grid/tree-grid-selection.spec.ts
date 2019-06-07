@@ -410,9 +410,8 @@ describe('IgxTreeGrid - Selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
-
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
         }));
 
         it('should return the correct type of cell when clicking on a cells', () => {
