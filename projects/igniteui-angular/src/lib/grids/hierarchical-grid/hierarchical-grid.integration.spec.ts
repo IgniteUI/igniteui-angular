@@ -426,8 +426,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
             expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
 
-            // there should be indentation of the summaries
-            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(true);
+             // there should be indentation of the summaries
+             expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(false);
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
@@ -448,6 +448,42 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(grandChildSummaryRow.children.length).toEqual(1);
             // there should be no indentation of the summaries of the leaf grid
             expect(grandChildSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) === -1).toBe(true);
+        }));
+
+        it('should size summaries with row selectors for parent and children grids correctly.', fakeAsync(/** row toggle rAF */() => {
+            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const rootExpander =  hierarchicalGrid.dataRowList.toArray()[0].expander;
+            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
+            const rootIndentChildren = Array.from(rootSummaryRow.children)
+                .filter((child: any) => child.tagName.toLowerCase() !== 'igx-display-container');
+            const indentCombinedWidth = rootIndentChildren.reduce((prev: any, cur: any) => prev + cur.offsetWidth, 0);
+
+            expect(rootSummaryRow.children.length).toEqual(2);
+            expect(rootIndentChildren.length).toEqual(1);
+            expect(indentCombinedWidth).toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
+            expect(rootSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(false);
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            const expander =  childGrid.dataRowList.toArray()[0].expander;
+
+            // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
+            const summaryRow = childGrid.summariesRowList.first.nativeElement;
+            const childIndentChildren = Array.from(summaryRow.children)
+                .filter((child: any) => child.tagName.toLowerCase() !== 'igx-display-container');
+            const childIndentCombinedWidth = childIndentChildren.reduce((prev: any, cur: any) => prev + cur.offsetWidth, 0);
+
+            expect(summaryRow.children.length).toEqual(2);
+            expect(summaryRow.children[0].tagName.toLowerCase()).toEqual('div');
+            expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
+            expect(childIndentCombinedWidth).toEqual(expander.nativeElement.offsetWidth);
+
+            // there should be indentation of the summaries
+            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(false);
         }));
 
         it('should render summaries for column inside a column group.', fakeAsync(/** row toggle rAF */() => {
