@@ -949,10 +949,10 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         describe('HasChildrenKey', () => {
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(async(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
                 fix.detectChanges();
-                tick();
+                await wait();
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -1007,10 +1007,10 @@ describe('Row editing expanding/collapsing', () => {
             .compileComponents();
     }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    beforeEach(async(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
         fix.detectChanges();
-        tick();
+        await wait();
         treeGrid = fix.componentInstance.treeGrid;
     }));
 

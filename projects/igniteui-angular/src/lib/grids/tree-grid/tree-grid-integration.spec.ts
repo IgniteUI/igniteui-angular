@@ -65,6 +65,7 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridDateTreeColumnComponent);
         fix.detectChanges();
+        tick();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'HireDate', 4);
@@ -74,6 +75,7 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridBooleanTreeColumnComponent);
         fix.detectChanges();
+        tick();
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);

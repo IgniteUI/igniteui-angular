@@ -385,6 +385,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async(done) => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);
         fixture.detectChanges();
+        await wait();
 
         const hierarchicalGrid = fixture.componentInstance.hgrid;
         fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
