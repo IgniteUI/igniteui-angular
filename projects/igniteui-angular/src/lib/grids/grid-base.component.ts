@@ -569,6 +569,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._rowDrag = val;
         if (this.gridAPI.grid && this.columnList) {
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 

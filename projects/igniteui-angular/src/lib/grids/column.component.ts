@@ -1043,7 +1043,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public resetCaches() {
         this._vIndex = NaN;
-        this.cacheCalcWidth();
+        if (this.grid) {
+            this.cacheCalcWidth();
+        }
     }
 
     /**
