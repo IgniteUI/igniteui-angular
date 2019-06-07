@@ -1,5 +1,7 @@
 # igx-slider
 
+### The latest version of the SPEC could be found in the [Wiki](https://github.com/IgniteUI/igniteui-angular/wiki/igxSlider-Specification).
+
 The slider component allows users to select a value in certain range or select a range of values. 
 Based on its configuration it's a slider or range slider.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider.html)
@@ -60,7 +62,7 @@ import { IgxSliderComponent } from "../../../src/main";
 | :--- | :--- | :--- |
 | id | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | disabled | boolean | Disables or enables UI interaction. |
-| isContinuous | boolean | Marks slider as continuous. By default is considered that the slider is discrete. Discrete slider does not have ticks and does not shows bubble labels for values. |
+| continuous | boolean | Marks slider as continuous. By default is considered that the slider is discrete. Discrete slider does not have ticks and does not shows bubble labels for values. |
 | lowerBound | number | The lower boundary of the slider value. If not set is the same as min value. |
 | maxValue | number | The maximal value for the slider. |
 | minValue | number | The minimal value for the slider. |
