@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -340,7 +340,7 @@ describe('CSV Grid Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */()  => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             tick();
