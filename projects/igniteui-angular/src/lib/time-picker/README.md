@@ -120,7 +120,7 @@ The TimePicker action buttons could be retemplated.
 ```typescript
     public selectToday(picker: IgxTimePickerComponent) {
         picker.value = new Date(Date.now());
-        picker.hideOverlay();
+        picker.close();
     }
 ```
 
