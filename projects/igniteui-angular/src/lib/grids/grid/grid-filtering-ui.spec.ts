@@ -40,7 +40,8 @@ import {
     IgxGridFilteringScrollComponent,
     IgxGridFilteringMCHComponent,
     IgxTestExcelFilteringDatePickerComponent,
-    IgxGridFilteringTemplateComponent
+    IgxGridFilteringTemplateComponent,
+    IgxGridFilteringESFTemplatesComponent
 } from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -3403,7 +3404,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
-                IgxTestExcelFilteringDatePickerComponent
+                IgxTestExcelFilteringDatePickerComponent,
+                IgxGridFilteringESFTemplatesComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -5188,6 +5190,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         fix.detectChanges();
 
         expect(grid.filteredData).toBeNull();
+    }));
+
+    it('Should use custom templates for ESF components instead of default ones.', fakeAsync(() => {
+        fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
+        fix.detectChanges();
+
+        const filterableColumns = grid.columns.filter((c) => c.filterable === true);
+        for (const column of filterableColumns) {
+            // Open ESF.
+            GridFunctions.clickExcelFilterIcon(fix, column.field);
+            tick(100);
+            fix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            // Verify custom sorting template is used.
+            expect(excelMenu.querySelector('.esf-custom-sorting')).not.toBeNull();
+            expect(GridFunctions.getExcelFilteringSortComponent(fix)).toBeNull();
+
+            // Verify custom hiding template is used.
+            expect(excelMenu.querySelector('.esf-custom-hiding')).not.toBeNull();
+            expect(GridFunctions.getExcelFilteringHideContainer(fix)).toBeNull();
+
+            // Verify custom moving template is used.
+            expect(excelMenu.querySelector('.esf-custom-moving')).not.toBeNull();
+            expect(GridFunctions.getExcelFilteringMoveComponent(fix)).toBeNull();
+
+            // Verify custom pinning template is used.
+            expect(excelMenu.querySelector('.esf-custom-pinning')).not.toBeNull();
+            expect(GridFunctions.getExcelFilteringPinContainer(fix)).toBeNull();
+            expect(GridFunctions.getExcelFilteringUnpinContainer(fix)).toBeNull();
+
+            // Close ESF.
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+        }
     }));
 });
 
