@@ -2,9 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.2.11
+## 7.2.12
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
 
 ## 7.2.9
 - `Pager`
