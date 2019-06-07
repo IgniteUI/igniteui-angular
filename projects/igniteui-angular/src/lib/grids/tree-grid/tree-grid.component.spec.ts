@@ -32,13 +32,14 @@ describe('IgxTreeGrid Component Tests', () => {
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
+            fix.detectChanges();
+            tick();
             grid = fix.componentInstance.treeGrid;
         }));
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
-            fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);

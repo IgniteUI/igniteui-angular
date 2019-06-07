@@ -33,6 +33,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
             fix.detectChanges();
+            tick();
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -161,6 +162,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
+            tick();
         }));
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {
