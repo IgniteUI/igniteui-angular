@@ -19,7 +19,7 @@ import { TabsRoutingViewComponentsModule,
     TabsRoutingView2Component,
     TabsRoutingView3Component } from './tabs-routing-view-components.spec';
 
-fdescribe('IgxTabs', () => {
+describe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
 

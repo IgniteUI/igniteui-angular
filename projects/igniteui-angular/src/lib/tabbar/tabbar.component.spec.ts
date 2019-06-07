@@ -15,7 +15,7 @@ import { BottomNavRoutingViewComponentsModule,
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-fdescribe('TabBar', () => {
+describe('TabBar', () => {
     configureTestSuite();
     beforeEach(async(() => {
 
