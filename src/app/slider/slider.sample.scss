@@ -1,0 +1,6 @@
+@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
+
+.ellipsis {
+    @include ellipsis();
+    max-width: 50px;
+}
