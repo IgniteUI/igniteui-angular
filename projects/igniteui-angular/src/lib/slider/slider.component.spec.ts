@@ -1,4 +1,4 @@
-import { Component, ViewChild, } from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -18,7 +18,8 @@ fdescribe('IgxSlider', () => {
                 SliderMinMaxComponent,
                 SliderTestComponent,
                 SliderWithLabelsComponent,
-                RangeSliderWithLabelsComponent
+                RangeSliderWithLabelsComponent,
+                RangeSliderWithCustomTemplate
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule
@@ -976,10 +977,6 @@ fdescribe('IgxSlider', () => {
             expect(readOnly).toBe('false');
         });
 
-        it('custom templates for the lower/upper thumb labels should be allowed', () => {
-
-        });
-
         it('should be able to track the value changes per every slide action through an event emitter', async() => {
             const FromTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from'));
             const ToTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to'));
@@ -1061,6 +1058,29 @@ fdescribe('IgxSlider', () => {
         });
     });
 
+    it('custom templates for the lower/upper thumb labels should be allowed', () => {
+        const fixture = TestBed.createComponent(RangeSliderWithCustomTemplate);
+        const slider = fixture.componentInstance.slider;
+        fixture.detectChanges();
+
+        const FromTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from'));
+        const ToTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to'));
+
+        expect(ToTumb).toBeDefined();
+        expect(FromTumb).toBeDefined();
+
+        let customTemplates = fixture.nativeElement.querySelectorAll('span.custom');
+
+        expect(customTemplates).toBeDefined();
+        expect(customTemplates.length).toBe(2);
+
+        slider.type = SliderType.SLIDER;
+        fixture.detectChanges();
+        customTemplates = fixture.nativeElement.querySelectorAll('span.custom');
+
+        expect(customTemplates.length).toBe(1);
+
+    });
     it('should draw tick marks', () => {
         const fixture = TestBed.createComponent(SliderInitializeTestComponent);
         const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
@@ -1317,13 +1337,29 @@ class SliderWithLabelsComponent {
     template: `
     <igx-slider [(ngModel)]='label' [type]="type"
         [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
-
     </igx-slider> `
 })
 class RangeSliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
-    public
     public label;
     public type = SliderType.RANGE;
 }
 
+@Component({
+    template: `
+    <igx-slider [(ngModel)]='label' [type]="type"
+        [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']">
+        <ng-template igxSliderThumbFrom let-value let-labels="labels">
+            <span class="custom"> Lower {{ labels[value.lower] }}</span>
+        </ng-template>
+        <ng-template igxSliderThumbTo let-value let-labels="labels">
+            <span class="custom"> Upper {{ labels[value.upper] }}</span>
+        </ng-template>
+    </igx-slider>
+    `
+
+})
+class RangeSliderWithCustomTemplate {
+    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    public type = SliderType.RANGE;
+}
