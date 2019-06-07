@@ -19,9 +19,10 @@ export class TestMethods {
 
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,
     applies the following filter: ["JobTitle", "Senior", IgxStringFilteringOperand.instance().condition('contains'), true]. */
-    public static createGridAndFilter(...filterParams: any[]) {
+    public static async createGridAndFilter(...filterParams: any[]) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+        await wait(16);
         const myGrid = fix.componentInstance.grid;
 
         filterParams = (filterParams.length === 0) ?
@@ -34,9 +35,10 @@ export class TestMethods {
     }
 
     /* Creates an instance of GridDeclarationComponent and pins the columns with the specified indices. */
-    public static createGridAndPinColumn(...colIndices: any[]) {
+    public static async createGridAndPinColumn(...colIndices: any[]) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+        await wait(16);
 
         const myGrid = fix.componentInstance.grid;
 
