@@ -1,6 +1,5 @@
 import { Injectable, SecurityContext, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
 /**
@@ -19,13 +18,14 @@ import { DOCUMENT } from '@angular/common';
 @Injectable({
     providedIn: 'root'
 })
+
 export class IgxIconService {
     private _fontSet = 'material-icons';
     private _fontSetAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
 
-    constructor (private _sanitizer: DomSanitizer, private _httpClient: HttpClient, @Inject(DOCUMENT) private _document: any) { }
+    constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) { }
 
     /**
      *  Returns the default font set.
@@ -108,7 +108,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Returns wheather a given SVG image is present in the cache.
+     *  Returns whether a given SVG image is present in the cache.
      *```typescript
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
@@ -132,14 +132,28 @@ export class IgxIconService {
      * @hidden
      */
     private fetchSvg(iconName: string, url: string, fontSet: string = '') {
-        const request = this._httpClient.get(url, { responseType: 'text' });
-        const subscription = request.subscribe((value: string) => {
-            this.cacheSvgIcon(iconName, value, fontSet);
-        }, (error) => {
-            throw new Error(`Could not fetch SVG from url: ${url}; error: ${error.message}`);
-        }, () => {
-            subscription.unsubscribe();
-        });
+        const instance = this;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', url, true);
+        httpRequest.responseType = 'text';
+
+        // load – when the result is ready, that includes HTTP errors like 404.
+        httpRequest.onload = function (event: ProgressEvent) {
+            const request = event.target as XMLHttpRequest;
+            if (request.status === 200) {
+                instance.cacheSvgIcon(iconName, request.responseText, fontSet);
+            } else {
+                throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
+            }
+        };
+
+        // error – when the request couldn’t be made, e.g.network down or invalid URL.
+        httpRequest.onerror = function (event: ProgressEvent) {
+            const request = event.target as XMLHttpRequest;
+            throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);
+        };
+
+        httpRequest.send();
     }
 
     /**
