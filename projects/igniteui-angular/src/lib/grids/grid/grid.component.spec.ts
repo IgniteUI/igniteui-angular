@@ -1047,8 +1047,8 @@ describe('IgxGrid Component Tests', () => {
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
-            fix.detectChanges();
             await wait(16);
+            fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
             expect(grid.columns[1].width).toEqual('150');
@@ -1110,8 +1110,8 @@ describe('IgxGrid Component Tests', () => {
         it('Should calculate column width when a column has width in % and row selectors are enabled.', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
-            fix.detectChanges();
             await wait(16);
+            fix.detectChanges();
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             grid.rowSelectable = true;
@@ -1614,8 +1614,8 @@ describe('IgxGrid Component Tests', () => {
 
             it(`Should preserve updated value inside the cell when it enters edit mode again`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-                fix.detectChanges();
                 await wait(DEBOUNCETIME);
+                fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
