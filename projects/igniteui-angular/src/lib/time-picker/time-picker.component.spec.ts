@@ -1696,7 +1696,7 @@ export class IgxTimePickerDropDownNoValueComponent {
 
 
 @Component({
-template: `
+    template: `
 <igx-time-picker #picker [mode]="'dropdown'">
     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-displayTime="displayTime">
         <igx-input-group #dropDownTarget>
@@ -1718,7 +1718,7 @@ template: `
 export class IgxTimePickerRetemplatedDropDownComponent {
     public select(picker: IgxTimePickerComponent) {
         picker.value = new Date(2018, 10, 27, 10, 45, 0, 0);
-        picker.hideOverlay();
+        picker.close();
     }
 }
 
