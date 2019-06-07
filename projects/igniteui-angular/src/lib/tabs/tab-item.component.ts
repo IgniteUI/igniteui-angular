@@ -103,16 +103,46 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.role')
     public role = 'tab';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.tabindex')
     public tabindex;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.id')
+    public id = 'igx-tab-item-' + this.index;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-label')
+    public ariaLabel = this.label;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-disabled')
+    public ariaDisabled = this.disabled;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-selected')
+    public ariaSelected = this.isSelected;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-controls')
+    public ariaControls = 'igx-tab-item-group-' + this.index;
 
     /**
      * @hidden
@@ -225,7 +255,9 @@ export class IgxTabItemComponent implements IgxTabItemBase {
      * @hidden
      */
     get index(): number {
-        return this._tabs.tabs.toArray().indexOf(this);
+        if (this._tabs.tabs) {
+            return this._tabs.tabs.toArray().indexOf(this);
+        }
     }
 
     /**

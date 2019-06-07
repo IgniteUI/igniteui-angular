@@ -463,6 +463,36 @@ export class IgxTabComponent {
     public role = 'tab';
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.id')
+    public id = 'igx-tab-' + this.index;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-label')
+    public ariaLabel = this.label;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-disabled')
+    public ariaDisabled = this.disabled;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-selected')
+    public ariaSelected = this.isSelected;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-controls')
+    public ariaControls = 'igx-tab-panel-' + this.index;
+
+    /**
      * Gets the panel associated with the tab.
      * ```typescript
      * let tabPanel =  this.tab.relatedPanel;
