@@ -476,8 +476,8 @@ export class GridFunctions {
     public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
-        const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-        const cancelButton: any = raisedButtons.find((rb: any) => rb.innerText === 'cancel');
+        const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
         cancelButton.click();
     }
 
