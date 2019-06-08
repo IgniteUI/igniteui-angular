@@ -550,6 +550,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.allRowsSelected = false;
             this.deselectAllRows();
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 
