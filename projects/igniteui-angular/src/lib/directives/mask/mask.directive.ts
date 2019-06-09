@@ -60,7 +60,14 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      * @memberof IgxMaskDirective
      */
     @Input()
-    public placeholder: string;
+    public set placeholder(val: string) {
+        this._placeholder = val;
+        this.nativeElement.setAttribute('placeholder', this._placeholder);
+    }
+
+    public get placeholder(): string {
+        return this._placeholder;
+    }
 
     /**
      * Specifies a pipe to be used on blur.
@@ -147,6 +154,11 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      *@hidden
      */
     private _selection: number;
+
+    /**
+     *@hidden
+     */
+    private _placeholder: string;
 
     /**
      *@hidden

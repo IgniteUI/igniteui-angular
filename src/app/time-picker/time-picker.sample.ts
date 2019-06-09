@@ -16,6 +16,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     isVertical = true;
     mode = InteractionMode.DropDown;
 
+    date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
     today = new Date(Date.now());
 
