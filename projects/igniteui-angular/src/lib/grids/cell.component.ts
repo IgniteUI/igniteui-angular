@@ -644,7 +644,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.selectionService.pointerDown(this.selectionNode,
             event.shiftKey, event.ctrlKey);
-        this._updateCRUDStatus();
+        // TODO: Investigate
+        // There is a nasty double to triple row editing overlay instantiation with IE 11 (of course!)
+        if (!isIE()) {
+            this._updateCRUDStatus();
+        }
     }
 
     /**
