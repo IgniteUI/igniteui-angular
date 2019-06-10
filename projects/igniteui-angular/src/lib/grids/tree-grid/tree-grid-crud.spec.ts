@@ -37,10 +37,11 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
-                tick();
+                tick(16);
             }));
 
             it('should support adding root row through treeGrid API', () => {
@@ -201,7 +202,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
-                tick();
+                tick(16);
             }));
 
             it('should support adding root row through treeGrid API', () => {
@@ -304,7 +305,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -325,7 +326,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 };
                 treeGrid.updateRow(newRow, 147);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 const rowComponent = treeGrid.getRowByKey(999);
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 147,
@@ -459,7 +460,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -686,7 +687,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -856,7 +857,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -1026,7 +1027,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -1128,7 +1129,7 @@ describe('IgxTreeGrid - CRUD', () => {
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.cascadeOnDelete = false;
             }));

@@ -681,10 +681,10 @@ describe('IgxTreeGrid - Summaries', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick();
+            tick(16);
         }));
 
         it('Delete root node', () => {
@@ -1198,10 +1198,10 @@ describe('IgxTreeGrid - Summaries', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyScroliingComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick();
+            tick(16);
         }));
 
         it('should be able to select root summaries with arrow keys', async () => {

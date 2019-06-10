@@ -35,7 +35,7 @@ describe('IgxTreeGrid Component Tests', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             grid = fix.componentInstance.treeGrid;
         }));
 
@@ -53,7 +53,7 @@ describe('IgxTreeGrid Component Tests', () => {
             grid.width = '50%';
             grid.height = '50%';
             fix.detectChanges();
-            tick();
+            tick(16);
 
             expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
@@ -62,7 +62,7 @@ describe('IgxTreeGrid Component Tests', () => {
 
         it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
             grid.height = '600px';
-            tick();
+            tick(16);
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
@@ -75,7 +75,7 @@ describe('IgxTreeGrid Component Tests', () => {
             there are fewer than 10 records in the data view`, fakeAsync(() => {
                 grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
-                tick();
+                tick(16);
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).not.toBeNull();
@@ -88,7 +88,7 @@ describe('IgxTreeGrid Component Tests', () => {
             display density is changed`, fakeAsync(() => {
                 grid.height = '100%';
                 fix.componentInstance.density = DisplayDensity.compact;
-                tick();
+                tick(16);
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);

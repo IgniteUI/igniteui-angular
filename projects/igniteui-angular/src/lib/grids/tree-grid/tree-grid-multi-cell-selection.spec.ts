@@ -495,7 +495,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
@@ -604,10 +604,10 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick();
+            tick(16);
         }));
 
         it('CRUD: selected range should not change when delete row', () => {
@@ -731,10 +731,10 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick();
+            tick(16);
         }));
 
         it('CRUD: selected range should not change when delete row', () => {

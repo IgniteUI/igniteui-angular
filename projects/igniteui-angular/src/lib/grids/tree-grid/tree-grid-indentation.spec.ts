@@ -34,7 +34,7 @@ describe('IgxTreeGrid - Indentation', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -192,7 +192,7 @@ describe('IgxTreeGrid - Indentation', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -253,7 +253,7 @@ describe('IgxTreeGrid - Indentation', () => {
             treeGrid.paging = true;
             treeGrid.perPage = 3;
             fix.detectChanges();
-            tick();
+            tick(16);
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -264,7 +264,7 @@ describe('IgxTreeGrid - Indentation', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
-            tick();
+            tick(16);
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -275,7 +275,7 @@ describe('IgxTreeGrid - Indentation', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
-            tick();
+            tick(16);
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -289,7 +289,7 @@ describe('IgxTreeGrid - Indentation', () => {
             column.resizable = true;
             fix.detectChanges();
             treeGrid.cdr.detectChanges();
-            tick();
+            tick(16);
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
@@ -328,7 +328,7 @@ describe('IgxTreeGrid - Indentation', () => {
             let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
-            tick();
+            tick(16);
             TreeGridFunctions.verifyTreeColumn(fix, 'ParentID', 5);
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
@@ -336,7 +336,7 @@ describe('IgxTreeGrid - Indentation', () => {
             targetColumn = treeGrid.columns.filter(c => c.field === 'ParentID')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
-            tick();
+            tick(16);
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
         }));
