@@ -5,8 +5,11 @@ All notable changes for each version of this project will be documented in this 
 ## 7.3.4
 
 ### New feature
-- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
-- **igxSlider** - deprecate **isContiunous** property.
+- `igxSlider` - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- `igxSlider` - deprecate **isContiunous** property.
+- `IgxChip`
+    - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
+    - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
 
 - `igxTimePicker` changes
     - `onClosing` event is added.
