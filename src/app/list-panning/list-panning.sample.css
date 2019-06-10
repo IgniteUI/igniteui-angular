@@ -1,49 +1,11 @@
-.list-sample {
-    display: block;
-    position: relative;
-    height: 640px;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-}
-
-.item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.item > [igxLabel],
-.item > .person {
-    position: absolute;
-    margin-left: 72px;
-}
-
-.person .name {
-    padding: 0;
-    margin: 0;
-}
-
-.person .phone {
-    font-size: 12px;
-    color: gray;
-}
-
-.item igx-icon {
-    color: lightgray;
-}
-
-.item igx-icon.favorite {
+::ng-deep .igx-list__item-actions .igx-icon.favorite {
     color: orange;
-}
-
-.item .delete-item:hover {
-    color: crimson;
-    cursor: pointer;
 }
 
 .listItemLeftPanningStyle {
     display: flex;
     flex-direction: row-reverse;
-    background-color:orange;
+    background-color: orange;
     color: white;
     width: 100%;
     padding-right: 10px;
@@ -53,7 +15,7 @@
 .listItemRightPanningStyle {
     display: flex;
     flex-direction: row;
-    background-color:limegreen;
+    background-color: limegreen;
     color: white;
     width: 100%;
     padding-left: 10px;
@@ -63,7 +25,7 @@
 .listItemLeftPanningStyle2 {
     display: flex;
     flex-direction: row-reverse;
-    background-color:purple;
+    background-color: purple;
     color: white;
     width: 100%;
     padding-right: 10px;
@@ -73,7 +35,7 @@
 .listItemRightPanningStyle2 {
     display: flex;
     flex-direction: row;
-    background-color:red;
+    background-color: red;
     color: white;
     width: 100%;
     padding-left: 10px;
