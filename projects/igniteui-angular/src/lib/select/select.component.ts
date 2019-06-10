@@ -118,7 +118,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets input placeholder.
      *
      */
-    @Input() public placeholder = '';
+    @Input() public placeholder;
     /**
      * An @Input property that disables the `IgxSelectComponent`.
      * ```html
