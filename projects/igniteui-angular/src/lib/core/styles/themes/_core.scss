@@ -56,6 +56,7 @@
 @import '../components/toast/toast-component';
 @import '../components/tooltip/tooltip-component';
 @import '../components/time-picker/time-picker-component';
+@import '../print/index';
 
 /// Includes the base for each theme.
 
@@ -68,6 +69,10 @@
     }
 }
 
-@mixin igx-core() {
+@mixin igx-core($print-layout:true) {
     @include igx-typography();
+
+    @if $print-layout == true {
+        @include igx-print-layout();
+    }
 }
