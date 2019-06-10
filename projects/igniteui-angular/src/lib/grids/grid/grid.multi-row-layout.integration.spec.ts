@@ -619,7 +619,7 @@ xdescribe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[4];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) - 1)
+            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) + 1)
             .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
 

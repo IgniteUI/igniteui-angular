@@ -30,6 +30,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -860,6 +861,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
+        this._setupNavigationService();
     }
 
     public ngOnInit() {
@@ -904,6 +906,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             return this.extractDataFromSelection(source);
         } else {
             return super.getSelectedData();
+        }
+    }
+
+    private _setupNavigationService() {
+        if (this.hasColumnLayouts) {
+            this.navigation = new IgxGridMRLNavigationService();
+            this.navigation.grid = this;
         }
     }
 }

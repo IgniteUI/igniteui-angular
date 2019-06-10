@@ -2,10 +2,10 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, DropPosition } from 'igniteui-angular';
 
 @Component({
-    selector: 'app-grid-mrl-sample',
-    templateUrl: 'grid-mrl.sample.html'
+    selector: 'app-grid-mrl-custom-navigation-sample',
+    templateUrl: 'grid-mrl-custom-navigation.sample.html'
 })
-export class GridMRLSampleComponent {
+export class GridMRLCustomNavigationSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     width = null;
@@ -67,18 +67,13 @@ export class GridMRLSampleComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
-    hideGroup() {
-        const col = this.grid.getColumnByName('group2');
-        col.hidden = !col.hidden;
-    }
-    pinGroup() {
-        const col = this.grid.getColumnByName('group2');
-        col.pinned = !col.pinned;
-    }
-
-    moveGroup() {
-        const col1 = this.grid.getColumnByName('group2');
-        const col2 = this.grid.getColumnByName('group1');
-        this.grid.moveColumn(col2, col1);
+    public customNavigation(args) {
+        const target = args.target;
+        if (args.event.key.toLowerCase() === 'enter') {
+            args.event.preventDefault();
+            args.cancel = true;
+            const rowIndex = target.rowIndex === undefined ? target.index : target.rowIndex;
+            this.grid.navigateTo(args.event.shiftKey ? rowIndex - 1 : rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+        }
     }
 }
