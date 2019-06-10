@@ -157,7 +157,7 @@ export class IgxItemListDirective {
         event.preventDefault();
 
         if (this.timePicker.mode === InteractionMode.DropDown) {
-            this.timePicker.hideOverlay();
+            this.timePicker.close();
             return;
         }
         this.timePicker.okButtonClick();
@@ -345,3 +345,12 @@ export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
+/**
+ * This directive can be used to add custom action buttons to the dropdownb/dialog.
+ */
+@Directive({
+    selector: '[igxTimePickerActions]'
+})
+export class IgxTimePickerActionsDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
