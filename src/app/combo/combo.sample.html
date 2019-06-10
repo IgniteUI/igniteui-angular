@@ -68,13 +68,13 @@
             </ng-template>
         </div>
         <div>
-            <h4>Display Density</h4>
+            <h4 class="no-print">Display Density</h4>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === compact" (click)="setDensity(compact)">Compact</button>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === comfortable" (click)="setDensity(comfortable)">Comfortable</button>
         </div>
         <div>
-            <h4>Search Input</h4>
+            <h4 class="no-print">Search Input</h4>
             <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch><br/>
             <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
         </div>
