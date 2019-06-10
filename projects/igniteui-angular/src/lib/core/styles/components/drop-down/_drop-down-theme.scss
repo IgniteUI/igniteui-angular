@@ -187,9 +187,9 @@
         compact: rem(24px)
     );
 
-    $item-padding-confortable: rem(16px);
-    $item-padding-cosy: rem(8px);
-    $item-padding-compact: rem(4px);
+    $item-padding-confortable:rem(16px);
+    $item-padding-cosy:rem(8px);
+    $item-padding-compact:rem(16px);
 
     $item-padding: (
         confortable: 0 $item-padding-confortable,
@@ -230,6 +230,24 @@
         height: map-get($item-height, 'confortable');
     }
 
+    %igx-drop-down__item--cosy {
+        height: map-get($item-height, 'cosy');
+        padding: map-get($item-padding, 'cosy');
+        //
+        //&%igx-drop-down__list--select {
+        //    max-width: calc(100% + #{$item-padding-cosy} * 2);
+        //}
+    }
+
+    %igx-drop-down__item--compact {
+        height: map-get($item-height, 'compact');
+        padding: map-get($item-padding, 'compact');
+        //
+        //&%igx-drop-down__list--select {
+        //    max-width: calc(100% + #{$item-padding-compact} * 2);
+        //}
+    }
+
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
@@ -250,24 +268,6 @@
             background: --var($theme, 'hover-item-background');
             color: --var($theme, 'hover-item-text-color');
         }
-    }
-
-    %igx-drop-down__item--cosy {
-        height: map-get($item-height, 'cosy');
-        padding: map-get($item-padding, 'cosy');
-        //
-        //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-cosy} * 2);
-        //}
-    }
-
-    %igx-drop-down__item--compact {
-        height: map-get($item-height, 'compact');
-        padding: map-get($item-padding, 'compact');
-        //
-        //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-compact} * 2);
-        //}
     }
 
     [dir='rtl'] {
