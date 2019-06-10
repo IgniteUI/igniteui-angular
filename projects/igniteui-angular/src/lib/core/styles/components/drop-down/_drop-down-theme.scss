@@ -182,19 +182,31 @@
     @include igx-root-css-vars($theme);
 
     $item-height: (
-        confortable: rem(48px),
-        cosy: rem(32px),
+        confortable: rem(32px),
+        cosy: rem(28px),
+        compact: rem(28px)
+    );
+
+    $header-item-height: (
+        confortable: rem(32px),
+        cosy: rem(28px),
         compact: rem(24px)
     );
 
-    $item-padding-confortable: rem(16px);
-    $item-padding-cosy: rem(8px);
-    $item-padding-compact: rem(4px);
+    $item-padding-confortable: rem(24px);
+    $item-padding-cosy: rem(20px);
+    $item-padding-compact: rem(16px);
 
     $item-padding: (
         confortable: 0 $item-padding-confortable,
         cosy: 0 $item-padding-cosy,
         compact: 0 $item-padding-compact
+    );
+
+    $header-item-padding: (
+        confortable: 0 rem(16px),
+        cosy: 0 rem(12px),
+        compact: 0 rem(8px)
     );
 
     %igx-drop-down {
@@ -227,13 +239,13 @@
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: map-get($item-height, 'confortable');
     }
 
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
         padding: map-get($item-padding, 'confortable');
+        height: map-get($item-height, 'confortable');
 
         //&%igx-drop-down__list--select {
         //    max-width: calc(100% + #{$item-padding-confortable} * 2);
@@ -280,17 +292,18 @@
     %igx-drop-down__header {
         color: --var($theme, 'header-text-color');
         pointer-events: none;
-        padding: map-get($item-padding, 'confortable');
+        height: map-get($header-item-height, 'confortable');
+        padding: map-get($header-item-padding, 'confortable');
     }
 
     %igx-drop-down__header--cosy {
-        height: map-get($item-height, 'cosy');
-        padding: map-get($item-padding, 'cosy');
+        height: map-get($header-item-height, 'cosy');
+        padding: map-get($header-item-padding, 'cosy');
     }
 
     %igx-drop-down__header--compact {
-        height: map-get($item-height, 'compact');
-        padding: map-get($item-padding, 'compact');
+        height: map-get($header-item-height, 'compact');
+        padding: map-get($header-item-padding, 'compact');
     }
 
     %igx-drop-down__group {
