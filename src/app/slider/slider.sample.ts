@@ -13,6 +13,7 @@ class Task {
 
 @Component({
     selector: 'app-slider-sample',
+    styleUrls: ['slider.sample.scss'],
     templateUrl: 'slider.sample.html'
 })
 export class SliderSampleComponent {
@@ -21,6 +22,11 @@ export class SliderSampleComponent {
     rangeValue = {
         lower: 30,
         upper: 60
+    };
+
+    rangeLabel = {
+        lower: 2,
+        upper: 5
     };
 
     task: Task = new Task('Implement new app', 30);
