@@ -152,12 +152,6 @@
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
 
-    $list-padding: (
-        comfortable: rem(8px) 0,
-        cosy: rem(4px) 0,
-        compact: rem(2px) 0
-    );
-
     $list-empty-padding: (
         comfortable: rem(16px),
         cosy: rem(8px),
@@ -203,11 +197,7 @@
         overflow: hidden;
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
-        padding: map-get($list-padding, 'comfortable');
     }
-
-    %igx-list--cosy {padding: map-get($list-padding, 'cosy');}
-    %igx-list--compact {padding: map-get($list-padding, 'compact');}
 
     %igx-list-empty {
         justify-content: center;
@@ -530,4 +520,3 @@
         }
     }
 }
-
