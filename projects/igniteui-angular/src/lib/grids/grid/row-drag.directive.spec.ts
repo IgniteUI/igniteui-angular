@@ -65,6 +65,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let nonDroppableAreaElement: Element;
         let rows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
+        configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
@@ -76,7 +77,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
 
         it('should drag and drop draggable row over droppable container', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -346,6 +346,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
+        configureTestSuite();
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
@@ -366,7 +367,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should drop row data in the proper grid columns', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
 
@@ -729,6 +730,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxHierarchicalGridComponent;
         let dropGrid: IgxHierarchicalGridComponent;
         let dragRows: DebugElement[];
+        configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
@@ -738,7 +740,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should be able to drag row on every hiearchical level', (async () => {
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
@@ -798,6 +800,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxTreeGridComponent;
         let dropGrid: IgxGridComponent;
         let dragRows: DebugElement[];
+        configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();
@@ -807,7 +810,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should be able to drag row on every hiearchical level', (async () => {
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;

@@ -458,11 +458,11 @@ describe('Excel Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(async(() => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick();
+
             treeGrid = fix.componentInstance.treeGrid;
         }));
 

@@ -343,7 +343,7 @@ describe('CSV Grid Exporter', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
