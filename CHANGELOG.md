@@ -1,12 +1,68 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 7.3.1
-`igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
+
+## 7.3.4
+
+### New feature
+- **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- **igxSlider** - deprecate **isContiunous** property.
+
+- `igxTimePicker` changes
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxTimePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+
+- `igxDatePicker` changes
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
 
 ``` 
 @include igx-core($print-layout: false); 
 ```
+- `IgxList`
+    - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
+    ```html
+        <igx-list>
+            <div [style.height]="'480px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+                <igx-list-item [index]="i" *igxFor="let item of data; index as i; scrollOrientation: 'vertical'; containerSize: '480px'; itemSize: '48px'">
+                    <div>{{ item.key }}</div>
+                    <div class="contact__info">
+                        <span class="name">{{item.name}}</span>
+                    </div>
+                </igx-list-item>
+            </div>
+        </igx-list>
+    ```
+    - The `items` property now returns the collection of child items sorted by their index if one is assigned. This is useful when the `children` order cannot be guaranteed.
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
+- `IgxCard` - The card component has been refactored. It now includes several new supporting components/directives:
+    - `igxCardHeaderTitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card title;
+    - `igxCardHeaderSubtitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card subtitle;
+    - `igxCardThumbnail` - tag anything placed in the `igx-card-header` as a thumb to be placed to the left of your titles;
+    - `igx-card-header` - the card header can now detect and automatically position `igx-avatar`s placed in it;
+    - `igx-card-media` - wrap images or videos that will be automatically sized for you;
+    - `igx-card-actions` - the card actions can now detect and automatically position all `igxButton`s placed in it;
+    - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
+    - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
+- New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+
+
+## 7.3.3
+
+- `igx-core()` now includes some styles for printing layout.
+In order to turn them off, you need to pass an argument and set it to `false`
+    ```
+        @include igx-core($print-layout: false); 
+    ```
+
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation
@@ -15,7 +71,7 @@ All notable changes for each version of this project will be documented in this 
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
-
+    
 ## 7.3.0
 
 ### Features
@@ -67,7 +123,6 @@ All notable changes for each version of this project will be documented in this 
 ## 7.2.9
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
-
 
 ## 7.2.6
 - `igxGrid`

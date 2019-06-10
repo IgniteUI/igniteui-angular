@@ -1,25 +1,13 @@
-.item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 34px;
-}
-
-.item>[igxLabel],
-.item>.person {
-    position: absolute;
-    margin-left: 72px;
-}
-
-.item igx-icon {
+::ng-deep .igx-list__item-actions .igx-icon {
     color: lightgray;
+    cursor: pointer;
 }
 
-.item igx-icon.favorite {
+::ng-deep .igx-list__item-actions .igx-icon.favorite {
     color: orange;
 }
 
-.item .delete-item:hover {
+::ng-deep .igx-list__item-actions .delete-item:hover {
     color: crimson;
     cursor: pointer;
 }
@@ -27,4 +15,11 @@
 .virtualized-items {
     position: relative;
     overflow: hidden;
+}
+
+.sample-column {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }

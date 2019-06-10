@@ -1,51 +1,22 @@
-.list-sample {
-    display: block;
-    position: relative;
-    height: 640px;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-}
-
-.list-sample-density {
-    display: block;
-    position: relative;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-}
-
-.density-chooser {
+.sample-space {
     margin-bottom: 16px;
 }
 
-.item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.density-chooser {
+    max-width: 400px;
+    margin: 30px auto 0;
 }
 
-.item > [igxLabel],
-.item > .person {
-    position: absolute;
-    margin-left: 72px;
+.igx-list__empty--custom {
+    text-align: center;
+    opacity: .7;
 }
 
-.person .name {
-    padding: 0;
-    margin: 0;
+.list-sample--add {
+    position: relative;
 }
 
-.person .phone {
-    font-size: 12px;
-    color: gray;
+.sample-dialog-content {
+    padding: 8px;
 }
 
-.item igx-icon {
-    color: lightgray;
-}
-
-.item igx-icon.favorite {
-    color: orange;
-}
-
-.item .delete-item:hover {
-    color: crimson;
-    cursor: pointer;
-}
