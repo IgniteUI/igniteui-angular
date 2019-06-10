@@ -22,8 +22,8 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
-import { OverlaySettings, PositionSettings, VerticalAlignment, HorizontalAlignment } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
+import { OverlaySettings, PositionSettings, VerticalAlignment } from '../services/overlay/utilities';
+import { AutoPositionStrategy } from '../services/overlay/position/auto-position-strategy';
 import { useAnimation } from '@angular/animations';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -203,23 +203,9 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     private toggleFilterDropdown() {
         if (!this._componentOverlayId) {
             const headerTarget = this.elementRef.nativeElement;
+            const filterIconTarget = headerTarget.querySelector('.' + this.filterIconClassName);
 
-            const gridRect = this.grid.nativeElement.getBoundingClientRect();
-            const headerRect = headerTarget.getBoundingClientRect();
-
-            let x = headerRect.left;
-            let x1 = gridRect.left + gridRect.width;
-            x += window.pageXOffset;
-            x1 += window.pageXOffset;
-            if (Math.abs(x - x1) < 300) {
-                this._filterMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
-                this._filterMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
-            } else {
-                this._filterMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
-                this._filterMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
-            }
-
-            this._filterMenuOverlaySettings.positionStrategy.settings.target = headerTarget;
+            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = this.grid.outlet;
 
             this._componentOverlayId =
@@ -246,7 +232,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
-            positionStrategy: new ConnectedPositioningStrategy(this._filterMenuPositionSettings),
+            positionStrategy: new AutoPositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
 
