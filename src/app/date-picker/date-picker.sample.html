@@ -56,7 +56,7 @@
                         </igx-input-group>
                     </ng-template>
                 </igx-date-picker>
-                <label>Date: {{ retemplated.value | date:'longDate'}}</label>
+                <label class="no-print">Date: {{ retemplated.value | date:'longDate'}}</label>
             </div>
         </article>
 
@@ -66,7 +66,7 @@
             <div class="preview">
                 <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="testDate" format="dd.MM.y" mask="M/d/y">
                 </igx-date-picker>
-                <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
+                <label class="no-print">Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
             </div>
         </article>
 
