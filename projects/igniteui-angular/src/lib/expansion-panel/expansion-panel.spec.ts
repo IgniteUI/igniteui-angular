@@ -51,7 +51,7 @@ describe('igxExpansionPanel', () => {
 
 
     describe('General tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -153,7 +153,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         function verifyPanelExpansionState(
             collapsed: boolean,
             panel: IgxExpansionPanelComponent,
@@ -778,7 +778,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Aria tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should properly apply default aria properties', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -901,7 +901,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Rendering tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();

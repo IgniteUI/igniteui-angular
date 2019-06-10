@@ -231,10 +231,10 @@ describe('IgxGrid - Cell component', () => {
     }));
 
     describe('Cell Editing', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
         describe('Cell Editing - test edit templates, sorting and filtering', () => {
-            configureTestSuite();
+            // configureTestSuite();
             let fixture;
             let grid: IgxGridComponent;
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -484,7 +484,7 @@ describe('IgxGrid - Cell component', () => {
         });
 
         describe('EditMode - on scroll, pin, blur', () => {
-            configureTestSuite();
+            // configureTestSuite();
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';

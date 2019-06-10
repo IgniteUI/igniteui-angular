@@ -1957,7 +1957,7 @@ describe('IgxCalendar', () => {
     });
 
     describe('Continuous month increment/decrement', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
         let fixture;
         let dom;

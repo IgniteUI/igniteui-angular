@@ -975,7 +975,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('DropDown Mode', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture;
         let timePicker;
         let dom;

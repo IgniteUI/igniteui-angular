@@ -57,7 +57,7 @@ describe('IgxDropDown ', () => {
     }));
 
     describe('igxDropDown integration tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
@@ -923,7 +923,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('igxDropDown Unit tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should fire events', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
@@ -1272,7 +1272,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('DropDownGroup Tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should properly render item groups aria attributes - label, role, labelledby', fakeAsync(() => {
             const fixture = TestBed.createComponent(GroupDropDownComponent);
             fixture.detectChanges();
@@ -1340,7 +1340,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('Virtualized DropDown tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture, button, dropdown: IgxDropDownComponent, scroll, items;
         beforeEach(() => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);

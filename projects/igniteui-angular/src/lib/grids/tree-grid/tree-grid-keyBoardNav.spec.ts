@@ -28,7 +28,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     }));
 
     describe('Navigation with no scroll', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
@@ -155,7 +155,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     });
 
     describe('Navigation with scrolls', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);

@@ -451,7 +451,7 @@ describe('IgxToggle', () => {
     }));
 
     describe('overlay settings', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();

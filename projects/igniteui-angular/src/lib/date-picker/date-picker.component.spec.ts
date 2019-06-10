@@ -42,7 +42,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Base Tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -203,7 +203,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('DatePicker with passed date', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerWithPassedDateComponent>;
         let datePicker: IgxDatePickerComponent;
         let inputTarget;
@@ -465,7 +465,7 @@ describe('IgxDatePicker', () => {
     }));
 
     describe('Drop-down opening', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerOpeningComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -520,7 +520,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Drop-down Retemplated Date Picker', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDropDownDatePickerRetemplatedComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -588,7 +588,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Drop-down mode', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerEditableComponent>;
         let datePicker: IgxDatePickerComponent;
 

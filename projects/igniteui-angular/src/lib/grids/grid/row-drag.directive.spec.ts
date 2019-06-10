@@ -65,7 +65,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let nonDroppableAreaElement: Element;
         let rows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
@@ -346,7 +346,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
-        configureTestSuite();
+        // configureTestSuite();
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
@@ -730,7 +730,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxHierarchicalGridComponent;
         let dropGrid: IgxHierarchicalGridComponent;
         let dragRows: DebugElement[];
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
@@ -800,7 +800,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxTreeGridComponent;
         let dropGrid: IgxGridComponent;
         let dragRows: DebugElement[];
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();

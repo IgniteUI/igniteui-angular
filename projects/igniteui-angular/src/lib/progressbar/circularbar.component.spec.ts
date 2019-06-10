@@ -347,7 +347,7 @@ describe('IgCircularBar', () => {
 
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();

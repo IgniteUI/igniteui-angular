@@ -352,7 +352,7 @@ describe('IgLinearBar', () => {
 
     // UI Tests
     describe('UI tests linear bar', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();

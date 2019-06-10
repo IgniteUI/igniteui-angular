@@ -32,7 +32,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Create', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
 
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -195,7 +195,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -301,7 +301,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update API', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -456,7 +456,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -683,7 +683,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update UI', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -853,7 +853,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -1023,7 +1023,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Delete', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -1125,7 +1125,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();

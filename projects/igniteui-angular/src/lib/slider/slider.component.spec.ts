@@ -24,7 +24,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-    configureTestSuite();
+    // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -362,7 +362,7 @@ describe('IgxSlider', () => {
     });
 
     describe('RANGE slider Base tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 

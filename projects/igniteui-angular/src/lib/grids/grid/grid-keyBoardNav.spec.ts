@@ -452,7 +452,7 @@ describe('IgxGrid - Keyboard navigation', () => {
     }));
 
     describe('in virtualized grid', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fix;
         let grid: IgxGridComponent;
 
@@ -867,7 +867,7 @@ describe('IgxGrid - Keyboard navigation', () => {
     });
 
     describe('Group By navigation ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fix;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
