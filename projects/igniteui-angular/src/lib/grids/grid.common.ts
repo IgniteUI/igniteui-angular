@@ -96,6 +96,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                 debounceTime(DEBOUNCE_TIME),
                 takeUntil(this.destroy$)
             ).subscribe(() => {
+                this.colResizingService.isColumnResizing = false;
                 this.colResizingService.showResizer = false;
                 this.column.grid.cdr.detectChanges();
             });
