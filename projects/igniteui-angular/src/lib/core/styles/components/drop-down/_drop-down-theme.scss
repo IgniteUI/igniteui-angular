@@ -286,7 +286,6 @@
     %igx-drop-down__header--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($item-padding, 'confortable');
-
     }
 
     %igx-drop-down__header--compact {
@@ -302,7 +301,7 @@
         }
 
         %igx-drop-down__item {
-            text-indent: map-get($item-padding, 'confortable') ;
+            text-indent: map-get($item-padding, 'confortable');
         }
     }
 
@@ -365,7 +364,7 @@
         %igx-drop-down__header,
         %igx-drop-down__group > label {
             @include igx-type-style($type-scale, $header) {
-                margin : 0;
+                margin: 0;
             }
         }
 
