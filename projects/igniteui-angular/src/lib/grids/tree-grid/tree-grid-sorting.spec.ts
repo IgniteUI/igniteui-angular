@@ -23,9 +23,10 @@ describe('IgxTreeGrid - Sorting', () => {
             .compileComponents();
     }));
 
-    beforeEach(async(/** height/width setter rAF */() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);
         fix.detectChanges();
+        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
     }));
 

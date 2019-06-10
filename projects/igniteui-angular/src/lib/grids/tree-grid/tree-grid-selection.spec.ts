@@ -407,9 +407,10 @@ describe('IgxTreeGrid - Selection', () => {
 
     describe('Cell Selection', () => {
         // configureTestSuite();
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 

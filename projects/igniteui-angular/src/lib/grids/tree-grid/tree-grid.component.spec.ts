@@ -32,9 +32,10 @@ describe('IgxTreeGrid Component Tests', () => {
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             fix.detectChanges();
+            tick(16);
             grid = fix.componentInstance.treeGrid;
         }));
 

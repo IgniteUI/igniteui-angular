@@ -83,9 +83,10 @@ describe('IgxTreeGrid - Integration', () => {
 
     describe('Child Collection', () => {
         // configureTestSuite();
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -195,9 +196,10 @@ describe('IgxTreeGrid - Integration', () => {
 
     describe('Primary/Foreign key', () => {
         // configureTestSuite();
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -306,9 +308,10 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Row editing', () => {
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -1162,9 +1165,10 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Multi-column header', () => {
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 

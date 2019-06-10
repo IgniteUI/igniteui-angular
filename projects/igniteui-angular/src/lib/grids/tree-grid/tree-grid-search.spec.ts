@@ -34,14 +34,16 @@ describe('IgxTreeGrid - search API', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
             fix.detectChanges();
+            tick(16);
         }));
 
         it('Search highlights should work within tree cell', () => {
@@ -111,9 +113,10 @@ describe('IgxTreeGrid - search API', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
         }));
