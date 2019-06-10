@@ -168,7 +168,7 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
             <div [style.height]="'240px'" [style.overflow]="'hidden'" [style.position]="'relative'">
                 <igx-list-item
                     [index]="i"
-                    *igxFor="let item of data; index as i; scrollOrientation : 'vertical'; containerSize: '240px'; itemSize: '58px'">
+                    *igxFor="let item of data; index as i; scrollOrientation : 'vertical'; containerSize: '240px'; itemSize: '40px'">
                     <div class="item-container">
                         <span>{{ item.key }}</span>&nbsp;
                         <span>{{ item.name }}</span>

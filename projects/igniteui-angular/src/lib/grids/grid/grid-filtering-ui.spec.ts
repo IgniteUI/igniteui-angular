@@ -3838,11 +3838,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('should not display search scrollbar when not needed for the current display density', (async() => {
-        // Verify scrollbar is visible for 'comfortable'.
+        // Verify scrollbar is NOT visible for 'comfortable'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
         await wait(16);
         fix.detectChanges();
-        expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
         GridFunctions.clickApplyExcelStyleFiltering(fix);
         fix.detectChanges();
 
