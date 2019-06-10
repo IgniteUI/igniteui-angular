@@ -84,7 +84,6 @@
 
     @include m(compact) {
         @extend %igx-list !optional;
-        @extend %igx-list--compact !optional;
 
         @include e(item-thumbnail) {
             @extend %igx-list__item-thumbnail--compact !optional;
@@ -111,7 +110,6 @@
 
     @include m(cosy) {
         @extend %igx-list !optional;
-        @extend %igx-list--cosy !optional;
 
         @include e(item-thumbnail) {
             @extend %igx-list__item-thumbnail--cosy !optional;
