@@ -31,10 +31,9 @@ describe('IgxTreeGrid - Indentation', () => {
 
     describe('Child Collection', () => {
         // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(async(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -189,10 +188,9 @@ describe('IgxTreeGrid - Indentation', () => {
 
     describe('Primary/Foreign key', () => {
         // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(async(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
