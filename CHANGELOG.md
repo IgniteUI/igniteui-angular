@@ -1,7 +1,6 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-
 ## 7.3.4
 
 ### New feature
@@ -22,9 +21,14 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - action buttons are now available in the dropdown mode.
     - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
 
-``` 
-@include igx-core($print-layout: false); 
-```
+
+## 7.3.3
+
+- `igx-core()` now includes some styles for printing layout.
+In order to turn them off, you need to pass an argument and set it to `false`
+    ```
+        @include igx-core($print-layout: false); 
+    ```
 - `IgxList`
     - **Feature** the `index` property is now an `@Input` and can be assigned by structural directives such as `*igxFor`.
     ```html
@@ -88,7 +92,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     ```
         @include igx-core($print-layout: false); 
     ```
-
+    
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
