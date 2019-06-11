@@ -152,6 +152,16 @@
         margin-left: -$slider-thumb-width / 2;
         top: -$slider-thumb-height / 2;
         outline: none;
+
+        &:hover %igx-thumb-dot::after {
+            opacity: .12;
+            transform: scale(1);
+        }
+
+        &:focus %igx-thumb-dot::after {
+            opacity: .18;
+            transform: scale(1);
+        }
     }
 
     %igx-thumb-label {
@@ -164,62 +174,84 @@
         height: $slider-label-height;
         padding: $slider-label-padding;
         border-radius: $slider-label-radius;
-        top: -36px;
+        top: -40px;
         font-size: $slider-label-font-size;
         font-weight: $slider-label-font-weight;
         line-height: $slider-label-font-size;
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
-        opacity: .5;
-        transform: scale(0);
+        opacity: 0;
+        transform: scale(1.2);
         border-color: --var($theme, 'label-background-color') transparent transparent;
         transform-origin: 50% 150% 0;
-        transition: transform .2s ease-out;
+        transition: opacity .1s $ease-out-quad;
         z-index: -1;
 
         &::after {
             content: '';
             position: absolute;
-            left: 50%;
-            width: 0;
-            height: 0;
-            transform: translateX(-50%);
-            border-left: 10px solid;
-            border-right: 10px solid;
-            border-top: 12px solid;
-            border-color: inherit;
-            top: 24px;
+            width: $slider-label-width;
+            height: $slider-label-height;
+            border-radius: #{$slider-label-radius}/0 $slider-label-radius $slider-label-radius;
+            background: inherit;
+            transform: rotate(-135deg);
             z-index: -1;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 32px;
+            border-left: 1px solid;
+            border-right: 1px solid;
+            border-top: 14px solid;
+            border-color: inherit;
         }
     }
 
     %igx-thumb-dot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
         left: 0;
         width: inherit;
         height: inherit;
         border-radius: $slider-thumb-radius;
         background: --var($theme, 'thumb-color');
-        transform: scale(1);
+        transform: scale(1) rotate(45deg);
         transform-origin: 50% 50% 0;
         opacity: 1;
-        transition: transform .2s ease-out;
+        transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
+
+        &::after {
+            position: absolute;
+            content: '';
+            background: inherit;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
+        }
     }
 
     %igx-thumb-dot--disabled {
         background: --var($theme, 'disabled-thumb-color');
-        transform: scale(.9);
-        border: 2px solid transparent;
     }
 
     %igx-thumb-dot--active {
-        opacity: 0;
-        transform: scale(0);
+        border-radius: #{$slider-thumb-radius}/0 $slider-thumb-radius $slider-thumb-radius;
+
+        &::after {
+            opacity: .24;
+            transform: scale(1.5) !important;
+        }
     }
 
     %igx-thumb-label--active {
-        opacity: .85;
-        transform: scale(1.2);
+        opacity: 1;
     }
 
     %igx-thumb-dot--start,
