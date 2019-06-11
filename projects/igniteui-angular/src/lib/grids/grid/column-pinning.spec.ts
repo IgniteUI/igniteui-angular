@@ -15,7 +15,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-describe('Column Pinning UI', () => {
+describe('Column Pinning UI #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;

@@ -21,7 +21,10 @@ script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
 - npm run build:style
-- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:others; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:grid; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:tgrid; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:hgrid; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:schematics; fi
 - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
