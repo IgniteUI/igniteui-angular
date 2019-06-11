@@ -12,6 +12,16 @@ export interface GridSelectionRange {
 export interface ISelectionNode {
     row: number;
     column: number;
+    layout?: IMultiRowLayoutNode;
+    isSummaryRow?: boolean;
+}
+
+export interface IMultiRowLayoutNode {
+    rowStart: number;
+    colStart: number;
+    rowEnd: number;
+    colEnd: number;
+    columnVisibleIndex: number;
 }
 
 interface ISelectionKeyboardState {
@@ -167,6 +177,8 @@ export class IgxGridCRUDService {
                 this.beginRowEdit();
                 return;
             }
+        } else {
+            this.endRowEdit();
         }
     }
 
