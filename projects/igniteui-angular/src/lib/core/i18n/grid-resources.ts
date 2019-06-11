@@ -52,6 +52,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_filter_sorting_asc?: string;
     igx_grid_excel_filter_sorting_desc?: string;
     igx_grid_excel_filter_sorting_header?: string;
+    igx_grid_excel_filter_clear?: string;
     igx_grid_excel_custom_dialog_add?: string;
     igx_grid_excel_custom_dialog_clear?: string;
     igx_grid_excel_custom_dialog_header?: string;
@@ -124,6 +125,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_filter_sorting_asc: 'ascending',
     igx_grid_excel_filter_sorting_desc: 'descending',
     igx_grid_excel_filter_sorting_header: 'sorting',
+    igx_grid_excel_filter_clear: 'Clear column filters',
     igx_grid_excel_custom_dialog_add: 'add filter',
     igx_grid_excel_custom_dialog_clear: 'Clear filter',
     igx_grid_excel_custom_dialog_header: 'Custom auto-filter on column: ',
