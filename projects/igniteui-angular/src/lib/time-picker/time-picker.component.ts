@@ -461,19 +461,19 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('hourList', { static: true })
+    @ViewChild('hourList', { static: false })
     public hourList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('minuteList', { static: true })
+    @ViewChild('minuteList', { static: false })
     public minuteList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ampmList', { static: true })
+    @ViewChild('ampmList', { static: false })
     public ampmList: ElementRef;
 
     /*
