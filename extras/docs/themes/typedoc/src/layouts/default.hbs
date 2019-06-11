@@ -9,13 +9,14 @@
 
     {{#ifCond settings.localize '===' 'en'}}
         <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" />
-        <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en" />
-        <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en-us" />
     {{else}}
         <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" />
-        <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja-jp" />
-        <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja" />
     {{/ifCond}}
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en" />
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en-us" />
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja" />
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja-jp" />
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="x-default" />
 
     <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/layout.css">
     <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/animate-custom.css">

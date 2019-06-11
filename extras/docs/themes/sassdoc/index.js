@@ -124,6 +124,10 @@ const theme = themeleon(__dirname, function (t) {
                 return config ? config.versions : '';
             },
             getLang: () => {
+                if (!process.env.SASSDOC_LANG) {
+                    return;
+                }
+
                 return process.env.SASSDOC_LANG.trim();
             },
             ifCond: (v1, operator, v2, options) => {
