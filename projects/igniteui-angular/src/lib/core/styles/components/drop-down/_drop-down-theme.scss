@@ -182,23 +182,23 @@
     @include igx-root-css-vars($theme);
 
     $item-height: (
-        confortable: rem(40px),
+        comfortable: rem(40px),
         cosy: rem(32px),
         compact: rem(28px)
     );
 
-    $item-padding-confortable: rem(24px);
+    $item-padding-comfortable: rem(24px);
     $item-padding-cosy: rem(20px);
     $item-padding-compact: rem(16px);
 
     $item-padding: (
-        confortable: 0 $item-padding-confortable,
+        comfortable: 0 $item-padding-comfortable,
         cosy: 0 $item-padding-cosy,
         compact: 0 $item-padding-compact
     );
 
     $header-item-padding: (
-        confortable: 0 rem(16px),
+        comfortable: 0 rem(16px),
         cosy: 0 rem(12px),
         compact: 0 rem(8px)
     );
@@ -233,16 +233,16 @@
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: map-get($item-height, 'confortable');
+        height: map-get($item-height, 'comfortable');
     }
 
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
-        padding: map-get($item-padding, 'confortable');
+        padding: map-get($item-padding, 'comfortable');
 
         //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-confortable} * 2);
+        //    max-width: calc(100% + #{$item-padding-comfortable} * 2);
         //}
 
         &:focus {
@@ -286,7 +286,7 @@
     %igx-drop-down__header {
         color: --var($theme, 'header-text-color');
         pointer-events: none;
-        padding: map-get($header-item-padding, 'confortable');
+        padding: map-get($header-item-padding, 'comfortable');
     }
 
     %igx-drop-down__header--cosy {
@@ -307,7 +307,7 @@
         }
 
         %igx-drop-down__item {
-            text-indent: map-get($item-padding, 'confortable');
+            text-indent: map-get($item-padding, 'comfortable');
         }
     }
 
