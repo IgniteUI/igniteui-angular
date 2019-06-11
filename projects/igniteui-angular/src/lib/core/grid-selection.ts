@@ -178,6 +178,8 @@ export class IgxGridCRUDService {
                 this.beginRowEdit();
                 return;
             }
+        } else {
+            this.endRowEdit();
         }
     }
 
