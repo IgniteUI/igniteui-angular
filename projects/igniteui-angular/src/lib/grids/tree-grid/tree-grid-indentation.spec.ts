@@ -11,7 +11,7 @@ import { DropPosition } from '../grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('IgxTreeGrid - Indentation #tgrid', () => {
+describe('IgxTreeGrid - Indentation #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

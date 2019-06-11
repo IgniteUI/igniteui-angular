@@ -29,8 +29,8 @@ module.exports = function (config) {
       tags: 'grid'
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['html', 'lcovonly'],
+      dir: require('path').join(__dirname, '../../coverage/grid'),
+      reports: ['html', 'json', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
     reporters: ['spec'],

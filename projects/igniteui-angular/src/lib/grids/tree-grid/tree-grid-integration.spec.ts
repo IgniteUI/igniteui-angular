@@ -24,7 +24,7 @@ import { IgxGridCellComponent } from '../grid';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 
-describe('IgxTreeGrid - Integration #tgrid', () => {
+describe('IgxTreeGrid - Integration #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

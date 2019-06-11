@@ -16,7 +16,7 @@ import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-describe('IgxTreeGrid - search API #tgrid', () => {
+describe('IgxTreeGrid - search API #tGrid', () => {
     configureTestSuite();
     let fix;
     let fixNativeElement;

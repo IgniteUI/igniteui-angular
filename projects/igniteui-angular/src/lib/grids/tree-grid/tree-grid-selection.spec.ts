@@ -19,7 +19,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Selection #tgrid', () => {
+describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

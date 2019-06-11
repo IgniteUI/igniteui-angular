@@ -12,7 +12,7 @@ import { IgxTreeGridModule } from '.';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Multi Cell selection #tgrid', () => {
+describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {

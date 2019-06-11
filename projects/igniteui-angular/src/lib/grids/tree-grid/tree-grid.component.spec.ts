@@ -13,7 +13,7 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid Component Tests #tgrid', () => {
+describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;

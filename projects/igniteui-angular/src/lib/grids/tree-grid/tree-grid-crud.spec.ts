@@ -14,7 +14,7 @@ const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 
-describe('IgxTreeGrid - CRUD #tgrid', () => {
+describe('IgxTreeGrid - CRUD #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

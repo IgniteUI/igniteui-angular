@@ -15,7 +15,7 @@ import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxTreeGrid - Expanding / Collapsing #tgrid', () => {
+describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
@@ -1096,7 +1096,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tgrid', () => {
 
 });
 
-describe('Row editing expanding/collapsing #tgrid', () => {
+describe('Row editing expanding/collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
