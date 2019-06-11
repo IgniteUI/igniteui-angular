@@ -704,17 +704,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
     }
 
-    /**
-     * @hidden
-     */
-    protected _calculateGridBodyHeight(): number {
-        if (this._autoSize && this.parent &&
-            (!this.data || this.data.length <= this._defaultTargetRecordNumber)) {
-            return null;
-        }
-        return super._calculateGridBodyHeight();
-    }
-
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
     }
