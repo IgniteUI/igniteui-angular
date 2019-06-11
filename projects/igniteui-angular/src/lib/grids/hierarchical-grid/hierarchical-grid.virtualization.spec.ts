@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
-xdescribe('IgxHierarchicalGrid Virtualization', () => {
+describe('IgxHierarchicalGrid Virtualization', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -36,6 +36,7 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();
+        await wait();
         expect(firstRow.expanded).toBeTruthy();
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
         const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
@@ -61,7 +62,7 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();
-
+        await wait();
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const verticalScroll = childGrid.verticalScrollContainer;
         const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
@@ -91,7 +92,7 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();
-
+        await wait();
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childCell =  childGrid.getCellByColumn(0, 'ID');
         childCell.nativeElement.focus();
@@ -130,9 +131,11 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();
+        await wait();
         const secondRow = hierarchicalGrid.dataRowList.toArray()[1];
         secondRow.nativeElement.children[0].click();
         fixture.detectChanges();
+        await wait();
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const expectedChildData1 = fixture.componentInstance.data[0].childData;
@@ -328,7 +331,7 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         const row = hierarchicalGrid.dataRowList.toArray()[3];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
-
+        await wait();
         // verify index and rowData
         let childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
         expect(childRowComponent.rowData.rowID).toBe('3');
@@ -364,12 +367,12 @@ xdescribe('IgxHierarchicalGrid Virtualization', () => {
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
-
+        await wait();
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(550);
     });
 });
 
-xdescribe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
+describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -408,7 +411,7 @@ xdescribe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
-
+        await wait();
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
     });
