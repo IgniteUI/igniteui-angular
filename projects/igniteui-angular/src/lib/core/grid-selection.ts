@@ -302,11 +302,20 @@ export class IgxGridSelectionService {
         return this.isActiveNode(node) || this.isInMap(node);
     }
 
-    isActiveNode(node: ISelectionNode): boolean {
+    isActiveNode(node: ISelectionNode, mrl = false): boolean {
         if (this.activeElement) {
-            return this.activeElement.column === node.column && this.activeElement.row === node.row;
+            const isActive = this.activeElement.column === node.column && this.activeElement.row === node.row;
+            if (mrl) {
+                const layout = this.activeElement.layout;
+                return isActive && this.isActiveLayout(layout, node.layout);
+            }
+            return isActive;
         }
         return false;
+    }
+
+    isActiveLayout(current: IMultiRowLayoutNode, target: IMultiRowLayoutNode): boolean {
+        return current.columnVisibleIndex === target.columnVisibleIndex;
     }
 
     addRangeMeta(node: ISelectionNode, state?: SelectionState): void {
