@@ -126,9 +126,9 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('hourList') !== -1) {
+        if (listName.indexOf('hourList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
-        } else if (listName.indexOf('minuteList') !== -1 && this.timePicker._ampmItems.length !== 0) {
+        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.ampmList) {
             this.timePicker.ampmList.nativeElement.focus();
         }
     }
@@ -142,10 +142,10 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('minuteList') !== -1) {
-            this.timePicker.hourList.nativeElement.focus();
-        } else if (listName.indexOf('ampmList') !== -1) {
+        if (listName.indexOf('ampmList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
+        } else if ((listName.indexOf('ampmList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.hourList) {
+            this.timePicker.hourList.nativeElement.focus();
         }
     }
 
