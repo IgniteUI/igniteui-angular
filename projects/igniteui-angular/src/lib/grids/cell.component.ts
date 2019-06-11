@@ -723,7 +723,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.focused = true;
         this.row.focused = true;
 
-        this.grid.onSelection.emit({ cell: this, event });
+        if (!this.selectionService.isActiveNode(node)) {
+            this.grid.onSelection.emit({ cell: this, event });
+        }
 
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
