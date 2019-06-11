@@ -18,7 +18,7 @@ import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';

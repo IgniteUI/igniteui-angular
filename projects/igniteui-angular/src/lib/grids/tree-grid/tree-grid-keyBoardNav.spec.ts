@@ -10,7 +10,7 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-describe('IgxTreeGrid - Key Board Navigation ', () => {
+describe('IgxTreeGrid - Key Board Navigation #tgrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

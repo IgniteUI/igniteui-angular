@@ -11,7 +11,7 @@ import { HelperUtils, setupGridScrollDetection, resizeObserverIgnoreError } from
 import { DefaultSortingStrategy } from 'igniteui-angular';
 
 
-describe('IgxGrid - Multi Cell selection', () => {
+describe('IgxGrid - Multi Cell selection #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {

@@ -19,7 +19,7 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
-describe('IgxGrid - multi-row-layout', () => {
+describe('IgxGrid - multi-row-layout #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

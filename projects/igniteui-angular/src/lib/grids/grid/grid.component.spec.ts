@@ -33,7 +33,7 @@ import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';

@@ -11,7 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
 
-describe('IgxGrid - Column properties', () => {
+describe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';

@@ -8,7 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('IgxTreeGrid - Sorting ', () => {
+describe('IgxTreeGrid - Sorting #tgrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;

@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { first, delay, take } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid Virtualization', () => {
+describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -370,7 +370,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
     });
 });
 
-describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
+describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

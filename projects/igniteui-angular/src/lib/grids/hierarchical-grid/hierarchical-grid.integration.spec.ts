@@ -19,7 +19,7 @@ import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid Integration', () => {
+describe('IgxHierarchicalGrid Integration #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

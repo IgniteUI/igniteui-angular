@@ -15,7 +15,7 @@ import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec'
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - Deferred Column Resizing', () => {
+describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
     const DEBOUNCE_TIME = 200;
     const COLUMN_HEADER_CLASS = '.igx-grid__th';

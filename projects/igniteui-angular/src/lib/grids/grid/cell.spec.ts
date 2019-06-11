@@ -12,7 +12,7 @@ import { HammerGesturesManager } from '../../core/touch';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+describe('IgxGrid - Cell component #grid', () => {
     configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';

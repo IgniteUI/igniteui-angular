@@ -51,7 +51,7 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_SCROLL_START_CLASS = '.igx-grid__filtering-row-scroll-start';
 const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
-describe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1667,7 +1667,7 @@ describe('IgxGrid - Filtering actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering Row UI actions', () => {
+describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -3521,7 +3521,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering actions - Excel style filtering', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

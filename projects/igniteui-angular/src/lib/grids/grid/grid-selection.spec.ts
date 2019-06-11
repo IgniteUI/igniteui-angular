@@ -14,7 +14,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridMultiLayoutComponent } from '../hierarchical-grid/hierarchical-grid.spec';
 import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
 
-describe('IgxGrid - Row Selection', () => {
+describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {

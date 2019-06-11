@@ -13,7 +13,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 
-describe('IgxGrid - Column Pinning ', () => {
+describe('IgxGrid - Column Pinning #grid ', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';

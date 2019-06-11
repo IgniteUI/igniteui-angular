@@ -11,7 +11,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - Grid Paging', () => {
+describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
     const PAGER_CLASS = '.igx-grid-paginator__pager';
     const PAGER_BUTTONS = '.igx-grid-paginator__pager > button';

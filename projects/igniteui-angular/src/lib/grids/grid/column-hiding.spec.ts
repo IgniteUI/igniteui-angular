@@ -17,7 +17,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { take } from 'rxjs/internal/operators/take';
 
-describe('Column Hiding UI', () => {
+describe('Column Hiding UI #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
