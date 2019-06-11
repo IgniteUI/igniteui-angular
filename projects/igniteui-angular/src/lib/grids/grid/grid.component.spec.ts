@@ -933,7 +933,7 @@ describe('IgxGrid Component Tests', () => {
             tick();
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeight).toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(5);
@@ -1015,35 +1015,31 @@ describe('IgxGrid Component Tests', () => {
             tick();
             fix.detectChanges();
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            let defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(250);
-            expect(fix.componentInstance.grid.calcHeight).toBe(250);
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
             fix.componentInstance.data = fix.componentInstance.fullData;
             tick();
             fix.detectChanges();
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            defaultHeightNum = parseInt(defaultHeight, 10);
+            const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
             expect(defaultHeightNum).toBe(500);
             expect(fix.componentInstance.grid.calcHeight).toBe(500);
         }));
 
-        it(`should not render with calcHeight null at any point when loading data and
-            auto-sizing is required and initial data is not empty`, async () => {
+        it(`should render with calcHeight null if initial data is small but then
+            auto-size when it is filled`, async () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.data = fix.componentInstance.semiData;
             fix.detectChanges();
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            let defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(250);
-            expect(fix.componentInstance.grid.calcHeight).toBe(250);
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
             fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
             fix.detectChanges();
             await wait(500);
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            defaultHeightNum = parseInt(defaultHeight, 10);
+            const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
             expect(defaultHeightNum).toBe(500);
             expect(fix.componentInstance.grid.calcHeight).toBe(500);
@@ -1085,7 +1081,7 @@ describe('IgxGrid Component Tests', () => {
             tick();
             fix.detectChanges();
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            let defaultHeightNum = parseInt(defaultHeight, 10);
+            const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
             expect(defaultHeightNum).toBe(500);
             expect(fix.componentInstance.grid.calcHeight).toBe(500);
@@ -1093,10 +1089,8 @@ describe('IgxGrid Component Tests', () => {
             tick();
             fix.detectChanges();
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(250);
-            expect(fix.componentInstance.grid.calcHeight).toBe(250);
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
         }));
 
         it('should not keep auto-sizing when changing height', async () => {

@@ -3972,7 +3972,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this._autoSize = true;
             }
             if (this._autoSize || computed.getPropertyValue('height').indexOf('%') !== -1) {
-                const bodyHeight = this.defaultTargetBodyHeight;
+                const bodyHeight = this.getDataBasedBodyHeight();
                 return bodyHeight > 0 ? bodyHeight : null;
             }
             gridHeight = parseInt(computed.getPropertyValue('height'), 10);
@@ -4085,6 +4085,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
             this.verticalScrollContainer.igxForOf.length > 0 &&
             isScrollable);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        return !this.data || (this.data.length < this._defaultTargetRecordNumber) ?
+            0 : this.defaultTargetBodyHeight;
     }
 
     /**
