@@ -182,15 +182,9 @@
     @include igx-root-css-vars($theme);
 
     $item-height: (
-        confortable: rem(32px),
-        cosy: rem(28px),
+        confortable: rem(40px),
+        cosy: rem(32px),
         compact: rem(28px)
-    );
-
-    $header-item-height: (
-        confortable: rem(32px),
-        cosy: rem(28px),
-        compact: rem(24px)
     );
 
     $item-padding-confortable: rem(24px);
@@ -239,13 +233,13 @@
         align-items: center;
         width: 100%;
         white-space: nowrap;
+        height: map-get($item-height, 'confortable');
     }
 
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
         padding: map-get($item-padding, 'confortable');
-        height: map-get($item-height, 'confortable');
 
         //&%igx-drop-down__list--select {
         //    max-width: calc(100% + #{$item-padding-confortable} * 2);
@@ -292,17 +286,16 @@
     %igx-drop-down__header {
         color: --var($theme, 'header-text-color');
         pointer-events: none;
-        height: map-get($header-item-height, 'confortable');
         padding: map-get($header-item-padding, 'confortable');
     }
 
     %igx-drop-down__header--cosy {
-        height: map-get($header-item-height, 'cosy');
+        height: map-get($item-height, 'cosy');
         padding: map-get($header-item-padding, 'cosy');
     }
 
     %igx-drop-down__header--compact {
-        height: map-get($header-item-height, 'compact');
+        height: map-get($item-height, 'compact');
         padding: map-get($header-item-padding, 'compact');
     }
 
