@@ -29,10 +29,10 @@ import {
     InFilteringOperation,
     InDateFilteringOperation
 } from '../../../data-operations/filtering-condition';
-import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { cloneArray, KEYS } from '../../../core/utils';
-import { DataType } from '../../../data-operations/data-util';
+import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { Subscription, Subject } from 'rxjs';
@@ -316,7 +316,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             return true;
         }
 
-        for (let index = 0; index < this.filterValues.size; index++) {
+        if (this.filterValues.size === 1) {
+            const firstValue = this.filterValues.values().next().value;
+
+            if (!firstValue && firstValue !== 0) {
+                return true;
+            }
+        }
+
+        for (let index = 0; index < this.uniqueValues.length; index++) {
             if (this.filterValues.has(this.uniqueValues[index])) {
                 return true;
             }
@@ -326,9 +334,23 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     public populateColumnData() {
-        let data = this.grid.filteredData;
-        if (!data) {
-            data = this.column.gridAPI.get_all_data(this.grid.id);
+        let data = this.column.gridAPI.get_all_data(this.grid.id);
+        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
+
+        for (const operand of gridExpressionsTree.filteringOperands) {
+            if (operand instanceof FilteringExpressionsTree) {
+                const columnExprTree = operand as FilteringExpressionsTree;
+                if (columnExprTree.fieldName === this.column.field) {
+                    break;
+                }
+            }
+            expressionsTree.filteringOperands.push(operand);
+        }
+
+        if (expressionsTree.filteringOperands.length) {
+            const state = { expressionsTree: expressionsTree };
+            data = DataUtil.filter(cloneArray(data), state);
         }
 
         if (this.column.dataType === DataType.Date) {

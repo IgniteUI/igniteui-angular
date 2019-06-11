@@ -249,7 +249,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             grid.displayDensity = 'cosy';
             fixture.detectChanges();
             tick(200);
@@ -257,7 +257,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             grid.displayDensity = 'compact';
             fixture.detectChanges();
             tick(200);
@@ -265,7 +265,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -2678,7 +2678,6 @@ describe('IgxGrid Component Tests', () => {
                 (<any>grid).gridAPI.get_cell_inEditMode().value = newDate;
                 // targetCell.update(newDate);
                 fix.detectChanges();
-                grid.recalculateSummaries();
 
                 // get the summaries for a particular column
                 const summaries = targetCell.gridAPI.get_summary_data();
@@ -2835,15 +2834,17 @@ describe('IgxGrid Component Tests', () => {
 
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
+                tick();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
+                tick();
                 // show column
-                grid.toolbar.columnHidingButton.nativeElement.click();
                 targetCheckbox.nativeElement.click();
                 tick();
-
+                grid.toolbar.toggleColumnHidingUI();
+                tick();
                 expect(targetCell.value).toEqual('Chai');
             }));
 
@@ -3650,7 +3651,7 @@ describe('IgxGrid Component Tests', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(133);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(147);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
 
