@@ -694,7 +694,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
+    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective, static: true })
     public datePickerActionsDirective: IgxDatePickerActionsDirective;
 
     public calendar: IgxCalendarComponent;

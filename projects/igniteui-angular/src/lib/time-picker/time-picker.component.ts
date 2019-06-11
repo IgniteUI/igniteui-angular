@@ -491,7 +491,7 @@ export class IgxTimePickerComponent implements
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
+    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective, static: true })
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
 
     /**
