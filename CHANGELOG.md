@@ -15,12 +15,34 @@ All notable changes for each version of this project will be documented in this 
     - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
     - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
 
-## 7.3.1
-`igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
 
-``` 
-@include igx-core($print-layout: false); 
-```
+## 7.3.4
+
+- `igxTimePicker` changes
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxTimePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+
+- `igxDatePicker` changes
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
+
+
+## 7.3.3
+
+- `igx-core()` now includes some styles for printing layout.
+In order to turn them off, you need to pass an argument and set it to `false`
+    ```
+        @include igx-core($print-layout: false); 
+    ```
+
+- `Pager`
+    - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
 ## 7.3.1
 - `IgxGrid` Custom keyboard navigation

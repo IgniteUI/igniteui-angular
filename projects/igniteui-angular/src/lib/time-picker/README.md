@@ -81,6 +81,23 @@ In order to re-template the TimePicker in `dropdown` mode, you should pass the d
 </igx-time-picker>
 ```
 
+The TimePicker action buttons could be retemplated.
+```html
+<igx-time-picker #picker>
+    <ng-template igxTimePickerActions>
+        <div class="action-buttons">
+            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
+        </div>
+    </ng-template>
+</igx-time-picker>
+```
+```typescript
+    public selectToday(picker: IgxTimePickerComponent) {
+        picker.value = new Date(Date.now());
+        picker.close();
+    }
+```
+
 # API
 
 ###### Inputs
