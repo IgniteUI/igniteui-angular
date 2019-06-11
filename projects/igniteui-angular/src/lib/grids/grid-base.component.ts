@@ -3972,7 +3972,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this._autoSize = true;
             }
             if (this._autoSize || computed.getPropertyValue('height').indexOf('%') !== -1) {
-                const bodyHeight = this.defaultTargetBodyHeight;
+                const bodyHeight = !this.data || (this.data.length < this._defaultTargetRecordNumber) ? 
+                    0 : this.defaultTargetBodyHeight;
                 return bodyHeight > 0 ? bodyHeight : null;
             }
             gridHeight = parseInt(computed.getPropertyValue('height'), 10);
