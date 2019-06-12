@@ -7,16 +7,41 @@ steps:
   env:
     AZURE_PIPELINES: "true"
 
+- script: npm install -g istanbul-combine
+  displayName: 'Install coverage combiner'
+  env:
+    AZURE_PIPELINES: "true"
+
 - script: npm run lint:lib
   displayName: 'Run lint'
 
 - script: npm run build:lib
   displayName: 'Build source code and styles'
 
-- script: npm run test:lib:azure
-  displayName: 'Run tests'
+- script: npm run test:lib:azure:others
+  displayName: 'Run non-grid tests'
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: npm run test:lib:azure:grid
+  displayName: 'Run grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: npm run test:lib:azure:tgrid
+  displayName: 'Run tree grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: npm run test:lib:azure:hgrid
+  displayName: 'Run hierarchical grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+  displayName: 'Combine coverage results'
+  env:
+    AZURE_PIPELINES: "true"
 
 - script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   condition: and(succeeded(), eq(variables['system.teamProject'], 'igniteui-angular'))
