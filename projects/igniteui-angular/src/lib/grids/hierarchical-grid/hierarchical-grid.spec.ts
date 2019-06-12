@@ -438,7 +438,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         expect(childGrid.nativeElement.style.width).toBe(ri1.width);
         // check virtualization state
         expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(4);
-        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(350);
+        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(357);
 
         let hVirt = childGrid.getRowByIndex(0).virtDirRow;
         expect(hVirt.state.chunkSize).toBe(2);
@@ -466,7 +466,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
          expect(childGrid.nativeElement.style.width).toBe(ri1.width);
          // check virtualization state
          expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(11);
-         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(700);
+         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(714);
          hVirt = childGrid.getRowByIndex(0).virtDirRow;
          expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
     }));
@@ -550,7 +550,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
 
         const rowIslandDOM = fixture.debugElement.query(By.css('.igx-grid__hierarchical-indent .igx-grid'));
         const rowIslandBody = rowIslandDOM.query(By.css('.igx-grid__tbody-content'));
-        expect(parseInt(window.getComputedStyle(rowIslandBody.nativeElement).height, 10)).toBe(250);
+        expect(parseInt(window.getComputedStyle(rowIslandBody.nativeElement).height, 10)).toBe(255);
     }));
 
     it('should render disabled collapse all icon for child grid even when it has no data but with child row island',
