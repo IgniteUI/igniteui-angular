@@ -7,7 +7,7 @@ steps:
   env:
     AZURE_PIPELINES: "true"
 
-- script: npm install -g istanbul-combine
+- script: sudo npm install -g istanbul-combine
   displayName: 'Install coverage combiner'
   env:
     AZURE_PIPELINES: "true"
