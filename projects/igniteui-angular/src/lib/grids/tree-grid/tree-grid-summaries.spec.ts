@@ -15,7 +15,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
-describe('IgxTreeGrid - Summaries #tgrid', () => {
+describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 

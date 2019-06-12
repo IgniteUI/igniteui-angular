@@ -7,7 +7,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('IgxTreeGrid - Filtering actions #tgrid', () => {
+describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
