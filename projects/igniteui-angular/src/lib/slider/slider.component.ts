@@ -554,7 +554,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set lowerBound(value: number) {
-        if (value >= this.upperBound) {
+        if (value >= this.upperBound || (this.labelsViewEnabled && value < 0)) {
             return;
         }
 
@@ -592,7 +592,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set upperBound(value: number) {
-        if (value <= this.lowerBound) {
+        if (value <= this.lowerBound || (this.labelsViewEnabled && value > this.labels.length - 1)) {
             return;
         }
 
