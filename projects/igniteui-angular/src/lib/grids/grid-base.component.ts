@@ -243,6 +243,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     private _destroyed = false;
+    private _primaryKey = null;
     private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
@@ -596,11 +597,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        if (val && (this.primaryKey === undefined || this.primaryKey === null)) {
-            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
-        }
         this._rowEditable = val;
         if (this.gridAPI.grid) {
+            this.checkEditKey(val);
             this.refreshGridState();
         }
     }
@@ -754,8 +753,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    public primaryKey;
+    public set primaryKey(val: any) {
+        this._primaryKey = val;
+        if (this.gridAPI.grid) {
+            this.checkEditKey(this._rowEditable);
+        }
+    }
 
+    public get primaryKey(): any {
+        return this._primaryKey;
+    }
     /**
      * An @Input property that sets the message displayed when there are no records.
      * ```html
@@ -2582,6 +2589,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.hideOverlays();
     }
 
+    private checkEditKey(val: boolean): void {
+        if (val && (this.primaryKey === undefined || this.primaryKey === null)) {
+            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
+        }
+    }
+
     /**
     * @hidden
     * @internal
@@ -2697,6 +2710,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
+        this.checkEditKey(this._rowEditable);
     }
 
     protected setupColumns() {
