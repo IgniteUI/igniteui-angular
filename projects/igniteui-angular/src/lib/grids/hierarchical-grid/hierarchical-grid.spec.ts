@@ -435,7 +435,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         expect(childGrid.nativeElement.style.width).toBe(ri1.width);
         // check virtualization state
         expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(4);
-        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(350);
+        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(357);
 
         let hVirt = childGrid.getRowByIndex(0).virtDirRow;
         expect(hVirt.state.chunkSize).toBe(2);
@@ -463,7 +463,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
          expect(childGrid.nativeElement.style.width).toBe(ri1.width);
          // check virtualization state
          expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(11);
-         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(700);
+         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(714);
          hVirt = childGrid.getRowByIndex(0).virtDirRow;
          expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
     }));
