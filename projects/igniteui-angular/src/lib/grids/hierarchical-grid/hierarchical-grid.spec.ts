@@ -552,8 +552,8 @@ describe('IgxHierarchicalGrid Children Sizing', () => {
         tick();
         fixture.detectChanges();
         defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBe('500px');
-        expect(childGrid.calcHeight).toBe(500);
+        expect(defaultHeight).toBe('510px');
+        expect(childGrid.calcHeight).toBe(510);
         expect(childGrid.data.length).toEqual(100000);
         expect(childGrid.rowList.length).toEqual(11);
     }));
@@ -575,8 +575,8 @@ describe('IgxHierarchicalGrid Children Sizing', () => {
         tick();
         fixture.detectChanges();
         defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBe('500px');
-        expect(childGrid.calcHeight).toBe(500);
+        expect(defaultHeight).toBe('510px');
+        expect(childGrid.calcHeight).toBe(510);
         expect(childGrid.data.length).toEqual(100000);
         expect(childGrid.rowList.length).toEqual(11);
     }));
