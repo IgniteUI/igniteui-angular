@@ -80,10 +80,10 @@
     $slider-thumb-radius: $slider-thumb-width / 2;
 
     // Slider Label
-    $slider-label-width: 28px;
+    $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
     $slider-label-radius: $slider-label-width / 2;
-    $slider-label-font-size: rem(11px);
+    $slider-label-font-size: rem(12px);
     $slider-label-font-weight: 600;
     $slider-label-padding: 0 2px;
     $slider-background--start: #fff;
@@ -174,25 +174,27 @@
         height: $slider-label-height;
         padding: $slider-label-padding;
         border-radius: $slider-label-radius;
-        top: -40px;
+        top: -50px;
+        left: 0;
         font-size: $slider-label-font-size;
         font-weight: $slider-label-font-weight;
-        line-height: $slider-label-font-size;
+        line-height: #{$slider-label-font-size} + 1px;
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
         opacity: 0;
-        transform: scale(1.2);
         border-color: --var($theme, 'label-background-color') transparent transparent;
-        transform-origin: 50% 150% 0;
         transition: opacity .1s $ease-out-quad;
         z-index: -1;
 
         &::after {
             content: '';
             position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -#{$slider-label-radius};
             width: $slider-label-width;
             height: $slider-label-height;
-            border-radius: #{$slider-label-radius}/0 $slider-label-radius $slider-label-radius;
+            border-radius: 0 $slider-label-radius $slider-label-radius;
             background: inherit;
             transform: rotate(-135deg);
             z-index: -1;
@@ -201,7 +203,8 @@
         &::before {
             content: '';
             position: absolute;
-            top: 32px;
+            top: 40px;
+            margin: auto;
             border-left: 1px solid;
             border-right: 1px solid;
             border-top: 14px solid;
@@ -242,7 +245,7 @@
     }
 
     %igx-thumb-dot--active {
-        border-radius: #{$slider-thumb-radius}/0 $slider-thumb-radius $slider-thumb-radius;
+        border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
 
         &::after {
             opacity: .24;
