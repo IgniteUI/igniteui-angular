@@ -1104,7 +1104,7 @@ class DataGenerator {
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: j % 8 < 2 ? 100 : (j % 6 + 0.25) * 125
+                width: j % 8 < 2 ? 100 : Math.floor((j % 6 + 0.25) * 125)
             });
         }
 
