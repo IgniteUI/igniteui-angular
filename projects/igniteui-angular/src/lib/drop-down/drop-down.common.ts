@@ -67,6 +67,7 @@ export interface IDropDownList {
  * @hidden
  */
 export interface IDropDownBase extends IDropDownList, IToggleView {
+    displayDensity: string;
     onOpening: EventEmitter<CancelableEventArgs>;
     onOpened: EventEmitter<void>;
     onClosing: EventEmitter<CancelableBrowserEventArgs>;

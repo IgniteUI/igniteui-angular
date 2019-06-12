@@ -109,6 +109,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/dropDown-density',
+            icon: 'horizontal_split',
+            name: 'DropDown - Density'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
