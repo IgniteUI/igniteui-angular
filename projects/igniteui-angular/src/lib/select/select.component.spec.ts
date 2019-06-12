@@ -1,3 +1,4 @@
+import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
@@ -6,7 +7,7 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent, IgxSelectState } from './select.component';
+import { IgxSelectComponent} from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -452,24 +453,24 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
             expect(selectComp.collapsed).toEqual(false);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INVALID);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
 
             selectComp.selectItem(selectComp.items[4]);
             expect(selectComp.value).toEqual('Option 5');
-            expect(selectComp.valid).toEqual(IgxSelectState.VALID);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.value = 'Option 1';
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
         it('Should properly initialize when used as a reactive form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
@@ -482,20 +483,20 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
         }));
 
@@ -510,24 +511,24 @@ describe('igxSelect', () => {
             fix.detectChanges();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeNull();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
             expect(selectComp.collapsed).toEqual(false);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INVALID);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
 
             selectComp.selectItem(selectComp.items[4]);
             expect(selectComp.value).toEqual('Option 5');
-            expect(selectComp.valid).toEqual(IgxSelectState.VALID);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.value = 'Option 1';
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
         it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
@@ -541,20 +542,20 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeUndefined();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(selectComp.valid).toEqual(IgxSelectState.INITIAL);
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
     });
     describe('Selection tests: ', () => {
