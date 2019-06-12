@@ -12,17 +12,13 @@ export class CharSeparatedValueData {
     private _delimiterLength = 1;
     private _isSpecialData = false;
 
-    constructor(private _data: any[], valueDelimiter: string, private _dataMemberPath?: string)  {
+    constructor(private _data: any[], valueDelimiter: string)  {
         this.setDelimiter(valueDelimiter);
     }
 
     public prepareData() {
         if (!this._data || this._data.length === 0) {
             return '';
-        }
-
-        if (this._dataMemberPath) {
-            this._data = this._data.map((item) => item[this._dataMemberPath]);
         }
 
         const keys = ExportUtilities.getKeysFromData(this._data);
