@@ -19,7 +19,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - Column Moving', () => {
+describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';

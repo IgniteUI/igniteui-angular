@@ -12,7 +12,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
-describe('IgxGrid - multi-row-layout Integration - ', () => {
+describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
