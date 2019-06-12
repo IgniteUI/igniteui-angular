@@ -1,7 +1,7 @@
 import { QueryList } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxListItemComponent } from 'igniteui-angular';
+import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import {
     IgxListActionDirective,
@@ -28,7 +28,8 @@ import {
 } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
-import { IgxForOfModule, IgxIconModule } from 'igniteui-angular';
+import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxIconModule } from '../icon/index';
 import { wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
@@ -37,7 +38,7 @@ const LIST_CSS_CLASS = 'igx-list';
 const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
 const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
-describe('List', () => {
+fdescribe('List', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

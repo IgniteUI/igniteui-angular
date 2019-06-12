@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxListComponent } from '../list';
-import { IgxForOfDirective } from 'igniteui-angular';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 @Component({
     template: `
