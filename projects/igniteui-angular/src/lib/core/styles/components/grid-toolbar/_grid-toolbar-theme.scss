@@ -151,9 +151,9 @@
     );
 
     $grid-toolbar-height: (
-        comfortable: rem(56px),
-        cosy: rem(48px),
-        compact: rem(48px)
+        comfortable: rem(74px),
+        cosy: rem(66px),
+        compact: rem(52px)
     );
 
     %igx-grid-toolbar {
@@ -295,6 +295,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        > div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     }
 
     %igx-grid-toolbar__dropdown {
