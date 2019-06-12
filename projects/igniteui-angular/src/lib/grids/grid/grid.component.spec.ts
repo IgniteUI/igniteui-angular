@@ -969,8 +969,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
         it('should keep auto-sizing if initial data is set to empty array that is then filled', fakeAsync(() => {
@@ -989,8 +989,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
         it(`should not render with calcHeight null at any point when loading data and
@@ -1006,8 +1006,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         });
 
         it('should keep auto-sizing if initial data is set to small array that is then filled', fakeAsync(() => {
@@ -1024,8 +1024,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
         it(`should render with calcHeight null if initial data is small but then
@@ -1042,8 +1042,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         });
 
         it('should keep default height when filtering', fakeAsync(() => {
@@ -1059,16 +1059,16 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             let defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
             fix.componentInstance.grid.filter('ID', 'ALFKI', IgxStringFilteringOperand.instance().condition('equals'));
             tick();
             fix.detectChanges();
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
         it('should not keep default height when lower the amount of bound data', fakeAsync(() => {
@@ -1084,8 +1084,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
             fix.componentInstance.grid.data = fix.componentInstance.semiData;
             tick();
             fix.detectChanges();
@@ -1106,8 +1106,8 @@ describe('IgxGrid Component Tests', () => {
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             let defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(500);
-            expect(fix.componentInstance.grid.calcHeight).toBe(500);
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
             fix.componentInstance.grid.height = '400px';
             await wait();
             fix.detectChanges();
@@ -3805,7 +3805,7 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(601);
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(601);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
         });
 
         it('IgxTabs: should initialize a grid with correct width/height when there is no column width set', async () => {
