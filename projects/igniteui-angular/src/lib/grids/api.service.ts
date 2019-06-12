@@ -65,7 +65,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     // TODO: Refactor
     public escape_editMode() {
         this.grid.crudService.end();
-        this.grid.refreshSearch();
     }
 
     // TODO: Refactor
