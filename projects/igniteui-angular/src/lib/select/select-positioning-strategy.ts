@@ -170,7 +170,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.itemTextPadding = numericLeftPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
+        contentElement.style.width = inputRect.width + 24 + 48 + 'px';
         this.deltaX = START.X - numericLeftPadding - numericTextIndent;
         const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
         const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];

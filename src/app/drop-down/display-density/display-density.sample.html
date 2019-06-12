@@ -1,0 +1,55 @@
+<section>
+    <igx-combo [data]="data" valueKey="valueKey" displayKey="textKey" [displayDensity]="displayDensity.comfortable">
+    </igx-combo>
+    <button igxButton [igxToggleAction]="dropdown1" [igxDropDownItemNavigation]="dropdown1">Toggle Dropdown</button>
+    <igx-drop-down #dropdown1 [displayDensity]="displayDensity.comfortable">
+        <div class="wrapping-div">
+            <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        </div>
+    </igx-drop-down>
+    <igx-select #select1 [placeholder]="'Pick One'" [displayDensity]="displayDensity.comfortable">
+        <label igxLabel>Example</label>
+        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
+            {{ entry.textKey }}
+        </igx-select-item>
+    </igx-select>
+</section>
+<section>
+    <igx-combo [data]="data" valueKey="valueKey" displayKey="textKey" [displayDensity]="displayDensity.cosy">
+    </igx-combo>
+    <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Toggle Dropdown</button>
+    <igx-drop-down #dropdown2 [displayDensity]="displayDensity.cosy">
+        <div class="wrapping-div">
+            <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        </div>
+    </igx-drop-down>
+    <igx-select #select1 [placeholder]="'Pick One'" [displayDensity]="displayDensity.cosy">
+        <label igxLabel>Example</label>
+        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
+            {{ entry.textKey }}
+        </igx-select-item>
+    </igx-select>
+</section>
+<section>
+    <igx-combo [data]="data" valueKey="valueKey" displayKey="textKey" [displayDensity]="displayDensity.compact">
+    </igx-combo>
+    <button igxButton [igxToggleAction]="dropdown3" [igxDropDownItemNavigation]="dropdown3">Toggle Dropdown</button>
+    <igx-drop-down #dropdown3 [displayDensity]="displayDensity.compact">
+        <div class="wrapping-div">
+            <igx-drop-down-item *ngFor="let entry of data" [value]="entry.valueKey" [isHeader]="entry.isHeader">
+                {{ entry.valueKey }}
+            </igx-drop-down-item>
+        </div>
+    </igx-drop-down>
+    <igx-select #select1 [placeholder]="'Pick One'" [displayDensity]="displayDensity.compact">
+        <label igxLabel>Example</label>
+        <igx-select-item *ngFor="let entry of data; let inx=index" [value]="entry.textKey" [isHeader]="entry.isHeader">
+            {{ entry.textKey }}
+        </igx-select-item>
+    </igx-select>
+
+</section>

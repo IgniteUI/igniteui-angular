@@ -61,4 +61,24 @@
 
         <div igxOverlayOutlet #outlet="overlay-outlet"></div>
     </section>
+    <section>
+        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Display: Comfortable</button>
+        <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'  displayDensity="comfortable">
+            <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+                    {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy" displayDensity="cosy">Display: Cosy</button>
+        <igx-drop-down #dropDownCosy (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'  displayDensity="cosy">
+            <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+                    {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownCompact" [igxDropDownItemNavigation]="dropDownCompact" displayDensity="compact">Display: Compact</button>
+        <igx-drop-down #dropDownCompact (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px' displayDensity="compact">
+            <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+                    {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    </section>
 </div>

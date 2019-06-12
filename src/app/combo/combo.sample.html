@@ -16,7 +16,7 @@
                 </igx-input-group>
             </div>
             <div class="input-row">
-                <igx-combo class="input-container" [placeholder]="'Locations'"
+                <igx-combo #combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
                             (onSelectionChange)="handleSelectionChange($event)"
                             [data]="items"
@@ -80,4 +80,10 @@
         </div>
     </section>
     </div>
+    <button igxButton (click)="combo.itemHeight = 56">
+        Set ItemHeight to 56
+    </button>
+    <button igxButton (click)="combo.itemHeight = null">
+        Reset ItemHeight
+    </button>
 </div>

@@ -15,7 +15,7 @@
   </div>
   <div class="drop-down-wrapper__section">
     <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Toggle Local</button>
-    <igx-drop-down #dropdown2>
+    <igx-drop-down #dropdown2 [displayDensity]="density">
       <div class="drop-down-virtual-wrapper">
           <igx-drop-down-item *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;" 
           [value]="item" [isHeader]="index % 7 === 0" role="option"
@@ -27,4 +27,5 @@
     </igx-drop-down>
   </div>
 </div>
+<igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 <igx-toast #loadingToast></igx-toast>
