@@ -934,7 +934,8 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).toBeNull();
-            expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
+            expect(fix.debugElement.query(By.css(TBODY_CLASS))
+                .nativeElement.getBoundingClientRect().height).toBeGreaterThan(200);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(5);
         }));
