@@ -10,7 +10,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
-xdescribe('IgxHierarchicalGrid Basic Navigation', () => {
+describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -650,7 +650,7 @@ xdescribe('IgxHierarchicalGrid Basic Navigation', () => {
 });
 
 
-xdescribe('IgxHierarchicalGrid Complex Navigation', () => {
+describe('IgxHierarchicalGrid Complex Navigation', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -779,7 +779,7 @@ xdescribe('IgxHierarchicalGrid Complex Navigation', () => {
         }));
 });
 
-xdescribe('IgxHierarchicalGrid Multi-layout Navigation', () => {
+describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -920,7 +920,7 @@ xdescribe('IgxHierarchicalGrid Multi-layout Navigation', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Smaller Child Navigation', () => {
+describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

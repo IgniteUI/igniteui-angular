@@ -17,7 +17,7 @@ import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
 
-xdescribe('IgxHierarchicalGrid Integration', () => {
+describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

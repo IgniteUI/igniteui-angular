@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 
-xdescribe('Basic IgxHierarchicalGrid', () => {
+describe('Basic IgxHierarchicalGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -270,7 +270,7 @@ xdescribe('Basic IgxHierarchicalGrid', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Row Islands', () => {
+describe('IgxHierarchicalGrid Row Islands', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -495,7 +495,7 @@ xdescribe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
+describe('IgxHierarchicalGrid Remote Scenarios', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -571,7 +571,7 @@ xdescribe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-xdescribe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
