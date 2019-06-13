@@ -951,36 +951,6 @@ describe('IgxSlider', () => {
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
         });
 
-        it('Dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
-            expect(slider.type).toBe(SliderType.RANGE);
-            expect(slider.labelsViewEnabled).toBe(true);
-
-            slider.labels = [];
-            fixture.detectChanges();
-
-            expect(slider.type).toBe(SliderType.RANGE);
-            expect(slider.labelsViewEnabled).toBe(false);
-
-            let FromTumb = fixture.nativeElement.querySelector('.igx-slider__thumb-from');
-            let ToTumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
-
-            expect(ToTumb).toBeDefined();
-            expect(FromTumb).toBeDefined();
-            expect(slider.upperBound).toBe(slider.maxValue);
-            expect(slider.lowerBound).toBe(slider.minValue);
-
-            slider.type = SliderType.SLIDER;
-            fixture.detectChanges();
-
-            FromTumb = fixture.nativeElement.querySelector('.igx-slider__thumb-from');
-            ToTumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
-            expect(slider.type).toBe(SliderType.SLIDER);
-            expect(ToTumb).toBeDefined();
-            expect(FromTumb).toBeFalsy();
-            expect(slider.upperBound).toBe(slider.maxValue);
-            expect(slider.lowerBound).toBe(slider.minValue);
-        });
-
         it('aria properties should be successfully applied', () => {
             const sliderElement = fixture.nativeElement.querySelector('igx-slider');
             const sliderRole = fixture.nativeElement.querySelector('igx-slider[role="slider"]');
