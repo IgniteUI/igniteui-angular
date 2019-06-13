@@ -43,8 +43,8 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
     private onScroll = (ev: Event) => {
         ev.preventDefault();
-        if (!this._sourceElement || this._sourceElement !== ev.srcElement) {
-            this._sourceElement = ev.srcElement;
+        if (!this._sourceElement || this._sourceElement !== ev.target) {
+            this._sourceElement = ev.target as Element;
             this._initialScrollTop = this._sourceElement.scrollTop;
             this._initialScrollLeft = this._sourceElement.scrollLeft;
         }

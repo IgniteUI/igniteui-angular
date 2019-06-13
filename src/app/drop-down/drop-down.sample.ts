@@ -15,10 +15,10 @@ import { foods } from './foods';
     styleUrls: ['drop-down.sample.scss']
 })
 export class DropDownSampleComponent implements OnInit {
-    @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button') public button: ElementRef;
+    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true }) public button: ElementRef;
 
-    @ViewChild(IgxOverlayOutletDirective) public igxOverlayOutlet: IgxOverlayOutletDirective;
+    @ViewChild(IgxOverlayOutletDirective, { static: true }) public igxOverlayOutlet: IgxOverlayOutletDirective;
 
     items: any[] = [];
     public foods = foods;

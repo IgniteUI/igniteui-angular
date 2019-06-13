@@ -134,7 +134,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public get element() {
+    public get element(): HTMLElement {
         return this.elementRef.nativeElement;
     }
 

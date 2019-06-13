@@ -123,31 +123,31 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
-    @ViewChild('dropdown', { read: ElementRef })
+    @ViewChild('dropdown', { read: ElementRef, static: true })
     public mainDropdown: ElementRef;
 
-    @ViewChild('subMenu', { read: IgxDropDownComponent })
+    @ViewChild('subMenu', { read: IgxDropDownComponent, static: true })
     public subMenu: IgxDropDownComponent;
 
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent, static: true })
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
-    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
+    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: true })
     protected excelStyleSearch: IgxExcelStyleSearchComponent;
 
-    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
+    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
 
-    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef })
+    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef })
+    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef })
+    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
+    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
     get grid(): any {

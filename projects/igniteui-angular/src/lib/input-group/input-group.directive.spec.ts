@@ -194,7 +194,7 @@ describe('IgxInputGroup', () => {
                 </igx-input-group>`
 })
 class InputGroupComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -203,7 +203,7 @@ class InputGroupComponent {
                 </igx-input-group>`
 })
 class InputGroupBoxComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -212,7 +212,7 @@ class InputGroupBoxComponent {
                 </igx-input-group>`
 })
 class InputGroupBorderComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -221,7 +221,7 @@ class InputGroupBorderComponent {
                 </igx-input-group>`
 })
 class InputGroupSearchComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 function testInputGroupType(type, component: IgxInputGroupComponent, nativeElement) {
@@ -262,7 +262,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
                 </igx-input-group>`
 })
 class InputGroupDisabledComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = false;
 
@@ -277,7 +277,7 @@ class InputGroupDisabledComponent {
                 </igx-input-group>`
 })
 class InputGroupDisabledByDefaultComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = true;
 }
@@ -289,7 +289,7 @@ class InputGroupDisabledByDefaultComponent {
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
 })
 class InputGroupCosyDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -299,7 +299,7 @@ class InputGroupCosyDisplayDensityComponent {
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
 })
 class InputGroupCompactDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -308,7 +308,7 @@ class InputGroupCompactDisplayDensityComponent {
                 </igx-input-group>`
 })
 class InputGroupInputDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -318,6 +318,6 @@ class InputGroupInputDisplayDensityComponent {
                 </igx-input-group>`
 })
 class InputGroupSupressInputFocusComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
 }

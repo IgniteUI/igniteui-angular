@@ -2,6 +2,20 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.0.0
+- `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
+    - `#emptyTemplate`
+    - `#headerTemplate`
+    - `#footerTemplate`
+    - `#itemTemplate`
+    - `#addItemTemplate`
+    - `#headerItemTemplate`
+- `igxTimePicker` and `igxDatePicker`
+    - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
+    - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
+    - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
+
+
 ## 7.3.4
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

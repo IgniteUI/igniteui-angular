@@ -699,7 +699,7 @@ export class ResizableColumnsComponent {
 
     public data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -709,7 +709,7 @@ export class PinnedColumnsComponent {
 
     public data = SampleTestData.personIDNameRegionData();
     public width = '500px';
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -736,7 +736,7 @@ export class LargePinnedColGridComponent implements OnInit {
     data = [];
     value: any;
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(75);
@@ -761,7 +761,7 @@ export class GridFeaturesComponent implements IColumnResized {
 
     public data = SampleTestData.productInfoDataFull();
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     columnResized(event) {
         this.count++;
@@ -779,7 +779,7 @@ export class NullColumnsComponent implements OnInit {
     public data = [];
     public columns = [];
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public ngOnInit(): void {
         this.columns = [
@@ -812,7 +812,7 @@ export class NullColumnsComponent implements OnInit {
 export class ColGridComponent implements OnInit {
     data = [];
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
@@ -830,7 +830,7 @@ export class ColGridComponent implements OnInit {
 export class ColPercentageGridComponent implements OnInit {
     data = [];
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(10);

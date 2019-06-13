@@ -975,7 +975,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('DropDown Mode', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture;
         let timePicker;
         let dom;
@@ -1781,7 +1781,7 @@ describe('IgxTimePicker', () => {
     `
 })
 export class IgxTimePickerTestComponent {
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public isVertical = false;
 }
 
@@ -1793,7 +1793,7 @@ export class IgxTimePickerTestComponent {
 export class IgxTimePickerWithPassedTimeComponent {
     public dateValue: Date = new Date(2017, 7, 7, 3, 24);
     public customFormat = 'h:mm tt';
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1804,7 +1804,7 @@ export class IgxTimePickerWithPassedTimeComponent {
 export class IgxTimePickerWithPmTimeComponent {
     public dateValue: Date = new Date(2017, 7, 7, 12, 27);
     public customFormat = 'h:mm tt';
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1815,7 +1815,7 @@ export class IgxTimePickerWithPmTimeComponent {
 export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
     public dateValue: Date = new Date(2017, 7, 7, 23, 27);
     public customFormat = 'hh:mm tt';
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1826,7 +1826,7 @@ export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
 export class IgxTimePickerWith24HTimeComponent {
     public dateValue: Date = new Date(2017, 7, 7, 24, 27);
     public customFormat = 'HH:mm';
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1839,7 +1839,7 @@ export class IgxTimePickerWithMInMaxTimeValueComponent {
     public dateValue: Date = new Date(2017, 7, 7, 4, 27);
     public myMinValue = '3:24 AM';
     public myMaxValue = '5:24 AM';
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1852,7 +1852,7 @@ export class IgxTimePickerWithSpinLoopFalseValueComponent {
     public dateValue: Date = new Date(2017, 7, 7, 1, 0);
     public customFormat = 'hh:mm tt';
     public customitemsDelta: any = { hours: 2, minutes: 2 };
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1865,7 +1865,7 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
     public dateValue: Date = new Date(2017, 7, 7, 10, 56);
     public customFormat = 'hh:mm tt';
     public customitemsDelta: any = { hours: 2, minutes: 2 };
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -1885,11 +1885,11 @@ export class IgxTimePickerRetemplatedComponent { }
 @Component({
     template: `
     <igx-time-picker mode="dropdown"
-                     [isSpinLoop]="isSpinLoop"
-                     [(ngModel)]="date"
-                     [itemsDelta]="itemsDelta"
-                     [format]="format" >
-                </igx-time-picker>
+            [isSpinLoop]="isSpinLoop"
+            [(ngModel)]="date"
+            [itemsDelta]="itemsDelta"
+            [format]="format" >
+    </igx-time-picker>
     `
 })
 export class IgxTimePickerDropDownComponent {
@@ -1899,15 +1899,15 @@ export class IgxTimePickerDropDownComponent {
     isVertical = true;
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 @Component({
     template: `
     <igx-time-picker
-                     [value]="customDate"
-                     [mode]="mode"
-                     [format]="format">
-                </igx-time-picker>
+         [value]="customDate"
+         [mode]="mode"
+         [format]="format">
+    </igx-time-picker>
     `
 })
 export class IgxTimePickerDropDownSingleHourComponent {
@@ -1915,20 +1915,20 @@ export class IgxTimePickerDropDownSingleHourComponent {
     mode = InteractionMode.DropDown;
     format = 'H:m';
 
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 @Component({
     template: `
     <igx-time-picker
-                     [mode]="mode"
-                     [format]="'hh:mm tt'">
-                </igx-time-picker>
+        [mode]="mode"
+        [format]="'hh:mm tt'">
+    </igx-time-picker>
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
     mode = InteractionMode.DropDown;
 
-    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 
@@ -1940,7 +1940,7 @@ export class IgxTimePickerDropDownNoValueComponent {
             <label igxLabel>Time</label>
             <input igxInput [value]="displayTime" required/>
             <igx-suffix>
-                <igx-icon class="date-picker-icon" (click)="openDialog()">access_alarm</igx-icon>
+                <igx-icon class="date-picker-icon" (click)="openDialog(dropDownTarget.element.nativeElement)">access_alarm</igx-icon>
             </igx-suffix>
         </igx-input-group>
     </ng-template>

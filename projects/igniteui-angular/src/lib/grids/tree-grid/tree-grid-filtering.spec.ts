@@ -7,7 +7,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('IgxTreeGrid - Filtering actions', () => {
+describe('IgxTreeGrid - Filtering actions ', () => {
     configureTestSuite();
     let fix;
     let grid;
@@ -27,6 +27,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
+        tick(16);
         grid = fix.componentInstance.treeGrid;
     }));
 
@@ -278,25 +279,26 @@ describe('IgxTreeGrid - Filtering actions', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
         it('should remove a filtered parent row from the filtered list', fakeAsync(() => {
             const newCellValue = 'John McJohn';
             treeGrid.filter('Name', 'in', IgxStringFilteringOperand.instance().condition('contains'), true);
-            tick();
+            tick(16);
 
             // modify the first filtered node
             const targetCell = treeGrid.getCellByColumn(0, 'Name');
             targetCell.update(newCellValue);
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // verify that the edited row was removed from the filtered list
             expect(treeGrid.filteredData.length).toBe(1);
 
             treeGrid.clearFilter();
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // check if the changes made were preserved
@@ -307,19 +309,19 @@ describe('IgxTreeGrid - Filtering actions', () => {
             fakeAsync(() => {
                 const newCellValue = 'John McJohn';
                 treeGrid.filter('Name', 'on', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+                tick(16);
 
                 // modify a parent node which has a child that matches the filtering condition
                 const targetCell = treeGrid.getCellByColumn(0, 'Name');
                 targetCell.update(newCellValue);
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // verify that the parent node is still in the filtered list
                 expect(treeGrid.filteredData.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
 
                 treeGrid.clearFilter();
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // verify the changes were preserved after the filtering is removed
@@ -332,19 +334,19 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 const newCellValue = 'John McJohn';
                 const filterValue = 'Langdon';
                 treeGrid.filter('Name', filterValue, IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+                tick(16);
 
                 // modify the first child node that meets the filtering condition
                 const targetCell = treeGrid.getCellByColumn(1, 'Name');
                 targetCell.update(newCellValue);
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // verify that the parent node is no longer in the filtered list
                 expect(grid.filteredData).toBeFalsy();
 
                 treeGrid.clearFilter();
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
@@ -360,12 +362,12 @@ describe('IgxTreeGrid - Filtering actions', () => {
             fakeAsync(() => {
                 const newCellValue = 'Peter Peterson';
                 treeGrid.filter('Name', 'h', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick();
+                tick(16);
 
                 // modify the first child node which meets the filtering condition
                 const targetCell = treeGrid.getCellByColumn(1, 'Name');
                 targetCell.update(newCellValue);
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // check if the edited child row is removed
@@ -375,7 +377,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.treeRow.parent.data.Name).length).toBeGreaterThan(0);
 
                 treeGrid.clearFilter();
-                tick();
+                tick(16);
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node

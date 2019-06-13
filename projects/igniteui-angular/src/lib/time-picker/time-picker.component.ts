@@ -365,7 +365,14 @@ export class IgxTimePickerComponent implements
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public overlaySettings: OverlaySettings;
+    public set overlaySettings(value: OverlaySettings) {
+        this._overlaySettings = value;
+    }
+
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings ? this._overlaySettings :
+            (this.mode === InteractionMode.Dialog ? undefined : this._dropDownOverlaySettings);
+    }
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
@@ -454,80 +461,70 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('hourList')
+    @ViewChild('hourList', { static: false })
     public hourList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('minuteList')
+    @ViewChild('minuteList', { static: false })
     public minuteList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ampmList')
+    @ViewChild('ampmList', { static: false })
     public ampmList: ElementRef;
 
     /*
      * @hidden
      */
-    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef })
+    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef, static: true })
     protected defaultTimePickerTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
+    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective, static: true })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
+    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective, static: false })
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxInputDirective, { read: ElementRef })
+    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
     private _input: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('container')
-    public container: ElementRef;
-
-    /**
-     * @hidden
-     */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
     /**
      * @hidden
      */
-    @ViewChild('input', { read: ElementRef })
+    @ViewChild('input', { read: ElementRef, static: false })
     private input: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('group', { read: IgxInputGroupComponent })
+    @ViewChild('group', { read: IgxInputGroupComponent, static: false })
     private group: IgxInputGroupComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('dropdownInputTemplate', { read: TemplateRef })
+    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
     private dropdownInputTemplate: TemplateRef<any>;
 
-    /*
-     * @hidden
-     */
-    @ContentChild('dropDownTarget', { read: ElementRef })
-    protected templateDropDownTarget: ElementRef;
+    private _overlaySettings: OverlaySettings;
 
     /**
      * @hidden
@@ -736,7 +733,7 @@ export class IgxTimePickerComponent implements
             value: this.value,
             displayTime: this.displayTime,
             displayValue: this.displayValue,
-            openDialog: () => { this.openDialog(); }
+            openDialog: (target?: HTMLElement) => this.openDialog(target)
         };
     }
 
@@ -774,8 +771,8 @@ export class IgxTimePickerComponent implements
             });
         }
 
-        if (this.container && this.group) {
-            this.container.nativeElement.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
+        if (this.toggleRef && this.group) {
+            this.toggleRef.element.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
         }
 
         if (this.toggleRef) {
@@ -822,7 +819,7 @@ export class IgxTimePickerComponent implements
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onKeydownSpace(event) {
-        this.openDialog();
+        this.openDialog(this.getInputGroupElement());
         event.preventDefault();
     }
 
@@ -831,7 +828,7 @@ export class IgxTimePickerComponent implements
      */
     @HostListener('keydown.Alt.ArrowDown')
     public onAltArrowDown() {
-        this.openDialog();
+        this.openDialog(this.getInputGroupElement());
     }
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
@@ -1286,7 +1283,14 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     getEditElement() {
-        return this._input.nativeElement;
+        return this._input ? this._input.nativeElement : null;
+    }
+
+    /**
+     * @hidden
+     */
+    public getInputGroupElement() {
+        return this.group ? this.group.element.nativeElement : null;
     }
 
     /**
@@ -1316,45 +1320,37 @@ export class IgxTimePickerComponent implements
 
     /**
      * opens the dialog.
+     * @param target HTMLElement - the target element to use for positioning the drop down container according to
      * ```html
-     *<igx-time-picker #timePicker></igx-time-picker>
-     * ```
-     * ```typescript
-     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
-     * picker.openDialog();
+     * <igx-time-picker [value]="date" mode="dropdown" #retemplated>
+     *   <ng-template igxTimePickerTemplate let-openDialog="openDialog"
+     *                let-displayTime="displayTime">
+     *     <igx-input-group>
+     *       <input #dropDownTarget igxInput [value]="displayTime" />
+     *       <igx-suffix (click)="openDialog(dropDownTarget)">
+     *         <igx-icon>alarm</igx-icon>
+     *       </igx-suffix>
+     *     </igx-input-group>
+     *   </ng-template>
+     * </igx-time-picker>
      * ```
      */
-    public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.toggleRef.collapsed) {
-            let settings;
-            if (this.mode === InteractionMode.Dialog && this.overlaySettings ) {
-                settings = this.overlaySettings;
-            }
-
-            if (this.mode === InteractionMode.DropDown) {
-                settings = this.overlaySettings || this._dropDownOverlaySettings;
-                const posStrategy = settings.positionStrategy;
-
-                if (this.group && posStrategy) {
-                    posStrategy.settings.target = this.group.element.nativeElement;
-                } else if (this.templateDropDownTarget && posStrategy) {
-                    posStrategy.settings.target = this.templateDropDownTarget.nativeElement;
-                } else if (!posStrategy || (posStrategy && !posStrategy.settings.target)) {
-                    throw new Error('There is no target element for the dropdown to attach.' +
-                        'Mark a DOM element with #dropDownTarget ref variable or provide correct overlay positionStrategy.');
-                }
-            }
-
-            if (this.outlet) {
-                settings.outlet = this.outlet;
-            }
-
-            this.toggleRef.open(settings);
-            this._initializeContainer();
-
-        } else if (this.mode === InteractionMode.DropDown) {
-            this.close();
+    public openDialog(target?: HTMLElement): void {
+        if (!this.toggleRef.collapsed) {
+            return this._onDropDownClosed();
         }
+        const settings = this.overlaySettings;
+
+        if (target && settings && settings.positionStrategy) {
+            settings.positionStrategy.settings.target = target;
+        }
+
+        if (this.outlet) {
+            settings.outlet = this.outlet;
+        }
+
+        this.toggleRef.open(settings);
+        this._initializeContainer();
     }
 
     /**
