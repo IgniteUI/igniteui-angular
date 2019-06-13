@@ -19,7 +19,7 @@ describe('IgxSlider', () => {
                 SliderTestComponent,
                 SliderWithLabelsComponent,
                 RangeSliderWithLabelsComponent,
-                RangeSliderWithCustomTemplate
+                RangeSliderWithCustomTemplateComponent
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule
@@ -1049,7 +1049,7 @@ describe('IgxSlider', () => {
     });
 
     it('custom templates for the lower/upper thumb labels should be allowed', () => {
-        const fixture = TestBed.createComponent(RangeSliderWithCustomTemplate);
+        const fixture = TestBed.createComponent(RangeSliderWithCustomTemplateComponent);
         const slider = fixture.componentInstance.slider;
         fixture.detectChanges();
 
@@ -1364,7 +1364,7 @@ class RangeSliderWithLabelsComponent {
     `
 
 })
-class RangeSliderWithCustomTemplate {
+class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
     public type = SliderType.RANGE;
 }
