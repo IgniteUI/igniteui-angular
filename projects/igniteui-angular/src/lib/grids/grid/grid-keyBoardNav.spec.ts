@@ -865,7 +865,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             });
         });
 
-        fit('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
+        it('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100, 50);
             fix.componentInstance.data = fix.componentInstance.generateData(100);
 
