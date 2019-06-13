@@ -66,7 +66,7 @@ export class IgxListItemComponent implements IListChild {
      * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
      * ```
      */
-    @ViewChild('leftPanningTmpl')
+    @ViewChild('leftPanningTmpl', { static: false })
     public leftPanningTemplateElement;
 
     /**
@@ -75,7 +75,7 @@ export class IgxListItemComponent implements IListChild {
      * const rightPanTmpl = this.listItem.rightPanningTemplateElement;
      * ```
      */
-    @ViewChild('rightPanningTmpl')
+    @ViewChild('rightPanningTmpl', { static: false })
     public rightPanningTemplateElement;
 
     constructor(

@@ -1,5 +1,4 @@
-import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService, IgxGridTransaction, IgxHierarchicalTransactionService,
          IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
@@ -33,7 +32,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
 
-    @ViewChild('grid1') public grid1: IgxTreeGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public density = '';
     public displayDensities;

@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { ChangeDetectorRef, Component, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent, IGridCreatedEventArgs } from './row-island.component';
@@ -733,9 +733,9 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         // 3 level hierarchy
@@ -777,14 +777,13 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     public height = '100px';
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland1: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 }
 
 @Component({
     template: `
-        <igx-hierarchical-grid [data]="data" (onDataPreLoad)="dataLoading($event)"
-         [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+        <igx-hierarchical-grid [data]="data" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
             <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1 (onGridCreated)="gridCreated($event, rowIsland1)">
                 <igx-column field="ID"></igx-column>
                 <igx-column field="ProductName"></igx-column>
@@ -797,16 +796,13 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
 export class IgxHGridRemoteOnDemandComponent {
     public data;
 
-    @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent })
+    @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
     public instance: IgxHierarchicalGridComponent;
 
-    @ViewChild('customTemplate', { read: TemplateRef })
-    public customTemaplate: TemplateRef<any>;
-
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent })
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
     public rowIsland: IgxRowIslandComponent;
 
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent })
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
     public rowIsland2: IgxRowIslandComponent;
 
     constructor(public cdr: ChangeDetectorRef) { }

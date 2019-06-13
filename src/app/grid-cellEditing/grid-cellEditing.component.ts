@@ -11,11 +11,11 @@ import {
 export class GridCellEditingComponent {
 
     orderDateHidden = false;
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public gridWithPK: IgxGridComponent;
-    @ViewChild('grid', { read: IgxGridComponent })
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
     public gridWithoutPK: IgxGridComponent;
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
     data: any;
     dataWithoutPK: any;
     public density = 'compact';

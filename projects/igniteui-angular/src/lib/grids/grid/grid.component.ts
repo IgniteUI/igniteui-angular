@@ -30,6 +30,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -420,7 +421,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: true })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
@@ -441,7 +442,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
@@ -450,7 +451,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ViewChild('defaultDropArea', { read: TemplateRef })
+    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
     public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
@@ -475,7 +476,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ViewChild('groupArea')
+    @ViewChild('groupArea', { static: false })
     public groupArea: ElementRef;
 
     /**
@@ -860,6 +861,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
+        this._setupNavigationService();
     }
 
     public ngOnInit() {
@@ -904,6 +906,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             return this.extractDataFromSelection(source);
         } else {
             return super.getSelectedData();
+        }
+    }
+
+    private _setupNavigationService() {
+        if (this.hasColumnLayouts) {
+            this.navigation = new IgxGridMRLNavigationService();
+            this.navigation.grid = this;
         }
     }
 }

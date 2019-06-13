@@ -1957,7 +1957,7 @@ describe('IgxCalendar', () => {
     });
 
     describe('Continuous month increment/decrement', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
         let fixture;
         let dom;
@@ -2018,7 +2018,7 @@ describe('IgxCalendar', () => {
 export class IgxCalendarSampleComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -2028,7 +2028,7 @@ export class IgxCalendarSampleComponent {
 })
 export class IgxCalendaRangeComponent {
     public viewDate = new Date(2017, 5, 13);
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -2042,7 +2042,7 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
     public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 class DateTester {

@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -12,7 +12,7 @@ import { IgxTreeGridModule } from '.';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Multi Cell selection', () => {
+describe('IgxTreeGrid - Multi Cell selection ', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -495,6 +495,7 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
@@ -603,8 +604,10 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
+            tick(16);
         }));
 
         it('CRUD: selected range should not change when delete row', () => {
@@ -728,8 +731,10 @@ describe('IgxTreeGrid - Multi Cell selection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
+            tick(16);
         }));
 
         it('CRUD: selected range should not change when delete row', () => {
