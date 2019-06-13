@@ -396,9 +396,8 @@ describe('IgxSlider', () => {
                 expect((slider.value as IRangeSliderValue).upper).toBe(slider.upperBound);
             });
 
-
-        // TODO: investigate deeper
-        xit('continuous(smooth) sliding should be allowed', (done) => {
+        it('continuous(smooth) sliding should be allowed', (done) => {
+            pending('Investigate deeper why sliding is not performed');
             const FromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS)).nativeElement;
             slider.continuous = true;
             fixture.detectChanges();
