@@ -11,7 +11,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component #grid', () => {
+describe('IgxGrid - Cell component', () => {
     configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';

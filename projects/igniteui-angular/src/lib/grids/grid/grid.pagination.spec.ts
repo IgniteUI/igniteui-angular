@@ -10,7 +10,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('IgxGrid - Grid Paging #grid', () => {
+describe('IgxGrid - Grid Paging', () => {
     configureTestSuite();
 
     beforeEach(async(() => {

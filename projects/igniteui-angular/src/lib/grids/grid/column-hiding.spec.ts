@@ -17,7 +17,7 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { take } from 'rxjs/internal/operators/take';
 
-describe('Column Hiding UI #grid', () => {
+describe('Column Hiding UI', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;

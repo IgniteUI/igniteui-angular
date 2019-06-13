@@ -28,7 +28,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection,
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../grid-base.component';
 
-describe('IgxGrid - Summaries #grid', () => {
+describe('IgxGrid - Summaries', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';

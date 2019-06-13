@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
+describe('IgxHierarchicalGrid Virtualization', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -369,7 +369,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
+describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

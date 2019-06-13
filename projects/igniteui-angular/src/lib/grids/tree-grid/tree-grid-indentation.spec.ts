@@ -13,7 +13,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Grid10x30WithSummariesComponent } from '../../test-utils/grid-samples.spec';
 
-describe('IgxTreeGrid - Indentation #tGrid', () => {
+describe('IgxTreeGrid - Indentation ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
