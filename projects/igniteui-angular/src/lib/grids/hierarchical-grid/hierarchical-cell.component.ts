@@ -54,7 +54,12 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         });
     }
 
-    _updateCellSelectionStatus() {
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('focus', ['$event'])
+    onFocus(event) {
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
         let parentGrid = this.grid;
@@ -72,10 +77,14 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
-        super._updateCellSelectionStatus();
+        super.onFocus(event);
     }
 
     // TODO: Refactor
+    /**
+     * @hidden
+     * @internal
+     */
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -101,6 +110,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         }
         super.dispatchEvent(event);
     }
+
     protected persistFocusedCell(rowID) {
         requestAnimationFrame(() => {
             // TODO: Test it out
