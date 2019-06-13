@@ -93,21 +93,21 @@ describe('IgxTreeGrid Component Tests', () => {
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
                 expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThan(330);
+                expect(defaultHeightNum).toBeLessThanOrEqual(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(grid.rowList.length).toEqual(11);
         }));
 
-        it('should display horizontal scroll bar when column width is set in %', async() => {
+        it('should display horizontal scroll bar when column width is set in %', async () => {
             fix.detectChanges();
 
             grid.columns[0].width = '50%';
-            grid.cdr.detectChanges();
+            grid.reflow();
             await wait(16);
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
             expect(horizontalScroll.style.width).toBe('785px');
-            expect(horizontalScroll.children[0].style.width).toBe('980px');
+            expect(horizontalScroll.children[0].style.width).toBe('800px');
         });
     });
 
