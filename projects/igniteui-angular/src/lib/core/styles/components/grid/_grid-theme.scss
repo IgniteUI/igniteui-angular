@@ -608,6 +608,15 @@
         %igx-grid__drag-indicator {
             cursor: default;
         }
+
+        %grid-row--mrl {
+            %igx-grid__hierarchical-expander--header,
+            %igx-grid__header-indentation,
+            %igx-grid__row-indentation,
+            %grid__cbx-selection {
+                border-bottom: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
+            }
+        }
     }
 
     %grid-thead--cosy {
@@ -699,7 +708,15 @@
     }
 
     %grid-row--mrl {
-        border-bottom: none !important;
+        &%grid-row {
+            border-bottom-color: transparent;
+        }
+
+        %grid__cbx-selection,
+        %igx-grid__row-indentation,
+        %igx-grid__drag-indicator {
+            border-bottom: 1px solid --var($theme, 'row-border-color');
+        }
     }
 
     %grid-tbody {
@@ -892,6 +909,10 @@
             background: --var($theme, 'edit-mode-color');
         }
 
+        &%grid-row {
+            border-bottom: 1px solid --var($theme, 'edit-mode-color');
+        }
+
         %igx-grid__td--editing {
             border: none;
 
@@ -902,6 +923,13 @@
             %form-group-border {
                 background: --var($theme, 'edit-mode-color') !important;
             }
+        }
+    }
+
+    %grid-row--edit-mrl {
+        &:first-of-type::after {
+            top: 0;
+            z-index: 5;
         }
     }
 
@@ -1000,6 +1028,11 @@
 
         %circular-outer {
             stroke: --var($theme, 'expand-icon-color');
+        }
+
+        > %circular-display {
+            width: rem(24);
+            height: rem(24);
         }
     }
 
@@ -1587,7 +1620,7 @@
 
     %igx-grid__row-indentation {
         background: transparent;
-        z-index: 9999;
+        z-index: 1;
         display: flex;
         justify-content: center;
         align-items: center;

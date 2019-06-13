@@ -1307,6 +1307,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public ngOnDestroy() {
+        this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
         this.selection.clear(this.id);

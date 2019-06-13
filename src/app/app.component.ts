@@ -149,6 +149,11 @@ export class AppComponent implements OnInit {
             name: 'Grid MRL Config'
         },
         {
+            link: '/gridMRLCustomNav',
+            icon: 'view_column',
+            name: 'Grid MRL Custom Navigation'
+        },
+        {
             link: '/gridFilterTemplate',
             icon: 'view_column',
             name: 'Grid Filter Template'
