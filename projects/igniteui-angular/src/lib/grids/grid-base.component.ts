@@ -550,6 +550,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.allRowsSelected = false;
             this.deselectAllRows();
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 
@@ -569,6 +570,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._rowDrag = val;
         if (this.gridAPI.grid && this.columnList) {
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 
@@ -2725,8 +2727,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetColumnsVisibleIndexCache() {
-        this.columnList.forEach(column => column.resetVisibleIndex());
+    public resetColumnsCaches() {
+        this.columnList.forEach(column => column.resetCaches());
     }
 
     /**
@@ -2766,7 +2768,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public resetCaches() {
         this.resetForOfCache();
-        this.resetColumnsVisibleIndexCache();
+        this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
         this._columnGroups = this.columnList.some(col => col.columnGroup);
@@ -3721,13 +3723,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
-    public clearSummaryCache(args?) {
-    }
-
-    /**
-     * @hidden
-     */
     public refreshGridState(args?) {
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
@@ -3773,13 +3768,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public reflow() {
         this.calculateGridSizes();
-    }
-
-    /**
-     * @hidden
-     */
-    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
-    public recalculateSummaries() {
     }
 
     /**
@@ -4291,8 +4279,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.cdr.detectChanges();
         this.resetCaches();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
 
         if (this.rowEditable) {
@@ -5036,7 +5024,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.calcWidth;
+        return col.field + col._calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {

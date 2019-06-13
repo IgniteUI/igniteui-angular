@@ -363,13 +363,14 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 
     it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).',
-    fakeAsync(/** height/width setter rAF + row toggle rAF */() => {
+    async() => { /** height/width setter rAF + row toggle rAF */
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
         const ri1 = fixture.componentInstance.rowIsland1;
         ri1.rowSelectable = true;
         fixture.detectChanges();
+        await wait();
 
         // check rendered grid
         let childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
@@ -380,17 +381,19 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         const row2 = hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row2.expander);
         fixture.detectChanges();
+        await wait();
         childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
         expect(childGrids[0].rowSelectable).toBe(true);
         expect(childGrids[1].rowSelectable).toBe(true);
         expect(childGrids[2].rowSelectable).toBe(false);
         expect(childGrids[3].rowSelectable).toBe(false);
-    }));
+    });
     it('should apply column settings applied to the row island to all related child grids.',
-    fakeAsync(/** height/width setter rAF + row toggle rAF */() => {
+    async() => { /** height/width setter rAF + row toggle rAF */
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
+        await wait();
 
         const ri1 = fixture.componentInstance.rowIsland1;
         const ri2 = fixture.componentInstance.rowIsland2;
@@ -411,7 +414,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
             const col = child2Cols.find((c) => c.key === ri2Cols[j].key);
             expect(col).not.toBeNull();
         }
-    }));
+    });
     it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.',
     fakeAsync(/** height/width setter + row toggle rAF */() => {
         const ri1 = fixture.componentInstance.rowIsland1;
