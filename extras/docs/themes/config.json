@@ -1,18 +1,18 @@
 {
     "en": {
         "development": {
-            "url": "https://dev.infragistics.local",
+            "url": "https://dev.infragistics.com",
             "gaID": "GTM-WLXLBZD",
-            "versions": "https://staging.infragistics.local/angular-docs/angular-api-docs-versions.json",
-            "typedoc_default_url": "https://staging.infragistics.local/products/ignite-ui-angular/docs/typescript/latest/",
-            "sassdoc_default_url": "https://staging.infragistics.local/products/ignite-ui-angular/docs/sass/latest/"
+            "versions": "https://staging.infragistics.com/angular-docs/angular-api-docs-versions.json",
+            "typedoc_default_url": "https://staging.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/",
+            "sassdoc_default_url": "https://staging.infragistics.com/products/ignite-ui-angular/docs/sass/latest/"
         },
         "staging": {
-            "url": "https://staging.infragistics.local",
+            "url": "https://staging.infragistics.com",
             "gaID": "GTM-NCKNPN",
-            "versions": "https://staging.infragistics.local/angular-docs/angular-api-docs-versions.json",
-            "typedoc_default_url": "https://staging.infragistics.local/products/ignite-ui-angular/docs/typescript/latest/",
-            "sassdoc_default_url": "https://staging.infragistics.local/products/ignite-ui-angular/docs/sass/latest/"
+            "versions": "https://staging.infragistics.com/angular-docs/angular-api-docs-versions.json",
+            "typedoc_default_url": "https://staging.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/",
+            "sassdoc_default_url": "https://staging.infragistics.com/products/ignite-ui-angular/docs/sass/latest/"
         },
         "production": {
             "url": "https://www.infragistics.com",
@@ -24,18 +24,18 @@
     },
     "jp": {
         "development": {
-            "url": "https://jp.dev.infragistics.local",
+            "url": "https://jp.dev.infragistics.com",
             "gaID": "GTM-NNHVMC7",
-            "versions": "https://jp.staging.infragistics.local/angular-docs/angular-api-docs-versions-jp.json",
-            "typedoc_default_url": "https://jp.staging.infragistics.local/products/ignite-ui-angular/docs/typescript/latest/",
-            "sassdoc_default_url": "https://jp.staging.infragistics.local/products/ignite-ui-angular/docs/sass/latest/"
+            "versions": "https://jp.staging.infragistics.com/angular-docs/angular-api-docs-versions-jp.json",
+            "typedoc_default_url": "https://jp.staging.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/",
+            "sassdoc_default_url": "https://jp.staging.infragistics.com/products/ignite-ui-angular/docs/sass/latest/"
         },
         "staging": {
-            "url": "https://jp.staging.infragistics.local",
+            "url": "https://jp.staging.infragistics.com",
             "gaID": "GTM-WLWSDK",
-            "versions": "https://jp.staging.infragistics.local/angular-docs/angular-api-docs-versions-jp.json",
-            "typedoc_default_url": "https://jp.staging.infragistics.local/products/ignite-ui-angular/docs/typescript/latest/",
-            "sassdoc_default_url": "https://jp.staging.infragistics.local/products/ignite-ui-angular/docs/sass/latest/"
+            "versions": "https://jp.staging.infragistics.com/angular-docs/angular-api-docs-versions-jp.json",
+            "typedoc_default_url": "https://jp.staging.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/",
+            "sassdoc_default_url": "https://jp.staging.infragistics.com/products/ignite-ui-angular/docs/sass/latest/"
         },
         "production": {
             "url": "https://jp.infragistics.com",
