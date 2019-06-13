@@ -1,7 +1,7 @@
 <ng-template #dropdownInputTemplate>
     <igx-input-group #group>
         <label igxLabel>Time</label>
-        <igx-prefix (click)="openDialog()">
+        <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
         <input #input type="text" [igxMask]="mask" igxInput [includeLiterals]="false" [placeholder]="format"
@@ -34,7 +34,7 @@
         </button>
     </div>
 </ng-template>
-<div #container igxToggle class="igx-time-picker"
+<div igxToggle class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': mode === 'dropdown', 'igx-time-picker--vertical': vertical && mode === 'dialog'}">
     <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>

@@ -119,7 +119,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(outputJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(outputJson));
 
         const fileContent = `<one (onReplaceMe)="a"> <comp\r\ntag (onReplaceMe)="dwdw" (onOld)=""> </other> <another (onOld)="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -163,7 +163,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
 
         const fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -224,7 +224,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         const fileContent = `import { igxClass } from ""; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
@@ -264,7 +264,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         const fileContent =
         `import { Component, Injectable, ViewChild } from "@angular/core";` +
@@ -356,7 +356,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
 
         const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
 <igx-icon fontSet="material-icons" name="build"></igx-icon>
@@ -411,7 +411,7 @@ describe('UpdateChanges', () => {
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(themePropsJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themePropsJson));
 
         const fileContent =
 `$var: igx-theme-func(
@@ -477,7 +477,7 @@ $var3: igx-comp-theme(
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(importsJson));
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(importsJson));
 
         const fileContent = `
 @NgModule({

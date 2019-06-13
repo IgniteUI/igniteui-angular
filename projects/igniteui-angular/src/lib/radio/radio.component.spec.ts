@@ -195,7 +195,7 @@ describe('IgxRadio', () => {
 
 @Component({ template: `<igx-radio #radio>Radio</igx-radio>` })
 class InitRadioComponent {
-    @ViewChild('radio') public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
 }
 
 @Component({
@@ -251,7 +251,7 @@ class RequiredRadioComponent {
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`
 })
 class RadioExternalLabelComponent {
-    @ViewChild('radio') public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
     label = 'My Label';
 }
 
@@ -259,6 +259,6 @@ class RadioExternalLabelComponent {
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`
 })
 class RadioInvisibleLabelComponent {
-    @ViewChild('radio') public radio: IgxRadioComponent;
+    @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
     label = 'Invisible Label';
 }

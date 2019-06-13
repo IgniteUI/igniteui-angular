@@ -619,7 +619,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[4];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) - 1)
+            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) + 1)
             .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
 
@@ -1124,7 +1124,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     `
 })
 export class ColumnLayouHidingTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1165,7 +1165,7 @@ export class ColumnLayouHidingTestComponent {
     `
 })
 export class ColumnLayoutPinningTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1246,7 +1246,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 })
 export class ColumnLayoutResizingTestComponent {
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     cols: Array<any> = [

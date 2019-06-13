@@ -11,6 +11,6 @@ import { IgxColumnResizerDirective } from './grid.common';
 export class IgxGridColumnResizerComponent {
     constructor(public colResizingService: IgxColumnResizingService) { }
 
-    @ViewChild(IgxColumnResizerDirective)
+    @ViewChild(IgxColumnResizerDirective, { static: true })
     public resizer: IgxColumnResizerDirective;
 }

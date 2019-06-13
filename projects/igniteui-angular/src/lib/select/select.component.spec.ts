@@ -13,6 +13,7 @@ import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 import { IgxSelectModule } from './select.module';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -98,10 +99,11 @@ describe('igxSelect', () => {
     }));
 
     describe('General tests: ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             select = fixture.componentInstance.select;
             fixture.detectChanges();
+            tick();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
@@ -1973,10 +1975,11 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Document bigger than the visible viewport tests: ', () => {
-            beforeEach(async(() => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                tick();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
@@ -2091,9 +2094,10 @@ describe('igxSelect', () => {
         });
     });
     describe('EditorProvider', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             fixture.detectChanges();
+            tick();
         }));
         it('Should return correct edit element', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
@@ -2113,7 +2117,7 @@ describe('igxSelect', () => {
 `
 })
 class IgxSelectSimpleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'New York',
@@ -2152,7 +2156,7 @@ class IgxSelectSimpleComponent {
 `
 })
 class IgxSelectGroupsComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public locations: {
         continent: string,
@@ -2177,7 +2181,7 @@ class IgxSelectGroupsComponent {
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })
 class IgxSelectMiddleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2194,7 +2198,7 @@ class IgxSelectMiddleComponent {
 `
 })
 class IgxSelectTopComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2215,7 +2219,7 @@ class IgxSelectTopComponent {
 `
 })
 class IgxSelectBottomComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2244,7 +2248,7 @@ class IgxSelectBottomComponent {
 `
 })
 class IgxSelectAffixComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',

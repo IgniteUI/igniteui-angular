@@ -537,7 +537,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
-    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
+    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective, static: true })
     public textTemplate: IgxProcessBarTextTemplateDirective;
 
     /**
@@ -688,7 +688,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     private _circleRadius = 46;
     private _circumference = 2 * Math.PI * this._circleRadius;
 
-    @ViewChild('circle') private _svgCircle: ElementRef;
+    @ViewChild('circle', { static: true }) private _svgCircle: ElementRef;
 
     constructor(private renderer: Renderer2) {
         super();

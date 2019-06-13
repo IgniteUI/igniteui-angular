@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { 
-    IgxCalendarComponent, 
-    DateRangeType, 
-    IgxDaysViewComponent, 
+import {
+    IgxCalendarComponent,
+    DateRangeType,
+    IgxDaysViewComponent,
     IgxMonthPickerComponent
 } from 'igniteui-angular';
 
@@ -12,9 +12,9 @@ import {
     styleUrls: ['calendar-views.sample.scss']
 })
 export class CalendarViewsSampleComponent implements OnInit {
-    @ViewChild('calendar') calendar: IgxCalendarComponent;
-    @ViewChild('daysView') daysView: IgxDaysViewComponent;
-    @ViewChild('mp') monthPicker: IgxMonthPickerComponent;
+    @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
+    @ViewChild('daysView', { static: true }) daysView: IgxDaysViewComponent;
+    @ViewChild('mp', { static: true }) monthPicker: IgxMonthPickerComponent;
 
     dates: Date | Date[];
     date = new Date(2018, 8, 5);

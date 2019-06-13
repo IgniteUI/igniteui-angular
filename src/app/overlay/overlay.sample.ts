@@ -64,11 +64,11 @@ export class OverlaySampleComponent implements OnInit {
     modal = true;
     useOutlet = false;
 
-    @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button') public button: ElementRef;
-    @ViewChild('container') public container: ElementRef;
-    @ViewChild(IgxDragDirective) public igxDrag: IgxDragDirective;
-    @ViewChild('outlet') public outletElement: ElementRef;
+    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true }) public button: ElementRef;
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
+    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
 
     onChange(ev) {
         switch (ev.radio.name) {
