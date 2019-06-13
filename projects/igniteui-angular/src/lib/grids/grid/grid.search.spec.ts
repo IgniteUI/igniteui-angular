@@ -331,7 +331,7 @@ describe('IgxGrid - search API', () => {
             grid.findNext(searchString);
             grid.findNext(searchString);
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            grid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             activeHighlight = rv.querySelector('.' + component.activeClass);
@@ -339,7 +339,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
+            grid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
             const scrolledCell = grid.getCellByColumn(grid.data.length - 1, 'JobTitle').nativeElement;
 
@@ -530,13 +530,13 @@ describe('IgxGrid - search API', () => {
             grid.columns[1].hidden = true;
             fix.detectChanges();
 
-            let finds =  grid.findNext('Director');
+            let finds = grid.findNext('Director');
             expect(finds).toEqual(2);
 
             grid.columns[2].hidden = true;
             fix.detectChanges();
 
-            finds =  grid.findNext('Director');
+            finds = grid.findNext('Director');
             expect(finds).toEqual(0);
         });
 
@@ -785,6 +785,47 @@ describe('IgxGrid - search API', () => {
                 }
                 expect((highlights[0] as HTMLElement).innerText).toEqual('12');
             });
+        });
+
+        it('Search should close row edit mode', async () => {
+            grid.primaryKey = 'ID';
+            grid.rowEditable = true;
+            grid.getColumnByName('Name').editable = true;
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait();
+            const row = grid.getRowByIndex(0);
+            const cell = grid.getCellByColumn(0, 'Name');
+
+            grid.findNext('Casey');
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait();
+
+            let highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(row.inEditMode).toBe(false);
+            cell.nativeElement.dispatchEvent(new Event('dblclick'));
+            fix.detectChanges();
+            await wait();
+
+            expect(row.inEditMode).toBe(true);
+
+            let cellInput = null;
+            cellInput = cell.nativeElement.querySelector('[igxinput]');
+            cellInput.value = 'newCellValue';
+            cellInput.dispatchEvent(new Event('input'));
+            fix.detectChanges();
+            await wait();
+
+            grid.findNext('Casey');
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            await wait();
+
+            highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(row.inEditMode).toBe(false);
         });
     });
 
