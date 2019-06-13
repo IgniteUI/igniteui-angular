@@ -39,7 +39,7 @@
             <input #input
                     igxInput
                     tabindex="0"
-                    (click)="openDatePicker(openDialog)"
+                    (click)="openDialog(dropDownTarget.element.nativeElement)"
                     [placeholder]="inputDatePlaceholder"
                     autocomplete="off"
                     [value]="value | igxdate: grid.locale"

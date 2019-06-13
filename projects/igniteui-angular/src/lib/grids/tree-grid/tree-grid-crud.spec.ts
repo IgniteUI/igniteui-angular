@@ -14,7 +14,7 @@ const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 
-describe('IgxTreeGrid - CRUD', () => {
+describe('IgxTreeGrid - CRUD ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -32,14 +32,16 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Create', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
 
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
+                tick(16);
             }));
 
             it('should support adding root row through treeGrid API', () => {
@@ -193,13 +195,14 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
                 fix.detectChanges();
+                tick(16);
             }));
 
             it('should support adding root row through treeGrid API', () => {
@@ -298,10 +301,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update API', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -322,7 +326,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 };
                 treeGrid.updateRow(newRow, 147);
                 fix.detectChanges();
-                tick();
+                tick(16);
                 const rowComponent = treeGrid.getRowByKey(999);
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 147,
@@ -452,10 +456,11 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -678,10 +683,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update UI', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -847,10 +853,11 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 for (const col of treeGrid.columns) {
                     col.editable = true;
@@ -1016,10 +1023,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Delete', () => {
         describe('Child Collection', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
             }));
 
@@ -1117,10 +1125,11 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            configureTestSuite();
+            // configureTestSuite();
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
+                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.cascadeOnDelete = false;
             }));

@@ -8,8 +8,8 @@ import { animate, useAnimation } from '@angular/animations';
     styleUrls: [`banner.sample.css`]
 })
 export class BannerSampleComponent {
-    @ViewChild('bannerNoSafeConnection') bannerNoSafeConnection: IgxBannerComponent;
-    @ViewChild('bannerCookies') bannerCookies: IgxBannerComponent;
+    @ViewChild('bannerNoSafeConnection', { static: true }) bannerNoSafeConnection: IgxBannerComponent;
+    @ViewChild('bannerCookies', { static: true }) bannerCookies: IgxBannerComponent;
 
     public animationSettings = { openAnimation: useAnimation(growVerIn, {
         params: {

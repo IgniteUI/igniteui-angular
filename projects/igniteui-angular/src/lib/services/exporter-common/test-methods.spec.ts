@@ -3,23 +3,26 @@ import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 export class TestMethods {
 
-    public static testRawData(myGrid: IgxGridComponent, action: (grid) => void) {
+    public static async testRawData(myGrid: IgxGridComponent, action: (grid) => Promise<void>) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+        await wait(16);
         myGrid = fix.componentInstance.grid;
 
         expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
-        action(myGrid);
+        await action(myGrid);
     }
 
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,
     applies the following filter: ["JobTitle", "Senior", IgxStringFilteringOperand.instance().condition('contains'), true]. */
-    public static createGridAndFilter(...filterParams: any[]) {
+    public static async createGridAndFilter(...filterParams: any[]) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+        await wait(16);
         const myGrid = fix.componentInstance.grid;
 
         filterParams = (filterParams.length === 0) ?
@@ -32,9 +35,10 @@ export class TestMethods {
     }
 
     /* Creates an instance of GridDeclarationComponent and pins the columns with the specified indices. */
-    public static createGridAndPinColumn(...colIndices: any[]) {
+    public static async createGridAndPinColumn(...colIndices: any[]) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+        await wait(16);
 
         const myGrid = fix.componentInstance.grid;
 
