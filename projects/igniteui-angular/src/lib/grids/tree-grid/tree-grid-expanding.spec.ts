@@ -14,7 +14,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
+describe('IgxTreeGrid - Expanding / Collapsing ', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
@@ -990,7 +990,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
 });
 
-describe('Row editing expanding/collapsing #tGrid', () => {
+describe('Row editing expanding/collapsing ', () => {
     configureTestSuite();
     let fix;
     let treeGrid;

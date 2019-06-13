@@ -17,7 +17,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
-describe('IgxGrid - Filtering actions #grid', () => {
+describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
