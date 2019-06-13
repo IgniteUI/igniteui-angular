@@ -159,12 +159,12 @@ export class IgxGridNavigationService {
 
     }
 
-    public movePreviousEditable(rowIndex, currentColumnVisibleIndex) {
+    public movePreviousEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
         this.focusNextEditableTarget(rowIndex, prevEditableColumnIndex);
     }
 
-    public moveNextEditable(rowIndex, currentColumnVisibleIndex) {
+    public moveNextEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
         this.focusNextEditableTarget(rowIndex, nextEditableColumnIndex);
     }
