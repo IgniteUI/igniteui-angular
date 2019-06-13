@@ -373,7 +373,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
         this.inputGroup.isRequired = this.required;
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
     }
 
     /**
