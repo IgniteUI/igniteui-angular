@@ -1,8 +1,9 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
+    styleUrls: ['grid-column-groups.sample.css'],
     templateUrl: 'grid-column-groups.sample.html'
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
@@ -10,7 +11,9 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    data = [
+    columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+
+    data: any[] = [
         // tslint:disable:max-line-length
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
         { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner', 'Address': 'Avda. de la Constitución 2222', 'City': 'México D.F.', 'Region': null, 'PostalCode': '05021', 'Country': 'Mexico', 'Phone': '(5) 555-4729', 'Fax': '(5) 555-3745' },
@@ -42,6 +45,13 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     ];
     // tslint:enable:max-line-length
 
+
+    constructor() {
+        for (const item of this.data) {
+            item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
+        }
+    }
+
     pinGroup() {
         const t = this.grid.getColumnByName('ContactTitle');
         t.pinned = !t.pinned;
@@ -56,5 +66,21 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
+    }
+
+    toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+        const columns = columnGroup.children.toArray();
+
+        if (columnGroup.header === 'General Information') {
+            const col = columns[1];
+            col.hidden = !col.hidden;
+        } else if (columnGroup.header === 'Address Information') {
+            for (let i = 0; i < columns.length; i++) {
+                const col = columns[i];
+                col.hidden = !col.hidden;
+            }
+        }
+
+        this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
     }
 }

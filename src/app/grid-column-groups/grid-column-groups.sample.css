@@ -1,0 +1,8 @@
+.column-group-template__container {
+    display: flex; 
+    align-items: center;
+}
+
+.column-group-template__icon {
+    cursor: pointer;
+}
