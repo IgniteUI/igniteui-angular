@@ -9,9 +9,9 @@ import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
     styleUrls: ['expansion-panel-sample.scss']
 })
 export class ExpansionPanelSampleComponent implements OnInit {
-    @ViewChild(IgxExpansionPanelComponent)
+    @ViewChild(IgxExpansionPanelComponent, { static: true })
     public igxExpansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('button') public button: ElementRef;
+    @ViewChild('button', { static: false }) public button: ElementRef;
 
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
         openAnimation: useAnimation(growVerIn, { params: {

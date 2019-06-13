@@ -956,7 +956,6 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items).toBeDefined();
 
             spyOn(combo.dropdown, 'selectItem').and.callThrough();
-            spyOn(combo.dropdown, 'selectedItem').and.callThrough();
             spyOn(combo.onSelectionChange, 'emit');
 
             // items are only accessible when the combo dropdown is opened;
@@ -3109,7 +3108,7 @@ describe('igxCombo', () => {
 `
 })
 class IgxComboTestComponent {
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public citiesData: string[] = [
@@ -3136,7 +3135,7 @@ class IgxComboTestComponent {
     template: `<igx-combo #combo [data]='citiesData'></igx-combo>`
 })
 class IgxComboTestDataComponent {
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
     public citiesData: string[] = [
         'New York',
@@ -3176,7 +3175,7 @@ class IgxComboTestDataComponent {
 `
 })
 class IgxComboScrollTestComponent {
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public data: string[] = [
@@ -3209,7 +3208,7 @@ class IgxComboScrollTestComponent {
 })
 class IgxComboSampleComponent {
 
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public items = [];
@@ -3265,7 +3264,7 @@ class IgxComboSampleComponent {
 })
 class IgxComboInputTestComponent {
 
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public items = [];
@@ -3328,7 +3327,7 @@ class="input-container" [filterable]="true" placeholder="Location(s)"
 })
 
 class IgxComboFormComponent {
-    @ViewChild('comboReactive', { read: IgxComboComponent })
+    @ViewChild('comboReactive', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
     public items = [];
 
@@ -3416,7 +3415,7 @@ export class LocalService {
 })
 export class IgxComboBindingTestComponent {
 
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public items = [];
@@ -3439,7 +3438,7 @@ export class IgxComboBindingTestComponent {
 })
 export class IgxComboEmptyTestComponent {
 
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 }
 
@@ -3456,7 +3455,7 @@ export class IgxComboEmptyTestComponent {
 `
 })
 class IgxComboInContainerTestComponent {
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public citiesData: string[] = [
@@ -3491,7 +3490,7 @@ class IgxComboInContainerTestComponent {
 `
 })
 class IgxComboInContainerFixedWidthComponent {
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 
     public citiesData: string[] = [
@@ -3563,7 +3562,7 @@ export class RemoteDataService {
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
     public data;
-    @ViewChild('combo', { read: IgxComboComponent })
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
     public instance: IgxComboComponent;
     constructor(private remoteDataService: RemoteDataService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
@@ -3592,7 +3591,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
     template: `<igx-combo [(ngModel)]="comboSelectedItems" [data]="items"></igx-combo>`
 })
 export class SimpleBindComboComponent implements OnInit {
-    @ViewChild(IgxComboComponent, { read: IgxComboComponent })
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
     public items: Array<any>;
     public comboSelectedItems: Array<any>;

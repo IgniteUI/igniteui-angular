@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  async,
-  TestBed
+    async,
+    TestBed
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxIconComponent, IgxIconService } from '../../icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DisplayDensity } from '../../core/density';
 
 const FLAT_RAISED_OUTLINED_BUTTON_COMPACT = 'igx-button--compact';
@@ -27,10 +26,9 @@ describe('IgxButton', () => {
                 IgxButtonDirective,
                 IgxIconComponent
             ],
-            imports: [HttpClientTestingModule],
             providers: [IgxIconService]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Initializes a button', () => {
@@ -114,7 +112,7 @@ describe('IgxButton', () => {
 
 @Component({
     template:
-    `<span igxButton="flat" igx-ripple="white">
+        `<span igxButton="flat" igx-ripple="white">
         <i class="material-icons">add</i>
     </span>`
 })
@@ -123,7 +121,7 @@ class InitButtonComponent {
 
 @Component({
     template:
-    `<span igxButton="raised"
+        `<span igxButton="raised"
         [igxButtonColor]="foreground"
         [igxButtonBackground]="background"
         [disabled]="disabled">Test</span>`
@@ -136,7 +134,7 @@ class ButtonWithAttribsComponent {
 
 @Component({
     template:
-    `
+        `
     <button #flat class="flatBtn" igxButton="flat" [displayDensity]="density">Flat</button>
     <button #raised class="raisedBtn" igxButton="raised" [displayDensity]="density">Raised</button>
     <button #outlined class="outlinedBtn" igxButton="outlined" [displayDensity]="density">Outlined</button>
@@ -151,11 +149,11 @@ class ButtonWithAttribsComponent {
 class ButtonsWithDisplayDensityComponent {
     public density: DisplayDensity = DisplayDensity.comfortable;
 
-    @ViewChild('flat', { read: IgxButtonDirective }) flatButton: IgxButtonDirective;
-    @ViewChild('raised', { read: IgxButtonDirective }) raisedButton: IgxButtonDirective;
-    @ViewChild('outlined', { read: IgxButtonDirective }) outlinedButton: IgxButtonDirective;
-    @ViewChild('fab', { read: IgxButtonDirective }) fabButton: IgxButtonDirective;
-    @ViewChild('icon', { read: IgxButtonDirective }) iconButton: IgxButtonDirective;
+    @ViewChild('flat', { read: IgxButtonDirective, static: true }) flatButton: IgxButtonDirective;
+    @ViewChild('raised', { read: IgxButtonDirective, static: true }) raisedButton: IgxButtonDirective;
+    @ViewChild('outlined', { read: IgxButtonDirective, static: true }) outlinedButton: IgxButtonDirective;
+    @ViewChild('fab', { read: IgxButtonDirective, static: true }) fabButton: IgxButtonDirective;
+    @ViewChild('icon', { read: IgxButtonDirective, static: true }) iconButton: IgxButtonDirective;
 }
 
 /**

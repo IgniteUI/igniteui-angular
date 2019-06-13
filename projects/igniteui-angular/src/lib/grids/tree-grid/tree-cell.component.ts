@@ -47,13 +47,13 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @Input()
     showIndicator = false;
 
-    @ViewChild('indicator', { read: ElementRef })
+    @ViewChild('indicator', { read: ElementRef, static: false })
     public indicator: ElementRef;
 
-    @ViewChild('indentationDiv', { read: ElementRef })
+    @ViewChild('indentationDiv', { read: ElementRef, static: false })
     public indentationDiv: ElementRef;
 
-    @ViewChild('defaultContentElement', { read: ElementRef })
+    @ViewChild('defaultContentElement', { read: ElementRef, static: false })
     public defaultContentElement: ElementRef;
 
     /**

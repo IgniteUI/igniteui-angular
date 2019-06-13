@@ -7,8 +7,8 @@ import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from 'ignite
     styleUrls: ['calendar.sample.scss']
 })
 export class CalendarSampleComponent implements OnInit {
-    @ViewChild('calendar') calendar: IgxCalendarComponent;
-    @ViewChild('calendar1', { read: IgxCalendarComponent }) calendar1: IgxCalendarComponent;
+    @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
+    @ViewChild('calendar1', { read: IgxCalendarComponent, static: true }) calendar1: IgxCalendarComponent;
 
     ngOnInit() {
         this.calendar.disabledDates = [{

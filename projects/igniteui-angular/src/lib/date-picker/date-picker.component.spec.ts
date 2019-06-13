@@ -42,7 +42,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Base Tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -203,7 +203,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('DatePicker with passed date', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerWithPassedDateComponent>;
         let datePicker: IgxDatePickerComponent;
         let inputTarget;
@@ -277,6 +277,10 @@ describe('IgxDatePicker', () => {
         const picker = document.getElementsByClassName('igx-calendar-picker');
         const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
         expect(formattedSubHeaderText).toBe('2019/Oct');
+
+        const buttons = document.getElementsByClassName('igx-button--flat');
+        expect(buttons.length).toEqual(1);
+        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
     });
 
     it('Retemplated calendar in date picker - dropdown mode', () => {
@@ -295,6 +299,10 @@ describe('IgxDatePicker', () => {
         const picker = document.getElementsByClassName('igx-calendar-picker');
         const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
         expect(formattedSubHeaderText).toBe('2019/Oct');
+
+        const buttons = document.getElementsByClassName('igx-button--flat');
+        expect(buttons.length).toEqual(1);
+        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
     });
 
     it('locale propagate calendar value (de-DE)', () => {
@@ -427,7 +435,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
 
         const firstYear = document.getElementsByClassName('igx-calendar__year')[1];
-        const expectedResult = (firstYear as HTMLElement).innerText;
+        const expectedResult = (firstYear as HTMLElement).innerText.trim();
         firstYear.dispatchEvent(new Event('click'));
         tick();
         fixture.detectChanges();
@@ -465,7 +473,7 @@ describe('IgxDatePicker', () => {
     }));
 
     describe('Drop-down opening', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerOpeningComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -520,7 +528,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Drop-down Retemplated Date Picker', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDropDownDatePickerRetemplatedComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -588,7 +596,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Drop-down mode', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerEditableComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -1080,7 +1088,7 @@ describe('IgxDatePicker', () => {
     `
 })
 export class IgxDatePickerWithCustomFormatterComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 
     public date = new Date(2017, 7, 7);
     public customFormatter = (_: Date) => (
@@ -1095,7 +1103,7 @@ export class IgxDatePickerWithCustomFormatterComponent {
 })
 export class IgxDatePickerWithWeekStartComponent {
     public date: Date = new Date(2017, 6, 8);
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1104,7 +1112,7 @@ export class IgxDatePickerWithWeekStartComponent {
     `
 })
 export class IgxDatePickerTestComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 
     public labelVisibility = true;
 }
@@ -1122,7 +1130,7 @@ export class IgxDatePickerWithPassedDateComponent {
         weekday: 'short',
         year: 'numeric'
     };
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1132,7 +1140,7 @@ export class IgxDatePickerWithPassedDateComponent {
 })
 export class IgxDatePickerWIthLocaleComponent {
     public date: Date = new Date(2017, 7, 7);
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1142,7 +1150,7 @@ export class IgxDatePickerWIthLocaleComponent {
 })
 export class IgxDatePickerNgModelComponent {
     public val: Date = new Date(2011, 11, 11);
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1167,14 +1175,14 @@ export class IgxDatePickerRetemplatedComponent { }
             <igx-input-group>
             <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"/>
             </igx-input-group>
-            <button igxButton (click)="openDialog()">Select Date</button>
+            <button igxButton="flat" (click)="openDialog(dropDownTarget)">Select Date</button>
         </ng-template>
     </igx-date-picker>
     `
 })
 export class IgxDropDownDatePickerRetemplatedComponent {
     public date: Date = new Date(2020, 9, 20);
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1184,7 +1192,7 @@ export class IgxDropDownDatePickerRetemplatedComponent {
 })
 export class IgxDatePickerEditableComponent {
     public date: Date = new Date(2011, 9, 20);
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1197,12 +1205,15 @@ export class IgxDatePickerEditableComponent {
             <span class="date__el" (click)="format.yearView()">{{ format.year.combined }}/</span>
             <span class="date__el" (click)="format.monthView()">{{ format.month.combined | titlecase }}</span>
         </ng-template>
+        <ng-template igxDatePickerActions>
+            <button igxButton="flat">TEST</button>
+        </ng-template>
     </igx-date-picker>
     `
 })
 export class IgxDatePickerCustomizedComponent {
     public date: Date = new Date(2019, 9, 20);
-    @ViewChild(IgxDatePickerComponent) public customizedDatePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public customizedDatePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1212,5 +1223,5 @@ export class IgxDatePickerCustomizedComponent {
         `
 })
 export class IgxDatePickerOpeningComponent {
-    @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }

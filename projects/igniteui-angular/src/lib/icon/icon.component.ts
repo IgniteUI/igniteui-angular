@@ -6,7 +6,7 @@ import { IgxIconService } from './icon.service';
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
  *
  * The Ignite UI Icon makes it easy for developers to include material design icons directly in their markup. The icons
- * support custom colors and can be marked as active or disabled using the `isActive` property. This will change the appearence
+ * support custom colors and can be marked as active or disabled using the `isActive` property. This will change the appearance
  * of the icon.
  *
  * Example:
@@ -22,13 +22,13 @@ let NEXT_ID = 0;
 })
 
 export class IgxIconComponent implements OnInit {
-    @ViewChild('noLigature', { read: TemplateRef })
+    @ViewChild('noLigature', { read: TemplateRef, static: true })
     private noLigature: TemplateRef<HTMLElement>;
 
-    @ViewChild('explicitLigature', { read: TemplateRef })
+    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
     private explicitLigature: TemplateRef<HTMLElement>;
 
-    @ViewChild('svgImage', { read: TemplateRef })
+    @ViewChild('svgImage', { read: TemplateRef, static: true })
     private svgImage: TemplateRef<HTMLElement>;
 
     /**

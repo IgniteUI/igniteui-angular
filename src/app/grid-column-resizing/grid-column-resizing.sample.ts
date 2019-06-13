@@ -9,7 +9,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 })
 
 export class GridColumnResizingSampleComponent implements OnInit {
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
     data: any[];

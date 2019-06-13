@@ -33,7 +33,6 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
-import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { DisplayDensity } from '../../core/density';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
@@ -54,7 +53,8 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule
+            ]
         })
             .compileComponents();
     }));
@@ -1572,7 +1572,6 @@ describe('IgxGrid - Filtering actions', () => {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const datePicker = filterUIRow.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
-        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 });
 
@@ -2831,18 +2830,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxGridExcelStyleFilteringModule]
+                IgxGridExcelStyleFilteringModule
+            ]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
     let fix, grid;
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         grid = fix.componentInstance.grid;
         grid.filterMode = FilterMode.excelStyleFilter;
         fix.detectChanges();
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -3432,7 +3432,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const dateExpression = fix.debugElement.query(By.css('igx-excel-style-date-expression'));
         const datePicker = dateExpression.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
-        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 
     it('Should pin/unpin column when clicking pin/unpin icon in header', fakeAsync(() => {
@@ -3929,6 +3928,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             [ 'Select All', '20', '254' ],
             [ true, true, true ]);
     }));
+
+    it('Should display the ESF based on the filterIcon within the grid', async() => {
+        // Test prerequisites
+        grid.width = '800px';
+        fix.detectChanges();
+        for (const column of grid.columns) {
+            column.width = '300px';
+        }
+        grid.cdr.detectChanges();
+        await wait(16);
+
+        // Scroll a bit to the right, so the ProductName column is not fully visible.
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+        await wait(100);
+        fix.detectChanges();
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Verify that the left, top and right borders of the ESF are within the grid.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const gridRect = gridNativeElement.getBoundingClientRect();
+        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        const excelMenuRect = excelMenu.getBoundingClientRect();
+        expect(excelMenuRect.left >= gridRect.left).toBe(true, 'ESF spans outside the grid on the left');
+        expect(excelMenuRect.top >= gridRect.top).toBe(true, 'ESF spans outside the grid on the top');
+        expect(excelMenuRect.right <= gridRect.right).toBe(true, 'ESF spans outside the grid on the right');
+    });
 });
 
 const expectedResults = [];
