@@ -300,31 +300,6 @@ fdescribe('IgxSlider', () => {
             expect(Math.round(slider.value as number)).toBe(59);
         });
 
-        it('should not move thumb slider and value should remain the same when slider is disabled', fakeAsync(() => {
-            slider.disabled = true;
-            slider.value = 30;
-            tick();
-            fixture.detectChanges();
-
-            const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
-            panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-            tick(1000);
-            fixture.detectChanges();
-            expect(Math.round(slider.value as number)).toBe(30);
-        }));
-
-        xit('should move thumb slider to value 60', (async () => {
-            slider.value = 30;
-            fixture.detectChanges();
-            expect(Math.round(slider.value as number)).toBe(30);
-
-            const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
-            await panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-            await wait(100);
-
-            expect(Math.round(slider.value as number)).toBe(60);
-        }));
-
         it('Value should remain to the max one if it exceeds.', () => {
             const fix = TestBed.createComponent(SliderMinMaxComponent);
             fix.detectChanges();
@@ -347,22 +322,51 @@ fdescribe('IgxSlider', () => {
             expect(sliderRef.maxValue).toEqual(expectedMax);
         });
 
-        function panRight(element, elementHeight, elementWidth, duration) {
-            const panOptions = {
-                deltaX: elementWidth * 0.6,
-                deltaY: 0,
-                duration,
-                pos: [element.offsetLeft, elementHeight * 0.5]
-            };
+        it('continuous(smooth) sliding should be allowed', (done) => {
+            const fix = TestBed.createComponent(SliderMinMaxComponent);
+            fix.detectChanges();
 
-            return new Promise((resolve, reject) => {
-                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-                Simulator.setType('touch');
-                Simulator.gestures.pan(element, panOptions, () => {
-                    resolve();
-                });
+            const sliderInstance = fix.componentInstance.slider;
+            sliderInstance.continuous = true;
+            fix.detectChanges();
+
+            expect(sliderInstance.continuous).toBe(true);
+            expect(slider.value).toBe(0);
+            const sliderEl = fix.debugElement.query(By.css('.igx-slider')).nativeElement;
+            sliderEl.dispatchEvent( new Event('pointerdown'));
+            fix.detectChanges();
+            expect(sliderEl).toBeDefined();
+            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
+            .then(() => {
+                fix.detectChanges();
+                const activeTumb = fix.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+                expect(sliderInstance.value).toBeGreaterThan(0);
+                expect(activeTumb).toBeNull();
+                done();
             });
-        }
+        });
+
+        it('should not move thumb slider and value should remain the same when slider is disabled', (done) => {
+            const fix = TestBed.createComponent(SliderMinMaxComponent);
+            fix.detectChanges();
+
+            const sliderInstance = fix.componentInstance.slider;
+            sliderInstance.disabled = true;
+            fix.detectChanges();
+
+            const sliderEl = fix.debugElement.query(By.css('.igx-slider')).nativeElement;
+            sliderEl.dispatchEvent( new Event('pointerdown'));
+            fix.detectChanges();
+            expect(sliderEl).toBeDefined();
+            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
+            .then(() => {
+                fix.detectChanges();
+                const activeTumb = fix.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+                expect(activeTumb).toBeDefined();
+                expect(sliderInstance.value).toBe(sliderInstance.minValue);
+                done();
+            });
+         });
     });
 
     describe('RANGE slider Base tests', () => {
@@ -499,6 +503,26 @@ fdescribe('IgxSlider', () => {
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
         }));
+
+        it('continuous(smooth) sliding should be allowed', (done) => {
+            slider.continuous = true;
+            fixture.detectChanges();
+
+            const sliderEl = fixture.debugElement.query(By.css('.igx-slider')).nativeElement;
+            sliderEl.dispatchEvent( new Event('pointerdown'));
+            fixture.detectChanges();
+            expect(sliderEl).toBeDefined();
+            return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
+            .then(() => {
+                fixture.detectChanges();
+                const activeToTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+                const activeFromTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
+                expect(slider.value).toEqual({ lower: 60, upper: 100 });
+                expect(activeToTumb).toBeNull();
+                expect(activeFromTumb).toBeNull();
+                done();
+            });
+        });
     });
 
     describe('Slider - List View', () => {
@@ -602,7 +626,7 @@ fdescribe('IgxSlider', () => {
             expect(slider.upperLabel).toEqual('Spring');
 
             // when you try to set invalid value should be better leave to old value rather to reset ???????
-/*             slider.upperBound = 4;
+            slider.upperBound = 4;
             fixture.detectChanges();
             expect(slider.upperBound).toBe(2);
             slider.lowerBound = -1;
@@ -618,7 +642,6 @@ fdescribe('IgxSlider', () => {
             fixture.detectChanges();
             expect(slider.upperBound).toBe(2);
             expect(slider.lowerBound).toBe(1);
-*/
         });
 
         it('Label view should not be enabled if labels array is set uncorrectly', async() => {
@@ -639,7 +662,7 @@ fdescribe('IgxSlider', () => {
 
             expect(slider.labelsViewEnabled).toBe(true);
 
-/*            slider.labels = undefined;
+            slider.labels = undefined;
             fixture.detectChanges();
 
             expect(slider.labelsViewEnabled).toBe(false);
@@ -647,7 +670,7 @@ fdescribe('IgxSlider', () => {
             slider.labels = null;
             fixture.detectChanges();
 
-            expect(slider.labelsViewEnabled).toBe(false); */
+            expect(slider.labelsViewEnabled).toBe(false);
         });
 
         it('should be able to track the value changes per every slide action through an event emitter', async() => {
@@ -727,9 +750,6 @@ fdescribe('IgxSlider', () => {
             expect(maxValue).toBe(slider.maxValue);
             expect(readOnly).toBe('false');
         });
-
-
-
     });
 
     describe('Slider  type: Range - List View', () => {
@@ -852,20 +872,20 @@ fdescribe('IgxSlider', () => {
             // when you try to set invalid value should be better leave to old value rather to reset ???????
             slider.upperBound = 7;
             fixture.detectChanges();
-            expect(slider.upperBound).toBe(6);
+            expect(slider.upperBound).toBe(4);
             slider.lowerBound = -1;
             fixture.detectChanges();
-            expect(slider.lowerBound).toBe(0);
+            expect(slider.lowerBound).toBe(1);
 
             slider.lowerBound = 9;
             fixture.detectChanges();
-            expect(slider.upperBound).toBe(6);
-            expect(slider.lowerBound).toBe(0);
+            expect(slider.upperBound).toBe(4);
+            expect(slider.lowerBound).toBe(1);
 
             slider.upperBound = 0;
             fixture.detectChanges();
-            expect(slider.upperBound).toBe(6);
-            expect(slider.lowerBound).toBe(0);
+            expect(slider.upperBound).toBe(4);
+            expect(slider.lowerBound).toBe(1);
         });
 
         it('Label view should not be enabled if labels array is set uncorrectly', async() => {
@@ -886,7 +906,7 @@ fdescribe('IgxSlider', () => {
 
             expect(slider.labelsViewEnabled).toBe(true);
 
-/*             slider.labels = undefined;
+            slider.labels = undefined;
             fixture.detectChanges();
 
             expect(slider.labelsViewEnabled).toBe(false);
@@ -894,7 +914,7 @@ fdescribe('IgxSlider', () => {
             slider.labels = null;
             fixture.detectChanges();
 
-            expect(slider.labelsViewEnabled).toBe(false); */
+            expect(slider.labelsViewEnabled).toBe(false);
         });
 
         it('should be able to track the value changes per every slide action through an event emitter', async() => {
@@ -1277,6 +1297,21 @@ fdescribe('IgxSlider', () => {
             expect(instance.getEditElement()).toBe(editElement);
         });
     });
+
+    function panRight(element, elementHeight, elementWidth, duration) {
+        const panOptions = {
+            deltaX: elementWidth * 0.6,
+            deltaY: 0,
+            duration,
+            pos: [element.offsetLeft, elementHeight * 0.5]
+        };
+
+        return new Promise((resolve, reject) => {
+            Simulator.gestures.pan(element, panOptions, () => {
+                resolve();
+            });
+        });
+    }
 });
 @Component({
     selector: 'igx-slider-test-component',
