@@ -142,7 +142,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -221,7 +221,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        }  else if (event.key === KEYS.TAB) {
+        } else if (event.key === KEYS.TAB) {
             if (event.shiftKey) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -298,7 +298,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed ) {
+        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
@@ -716,6 +716,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
             this.transform(this.chipAreaScrollOffset);
         }
+    }
+
+    /**
+    * @hidden
+    * Resets the chips area
+    * @memberof IgxGridFilteringRowComponent
+    */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
     }
 
     private transform(offset: number) {
