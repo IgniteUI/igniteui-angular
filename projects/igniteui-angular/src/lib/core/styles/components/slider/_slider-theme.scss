@@ -75,7 +75,7 @@
     $slider-track-height: 2px;
 
     // Slider Thumb
-    $slider-thumb-width: 14px;
+    $slider-thumb-width: 40px;
     $slider-thumb-height: $slider-thumb-width;
     $slider-thumb-radius: $slider-thumb-width / 2;
 
@@ -143,42 +143,37 @@
     }
 
     %igx-thumb-display {
-        display: flex;
         position: absolute;
+        display: flex;
         justify-content: center;
-        flex-flow: row nowrap;
-        width: $slider-thumb-width;
-        height: $slider-thumb-height;
-        margin-left: -$slider-thumb-width / 2;
-        top: -$slider-thumb-height / 2;
+        align-items: center;
+        flex-direction: column;
         outline: none;
-
-        &:hover %igx-thumb-dot::after {
-            opacity: .12;
-            transform: scale(1);
-        }
+        top: -#{$slider-thumb-radius + $slider-label-height};
+        margin-left: -#{$slider-thumb-radius};
 
         &:focus %igx-thumb-dot::after {
             opacity: .18;
-            transform: scale(1);
+            /* 32 / 40 */
+            transform: scale(.8);
         }
     }
 
     %igx-thumb-label {
-        display: flex;
         position: relative;
+        display: flex;
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
+        pointer-events: none;
         min-width: $slider-label-width;
         height: $slider-label-height;
         padding: $slider-label-padding;
         border-radius: $slider-label-radius;
-        top: -50px;
-        left: 0;
+        margin: 0 auto;
         font-size: $slider-label-font-size;
         font-weight: $slider-label-font-weight;
-        line-height: #{$slider-label-font-size} + 1px;
+        line-height: 1;
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
         opacity: 0;
@@ -203,8 +198,8 @@
         &::before {
             content: '';
             position: absolute;
-            top: 40px;
-            margin: auto;
+            top: 42px;
+            left: calc(50% - 1px);
             border-left: 1px solid;
             border-right: 1px solid;
             border-top: 14px solid;
@@ -213,43 +208,64 @@
     }
 
     %igx-thumb-dot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
+        position: relative;
         left: 0;
-        width: inherit;
-        height: inherit;
-        border-radius: $slider-thumb-radius;
-        background: --var($theme, 'thumb-color');
-        transform: scale(1) rotate(45deg);
-        transform-origin: 50% 50% 0;
-        opacity: 1;
-        transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
+        padding: 20px;
+
+        &:hover::after {
+            opacity: .12;
+            /* 32 / 40 */
+            transform: scale(.8);
+        }
+
+        &::before {
+            position: absolute;
+            content: '';
+            width: 12px;
+            height: 12px;
+            left: #{$slider-thumb-radius - 6px};
+            top: #{$slider-thumb-radius - 6px};
+            background: --var($theme, 'thumb-color');
+            transform: rotate(45deg);
+            transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
+            border-radius: $slider-thumb-width / 2;
+        }
 
         &::after {
             position: absolute;
             content: '';
-            background: inherit;
-            width: 32px;
-            height: 32px;
-            border-radius: 16px;
+            width: $slider-thumb-width;
+            height: $slider-thumb-height;
+            background: --var($theme, 'thumb-color');
+            top: 0;
+            left: 0;
             opacity: 0;
             transform: scale(0);
+            transform-origin: center center;
             transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
+            border-radius: 50%;
         }
     }
 
     %igx-thumb-dot--disabled {
-        background: --var($theme, 'disabled-thumb-color');
+        &::before {
+            background: --var($theme, 'disabled-thumb-color');
+        }
+
+        &::after {
+            background: --var($theme, 'disabled-thumb-color');
+        }
     }
 
     %igx-thumb-dot--active {
-        border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
+        &::before {
+            border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
+        }
 
         &::after {
             opacity: .24;
-            transform: scale(1.5) !important;
+            /* 48 / 40 */
+            transform: scale(1.2) !important;
         }
     }
 
