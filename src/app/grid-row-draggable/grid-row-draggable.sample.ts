@@ -16,8 +16,8 @@ enum DragIcon {
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 
-    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;
-    @ViewChild("grid2", { read: IgxGridComponent }) public grid2: IgxGridComponent;
+    @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid2', { read: IgxGridComponent, static: true }) public grid2: IgxGridComponent;
     remote: Observable<any[]>;
     newData = [];
     dragdrop = true;

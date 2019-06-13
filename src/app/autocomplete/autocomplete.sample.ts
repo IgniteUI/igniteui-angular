@@ -9,7 +9,7 @@ import { IgxDialogComponent } from 'igniteui-angular';
     templateUrl: `autocomplete.sample.html`
 })
 export class AutocompleteSampleComponent {
-    @ViewChild('alert', { read: IgxDialogComponent }) public alert: IgxDialogComponent;
+    @ViewChild('alert', { read: IgxDialogComponent, static: true }) public alert: IgxDialogComponent;
     public travel: FormGroup;
     worldInfo;
     attractions;
