@@ -10,7 +10,7 @@ import { RemoteService } from '../shared/remote.service';
 })
 export class GridSelectionComponent implements AfterViewInit {
 
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
     remote: Observable<any[]>;
     selection = true;

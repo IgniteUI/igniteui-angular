@@ -77,7 +77,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid')
+    @ViewChild('hgrid', { static: true })
     private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**

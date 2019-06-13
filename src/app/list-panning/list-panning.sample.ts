@@ -8,7 +8,7 @@ import { IgxToastComponent } from 'igniteui-angular';
 })
 export class ListPanningSampleComponent {
 
-    @ViewChild('toast')
+    @ViewChild('toast', { static: true })
     toast: IgxToastComponent;
 
     public navItems: object[] = [{

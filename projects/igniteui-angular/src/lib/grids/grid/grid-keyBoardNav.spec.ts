@@ -452,16 +452,16 @@ describe('IgxGrid - Keyboard navigation', () => {
     }));
 
     describe('in virtualized grid', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
-        });
+        }));
 
         it('should allow navigating down', async () => {
             const cell = grid.getCellByColumn(4, 'index');
@@ -865,7 +865,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             });
         });
 
-        fit('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
+        it('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100, 50);
             fix.componentInstance.data = fix.componentInstance.generateData(100);
 
@@ -908,10 +908,10 @@ describe('IgxGrid - Keyboard navigation', () => {
     });
 
     describe('Group By navigation ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fix;
         let grid: IgxGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(DefaultGroupBYGridComponent);
             grid = fix.componentInstance.grid;
             fix.componentInstance.width = '600px';
@@ -919,7 +919,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             grid.columnWidth = '100px';
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-        });
+        }));
 
         it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', async(() => {
             grid.groupBy({
@@ -1474,7 +1474,7 @@ export class DefaultGridComponent {
     public selectedCell: IgxGridCellComponent;
     public clickedCell: IgxGridCellComponent;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public cellSelected(event: IGridCellEventArgs) {
@@ -1508,7 +1508,7 @@ export class CtrlKeyKeyboardNagivationComponent {
 
     public selectedCell: IgxGridCellComponent;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public cellSelected(event: IGridCellEventArgs) {
@@ -1533,10 +1533,10 @@ export class DefaultGroupBYGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: TemplateRef })
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
     public enableSorting = false;

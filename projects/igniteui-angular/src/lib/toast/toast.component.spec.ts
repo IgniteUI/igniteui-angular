@@ -136,5 +136,5 @@ describe('IgxToast', () => {
                </igx-toast>`
 })
 class ToastInitializeTestComponent {
-    @ViewChild(IgxToastComponent) public toast: IgxToastComponent;
+    @ViewChild(IgxToastComponent, { static: true }) public toast: IgxToastComponent;
 }

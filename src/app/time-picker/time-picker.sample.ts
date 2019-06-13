@@ -29,10 +29,10 @@ export class TimePickerSampleComponent implements AfterViewInit {
         positionStrategy: new AutoPositionStrategy()
     };
 
-    @ViewChild('tp', { read: IgxTimePickerComponent })
+    @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
     public tp: IgxTimePickerComponent;
 
-    @ViewChild('target')
+    @ViewChild('target', { static: false })
     public target: IgxInputDirective;
 
     ngAfterViewInit() {
@@ -56,7 +56,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     }
 
     public onBlur(inputValue, timePickerValue) {
-        const parts = inputValue.split(":");
+        const parts = inputValue.split(':');
 
         if (parts.length === 2) {
             timePickerValue.setHours(parts[0], parts[1]);

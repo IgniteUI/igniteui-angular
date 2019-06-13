@@ -6,7 +6,7 @@ import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspac
 import * as os from 'os';
 import { addResetCss } from './add-normalize';
 import { getWorkspace } from '@schematics/angular/utility/config';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 /**
  *  ES7 `Object.entries` needed for igxGrid to render in IE.
