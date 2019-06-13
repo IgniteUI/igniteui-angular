@@ -1024,8 +1024,8 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, static: true })
-    protected headTemplate: IgxCellHeaderTemplateDirective;
+    @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, static: true, descendants: false })
+    protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
     /**
      *@hidden
      */
@@ -1056,8 +1056,8 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
         }
-        if (this.headTemplate) {
-            this._headerTemplate = this.headTemplate.template;
+        if (this.headTemplate && this.headTemplate.length) {
+            this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
@@ -1677,21 +1677,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @hidden
      */
     set bodyTemplate(template: TemplateRef<any>) { }
-    /**
-     * Returns a reference to the header template.
-     * ```typescript
-     * let headerTemplate = this.columnGroup.headerTemplate;
-     * ```
-     * @memberof IgxColumnGroupComponent
-     */
-    get headerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     * @hidden
-     * @memberof IgxColumnGroupComponent
-     */
-    set headerTemplate(template: TemplateRef<any>) { }
+
     /**
      * Returns a reference to the inline editor template.
      * ```typescript
@@ -1746,6 +1732,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             @ContentChildren with descendants still returns the `parent`
             component in the query list.
         */
+        if (this.headTemplate && this.headTemplate.length) {
+            this._headerTemplate = this.headTemplate.toArray()[0].template;
+        }
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
             child.parent = this;
