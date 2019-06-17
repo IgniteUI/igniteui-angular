@@ -598,9 +598,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        if (val && (this.primaryKey === undefined || this.primaryKey === null)) {
-            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
-        }
         this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
