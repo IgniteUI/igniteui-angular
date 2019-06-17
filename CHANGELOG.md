@@ -32,6 +32,8 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 ## 7.3.4
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
@@ -80,7 +82,7 @@ All notable changes for each version of this project will be documented in this 
 - `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
     ```
-        @include igx-core($print-layout: false); 
+        @include igx-core($print-layout: false);
     ```
 
 - `Pager`
@@ -154,7 +156,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
-- `igxTreeGrid` 
+- `igxTreeGrid`
     - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
@@ -238,9 +240,9 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ## 7.2.9
 `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
-  
+
 ```
- @include igx-core($print-layout: false); 
+ @include igx-core($print-layout: false);
 ```
 
 - `Pager`
@@ -258,7 +260,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
 - [igx-grid] some cells don't go into edit state or selected state when resizing window. #4746
 - igx-tree-grid when no data in grid pagination shows wrong #4666
 - ElasticPositionStrategy should resize shown element with Center/Middle directions #4564
-- ESF custom dialog new filter not fully visible #4639 
+- ESF custom dialog new filter not fully visible #4639
 - igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
 - Grid height is calculated wrongly as grid width narrows #4745
 - [igx-grid][IE11] filtering problems with IME mode. #4636

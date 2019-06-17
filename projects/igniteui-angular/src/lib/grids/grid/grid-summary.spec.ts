@@ -706,6 +706,55 @@ describe('IgxGrid - Summaries', () => {
 
         });
 
+        it('CRUD: should not recalc summaries when update cell and rowEditing is set to TRUE', async() => {
+            const fixture = TestBed.createComponent(SummariesGroupByWithScrollsComponent);
+            await wait(30);
+            fixture.detectChanges();
+            const grid = fixture.componentInstance.grid;
+            grid.getColumnByName('ID').editable = true;
+            grid.getColumnByName('ParentID').editable = true;
+            fixture.detectChanges();
+            grid.rowEditable = true;
+            fixture.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fixture.detectChanges();
+            const cell = grid.getCellByColumn(1, 'ParentID');
+            cell.nativeElement.focus();
+            fixture.detectChanges();
+
+            let summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+            await wait(50);
+            fixture.detectChanges();
+
+            const editTemplate = fixture.debugElement.query(By.css('input[type=\'number\']'));
+            UIInteractions.sendInput(editTemplate, 87);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+            await wait(50);
+            fixture.detectChanges();
+
+            summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
+
+            const idCell = grid.getCellByColumn(1, 'ID');
+            UIInteractions.triggerKeyDownEvtUponElem('enter', idCell.nativeElement, true);
+            await wait(50);
+            fixture.detectChanges();
+
+            summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 1,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '87', '87', '87', '87']);
+        });
+
         it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', fakeAsync(/** height/width setter rAF */() => {
             const fixture = TestBed.createComponent(SummariesGroupByWithScrollsComponent);
             fixture.detectChanges();
@@ -1482,6 +1531,46 @@ describe('IgxGrid - Summaries', () => {
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['19', '25']);
+        }));
+
+        it('CRUD: summaries should be updated when row is submitted when rowEditable=true', (async () => {
+            grid.getColumnByName('Age').editable = true;
+            grid.getColumnByName('HireDate').editable = true;
+            fix.detectChanges();
+            grid.rowEditable = true;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(1, 'Age');
+
+            let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+            await wait(50);
+            fix.detectChanges();
+
+            const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
+            UIInteractions.sendInput(editTemplate, 87);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+            await wait(50);
+            fix.detectChanges();
+
+            summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
+
+            const hireDateCell = grid.getCellByColumn(1, 'HireDate');
+            UIInteractions.triggerKeyDownEvtUponElem('enter', hireDateCell.nativeElement, true);
+            await wait(50);
+            fix.detectChanges();
+
+            summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '87']);
         }));
 
         it('Grouping: Update row and change grouping', (async () => {
