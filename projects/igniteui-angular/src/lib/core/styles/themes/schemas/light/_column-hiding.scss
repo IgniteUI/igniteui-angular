@@ -11,7 +11,7 @@
 /// @prop {Map} title-color [igx-color: ('primary', 500)]- The text color used for the title of the list.
 /// @prop {Color} background-color [transparent] - The background color of the panel.
 /// @see $default-palette
-$_light-column-hiding:extend((
+$_light-column-hiding: extend((
     background-color: transparent,
     title-color: (
         igx-color: ('primary', 500)

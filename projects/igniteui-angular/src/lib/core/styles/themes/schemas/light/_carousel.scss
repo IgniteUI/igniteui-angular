@@ -17,7 +17,7 @@
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
 /// @see $default-palette
-$_light-carousel:extend((
+$_light-carousel: extend((
     button-background: #fff,
     button-hover-background: #fff,
 

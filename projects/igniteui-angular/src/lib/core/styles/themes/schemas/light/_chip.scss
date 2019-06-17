@@ -26,7 +26,7 @@
 /// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
 /// @see $default-palette
-$_light-chip:extend((
+$_light-chip: extend((
     text-color: (
         igx-color: ('grays', 700)
     ),

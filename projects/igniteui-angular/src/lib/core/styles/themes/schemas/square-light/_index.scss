@@ -86,7 +86,7 @@
 /// @property {Map} igx-tooltip [$_light-tooltip]
 
 $light-square-schema: (
-    igx-avatar: extend($_light-avatar ,$_square-shape-avatar),
+    igx-avatar: extend($_light-avatar, $_square-shape-avatar),
     igx-badge: extend($_light-badge, $_square-shape-badge),
     igx-banner: extend($_light-banner, $_square-shape-banner),
     igx-bottom-nav: extend($_light-bottom-nav, $_square-shape-bottom-nav),

@@ -26,7 +26,7 @@
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for button-group component.
 /// @see $default-palette
-$_light-button-group:extend((
+$_light-button-group: extend((
     item-background: #fff,
 
     item-border-color: (

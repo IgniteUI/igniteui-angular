@@ -68,7 +68,7 @@
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
 /// @see $default-palette
-$_light-grid:extend((
+$_light-grid: extend((
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #fff

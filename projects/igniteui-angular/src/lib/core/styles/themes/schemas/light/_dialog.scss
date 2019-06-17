@@ -14,7 +14,7 @@
 /// @prop {number} elevation [24] - The elevation level for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for dialog component.
 /// @see $default-palette
-$_light-dialog:extend((
+$_light-dialog: extend((
     background: (
         igx-color: 'surface'
     ),

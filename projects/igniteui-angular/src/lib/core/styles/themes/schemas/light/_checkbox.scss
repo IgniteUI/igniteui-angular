@@ -15,7 +15,7 @@
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for checkbox date.
 /// @see $default-palette
-$_light-checkbox:extend((
+$_light-checkbox: extend((
     tick-color: #fff,
 
     label-color: (

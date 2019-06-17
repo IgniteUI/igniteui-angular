@@ -18,7 +18,7 @@
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for expansion-panel.
 /// @see $default-palette
-$_light-expansion-panel:extend((
+$_light-expansion-panel: extend((
     header-background: #fff,
     body-background: #fff,
 

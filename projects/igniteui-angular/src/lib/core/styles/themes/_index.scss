@@ -281,8 +281,8 @@
 
     @include igx-theme(
         $palette: igx-palette(
-                $primary,
-                $secondary,
+            $primary,
+            $secondary,
             $surface: if($surface != #fff, $surface, #fff),
             $grays: #000
         ),

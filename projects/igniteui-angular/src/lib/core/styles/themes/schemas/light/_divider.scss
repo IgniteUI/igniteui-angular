@@ -12,7 +12,7 @@
 /// @property {Map} color [igx-color: ('grays', 300)] - The color used for the divider.
 ///
 /// @see $default-palette
-$_light-divider:extend((
+$_light-divider: extend((
     color: (
         igx-color: ('grays', 300)
     )
