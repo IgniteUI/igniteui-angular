@@ -1239,7 +1239,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _setLocaleToDate(value: Date): string {
-        return value.toLocaleDateString(this.locale);
+        const localeDateStr = value.toLocaleDateString(this.locale);
+
+        // the replace() is a workaround fixing the following IE11 issue:
+        // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
+        // precedes each portion that comprises the total date... For more information read this article:
+        // tslint:disable-next-line: max-line-length
+        // https://www.csgpro.com/blog/2016/08/a-bad-date-with-internet-explorer-11-trouble-with-new-unicode-characters-in-javascript-date-strings/
+        return localeDateStr.replace(/[^ -~]/g, '');
     }
 
     private _getCursorPosition(): number {
