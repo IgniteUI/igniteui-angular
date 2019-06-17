@@ -139,37 +139,37 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ViewChild('months', { read: IgxMonthsViewComponent })
+    @ViewChild('months', { read: IgxMonthsViewComponent, static: false })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('monthsBtn')
+    @ViewChild('monthsBtn', { static: false })
     public monthsBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('decade', { read: IgxYearsViewComponent })
+    @ViewChild('decade', { read: IgxYearsViewComponent, static: false })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', {read: IgxDaysViewComponent})
+    @ViewChild('days', { read: IgxDaysViewComponent, static: false })
     public daysView: IgxDaysViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('prevMonthBtn')
+    @ViewChild('prevMonthBtn', { static: false })
     public prevMonthBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('nextMonthBtn')
+    @ViewChild('nextMonthBtn', { static: false })
     public nextMonthBtn: ElementRef;
 
     /**
@@ -274,14 +274,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective })
+    @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true  })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
     /**
      * @hidden
      */
     // tslint:disable-next-line:max-line-length
-    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective })
+    @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true  })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
     /**

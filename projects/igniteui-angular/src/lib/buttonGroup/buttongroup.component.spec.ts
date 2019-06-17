@@ -236,14 +236,13 @@ describe('IgxButtonGroup', () => {
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
 class InitButtonGroupComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 
-    private buttons: Button[];
+    public buttons: Button[];
 
     constructor() {}
 
     public ngOnInit(): void {
-
         this.buttons = [
             new Button({
                 disabled: false,
@@ -266,11 +265,11 @@ class InitButtonGroupComponent implements OnInit {
                             [values]="cities" [alignment]="alignment">
                         </igx-buttongroup>` })
 class InitButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 
-    private cities: Button[];
+    public cities: Button[];
 
-    private alignment = ButtonGroupAlignment.vertical;
+    public alignment = ButtonGroupAlignment.vertical;
 
     constructor() {}
 
@@ -302,40 +301,6 @@ class InitButtonGroupWithValuesComponent implements OnInit {
     }
 }
 
-@Component({ template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
-                            [values]="buttons" [alignment]="alignment">
-                        </igx-buttongroup>` })
-class ButtonGroupWithValuesComponent implements OnInit {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
-
-    private buttons: Button[];
-
-    private alignment = ButtonGroupAlignment.vertical;
-
-    constructor() {}
-
-    public ngOnInit(): void {
-
-        this.buttons = [
-            new Button({
-                disabled: false,
-                label: 'Euro',
-                selected: false,
-                type: 'raised'
-            }),
-            new Button({
-                label: 'British Pound',
-                selected: false,
-                type: 'raised'
-            }),
-            new Button({
-                label: 'US Dollar',
-                selected: false,
-                type: 'raised'
-            })
-        ];
-    }
-}
 
 @Component({ template: `<igx-buttongroup [multiSelection]="multiselection" [alignment]="alignment">
                             <button igxButton>Sofia</button>
@@ -344,9 +309,9 @@ class ButtonGroupWithValuesComponent implements OnInit {
                             <button igxButton [disabled]="'true'">Tokio</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupComponent {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 
-    private alignment = ButtonGroupAlignment.vertical;
+    public alignment = ButtonGroupAlignment.vertical;
     public multiselection = true;
 }
 
@@ -355,5 +320,5 @@ class TemplatedButtonGroupComponent {
                             <button igxButton>London</button>
                         </igx-buttongroup>` })
 class TemplatedButtonGroupDesplayDensityComponent {
-    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
 }

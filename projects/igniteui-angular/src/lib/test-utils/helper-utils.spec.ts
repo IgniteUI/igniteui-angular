@@ -20,7 +20,7 @@ export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: I
 }
 
 export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) {
-    this.setupGridScrollDetection(fixture, hierarchicalGrid);
+    setupGridScrollDetection(fixture, hierarchicalGrid);
 
     const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
     existingChildren.forEach(child =>  setupGridScrollDetection(fixture, child));
@@ -28,7 +28,7 @@ export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<a
     const layouts = hierarchicalGrid.allLayoutList.toArray();
     layouts.forEach((layout) => {
         layout.onGridCreated.subscribe(evt => {
-            this.setupGridScrollDetection(fixture, evt.grid);
+            setupGridScrollDetection(fixture, evt.grid);
         });
     });
 }
@@ -146,11 +146,6 @@ export class HelperUtils {
                 const cIndx = colIndex || 0;
                 const colKey = grid.columnList.toArray()[cIndx].field;
                 const nextIndex =  dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
-                let nextRow =  grid.getRowByIndex(nextIndex);
-                if (!nextRow) {
-                    nextRow = grid.summariesRowList.find( s => s.index === nextIndex);
-                }
-
                 let elem;
                 if (row) {
                     elem = row instanceof IgxGridGroupByRowComponent ?
@@ -169,20 +164,9 @@ export class HelperUtils {
 
                 UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, false, shift);
 
-                if (nextRow) {
-                    await wait(40);
-                    HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
-                        .then(() => { resolve(); });
-                } else {
-                    // else wait for chunk to load.
-                    grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                        next: async () => {
-                            // nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                            HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
-                                .then(() => { resolve(); });
-                        }
-                    });
-                }
+                await wait(40);
+                HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
+                    .then(() => { resolve(); });
             })
 
     public static navigateHorizontallyToIndex = (
