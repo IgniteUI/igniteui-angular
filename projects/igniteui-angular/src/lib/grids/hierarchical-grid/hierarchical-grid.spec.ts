@@ -498,6 +498,146 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
+describe('IgxHierarchicalGrid Children Sizing', () => {
+    configureTestSuite();
+    let fixture;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    const TBODY_CLASS = '.igx-grid__tbody-content';
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridSizingComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(async(() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridSizingComponent);
+        fixture.detectChanges();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+    }));
+
+    it('should create a child grid with null height when its data is unset then set to a number under 10', fakeAsync(() => {
+        fixture.detectChanges();
+        // expansion
+        const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        const defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        childGrid.data = fixture.componentInstance.data;
+        fixture.detectChanges();
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        expect(childGrid.data.length).toEqual(1);
+        expect(childGrid.rowList.length).toEqual(1);
+    }));
+
+    it('should create a child grid with auto-size when its data is unset then set to a number above 10', fakeAsync(() => {
+        fixture.detectChanges();
+        // expansion
+        const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        childGrid.data = fixture.componentInstance.fullData;
+        tick();
+        fixture.detectChanges();
+        defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBe('510px');
+        expect(childGrid.calcHeight).toBe(510);
+        expect(childGrid.data.length).toEqual(100000);
+        expect(childGrid.rowList.length).toEqual(11);
+    }));
+
+    it('should create a child grid with auto-size when its data is unset then set to a number above 10 and height is 50%', fakeAsync(() => {
+        fixture.componentInstance.childHeight = '50%';
+        fixture.detectChanges();
+        // expansion
+        const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        childGrid.data = fixture.componentInstance.fullData;
+        tick();
+        fixture.detectChanges();
+        defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBe('510px');
+        expect(childGrid.calcHeight).toBe(510);
+        expect(childGrid.data.length).toEqual(100000);
+        expect(childGrid.rowList.length).toEqual(11);
+    }));
+
+    it('should create a child grid fixed size when height is set to px', fakeAsync(() => {
+        fixture.componentInstance.childHeight = '600px';
+        fixture.detectChanges();
+        // expansion
+        const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        let defaultHeightNum = parseInt(defaultHeight, 10);
+        expect(defaultHeightNum).toBeGreaterThan(500);
+        expect(defaultHeightNum).toBeLessThan(600);
+        expect(childGrid.calcHeight).toBeGreaterThan(500);
+        expect(childGrid.calcHeight).toBeLessThan(600);
+        expect(childGrid.rowList.length).toEqual(0);
+        childGrid.data = fixture.componentInstance.fullData;
+        tick();
+        fixture.detectChanges();
+        defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        defaultHeightNum = parseInt(defaultHeight, 10);
+        expect(defaultHeightNum).toBeGreaterThan(500);
+        expect(defaultHeightNum).toBeLessThan(600);
+        expect(childGrid.calcHeight).toBeGreaterThan(500);
+        expect(childGrid.calcHeight).toBeLessThan(600);
+        expect(childGrid.data.length).toEqual(100000);
+        expect(childGrid.rowList.length).toEqual(12);
+    }));
+
+    it('should create a child grid null height regardless of data when height is set to null', fakeAsync(() => {
+        fixture.componentInstance.childHeight = null;
+        fixture.detectChanges();
+        // expansion
+        const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        childGrid.data = fixture.componentInstance.semiData;
+        tick();
+        fixture.detectChanges();
+        defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeNull();
+        expect(childGrid.calcHeight).toBeNull();
+        expect(childGrid.data.length).toEqual(15);
+        expect(childGrid.rowList.length).toEqual(15);
+    }));
+});
+
 describe('IgxHierarchicalGrid Remote Scenarios', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
@@ -873,5 +1013,35 @@ export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGr
         this.islandCols2 = this.cols2;
         this.cdr.detectChanges();
     }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data"
+        [autoGenerate]="false" [height]="'600px'" [width]="'700px'" #hierarchicalGrid>
+        <igx-column field="ID"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [width]="'500px'" [height]="childHeight" #rowIsland>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridSizingComponent {
+    public childHeight = '100%';
+    public data = [
+        {
+            ID: 1,
+            ProductName: 'Car'
+        }
+    ];
+    public fullData = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
+    public semiData = Array.from({ length: 15 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
+
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent })
+    public rowIsland: IgxRowIslandComponent;
 }
 
