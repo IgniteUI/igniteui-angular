@@ -231,7 +231,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -599,7 +599,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
