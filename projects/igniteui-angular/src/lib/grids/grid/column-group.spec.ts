@@ -1,7 +1,7 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, TemplateRef } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -37,7 +37,8 @@ describe('IgxGrid - multi-column headers', () => {
                 OneColPerGroupGridComponent,
                 NestedColumnGroupsGridComponent,
                 DynamicGridComponent,
-                NumberColWidthGridComponent
+                NumberColWidthGridComponent,
+                NestedColGroupsWithTemplatesGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1368,6 +1369,40 @@ describe('IgxGrid - multi-column headers', () => {
             fixture.detectChanges();
         }).not.toThrow();
     }));
+
+    it('Should correctly initialize column group templates.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const locationColGroup = ci.locationColGroup;
+        const contactInfoColGroup = ci.contactInfoColGroup;
+
+        expect(locationColGroup.headerTemplate).toBeDefined();
+        expect(contactInfoColGroup.headerTemplate).toBeUndefined();
+
+        const headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.col-group-template'));
+        expect(headerSpans.length).toBe(1);
+        expect(headerSpans[0].nativeElement.textContent).toMatch('Column group template');
+    }));
+
+    it('Should correctly change column group templates dynamically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const locationColGroup = ci.locationColGroup;
+        const genInfoColGroup = ci.genInfoColGroup;
+        const headerTemplate = ci.dynamicColGroupTemplate;
+
+        locationColGroup.headerTemplate = headerTemplate;
+        genInfoColGroup.headerTemplate = headerTemplate;
+        fixture.detectChanges();
+
+        const headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
+        expect(headerSpans.length).toBe(2);
+        headerSpans.forEach(headerSpan => {
+            expect(headerSpan.nativeElement.textContent).toMatch('Dynamic column group template');
+        });
+    }));
 });
 
 @Component({
@@ -2021,6 +2056,55 @@ export class NumberColWidthGridComponent {
         { field: 'ContactName', width: 150 },
         { field: 'City', width: 100 },
     ];
+}
+
+@Component({
+    template: `
+    <ng-template #dynamicColGroupTemplate>
+        <span class="dynamic-col-group-template">Dynamic column group template</span>
+    </ng-template>
+    <igx-grid #grid [data]="data" height="600px" width="1000px">
+        <igx-column-group #contactInfoColGroup header="Contact Info">
+            <igx-column-group #locationColGroup header="Location">
+                <ng-template igxHeader>
+                    <span class="col-group-template">Column group template</span>
+                </ng-template>
+                <igx-column #countryCol field="Country"></igx-column>
+            </igx-column-group>
+            <igx-column #phoneCol field="Phone"></igx-column>
+        </igx-column-group>
+        <igx-column-group #genInfoColGroup header="General Information">
+            <igx-column #companyNameCol field="CompanyName"></igx-column>
+        </igx-column-group>
+        <igx-column #cityCol field="City"></igx-column>
+    </igx-grid>
+    `
+})
+export class NestedColGroupsWithTemplatesGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+
+    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent, static: true })
+    contactInfoColGroup: IgxColumnGroupComponent;
+    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
+    locationColGroup: IgxColumnGroupComponent;
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
+    countryCol: IgxColumnComponent;
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
+    phoneCol: IgxColumnComponent;
+
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
+    genInfoColGroup: IgxColumnGroupComponent;
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
+    companyNameCol: IgxColumnComponent;
+
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
+    cityCol: IgxColumnComponent;
+
+    @ViewChild('dynamicColGroupTemplate', { read: TemplateRef, static: true })
+    dynamicColGroupTemplate: TemplateRef<any>;
+
+    data = SampleTestData.contactInfoDataFull();
 }
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
