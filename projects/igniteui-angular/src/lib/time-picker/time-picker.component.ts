@@ -368,7 +368,7 @@ export class IgxTimePickerComponent implements
     public overlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false
-    }
+    };
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
