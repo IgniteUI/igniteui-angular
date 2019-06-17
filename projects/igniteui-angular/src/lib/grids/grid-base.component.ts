@@ -78,7 +78,7 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
-import { ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import {
     IgxExcelStyleSortingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
@@ -1812,6 +1812,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+    */
+    @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
+    public tmpOutlets: QueryList<any>;
+
+
+    /**
+     * @hidden
      */
     public get rowOutletDirective() {
         return this.rowEditingOutletDirective;
@@ -2862,6 +2869,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngOnDestroy() {
+        this.tmpOutlets.forEach((tmplOutlet) => {
+            tmplOutlet.cleanCache();
+        });
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
             this.nativeElement.removeEventListener('keydown', this._keydownListener);
