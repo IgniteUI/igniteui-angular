@@ -1031,10 +1031,10 @@ export class IgxHierarchicalGridSizingComponent {
     public fullData = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
     public semiData = Array.from({ length: 15 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
 
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent })
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     public hgrid: IgxHierarchicalGridComponent;
 
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent })
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
     public rowIsland: IgxRowIslandComponent;
 }
 
