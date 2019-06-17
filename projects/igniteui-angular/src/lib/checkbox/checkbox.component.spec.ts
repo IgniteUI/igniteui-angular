@@ -239,17 +239,17 @@ describe('IgxCheckbox', () => {
 class InitCheckboxComponent { }
 
 @Component({
-    template: `<igx-checkbox #cb (change)="onChange($event)" (click)="onClick($event)"
+    template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
 [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
 class CheckboxSimpleComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
-    public onChange(event) {
+    public onChange() {
         this.changeEventCalled = true;
     }
-    public onClick(event) {
+    public onClick() {
         this.clickCounter++;
     }
 }
@@ -259,7 +259,7 @@ class CheckboxSimpleComponent {
                                 [indeterminate]="true"
                                 >Indeterminate</igx-checkbox>`})
 class CheckboxIndeterminateComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
     public subscribed = false;
 }
@@ -268,7 +268,7 @@ class CheckboxIndeterminateComponent {
     template: `<igx-checkbox #cb [required]="true">Required</igx-checkbox>`
 })
 class CheckboxRequiredComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 }
 
 @Component({
@@ -277,7 +277,7 @@ class CheckboxRequiredComponent {
                                 [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-checkbox>`})
 class CheckboxDisabledComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
     public subscribed = false;
 }
@@ -287,7 +287,7 @@ class CheckboxDisabledComponent {
     <igx-checkbox #cb aria-labelledby="my-label"></igx-checkbox>`
 })
 class CheckboxExternalLabelComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     label = 'My Label';
 }
 
@@ -295,7 +295,7 @@ class CheckboxExternalLabelComponent {
     template: `<igx-checkbox #cb [aria-label]="label"></igx-checkbox>`
 })
 class CheckboxInvisibleLabelComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     label = 'Invisible Label';
 }
 
@@ -303,5 +303,5 @@ class CheckboxInvisibleLabelComponent {
     template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`
 })
 class CheckboxDisabledTransitionsComponent {
-    @ViewChild('cb') public cb: IgxCheckboxComponent;
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 }

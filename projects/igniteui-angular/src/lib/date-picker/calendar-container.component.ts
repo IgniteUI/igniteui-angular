@@ -12,7 +12,7 @@ import { IgxDatePickerActionsDirective } from './date-picker.directives';
     templateUrl: 'calendar-container.component.html'
 })
 export class IgxCalendarContainerComponent {
-    @ViewChild('calendar')
+    @ViewChild('calendar', { static: true })
     public calendar: IgxCalendarComponent;
 
     @Input()

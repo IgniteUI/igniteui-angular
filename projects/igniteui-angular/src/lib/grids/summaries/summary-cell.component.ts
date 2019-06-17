@@ -2,7 +2,7 @@ import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, E
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
 import { DataType } from '../../data-operations/data-util';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
@@ -61,6 +61,14 @@ export class IgxSummaryCellComponent {
         this.focused = false;
     }
 
+    protected get selectionNode(): ISelectionNode {
+        return {
+            row: this.rowIndex,
+            column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex,
+            isSummaryRow: true
+        };
+    }
+
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         // TODO: Refactor
@@ -86,10 +94,10 @@ export class IgxSummaryCellComponent {
         switch (key) {
             case 'tab':
                 if (shift) {
-                    this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
+                    this.grid.navigation.performShiftTabKey(row, this.selectionNode);
                     break;
                 }
-                this.grid.navigation.performTab(row, this.rowIndex, this.visibleColumnIndex, true);
+                this.grid.navigation.performTab(row, this.selectionNode);
                 break;
             case 'arrowleft':
             case 'home':
@@ -98,7 +106,7 @@ export class IgxSummaryCellComponent {
                     this.grid.navigation.onKeydownHome(this.rowIndex, true);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.rowIndex, this.visibleColumnIndex, true);
+                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.selectionNode);
                 break;
             case 'end':
             case 'arrowright':
@@ -107,15 +115,15 @@ export class IgxSummaryCellComponent {
                     this.grid.navigation.onKeydownEnd(this.rowIndex, true);
                     break;
                 }
-                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex, true);
+                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.selectionNode);
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                    this.grid.navigation.navigateUp(row, this.selectionNode);
                 break;
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
+                    this.grid.navigation.navigateDown(row, this.selectionNode);
                 break;
         }
     }

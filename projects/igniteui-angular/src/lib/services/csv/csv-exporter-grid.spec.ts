@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -51,10 +51,10 @@ describe('CSV Grid Exporter', () => {
         exporter.onRowExport.unsubscribe();
     }));
 
-    it('should export grid as displayed.', () => {
+    it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;
 
-        TestMethods.testRawData(currentGrid, async (grid) => {
+        await TestMethods.testRawData(currentGrid, async (grid) => {
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyData(wrapper.simpleGridData);
         });
@@ -62,7 +62,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should honor \'ignoreFiltering\' option.', async () => {
 
-        const result = TestMethods.createGridAndFilter();
+        const result = await TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
 
@@ -81,7 +81,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should honor filter criteria changes.', async () => {
 
-        const result = TestMethods.createGridAndFilter();
+        const result = await TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
 
@@ -191,7 +191,7 @@ describe('CSV Grid Exporter', () => {
     });
 
     it('should display pinned columns data in the beginning.', async () => {
-        const result = TestMethods.createGridAndPinColumn([1]);
+        const result = await TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
         fix.detectChanges();
@@ -201,7 +201,7 @@ describe('CSV Grid Exporter', () => {
     });
 
     it('should not display pinned columns data first when ignoreColumnsOrder is true.', async () => {
-        const result = TestMethods.createGridAndPinColumn([1]);
+        const result = await TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
         options.ignoreColumnsOrder = true;
@@ -340,11 +340,12 @@ describe('CSV Grid Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should export tree grid as displayed.', async () => {
             const wrapper = await getExportedData(treeGrid, options);
