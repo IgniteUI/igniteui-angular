@@ -127,6 +127,9 @@ export class IgxGridCRUDService {
     }
 
     beginRowEdit() {
+        if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
+            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
+        }
         this.row = this.createRow(this.cell);
         const args = {
             rowID: this.row.id,
