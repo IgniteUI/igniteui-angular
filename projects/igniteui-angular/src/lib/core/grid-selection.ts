@@ -106,7 +106,7 @@ export class IgxGridCRUDService {
     }
 
     sameRow(rowID): boolean {
-        return this.row.id === rowID;
+        return this.row && this.row.id === rowID;
     }
 
     sameCell(cell: IgxCell): boolean {
