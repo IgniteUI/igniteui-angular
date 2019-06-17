@@ -1,0 +1,52 @@
+$border-color: #ddd;
+$border-pin-color: #999;
+$print-background: #eee;
+
+@mixin igx-grid-print {
+    %igx-grid__grouparea,
+    %igx-grid-toolbar__actions,
+    %igx-drop-area__icon,
+    %igx-drop-area__text,
+    %igx-grid__header-indentation,
+    %igx-grid__grouping-indicator,
+    %igx-grid__row-indentation,
+    %igx-grid__hierarchical-expander,
+    %igx-expansion-panel__header-icon--end,
+    %igx-expansion-panel__header-icon--start,
+    %grid-summaries-patch {
+        display: none !important;
+    }
+
+    %grid-tfoot,
+    %igx-grid__grouparea,
+    %igx-grid__filtering-cell,
+    %igx-grid__group-row,
+    %grid-cell-header,
+    %igx-grid-toolbar,
+    %grid-thead-title,
+    %grid-row,
+    %grid-thead {
+        border-color: $border-color !important;
+    }
+
+    %grid-thead,
+    %igx-grid-toolbar,
+    %igx-grid__group-row,
+    %grid-tfoot {
+        background: $print-background !important;
+    }
+
+    %grid-cell-header-title,
+    %grid-cell-text {
+        white-space: unset !important;
+        text-overflow: initial !important;
+        overflow: visible !important;
+    }
+
+    %grid-cell-display {
+        igx-icon {
+            display: none;
+        }
+    }
+}
+
