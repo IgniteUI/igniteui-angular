@@ -9,7 +9,7 @@ import { SliderType, IRangeSliderValue } from './slider.common';
 
 declare var Simulator: any;
 
-fdescribe('IgxSlider', () => {
+describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
