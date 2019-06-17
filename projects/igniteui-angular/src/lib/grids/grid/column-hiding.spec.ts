@@ -941,7 +941,7 @@ describe('Column Hiding UI', () => {
     });
 
     describe('toolbar button', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();

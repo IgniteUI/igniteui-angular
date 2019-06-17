@@ -128,37 +128,37 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @ViewChild('contentsContainer')
+    @ViewChild('contentsContainer', { static: true })
     public contentsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerContainer')
+    @ViewChild('headerContainer', { static: true })
     public headerContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('itemsContainer')
+    @ViewChild('itemsContainer', { static: true })
     public itemsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('selectedIndicator')
+    @ViewChild('selectedIndicator', { static: false })
     public selectedIndicator: ElementRef;
 
     /**
     * @hidden
     */
-    @ViewChild('tabsContainer')
+    @ViewChild('tabsContainer', { static: true })
     public tabsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('viewPort')
+    @ViewChild('viewPort', { static: true })
     public viewPort: ElementRef;
 
     /**

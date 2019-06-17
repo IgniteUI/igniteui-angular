@@ -1,5 +1,4 @@
-import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService, IgxGridTransaction, IgxHierarchicalTransactionService,
          IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 
@@ -31,7 +30,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
 
-    @ViewChild('grid1') public grid1: IgxTreeGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public density = '';
     public displayDensities;
@@ -140,7 +139,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             this.grid1.enableSummaries([{ fieldName: name, customSummary: MySummaryOperand }]);
         }
     }
-  
+
     public undo() {
         this.grid1.transactions.undo();
     }

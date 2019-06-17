@@ -7,7 +7,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
 
-    @ViewChild('grid', { read: IgxGridComponent })
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = [

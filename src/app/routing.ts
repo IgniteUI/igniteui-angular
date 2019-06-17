@@ -81,6 +81,7 @@ import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample'
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
+import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 
 const appRoutes = [
     {
@@ -166,7 +167,7 @@ const appRoutes = [
     },
     {
         path: 'lazyIconModule',
-        loadChildren: './icon/LazyModule/lazyIcon.module#LazyIconModule'
+        loadChildren: () => import('./icon/LazyModule/lazyIcon.module').then(m => m.LazyIconModule)
     },
     {
         path: 'inputs',
@@ -353,6 +354,10 @@ const appRoutes = [
     {
         path: 'gridMRLConfig',
         component: GridMRLConfigSampleComponent
+    },
+    {
+        path: 'gridMRLCustomNav',
+        component: GridMRLCustomNavigationSampleComponent
     },
     {
         path: 'gridGroupBy',

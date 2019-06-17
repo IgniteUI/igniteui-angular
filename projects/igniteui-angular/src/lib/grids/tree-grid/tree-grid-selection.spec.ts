@@ -19,7 +19,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Selection', () => {
+describe('IgxTreeGrid - Selection ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -37,7 +37,7 @@ describe('IgxTreeGrid - Selection', () => {
     }));
 
     describe('API Row Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -225,7 +225,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('UI Row Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -406,13 +406,12 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('Cell Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
-
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
         }));
 
         it('should return the correct type of cell when clicking on a cells', () => {
@@ -595,7 +594,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('Cell/Row Selection With Row Editing', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSelectionRowEditingComponent);
             fix.detectChanges();
@@ -612,7 +611,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             // select the second row
             treeGrid.selectRows([targetCell.cellID.rowID], true);
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // check if any rows were selected
@@ -620,7 +619,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             // enter edit mode
             targetCell.inEditMode = true;
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // the banner should appear
@@ -638,7 +637,7 @@ describe('IgxTreeGrid - Selection', () => {
             // select a cell
             const targetCell = treeGridCells[0];
             targetCell.triggerEventHandler('focus', new Event('focus'));
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // there should be at least one selected cell
@@ -646,7 +645,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             // enter edit mode
             targetCell.triggerEventHandler('dblclick', new Event('dblclick'));
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // the banner should appear

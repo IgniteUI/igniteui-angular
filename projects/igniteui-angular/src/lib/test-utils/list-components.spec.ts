@@ -12,8 +12,8 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
     </div>`
 })
 export class BasicListComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('wrapper') public wrapper;
+    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+    @ViewChild('wrapper', { static: true }) public wrapper;
 }
 
 @Component({
@@ -102,7 +102,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
 
 @Component({
     template: `<div #wrapper>
-        <igx-list [allowRightPanning]="allowRightPanning" [allowLeftPanning]="allowLeftPanning">
+        <igx-list>
             <igx-list-item [isHeader]="true">Header 1</igx-list-item>
             <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
             <igx-list-item [isHeader]="true">Header 2</igx-list-item>
@@ -149,10 +149,10 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     styles: [`.item-container { display: flex; }`]
 })
 export class ListWithIgxForAndScrollingComponent {
-    @ViewChild('forOfList', { read: IgxListComponent })
+    @ViewChild('forOfList', { read: IgxListComponent, static: true })
     public forOfList: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: false })
     public igxFor: IgxForOfDirective<any>;
 
     public data = [

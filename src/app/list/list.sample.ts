@@ -7,19 +7,19 @@ import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui
     templateUrl: 'list.sample.html'
 })
 export class ListSampleComponent implements OnInit {
-    @ViewChild('contactsList')
+    @ViewChild('contactsList', { static: true })
     contactsList: IgxListComponent;
 
-    @ViewChild('fruitList')
+    @ViewChild('fruitList', { static: true })
     fruitList: IgxListComponent;
 
-    @ViewChild('checkbox')
+    @ViewChild('checkbox', { static: true })
     checkbox: any;
 
-    @ViewChild('declarativeList')
+    @ViewChild('declarativeList', { static: true })
     declarativeList: any;
 
-    @ViewChild('addFruitDialog')
+    @ViewChild('addFruitDialog', { static: true })
     addFruitDialog: IgxDialogComponent;
 
     fruitsSearch: string;
@@ -27,7 +27,7 @@ export class ListSampleComponent implements OnInit {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
-    
+
     density = 'comfortable';
     displayDensities;
 

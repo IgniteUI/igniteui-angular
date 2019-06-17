@@ -50,7 +50,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('radio') public nativeRadio: ElementRef;
+    @ViewChild('radio', { static: true }) public nativeRadio: ElementRef;
     /**
      * Returns reference to native label element.
      * ```typescript
@@ -58,7 +58,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('nativeLabel') public nativeLabel;
+    @ViewChild('nativeLabel', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -66,7 +66,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('placeholderLabel') public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
 
     /**
      * Sets/gets the `id` of the radio component.

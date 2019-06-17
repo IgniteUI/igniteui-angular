@@ -142,13 +142,13 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @ViewChild('track')
+    @ViewChild('track', { static: true })
     private track: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ticks')
+    @ViewChild('ticks', { static: true })
     private ticks: ElementRef;
 
     /**
@@ -178,13 +178,13 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef })
+    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef, static: false })
     public thumbFromTemplateRef: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef })
+    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef, static: true })
     public thumbToTemplateRef: TemplateRef<any>;
 
     /**

@@ -10,7 +10,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 })
 export class AppComponent implements OnInit {
 
-    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent })
+    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     navdrawer;
 
     @HostBinding('attr.id')
@@ -152,6 +152,11 @@ export class AppComponent implements OnInit {
             link: '/gridMRLConfig',
             icon: 'view_column',
             name: 'Grid MRL Config'
+        },
+        {
+            link: '/gridMRLCustomNav',
+            icon: 'view_column',
+            name: 'Grid MRL Custom Navigation'
         },
         {
             link: '/gridFilterTemplate',
@@ -419,8 +424,8 @@ export class AppComponent implements OnInit {
             });
 
         // register custom SVG icons
-        this.iconService.addSvgIcon("rain", "../assets/images/card/icons/rain.svg", "weather-icons");
-        this.iconService.addSvgIcon("breeze", "../assets/images/card/icons/breeze.svg", "weather-icons");
+        this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
+        this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
 
     }
 }

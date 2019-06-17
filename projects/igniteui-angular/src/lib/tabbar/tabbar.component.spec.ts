@@ -1,11 +1,9 @@
-import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { IgxBottomNavComponent,
          IgxBottomNavModule,
          IgxTabComponent,
-         IgxTabPanelComponent,
-         IgxTabTemplateDirective } from './tabbar.component';
+         IgxTabPanelComponent } from './tabbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { BottomNavRoutingViewComponentsModule,
@@ -289,8 +287,8 @@ describe('TabBar', () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
     }
@@ -328,8 +326,8 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
 @Component({
@@ -359,8 +357,8 @@ class BottomTabBarTestComponent {
         </div>`
 })
 class TemplatedTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent) public tabbar: IgxBottomNavComponent;
-    @ViewChild('wrapperDiv') public wrapperDiv: any;
+    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
 @Component({

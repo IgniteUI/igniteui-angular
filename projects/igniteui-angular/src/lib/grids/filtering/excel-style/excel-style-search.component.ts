@@ -32,13 +32,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
-    @ViewChild('input', { read: IgxInputDirective })
+    @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
     constructor() {}

@@ -10,7 +10,7 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-describe('IgxTreeGrid - Key Board Navigation', () => {
+describe('IgxTreeGrid - Key Board Navigation ', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -28,13 +28,14 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     }));
 
     describe('Navigation with no scroll', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {
             await testNavigationUpDown(fix, treeGrid, 'Name');
@@ -154,14 +155,16 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     });
 
     describe('Navigation with scrolls', () => {
-        configureTestSuite();
+        // configureTestSuite();
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-        });
+            tick(16);
+        }));
 
         it('should navigate with arrow Up and Down keys on gridCells', async () => {
             await testNavigationUpDown(fix, treeGrid, 'Name');
