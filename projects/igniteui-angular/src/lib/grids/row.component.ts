@@ -69,13 +69,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
+    @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
      */
-    @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
+    @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent, static: false })
     public checkboxElement: IgxCheckboxComponent;
 
     /**

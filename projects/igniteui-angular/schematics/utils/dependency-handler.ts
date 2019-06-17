@@ -1,9 +1,8 @@
 import { SchematicContext, Rule, SchematicsException } from '@angular-devkit/schematics';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics/src/tree/interface';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { Options } from '../interfaces/options';
-import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
+import { WorkspaceProject, ProjectType, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);

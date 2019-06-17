@@ -57,7 +57,7 @@ describe('IgxDropDown ', () => {
     }));
 
     describe('igxDropDown integration tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
@@ -923,7 +923,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('igxDropDown Unit tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should fire events', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
@@ -1272,7 +1272,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('DropDownGroup Tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should properly render item groups aria attributes - label, role, labelledby', fakeAsync(() => {
             const fixture = TestBed.createComponent(GroupDropDownComponent);
             fixture.detectChanges();
@@ -1340,7 +1340,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('Virtualized DropDown tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture, button, dropdown: IgxDropDownComponent, scroll, items;
         beforeEach(() => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
@@ -1475,7 +1475,7 @@ describe('IgxDropDown ', () => {
 })
 class IgxDropDownTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1513,7 +1513,7 @@ class IgxDropDownTestComponent {
 })
 class IgxDropDownTestScrollComponent {
 
-    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent, static: true })
     public dropdownScroll: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1556,7 +1556,7 @@ class IgxDropDownTestScrollComponent {
 })
 class IgxDropDownTestDisabledAnyComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownDisabledAny: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1600,7 +1600,7 @@ class IgxDropDownTestDisabledAnyComponent {
 })
 class IgxDropDownTestDisabledComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownDisabled: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1642,7 +1642,7 @@ class IgxDropDownTestDisabledComponent {
 })
 class IgxDropDownTestEmptyListComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownEmpty: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1663,7 +1663,7 @@ class IgxDropDownTestEmptyListComponent {
 })
 class IgxDropDownWithScrollComponent implements OnInit {
 
-    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent, static: true })
     public dropdownScroll: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1701,10 +1701,10 @@ class IgxDropDownWithScrollComponent implements OnInit {
 })
 class DoubleIgxDropDownComponent implements OnInit {
 
-    @ViewChild('dropdown1', { read: IgxDropDownComponent })
+    @ViewChild('dropdown1', { read: IgxDropDownComponent, static: true })
     public dropdown1: IgxDropDownComponent;
 
-    @ViewChild('dropdown2', { read: IgxDropDownComponent })
+    @ViewChild('dropdown2', { read: IgxDropDownComponent, static: true })
     public dropdown2: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1729,7 +1729,7 @@ class DoubleIgxDropDownComponent implements OnInit {
 })
 class IgxDropDownInputTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1767,7 +1767,7 @@ class IgxDropDownInputTestComponent {
 })
 class IgxDropDownImageTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1824,9 +1824,9 @@ class IgxDropDownImageTestComponent {
 })
 class IgxDropDownTabsTestComponent {
 
-    @ViewChild(IgxTabsComponent)
+    @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1863,7 +1863,7 @@ class IgxDropDownTabsTestComponent {
     `
 })
 class IgxDropDownSelectComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1890,10 +1890,10 @@ class IgxDropDownSelectComponent {
     </igx-drop-down>`
 })
 class InputWithDropDownDirectiveComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
-    @ViewChild(`inputElement`)
+    @ViewChild(`inputElement`, { static: true })
     public inputElement: ElementRef;
 
     public items: any[] = [
@@ -1913,7 +1913,7 @@ class InputWithDropDownDirectiveComponent {
     </igx-drop-down>`
 })
 class DropDownWithValuesComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1955,7 +1955,7 @@ class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {
     </igx-drop-down>`
 })
 class GroupDropDownComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropDown: IgxDropDownComponent;
     @ViewChildren(IgxDropDownGroupComponent, { read: IgxDropDownGroupComponent })
     public groups: QueryList<IgxDropDownGroupComponent>;
@@ -2002,11 +2002,11 @@ class GroupDropDownComponent {
     `]
 })
 class VirtualizedDropDownComponent {
-    @ViewChild('toggleButton', { read: ElementRef })
+    @ViewChild('toggleButton', { read: ElementRef, static: true })
     public toggleButton: ElementRef;
-    @ViewChild(IgxDropDownComponent)
+    @ViewChild(IgxDropDownComponent, { static: true })
     public dropdown: IgxDropDownComponent;
-    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective })
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
     public virtualScroll: IgxForOfDirective<any>;
     @ViewChildren(IgxDropDownItemComponent)
     public dropdownItems: QueryList<IgxDropDownItemComponent>;

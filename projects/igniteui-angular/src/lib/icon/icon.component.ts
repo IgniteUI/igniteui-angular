@@ -22,13 +22,13 @@ let NEXT_ID = 0;
 })
 
 export class IgxIconComponent implements OnInit {
-    @ViewChild('noLigature', { read: TemplateRef })
+    @ViewChild('noLigature', { read: TemplateRef, static: true })
     private noLigature: TemplateRef<HTMLElement>;
 
-    @ViewChild('explicitLigature', { read: TemplateRef })
+    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
     private explicitLigature: TemplateRef<HTMLElement>;
 
-    @ViewChild('svgImage', { read: TemplateRef })
+    @ViewChild('svgImage', { read: TemplateRef, static: true })
     private svgImage: TemplateRef<HTMLElement>;
 
     /**

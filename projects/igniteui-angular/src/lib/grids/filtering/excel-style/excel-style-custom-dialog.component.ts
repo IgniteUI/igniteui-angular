@@ -87,16 +87,16 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @ViewChildren(IgxExcelStyleDateExpressionComponent)
     private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
 
-    @ViewChild('toggle', { read: IgxToggleDirective })
+    @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;
 
-    @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
+    @ViewChild('defaultExpressionTemplate', { read: TemplateRef, static: false })
     protected defaultExpressionTemplate: TemplateRef<any>;
 
-    @ViewChild('dateExpressionTemplate', { read: TemplateRef })
+    @ViewChild('dateExpressionTemplate', { read: TemplateRef, static: false })
     protected dateExpressionTemplate: TemplateRef<any>;
 
-    @ViewChild('expressionsContainer')
+    @ViewChild('expressionsContainer', { static: true })
     protected expressionsContainer: ElementRef;
 
     constructor(private cdr: ChangeDetectorRef) {}

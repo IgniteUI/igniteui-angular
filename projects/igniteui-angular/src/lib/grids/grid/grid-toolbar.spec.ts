@@ -33,11 +33,11 @@ describe('IgxGrid - Grid Toolbar', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -652,7 +652,7 @@ export class GridToolbarTestPage1Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
 }
@@ -688,7 +688,7 @@ export class GridToolbarTestPage2Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
 }

@@ -90,17 +90,15 @@
                     <igx-expansion-panel-body>
                         <igx-list>
                             <igx-list-item *ngFor="let day of days;">
-                                <div class="item-container">
-                                    <span class="day">{{ day.day }}</span>
-                                    <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
-                                        <igx-icon>{{day.icon}}</igx-icon>
-                                    </span>
-                                    <span class="degree">
+                                    <div igxListLineTitle>
+                                        <span class="day">{{ day.day }}</span>
+                                    </div>
+                                        <span [class]="day.isSunny ? 'isSunny w_icon' : 'w_icon'" class="w_icon">
+                                            <igx-icon>{{day.icon}}</igx-icon>
+                                        </span>
                                         <span>{{ day.tempHeight}}</span>
                                         /
                                         <span>{{day.tempLow}}</span>
-                                    </span>
-                                </div>
                             </igx-list-item>
                         </igx-list>
                     </igx-expansion-panel-body>
