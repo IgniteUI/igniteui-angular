@@ -14,15 +14,35 @@
 <ng-template #itemsContent>
     <ng-content></ng-content>
 </ng-template>
+
+<ng-template #itemThumbnails>
+    <div class="igx-list__item-thumbnail">
+        <ng-content select="[igxListThumbnail], igx-list__item-thumbnail, igx-avatar"></ng-content>
+    </div>
+</ng-template>
+
+<ng-template #itemLines>
+    <div class="igx-list__item-lines">
+        <ng-content select="[igxListLine], .igx-list__item-lines, [igxListLineTitle], [igxListLineSubTitle], .igx-list__item-line-title, .igx-list__item-line-subtitle"></ng-content>
+    </div>
+</ng-template>
+
+<ng-template #itemActions>
+    <div class="igx-list__item-actions">
+        <ng-content select="[igxListAction], .igx-list__item-actions"></ng-content>
+    </div>
+</ng-template>
+
     
 <ng-container *ngIf="isHeader">
-    <ng-container *ngTemplateOutlet="itemsContent">
-    </ng-container>
+    <ng-container *ngTemplateOutlet="itemsContent"></ng-container>
 </ng-container>
 
 <ng-container *ngIf="!isHeader">
     <div class="igx-list__item-content">
-        <ng-container *ngTemplateOutlet="itemsContent">
-        </ng-container>
+        <ng-container *ngTemplateOutlet="itemThumbnails"></ng-container>
+        <ng-container *ngTemplateOutlet="itemLines"></ng-container>
+        <ng-container *ngTemplateOutlet="itemActions"></ng-container>
+        <ng-container *ngTemplateOutlet="itemsContent"></ng-container>
     </div>
 </ng-container>

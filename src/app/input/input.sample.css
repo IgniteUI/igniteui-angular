@@ -1,42 +1,9 @@
-.input-sample {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
-    padding: 24px 16px;
-    margin-bottom: 48px;
-}
-
 .form-title {
     margin-bottom: 16px;
 }
 
-igx-input-group+igx-input-group {
+igx-input-group + igx-input-group {
     margin-top: 32px;
-}
-
-.switch-sample,
-.checkbox-sample {
-    display: flex;
-    align-items: center;
-    flex-flow: row nowrap;
-    height: 48px;
-}
-
-.checkbox-sample {
-    justify-content: space-between;
-}
-
-.switch-sample+.switch-sample,
-.checkbox-sample+.checkbox-sample {
-    margin-top: 8px;
-}
-
-.checkbox-sample .name {
-    margin-left: 16px;
-}
-
-.checkbox-sample>div {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
 }
 
 .radio-group {
