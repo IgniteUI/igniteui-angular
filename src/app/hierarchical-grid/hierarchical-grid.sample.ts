@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from '@angular/core';
 import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } from 'igniteui-angular';
 
 @Component({
@@ -14,10 +14,10 @@ export class HierarchicalGridSampleComponent {
     density = 'comfortable';
     displayDensities;
 
-    @ViewChild('layout1')
+    @ViewChild('layout1', { static: true })
     layout1: IgxRowIslandComponent;
 
-    @ViewChild('hGrid')
+    @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
 

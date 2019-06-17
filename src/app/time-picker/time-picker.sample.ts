@@ -16,6 +16,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     isVertical = true;
     mode = InteractionMode.DropDown;
 
+    date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
     val = new Date(0, 0, 0, 19, 35, 0, 0);
     today = new Date(Date.now());
@@ -28,10 +29,10 @@ export class TimePickerSampleComponent implements AfterViewInit {
         positionStrategy: new AutoPositionStrategy()
     };
 
-    @ViewChild('tp', { read: IgxTimePickerComponent })
+    @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
     public tp: IgxTimePickerComponent;
 
-    @ViewChild('target')
+    @ViewChild('target', { static: false })
     public target: IgxInputDirective;
 
     ngAfterViewInit() {
@@ -55,7 +56,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     }
 
     public onBlur(inputValue, timePickerValue) {
-        const parts = inputValue.split(":");
+        const parts = inputValue.split(':');
 
         if (parts.length === 2) {
             timePickerValue.setHours(parts[0], parts[1]);

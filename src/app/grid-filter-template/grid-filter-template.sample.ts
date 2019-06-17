@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { 
+import {
     IgxGridComponent,
     DataType,
     IgxNumberFilteringOperand,
@@ -20,7 +20,7 @@ export class GridFilterTemplateSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public ngOnInit(): void {
         this.columns = [

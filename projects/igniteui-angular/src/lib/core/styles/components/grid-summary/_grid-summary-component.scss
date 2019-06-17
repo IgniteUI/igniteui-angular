@@ -15,11 +15,6 @@
         @extend %igx-grid-summary__item !optional;
     }
 
-    @include e(item, $m: inactive) {
-        @extend %igx-grid-summary__item !optional;
-        @extend %igx-grid-summary__item--inactive !optional;
-    }
-
     @include e(label) {
         @extend %igx-grid-summary__label !optional;
     }

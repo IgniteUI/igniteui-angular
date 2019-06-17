@@ -1,7 +1,4 @@
-import { Component, ElementRef, ViewChild, Injectable, OnInit, AfterViewInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Http } from '@angular/http';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxForOfDirective } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -16,16 +13,16 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     remoteData: any;
     options = {};
     prevRequest: any;
-    @ViewChild('virtDirVertical', { read: IgxForOfDirective })
+    @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
     virtDirVertical: IgxForOfDirective<any>;
 
-    @ViewChild('virtDirHorizontal', { read: IgxForOfDirective })
+    @ViewChild('virtDirHorizontal', { read: IgxForOfDirective, static: true })
     virtDirHorizontal: IgxForOfDirective<any>;
 
-    @ViewChild('virtDirRemote', { read: IgxForOfDirective })
+    @ViewChild('virtDirRemote', { read: IgxForOfDirective, static: true })
     virtDirRemote: IgxForOfDirective<any>;
 
-    @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective })
+    @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective, static: true })
     virtDirVariableVertical: IgxForOfDirective<any>;
 
     constructor(private remoteService: RemoteService) {

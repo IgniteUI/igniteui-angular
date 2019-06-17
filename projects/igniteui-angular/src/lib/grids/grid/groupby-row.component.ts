@@ -11,7 +11,7 @@ import {
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { IgxGridSelectionService } from '../../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
@@ -86,7 +86,7 @@ export class IgxGridGroupByRowComponent {
      * const groupRowContent = this.grid1.rowList.first.groupContent;
      * ```
      */
-    @ViewChild('groupContent')
+    @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
 
     /**
@@ -176,6 +176,13 @@ export class IgxGridGroupByRowComponent {
         }
     }
 
+    protected get selectionNode(): ISelectionNode {
+        return {
+            row: this.index,
+            column: this.gridSelection.activeElement ? this.gridSelection.activeElement.column : 0
+        };
+    }
+
     /**
      * @hidden
      */
@@ -211,18 +218,20 @@ export class IgxGridGroupByRowComponent {
         selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
         const visibleColumnIndex = selection.activeElement && this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex)
-                .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
+            .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
+        const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
+        activeNode.row = this.index;
         switch (key) {
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+                this.grid.navigation.navigateDown(this.nativeElement, activeNode);
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+                this.grid.navigation.navigateUp(this.nativeElement, activeNode);
                 break;
             case 'tab':
-                this.handleTabKey(event.shiftKey);
+                this.handleTabKey(event.shiftKey, activeNode);
                 break;
         }
     }
@@ -244,14 +253,17 @@ export class IgxGridGroupByRowComponent {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
-    private handleTabKey(shift) {
+    private handleTabKey(shift: boolean, activeNode: ISelectionNode) {
         if (shift) {
-            this.grid.navigation.performShiftTabKey(this.nativeElement, this.index, 0);
+            this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
         } else {
             if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
                 this.grid.navigation.onKeydownHome(0, true);
             } else {
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
+                const orderedColumns = this.grid.navigation.gridOrderedColumns;
+                const lastCol = orderedColumns[orderedColumns.length - 1];
+                activeNode.column = lastCol.columnLayoutChild ? lastCol.parent.visibleIndex : lastCol.visibleIndex;
+                this.grid.navigation.performTab(this.nativeElement, activeNode);
             }
         }
     }

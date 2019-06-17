@@ -1,7 +1,7 @@
 <ng-template #dropdownInputTemplate>
     <igx-input-group #group>
         <label igxLabel>Time</label>
-        <igx-prefix (click)="openDialog()">
+        <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
         <input #input type="text" [igxMask]="mask" igxInput [includeLiterals]="false" [placeholder]="format"
@@ -34,7 +34,7 @@
         </button>
     </div>
 </ng-template>
-<div #container igxToggle class="igx-time-picker"
+<div igxToggle class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': mode === 'dropdown', 'igx-time-picker--vertical': vertical && mode === 'dialog'}">
     <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
@@ -44,13 +44,13 @@
     </div>
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
-            <div #hourList [igxItemList]="'hourList'">
+            <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
                 <span [igxHourItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
-            <div #minuteList [igxItemList]="'minuteList'">
+            <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
-            <div #ampmList [igxItemList]="'ampmList'">
+            <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
