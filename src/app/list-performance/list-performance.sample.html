@@ -1,7 +1,7 @@
 <div class="sample-wrapper">
     <app-page-header title="List Performance">List virtualized.</app-page-header>
     <section class="sample-content">
-        <article class="sample-column" [style.width]="'500px'">
+        <article class="sample-column">
             <h4 class="sample-title">Performance sample</h4>
 
             <igx-input-group type="search" style="margin-bottom: 16px">
@@ -14,18 +14,18 @@
                 </igx-suffix>
             </igx-input-group>
 
-            <igx-list>
-                <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                <div class="virtualized-items">
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '50px'">
-                        <div class="item">
-                            <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
-                            <span igxLabel>{{item.text}}</span>
-                            <igx-icon [class.favorite]="item.favorite">star</igx-icon>
-                        </div>
-                    </igx-list-item>
-                </div>
-            </igx-list>
+            <igx-card>
+                <igx-list>
+                    <igx-list-item [isHeader]="true">Contacts</igx-list-item>
+                    <div class="virtualized-items" [style.height]="'500px'" [style.overflow]="'hidden'" [style.position]="'relative'">
+                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '56px'">
+                            <igx-avatar igxListThumbnail [src]="item.avatar" roundShape="true"></igx-avatar>
+                            <span igxListLine igxListLineTitle>{{item.text}}</span>
+                            <igx-icon igxListAction [class.favorite]="item.favorite">star</igx-icon>
+                        </igx-list-item>
+                    </div>
+                </igx-list>
+            </igx-card>
 
         </article>
     </section>
