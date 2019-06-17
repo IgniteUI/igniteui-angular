@@ -362,6 +362,7 @@ describe('IgxGrid - CRUD operations', () => {
     template: `
         <igx-grid
             [data]="data"
+            [height]="null"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
             (onCellEdit)="editDone($event)"
