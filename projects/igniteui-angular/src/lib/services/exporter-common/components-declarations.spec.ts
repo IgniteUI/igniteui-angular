@@ -15,7 +15,7 @@ export class GridDeclarationComponent {
 
     data = new ExportTestDataService().simpleGridData;
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 }
 
@@ -31,7 +31,7 @@ export class GridDeclarationComponent {
 export class GridMarkupPagingDeclarationComponent {
     public data = new ExportTestDataService().simpleGridData;
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 }
 
@@ -48,6 +48,6 @@ export class GridReorderedColumnsComponent {
 
     public data = new ExportTestDataService().simpleGridData;
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 }

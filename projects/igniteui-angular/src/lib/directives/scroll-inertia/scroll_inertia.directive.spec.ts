@@ -1,30 +1,16 @@
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     Directive,
-    Injectable,
-    IterableChanges,
-    IterableDiffers,
     NgZone,
     OnInit,
-    QueryList,
-    TemplateRef,
     ViewChild,
-    ViewChildren,
-    ViewContainerRef,
-    DebugElement,
     ElementRef
 } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_inertia.directive';
-import { take } from 'rxjs/operators';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Scroll Inertia Directive ', () => {
     configureTestSuite();
@@ -412,7 +398,7 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         </div>
     `
 })
-export class ScrollInertiaComponent implements AfterViewInit {
+export class ScrollInertiaComponent implements OnInit {
     public height = '500px';
     public innerHeight = '5000px';
     public innerWidth = '5000px';
@@ -421,13 +407,13 @@ export class ScrollInertiaComponent implements AfterViewInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-    @ViewChild('container') public container: ElementRef;
-    @ViewChild('scrBar') public scrollContainer: ElementRef;
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
 
-    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective })
+    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
     public scrInertiaDir: IgxTestScrollInertiaDirective;
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
         this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });

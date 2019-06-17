@@ -22,3 +22,5 @@ const context = require.context('./', true, /\.spec\.ts$/);
 context.keys().map(context);
 
 // configureTestSuite();
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

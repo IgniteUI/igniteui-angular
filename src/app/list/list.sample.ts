@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
 
 interface Employee {
@@ -14,19 +14,19 @@ interface Employee {
     templateUrl: 'list.sample.html'
 })
 export class ListSampleComponent implements OnInit {
-    @ViewChild('contactsList')
+    @ViewChild('contactsList', { static: true })
     contactsList: IgxListComponent;
 
-    @ViewChild('fruitList')
+    @ViewChild('fruitList', { static: true })
     fruitList: IgxListComponent;
 
-    @ViewChild('checkbox')
+    @ViewChild('checkbox', { static: true })
     checkbox: any;
 
-    @ViewChild('declarativeList')
+    @ViewChild('declarativeList', { static: true })
     declarativeList: any;
 
-    @ViewChild('addFruitDialog')
+    @ViewChild('addFruitDialog', { static: true })
     addFruitDialog: IgxDialogComponent;
 
     fruitsSearch: string;
@@ -34,6 +34,7 @@ export class ListSampleComponent implements OnInit {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
+
     density = 'comfortable';
     displayDensities;
 
@@ -134,9 +135,9 @@ export class ListSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.displayDensities = [
-            {label: 'comfortable', selected: this.density === 'comfortable', togglable: true},
-            {label: 'cosy', selected: this.density === 'cosy', togglable: true},
-            {label: 'compact', selected: this.density === 'compact', togglable: true}
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
     }
 
@@ -180,12 +181,11 @@ export class ListSampleComponent implements OnInit {
         return fruitsFilterOpts;
     }
 
-    filteringHandler = function (args) {
+    filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
     };
 
-    filteredHandler = (args) => {
-    };
+    filteredHandler = (args) => { };
 
     onAddFruitButtonClicked(fruitName) {
         this.addFruit(fruitName);
@@ -193,7 +193,7 @@ export class ListSampleComponent implements OnInit {
     }
 
     addFruit(fruitName) {
-        this.fruits.push({id: this.fruits.length, name: fruitName});
+        this.fruits.push({ id: this.fruits.length, name: fruitName });
     }
 
     addFruits(fruits: string[]) {

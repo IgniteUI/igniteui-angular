@@ -32,8 +32,8 @@ export class ListDirectivesComponent {
         </div>`
 })
 export class BasicListComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('wrapper') public wrapper;
+    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+    @ViewChild('wrapper', { static: true }) public wrapper;
 }
 
 @Component({
@@ -181,10 +181,10 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     }`]
 })
 export class ListWithIgxForAndScrollingComponent {
-    @ViewChild('forOfList', {read: IgxListComponent})
+    @ViewChild('forOfList', {read: IgxListComponent, static: true })
     public forOfList: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: false })
     public igxFor: IgxForOfDirective<any>;
 
     public data = [

@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.0.0
+- `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
+    - `#emptyTemplate`
+    - `#headerTemplate`
+    - `#footerTemplate`
+    - `#itemTemplate`
+    - `#addItemTemplate`
+    - `#headerItemTemplate`
+- `igxTimePicker` and `igxDatePicker`
+    - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
+    - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
+    - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `igxDatePicker` and `igxTimePicker` now provide the ability for adding custom action buttons. Read up more information in [igxDatePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md) or [igxTimePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+
 ## 7.3.5
 - `IgxList` - The list component has been refactored. It now includes several new supporting directives:
     - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
@@ -39,7 +57,6 @@ All notable changes for each version of this project will be documented in this 
 ### New feature
 - `igxSlider` - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - `igxSlider` - deprecate **isContiunous** property.
-
 - `IgxChip`
     - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
     - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
@@ -95,7 +112,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     ```
         @include igx-core($print-layout: false); 
     ```
-    
+
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
@@ -129,7 +146,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
-    
+
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834
 - IgxButtonGroup does not respect compact styles #4840

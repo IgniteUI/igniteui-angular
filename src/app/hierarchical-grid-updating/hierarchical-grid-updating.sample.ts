@@ -27,13 +27,13 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
         { name: 'ProductID', type: 'number', level: 2 }
     ];
 
-    @ViewChild('rowIsland1')
+    @ViewChild('rowIsland1', { static: true })
     rowIsland1: IgxRowIslandComponent;
 
-    @ViewChild('rowIsland2')
+    @ViewChild('rowIsland2', { static: true })
     rowIsland2: IgxRowIslandComponent;
 
-    @ViewChild('hGrid')
+    @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
     constructor(private remoteService: RemoteService) {

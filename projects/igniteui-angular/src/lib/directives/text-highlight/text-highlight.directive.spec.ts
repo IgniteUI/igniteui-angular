@@ -321,7 +321,7 @@ class HighlightLoremIpsumComponent {
     // tslint:disable-next-line:max-line-length
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
 
-    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective, static: true })
     public highlight: IgxTextHighlightDirective;
 
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean) {
