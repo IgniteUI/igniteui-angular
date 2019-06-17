@@ -9,7 +9,7 @@ templateUrl: 'bottomnav-routing.sample.html'
 })
 export class BottomNavRoutingSampleComponent implements AfterViewInit {
 
-    @ViewChild(IgxBottomNavComponent)
+    @ViewChild(IgxBottomNavComponent, { static: true })
     bottomNavComp: IgxBottomNavComponent;
 
     constructor(private router: Router, private renderer: Renderer2) { }

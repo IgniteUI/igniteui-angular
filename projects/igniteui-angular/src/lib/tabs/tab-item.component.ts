@@ -71,11 +71,11 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     }
 
     /**@hidden*/
-    @ViewChild('defaultTabTemplate', { read: TemplateRef })
+    @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
     protected defaultTabTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: true })
     protected customTabTemplateDir: IgxTabItemTemplateDirective;
 
     private _nativeTabItem: ElementRef;

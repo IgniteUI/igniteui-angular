@@ -379,7 +379,7 @@ class TemplatedTabBarTestComponent {
     `
 })
 class TabBarRoutingTestComponent {
-    @ViewChild(IgxBottomNavComponent)
+    @ViewChild(IgxBottomNavComponent, { static: true })
     public bottomNavComp: IgxBottomNavComponent;
 }
 
@@ -398,6 +398,6 @@ class TabBarRoutingTestComponent {
     `
 })
 class TabBarTabsOnlyModeTestComponent {
-    @ViewChild(IgxBottomNavComponent)
+    @ViewChild(IgxBottomNavComponent, { static: true })
     public bottomNavComp: IgxBottomNavComponent;
 }
