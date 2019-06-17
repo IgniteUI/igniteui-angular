@@ -31,7 +31,6 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-        configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -305,7 +304,6 @@ describe('IgxSlider', () => {
     });
 
     describe('Slider: with set min and max value', () => {
-        configureTestSuite();
         let fixture: ComponentFixture<SliderMinMaxComponent>;
         let sliderInstance: IgxSliderComponent;
 
@@ -373,7 +371,6 @@ describe('IgxSlider', () => {
     });
 
     describe('RANGE slider Base tests', () => {
-        configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -548,7 +545,6 @@ describe('IgxSlider', () => {
     });
 
     describe('Slider - List View', () => {
-        configureTestSuite();
         let fixture: ComponentFixture<SliderWithLabelsComponent>;
         let slider: IgxSliderComponent;
 
@@ -841,7 +837,6 @@ describe('IgxSlider', () => {
     });
 
     describe('Slider  type: Range - List View', () => {
-        configureTestSuite();
         let fixture: ComponentFixture<RangeSliderWithLabelsComponent>;
         let slider: IgxSliderComponent;
 
@@ -1148,7 +1143,6 @@ describe('IgxSlider', () => {
     });
 
     describe('General Tests', () => {
-        configureTestSuite();
         it('custom templates for the lower/upper thumb labels should be allowed', () => {
             const fixture = TestBed.createComponent(RangeSliderWithCustomTemplateComponent);
             const slider = fixture.componentInstance.slider;
