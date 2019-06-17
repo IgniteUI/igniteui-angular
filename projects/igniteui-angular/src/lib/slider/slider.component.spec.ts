@@ -726,7 +726,7 @@ export class SliderMinMaxComponent {
                 </div>`
 })
 export class SliderTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     minValue = 0;
     maxValue = 10;
