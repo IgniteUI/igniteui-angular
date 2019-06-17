@@ -482,6 +482,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        return !this.flatData || (this.flatData.length < this._defaultTargetRecordNumber) ?
+            0 : this.defaultTargetBodyHeight;
+    }
+
+    /**
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {

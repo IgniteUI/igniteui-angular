@@ -12,7 +12,7 @@ export class CharSeparatedValueData {
     private _delimiterLength = 1;
     private _isSpecialData = false;
 
-    constructor(private _data: any[], valueDelimiter: string, private _isTreeGridData = false) {
+    constructor(private _data: any[], valueDelimiter: string)  {
         this.setDelimiter(valueDelimiter);
     }
 
@@ -20,8 +20,6 @@ export class CharSeparatedValueData {
         if (!this._data || this._data.length === 0) {
             return '';
         }
-
-        this._data = this._data.map((item) => item.rowData);
 
         const keys = ExportUtilities.getKeysFromData(this._data);
 
