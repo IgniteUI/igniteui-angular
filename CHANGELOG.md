@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.1.0
+- `IgxGrid`
+    - `IgxColumnGroup`
+        - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
+
 ## 8.0.0
 - `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
     - `#emptyTemplate`
