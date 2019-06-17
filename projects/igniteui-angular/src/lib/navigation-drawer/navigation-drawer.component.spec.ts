@@ -221,7 +221,7 @@ describe('Navigation Drawer', () => {
     it('should update with dynamic min template', async(() => {
 
         // immediate requestAnimationFrame for testing
-        spyOn(window, 'requestAnimationFrame').and.callFake((callback) => callback());
+        spyOn(window, 'requestAnimationFrame').and.callFake(callback => { callback(0); return 0; });
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
@@ -614,7 +614,7 @@ describe('Navigation Drawer', () => {
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponent {
-    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
+    @ViewChild(IgxNavigationDrawerComponent, { static: true }) public viewChild: IgxNavigationDrawerComponent;
 }
 
 @Component({
@@ -625,7 +625,7 @@ class TestComponent {
 class TestComponentDIComponent {
     public drawerMiniWidth: string | number;
     public drawerWidth: string | number;
-    @ViewChild(IgxNavigationDrawerComponent) public viewChild: IgxNavigationDrawerComponent;
+    @ViewChild(IgxNavigationDrawerComponent, { static: true }) public viewChild: IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDIComponent {

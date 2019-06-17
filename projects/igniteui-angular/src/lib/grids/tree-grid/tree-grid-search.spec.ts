@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -16,7 +16,7 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-describe('IgxTreeGrid - search API', () => {
+describe('IgxTreeGrid - search API ', () => {
     configureTestSuite();
     let fix;
     let fixNativeElement;
@@ -37,10 +37,13 @@ describe('IgxTreeGrid - search API', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
+            fix.detectChanges();
+            tick(16);
         }));
 
         it('Search highlights should work within tree cell', () => {
@@ -113,6 +116,7 @@ describe('IgxTreeGrid - search API', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
         }));

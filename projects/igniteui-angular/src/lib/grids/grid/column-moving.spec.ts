@@ -48,7 +48,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
@@ -496,7 +496,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
@@ -532,7 +532,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
@@ -943,7 +943,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();

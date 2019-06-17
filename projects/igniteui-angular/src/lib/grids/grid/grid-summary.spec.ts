@@ -284,11 +284,11 @@ describe('IgxGrid - Summaries', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            });
+            }));
 
             it('should disableSummaries through grid API ', () => {
                 const summariedColumns = [];
@@ -2243,7 +2243,7 @@ describe('IgxGrid - Summaries', () => {
 })
 export class SummaryColumnsWithIdenticalWidthsComponent {
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();
@@ -2325,7 +2325,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
 export class CustomSummariesComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
@@ -2350,7 +2350,7 @@ export class CustomSummariesComponent {
 })
 export class SummaryColumnsWithSpecificWidthsComponent {
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();

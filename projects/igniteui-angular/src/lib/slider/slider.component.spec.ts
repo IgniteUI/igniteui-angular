@@ -24,7 +24,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-    configureTestSuite();
+    // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -362,7 +362,7 @@ describe('IgxSlider', () => {
     });
 
     describe('RANGE slider Base tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -700,7 +700,7 @@ describe('IgxSlider', () => {
     </igx-slider>`
 })
 class SliderInitializeTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 }
 
 @Component({
@@ -709,7 +709,7 @@ class SliderInitializeTestComponent {
     `
 })
 export class SliderMinMaxComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     public minValue = 150;
     public maxValue = 300;
@@ -725,7 +725,7 @@ export class SliderMinMaxComponent {
                 </div>`
 })
 class SliderTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     minValue = 0;
     maxValue = 10;

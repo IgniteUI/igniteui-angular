@@ -50,6 +50,10 @@ export class UIInteractions {
     }
 
     public static clickElement(element) {
+        const elementRect = element.nativeElement.getBoundingClientRect();
+        UIInteractions.simulatePointerEvent('pointerdown', element.nativeElement, elementRect.left, elementRect.top);
+        element.nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerEvent('pointerup', element.nativeElement, elementRect.left, elementRect.top);
         element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     }
 
