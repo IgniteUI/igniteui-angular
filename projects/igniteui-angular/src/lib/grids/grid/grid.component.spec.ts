@@ -1549,22 +1549,21 @@ describe('IgxGrid Component Tests', () => {
                 grid.rowEditable = true;
                 tick();
                 fix.detectChanges();
+
+                // Still sets the property correctly
+                expect(grid.rowEditable).toBeTruthy();
+                const cell = grid.getRowByIndex(2).cells.toArray()[1].nativeElement;
+                spyOn(grid, 'openRowOverlay');
+                cell.dispatchEvent(new Event('focus'));
+                flush();
+                fix.detectChanges();
+                cell.dispatchEvent(new Event('dblclick'));
+                flush();
+                fix.detectChanges();
                 expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
                 expect(console.warn).toHaveBeenCalledTimes(1);
-                // Throws warinig but still sets the property correctly
-                expect(grid.rowEditable).toBeTruthy();
-
-                tick();
-                fix.detectChanges();
-                grid.primaryKey = 'ProductID';
-                grid.rowEditable = false;
-                tick();
-                fix.detectChanges();
-                grid.rowEditable = true;
-                tick();
-                fix.detectChanges();
-                expect(console.warn).toHaveBeenCalledTimes(1);
-                expect(grid.rowEditable).toBeTruthy();
+                // Still calls openRowOverlay, just logs the warning
+                expect(grid.openRowOverlay).toHaveBeenCalled();
             }));
             it('Should be able to enter edit mode on dblclick, enter and f2', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
