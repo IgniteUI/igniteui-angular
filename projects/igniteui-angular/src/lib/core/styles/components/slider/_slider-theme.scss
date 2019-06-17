@@ -85,13 +85,12 @@
     $slider-label-radius: $slider-label-width / 2;
     $slider-label-font-size: rem(12px);
     $slider-label-font-weight: 600;
-    $slider-label-padding: 0 2px;
-    $slider-background--start: #fff;
+    $slider-label-padding: 0 rem(2px);
 
     %igx-slider-display {
         display: flex;
         position: relative;
-        height: $slider-height;
+        height: rem($slider-height);
         align-items: center;
     }
 
@@ -106,9 +105,9 @@
     %igx-slider-track {
         position: absolute;
         width: 100%;
-        height: $slider-track-height;
+        height: rem($slider-track-height);
         background: --var($theme, 'base-track-color');
-        transition: background .2s ease;
+        transition: background .2s $ease-out-quad;
     }
 
     %igx-slider-track--disabled {
@@ -118,10 +117,10 @@
     %igx-slider-track-ticks {
         position: absolute;
         width: 100%;
-        height: $slider-track-height;
-        background-size: 100% $slider-track-height;
+        height: rem($slider-track-height);
+        background-size: 100% em($slider-track-height);
         opacity: .85;
-        transition: opacity .2s ease;
+        transition: opacity .2s $ease-out-quad;
         z-index: 1;
     }
 
@@ -149,8 +148,8 @@
         align-items: center;
         flex-direction: column;
         outline: none;
-        top: -#{$slider-thumb-radius + $slider-label-height};
-        margin-left: -#{$slider-thumb-radius};
+        top: -#{rem($slider-thumb-radius) + rem($slider-label-height)};
+        margin-left: -#{rem($slider-thumb-radius)};
 
         &:focus %igx-thumb-dot::after {
             opacity: .18;
@@ -166,10 +165,10 @@
         justify-content: center;
         flex: 0 0 auto;
         pointer-events: none;
-        min-width: $slider-label-width;
-        height: $slider-label-height;
+        min-width: rem($slider-label-width);
+        height: rem($slider-label-height);
         padding: $slider-label-padding;
-        border-radius: $slider-label-radius;
+        border-radius: rem($slider-label-radius);
         margin: 0 auto;
         font-size: $slider-label-font-size;
         font-weight: $slider-label-font-weight;
@@ -187,7 +186,7 @@
             top: 0;
             left: 50%;
             margin-left: -#{$slider-label-radius};
-            width: $slider-label-width;
+            width: rem($slider-label-width);
             height: $slider-label-height;
             border-radius: 0 $slider-label-radius $slider-label-radius;
             background: inherit;
@@ -198,11 +197,11 @@
         &::before {
             content: '';
             position: absolute;
-            top: 42px;
+            top: rem(42px);
             left: calc(50% - 1px);
             border-left: 1px solid;
             border-right: 1px solid;
-            border-top: 14px solid;
+            border-top: rem(14px) solid;
             border-color: inherit;
         }
     }
@@ -210,7 +209,7 @@
     %igx-thumb-dot {
         position: relative;
         left: 0;
-        padding: 20px;
+        padding: rem(20px);
 
         &:hover::after {
             opacity: .12;
@@ -221,21 +220,21 @@
         &::before {
             position: absolute;
             content: '';
-            width: 12px;
-            height: 12px;
-            left: #{$slider-thumb-radius - 6px};
-            top: #{$slider-thumb-radius - 6px};
+            width: rem(12px);
+            height: rem(12px);
+            left: #{rem($slider-thumb-radius) - rem(6px)};
+            top: #{rem($slider-thumb-radius) - rem(6px)};
             background: --var($theme, 'thumb-color');
             transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
-            border-radius: $slider-thumb-width / 2;
+            border-radius: rem($slider-thumb-radius);
         }
 
         &::after {
             position: absolute;
             content: '';
-            width: $slider-thumb-width;
-            height: $slider-thumb-height;
+            width: rem($slider-thumb-width);
+            height: rem($slider-thumb-height);
             background: --var($theme, 'thumb-color');
             top: 0;
             left: 0;
@@ -263,7 +262,7 @@
         }
 
         &::after {
-            opacity: .24;
+            opacity: .24 !important;
             /* 48 / 40 */
             transform: scale(1.2) !important;
         }
@@ -271,12 +270,6 @@
 
     %igx-thumb-label--active {
         opacity: 1;
-    }
-
-    %igx-thumb-dot--start,
-    %igx-thumb-label--start {
-        background: $slider-background--start;
-        border-color: $slider-background--start transparent transparent;
     }
 
     %igx-thumb--active {
