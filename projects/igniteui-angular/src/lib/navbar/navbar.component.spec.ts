@@ -152,7 +152,7 @@ class NavbarIntializeTestComponent {
     public title: string;
     public actionButtonIcon: string;
     public isActionButtonVisible: boolean;
-    @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -167,7 +167,7 @@ class NavbarIntializeTestComponent {
                </igx-navbar>`
 })
 class NavbarCustomActionIconTestComponent {
-    @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -182,5 +182,5 @@ class NavbarCustomActionIconTestComponent {
                </igx-navbar>`
 })
 class NavbarCustomIgxIconTestComponent {
-    @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
+    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
 }

@@ -374,5 +374,5 @@ export class IgxMonthPickerSampleComponent {
         year: 'numeric'
     };
 
-    @ViewChild(IgxMonthPickerComponent) public monthPicker: IgxMonthPickerComponent;
+    @ViewChild(IgxMonthPickerComponent, { static: true }) public monthPicker: IgxMonthPickerComponent;
 }

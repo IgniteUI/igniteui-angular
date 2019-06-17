@@ -11,7 +11,7 @@
 
 <ng-template #editableDatePickerTemplate>
     <igx-input-group #editableInputGroup [supressInputAutofocus]="true">
-        <igx-prefix (click)="openDialog()">
+        <igx-prefix (click)="openDialog(editableInputGroup.element.nativeElement)">
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>

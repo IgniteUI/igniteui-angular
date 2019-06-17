@@ -10,7 +10,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 
 export class GridColumnPinningSampleComponent implements OnInit {
 
-    @ViewChild('grid1')
+    @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
     data: any[];

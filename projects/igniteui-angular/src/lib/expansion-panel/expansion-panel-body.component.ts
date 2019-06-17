@@ -1,4 +1,4 @@
-import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, OnInit, Inject } from '@angular/core';
+import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, Inject } from '@angular/core';
 import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
@@ -6,7 +6,7 @@ import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansio
     selector: 'igx-expansion-panel-body',
     template: `<ng-content></ng-content>`
 })
-export class IgxExpansionPanelBodyComponent implements OnInit {
+export class IgxExpansionPanelBodyComponent {
     private _labelledBy = '';
     private _label = '';
     constructor(
@@ -89,9 +89,4 @@ export class IgxExpansionPanelBodyComponent implements OnInit {
     @Input()
     @HostBinding('attr.role')
     public role = 'region';
-
-    ngOnInit() {
-        this.labelledBy = this.panel.headerId;
-        this.label = this.panel.id + '-region';
-    }
 }

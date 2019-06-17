@@ -13,20 +13,20 @@ export class GridCellStylingSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     condition = (rowData: any): boolean => {
-        return rowData[this.grid1.primaryKey] === "BLONP";
+        return rowData[this.grid1.primaryKey] === 'BLONP';
     }
 
     condition1 = (rowData: any, columnKey: any): boolean => {
-        return rowData[columnKey] === "ALFKI" || rowData[columnKey] === "ANTON";
+        return rowData[columnKey] === 'ALFKI' || rowData[columnKey] === 'ANTON';
     }
     condition2 = (rowData: any, columnKey: any): boolean => {
-        return rowData[columnKey] === "BERGS" || rowData[columnKey] === "ANATR";
+        return rowData[columnKey] === 'BERGS' || rowData[columnKey] === 'ANATR';
     }
     condition3 = (rowData: any, columnKey: any) => {
-        return rowData[columnKey] === 'FRANS' || rowData[columnKey] === "BLONP";
+        return rowData[columnKey] === 'FRANS' || rowData[columnKey] === 'BLONP';
     }
 
     condition4 = (rowData: any, columnKey: any): boolean => {
@@ -44,13 +44,13 @@ export class GridCellStylingSampleComponent implements OnInit {
         'test1': this.condition1,
         'test2': this.condition2,
         'test3': this.condition3
-    }
+    };
 
     cellClasses2 = {
         'test1': this.condition4,
         'test2': this.condition5,
         'test3': this.condition6
-    }
+    };
 
     public ngOnInit(): void {
         this.columns = [

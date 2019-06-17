@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.0.0
+- `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
+    - `#emptyTemplate`
+    - `#headerTemplate`
+    - `#footerTemplate`
+    - `#itemTemplate`
+    - `#addItemTemplate`
+    - `#headerItemTemplate`
+- `igxTimePicker` and `igxDatePicker`
+    - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
+    - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
+    - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `igxDatePicker` and `igxTimePicker` now provide the ability for adding custom action buttons. Read up more information in [igxDatePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md) or [igxTimePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+
 ## 7.3.4
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
