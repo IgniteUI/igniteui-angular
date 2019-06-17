@@ -1,3 +1,5 @@
+@import '../shape/chip';
+
 ////
 /// @group schemas
 /// @access private
@@ -24,9 +26,7 @@
 /// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
 /// @see $default-palette
-$_light-chip: (
-    border-radius: 1,
-
+$_light-chip:extend((
     text-color: (
         igx-color: ('grays', 700)
     ),
@@ -91,4 +91,4 @@ $_light-chip: (
     ),
 
     focus-selected-border-color: transparent
-);
+), $_default-shape-chip);

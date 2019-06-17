@@ -1,3 +1,5 @@
+@import '../shape/list';
+
 ////
 /// @group schemas
 /// @access private
@@ -20,11 +22,7 @@
 ///
 /// @see $default-palette
 
-$_light-list: (
-
-    border-radius: 0,
-    item-border-radius: 0,
-
+$_light-list: extend((
     background: (
         igx-color: 'surface'
     ),
@@ -55,4 +53,4 @@ $_light-list: (
         igx-color: 'surface',
         text-contrast: ()
     )
-);
+), $_default-shape-list);

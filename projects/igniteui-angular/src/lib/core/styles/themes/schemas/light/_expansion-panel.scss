@@ -1,3 +1,5 @@
+@import '../shape/expansion-panel';
+
 ////
 /// @group schemas
 /// @access private
@@ -16,9 +18,7 @@
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for expansion-panel.
 /// @see $default-palette
-$_light-expansion-panel: (
-    border-radius: 0,
-
+$_light-expansion-panel:extend((
     header-background: #fff,
     body-background: #fff,
 
@@ -45,4 +45,4 @@ $_light-expansion-panel: (
     disabled-color: (
         igx-color: ('grays', 500)
     )
-);
+), $_default-shape-expansion-panel);

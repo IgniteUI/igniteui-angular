@@ -1,3 +1,5 @@
+@import '../shape/grid';
+
 ////
 /// @group schemas
 /// @access private
@@ -64,8 +66,9 @@
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
 /// @see $default-palette
-$_light-grid: (
+$_light-grid:extend((
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #fff
@@ -293,4 +296,4 @@ $_light-grid: (
     row-drag-color: (
         igx-color: ('grays', 200)
     )
-);
+), $_default-shape-grid);

@@ -74,6 +74,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
+/// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -167,11 +168,17 @@
     $grid-shadow: null,
     $drag-shadow: null,
     $row-ghost-background: null,
-    $row-drag-color: null
+    $row-drag-color: null,
+    $drop-area-border-radius: null,
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
     $theme: apply-palette($grid-schema, $palette);
+
+    $drop-area-border-radius: round-borders(
+        if($drop-area-border-radius, $drop-area-border-radius, map-get($grid-schema, 'border-radius')),0 ,16px
+    );
+
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
@@ -430,7 +437,8 @@
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
         row-ghost-background: $row-ghost-background,
-        row-drag-color: $row-drag-color
+        row-drag-color: $row-drag-color,
+        drop-area-border-radius: $drop-area-border-radius
     ));
 }
 
@@ -488,12 +496,6 @@
         comfortable: rem(32px),
         cosy: rem(24px),
         compact: rem(24px)
-    );
-
-    $drop-area-padding: (
-        comfortable: 0 rem(16px),
-        cosy: 0 rem(8px),
-        compact: 0 rem(6px)
     );
 
     $cell-padding-comfortable: rem(24px);
@@ -1705,9 +1707,8 @@
         align-items: center;
         justify-content: flex-start;
         height: map-get($drop-area-height, 'comfortable');
-        border-radius: map-get($drop-area-height, 'comfortable') / 2;
-        padding: map-get($drop-area-padding, 'comfortable');
-        margin: rem(4px);
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'comfortable');
         flex: 1 0 0%;
         background: --var($theme, 'drop-area-background');
 
@@ -1726,16 +1727,15 @@
 
     %igx-drop-area--cosy {
         height: map-get($drop-area-height, 'cosy');
-        border-radius: map-get($drop-area-height, 'cosy') / 2;
-        padding: map-get($drop-area-padding, 'cosy');
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map-get($drop-area-height, 'compact');
-        border-radius: map-get($drop-area-height, 'compact') / 2;
-        padding: map-get($drop-area-padding, 'compact');
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'compact');
     }
-
 
     %igx-drop-area__text {
         @include ellipsis();

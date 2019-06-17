@@ -1,3 +1,5 @@
+@import '../shape/dialog';
+
 ////
 /// @group schemas
 /// @access private
@@ -12,9 +14,7 @@
 /// @prop {number} elevation [24] - The elevation level for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for dialog component.
 /// @see $default-palette
-$_light-dialog: (
-    border-radius: .1,
-
+$_light-dialog:extend((
     background: (
         igx-color: 'surface'
     ),
@@ -32,4 +32,4 @@ $_light-dialog: (
     ),
 
     elevation: 24
-);
+), $_default-shape-dialog);
