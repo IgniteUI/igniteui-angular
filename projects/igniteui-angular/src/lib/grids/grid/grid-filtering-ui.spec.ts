@@ -3063,7 +3063,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
         const checkbox: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
 
-        expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false]);
+        expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false, false]);
     }));
 
     it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
@@ -3115,8 +3115,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
         const checkbox: any[] = Array.from(excelMenu.querySelectorAll('.igx-checkbox__input'));
 
-        expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true]);
-        expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false]);
+        expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true, false]);
+        expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false, false]);
     }));
 
     it('Should change filter when changing And/Or operator.', fakeAsync(() => {
@@ -3889,11 +3889,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     }));
 
     it('should not display search scrollbar when not needed for the current display density', (async() => {
-        // Verify scrollbar is visible for 'comfortable'.
+        // Verify scrollbar is NOT visible for 'comfortable'.
         GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
         await wait(16);
         fix.detectChanges();
-        expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
+        expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
         GridFunctions.clickApplyExcelStyleFiltering(fix);
         fix.detectChanges();
 
@@ -3927,8 +3927,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
         openExcelMenu(fix, 2);
         verifyExcelStyleFilterAvailableOptions(grid,
-            [ 'Select All', '(Blanks)', '0', '20', '100', '127', '254' ],
-            [ true, true, true, true, true, true, true ]);
+            [ 'Select All', '(Blanks)', '0', '20', '100', '127', '254', '702' ],
+            [ true, true, true, true, true, true, true, true ]);
 
         openExcelMenu(fix, 1);
         verifyExcelStyleFilterAvailableOptions(grid,
