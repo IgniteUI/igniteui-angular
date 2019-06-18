@@ -316,6 +316,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             return true;
         }
 
+        if (this.filterValues.size === 1) {
+            const firstValue = this.filterValues.values().next().value;
+
+            if (!firstValue && firstValue !== 0) {
+                return true;
+            }
+        }
+
         for (let index = 0; index < this.uniqueValues.length; index++) {
             if (this.filterValues.has(this.uniqueValues[index])) {
                 return true;
