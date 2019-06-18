@@ -41,7 +41,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
-    constructor() {}
+    constructor() { }
 
     public ngAfterViewInit() {
         requestAnimationFrame(() => {
@@ -76,7 +76,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     }
 
     public get itemSize() {
-        let itemSize = '48px';
+        let itemSize = '40px';
         switch (this.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
             case DisplayDensity.compact: itemSize = '28px'; break;
