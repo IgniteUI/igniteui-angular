@@ -13,11 +13,11 @@ interface DataItem {
   styleUrls: ['./drop-down-virtual.component.scss']
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
-  @ViewChild('loadingToast', { read: IgxToastComponent})
+  @ViewChild('loadingToast', { read: IgxToastComponent, static: true })
   public loadingToast: IgxToastComponent;
-  @ViewChild('asyncFor', { read: IgxForOfDirective })
+  @ViewChild('asyncFor', { read: IgxForOfDirective, static: true })
   public remoteVirtDir: IgxForOfDirective<any>;
-  @ViewChild('dropdown', { read: IgxDropDownComponent })
+  @ViewChild('dropdown', { read: IgxDropDownComponent, static: true })
   public remoteDropDown: IgxDropDownComponent;
   public itemsAsync: Observable<any[]>;
   public localItems: DataItem[];

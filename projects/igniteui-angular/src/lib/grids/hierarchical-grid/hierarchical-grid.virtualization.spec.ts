@@ -385,6 +385,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async(done) => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);
         fixture.detectChanges();
+        await wait();
 
         const hierarchicalGrid = fixture.componentInstance.hgrid;
         fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
@@ -395,6 +396,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
 
                 expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeFalsy();
                 expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);
+                console.log('==== Done called! ====');
                 done();
             }
         );
@@ -424,9 +426,9 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         // 3 level hierarchy

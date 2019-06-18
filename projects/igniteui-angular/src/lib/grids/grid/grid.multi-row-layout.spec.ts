@@ -1146,7 +1146,7 @@ describe('IgxGrid - multi-row-layout', () => {
     `
 })
 export class ColumnLayoutTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },

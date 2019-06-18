@@ -2,11 +2,15 @@
 
 # Current Milestone
 
+## Milestone 8 (Due by July, 2019) 
 
-## Milestone 7 (Due May 7th, 2019) 
-1. Multi-cell Selection #3915
-2. Grid Multi-Row Layout 
-3. Grid Row Dragging 
+1. Grid Multi-Row Layout keyboard nav #4708
+2. Angular 8 compatibility #4908
+3. Display density for Drop Downs #2960
+4. Slider custom labels #4594
+5. Copy data from the igxGrid #4907
+6. BottomNav and Tabs integration with router outlet container #4297
+7. Date/Time pickers action buttons customization #4647
 
 
 ## Going down the road
@@ -93,3 +97,10 @@
 4. **[DONE]** Excel Style Filtering #3592
 5. **[DONE]** Inline date and time pickers (with drop down/toggle) #3034 #2337
 6. **[DONE]** igxSelect Component #3148
+
+## Milestone 7 (13.05.2019) 
+
+1. **[DONE]** Multi-cell Selection #3915
+2. **[DONE]** Grid Multi-Row Layout #4384
+3. **[DONE]** Grid Row Dragging #3993
+3. **[DONE]** List, button, button group display density support #4393 #4502 #4532

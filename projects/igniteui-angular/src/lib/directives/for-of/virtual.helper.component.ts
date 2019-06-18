@@ -8,7 +8,7 @@ export class VirtualHelperComponent implements OnDestroy {
     @HostBinding('scrollTop')
     public scrollTop;
 
-    @ViewChild('container', { read: ViewContainerRef }) public _vcr;
+    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
     @Input() public itemsLength: number;
 
     public set height(value) {

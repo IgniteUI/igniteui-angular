@@ -145,6 +145,6 @@ describe('IgxLayoutDirective', () => {
     `
 })
 class TestFlexLayoutComponent {
-    @ViewChild(IgxLayoutDirective) public instance: IgxLayoutDirective;
-    @ViewChild(IgxFlexDirective) public inner: IgxFlexDirective;
+    @ViewChild(IgxLayoutDirective, { static: true }) public instance: IgxLayoutDirective;
+    @ViewChild(IgxFlexDirective, { static: true }) public inner: IgxFlexDirective;
 }
