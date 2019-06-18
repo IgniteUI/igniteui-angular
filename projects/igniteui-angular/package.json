@@ -75,6 +75,7 @@
     "@angular/core": "^8.0.0",
     "@angular/animations": "^8.0.0",
     "@angular/forms": "^8.0.0",
+    "node-sass": "^4.9.0",
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
