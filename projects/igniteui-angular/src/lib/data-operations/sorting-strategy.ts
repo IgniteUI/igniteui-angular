@@ -142,7 +142,7 @@ export class IgxSorting {
                 value: group[0][expressions[level].fieldName],
                 groupParent: parent,
                 groups: [],
-                height: grid ? grid.rowHeight : null
+                height: grid ? grid.renderedRowHeight : null
             };
             if (parent) {
                 parent.groups.push(groupRow);
