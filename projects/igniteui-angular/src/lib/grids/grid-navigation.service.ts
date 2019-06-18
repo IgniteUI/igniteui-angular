@@ -553,7 +553,7 @@ export class IgxGridNavigationService {
             const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
-                    this.movePreviousEditable(rowIndex, selectedNode.column);
+                    this.movePreviousEditable(rowIndex, visibleColumnIndex);
                     return;
                 }
                 this.onKeydownArrowLeft(cell, selectedNode);
