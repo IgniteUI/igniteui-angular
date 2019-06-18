@@ -1,5 +1,12 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
+
+interface Employee {
+    imageURL: string;
+    name: string;
+    position: string;
+    description: string;
+}
 
 @Component({
     selector: 'app-list-sample',
@@ -27,10 +34,30 @@ export class ListSampleComponent implements OnInit {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
-    
     density = 'comfortable';
     displayDensities;
 
+    employeeItems: Employee[] = [{
+        imageURL: 'assets/images/avatar/18.jpg',
+        name: 'Marin Popov',
+        position: 'Web designer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/2.jpg',
+        name: 'Simeon Simeonov',
+        position: 'Front-end Developer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/7.jpg',
+        name: 'Stefan ivanov',
+        position: 'UX Architect',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/6.jpg',
+        name: 'Svilen Dimchevski',
+        position: 'Graphic designer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
+    }];
     navItems: object[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
@@ -107,9 +134,9 @@ export class ListSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+            {label: 'comfortable', selected: this.density === 'comfortable', togglable: true},
+            {label: 'cosy', selected: this.density === 'cosy', togglable: true},
+            {label: 'compact', selected: this.density === 'compact', togglable: true}
         ];
     }
 
@@ -153,11 +180,12 @@ export class ListSampleComponent implements OnInit {
         return fruitsFilterOpts;
     }
 
-    filteringHandler = function(args) {
+    filteringHandler = function (args) {
         args.cancel = !this.checkbox.checked;
     };
 
-    filteredHandler = (args) => { };
+    filteredHandler = (args) => {
+    };
 
     onAddFruitButtonClicked(fruitName) {
         this.addFruit(fruitName);
@@ -165,7 +193,7 @@ export class ListSampleComponent implements OnInit {
     }
 
     addFruit(fruitName) {
-        this.fruits.push({ id: this.fruits.length, name: fruitName });
+        this.fruits.push({id: this.fruits.length, name: fruitName});
     }
 
     addFruits(fruits: string[]) {
