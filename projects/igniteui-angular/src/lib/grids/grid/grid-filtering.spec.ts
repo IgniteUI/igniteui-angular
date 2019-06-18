@@ -597,6 +597,27 @@ describe('IgxGrid - Filtering actions', () => {
         verifyExpressionUI(expressionUIs[3], expression21, FilteringLogic.And, FilteringLogic.Or);
         verifyExpressionUI(expressionUIs[4], expression22, null, FilteringLogic.And);
     }));
+
+    it('Should throw descriptive error when filter() is called without condition', fakeAsync(() => {
+        expect(() => {
+            grid.filter('Downloads', 100);
+            fix.detectChanges();
+        }).toThrowError('Invalid condition or Expression Tree!');
+    }));
+
+    it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
+
+        // Execute global filtering with invalid condition.
+        grid.filterGlobal(1000, null);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
+    }));
 });
 
 const expectedResults = [];

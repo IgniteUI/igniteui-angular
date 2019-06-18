@@ -28,6 +28,7 @@ import { IgxCheckboxModule } from '../../../checkbox/checkbox.component';
 import { IgxFilterModule } from '../../../directives/filter/filter.directive';
 import { IgxToggleModule } from '../../../directives/toggle/toggle.directive';
 import { IgxListModule } from '../../../list/list.component';
+import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
 
 /**
  * @hidden
@@ -44,7 +45,8 @@ import { IgxListModule } from '../../../list/list.component';
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleSearchFilterPipe
     ],
     exports: [
         IgxGridExcelStyleFilteringComponent,

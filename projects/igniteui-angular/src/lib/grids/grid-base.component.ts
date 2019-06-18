@@ -75,10 +75,10 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
-import { ICachedViewLoadedEventArgs } from '../directives/template-outlet/template_outlet.directive';
+import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import {
     IgxExcelStyleSortingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
@@ -86,6 +86,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -172,9 +173,16 @@ export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
 }
-
+// TODO: to be deleted when onFocusChange event is removed #4054
 export interface IFocusChangeEventArgs {
     cell: IgxGridCellComponent;
+    event: Event;
+    cancel: boolean;
+}
+
+export interface IGridKeydownEventArgs {
+    targetType: GridKeydownTargetType;
+    target: Object;
     event: Event;
     cancel: boolean;
 }
@@ -198,6 +206,12 @@ export enum GridSummaryCalculationMode {
 export enum FilterMode {
     quickFilter = 'quickFilter',
     excelStyleFilter = 'excelStyleFilter'
+}
+
+export enum GridKeydownTargetType {
+    dataCell = 'dataCell',
+    summaryCell = 'summaryCell',
+    groupRow = 'groupRow'
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
@@ -571,6 +585,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
+            this._autoSize = false;
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
                     this.reflow();
@@ -1430,19 +1445,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
-     * Emitted when changing the focus while navigating with the keyboard.
-     * Return the focused cell or focused group row. This event is cancelable.
+     * @deprecated you should use onGridKeydown event
+     */
+    @Output()
+    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
+    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+
+    /**
+     * Emitted when keydown is triggered over element inside grid's body.
+     * This event is fired only if the key combination is supported in the grid.
+     * Return the target type, target object and the original event. This event is cancelable.
      * ```typescript
-     * changeFocus(event: IGridFocusChangeEventArgs) {
-     *  const changedFocus = event;
+     * customKeydown(args: IGridKeydownEventArgs) {
+     *  const keydownEvent = args.event;
      * }
      * ```
      * ```html
-     * * <igx-grid (onFocusChange)="changeFocus($event)"></igx-grid>
+     *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
-     */
+    */
     @Output()
-    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+    public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
     /**
      * @hidden
@@ -1633,9 +1656,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
-        /**
-     * @hidden
-     */
+    /**
+ * @hidden
+ */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective })
     public verticalScroll: IgxGridForOfDirective<any>;
 
@@ -1678,6 +1701,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
+    public filteringRow: IgxGridFilteringRowComponent;
+
+    /**
+     * @hidden
+     */
     @ViewChild('theadRow')
     public theadRow: ElementRef;
 
@@ -1712,6 +1741,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+    */
+    @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
+    public tmpOutlets: QueryList<any>;
+
 
     /**
      * @hidden
@@ -2403,8 +2439,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
+    protected _autoSize = false;
     private _rowHeight;
-    private _ngAfterViewInitPassed = false;
+    protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
 
     // Caches
@@ -2419,7 +2456,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
     private _columnWidthSetByUser = false;
 
-    private _defaultTargetRecordNumber = 10;
+    protected _defaultTargetRecordNumber = 10;
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -2524,8 +2561,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.resizeHandler = () => {
-            this.calculateGridSizes();
-            this.zone.run(() => this.markForCheck());
+            this.zone.run(() => this.calculateGridSizes());
         };
     }
 
@@ -2603,19 +2639,29 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.columnListDiffer.diff(this.columnList);
         this.markForCheck();
         this.resetCaches();
-        this._derivePossibleHeight();
 
         this.columnList.changes
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
      * @hidden
      * @internal
      */
-    public resetColumnsVisibleIndexCache() {
-        this.columnList.forEach(column => column.resetVisibleIndex());
+    public resetColumnsCaches() {
+        this.columnList.forEach(column => column.resetCaches());
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetForOfCache() {
+        const firstVirtRow = this.dataRowList.first;
+        if (firstVirtRow) {
+            firstVirtRow.virtDirRow.assumeMaster();
+        }
     }
 
     /**
@@ -2643,7 +2689,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public resetCaches() {
-        this.resetColumnsVisibleIndexCache();
+        this.resetForOfCache();
+        this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
         this._columnGroups = this.columnList.some(col => col.columnGroup);
@@ -2719,6 +2766,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
 
+        this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
+            this.calculateGridHeight();
+            $event.containerSize = this.calcHeight;
+        });
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
@@ -2736,6 +2787,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngOnDestroy() {
+        this.tmpOutlets.forEach((tmplOutlet) => {
+            tmplOutlet.cleanCache();
+        });
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
             this.nativeElement.removeEventListener('keydown', this._keydownListener);
@@ -2827,6 +2881,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return 32;
             default:
                 return 50;
+        }
+    }
+
+    get defaultSummaryHeight(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 30;
+            case DisplayDensity.compact:
+                return 24;
+            default:
+                return 36;
         }
     }
 
@@ -3496,7 +3561,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param ignoreCase
      * @memberof IgxGridBaseComponent
      */
-    public filterGlobal(value: any, condition?, ignoreCase?) {
+    public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
 
@@ -3579,13 +3644,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
-    public clearSummaryCache(args?) {
-    }
-
-    /**
-     * @hidden
-     */
     public refreshGridState(args?) {
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
@@ -3631,13 +3689,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public reflow() {
         this.calculateGridSizes();
-    }
-
-    /**
-     * @hidden
-     */
-    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
-    public recalculateSummaries() {
     }
 
     /**
@@ -3816,24 +3867,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get rowBasedHeight() {
-            return this.dataLength * this.rowHeight;
-        }
+        return this.dataLength * this.rowHeight;
+    }
 
     /**
      * @hidden
-     * Sets this._height
      */
-    protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom) {
-            return;
-        }
-        if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
-            const viewPortHeight = document.documentElement.clientHeight;
-            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
-        }
+    protected get isPercentWidth() {
+        return this._width && this._width.indexOf('%') !== -1;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isPercentHeight() {
+        return this._height && this._height.indexOf('%') !== -1;
     }
 
     /**
@@ -3846,16 +3894,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.columnList.forEach((column: IgxColumnComponent) => {
                 column.defaultWidth = this._columnWidth;
             });
+            this.resetCachedWidths();
         }
     }
 
     /**
      * @hidden
      */
-    private get defaultTargetBodyHeight(): number {
+    protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    /**
+     * @hidden @internal
+     * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
+     */
+    public get renderedRowHeight(): number {
+        return this.rowHeight + 1;
     }
 
     /**
@@ -3863,21 +3920,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this._derivePossibleHeight();
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
                 (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
         this.summariesHeight = 0;
-        if (!this._height) {
-            this.calcHeight = null;
-            if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
-                this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
-            }
-            return;
-        }
-
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
             this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         }
@@ -3918,33 +3966,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _calculateGridBodyHeight() {
+    protected _calculateGridBodyHeight(): number {
+        if (!this._height) {
+            return null;
+        }
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
+        let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        let gridHeight;
+        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+            this.summariesHeight + pagingHeight + groupAreaHeight + footerBordersAndScrollbars +
+            this.scr.nativeElement.clientHeight;
 
-        if (this._height && this._height.indexOf('%') !== -1) {
+        if (this.isPercentHeight) {
             /*height in %*/
-            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
-                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
-            } else {
-                return this.defaultTargetBodyHeight;
+            if (!this.nativeElement.parentElement ||
+                this.nativeElement.parentElement.clientHeight === renderedHeight) {
+                /* parent element is sized by the rendered elements which means
+                the grid should attempt a content-box style rendering */
+                this._autoSize = true;
             }
+            if (this._autoSize || computed.getPropertyValue('height').indexOf('%') !== -1) {
+                const bodyHeight = this.getDataBasedBodyHeight();
+                return bodyHeight > 0 ? bodyHeight : null;
+            }
+            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
         } else {
             gridHeight = parseInt(this._height, 10);
         }
-        const height = Math.abs(gridHeight - toolbarHeight -
-                this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight -
-                groupAreaHeight - footerBordersAndScrollbars -
-                this.scr.nativeElement.clientHeight);
+        const height = Math.abs(gridHeight - renderedHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
-            return this.defaultTargetBodyHeight;
+            const bodyHeight = this.defaultTargetBodyHeight;
+            return bodyHeight > 0 ? bodyHeight : null;
         }
 
         return height;
@@ -4013,7 +4070,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const el = this.document.getElementById(this.nativeElement.id);
 
-        if (this._width && this._width.indexOf('%') !== -1) {
+        if (this.isPercentWidth) {
             /* width in %*/
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
                 parseInt(computed.getPropertyValue('width'), 10) : null;
@@ -4027,7 +4084,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
         if (!width) {
-            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
         if (this.hasVerticalSroll()) {
@@ -4044,8 +4101,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._ngAfterViewInitPassed) { return false; }
         const isScrollable = this.verticalScrollContainer.isScrollable();
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
-        this.verticalScrollContainer.igxForOf.length > 0 &&
-        isScrollable);
+            this.verticalScrollContainer.igxForOf.length > 0 &&
+            isScrollable);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        return !this.data || (this.data.length < this._defaultTargetRecordNumber) ?
+            0 : this.defaultTargetBodyHeight;
     }
 
     /**
@@ -4099,16 +4164,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.cdr.detectChanges();
-        this.resetCaches();
-        this.calculateGridHeight();
 
         if (this.showRowCheckboxes) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
+        this.resetCaches();
+        this.cdr.detectChanges();
+        this.calculateGridHeight();
+
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
+        }
+
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.resetChipsArea();
         }
 
         this.cdr.detectChanges();
@@ -4151,11 +4221,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const isPercentage = this._width && this._width.indexOf('%') !== -1;
-        let width = isPercentage ?
+        let width = this.isPercentWidth ?
             this.calcWidth :
             parseInt(this._width, 10);
-        if (this.hasVerticalSroll() && !isPercentage) {
+        if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);
@@ -4557,8 +4626,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
     setSelection(range: GridSelectionRange): void {
-        const startNode =  { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
-        const endNode =  { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
+        const startNode = { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
+        const endNode = { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
 
         this.selectionService.pointerState.node = startNode;
         this.selectionService.selectRange(endNode, this.selectionService.pointerState);
@@ -4642,10 +4711,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public wheelHandler(isScroll = false) {
         if (document.activeElement &&
-        // tslint:disable-next-line:no-bitwise
+            // tslint:disable-next-line:no-bitwise
             (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-        // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
+                // tslint:disable-next-line:no-bitwise
+                (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
@@ -4654,7 +4723,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.calcWidth;
+        return col.field + col._calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
@@ -4709,7 +4778,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
-            this.lastSearchInfo = {...this.lastSearchInfo};
+            this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column);
@@ -4813,7 +4882,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof(row) !== 'number') {
+        if (this.paging && typeof (row) !== 'number') {
             const rowIndex = this.filteredSortedData.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
@@ -4826,11 +4895,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                    typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
@@ -4863,6 +4932,136 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // directive.onChunkLoad.pipe(first())
         //     .subscribe(() => requestAnimationFrame(() => this.cdr.detectChanges()));
         directive.scrollTo(goal);
+    }
+
+    public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
+        if (rowIndex < 0 || rowIndex > this.verticalScrollContainer.igxForOf.length - 1
+            || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+            return;
+        }
+        this.wheelHandler();
+        if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
+            && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
+            if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                this.verticalScrollContainer.scrollTo(rowIndex);
+                this.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
+                    });
+            } else {
+                this.executeCallback(rowIndex, visibleColIndex, cb);
+            }
+        } else {
+            const unpinnedIndex = this.navigation.getColumnUnpinnedIndex(visibleColIndex);
+            this.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    if (this.navigation.shouldPerformVerticalScroll(rowIndex)) {
+                        this.verticalScrollContainer.scrollTo(rowIndex);
+                        this.verticalScrollContainer.onChunkLoad
+                            .pipe(first()).subscribe(() => {
+                                this.executeCallback(rowIndex, visibleColIndex, cb);
+                            });
+                    } else {
+                        this.executeCallback(rowIndex, visibleColIndex, cb);
+                    }
+
+                });
+            this.navigation.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
+        }
+    }
+
+    public getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
+        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
+        }
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
+            columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
+        const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+            .find(rec => !rec.expression && !rec.summaries) && nextCellIndex !== undefined) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
+        } else {
+            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
+                return { rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex };
+            } else {
+                return { rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
+            }
+        }
+    }
+
+    public getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (IgxColumnComponent) => boolean = null) {
+        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+
+        if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
+        }
+        const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
+            columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
+        const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
+        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+            .find(rec => !rec.expression && !rec.summaries) && prevCellIndex !== undefined) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
+        } else {
+            if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+                return { rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: curVisibleColIndex };
+            } else {
+                return { rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
+            }
+        }
+    }
+
+    private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
+        if (!cb) { return; }
+        let targetType, target;
+        const row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        if (!row) { return; }
+        switch (row.nativeElement.tagName.toLowerCase()) {
+            case 'igx-grid-groupby-row':
+                targetType = GridKeydownTargetType.groupRow;
+                target = row;
+                break;
+            case 'igx-grid-summary-row':
+                targetType = GridKeydownTargetType.summaryCell;
+                target = visibleColIndex !== -1 ?
+                    row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
+                break;
+            default:
+                targetType = GridKeydownTargetType.dataCell;
+                target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
+                break;
+        }
+        const args = { targetType: targetType, target: target };
+        cb(args);
+    }
+
+    private getPrevDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex <= 0) { return currentRowIndex; }
+
+        const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
+            .find(rec => !rec.expression && !rec.summaries);
+        return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
+    }
+
+    private getNextDataRowIndex(currentRowIndex): number {
+        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) { return currentRowIndex; }
+
+        const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
+            .find(rec => !rec.expression && !rec.summaries);
+        return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
+    }
+
+    private isValidPosition(rowIndex, colIndex) {
+        const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        if (rows < 1 || cols < 1) { return false; }
+        if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
+            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+            return true;
+        }
+        return false;
     }
 
     private rebuildMatchCache() {
@@ -5097,12 +5296,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected _restoreVirtState(row) {
-         // check virtualization state of data record added from cache
-         // in case state is no longer valid - update it.
-         const rowForOf = row.virtDirRow;
-         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
-         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        // check virtualization state of data record added from cache
+        // in case state is no longer valid - update it.
+        const rowForOf = row.virtDirRow;
+        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
         }

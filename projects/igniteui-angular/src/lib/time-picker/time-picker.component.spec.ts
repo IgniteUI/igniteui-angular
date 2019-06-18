@@ -9,6 +9,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
+import { IgxIconModule } from '../icon';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -26,13 +27,15 @@ describe('IgxTimePicker', () => {
                 IgxTimePickerRetemplatedComponent,
                 IgxTimePickerDropDownComponent,
                 IgxTimePickerDropDownSingleHourComponent,
-                IgxTimePickerDropDownNoValueComponent
+                IgxTimePickerDropDownNoValueComponent,
+                IgxTimePickerRetemplatedDropDownComponent
             ],
             imports: [
                 IgxTimePickerModule,
                 FormsModule,
                 NoopAnimationsModule,
-                IgxInputGroupModule
+                IgxInputGroupModule,
+                IgxIconModule
             ]
         }).compileComponents();
     }));
@@ -1285,7 +1288,7 @@ describe('IgxTimePicker', () => {
             expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
         }));
 
-        it('should scroll on dropdown opened and accept value when focust lost', fakeAsync(() => {
+        it('should scroll on dropdown opened and accept value when focus lost', fakeAsync(() => {
             fixture.detectChanges();
 
             timePicker.itemsDelta = { hours: 1, minutes: 5 };
@@ -1412,6 +1415,35 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             expect(timePicker.onOpen.emit).toHaveBeenCalled();
+        }));
+    });
+
+    describe('TimePicker DropDown retemplating', () => {
+        it('TimePicker with retemplated input group and dropDownTarget ref variable', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTimePickerRetemplatedDropDownComponent);
+            fixture.detectChanges();
+
+            const dom = fixture.debugElement;
+            const icon = dom.query(By.css('.igx-icon'));
+            const inputGroup = dom.query(By.css('.igx-input-group'));
+
+            expect(inputGroup).not.toBeNull();
+            expect(icon).not.toBeNull();
+
+            expect(() => {
+                UIInteractions.clickElement(icon);
+                tick();
+                fixture.detectChanges();
+            }).not.toThrowError();
+
+            const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+            expect(dropDown.properties.hidden).toBeFalsy();
+
+            const dropdownClientRect = dropDown.nativeElement.getBoundingClientRect();
+            const inputGroupClientRect = inputGroup.nativeElement.getBoundingClientRect();
+
+            expect(dropdownClientRect.top).toEqual(inputGroupClientRect.bottom);
+            expect(dropdownClientRect.left).toEqual(inputGroupClientRect.left);
         }));
     });
 });
@@ -1570,6 +1602,24 @@ export class IgxTimePickerDropDownNoValueComponent {
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
+
+
+@Component({
+template: `
+<igx-time-picker [mode]="'dropdown'">
+    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-displayTime="displayTime">
+        <igx-input-group #dropDownTarget>
+            <label igxLabel>Time</label>
+            <input igxInput [value]="displayTime" required/>
+            <igx-suffix>
+                <igx-icon class="date-picker-icon" (click)="openDialog()">access_alarm</igx-icon>
+            </igx-suffix>
+        </igx-input-group>
+    </ng-template>
+</igx-time-picker>
+    `
+})
+export class IgxTimePickerRetemplatedDropDownComponent { }
 
 // helper functions
 function findByInnerText(collection, searchText) {

@@ -1195,8 +1195,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _getItemSize(item, dimension: string): number {
-        const hasDimension = (item[dimension] !== null && item[dimension] !== undefined);
-        return hasDimension ? parseInt(item[dimension], 10) : this.igxForItemSize;
+        const dim = item[dimension];
+        return typeof dim === 'number' ? dim : this.igxForItemSize;
     }
 }
 
@@ -1208,6 +1208,10 @@ export function getTypeNameForDebugging(type: any): string {
 export interface IForOfState {
     startIndex?: number;
     chunkSize?: number;
+}
+
+export interface IForOfDataChangingEventArgs {
+    containerSize: number;
 }
 
 @Directive({
@@ -1234,6 +1238,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     get igxGridForOf() {
         return this.igxForOf;
     }
+
+    /**
+     * @hidden @internal
+     * An event that is emitted after data has been changed but before the view is refreshed
+     */
+    @Output()
+    public onDataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
 
     ngOnInit() {
         this.syncService.setMaster(this);
@@ -1267,13 +1278,21 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
-    protected get sizesCache(): number[] {
+    /**
+     * @hidden
+     * @internal
+     */
+    public get sizesCache(): number[] {
         if (this.syncService.isMaster(this)) {
             return this._sizesCache;
         }
         return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
-    protected set sizesCache(value: number[]) {
+    /**
+     * @hidden
+     * @internal
+     */
+    public set sizesCache(value: number[]) {
         this._sizesCache = value;
     }
 
@@ -1390,10 +1409,23 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         return newHeight;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public assumeMaster(): void {
+        this._sizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
+        this.syncService.setMaster(this, true);
+    }
+
     ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
+                const args: IForOfDataChangingEventArgs = {
+                    containerSize: this.igxForContainerSize
+                };
+                this.onDataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
                     return;
@@ -1406,6 +1438,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);
+                this.igxForContainerSize = args.containerSize;
                 this._updateSizeCache(changes);
                 this._applyChanges();
                 this._updateScrollOffset();

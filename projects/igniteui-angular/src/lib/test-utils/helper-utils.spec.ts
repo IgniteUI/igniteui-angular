@@ -107,7 +107,7 @@ export class HelperUtils {
                     return;
                 }
 
-                UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true, false, shift);
+                UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
 
                 if (nextRow) {
                     await wait(40);
@@ -145,7 +145,7 @@ export class HelperUtils {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -253,7 +253,7 @@ export class HelperUtils {
         return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
     }
 
-    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 50) {
+    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
         const visibleSummaries = HelperUtils.getAllVisibleSummaries(fix);
         visibleSummaries.forEach(summary => {
             expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight - 1);

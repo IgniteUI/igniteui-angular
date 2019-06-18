@@ -385,9 +385,9 @@ describe('IgxSlider', () => {
                 expect((slider.value as IRangeSliderValue).upper).toBe(slider.upperBound);
             });
 
-        it('should switch from left thumb to be focused upper when lower value is near upper', () => {
+        it('should switch from left thumb to be focused upper when lower value is equal to upper', () => {
             slider.value = {
-                lower: 59,
+                lower: 60,
                 upper: 60
             };
 
@@ -398,14 +398,14 @@ describe('IgxSlider', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
 
-            expect((slider.value as IRangeSliderValue).lower).toBe(59);
+            expect((slider.value as IRangeSliderValue).lower).toBe(60);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector('.igx-slider__thumb-to'));
         });
 
-        it('should switch from right thumb to be focused lower when upper value is near lower', () => {
+        it('should switch from right thumb to be focused lower when upper value is equal to lower', () => {
             slider.value = {
-                lower: 59,
+                lower: 60,
                 upper: 60
             };
             fixture.detectChanges();
@@ -415,7 +415,7 @@ describe('IgxSlider', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
 
-            expect((slider.value as IRangeSliderValue).lower).toBe(59);
+            expect((slider.value as IRangeSliderValue).lower).toBe(60);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector('.igx-slider__thumb-from'));
         });

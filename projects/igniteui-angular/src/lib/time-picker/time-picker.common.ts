@@ -16,7 +16,6 @@ export interface IgxTimePickerBase {
     format: string;
     promptChar: string;
     cleared: boolean;
-    collapsed: boolean;
     mode: InteractionMode;
     nextHour();
     prevHour();

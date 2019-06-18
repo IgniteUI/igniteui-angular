@@ -65,7 +65,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     // TODO: Refactor
     public escape_editMode() {
         this.grid.crudService.end();
-        this.grid.refreshSearch();
     }
 
     // TODO: Refactor
@@ -235,12 +234,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             return args;
         }
 
-        if (!args.newValue) {
-            return args;
-        }
-
         if (rowInEditMode) {
             grid.transactions.endPending(false);
+        }
+
+        if (!args.newValue) {
+            return args;
         }
 
         if (hasSummarized) {
@@ -305,11 +304,15 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
 
-        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
+        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         grid.filteringExpressionsTree = filteringTree;
     }
 
     public filter_global(term, condition, ignoreCase) {
+        if (!condition) {
+            return;
+        }
+
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         grid.endEdit(false);
@@ -318,11 +321,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         filteringTree.filteringOperands = [];
-        if (condition) {
-            for (const column of grid.columns) {
-                this.prepare_filtering_expression(filteringTree, column.field, term,
-                    condition, ignoreCase || column.filteringIgnoreCase);
-            }
+        for (const column of grid.columns) {
+            this.prepare_filtering_expression(filteringTree, column.field, term,
+                condition, ignoreCase || column.filteringIgnoreCase);
         }
 
         grid.filteringExpressionsTree = filteringTree;
@@ -360,7 +361,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
 
         let newExpressionsTree;
         const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
@@ -373,7 +374,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (oldExpressionsTreeIndex === -1) {
             // no expressions tree found for this field
             if (expressionsTree) {
-                filteringState.filteringOperands.push(expressionsTree);
+                if (insertAtIndex > -1) {
+                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
+                } else {
+                    filteringState.filteringOperands.push(expressionsTree);
+                }
             } else if (condition) {
                 // create expressions tree for this field and add the new expression to it
                 newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);

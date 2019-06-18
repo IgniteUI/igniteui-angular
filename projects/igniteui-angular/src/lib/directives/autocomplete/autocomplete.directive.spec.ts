@@ -166,7 +166,11 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
-            document.body.click();
+            // Click in center of the body.
+            const bodyRect = document.body.getBoundingClientRect();
+            UIInteractions.simulateMouseEvent('click', document.body,
+                                    bodyRect.left + bodyRect.width / 2,
+                                    bodyRect.top + bodyRect.height / 2);
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -833,7 +837,7 @@ describe('IgxAutocomplete', () => {
 });
 
 @Component({
-    template: `<igx-input-group>
+    template: `<igx-input-group style="width: 300px;">
         <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'

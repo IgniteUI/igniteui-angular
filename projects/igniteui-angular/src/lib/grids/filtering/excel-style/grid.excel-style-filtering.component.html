@@ -74,7 +74,7 @@
             [ngClass]="clearFilterClass()"
             (keydown)="onClearFilterKeyDown($event)"
             (click)="clearFilter()">
-            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</span>
+            <span>{{ grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
             <igx-icon>clear</igx-icon>
         </div>
 
@@ -110,7 +110,7 @@
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
-        <igx-drop-down-item *ngIf="column.filteringExpressionsTree">
+        <igx-drop-down-item *ngIf="showCustomFilterItem()">
             <igx-icon>filter_list</igx-icon>
             <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
         </igx-drop-down-item>

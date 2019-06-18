@@ -150,7 +150,9 @@ export class IgxFilteringService implements OnDestroy {
             this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+            if (!expressionsTreeForColumn) {
+                throw new Error('Invalid condition or Expression Tree!');
+            } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
                 this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
@@ -191,7 +193,7 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
-    public filterGlobal(value: any, condition?, ignoreCase?) {
+    public filterGlobal(value: any, condition, ignoreCase?) {
         this.gridAPI.filter_global(value, condition, ignoreCase);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -370,6 +372,13 @@ export class IgxFilteringService implements OnDestroy {
         if (filterCell) {
             filterCell.focusChip(focusFirst);
         }
+    }
+
+    /**
+     * Focus the close button in the filtering row.
+     */
+    public focusFilterRowCloseButton() {
+        this.grid.filteringRow.closeButton.nativeElement.focus();
     }
 
     public get filteredData() {
