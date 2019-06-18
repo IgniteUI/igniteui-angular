@@ -366,6 +366,7 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     public overlaySettings: OverlaySettings;
+
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
      *```typescript
