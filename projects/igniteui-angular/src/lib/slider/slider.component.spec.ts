@@ -586,7 +586,7 @@ describe('IgxSlider', () => {
             expect(activeTumb).toBeNull();
         });
 
-        it('rendering of the slider should corresponds to the set labels', async() => {
+        it('rendering of the slider should corresponds to the set labels', () => {
             const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
@@ -595,24 +595,20 @@ describe('IgxSlider', () => {
             expect(slider.lowerLabel).toEqual('Winter');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Spring');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Autumn');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Autumn');
@@ -645,7 +641,7 @@ describe('IgxSlider', () => {
             expect(slider.stepDistance).toEqual(sliderWidth / 3);
         });
 
-        it('Upper bounds should be applied correctly', async() => {
+        it('Upper bounds should be applied correctly', () => {
             const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
             expect(slider.value).toBe(0);
 
@@ -662,23 +658,19 @@ describe('IgxSlider', () => {
             expect(slider.lowerBound).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Spring');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Spring');
@@ -707,7 +699,7 @@ describe('IgxSlider', () => {
             expect(slider.lowerBound).toBe(1);
         });
 
-        it('Label view should not be enabled if labels array is set uncorrectly', async() => {
+        it('Label view should not be enabled if labels array is set uncorrectly', () => {
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = ['Winter'];
@@ -736,7 +728,7 @@ describe('IgxSlider', () => {
             expect(slider.labelsViewEnabled).toBe(false);
         });
 
-        it('should be able to track the value changes per every slide action through an event emitter', async() => {
+        it('should be able to track the value changes per every slide action through an event emitter', () => {
             const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
@@ -744,35 +736,29 @@ describe('IgxSlider', () => {
             const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(0);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(1);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 0, value: 1});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 1, value: 2});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 2, value: 3});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(4);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 3, value: 2});
@@ -878,7 +864,7 @@ describe('IgxSlider', () => {
             expect(activeTumb).toBeNull();
         });
 
-        it('rendering of the slider should corresponds to the set labels', async() => {
+        it('rendering of the slider should corresponds to the set labels', () => {
             const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
             const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
@@ -886,40 +872,33 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            // expect(fixture.componentInstance.label).toEqual({lower: 0, upper: 6});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 1, upper: 6});
             expect(slider.lowerLabel).toEqual('Tuesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 2, upper: 6});
             expect(slider.lowerLabel).toEqual('Wednesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 3, upper: 6});
             expect(slider.lowerLabel).toEqual('Thursday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 6});
             expect(slider.lowerLabel).toEqual('Friday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 5});
             expect(slider.upperLabel).toEqual('Saturday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 4});
             expect(slider.upperLabel).toEqual('Friday');
@@ -954,7 +933,7 @@ describe('IgxSlider', () => {
             expect(slider.stepDistance).toEqual(sliderWidth / 6);
         });
 
-        it('upper bounds should be applied correctly', async() => {
+        it('upper bounds should be applied correctly', () => {
             const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
             const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
             expect(slider.value).toEqual({lower: 0, upper: 6});
@@ -977,23 +956,19 @@ describe('IgxSlider', () => {
 
             expect(slider.value).toEqual({lower: 1, upper: 4});
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Friday');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.lowerLabel).toEqual('Wednesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.lowerLabel).toEqual('Tuesday');
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect(slider.lowerLabel).toEqual('Tuesday');
@@ -1051,7 +1026,7 @@ describe('IgxSlider', () => {
             expect(slider.labelsViewEnabled).toBe(false);
         });
 
-        it('should be able to track the value changes per every slide action through an event emitter', async() => {
+        it('should be able to track the value changes per every slide action through an event emitter', () => {
             const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
             const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
@@ -1062,24 +1037,20 @@ describe('IgxSlider', () => {
             const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(1);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 0, upper: 6}, value: {lower: 1, upper: 6}});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 1, upper: 6}, value: {lower: 2, upper: 6}});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
-            await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 2, upper: 6}, value: {lower: 2, upper: 5}});
