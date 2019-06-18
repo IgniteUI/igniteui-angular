@@ -57,7 +57,7 @@
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
 </ng-container>
-<ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+<ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
     <ng-template #cellTemplate>
         <igx-grid-cell
             class="igx-grid__td igx-grid__td--fw"
