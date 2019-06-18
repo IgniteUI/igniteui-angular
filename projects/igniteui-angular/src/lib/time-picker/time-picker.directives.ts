@@ -126,9 +126,9 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('hourList') !== -1) {
+        if (listName.indexOf('hourList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
-        } else if (listName.indexOf('minuteList') !== -1 && this.timePicker._ampmItems.length !== 0) {
+        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.ampmList) {
             this.timePicker.ampmList.nativeElement.focus();
         }
     }
@@ -142,10 +142,10 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('minuteList') !== -1) {
-            this.timePicker.hourList.nativeElement.focus();
-        } else if (listName.indexOf('ampmList') !== -1) {
+        if (listName.indexOf('ampmList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
+        } else if ((listName.indexOf('ampmList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.hourList) {
+            this.timePicker.hourList.nativeElement.focus();
         }
     }
 
@@ -157,7 +157,7 @@ export class IgxItemListDirective {
         event.preventDefault();
 
         if (this.timePicker.mode === InteractionMode.DropDown) {
-            this.timePicker.hideOverlay();
+            this.timePicker.close();
             return;
         }
         this.timePicker.okButtonClick();
@@ -345,3 +345,12 @@ export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
+/**
+ * This directive can be used to add custom action buttons to the dropdownb/dialog.
+ */
+@Directive({
+    selector: '[igxTimePickerActions]'
+})
+export class IgxTimePickerActionsDirective {
+    constructor(public template: TemplateRef<any>) { }
+}

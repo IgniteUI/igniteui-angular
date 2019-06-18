@@ -20,7 +20,6 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
     exportAs: 'toggle',
@@ -134,7 +133,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public get element() {
+    public get element(): HTMLElement {
         return this.elementRef.nativeElement;
     }
 
@@ -346,30 +345,6 @@ export class IgxToggleActionDirective implements OnInit {
     @Input()
     public overlaySettings: OverlaySettings;
 
-    private _closeOnOutsideClick: boolean;
-    /**
-     * DEPRECATED. Determines whether the toggle should close when you click outside.
-     *
-     * ```typescript
-     * // get
-     * let closesOnOutsideClick = this.toggle.closeOnOutsideClick;
-     * ```
-     */
-    @Input()
-    @DeprecateProperty(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`)
-    public get closeOnOutsideClick(): boolean {
-        return this._closeOnOutsideClick;
-    }
-    /**
-     * ```html
-     * <!--set-->
-     * <div igxToggleAction [closeOnOutsideClick]="'true'"></div>
-     * ```
-     */
-    public set closeOnOutsideClick(v: boolean) {
-        this._closeOnOutsideClick = v;
-    }
-
     /**
      * Determines where the toggle element overlay should be attached.
      *
@@ -424,9 +399,6 @@ export class IgxToggleActionDirective implements OnInit {
      */
     @HostListener('click')
     public onClick() {
-        if (this._closeOnOutsideClick !== undefined) {
-            this._overlayDefaults.closeOnOutsideClick = this._closeOnOutsideClick;
-        }
         if (this.outlet) {
             this._overlayDefaults.outlet = this.outlet;
         }

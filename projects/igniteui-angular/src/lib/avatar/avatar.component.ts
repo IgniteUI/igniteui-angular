@@ -54,31 +54,31 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxAvatarComponent
      */
-    @ViewChild('image')
+    @ViewChild('image', { static: false })
     public image: ElementRef;
 
     /**
      *@hidden
      */
-    @ViewChild('defaultTemplate', { read: TemplateRef })
+    @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
     protected defaultTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
-    @ViewChild('imageTemplate', { read: TemplateRef })
+    @ViewChild('imageTemplate', { read: TemplateRef, static: true })
     protected imageTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
-    @ViewChild('initialsTemplate', { read: TemplateRef })
+    @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
     protected initialsTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
-    @ViewChild('iconTemplate', { read: TemplateRef })
+    @ViewChild('iconTemplate', { read: TemplateRef, static: true })
     protected iconTemplate: TemplateRef<any>;
 
     /**

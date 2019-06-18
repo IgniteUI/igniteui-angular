@@ -233,13 +233,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ViewChild('hierarchical_record_template', { read: TemplateRef })
+    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
 
-    @ViewChild('child_record_template', { read: TemplateRef })
+    @ViewChild('child_record_template', { read: TemplateRef, static: true })
     protected childTemplate: TemplateRef<any>;
 
-    @ViewChild('headerHierarchyExpander', { read: ElementRef })
+    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected headerHierarchyExpander: ElementRef;
 
     /**
@@ -468,7 +468,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         let width = super.getFeatureColumnsWidth();
 
         if (this.hasExpandableChildren) {
-            width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
+            width += this.headerHierarchyExpander.nativeElement.offsetWidth || this.getDefaultExpanderWidth();
         }
 
         return width;
@@ -569,7 +569,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);

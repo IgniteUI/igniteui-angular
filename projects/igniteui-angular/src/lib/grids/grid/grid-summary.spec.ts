@@ -284,11 +284,11 @@ describe('IgxGrid - Summaries', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(() => {
+            beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            });
+            }));
 
             it('should disableSummaries through grid API ', () => {
                 const summariedColumns = [];
@@ -1780,6 +1780,8 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             verifyBaseSummaries(fix);
             verifySummariesForParentID19(fix, 3);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 3);
         });
 
         it('should render correct summaries when change grouping', () => {
@@ -1792,6 +1794,9 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 4);
             verifySummariesForParentID17(fix, 5);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 5);
 
             // change order
             grid.groupingExpressions = [
@@ -1802,6 +1807,9 @@ describe('IgxGrid - Summaries', () => {
 
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
+
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 8);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Jul 3, 2011', 'Sep 18, 2014']);
@@ -1811,6 +1819,9 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             verifySummariesForParentID19(fix, 6);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 3);
+            verifySummaryRowIndentationByDataRowIndex(fix, 6);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
@@ -2255,6 +2266,13 @@ describe('IgxGrid - Summaries', () => {
         });
     });
 
+    function verifySummaryRowIndentationByDataRowIndex(fixture, visibleIndex) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, visibleIndex);
+        const summaryRowIndentation = summaryRow.query(By.css('.igx-grid__summaries-patch'));
+        const expander = fixture.componentInstance.grid.headerGroupContainer;
+        expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
+    }
+
     function verifyBaseSummaries(fixture) {
         const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, 0);
         HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -2314,7 +2332,7 @@ describe('IgxGrid - Summaries', () => {
 })
 export class SummaryColumnsWithIdenticalWidthsComponent {
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();
@@ -2396,7 +2414,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
 export class CustomSummariesComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
@@ -2421,7 +2439,7 @@ export class CustomSummariesComponent {
 })
 export class SummaryColumnsWithSpecificWidthsComponent {
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public data = SampleTestData.foodProductData();

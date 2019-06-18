@@ -18,7 +18,7 @@ import {
     `
 })
 export class DisplayContainerComponent {
-    @ViewChild('display_container', { read: ViewContainerRef })
+    @ViewChild('display_container', { read: ViewContainerRef, static: true })
     public _vcr;
 
     public scrollDirection: string;

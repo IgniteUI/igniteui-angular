@@ -65,6 +65,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let nonDroppableAreaElement: Element;
         let rows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
@@ -76,7 +77,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
 
         it('should drag and drop draggable row over droppable container', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -346,6 +346,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
+        // configureTestSuite();
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
@@ -366,7 +367,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should drop row data in the proper grid columns', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
 
@@ -729,6 +730,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxHierarchicalGridComponent;
         let dropGrid: IgxHierarchicalGridComponent;
         let dragRows: DebugElement[];
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
@@ -738,7 +740,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should be able to drag row on every hiearchical level', (async () => {
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
@@ -798,6 +800,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragGrid: IgxTreeGridComponent;
         let dropGrid: IgxGridComponent;
         let dragRows: DebugElement[];
+        // configureTestSuite();
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();
@@ -807,7 +810,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        configureTestSuite();
+
         it('should be able to drag row on every hiearchical level', (async () => {
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
@@ -881,10 +884,10 @@ export class IgxGridRowDraggableComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: IgxDropDirective })
+    @ViewChild('dropArea', { read: IgxDropDirective, static: true })
     public dropArea: IgxDropDirective;
 
     public enableSorting = false;
@@ -934,9 +937,9 @@ export class IgxGridRowDraggableComponent extends DataParent {
     `
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
-    @ViewChild('dragGrid', { read: IgxGridComponent })
+    @ViewChild('dragGrid', { read: IgxGridComponent, static: true })
     public dragGrid: IgxGridComponent;
-    @ViewChild('dropGrid', { read: IgxGridComponent })
+    @ViewChild('dropGrid', { read: IgxGridComponent, static: true })
     public dropGrid: IgxGridComponent;
     newData = [];
     public currentSortExpressions;
@@ -975,10 +978,10 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
 export class IgxHierarchicalGridTestComponent {
     public data;
     newData = [];
-    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent }) public hDragGrid: IgxHierarchicalGridComponent;
-    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent }) public hDropGrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         this.data = this.generateData(2, 3);
@@ -1026,8 +1029,8 @@ export class IgxHierarchicalGridTestComponent {
     `
 })
 export class IgxTreeGridTestComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
-    @ViewChild(IgxGridComponent) public dropGrid: IgxGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
     newData = [];
 

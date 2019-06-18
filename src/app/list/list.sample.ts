@@ -1,25 +1,32 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
 
+interface Employee {
+    imageURL: string;
+    name: string;
+    position: string;
+    description: string;
+}
+
 @Component({
     selector: 'app-list-sample',
     styleUrls: ['list.sample.css'],
     templateUrl: 'list.sample.html'
 })
 export class ListSampleComponent implements OnInit {
-    @ViewChild('contactsList')
+    @ViewChild('contactsList', { static: true })
     contactsList: IgxListComponent;
 
-    @ViewChild('fruitList')
+    @ViewChild('fruitList', { static: true })
     fruitList: IgxListComponent;
 
-    @ViewChild('checkbox')
+    @ViewChild('checkbox', { static: true })
     checkbox: any;
 
-    @ViewChild('declarativeList')
+    @ViewChild('declarativeList', { static: true })
     declarativeList: any;
 
-    @ViewChild('addFruitDialog')
+    @ViewChild('addFruitDialog', { static: true })
     addFruitDialog: IgxDialogComponent;
 
     fruitsSearch: string;
@@ -27,10 +34,31 @@ export class ListSampleComponent implements OnInit {
     search2: string;
     options: object = {};
     fruitsFilteredItemsCount = undefined;
-    
+
     density = 'comfortable';
     displayDensities;
 
+    employeeItems: Employee[] = [{
+        imageURL: 'assets/images/avatar/18.jpg',
+        name: 'Marin Popov',
+        position: 'Web designer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/2.jpg',
+        name: 'Simeon Simeonov',
+        position: 'Front-end Developer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/7.jpg',
+        name: 'Stefan ivanov',
+        position: 'UX Architect',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?'
+    }, {
+        imageURL: 'assets/images/avatar/6.jpg',
+        name: 'Svilen Dimchevski',
+        position: 'Graphic designer',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
+    }];
     navItems: object[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,

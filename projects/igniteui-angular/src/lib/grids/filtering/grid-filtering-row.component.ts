@@ -12,7 +12,6 @@ import {
     HostListener,
     ChangeDetectionStrategy
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
@@ -106,37 +105,37 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.filter();
     }
 
-    @ViewChild('defaultFilterUI', { read: TemplateRef })
+    @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
-    @ViewChild('defaultDateUI', { read: TemplateRef })
+    @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('input', { read: ElementRef })
+    @ViewChild('input', { read: ElementRef, static: false })
     protected input: ElementRef;
 
-    @ViewChild('inputGroupConditions', { read: IgxDropDownComponent })
+    @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
     protected dropDownConditions: IgxDropDownComponent;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     protected chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
-    @ViewChild('inputGroup', { read: ElementRef })
+    @ViewChild('inputGroup', { read: ElementRef, static: false })
     protected inputGroup: ElementRef;
 
-    @ViewChild('inputGroupPrefix', { read: ElementRef })
+    @ViewChild('inputGroupPrefix', { read: ElementRef, static: false })
     protected inputGroupPrefix: ElementRef;
 
-    @ViewChild('container')
+    @ViewChild('container', { static: true })
     protected container: ElementRef;
 
-    @ViewChild('operand')
+    @ViewChild('operand', { static: false })
     protected operand: ElementRef;
 
-    @ViewChild('closeButton')
+    @ViewChild('closeButton', { static: true })
     public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
@@ -470,13 +469,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /*
-    * Opens date-picker if condition is not unary
+    * noop
     */
-    public openDatePicker(openDialog: Function) {
-        if (!this.expression.condition.isUnary) {
-            openDialog();
-        }
-    }
+    public noop() {}
 
     /**
      *  Event handler for date picker's selection.

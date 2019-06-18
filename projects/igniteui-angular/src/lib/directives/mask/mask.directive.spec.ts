@@ -346,7 +346,7 @@ class DefMaskComponent {
     public mask;
     public value;
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -357,7 +357,7 @@ class MaskComponent {
     mask = '(000) 0000-000';
     value = '1234567890';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -371,10 +371,10 @@ class IncludeLiteralsComponent {
     public mask = '(000) 0000-000';
     @Input() public value = '55555';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 
-    @ViewChild('input1')
+    @ViewChild('input1', { static: true })
     public input1: ElementRef;
 }
 
@@ -385,7 +385,7 @@ class DigitSpaceMaskComponent {
     public mask = '999999';
     public value = '555 555';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -396,7 +396,7 @@ class DigitPlusMinusMaskComponent {
     public mask = '####-### ## ## ##';
     public value = '+359884190854';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -407,7 +407,7 @@ class LetterSpaceMaskComponent {
     public mask = 'LL??LL??';
     public value = 'AB 2CD E';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -418,7 +418,7 @@ class AlphanumSpaceMaskComponent {
     public mask = 'AAAaaa';
     public value = '7c  8u';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -429,7 +429,7 @@ class AnyCharMaskComponent {
     public mask = '&&&.CCC';
     public value = ' =% p]';
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -443,7 +443,7 @@ class EventFiringComponent {
     raw: string;
     formatted: string;
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 
     handleValueChange(event) {
@@ -463,7 +463,7 @@ class OneWayBindComponent {
     myMask = 'AAAAAAAA';
     value = 3456;
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -477,7 +477,7 @@ class PlaceholderMaskComponent {
     public mask = '(00) (00)';
     public value = null;
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
@@ -495,7 +495,7 @@ class PipesMaskComponent {
     public displayFormat = new DisplayFormatPipe();
     public inputFormat = new InputFormatPipe();
 
-    @ViewChild('input')
+    @ViewChild('input', { static: true })
     public input: ElementRef;
 }
 
