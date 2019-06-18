@@ -9,8 +9,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
-const TUBM_TO_CLASS = '.igx-slider__thumb-to';
-const TUBM_FROM_CLASS = '.igx-slider__thumb-from';
+const THUMB_TO_CLASS = '.igx-slider__thumb-to';
+const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 
 describe('IgxSlider', () => {
     configureTestSuite();
@@ -282,7 +282,7 @@ describe('IgxSlider', () => {
             slider.value = 60;
             fixture.detectChanges();
 
-            const fromThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            const fromThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             fromThumb.focus();
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
 
@@ -294,7 +294,7 @@ describe('IgxSlider', () => {
             slider.value = 60;
             fixture.detectChanges();
 
-            const toThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             toThumb.focus();
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
 
@@ -395,7 +395,7 @@ describe('IgxSlider', () => {
 
         it('continuous(smooth) sliding should be allowed', (done) => {
             pending('Investigate deeper why sliding is not performed');
-            const fromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS)).nativeElement;
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
             slider.continuous = true;
             fixture.detectChanges();
 
@@ -404,23 +404,23 @@ describe('IgxSlider', () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             sliderEl.dispatchEvent( new Event('pointerdown'));
             fixture.detectChanges();
-            fromTumb.dispatchEvent(new Event('focus'));
+            fromThumb.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
             return panRight(sliderEl, sliderEl.offsetHeight, sliderEl.offsetWidth, 200)
             .then(() => {
                 fixture.detectChanges();
-                const activetoTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-                const activefromTumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
+                const activetoThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+                const activefromThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
                 expect(slider.value).toEqual({ lower: 60, upper: 100 });
-                expect(activetoTumb).toBeNull();
-                expect(activefromTumb).toBeNull();
+                expect(activetoThumb).toBeNull();
+                expect(activefromThumb).toBeNull();
                 done();
             });
         });
 
-        it('should switch from left thumb to be focused upper when lower value is equal to upper', async() => {
+        it('should switch from lower to upper thumb when the lower value is equal to the upper one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
@@ -428,39 +428,35 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
 
-            const fromThumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
+            const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
             fromThumb.dispatchEvent(new Event('focus'));
-            await wait();
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
-            await wait(50);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(60);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(TUBM_TO_CLASS));
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
         });
 
-        it('should switch from right thumb to be focused lower when upper value is equal to lower', async() => {
+        it('should switch from upper to lower thumb when the upper value is equal to the lower one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
             };
             fixture.detectChanges();
 
-            const toThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             toThumb.dispatchEvent(new Event('focus'));
-            await wait();
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
-            await wait(50);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);;
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(60);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(TUBM_FROM_CLASS));
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_FROM_CLASS));
         });
 
         it('should not change value if different key from arrows is pressed and slider is RANGE', () => {
@@ -470,32 +466,30 @@ describe('IgxSlider', () => {
             };
             fixture.detectChanges();
 
-            const toThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             toThumb.focus();
             UIInteractions.triggerKeyDownEvtUponElem('A', toThumb, true);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(TUBM_TO_CLASS));
+            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
         });
 
         it('should increment lower value when lower thumb is focused ' +
-            'if right arrow is pressed and slider is RANGE', async() => {
+            'if right arrow is pressed and slider is RANGE', () => {
                 slider.value = {
                     lower: 50,
                     upper: 60
                 };
                 fixture.detectChanges();
 
-                const fromThumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
+                const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
 
                 fromThumb.dispatchEvent(new Event('focus'));
-                await wait();
                 fixture.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
-                await wait(50);
                 fixture.detectChanges();
 
                 expect((slider.value as IRangeSliderValue).lower).toBe(51);
@@ -503,26 +497,24 @@ describe('IgxSlider', () => {
             });
 
         it('should increment upper value when upper thumb is focused' +
-            'if right arrow is pressed and slider is RANGE', async() => {
+            'if right arrow is pressed and slider is RANGE', () => {
                 slider.value = {
                     lower: 50,
                     upper: 60
                 };
                 fixture.detectChanges();
 
-                const toThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+                const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
                 toThumb.dispatchEvent(new Event('focus'));
-                await wait();
                 fixture.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
-                await wait(50);
                 fixture.detectChanges();
                 expect((slider.value as IRangeSliderValue).lower).toBe(50);
                 expect((slider.value as IRangeSliderValue).upper).toBe(61);
             });
 
-        it('should not increment upper value when slider is disabled', async() => {
+        it('should not increment upper value when slider is disabled', () => {
             slider.disabled = true;
             slider.value = {
                 lower: 50,
@@ -530,13 +522,11 @@ describe('IgxSlider', () => {
             };
             fixture.detectChanges();
 
-            const toThumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             toThumb.dispatchEvent(new Event('focus'));
-            await wait();
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
-            await wait(50);
             fixture.detectChanges();
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
             expect((slider.value as IRangeSliderValue).upper).toBe(60);
@@ -597,31 +587,31 @@ describe('IgxSlider', () => {
         });
 
         it('rendering of the slider should corresponds to the set labels', async() => {
-            const tumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
-            expect(tumb).toBeDefined();
+            expect(thumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
             expect(slider.lowerLabel).toEqual('Winter');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Spring');
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Autumn');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -656,7 +646,7 @@ describe('IgxSlider', () => {
         });
 
         it('Upper bounds should be applied correctly', async() => {
-            const tumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
             expect(slider.value).toBe(0);
 
             slider.lowerBound = 1;
@@ -671,23 +661,23 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(2);
             expect(slider.lowerBound).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Summer');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Spring');
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -747,41 +737,41 @@ describe('IgxSlider', () => {
         });
 
         it('should be able to track the value changes per every slide action through an event emitter', async() => {
-            const tumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const thumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
             const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(1);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 0, value: 1});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 1, value: 2});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: 2, value: 3});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', tumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(4);
@@ -798,23 +788,23 @@ describe('IgxSlider', () => {
             expect(slider.type).toBe(SliderType.SLIDER);
             expect(slider.labelsViewEnabled).toBe(false);
 
-            let fromTumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
-            let toTumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            let toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
             expect(slider.type).toBe(SliderType.SLIDER);
-            expect(toTumb).toBeDefined();
-            expect(fromTumb).toBeFalsy();
+            expect(toThumb).toBeDefined();
+            expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
             slider.type = SliderType.RANGE;
             fixture.detectChanges();
 
-            fromTumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
-            toTumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
-            expect(toTumb).toBeDefined();
-            expect(fromTumb).toBeDefined();
+            expect(toThumb).toBeDefined();
+            expect(fromThumb).toBeDefined();
             expect(slider.upperBound).toBe(100);
             expect(slider.lowerBound).toBe(0);
         });
@@ -889,46 +879,46 @@ describe('IgxSlider', () => {
         });
 
         it('rendering of the slider should corresponds to the set labels', async() => {
-            const fromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS));
-            const toTumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
+            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
-            expect(fromTumb).toBeDefined();
+            expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
             // expect(fixture.componentInstance.label).toEqual({lower: 0, upper: 6});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 1, upper: 6});
             expect(slider.lowerLabel).toEqual('Tuesday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 2, upper: 6});
             expect(slider.lowerLabel).toEqual('Wednesday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 3, upper: 6});
             expect(slider.lowerLabel).toEqual('Thursday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 6});
             expect(slider.lowerLabel).toEqual('Friday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 5});
             expect(slider.upperLabel).toEqual('Saturday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 4});
@@ -965,8 +955,8 @@ describe('IgxSlider', () => {
         });
 
         it('upper bounds should be applied correctly', async() => {
-            const toTumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
-            const fromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS));
+            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
             expect(slider.value).toEqual({lower: 0, upper: 6});
 
             slider.lowerBound = 1;
@@ -986,23 +976,23 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(slider.value).toEqual({lower: 1, upper: 4});
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.upperLabel).toEqual('Friday');
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.lowerLabel).toEqual('Wednesday');
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
             expect(slider.lowerLabel).toEqual('Tuesday');
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -1062,33 +1052,33 @@ describe('IgxSlider', () => {
         });
 
         it('should be able to track the value changes per every slide action through an event emitter', async() => {
-            const fromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS));
-            const toTumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
+            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
             expect(slider).toBeDefined();
-            expect(fromTumb).toBeDefined();
+            expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
             const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(1);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 0, upper: 6}, value: {lower: 1, upper: 6}});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
             expect(valueChangeSpy).toHaveBeenCalledWith({oldValue: {lower: 1, upper: 6}, value: {lower: 2, upper: 6}});
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toTumb.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
             expect(valueChangeSpy).toHaveBeenCalledTimes(3);
@@ -1105,22 +1095,22 @@ describe('IgxSlider', () => {
             expect(slider.type).toBe(SliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(false);
 
-            let fromTumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
-            let toTumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            let toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
-            expect(toTumb).toBeDefined();
-            expect(fromTumb).toBeDefined();
+            expect(toThumb).toBeDefined();
+            expect(fromThumb).toBeDefined();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
             slider.type = SliderType.SLIDER;
             fixture.detectChanges();
 
-            fromTumb = fixture.nativeElement.querySelector(TUBM_FROM_CLASS);
-            toTumb = fixture.nativeElement.querySelector(TUBM_TO_CLASS);
+            fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             expect(slider.type).toBe(SliderType.SLIDER);
-            expect(toTumb).toBeDefined();
-            expect(fromTumb).toBeFalsy();
+            expect(toThumb).toBeDefined();
+            expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
         });
@@ -1148,11 +1138,11 @@ describe('IgxSlider', () => {
             const slider = fixture.componentInstance.slider;
             fixture.detectChanges();
 
-            const fromTumb = fixture.debugElement.query(By.css(TUBM_FROM_CLASS));
-            const toTumb = fixture.debugElement.query(By.css(TUBM_TO_CLASS));
+            const fromThumb = fixture.debugElement.query(By.css(THUMB_FROM_CLASS));
+            const toThumb = fixture.debugElement.query(By.css(THUMB_TO_CLASS));
 
-            expect(toTumb).toBeDefined();
-            expect(fromTumb).toBeDefined();
+            expect(toThumb).toBeDefined();
+            expect(fromThumb).toBeDefined();
 
             let customTemplates = fixture.nativeElement.querySelectorAll('span.custom');
 
@@ -1346,7 +1336,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const instance = fixture.componentInstance.slider;
-            const editElement = fixture.debugElement.query(By.css(TUBM_TO_CLASS)).nativeElement;
+            const editElement = fixture.debugElement.query(By.css(THUMB_TO_CLASS)).nativeElement;
 
             expect(instance.getEditElement()).toBe(editElement);
         });
@@ -1357,7 +1347,7 @@ describe('IgxSlider', () => {
             instance.type = SliderType.RANGE;
             fixture.detectChanges();
 
-            const editElement = fixture.debugElement.query(By.css(TUBM_FROM_CLASS)).nativeElement;
+            const editElement = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
 
             expect(instance.getEditElement()).toBe(editElement);
         });
