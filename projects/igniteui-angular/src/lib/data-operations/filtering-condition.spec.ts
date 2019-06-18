@@ -1,7 +1,7 @@
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand, 
+    IgxBooleanFilteringOperand,
     IgxFilteringOperand} from './filtering-condition';
 
 describe('Unit testing FilteringCondition', () => {
