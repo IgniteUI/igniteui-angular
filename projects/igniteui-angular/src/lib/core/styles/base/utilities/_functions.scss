@@ -326,27 +326,6 @@
     );
 }
 
-/// Returns a string from the elements of a list.
-/// Works recursively so the elements can be lists themselves.
-/// @param {List} $list [null] - A list of elements to be turned into a string.
-/// @param {String} $glue [''] - A string symbol to join the elements by.
-@function implode($list, $glue: '') {
-    $result: null;
-    @for $i from 1 through length($list) {
-        $e: nth($list, $i);
-        @if type-of($e) == list {
-            $result: $result#{implode($e, $glue)};
-        } @else {
-            $result: if(
-                $i != length($list),
-                $result#{$e}#{$glue},
-                $result#{$e}
-            );
-        }
-    }
-    @return $result;
-}
-
 /// Returns a CSS property value. It could return either css '--var' or
 /// a plain string value based on theme configuration.
 /// @access public
