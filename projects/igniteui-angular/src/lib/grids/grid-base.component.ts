@@ -3721,13 +3721,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
-    public clearSummaryCache(args?) {
-    }
-
-    /**
-     * @hidden
-     */
     public refreshGridState(args?) {
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
@@ -3773,13 +3766,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public reflow() {
         this.calculateGridSizes();
-    }
-
-    /**
-     * @hidden
-     */
-    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
-    public recalculateSummaries() {
     }
 
     /**
