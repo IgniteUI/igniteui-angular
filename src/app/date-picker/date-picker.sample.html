@@ -55,6 +55,11 @@
                             </igx-suffix>
                         </igx-input-group>
                     </ng-template>
+                    <ng-template igxDatePickerActions>
+                        <div class="action-buttons">
+                            <button igxButton="flat" (click)="selectToday(retemplated)">Today</button>
+                        </div>
+                    </ng-template>
                 </igx-date-picker>
                 <label>Date: {{ retemplated.value | date:'longDate'}}</label>
             </div>
@@ -74,11 +79,17 @@
             <h4 class="sample-title">DropDown Date Picker bind with ngModel</h4>
             <p class="sample-description">isSpinLoop set to false</p>
             <div class="preview">
-                <igx-date-picker #editableDatePicker mode="dropdown" [weekStart]="1" [(ngModel)]="date1"
-                    [isSpinLoop]="false">
+                <igx-date-picker #editableDatePicker
+                                mode="dropdown"
+                                cancelButtonLabel="close"
+                                todayButtonLabel="today"
+                                [weekStart]="1"
+                                [(ngModel)]="date1"
+                                [isSpinLoop]="false">
                 </igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">Deselect
-                    date</button>
+                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">
+                    Deselect date
+                </button>
             </div>
         </article>
     </section>

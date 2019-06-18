@@ -88,6 +88,21 @@ In order to re-template a date picker in `dropdown` mode, an element should be m
     </ng-template>
 </igx-date-picker>
 ```
+The DatePicker action buttons could be retemplated.
+```html
+<igx-date-picker #picker>
+    <ng-template igxDatePickerActions>
+        <div class="action-buttons">
+            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
+        </div>
+    </ng-template>
+</igx-date-picker>
+```
+```typescript
+    public selectToday(picker: IgxDatePickerComponent) {
+        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
+    }
+```
 
 # API
 

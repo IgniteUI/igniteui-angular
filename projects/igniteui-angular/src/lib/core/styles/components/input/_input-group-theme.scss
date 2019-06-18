@@ -505,12 +505,12 @@
         position: absolute;
         width: 100%;
         transform: translateY(50%); /* 8px, base is 16px */
-        line-height: rem(16px, map-get($base-scale-size, 'comfortable')) !important;
-        height: rem(18px, map-get($base-scale-size, 'comfortable'));
+        line-height: 1 !important;
+        height: rem(18px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition: transform $transition-timing, color $transition-timing;
+        transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -518,13 +518,11 @@
     }
 
     %form-group-label--cosy {
-        line-height: rem(16px, map-get($base-scale-size, 'cosy')) !important;
-        height: rem(18px, map-get($base-scale-size, 'cosy'));
+        margin-top: rem(-2px);
     }
 
     %form-group-label--compact {
-        line-height: rem(16px, map-get($base-scale-size, 'compact')) !important;
-        height: rem(18px, map-get($base-scale-size, 'compact'));
+        margin-top: rem(-4px);
     }
 
     %form-group-label--box {
@@ -534,6 +532,7 @@
     %form-group-label--float {
         overflow: visible;
         transform: translateY(-50%) scale(.75);
+        margin-top: auto;
     }
 
     %form-group-label--fixed {
@@ -566,8 +565,6 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'comfortable'));
-        border-top: rem(8px, map-get($base-scale-size, 'comfortable')) solid rgba(0, 0, 0, 0);
         line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
@@ -576,6 +573,8 @@
         color: --var($theme, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
+        border-top: rem(3px) solid transparent;
+        padding-bottom: rem(3px);
 
         &::-webkit-input-placeholder {
             line-height: normal;
@@ -589,15 +588,11 @@
 
     %form-group-input--cosy {
         height: rem(32px, map-get($base-scale-size, 'cosy'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'cosy'));
-        border-top: rem(8px, map-get($base-scale-size, 'cosy')) solid rgba(0, 0, 0, 0);
     }
 
     %form-group-input--compact {
         font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'compact'));
-        border-top: rem(8px, map-get($base-scale-size, 'compact')) solid rgba(0, 0, 0, 0);
     }
 
     %chrome-autofill-fix {
@@ -892,17 +887,6 @@
     $input-text-props: igx-type-scale-category($type-scale, $input-text);
 
     @include igx-scope('.igx-typography') {
-        %form-group-label {
-            @include igx-type-style($type-scale, $input-text) {
-                // This is embarrassing but there's no other
-                // way to extract the font-size the user sets
-                // in case they use custom typography :(
-                // We need the padding so that the text doesn't get
-                // cut off.
-                padding-bottom: map-get($input-text-props, 'font-size');
-            }
-        }
-
         %form-group-input {
             @include igx-type-style($type-scale, $input-text) {
                 margin: 0;

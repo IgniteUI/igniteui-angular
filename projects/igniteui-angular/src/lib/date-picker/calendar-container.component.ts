@@ -1,6 +1,7 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { IgxCalendarComponent } from '../calendar';
 import { InteractionMode } from '../core/enums';
+import { IgxDatePickerActionsDirective } from './date-picker.directives';
 
 /**
  * @hidden
@@ -25,6 +26,9 @@ export class IgxCalendarContainerComponent {
 
     @Input()
     public todayButtonLabel: string;
+
+    @Input()
+    public datePickerActions: IgxDatePickerActionsDirective;
 
     @Output()
     public onClose = new EventEmitter();

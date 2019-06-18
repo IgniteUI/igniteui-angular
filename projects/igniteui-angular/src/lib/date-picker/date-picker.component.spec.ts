@@ -277,6 +277,10 @@ describe('IgxDatePicker', () => {
         const picker = document.getElementsByClassName('igx-calendar-picker');
         const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
         expect(formattedSubHeaderText).toBe('2019/Oct');
+
+        const buttons = document.getElementsByClassName('igx-button--flat');
+        expect(buttons.length).toEqual(1);
+        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
     });
 
     it('Retemplated calendar in date picker - dropdown mode', () => {
@@ -295,6 +299,10 @@ describe('IgxDatePicker', () => {
         const picker = document.getElementsByClassName('igx-calendar-picker');
         const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
         expect(formattedSubHeaderText).toBe('2019/Oct');
+
+        const buttons = document.getElementsByClassName('igx-button--flat');
+        expect(buttons.length).toEqual(1);
+        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
     });
 
     it('locale propagate calendar value (de-DE)', () => {
@@ -1196,6 +1204,9 @@ export class IgxDatePickerEditableComponent {
         <ng-template igxCalendarSubheader let-format>
             <span class="date__el" (click)="format.yearView()">{{ format.year.combined }}/</span>
             <span class="date__el" (click)="format.monthView()">{{ format.month.combined | titlecase }}</span>
+        </ng-template>
+        <ng-template igxDatePickerActions>
+            <button igxButton="flat">TEST</button>
         </ng-template>
     </igx-date-picker>
     `

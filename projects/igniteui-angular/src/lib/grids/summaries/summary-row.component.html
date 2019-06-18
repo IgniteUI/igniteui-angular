@@ -23,7 +23,7 @@
             [style.min-height.px]="minHeight">
         </igx-grid-summary-cell>
     </ng-container>
-    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]='"calcWidth"' #igxDirRef>
+    <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]='"calcPixelWidth"' #igxDirRef>
         <igx-grid-summary-cell
             class="igx-grid-summary igx-grid-summary--fw"
             [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"

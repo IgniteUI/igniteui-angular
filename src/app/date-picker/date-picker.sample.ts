@@ -8,7 +8,7 @@ import { DatePipe, formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-date-picker-sample',
-    styleUrls: ['date-picker.sample.css'],
+    styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html'
 })
 
@@ -75,5 +75,9 @@ export class DatePickerSampleComponent {
         const input = event.target.value;
         const parsedDate = (input !== '') ? new Date(input) : '';
         this.retemplatedDP.value = parsedDate;
+    }
+
+    public selectToday(picker: IgxDatePickerComponent) {
+        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
     }
 }
