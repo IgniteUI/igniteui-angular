@@ -7,6 +7,36 @@ _Components_
 _Igx-List represents a list of identical items._  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
 
+- `IgxList` - since v7.3.4 The list component has been refactored. It now includes several new supporting directives:
+    - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+    - `igxListAction` - Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+    - `igxListLine` - Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+    - `igxListLineTitle` - Use it to mark the target as list title which will be automatically formatted as a list-item title;
+    - `igxListLineSubTitle` - Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
+
+Example using the new directives:
+
+    ```html
+        <igx-list>
+            <igx-list-item [isHeader]="true">List items</igx-list-item>
+            <igx-list-item>
+              <igx-avatar igxListThumbnail></igx-avatar>
+              <h1 igxListLineTitle>List item title</h1>
+              <h3 igxListLineSubTitle>List item subtitle</h3>
+              <igx-icon igxListAction>info</igx-icon>
+            </igx-list-item>
+        </igx-list>
+        
+        <igx-list>
+          <igx-list-item [isHeader]="true">List items</igx-list-item>
+          <igx-list-item>
+            <igx-avatar igxListThumbnail></igx-avatar>
+            <span igxListLine>Some content</span>
+            <igx-icon igxListAction>info</igx-icon>
+          </igx-list-item>
+        </igx-list>
+    ```
+    
 ## Usage
 ```html
 <igx-list>
@@ -181,6 +211,17 @@ All list items implement `IListChild`.
 | index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
+
+### Directives
+
+| name | description
+| :--- | :---|
+| igxListThumbnail | Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+| igxListAction | Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+| igxListLine | Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+| igxListLineTitle | Use it to mark the target as list title which will be automatically formatted as a list-item title;
+| igxListLineSubTitle | Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
+
 
 ### Properties
 
