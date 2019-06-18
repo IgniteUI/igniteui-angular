@@ -451,7 +451,7 @@ describe('IgxSlider', () => {
             toThumb.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);;
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(60);
