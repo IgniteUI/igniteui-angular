@@ -33,6 +33,7 @@ interface ISelectionKeyboardState {
 
 interface ISelectionPointerState extends ISelectionKeyboardState {
     ctrl: boolean;
+    primaryButton: boolean;
 }
 
 type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
@@ -105,7 +106,7 @@ export class IgxGridCRUDService {
     }
 
     sameRow(rowID): boolean {
-        return this.row.id === rowID;
+        return this.row && this.row.id === rowID;
     }
 
     sameCell(cell: IgxCell): boolean {
@@ -209,6 +210,7 @@ export class IgxGridSelectionService {
     selection = new Map<number, Set<number>>();
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
+    _selectionRange: Range;
 
 
     /**
@@ -218,9 +220,7 @@ export class IgxGridSelectionService {
     get ranges(): GridSelectionRange[] {
 
         // The last action was keyboard + shift selection -> add it
-        if (this.keyboardState.range) {
-            this._ranges.add(JSON.stringify(this.keyboardState.range));
-        }
+        this.addKeyboardRange();
 
         const ranges = Array.from(this._ranges).map(range => JSON.parse(range));
 
@@ -230,6 +230,14 @@ export class IgxGridSelectionService {
         }
 
         return ranges;
+    }
+
+    get primaryButton(): boolean {
+        return this.pointerState.primaryButton;
+    }
+
+    set primaryButton(value: boolean) {
+        this.pointerState.primaryButton = value;
     }
 
     constructor(private zone: NgZone) {
@@ -255,6 +263,7 @@ export class IgxGridSelectionService {
         this.pointerState.ctrl = false;
         this.pointerState.shift = false;
         this.pointerState.range = null;
+        this.pointerState.primaryButton = true;
     }
 
     /**
@@ -266,6 +275,15 @@ export class IgxGridSelectionService {
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
 
         this._ranges.add(JSON.stringify(this.generateRange(node)));
+    }
+
+    /**
+     * Adds the active keyboard range selection (if any) to the `ranges` meta.
+     */
+    addKeyboardRange(): void {
+        if (this.keyboardState.range) {
+            this._ranges.add(JSON.stringify(this.keyboardState.range));
+        }
     }
 
     remove(node: ISelectionNode): void {
@@ -287,11 +305,20 @@ export class IgxGridSelectionService {
         return this.isActiveNode(node) || this.isInMap(node);
     }
 
-    isActiveNode(node: ISelectionNode): boolean {
+    isActiveNode(node: ISelectionNode, mrl = false): boolean {
         if (this.activeElement) {
-            return this.activeElement.column === node.column && this.activeElement.row === node.row;
+            const isActive = this.activeElement.column === node.column && this.activeElement.row === node.row;
+            if (mrl) {
+                const layout = this.activeElement.layout;
+                return isActive && this.isActiveLayout(layout, node.layout);
+            }
+            return isActive;
         }
         return false;
+    }
+
+    isActiveLayout(current: IMultiRowLayoutNode, target: IMultiRowLayoutNode): boolean {
+        return current.columnVisibleIndex === target.columnVisibleIndex;
     }
 
     addRangeMeta(node: ISelectionNode, state?: SelectionState): void {
@@ -329,7 +356,7 @@ export class IgxGridSelectionService {
     /**
      *
      */
-    keyboardStateOnKeydown(node: ISelectionNode, shift: boolean, shiftTab: boolean) {
+    keyboardStateOnKeydown(node: ISelectionNode, shift: boolean, shiftTab: boolean): void {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
@@ -363,10 +390,7 @@ export class IgxGridSelectionService {
 
     pointerDown(node: ISelectionNode, shift: boolean, ctrl: boolean): void {
 
-        if (this.keyboardState.range) {
-            this._ranges.add(JSON.stringify(this.keyboardState.range));
-        }
-
+        this.addKeyboardRange();
         this.initKeyboardState();
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
@@ -379,7 +403,7 @@ export class IgxGridSelectionService {
         if (shift) {
             // No previously 'clicked' node. Use the last active node.
             if (!this.pointerState.node) {
-                this.pointerState.node = this.activeElement;
+                this.pointerState.node = this.activeElement || node;
             }
             this.pointerDownShiftKey(node);
             this.clearTextSelection();
@@ -414,8 +438,9 @@ export class IgxGridSelectionService {
         }
     }
 
-    pointerEnter(node: ISelectionNode, dragEnabled: boolean): boolean {
-        this.dragMode = dragEnabled;
+    pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
+        // https://www.w3.org/TR/pointerevents/#the-button-property
+        this.dragMode = event.buttons === 1 && event.button === -1;
         if (!this.dragMode) {
             return false;
         }
@@ -428,13 +453,14 @@ export class IgxGridSelectionService {
             this.pointerState.node = node;
         }
 
-        this.pointerState.ctrl ? this.blah(node, this.pointerState) :
+        this.pointerState.ctrl ? this.selectRange(node, this.pointerState, this.temp) :
             this.dragSelect(node, this.pointerState);
         return true;
     }
 
     pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
         if (this.dragMode) {
+            this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
             this.mergeMap(this.selection, this.temp);
             this.zone.runTask(() => emitter.emit(this.generateRange(node, this.pointerState)));
@@ -445,6 +471,7 @@ export class IgxGridSelectionService {
 
         if (this.pointerState.shift) {
             this.clearTextSelection();
+            this.restoreTextSelection();
             emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
             return true;
@@ -454,23 +481,15 @@ export class IgxGridSelectionService {
         return false;
     }
 
-    selectRange(node: ISelectionNode, state: SelectionState) {
-        const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
-        for (let i = rowStart; i <= rowEnd; i++) {
-            for (let j = columnStart as number; j <= columnEnd; j++) {
-                this.selection.has(i) ? this.selection.get(i).add(j) :
-                    this.selection.set(i, new Set<number>()).get(i).add(j);
-            }
+    selectRange(node: ISelectionNode, state: SelectionState, collection: Map<number, Set<number>> = this.selection): void {
+        if (collection === this.temp) {
+            collection.clear();
         }
-    }
-
-    blah(node: ISelectionNode, state: SelectionState) {
-        this.temp.clear();
         const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
         for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = columnStart as number; j <= columnEnd; j++) {
-                this.temp.has(i) ? this.temp.get(i).add(j) :
-                    this.temp.set(i, new Set<number>()).get(i).add(j);
+                collection.has(i) ? collection.get(i).add(j) :
+                    collection.set(i, new Set<number>()).get(i).add(j);
             }
         }
     }
@@ -488,10 +507,28 @@ export class IgxGridSelectionService {
         this._ranges.clear();
     }
 
-    clearTextSelection() {
+    clearTextSelection(): void {
         const selection = window.getSelection();
-        if (selection) {
+        if (selection.rangeCount) {
+            this._selectionRange = selection.getRangeAt(0);
+            this._selectionRange.collapse(true);
             selection.removeAllRanges();
         }
+    }
+
+    restoreTextSelection(): void {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) {
+            selection.addRange(this._selectionRange);
+        }
+    }
+
+    _moveSelectionChrome(node: Node) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        const range = new Range();
+        range.selectNode(node);
+        range.collapse(true);
+        selection.addRange(range);
     }
 }
