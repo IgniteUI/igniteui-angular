@@ -1,9 +1,10 @@
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand } from './filtering-condition';
+    IgxBooleanFilteringOperand, 
+    IgxFilteringOperand} from './filtering-condition';
 
-describe('Unit testing FilteringCondition', () => {
+fdescribe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
         const fc = IgxStringFilteringOperand.instance();
         // contains
@@ -145,7 +146,7 @@ describe('Unit testing FilteringCondition', () => {
     });
 });
 
-class CustomFilter extends IgxStringFilteringOperand {
+class CustomFilter extends IgxFilteringOperand {
     private constructor() {
         super();
         this.append({
