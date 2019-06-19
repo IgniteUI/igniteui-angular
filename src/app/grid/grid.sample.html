@@ -139,9 +139,9 @@
                 </div>
             </div>
 
-            <igx-grid #grid2 [data]="data | async" [paging]="true" [perPage]="10" (onCellSelection)="onInlineEdit($event)">
+            <igx-grid #grid2 [data]="data | async" [paging]="true" [perPage]="10" [allowFiltering]="true" (onCellSelection)="onInlineEdit($event)">
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
-                <igx-column [sortable]="true" [field]="'ProductName'"></igx-column>
+                <igx-column [sortable]="true" [field]="'ProductName'" [filters]="customFilter" [filterable]="true"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'In Stock'">
                     <!--
                     <ng-template igxCell let-col="column" let-ri="rowIndex" let-item="item">
@@ -188,7 +188,7 @@
             </div>
             <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
                 <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
-                <igx-column [editable]="true" [field]="'ProductName'" ></igx-column>
+                <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
                 <igx-column [field]="'Discontinued'" [sortable]="true" [hidden]="true">
                     <ng-template igxHeader let-column="column">

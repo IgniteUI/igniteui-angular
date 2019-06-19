@@ -74,7 +74,7 @@ export class CardSampleComponent {
     public horizontal = false;
     public volume = 10;
 
-    @ViewChild(IgxExpansionPanelComponent)
+    @ViewChild(IgxExpansionPanelComponent, { static: true })
     public panel: IgxExpansionPanelComponent;
 
     public toggleDetails() {

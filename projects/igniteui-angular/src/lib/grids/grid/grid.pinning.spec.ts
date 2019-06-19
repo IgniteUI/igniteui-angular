@@ -654,7 +654,7 @@ export class DefaultGridComponent {
 
     public data = companyData;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public initColumns(column: IgxColumnComponent) {
@@ -711,7 +711,7 @@ export class GridPinningComponent {
         { field: 'Fax', width: 150 }
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public columnPinningHandler($event) {
@@ -797,7 +797,7 @@ export class GridFeaturesComponent {
         }
     ];
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })public grid: IgxGridComponent;
 }
 
 @Component({
@@ -810,7 +810,7 @@ export class GridFeaturesComponent {
     `
 })
 export class OverPinnedGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -858,7 +858,7 @@ export class OverPinnedGridComponent {
     `
 })
 export class PinnedGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -893,7 +893,7 @@ export class PinnedGroupsGridComponent {
     `
 })
 export class InnerPinnedGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -935,6 +935,6 @@ export class GridInitialPinningComponent {
         { field: 'ContactName', width: 200 },
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }

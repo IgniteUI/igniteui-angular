@@ -1,0 +1,37 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onOpen",
+            "replaceWith": "onOpened",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClose",
+            "replaceWith": "onClosed",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpen",
+            "replaceWith": "onOpened",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClose",
+            "replaceWith": "onClosed",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        }
+    ]
+}

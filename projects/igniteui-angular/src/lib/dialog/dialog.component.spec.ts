@@ -339,7 +339,7 @@ describe('Dialog', () => {
                             </igx-dialog>
                         </div>` })
 class AlertComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
     public isModal = false;
 }
 
@@ -360,7 +360,7 @@ class AlertComponent {
                             </igx-dialog>
                         </div>` })
 class DialogComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 @Component({
     template: `<div #wrapper>
@@ -382,7 +382,7 @@ class DialogComponent {
                             </igx-dialog>
                         </div>` })
 class DialogSampleComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 @Component({
     template: `<div #wrapper>
@@ -393,7 +393,7 @@ class DialogSampleComponent {
                             </igx-dialog>
                         <div>` })
 class CustomDialogComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -411,8 +411,8 @@ class CustomDialogComponent {
                             </igx-dialog>
                         </igx-dialog>` })
 class NestedDialogsComponent {
-    @ViewChild('child') public child: IgxDialogComponent;
-    @ViewChild('main') public main: IgxDialogComponent;
+    @ViewChild('child', { static: true }) public child: IgxDialogComponent;
+    @ViewChild('main', { static: true }) public main: IgxDialogComponent;
 }
 
 @Component({
@@ -425,7 +425,7 @@ class NestedDialogsComponent {
                 </igx-dialog-actions>
             </igx-dialog>` })
 class CustomTemplates1DialogComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 
 @Component({
@@ -434,5 +434,5 @@ class CustomTemplates1DialogComponent {
                     <div igxDialogActions>BUTTONS 2</div>
             </igx-dialog>` })
 class CustomTemplates2DialogComponent {
-    @ViewChild('dialog') public dialog: IgxDialogComponent;
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }

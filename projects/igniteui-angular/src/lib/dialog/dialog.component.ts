@@ -59,7 +59,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
     /**
