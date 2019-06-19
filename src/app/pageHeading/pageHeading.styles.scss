@@ -15,7 +15,7 @@ $hamburger-theme: igx-button-theme(
 );
 
 :host ::ng-deep {
-     @include igx-button($hamburger-theme);
+    @include igx-button($hamburger-theme);
 
     .hamburger {
         margin-right: 32px;
