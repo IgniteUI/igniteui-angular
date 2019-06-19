@@ -104,7 +104,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @HostBinding('class.igx-drop-down__item--cosy')
     public get itemStyleCosy() {
-        return this.dropDown.displayDensity === 'cosy';
+        return this.dropDown.displayDensity === 'cosy' && !this.isHeader;
     }
 
     /**
@@ -112,7 +112,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @HostBinding('class.igx-drop-down__item--compact')
     public get itemStyleCompact() {
-        return this.dropDown.displayDensity === 'compact';
+        return this.dropDown.displayDensity === 'compact' && !this.isHeader;
     }
 
     /**
