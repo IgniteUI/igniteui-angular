@@ -49,6 +49,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     newRecord = '';
     editCell;
     exportFormat = 'XLSX';
+    customFilter = CustomStringFilter.instance();
 
     constructor(private localService: LocalService,
                 private remoteService: RemoteService,
@@ -280,5 +281,20 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
 
     onColumnInit(column: IgxColumnComponent) {
         column.editable = true;
+    }
+}
+
+export class CustomStringFilter extends IgxStringFilteringOperand {
+
+    private constructor() {
+        super();
+        this.append({
+            name: 'Custom',
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
+                return value === searchVal;
+            },
+            isUnary: false,
+            iconName: 'starts_with'
+        });
     }
 }

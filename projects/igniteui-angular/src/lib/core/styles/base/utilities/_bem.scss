@@ -236,7 +236,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
                     @content;
                 }
             } @else {
-                #{implode($mx)} {
+                #{selector-append($mx...)} {
                     @content;
                 }
             }
@@ -253,7 +253,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
                     @content;
                 }
             } @else {
-                #{$first} #{implode($mx)} {
+                #{$first} #{selector-append($mx...)} {
                     @content;
                 }
             }
@@ -307,7 +307,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
         $mod-classes: append($mod-classes, #{bem-selector($block: $this, $m: $mod)})
     }
     @at-root {
-        #{implode($mod-classes)} {
+        #{selector-append($mod-classes...)} {
             @content;
         }
     }
