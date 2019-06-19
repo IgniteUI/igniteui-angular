@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType } from './slider.component';
+import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { SliderType, IRangeSliderValue } from './slider.common';
 
 declare var Simulator: any;
 
@@ -724,7 +725,7 @@ export class SliderMinMaxComponent {
                     </igx-slider>
                 </div>`
 })
-class SliderTestComponent {
+export class SliderTestComponent {
     @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     minValue = 0;

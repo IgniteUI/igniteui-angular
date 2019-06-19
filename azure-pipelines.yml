@@ -14,7 +14,7 @@ steps:
   displayName: 'Build source code and styles'
 
 - script: npm run test:lib:azure
-  displayName: 'Run non-grid tests'
+  displayName: 'Run tests'
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
 
