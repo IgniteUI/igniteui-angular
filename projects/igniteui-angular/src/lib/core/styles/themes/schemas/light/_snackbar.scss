@@ -1,3 +1,5 @@
+@import '../shape/snackbar';
+
 ////
 /// @group schemas
 /// @access private
@@ -16,10 +18,7 @@
 ///
 /// @see $default-palette
 
-$_light-snackbar: (
-    border-radius: .17,
-
-
+$_light-snackbar: extend((
     background: (
         igx-color: ('grays', 900)
     ),
@@ -33,4 +32,4 @@ $_light-snackbar: (
     ),
 
     elevation: 4
-);
+), $_default-shape-snackbar);

@@ -1,7 +1,7 @@
 /**
  *@hidden
  */
-export function cloneArray(array, deep?: boolean) {
+export function cloneArray(array: any[], deep?: boolean) {
     const arr = [];
     if (!array) {
         return arr;
@@ -224,6 +224,13 @@ export function isEdge(): boolean {
 export function isFirefox(): boolean {
     const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     return firefoxBrowser;
+}
+
+/**
+ * @hidden
+ */
+export function isLeftClick(event: PointerEvent) {
+    return event.button === 0;
 }
 
 /** @hidden */

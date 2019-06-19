@@ -1,3 +1,5 @@
+@import '../shape/drop-down';
+
 ////
 /// @group schemas
 /// @access private
@@ -24,12 +26,10 @@
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
 /// @see $default-palette
-$_light-drop-down: (
+$_light-drop-down: extend((
     background-color: (
         igx-color: 'surface'
     ),
-
-    border-radius: .2,
 
     header-text-color: (
         igx-color: ('secondary', 500)
@@ -98,4 +98,4 @@ $_light-drop-down: (
     ),
 
     elevation: 8
-);
+), $_default-shape-drop-down);
