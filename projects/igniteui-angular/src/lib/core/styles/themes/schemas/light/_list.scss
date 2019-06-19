@@ -14,8 +14,11 @@
 /// @property {Color} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
 /// @property {Map} item-background [igx-color: 'surface'] - The list item background color.
 /// @property {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
-/// @property {Map} item-background-active [igx-color: ('grays', 200)] - The active list item background color.
-/// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: ()] - The active list item text color.
+/// @property {Map} item-title-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item title color.
+/// @property {Map} item-subtitle-color [igx-color: ('grays', 700)] - The list item subtitle color.
+/// @property {Map} item-background-hover [igx-color: 'surface', text-contrast: (), rgba: .1] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: 'surface' text-contrast: (), rgba: .1] - The active list item background color.
+/// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: (), rgba: .74] - The active list item text color.
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
@@ -39,18 +42,45 @@ $_light-list: extend((
         igx-color: 'surface'
     ),
 
+    item-background-hover: (
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .1,
+    ),
+
+    item-background-active: (
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .1,
+    ),
+
     item-text-color: (
         igx-color: 'surface',
         text-contrast: (),
         rgba: .74
     ),
 
-    item-background-active: (
-        igx-color: ('grays', 200)
+    item-text-color-hover: (
+        igx-color: 'surface',
+        text-contrast: (),
+        rgba: .74
     ),
 
     item-text-color-active: (
         igx-color: 'surface',
-        text-contrast: ()
-    )
+        text-contrast: (),
+        rgba: .74
+    ),
+
+    item-subtitle-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-subtitle-color-hover: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-subtitle-color-active: (
+        igx-color: ('grays', 700)
+    ),
 ), $_default-shape-list);
