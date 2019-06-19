@@ -163,6 +163,49 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
+    /**
+     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
+     * ```typescript
+     * const gridVirtState = this.grid1.virtualizationState;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+
+    /**
+     * @hidden
+     */
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
+    }
+
+    /**
+     * Sets the total number of records in the data source.
+     * This property is required for remote grid virtualization to function when it is bound remotely as well.
+     * ```typescript
+     * this.grid1.totalItemCount = 55;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set totalItemCount(count) {
+        this.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Returns the total number of records in the data source.
+     * Works only with remote grid virtualization.
+     * ```typescript
+     * const itemCount = this.grid1.totalItemCount;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    get totalItemCount() {
+        return this.verticalScrollContainer.totalItemCount;
+    }
+
     private _gridAPI: IgxGridAPIService;
     private _filteredData = null;
 
@@ -778,6 +821,15 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.sort(columnExpr);
             this.markForCheck();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected get defaultTargetBodyHeight(): number {
+        const allItems = this.totalItemCount || this.dataLength;
+        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+            this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
 
     /**
