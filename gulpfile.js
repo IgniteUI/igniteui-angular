@@ -17,6 +17,8 @@ const ts = require('gulp-typescript');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
 
+sass.compiler = require('sass');
+
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
     DIST: './dist/igniteui-angular/styles',
@@ -119,9 +121,9 @@ gulp.task('copy-git-hooks', () => {
 
 gulp.task('copy-migrations', () => {
     return gulp.src([
-            './projects/igniteui-angular/migrations/**/*.json',
-            '!**/tsconfig.json'
-        ])
+        './projects/igniteui-angular/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ])
         .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 });
 
@@ -154,24 +156,24 @@ gulp.task('typedoc-ts',
 
 gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
     gulp.src([
-            `${TYPEDOC_THEME.SRC}/assets/js/lib/jquery-2.1.1.min.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/src/versioning/tag-versions.req.js`,
-            `${TYPEDOC_THEME.SRC}/assets/js/main.js`
-        ])
+        `${TYPEDOC_THEME.SRC}/assets/js/lib/jquery-2.1.1.min.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/src/versioning/tag-versions.req.js`,
+        `${TYPEDOC_THEME.SRC}/assets/js/main.js`
+    ])
         .pipe(concat('main.js'))
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/js/`));
 });
 
 gulp.task('typedoc-theme-ts', () => {
     gulp.src([
-            `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
-        ])
+        `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
+    ])
         .pipe(ts({
             target: "es2017",
             moduleResolution: 'node',
@@ -193,10 +195,10 @@ gulp.task('typedoc-images', ['typedoc:clean-images'], () => {
 
 gulp.task('typedoc-hbs', ['typedoc:clean-hbs'], () => {
     return gulp.src([
-            `${TYPEDOC_THEME.SRC}/layouts/**/*`,
-            `${TYPEDOC_THEME.SRC}/partials/**/*`,
-            `${TYPEDOC_THEME.SRC}/templates/**/*`,
-        ], {
+        `${TYPEDOC_THEME.SRC}/layouts/**/*`,
+        `${TYPEDOC_THEME.SRC}/partials/**/*`,
+        `${TYPEDOC_THEME.SRC}/templates/**/*`,
+    ], {
             base: `${TYPEDOC_THEME.SRC}`
         })
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
@@ -266,8 +268,8 @@ gulp.task('sassdoc-js', ['sassdoc-ts'], () => {
     gulp.src([
         `${SASSDOC_THEME.JS_DIR}/**/!(tag-versions.req)*.js`,
     ])
-    .pipe(concat('main.js'))
-    .pipe(gulp.dest(SASSDOC_THEME.JS_DIR));
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest(SASSDOC_THEME.JS_DIR));
 })
 
 gulp.task('sassdoc-build', [
