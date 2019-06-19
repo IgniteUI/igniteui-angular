@@ -2,6 +2,7 @@ import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { EventEmitter } from '@angular/core';
+import { DisplayDensityBase } from '../core/density';
 
 /** @hidden */
 export enum Navigate {
@@ -43,7 +44,7 @@ export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 /**
  * @hidden
  */
-export interface IDropDownList {
+export interface IDropDownList extends DisplayDensityBase {
     onSelection: EventEmitter<ISelectionEventArgs>;
     width: string;
     height: string;
@@ -65,7 +66,6 @@ export interface IDropDownList {
  * @hidden
  */
 export interface IDropDownBase extends IDropDownList, IToggleView {
-    displayDensity: string;
     selectedItem: any;
     onOpening: EventEmitter<CancelableEventArgs>;
     onOpened: EventEmitter<void>;

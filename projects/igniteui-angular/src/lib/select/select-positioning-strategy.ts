@@ -163,6 +163,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
+        const selectItemPaddingHorizontal = 24;
         const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
@@ -170,7 +171,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.itemTextPadding = numericLeftPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + 48 + 'px';
+        contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
         this.deltaX = START.X - numericLeftPadding - numericTextIndent;
         const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
         const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
