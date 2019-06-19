@@ -1,3 +1,5 @@
+@import '../shape/input-group';
+
 ////
 /// @group schemas
 /// @access private
@@ -47,12 +49,7 @@
 /// @see $default-palette
 
 
-$_light-input-group: (
-
-    box-border-radius: .2 .2 0 0,
-    border-border-radius: .2,
-    search-border-radius: .2,
-
+$_light-input-group: extend((
     idle-text-color: (
         igx-color: ('grays', 600)
     ),
@@ -152,4 +149,4 @@ $_light-input-group: (
     disabled-placeholder-color: (
         igx-color: ('grays', 400)
     )
-);
+), $_default-shape-input-group);

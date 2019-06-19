@@ -1,3 +1,5 @@
+@import '../shape/tooltip';
+
 ////
 /// @group schemas
 /// @access private
@@ -13,9 +15,7 @@
 ///
 /// @see $default-palette
 
-$_light-tooltip: (
-    border-radius: .25,
-
+$_light-tooltip: extend((
     background: (
         igx-color: ('grays', 700),
         hexrgba: (),
@@ -30,4 +30,4 @@ $_light-tooltip: (
     ),
 
     roundness: rem(4px)
-);
+), $_default-shape-tooltip);
