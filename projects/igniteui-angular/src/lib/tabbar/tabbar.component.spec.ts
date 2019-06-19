@@ -251,6 +251,35 @@ describe('TabBar', () => {
             expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
         });
 
+        it('should have the correct selection set even when no active link is present on the tabs', () => {
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[2].isSelected).toBe(false);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+
+            theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[2].isSelected).toBe(false);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+
+            theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[2].isSelected).toBe(true);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+        });
+
     });
 
 });

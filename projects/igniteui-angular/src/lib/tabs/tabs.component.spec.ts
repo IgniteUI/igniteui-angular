@@ -712,7 +712,7 @@ class TabsTestBug4420Component {
     `
 })
 class TabsRoutingTestComponent {
-    @ViewChild(IgxTabsComponent)
+    @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
 }
 
@@ -731,6 +731,6 @@ class TabsRoutingTestComponent {
     `
 })
 class TabsTabsOnlyModeTestComponent {
-    @ViewChild(IgxTabsComponent)
+    @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
 }
