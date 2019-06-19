@@ -15,9 +15,11 @@
         <button [disabled]="api.isLastPage" (click)="api.paginate(api.totalPages - 1)" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">last_page</igx-icon>
     </button>
-    <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
-            <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">{{ val }}</option>
-    </select>
+    <igx-select [(ngModel)]="api.perPage" displayDensity="compact" type="box">
+        <igx-select-item [value]="val" *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">
+            {{val}}
+        </igx-select-item>
+    </igx-select>
 </ng-template>
 
 <div [style.width.px]='outerWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
