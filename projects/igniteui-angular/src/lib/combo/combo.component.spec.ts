@@ -3679,7 +3679,7 @@ export class SimpleBindComboComponent implements OnInit {
 })
 class DensityInputComponent {
     public density = DisplayDensity.cosy;
-    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    @ViewChild('combo', { read: IgxComboComponent })
     public combo: IgxComboComponent;
     public items = fiftyItems;
 }
@@ -3694,7 +3694,7 @@ class DensityInputComponent {
     }]
 })
 class DensityParentComponent {
-    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    @ViewChild('combo', { read: IgxComboComponent })
     public combo: IgxComboComponent;
     public items = fiftyItems;
 }
