@@ -697,6 +697,14 @@ export class IgxTabComponent {
         }
     }
 
+    /**
+     * @hidden
+     */
+    @HostListener('click')
+    public onClick() {
+        this.select();
+    }
+
     public elementRef(): ElementRef {
         return this._element;
     }

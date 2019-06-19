@@ -3,7 +3,7 @@
 </div>
 <div #tablist class="{{itemStyle}}__menu {{itemStyle}}__menu--bottom" role="tablist" aria-orientation="horizontal">
     <ng-container *ngIf="!hasContentTabs">    
-        <igx-tab *ngFor="let panel of panels" [relatedPanel]="panel" (click)="panel.select()">
+        <igx-tab *ngFor="let panel of panels" [relatedPanel]="panel">
         </igx-tab>
     </ng-container>
     <ng-content select="igx-tab"></ng-content>
