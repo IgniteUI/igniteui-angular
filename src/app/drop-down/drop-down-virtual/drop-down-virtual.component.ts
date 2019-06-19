@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
 import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxToastPosition, IgxForOfDirective } from 'igniteui-angular';
@@ -24,7 +24,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public totalItemCount = 0;
   public prevRequest: any;
   public startIndex = 0;
-  public itemHeight = 48;
+  public itemHeight = 40;
   public itemsMaxHeight = 320;
   public density = 'comfortable';
   public displayDensities = [
@@ -75,8 +75,5 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
         this.loadingToast.hide();
         this.cdr.detectChanges();
       });
-  }
-  public selectDensity(event: any) {
-    this.density = event.button.element.nativeElement.innerText.toLowerCase();
   }
 }
