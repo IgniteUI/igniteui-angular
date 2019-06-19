@@ -33,7 +33,6 @@
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
-
 /// @see $default-palette
 $_light-calendar: extend((
     content-background: (
