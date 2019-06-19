@@ -1,3 +1,5 @@
+@import '../shape/navbar';
+
 ////
 /// @group schemas
 /// @access private
@@ -15,7 +17,7 @@
 ///
 /// @see $default-palette
 
-$_light-navbar: (
+$_light-navbar: extend((
     background: (
         igx-color: ('primary', 500)
     ),
@@ -33,4 +35,4 @@ $_light-navbar: (
     ),
 
     elevation: 4
-);
+), $_default-shape-navbar);
