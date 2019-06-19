@@ -48,7 +48,9 @@
 ///
 /// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for calendar.
+/// @param {border-radius} $border-radius [null] - The border radius used for the outline of the calendar.
+/// @param {border-radius} $date-border-radius [null] - The border radius used for the outline outline of the date.
+/// @param {border-radius} $month-border-radius [null] - The border radius used for the outline outline of the month.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -72,6 +74,8 @@
     $content-text-color: null,
 
     $border-radius: null,
+    $date-border-radius: null,
+    $month-border-radius: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -109,6 +113,14 @@
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($calendar-schema, 'border-radius')), 0, 20px
+    );
+
+    $date-border-radius: round-borders(
+        if($date-border-radius, $date-border-radius, map-get($calendar-schema, 'date-border-radius')), 0, 20px
+    );
+
+    $month-border-radius: round-borders(
+        if($month-border-radius, $month-border-radius, map-get($calendar-schema, 'month-border-radius')), 0, 20px
     );
 
     @if not($content-text-color) and $content-background {
@@ -209,6 +221,8 @@
         header-text-color: $header-text-color,
 
         border-radius: $border-radius,
+        date-border-radius: $date-border-radius,
+        month-border-radius: $month-border-radius,
 
         picker-arrow-color: $picker-arrow-color,
         picker-arrow-hover-color: $picker-arrow-hover-color,
@@ -372,6 +386,7 @@
     }
 
     %cal-value {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -379,7 +394,8 @@
         height: $cal-value-h;
         min-width: 2ch;
         margin: $cal-value-margin;
-        border-radius: $cal-value-br;
+        // border-radius: $cal-value-br;
+        border-radius: --var($theme, 'date-border-radius');
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
@@ -452,7 +468,7 @@
             transform: translateY(-50%);
             height: 48px;
             background: transparent;
-            border-radius: rem(20px);
+            border-radius: --var($theme, 'month-border-radius');
             transition: background-color .15s ease-out;
             z-index: -1;
         }

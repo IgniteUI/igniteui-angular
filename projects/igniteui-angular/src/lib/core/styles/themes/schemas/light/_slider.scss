@@ -1,3 +1,5 @@
+@import '../shape/slider';
+
 ////
 /// @group schemas
 /// @access private
@@ -17,7 +19,7 @@
 ///
 /// @see $default-palette
 
-$_light-slider: (
+$_light-slider: extend((
     track-color: (
         igx-color: ('secondary', 500)
     ),
@@ -47,4 +49,4 @@ $_light-slider: (
     disabled-base-track-color: (
         igx-color: ('grays', 400)
     )
-);
+), $_default-shape-slider);
