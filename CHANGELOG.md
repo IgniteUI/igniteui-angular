@@ -53,6 +53,11 @@ There are also prebuilt schema presets for all components (light-round/dark-roun
         </igx-list>
     ```
 
+- `IgxChip`
+    - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
+    - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
+
+
 ## 7.3.4
 - `IgxGrid` - summaries
     - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
