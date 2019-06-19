@@ -488,7 +488,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         let width = super.getFeatureColumnsWidth();
 
         if (this.hasExpandableChildren) {
-            width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
+            width += this.headerHierarchyExpander.nativeElement.offsetWidth || this.getDefaultExpanderWidth();
         }
 
         return width;
