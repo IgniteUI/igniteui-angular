@@ -316,7 +316,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit() {
         if (this.hasContentTabs) {
-            // in content tabs mode there there is not first tab selected by default
+            // in content tabs mode no tab is selected by default
             this._selectedIndex = -1;
         }
 

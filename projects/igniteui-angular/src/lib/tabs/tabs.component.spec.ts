@@ -415,8 +415,6 @@ describe('IgxTabs', () => {
     }));
 
     describe('Routing Navigation Tests', () => {
-        configureTestSuite();
-
         let router;
         let location;
         let fixture;
@@ -437,15 +435,15 @@ describe('IgxTabs', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { theTabs[2].nativeTabItem.nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[2].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view3');
 
-            fixture.ngZone.run(() => { theTabs[1].nativeTabItem.nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view2');
 
-            fixture.ngZone.run(() => { theTabs[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view1');
         }));
@@ -461,6 +459,8 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
             expect(theTabs[2].isSelected).toBe(true);
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[1].isSelected).toBe(false);
 
             fixture.ngZone.run(() => { router.navigate(['/view2']); });
             tick();
@@ -468,6 +468,8 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
             expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[2].isSelected).toBe(false);
 
             fixture.ngZone.run(() => { router.navigate(['/view1']); });
             tick();
@@ -475,13 +477,13 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[2].isSelected).toBe(false);
         }));
 
     });
 
     describe('Tabs-only Mode Tests', () => {
-        configureTestSuite();
-
         let fixture;
         let tabsComp;
         let theTabs;

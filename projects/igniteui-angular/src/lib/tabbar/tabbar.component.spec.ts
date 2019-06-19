@@ -12,11 +12,15 @@ import { BottomNavRoutingViewComponentsModule,
     BottomNavRoutingView3Component } from './routing-view-components.spec';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('TabBar', () => {
     configureTestSuite();
-    beforeEach(async(() => {
 
+    const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
+    const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
+
+    beforeEach(async(() => {
         const testRoutes = [
             { path: 'view1', component: BottomNavRoutingView1Component },
             { path: 'view2', component: BottomNavRoutingView2Component },
@@ -162,8 +166,6 @@ describe('TabBar', () => {
     });
 
     describe('Routing Navigation Tests', () => {
-        configureTestSuite();
-
         let router;
         let location;
         let fixture;
@@ -184,15 +186,15 @@ describe('TabBar', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[2].elementRef()); });
             tick();
             expect(location.path()).toBe('/view3');
 
-            fixture.ngZone.run(() => { theTabs[1].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].elementRef()); });
             tick();
             expect(location.path()).toBe('/view2');
 
-            fixture.ngZone.run(() => { theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click')); });
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].elementRef()); });
             tick();
             expect(location.path()).toBe('/view1');
         }));
@@ -208,6 +210,8 @@ describe('TabBar', () => {
             fixture.detectChanges();
             expect(bottomNav.selectedIndex).toBe(2);
             expect(theTabs[2].isSelected).toBe(true);
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[1].isSelected).toBe(false);
 
             fixture.ngZone.run(() => { router.navigate(['/view2']); });
             tick();
@@ -215,6 +219,8 @@ describe('TabBar', () => {
             fixture.detectChanges();
             expect(bottomNav.selectedIndex).toBe(1);
             expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[2].isSelected).toBe(false);
 
             fixture.ngZone.run(() => { router.navigate(['/view1']); });
             tick();
@@ -222,13 +228,13 @@ describe('TabBar', () => {
             fixture.detectChanges();
             expect(bottomNav.selectedIndex).toBe(0);
             expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[2].isSelected).toBe(false);
         }));
 
     });
 
     describe('Tabs-only Mode Tests', () => {
-        configureTestSuite();
-
         let fixture;
         let bottomNav;
         let theTabs;
@@ -242,42 +248,42 @@ describe('TabBar', () => {
 
         it('should retain the correct initial selection status', () => {
             expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
 
             expect(theTabs[1].isSelected).toBe(true);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
 
             expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
         });
 
         it('should have the correct selection set even when no active link is present on the tabs', () => {
             expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
             expect(theTabs[1].isSelected).toBe(true);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
             expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
 
             theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
             fixture.detectChanges();
 
             expect(theTabs[0].isSelected).toBe(true);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
             expect(theTabs[1].isSelected).toBe(false);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
             expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
 
             theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click'));
             fixture.detectChanges();
 
             expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
             expect(theTabs[1].isSelected).toBe(false);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item')).toBe(true);
+            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
             expect(theTabs[2].isSelected).toBe(true);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains('igx-bottom-nav__menu-item--selected')).toBe(true);
+            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
         });
 
     });
