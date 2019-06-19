@@ -2777,7 +2777,6 @@ describe('IgxGrid Component Tests', () => {
                 (<any>grid).gridAPI.get_cell_inEditMode().value = newDate;
                 // targetCell.update(newDate);
                 fix.detectChanges();
-                grid.recalculateSummaries();
 
                 // get the summaries for a particular column
                 const summaries = targetCell.gridAPI.get_summary_data();

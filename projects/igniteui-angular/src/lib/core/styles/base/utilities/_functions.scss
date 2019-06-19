@@ -104,9 +104,10 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette, $color, $variant: 500) {
-    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
+    @if type-of($palette) == 'map' and map-has-key($palette, $color) {
         @return map-get(map-get($palette, $color), $variant);
     }
+
     @return #fff;
 }
 
@@ -323,27 +324,6 @@
         error: (500: $error),
         surface: (500: $surface)
     );
-}
-
-/// Returns a string from the elements of a list.
-/// Works recursively so the elements can be lists themselves.
-/// @param {List} $list [null] - A list of elements to be turned into a string.
-/// @param {String} $glue [''] - A string symbol to join the elements by.
-@function implode($list, $glue: '') {
-    $result: null;
-    @for $i from 1 through length($list) {
-        $e: nth($list, $i);
-        @if type-of($e) == list {
-            $result: $result#{implode($e, $glue)};
-        } @else {
-            $result: if(
-                $i != length($list),
-                $result#{$e}#{$glue},
-                $result#{$e}
-            );
-        }
-    }
-    @return $result;
 }
 
 /// Returns a CSS property value. It could return either css '--var' or
