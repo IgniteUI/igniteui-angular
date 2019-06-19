@@ -1780,6 +1780,8 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             verifyBaseSummaries(fix);
             verifySummariesForParentID19(fix, 3);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 3);
         });
 
         it('should render correct summaries when change grouping', () => {
@@ -1792,6 +1794,9 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 4);
             verifySummariesForParentID17(fix, 5);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 5);
 
             // change order
             grid.groupingExpressions = [
@@ -1802,6 +1807,9 @@ describe('IgxGrid - Summaries', () => {
 
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
+
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 8);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Jul 3, 2011', 'Sep 18, 2014']);
@@ -1811,6 +1819,9 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             verifySummariesForParentID19(fix, 6);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 3);
+            verifySummaryRowIndentationByDataRowIndex(fix, 6);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
@@ -2254,6 +2265,13 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'May 4, 2014', 'Apr 3, 2019']);
         });
     });
+
+    function verifySummaryRowIndentationByDataRowIndex(fixture, visibleIndex) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, visibleIndex);
+        const summaryRowIndentation = summaryRow.query(By.css('.igx-grid__summaries-patch'));
+        const expander = fixture.componentInstance.grid.headerGroupContainer;
+        expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
+    }
 
     function verifyBaseSummaries(fixture) {
         const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, 0);
