@@ -1,3 +1,5 @@
+@import '../shape/switch';
+
 ////
 /// @group schemas
 /// @access private
@@ -19,9 +21,12 @@
 /// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
 ///
+/// @prop {Number} border-radius-track [1] - The border radius fraction, between 0-7 to be used for card date.
+/// @prop {Number} border-radius-thumb [1] - The border radius fraction, between 0-10 to be used for card date.
+///
 /// @see $default-palette
 
-$_light-switch: (
+$_light-switch: extend((
     thumb-on-color: (
         igx-color: ('secondary', 500)
     ),
@@ -62,4 +67,4 @@ $_light-switch: (
     hover-elevation: 3,
 
     disabled-elevation: 1
-);
+), $_default-shape-switch);

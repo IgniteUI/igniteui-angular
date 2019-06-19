@@ -1,3 +1,5 @@
+@import '../shape/progress';
+
 ////
 /// @group schemas
 /// @access private
@@ -18,7 +20,7 @@
 ///
 /// @see $default-palette
 
-$_light-progress-linear: (
+$_light-progress-linear: extend((
     track-color: (
         igx-color: ('grays', 300)
     ),
@@ -48,7 +50,7 @@ $_light-progress-linear: (
     text-color: (
         igx-color: ('grays', 700)
     )
-);
+), $_default-shape-progress);
 
 /// Generates a light progress-circular schema.
 /// @type {Map}
@@ -59,7 +61,7 @@ $_light-progress-linear: (
 ///
 /// @see $default-palette
 
-$_light-progress-circular: (
+$_light-progress-circular: extend((
     base-circle-color: (
         igx-color: ('grays', 300)
     ),
@@ -71,4 +73,4 @@ $_light-progress-circular: (
     text-color: (
         igx-color: ('grays', 700)
     )
-);
+), $_default-shape-progress);
