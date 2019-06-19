@@ -52,6 +52,8 @@ There are also prebuilt schema presets for all components (light-round/dark-roun
           </igx-list-item>
         </igx-list>
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
 
 ## 7.3.4
 - `IgxGrid` - summaries
