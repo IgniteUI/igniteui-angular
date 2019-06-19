@@ -5,6 +5,7 @@
  * @export
  */
 export class IgxFilteringOperand {
+    protected static _instance: IgxFilteringOperand = null;
     public operations: IFilteringOperation[];
 
     public constructor() {
@@ -23,6 +24,10 @@ export class IgxFilteringOperand {
                 return target !== null;
             }
         }];
+    }
+
+    public static instance(): IgxFilteringOperand {
+        return this._instance || (this._instance = new this());
     }
 
     public conditionList(): string[] {
@@ -44,8 +49,6 @@ export class IgxFilteringOperand {
  * @export
  */
 export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxBooleanFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -85,10 +88,6 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
-
-    public static instance(): IgxBooleanFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
 }
 
 /**
@@ -97,8 +96,6 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxDateFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxDateFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -318,10 +315,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }].concat(this.operations);
     }
 
-    public static instance(): IgxDateFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
-
     /**
      * Splits a Date object into parts
      *
@@ -377,8 +370,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxNumberFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxNumberFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -439,10 +430,6 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
-
-    public static instance(): IgxNumberFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
 }
 
 /**
@@ -451,8 +438,6 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxStringFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxStringFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -524,10 +509,6 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
                 return target !== null && target !== undefined && target.length > 0;
             }
         }].concat(this.operations);
-    }
-
-    public static instance(): IgxStringFilteringOperand {
-        return this._instance || (this._instance = new this());
     }
 
     /**
