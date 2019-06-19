@@ -630,12 +630,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
-    /**
-    * @hidden
-    */
-    @ViewChild('datePickerOutlet', { read: ElementRef })
-    public outletDirective: ElementRef;
-
     /*
      * @hidden
      */
@@ -800,20 +794,22 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             closeAnimation: fadeOut
         };
 
-        const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
         this._dropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings),
-            outlet: outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
-            outlet: outlet
         };
+
+        if (this.outlet !== undefined) {
+            this._dropDownOverlaySettings.outlet = this.outlet;
+            this._modalOverlaySettings.outlet = this.outlet;
+        }
 
         this._overlayService.onOpening.pipe(
             filter((overlay) => overlay.id === this._componentID),
