@@ -3,7 +3,7 @@ import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositio
 
 @Component({
     selector: 'app-time-picker-sample',
-    styleUrls: ['time-picker.sample.css'],
+    styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html'
 })
 export class TimePickerSampleComponent implements AfterViewInit {
@@ -16,7 +16,9 @@ export class TimePickerSampleComponent implements AfterViewInit {
     isVertical = true;
     mode = InteractionMode.DropDown;
 
+    date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
+    val = new Date(0, 0, 0, 19, 35, 0, 0);
     today = new Date(Date.now());
 
     isRequired = true;
@@ -59,5 +61,10 @@ export class TimePickerSampleComponent implements AfterViewInit {
         if (parts.length === 2) {
             timePickerValue.setHours(parts[0], parts[1]);
         }
+    }
+
+    public selectToday(picker: IgxTimePickerComponent) {
+        picker.value = new Date(Date.now());
+        picker.close();
     }
 }

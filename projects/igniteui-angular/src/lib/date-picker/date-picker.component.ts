@@ -50,12 +50,12 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS } from '../core/utils';
-import { IgxDatePickerTemplateDirective } from './date-picker.directives';
+import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
+import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
-import { getViewportRect } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -539,6 +539,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
+     * @deprecated Use 'onOpened' instead.
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
      *```typescript
      *public open(event){
@@ -549,10 +550,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
+    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
     /**
+     *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
+    */
+    @Output()
+    public onOpened = new EventEmitter<IgxDatePickerComponent>();
+
+    /**
+     * @deprecated Use 'onClosed' instead.
      *"An event that is emitted when the `IgxDatePickerComponent` is closed.
      *```typescript
      *public close(event){
@@ -563,8 +572,22 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
+    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
     public onClose = new EventEmitter<IgxDatePickerComponent>();
+
+    /**
+     *An event that is emitted after the `IgxDatePickerComponent` is closed.
+    */
+    @Output()
+    public onClosed = new EventEmitter<IgxDatePickerComponent>();
+
+    /**
+     * An event that is emitted when the `IgxDatePickerComponent` is being closed.
+     */
+    @Output()
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+
     /**
      *An @Output property that is fired when selection is made in the calendar.
      *```typescript
@@ -672,6 +695,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
+    public datePickerActionsDirective: IgxDatePickerActionsDirective;
 
     public calendar: IgxCalendarComponent;
     public hasHeader = true;
@@ -802,6 +831,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             filter(overlay => overlay.id === this._componentID),
             takeUntil(this._destroy$)).subscribe(() => {
                 this._onClosed();
+            });
+
+        this._overlayService.onClosing.pipe(
+            filter(overlay => overlay.id === this._componentID),
+            takeUntil(this._destroy$)).subscribe((event) => {
+                this.onClosing.emit(event);
             });
 
         if (this.mode === InteractionMode.DropDown) {
@@ -1159,6 +1194,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private _onOpened(event): void {
         this._onTouchedCallback();
+        this.onOpened.emit(this);
+
+        // TODO: remove this line after deprecating 'onOpen'
         this.onOpen.emit(this);
 
         if (this.calendar) {
@@ -1169,6 +1207,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _onClosed(): void {
         this.collapsed = true;
         this._componentID = null;
+        this.onClosed.emit(this);
+
+        // TODO: remove this line after deprecating 'onClose'
         this.onClose.emit(this);
 
         if (this.getEditElement()) {
@@ -1200,6 +1241,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         componentInstance.vertical = isVertical;
         componentInstance.cancelButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
+        componentInstance.datePickerActions = this.datePickerActionsDirective;
 
         componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
         componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
@@ -1265,9 +1307,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDatePickerComponent, IgxCalendarContainerComponent,
+    declarations: [IgxDatePickerComponent, IgxCalendarContainerComponent, IgxDatePickerActionsDirective,
         IgxDatePickerTemplateDirective, DatePickerDisplayValuePipe, DatePickerInputValuePipe],
-    exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective, DatePickerDisplayValuePipe, DatePickerInputValuePipe],
+    exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective,
+        DatePickerDisplayValuePipe, DatePickerInputValuePipe],
     imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxMaskModule],
     entryComponents: [IgxCalendarContainerComponent]
 })

@@ -389,12 +389,12 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDir['dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
+            expect(thirdChip.dragDirective['dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDir['dragGhost'], startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDirective['dragGhost'], startingX + 10, startingY + 10);
 
             done();
         });
