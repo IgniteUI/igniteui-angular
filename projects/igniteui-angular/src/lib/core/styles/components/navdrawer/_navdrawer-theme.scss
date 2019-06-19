@@ -21,7 +21,8 @@
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
-/// @param {border-radius} $border-radius [null] - The border radius used for navdrawer item.
+/// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
+/// @param {item-border-radius} $item-border-radius [null] - The border radius used for the navdrawer items.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -46,6 +47,7 @@
     $elevations: $elevations,
 
     $border-radius: null,
+    $item-border-radius: null,
 
     $background: null,
     $border-color: null,
@@ -69,6 +71,10 @@
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($navdrawer-schema, 'border-radius')), 0, 36px
+    );
+
+    $item-border-radius: round-borders(
+        if($item-border-radius, $item-border-radius, map-get($navdrawer-schema, 'item-border-radius')), 0, 24px
     );
 
     @if not($item-header-text-color) and $background {
@@ -116,6 +122,7 @@
         name: $name,
         palette: $palette,
         border-radius: $border-radius,
+        item-border-radius: $item-border-radius,
         background: $background,
         border-color: $border-color,
         item-text-color:$item-text-color,
@@ -246,23 +253,23 @@
         display: flex;
         flex-flow: row nowrap;
         color: --var($theme, 'item-text-color');
-        max-height: 48px;
-        padding: 12px 16px;
+        max-height: rem(48px);
+        padding: rem(12px) rem(16px);
         cursor: pointer;
         align-items: center;
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: 4px;
-        margin: 8px;
+        border-radius: --var($theme, 'item-border-radius');
+        margin: rem(8px);
 
         > igx-icon + span {
-            margin-left: 32px;
+            margin-left: rem(32px);
         }
 
         &[dir='rtl'] {
             > igx-icon + span {
-                margin-right: 32px;
+                margin-right: rem(32px);
             }
         }
 
@@ -303,7 +310,7 @@
 
     %item--header {
         display: block;
-        padding: 12px 16px;
+        padding: rem(12px) rem(16px);
         white-space: nowrap;
         color: --var($theme, 'item-header-text-color');
     }
