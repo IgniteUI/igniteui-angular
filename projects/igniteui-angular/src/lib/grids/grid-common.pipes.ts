@@ -86,3 +86,13 @@ export class IgxGridTransactionPipe implements PipeTransform {
         return collection;
     }
 }
+
+@Pipe({
+    name: 'filterUniqueOptions',
+    pure: true,
+})
+export class IgxGridUniqueOptionsPipe implements PipeTransform {
+    public transform(values: Array<number>) {
+        return Array.from(new Set([...values])).sort((a, b) => a - b);
+    }
+}

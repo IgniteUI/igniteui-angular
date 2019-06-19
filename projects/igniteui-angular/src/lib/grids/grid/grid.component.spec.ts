@@ -3711,6 +3711,33 @@ describe('IgxGrid Component Tests', () => {
                     expect(overlayContent.style.display).toEqual('');
                 }));
         });
+
+        describe('Selector should display random numbers from perpage', () => {
+            configureTestSuite();
+            beforeEach(async(() => {
+                TestBed.configureTestingModule({
+                    declarations: [
+                        IgxGridRowEditingComponent
+                    ],
+                    imports: [
+                        NoopAnimationsModule, IgxGridModule]
+                }).compileComponents();
+            }));
+
+            it('Custom items perpage should be shown correctly in the select', async () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const select = fix.debugElement.query(By.css('select')).nativeElement;
+                const options = select.options;
+                const option0 = options[0].value;
+                const option1 = options[1].value;
+                const option2 = options[2].value;
+                expect(option0).toBe('5');
+                expect(option1).toBe('7');
+                expect(option2).toBe('10');
+            });
+        });
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {

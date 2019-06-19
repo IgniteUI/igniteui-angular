@@ -16,7 +16,7 @@
         <igx-icon fontSet="material">last_page</igx-icon>
     </button>
     <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
-            <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
+            <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">{{ val }}</option>
     </select>
 </ng-template>
 
