@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 8.0.0
+- `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
+    ```scss
+        $light-round-input: extend($_light-input-group, $_round-shape-input-group);
+    ```
+There are also prebuilt schema presets for all components (light-round/dark-round and light-square/dark-square), namely `$light-round-schema, $light-dark-schema, $light-square-schema, $dark-square-schema`;
 - `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
     - `#emptyTemplate`
     - `#headerTemplate`
