@@ -163,6 +163,7 @@ export class IgxGridNavigationService {
         const prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
         if (prevEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
             this.grid.rowEditTabs.last.element.nativeElement.focus();
+            return;
         }
         this.focusNextEditableTarget(rowIndex, prevEditableColumnIndex);
     }
@@ -171,6 +172,7 @@ export class IgxGridNavigationService {
         const nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
         if (nextEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
             this.grid.rowEditTabs.first.element.nativeElement.focus();
+            return;
         }
         this.focusNextEditableTarget(rowIndex, nextEditableColumnIndex);
     }
@@ -423,7 +425,7 @@ export class IgxGridNavigationService {
             return;
         }
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
-            if (this.isRowInEditMode(rowIndex)) {
+            if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
                 return;
             }
@@ -538,7 +540,7 @@ export class IgxGridNavigationService {
             return;
         }
         if (visibleColumnIndex === 0) {
-            if (this.isRowInEditMode(rowIndex)) {
+            if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
                 return;
             }
