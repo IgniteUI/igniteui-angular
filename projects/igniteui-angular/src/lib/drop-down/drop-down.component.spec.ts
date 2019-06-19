@@ -1925,7 +1925,7 @@ class GroupDropDownComponent {
 })
 class DensityInputComponent {
     public density = DisplayDensity.cosy;
-    @ViewChild('dropdown', { read: IgxDropDownComponent, static: true })
+    @ViewChild('dropdown', { read: IgxDropDownComponent })
     public dropdown: IgxDropDownComponent;
     public items = fiftyItems;
 }
@@ -1943,7 +1943,7 @@ class DensityInputComponent {
     }]
 })
 class DensityParentComponent {
-    @ViewChild('dropdown', { read: IgxDropDownComponent, static: true })
+    @ViewChild('dropdown', { read: IgxDropDownComponent })
     public dropdown: IgxDropDownComponent;
     public items = fiftyItems;
 }
