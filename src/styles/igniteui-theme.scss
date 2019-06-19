@@ -24,6 +24,32 @@
     }
 }
 
+.light-square-theme {
+    $igx-background-color: #fff;
+    $igx-foreground-color: text-contrast($igx-background-color);
+
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+
+    @include scrollbar-love();
+    @include igx-light-square-theme($purple-palette);
+
+    .nav-header {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
+    }
+}
+
+.light-round-theme {
+    $igx-background-color: #fff;
+    $igx-foreground-color: text-contrast($igx-background-color);
+
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+
+    @include scrollbar-love();
+    @include igx-theme($palette: $purple-palette, $schema: $light-round-schema);
+}
+
 .dark-theme {
     $igx-background-color: #333;
     $igx-foreground-color: text-contrast($igx-background-color);

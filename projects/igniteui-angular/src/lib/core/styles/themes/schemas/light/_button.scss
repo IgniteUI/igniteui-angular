@@ -1,3 +1,5 @@
+@import '../shape/button';
+
 ////
 /// @group schemas
 /// @access private
@@ -53,18 +55,7 @@
 /// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
 /// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
 /// @see $default-palette
-$_light-button: (
-
-    flat-border-radius: .2,
-
-    raised-border-radius: .2,
-
-    outlined-border-radius: .2,
-
-    fab-border-radius: 1,
-
-    icon-border-radius: 1,
-
+$_light-button: extend((
     flat-background: transparent,
 
     flat-text-color: (
@@ -207,4 +198,4 @@ $_light-button: (
     fab-resting-elevation: 6,
     fab-hover-elevation: 12,
     fab-focus-elevation: 12
-);
+), $_default-shape-button);

@@ -1,3 +1,5 @@
+@import '../shape/badge';
+
 ////
 /// @group schemas
 /// @access private
@@ -13,9 +15,7 @@
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for badge component.
 /// @see $default-palette
-$_light-badge: (
-    border-radius: 1,
-
+$_light-badge: extend((
     icon-color: (
         igx-contrast-color: ('primary', 500)
     ),
@@ -31,4 +31,4 @@ $_light-badge: (
     ),
 
     elevation: 1
-);
+), $_default-shape-badge);
