@@ -894,8 +894,6 @@ export class SelectionWithTransactionsComponent extends BasicGridComponent {
 }
 
 export class CustomFilter extends IgxFilteringOperand {
-    private static _instance: CustomFilter;
-
     private constructor () {
         super();
         this.operations = [{
@@ -906,10 +904,6 @@ export class CustomFilter extends IgxFilteringOperand {
             },
             iconName: 'custom'
         }];
-    }
-
-    public static instance(): CustomFilter {
-        return this._instance || (this._instance = new this());
     }
 }
 @Component({

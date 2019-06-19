@@ -1,3 +1,5 @@
+@import '../shape/calendar';
+
 ////
 /// @group schemas
 /// @access private
@@ -29,14 +31,14 @@
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 
 /// @see $default-palette
-$_light-calendar: (
+$_light-calendar: extend((
     content-background: (
         igx-color: 'surface'
     ),
-
-    border-radius: .2,
 
     content-text-color: (
         igx-color: 'surface',
@@ -134,4 +136,4 @@ $_light-calendar: (
         hexrgba: (),
         rgba: .6
     )
-);
+), $_default-shape-calendar);
