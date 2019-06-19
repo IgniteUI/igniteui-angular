@@ -16,6 +16,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownBase } from '../drop-down/drop-down.base';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { DisplayDensity, DisplayDensityToken } from '../core/density';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -41,6 +42,20 @@ const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
+const CSS_CLASS_ITEM = 'igx-drop-down__item';
+const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
+const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
+const CSS_CLASS_HEADER_ITEM = 'igx-drop-down__header';
+const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
+const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
+const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
+const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
+const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
+
+const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
+    value: i,
+    name: `Item ${i + 1}`
+}));
 
 describe('igxCombo', () => {
     configureTestSuite();
@@ -58,7 +73,9 @@ describe('igxCombo', () => {
                 IgxComboInContainerTestComponent,
                 IgxComboInContainerFixedWidthComponent,
                 IgxComboFormComponent,
-                SimpleBindComboComponent
+                SimpleBindComboComponent,
+                DensityParentComponent,
+                DensityInputComponent
             ],
             imports: [
                 IgxComboModule,
@@ -3097,6 +3114,57 @@ describe('igxCombo', () => {
             expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
         }));
     });
+
+    describe('Combo - Display Density', () => {
+        it('Should be able to set Display Density as input', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const combo = fixutre.componentInstance.combo;
+            expect(combo.displayDensity).toEqual(DisplayDensity.cosy);
+            fixutre.componentInstance.density = DisplayDensity.compact;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.displayDensity).toEqual(DisplayDensity.compact);
+            fixutre.componentInstance.density = DisplayDensity.comfortable;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.displayDensity).toEqual(DisplayDensity.comfortable);
+        }));
+        it('Should be able to get Display Density from DI engine', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const combo = fixutre.componentInstance.combo;
+            expect(combo.displayDensity).toEqual(DisplayDensity.cosy);
+        }));
+        it('Should apply correct styles to items and input when Display Density is set', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const combo = fixutre.componentInstance.combo;
+            combo.toggle();
+            tick();
+            fixutre.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
+            expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
+            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COSY).length).toBe(2);
+            fixutre.componentInstance.density = DisplayDensity.compact;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
+            expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
+            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMPACT).length).toBe(2);
+            fixutre.componentInstance.density = DisplayDensity.comfortable;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
+            expect(combo.dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_ITEM).length);
+            expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMFORTABLE).length).toBe(2);
+            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
+            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+        }));
+    });
 });
 
 @Component({
@@ -3602,4 +3670,32 @@ export class SimpleBindComboComponent implements OnInit {
         this.items = ['One', 'Two', 'Three', 'Four', 'Five'];
         this.comboSelectedItems = ['One', 'Two'];
     }
+}
+
+@Component({
+    template: `
+        <igx-combo #combo [data]="items" [displayDensity]="density" [displayKey]="'name'" [valueKey]="'value'">
+        </igx-combo>
+    `
+})
+class DensityInputComponent {
+    public density = DisplayDensity.cosy;
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items = fiftyItems;
+}
+
+@Component({
+    template: `
+        <igx-combo #combo [data]="items" [displayKey]="'name'" [valueKey]="'value'">
+        </igx-combo>
+    `,
+    providers: [{
+        provide: DisplayDensityToken, useValue: DisplayDensity.cosy
+    }]
+})
+class DensityParentComponent {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items = fiftyItems;
 }
