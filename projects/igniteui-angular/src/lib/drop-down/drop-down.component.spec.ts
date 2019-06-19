@@ -1113,20 +1113,6 @@ describe('IgxDropDown ', () => {
             expect(igxDropDown.collapsed).toEqual(true);
         }));
 
-        xit('#1663 drop down flickers on open', fakeAsync(() => {
-            // This tests nothing.
-            const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
-            fixture.detectChanges();
-            const button = fixture.debugElement.query(By.css('button')).nativeElement;
-            const igxDropDown = fixture.componentInstance.dropdownScroll;
-            button.click();
-            igxDropDown.open();
-            tick();
-            fixture.detectChanges();
-
-            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(80);
-        }));
-
         it('Should set isSelected via igxDropDownIteComponent', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
