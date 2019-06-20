@@ -25,7 +25,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-fdescribe('IgxForOf directive -', () => {
+describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
@@ -566,7 +566,7 @@ fdescribe('IgxForOf directive -', () => {
             expect(rowsRendered.length).toBe(9);
         });
 
-        fit('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async () => {
+        it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async () => {
             let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             let colsRendered = rowsRendered[0].children;
 
