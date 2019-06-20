@@ -134,7 +134,9 @@ Sets Input Group style type. Choose from `line`, `box` or `border`.
 
 
 ### DisplayDensity
-Sets Input Group displayDensity. Choose from `compact`, `cosy` or`comfortable`.
+**igx-select** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
 
 ```html
     <igx-select [(ngModel)]="fruit" [displayDensity]="'comfortable'">
