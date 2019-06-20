@@ -60,7 +60,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('checkbox') public nativeCheckbox: ElementRef;
+    @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
@@ -68,7 +68,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('label') public nativeLabel;
+    @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -76,7 +76,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('placeholderLabel') public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
     /**
      * Sets/gets the `id` of the checkbox component.
      * If not set, the `id` of the first checkbox component will be `"igx-checkbox-0"`.

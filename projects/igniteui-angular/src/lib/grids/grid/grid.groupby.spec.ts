@@ -769,9 +769,9 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        // verify scrollbar is updated - 4 rows x 51px are hidden.
         expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
-            .toEqual(origScrollHeight - 200);
+            .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
         tick();
@@ -2597,10 +2597,10 @@ export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: TemplateRef })
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
     public enableSorting = false;
@@ -2643,7 +2643,7 @@ export class GroupableGridComponent extends DataParent {
     public width = '800px';
     public height = '700px';
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -2668,7 +2668,7 @@ export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -2703,7 +2703,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 

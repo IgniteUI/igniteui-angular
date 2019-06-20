@@ -56,12 +56,12 @@ export class GridRowEditSampleComponent {
     data: any[];
     performanceData: any[] = [];
     columns;
-    @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
-    @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
-    @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
-    @ViewChild('gridTransaction', { read: IgxGridComponent }) public gridTransaction: IgxGridComponent;
-    @ViewChild('gridPerformance', { read: IgxGridComponent }) public gridPerformance: IgxGridComponent;
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true }) public gridRowEdit: IgxGridComponent;
+    @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true }) public gridRowEditTransaction: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
+    @ViewChild('gridTransaction', { read: IgxGridComponent, static: true }) public gridTransaction: IgxGridComponent;
+    @ViewChild('gridPerformance', { read: IgxGridComponent, static: true }) public gridPerformance: IgxGridComponent;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
 
     constructor() {
         const enhancedData = data.map((e, i) => Object.assign(e, {

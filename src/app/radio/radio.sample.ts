@@ -18,7 +18,7 @@ class Person {
     templateUrl: 'radio.sample.html'
 })
 export class RadioSampleComponent implements AfterContentInit {
-    @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     selectedValue: any;
 

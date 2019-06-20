@@ -13,7 +13,20 @@
 
             <article class="sample-column">
                 <h4 class="sample-title">Range slider</h4>
-                <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+                <igx-slider #slider2 [type]="sliderType" [disabled]="false" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+                </igx-slider>
+            </article>
+
+            <article class="sample-column">
+                <h4 class="sample-title">Range label slider</h4>
+                <igx-slider #slider3 [type]="sliderType" [(ngModel)]="rangeLabel"
+                    [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
+                    <ng-template igxSliderThumbFrom let-value let-labels="labels">
+                        <span class="ellipsis">{{ labels[value.lower] }}</span>
+                    </ng-template>
+                    <ng-template igxSliderThumbTo let-value let-labels="labels">
+                        <span class="ellipsis">{{ labels[value.upper] }}</span>
+                    </ng-template>
                 </igx-slider>
             </article>
         </div>
@@ -30,8 +43,15 @@
 
 
             <article class="sample-column">
+                <h4>Range slider</h4>
                 <input type="text" [(ngModel)]="rangeValue.lower">
                 <input type="text" [(ngModel)]="rangeValue.upper">
+            </article>
+
+            <article class="sample-column">
+                <h4>Range label slider</h4>
+                <input type="text" [(ngModel)]="rangeLabel.lower">
+                <input type="text" [(ngModel)]="rangeLabel.upper">
             </article>
         </div>
     </section>
