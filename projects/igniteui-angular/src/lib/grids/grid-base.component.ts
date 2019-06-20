@@ -4874,8 +4874,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        if (visibleColIndex === -1 || (this.navigation.isColumnFullyVisible(visibleColIndex)
-            && this.navigation.isColumnLeftFullyVisible(visibleColIndex))) {
+        if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
             if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
                 this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
                      () => { this.executeCallback(rowIndex, visibleColIndex, cb); } );

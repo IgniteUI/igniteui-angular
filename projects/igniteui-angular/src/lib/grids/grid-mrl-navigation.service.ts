@@ -59,7 +59,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this.focusCellDownFromLayout(rowElement, selectedNode);
     }
 
-    public isColumnFullyVisible(visibleColumnIndex: number): boolean {
+    public isColumnRightEdgeVisible(visibleColumnIndex: number): boolean {
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
         const forOfDir =  this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
@@ -82,7 +82,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(index);
     }
 
-    public isColumnLeftFullyVisible(visibleColumnIndex: number): boolean {
+    public isColumnLeftEdgeVisible(visibleColumnIndex: number): boolean {
         const forOfDir = this.grid.headerContainer;
         const horizontalScroll = forOfDir.getHorizontalScroll();
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
@@ -120,7 +120,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     protected _moveFocusToCell(currentRowEl: HTMLElement, nextElementColumn, row, selectedNode, dir) {
         if (nextElementColumn && row.cells) {
             let nextCell = row.cells.find(currCell => currCell.column === nextElementColumn);
-            const isVisible = this.isColumnFullyVisible(nextElementColumn.visibleIndex);
+            const isVisible = this.isColumnRightEdgeVisible(nextElementColumn.visibleIndex);
             if (!nextCell || !isVisible) {
                 this.grid.nativeElement.focus({ preventScroll: true });
                 const cb = () => {
@@ -296,7 +296,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             const nextElement = nextElementColumn.cells.find((c) => c.rowIndex === rowIndex).nativeElement;
            this._focusCell(nextElement);
         };
-        if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
+        if (!this.isColumnRightEdgeVisible(nextElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(rowIndex, nextElementColumn.visibleIndex, false, cb);
         } else {
@@ -337,7 +337,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             const prevElement = prevElementColumn.cells.find((c) => c.rowIndex === rowIndex).nativeElement;
             this._focusCell(prevElement);
         };
-        if (!this.isColumnLeftFullyVisible(prevElementColumn.visibleIndex)) {
+        if (!this.isColumnLeftEdgeVisible(prevElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(rowIndex, prevElementColumn.visibleIndex, false, cb);
         } else {
@@ -365,7 +365,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
 
-        if (!this.isColumnFullyVisible(nextElementColumn.visibleIndex)) {
+        if (!this.isColumnRightEdgeVisible(nextElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
             const cb = () => {
                 const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
@@ -399,7 +399,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
 
-        if (!this.isColumnLeftFullyVisible(nextElementColumn.visibleIndex)) {
+        if (!this.isColumnLeftEdgeVisible(nextElementColumn.visibleIndex)) {
             this.grid.nativeElement.focus({ preventScroll: true });
            const cb = () => {
                 const allBlocks = rowElement.querySelectorAll(this.getColumnLayoutSelector());
