@@ -169,6 +169,8 @@ export class IgxGridNavigationService {
     public movePreviousEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
         if (prevEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
+            //  TODO: make gridAPI visible for internal use and remove cast to any
+            (this.grid as any).gridAPI.submit_value();
             this.grid.rowEditTabs.last.element.nativeElement.focus();
             return;
         }
@@ -178,6 +180,8 @@ export class IgxGridNavigationService {
     public moveNextEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
         if (nextEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
+            //  TODO: make gridAPI visible for internal use and remove cast to any
+            (this.grid as any).gridAPI.submit_value();
             this.grid.rowEditTabs.first.element.nativeElement.focus();
             return;
         }
@@ -434,6 +438,8 @@ export class IgxGridNavigationService {
 
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
+                //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
                 return;
             }
@@ -555,6 +561,8 @@ export class IgxGridNavigationService {
 
         if (visibleColumnIndex === 0) {
             if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
+                //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
                 return;
             }
