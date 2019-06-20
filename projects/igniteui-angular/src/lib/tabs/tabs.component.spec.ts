@@ -21,6 +21,10 @@ import { TabsRoutingViewComponentsModule,
 
 describe('IgxTabs', () => {
     configureTestSuite();
+
+    const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
+    const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
+
     beforeEach(async(() => {
 
         const testRoutes = [
@@ -497,13 +501,13 @@ describe('IgxTabs', () => {
 
         it('should retain the correct initial selection status', () => {
             expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item')).toBe(true);
+            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
 
             expect(theTabs[1].isSelected).toBe(true);
-            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item--selected')).toBe(true);
+            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
 
             expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains('igx-tabs__header-menu-item')).toBe(true);
+            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
         });
 
     });
