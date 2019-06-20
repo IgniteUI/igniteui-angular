@@ -10,6 +10,7 @@ import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon';
+import { IgxOverlayOutletDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -28,14 +29,16 @@ describe('IgxTimePicker', () => {
                 IgxTimePickerDropDownComponent,
                 IgxTimePickerDropDownSingleHourComponent,
                 IgxTimePickerDropDownNoValueComponent,
-                IgxTimePickerRetemplatedDropDownComponent
+                IgxTimePickerRetemplatedDropDownComponent,
+                IgxTimePickerWithOutletComponent
             ],
             imports: [
                 IgxTimePickerModule,
                 FormsModule,
                 NoopAnimationsModule,
                 IgxInputGroupModule,
-                IgxIconModule
+                IgxIconModule,
+                IgxToggleModule
             ]
         }).compileComponents();
     }));
@@ -1474,6 +1477,27 @@ describe('IgxTimePicker', () => {
         }));
     });
 
+    describe('Timepicker with outlet', () => {
+        configureTestSuite();
+        let fixture;
+        let timePicker;
+        it('should display the overlay in the provided outlet', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxTimePickerWithOutletComponent);
+            timePicker = fixture.componentInstance.timepicker;
+            fixture.detectChanges();
+            const dom = fixture.debugElement;
+
+            expect(() => {
+                const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+                UIInteractions.clickElement(timePickerTarget);
+                tick();
+                fixture.detectChanges();
+            }).not.toThrowError();
+
+            expect(timePicker.outlet).toBeDefined();
+        }));
+    });
+
     describe('TimePicker retemplating and customization', () => {
         configureTestSuite();
         let fixture;
@@ -1957,6 +1981,16 @@ export class IgxTimePickerRetemplatedDropDownComponent {
         picker.value = new Date(2018, 10, 27, 10, 45, 0, 0);
         picker.close();
     }
+}
+
+@Component({
+    template: `
+        <igx-time-picker [outlet]="outlet" #timepicker></igx-time-picker>
+        <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+    `
+})
+export class IgxTimePickerWithOutletComponent {
+    @ViewChild('timepicker') public timepicker: IgxTimePickerComponent;
 }
 
 // helper functions

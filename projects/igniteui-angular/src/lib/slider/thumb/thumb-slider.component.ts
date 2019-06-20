@@ -10,10 +10,9 @@ import {
     OnInit,
     OnDestroy,
     TemplateRef} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SliderHandle } from '../slider.component';
+import { SliderHandle } from '../slider.common';
 
 /**
  * @hidden
@@ -213,9 +212,3 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return Math.round(scaleX / stepDist) * this.step;
     }
 }
-@NgModule({
-    declarations: [IgxSliderThumbComponent],
-    imports: [CommonModule],
-    exports: [IgxSliderThumbComponent]
-})
-export class IgxSliderThumbModule {}

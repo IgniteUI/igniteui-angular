@@ -590,6 +590,7 @@ export class IgxTimePickerComponent implements
     private _dateFromModel: Date;
     private _destroy$ = new Subject<boolean>();
     private _dropDownOverlaySettings: OverlaySettings;
+    private _dialogOverlaySettings: OverlaySettings;
 
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
@@ -756,6 +757,7 @@ export class IgxTimePickerComponent implements
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy()
         };
+        this._dialogOverlaySettings = {};
     }
 
     /**
@@ -1327,8 +1329,8 @@ export class IgxTimePickerComponent implements
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
         if (this.toggleRef.collapsed) {
             let settings;
-            if (this.mode === InteractionMode.Dialog && this.overlaySettings ) {
-                settings = this.overlaySettings;
+            if (this.mode === InteractionMode.Dialog) {
+                settings = this.overlaySettings || this._dialogOverlaySettings;
             }
 
             if (this.mode === InteractionMode.DropDown) {
