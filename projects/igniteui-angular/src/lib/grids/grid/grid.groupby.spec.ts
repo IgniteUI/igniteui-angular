@@ -769,9 +769,9 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        // verify scrollbar is updated - 4 rows x 51px are hidden.
         expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
-            .toEqual(origScrollHeight - 200);
+            .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
         tick();

@@ -1,3 +1,5 @@
+@import '../shape/icon';
+
 ////
 /// @group schemas
 /// @access private
@@ -13,10 +15,10 @@
 ///
 /// @see $default-palette
 
-$_light-icon: (
+$_light-icon: extend((
     color: currentColor,
 
     size: rem(24px),
 
     disabled-color: currentColor
-);
+), $_default-shape-icon);
