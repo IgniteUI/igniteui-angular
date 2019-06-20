@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType } from './slider.component';
+import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { SliderType, IRangeSliderValue } from './slider.common';
 
 declare var Simulator: any;
 
@@ -24,7 +25,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-    configureTestSuite();
+    // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -362,7 +363,7 @@ describe('IgxSlider', () => {
     });
 
     describe('RANGE slider Base tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -700,7 +701,7 @@ describe('IgxSlider', () => {
     </igx-slider>`
 })
 class SliderInitializeTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 }
 
 @Component({
@@ -709,7 +710,7 @@ class SliderInitializeTestComponent {
     `
 })
 export class SliderMinMaxComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     public minValue = 150;
     public maxValue = 300;
@@ -724,8 +725,8 @@ export class SliderMinMaxComponent {
                     </igx-slider>
                 </div>`
 })
-class SliderTestComponent {
-    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+export class SliderTestComponent {
+    @ViewChild(IgxSliderComponent, { static: true }) public slider: IgxSliderComponent;
 
     minValue = 0;
     maxValue = 10;

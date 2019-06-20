@@ -97,10 +97,10 @@ export class ColumnsFromIterableComponent extends BasicGridComponent {
 export class TemplatedColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameData();
 
-    @ViewChild('newHeader', { read: TemplateRef })
+    @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
-    @ViewChild('newCell', { read: TemplateRef })
+    @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 }
 
@@ -231,7 +231,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -519,7 +519,7 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild('nameColumn') public nameColumn;
+    @ViewChild('nameColumn', { static: true }) public nameColumn;
 }
 
 @Component({
@@ -599,7 +599,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
@@ -894,8 +894,6 @@ export class SelectionWithTransactionsComponent extends BasicGridComponent {
 }
 
 export class CustomFilter extends IgxFilteringOperand {
-    private static _instance: CustomFilter;
-
     private constructor () {
         super();
         this.operations = [{
@@ -906,10 +904,6 @@ export class CustomFilter extends IgxFilteringOperand {
             },
             iconName: 'custom'
         }];
-    }
-
-    public static instance(): CustomFilter {
-        return this._instance || (this._instance = new this());
     }
 }
 @Component({

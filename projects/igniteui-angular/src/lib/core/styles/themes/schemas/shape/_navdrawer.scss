@@ -1,0 +1,12 @@
+$_default-shape-navdrawer: (
+    border-radius: .2,
+);
+
+$_round-shape-navdrawer: (
+    border-radius: 1,
+);
+
+$_square-shape-navdrawer: (
+    border-radius: 0%,
+    border-radius-item: 0%
+);

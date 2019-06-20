@@ -28,7 +28,7 @@ export class IgxExcelStyleSortingComponent {
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
+    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent, static: true })
     public sortButtonGroup: IgxButtonGroupComponent;
 
     constructor() {}

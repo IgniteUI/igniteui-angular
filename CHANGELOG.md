@@ -1,7 +1,72 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 8.0.0
+- `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
+    ```scss
+        $light-round-input: extend($_light-input-group, $_round-shape-input-group);
+    ```
+There are also prebuilt schema presets for all components (light-round/dark-round and light-square/dark-square), namely `$light-round-schema, $light-dark-schema, $light-square-schema, $dark-square-schema`;
+- `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
+    - `#emptyTemplate`
+    - `#headerTemplate`
+    - `#footerTemplate`
+    - `#itemTemplate`
+    - `#addItemTemplate`
+    - `#headerItemTemplate`
+- `igxTimePicker` and `igxDatePicker`
+    - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
+    - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
+    - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `igxDatePicker` and `igxTimePicker` now provide the ability for adding custom action buttons. Read up more information in [igxDatePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md) or [igxTimePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+- `IgxToggleAction` / `IgxTooltip`: Removed the deprecated `closeOnOutsideClick` Input that has been superseded by `overlaySettings` in 6.2.0.
+
+- `IgxList` - The list component has been refactored. It now includes several new supporting directives:
+    - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+    - `igxListAction` - Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+    - `igxListLine` - Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+    - `igxListLineTitle` - Use it to mark the target as list title which will be automatically formatted as a list-item title;
+    - `igxListLineSubTitle` - Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
+
+    ```html
+        <igx-list>
+            <igx-list-item [isHeader]="true">List items</igx-list-item>
+            <igx-list-item>
+              <igx-avatar igxListThumbnail></igx-avatar>
+              <h1 igxListLineTitle>List item title</h1>
+              <h3 igxListLineSubTitle>List item subtitle</h3>
+              <igx-icon igxListAction>info</igx-icon>
+            </igx-list-item>
+        </igx-list>
+
+        <igx-list>
+          <igx-list-item [isHeader]="true">List items</igx-list-item>
+          <igx-list-item>
+            <igx-avatar igxListThumbnail></igx-avatar>
+            <span igxListLine>Some content</span>
+            <igx-icon igxListAction>info</igx-icon>
+          </igx-list-item>
+        </igx-list>
+    ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
 ## 7.3.4
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
+### New feature
+- `igxSlider` - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
+- `igxSlider` - deprecate **isContiunous** property.
+- `IgxChip`
+    - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
+    - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
 
 - `igxTimePicker` changes
     - `onClosing` event is added.
@@ -17,25 +82,99 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - action buttons are now available in the dropdown mode.
     - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
 
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
+- `IgxCard` - The card component has been refactored. It now includes several new supporting components/directives:
+    - `igxCardHeaderTitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card title;
+    - `igxCardHeaderSubtitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card subtitle;
+    - `igxCardThumbnail` - tag anything placed in the `igx-card-header` as a thumb to be placed to the left of your titles;
+    - `igx-card-header` - the card header can now detect and automatically position `igx-avatar`s placed in it;
+    - `igx-card-media` - wrap images or videos that will be automatically sized for you;
+    - `igx-card-actions` - the card actions can now detect and automatically position all `igxButton`s placed in it;
+    - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
+    - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
+- New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+
+### Bug Fixing
+- igx-input: Top of Japanese characters get cut off in Density Compact mode #4752
+- When no condition is provided, filter() method of grid throws undescriptive error #4897
+- [IE11][igx-grid][MRL] header cell is not row-spanned. #4825
+- Select's label is positioned incorrectly #4236
+- [igx-grid] Filtering row's chips area is not resized when resizing window. #4906
+- `hideGroupedColumns` hides the whole MRL group #4714
+- An error is returned when changing rowEditable input and a cell is opened in edit mode #4950
+- Row editing border style is not applied correctly for the first record when there is grouping #4968
+- Cell navigation does not work along with Multi Row Layout group #4708
+- When no condition is provided, filter() method of grid throws undescriptive error #4897
+- In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562
+- When change the slider type at run time the slider is not updated correctly #4559
+- Range Slider Thumps collapsing #2622
+- Angular httpinterceptor(jwt token header) not working after importing IgxTreeGridModule in lazy loaded module #4285
+- [igx-grid] "quick clicking twice resizer " can sometimes lead to unable to sort. #4858
+- TimePicker "hour mode" #4679
 
 ## 7.3.3
 
 - `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
     ```
-        @include igx-core($print-layout: false); 
+        @include igx-core($print-layout: false);
     ```
 
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
+### Bug fixes
+- Row editing styles are not applied correctly within multi row layout grid #4859
+- Provide a way to animate row drag, when it is released #4775
+- There is lag on checking/unchecking an item in an Excel Style Filter with a lot of items #4862
+- Make dragIndicatorIconTemplate @ContentChild in the igxHierarchicalGrid #4769
+- Add PostDeploy.ps1 script into the repo #4887
+- Provide a way to animate row drag, when it is released #4775
+- Feature-request: IgxGrid improve Printing Experience #1995
+- When column is scrolled and open excel filter, its position is not correct #4898
+- IgxCombo is not properly clearing subscription #4928
+- "(Blanks)" appears unchecked on reopening the ESF UI if the underlying value is an empty string. #4875
+- [igx-tree-grid] loading indicator not shown in IE11 #4754
+- Filtering conditions drop down does not behave consistently when the button that opens it is clicked multiple times #4470
+
+## 7.3.2
+
+### Bug Fixes
+- Time picker component fails on dropdown mode in combination with igxTimePickerTemplate modifications #4656
+- In IE11 when chips length is bigger then filter row scrolls position is not correct #4699
+- Not able to change filter option in excel style filter. #4347
+- [igx-grid] rendering performance becomes extremely poor when binding data after initialization. #4839
+- Group comparer is not taken into consideration when column is dragged to grouped area #4663
+
 ## 7.3.1
+`igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
+
+```
+@include igx-core($print-layout: false);
+```
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
     - `onGridKeydown` event is exposed which is emitted when `keydown` is triggered over element inside grid's body
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+
+### Bug fixes
+- The ESF animations for opening and closing do not work #4834
+- IgxButtonGroup does not respect compact styles #4840
+- Not able to change filter option in excel style filter. #4347
+- Broken links enhancements #4830
+- rowDraggable is applied to grids from all hierarchical levels in hierarchical grid #4789
+- [igx-grid][IE11] filtering problems with IME mode. #4636
+- Filtering operation crashes when applying filter on a column with many unique values. #4723
+- Emit onColumnVisibilityChanged when hiding a column through ESF UI. #4765 #4792
+- onColumnVisibilityChanged event is not fired when hiding a column through ESF. #4765
+- "Select All" should not be treated as a match when searching. #4020
+- Opening the ESF dialog throws an error #4737
+- Recalculate igxfor sizes for excel style search list on after view init #4804
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- When grid width is less than 400px and open filter row the arrows for chips are previewed #4700
+- Canceling onRowDragStart leaves the drag ghost in the DOM #4802
 
 ## 7.3.0
 
@@ -57,7 +196,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
-- `igxTreeGrid` 
+- `igxTreeGrid`
     - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
@@ -80,19 +219,145 @@ In order to turn them off, you need to pass an argument and set it to `false`
     </igx-drop-down>
     ```
 
+### Bug Fixes
+- Grid remains in pending state after commiting row edit w/o changes #4680
+- Filter condition dropdown is not closed on tab navigation #4612
+- When filter row is opened navigating with shift and tab on first cell does not selects the cancel button #4537
+- Focus is not moved from the filter row to the summary row when the grid has no records #4613
+- igx-carousel problem with lost focus #4292
+- List items are shifted down on search if the list was scrolled down beforehand. #4645
+- [igx-grid] some cells are not rendered when resizing window. #4568
+- [igx-grid] after being grouped then resized, horizontal scrolling causes column header misalignment with data cell #4648
+- Cells content is misaligned when group by a column and scroll horizontal #4720
+- When hide/show columns the grid has empty space #4505
+
 ## 7.2.12
-### New feature
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
+
+### New features
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
- 
+
+### Bug Fixes
+- In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562
+- When change the slider type at run time the slider is not updated correctly #4559
+- Range Slider Thumps collapsing #2622
+- When no condition is provided, filter() method of grid throws undescriptive error #4897
+- [igx-grid] Filtering row's chips area is not resized when resizing window. #4906
+- Add PostDeploy.ps1 script into the repo #4887
+- An error is returned when a row is opened in edit mode and click to search the next item #4902
+- [igx-grid] "quick clicking twice resizer " can sometimes lead to unable to sort. #4858
+- Child summaries disappears when edit a cell and press tab on click on cell in same row when rowEditable is true #4949
+- When no condition is provided, filter() method of grid throws undescriptive error #4897
+
+## 7.2.11
+
+### Bug fixes
+- When column is scrolled and open excel filter, its position is not correct #4898
+- "(Blanks)" appears unchecked on reopening the ESF UI if the underlying value is an empty string. #4875
+- There is lag on checking/unchecking an item in an Excel Style Filter with a lot of items #4862
+- Group comparer is not taken into consideration when column is dragged to grouped area #4663
+- Filtering conditions drop down does not behave consistently when the button that opens it is clicked multiple times #4470
+
+## 7.2.10
+
+### Features
+- Condense grid summaries #4694
+
+### Bug Fixes
+- When grid width is less than 400px and open filter row the arrows for chips are previewed #4700
+- Time picker component fails on dropdown mode in combination with igxTimePickerTemplate modifications #4656
+- In IE11 when chips length is bigger then filter row scrolls position is not correct #4699
+- The ESF animations for opening and closing do not work #4834
+- Not able to change filter option in excel style filter. #4347
+- [igx-grid] rendering performance becomes extremely poor when binding data after initialization. #4839
+
 ## 7.2.9
+`igx-core()` now includes some styles for printing layout.
+In order to turn them off, you need to pass an argument and set it to `false`
+
+```
+ @include igx-core($print-layout: false);
+```
+
 - `Pager`
     - **Behavioral Change** - The pager is now hidden when there are no records in the grid.
 
+### Bug fixes
+- ElasticPositionStrategy should resize shown element with Center/Middle directions #4564
+- onColumnVisibilityChanged event is not fired when hiding a column through ESF. #4765
+- Filtering operation crashes when applying filter on a column with many unique values. #4723
+- "Select All" should not be treated as a match when searching. #4020
+- igx-grid: Incorrect height calculation when setting height in percent and binding empty data. #3950
+- Error is thrown when press escape in the filter row #4712
+- Opening the ESF dialog throws an error #4737
+- [igx-grid][IE11] "Error: ViewDestroyedError: Attempt to use a destroyed view: detectChanges" is thrown when closing filtering row. #4764
+- [igx-grid] some cells don't go into edit state or selected state when resizing window. #4746
+- igx-tree-grid when no data in grid pagination shows wrong #4666
+- ElasticPositionStrategy should resize shown element with Center/Middle directions #4564
+- ESF custom dialog new filter not fully visible #4639
+- igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
+- Grid height is calculated wrongly as grid width narrows #4745
+- [igx-grid][IE11] filtering problems with IME mode. #4636
+
+## 7.2.8
+- `IgxGrid` Custom keyboard navigation
+    - `onFocusChange` event is deprecated.
+    - `onGridKeydown` is exposed. The event will emit
+    `IGridKeydownEventArgs { targetType: GridKeydownTargetType; target: Object; event: Event; cancel: boolean; }`
+    - `navigateTo(rowIndex: number, visibleColumnIndex: number, callback({targetType, target: Object }))` - this method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`;
+    - `getNextCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the next cell, that match specific criteria according to the current position
+    - `getPreviousCell(currentRowIndex, currentvisibleColumnIndex, callback(IgxColumnComponent))` - returns `{ rowIndex, visibleColumnIndex }` which defines the previous cell, that match specific criteria according to the current position
+
+### Bug Fixes
+- Grid remains in pending state after commiting row edit w/o changes #4680
+- Filter condition dropdown is not closed on tab navigation #4612
+- When filter row is opened navigating with shift and tab on first cell does not selects the cancel button #4537
+- Focus is not moved from the filter row to the summary row when the grid has no records #4613
+- igx-carousel problem with lost focus #4292
+- List items are shifted down on search if the list was scrolled down beforehand. #4645
+- [igx-grid] some cells are not rendered when resizing window. #4568
+- [igx-grid] after being grouped then resized, horizontal scrolling causes column header misalignment with data cell #4648
+- Cells content is misaligned when group by a column and scroll horizontal #4720
+- When hide/show columns the grid has empty space #4505
+
+## 7.2.7
+
+### Bug fixes
+- Custom filter dialog Excel-Style Filtering does not save the selected operand #4548
+- Wrong endEdit call on data operation pipes subscribe #4313
+- TreeGrid does not have default loading template #4624
+- [igx-grid] Question about resizing behavioral change after v7.2.1. #4610
+- [igx-grid] onSelection event comes to emit after ending edit mode. #4625
+- Error is thrown when trying to open datepicker with Space key in IE #4495
+- DatePicker dropdown overlaps the input when it appears top #4526
+- Custom filter dialog of the Excel-style Filtering does not display the selected condition in the correct format #4525
+- [igx-grid] group row is duplicated when collapsing all and then expanding a group row. #4650
+- Fix scroll wheel tests due to creating wheel event with deltaY sets also wheelDeltaY (PR #4659)
+- Update Canonical and HrefLang links for EN and JP environments #4674
+- In the Drag and Drop dev sample the background color is not changed in IE and Edge #4597
 
 ## 7.2.6
 - `igxGrid`
     - **Feature** The `groupsRecords` property now returns the full grouping tree as in 7.1 and also includes the grouping information for all pages.
+
+### Bug Fixes
+- Unreadable icon color when icon is used as a tooltip target with dark-theme #4477
+- [igx-tabs] Selection indicator is not resized correctly #4420
+- Faulty urls in Typescript #4546
+- igx-list theme docs #4390
+- Filtering conditions drop down does not behave consistently when the button that opens it is clicked multiple times #4470
+- Message 'No records found.' is still previewed when reset filter #4484
+- The text in the filter column textbox truncates in the igx-grid component #4496
+- Excel style filter does not apply the filter when the value is 0 #4483
+- When hold arrow up or down key on a month the focus changes to the year #4585
+- Putting two circular progress bars results in duplicate IDs #4410
+- igxGrid does not clear groupsRecords when all columns get ungrouped #4515
 
 ## 7.2.5
 - `igxDrop`
@@ -123,6 +388,25 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
     - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
 - New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+
+### Bug Fixes
+- Row editing overlay is not visible when grid has either 1 or 2 rows and height is not set. #4240
+- Ctrl + Right Arrow is not working in an expanded child grid in 7.2.x #4414
+- In EI11 and error is returned when filter by date #4434
+- Calendar should be closed when scrolling is initiated #4099
+- The sync service for the horizontal virtualization returns invalid cache values in certain scenarios #4460
+- Unreadable icon color when icon is used as a tooltip target with dark-theme #4477
+- When first tree grid column is with type date the calendar mode is not correct #4457
+- When grid is grouped the search does not scroll to the find result #4327
+- Calendar should be closed when scrolling is initiated #4099
+- [igx-list] IgxListItem.index returns wrong index when igx-list is virtualized by igxForOf #4465
+- [igx-grid] groupsRepcords is not updated correctly when grouping/ungrouping. #4479
+- Exceptions are thrown by igxHGrid when columns don't have initial width, or it has been set as a percentage #4491
+- Change date pickers' mode to 'dropdown' in all filtering UIs. #4493
+- The radio-group display cannot be overridden #4402
+- Filtered column header goes over the RowSelectors and groups when scroll horizontal #4366
+- [igx-grid] description about onColumnMovingEnd is not correct. #4452
+- IgxTabs removes custom added class #4508
 
 ## 7.2.4
 ### New feature

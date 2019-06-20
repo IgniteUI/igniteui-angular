@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     async,
     fakeAsync,
@@ -13,8 +13,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 const SUCCESS_TYPE_CLASS = 'igx-linear-bar--success';
 const INFO_TYPE_CLASS = 'igx-linear-bar--info';
-const WARNING_TYPE_CLASS = 'igx-linear-bar--warning';
-const DANGER_TYPE_CLASS = 'igx-linear-bar--danger';
 const STRIPED_CLASS = 'igx-linear-bar--striped';
 const LINEAR_BAR_TAG = 'igx-linear-bar';
 const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
@@ -195,14 +193,14 @@ describe('IgLinearBar', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
-        const progressbar = fix.componentInstance.linearBar;
-        const expectedRes = fix.componentInstance.value;
+        const progressbar = fix.componentInstance.progressbar;
+        const expectedRes = fix.componentInstance.value as number;
 
         tick(tickTime);
         fix.detectChanges();
         expect(progressbar.value).toEqual(expectedRes);
 
-        progressbar.value = '0345-234';
+        fix.componentInstance.value = '0345-234';
         tick(tickTime);
         fix.detectChanges();
         expect(progressbar.value).toEqual(expectedRes);
@@ -277,10 +275,9 @@ describe('IgLinearBar', () => {
         compInstance.value = stringValue;
         fix.detectChanges();
 
-        const bar = compInstance.linearBar;
+        const bar = compInstance.progressbar;
 
         let expectedRes: number | string = stringValue.toString();
-        expect(bar.value).not.toBe(expectedRes);
         expectedRes = parseFloat(stringValue);
         expect(bar.value).toBe(expectedRes);
     });
@@ -355,7 +352,7 @@ describe('IgLinearBar', () => {
 
     // UI Tests
     describe('UI tests linear bar', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
@@ -474,7 +471,7 @@ describe('IgLinearBar', () => {
 
 @Component({ template: `<igx-linear-bar [animate]="true"></igx-linear-bar>` })
 class InitLinearProgressBarComponent {
-    @ViewChild(IgxLinearProgressBarComponent) public linearBar: IgxLinearProgressBarComponent;
+    @ViewChild(IgxLinearProgressBarComponent, { static: true }) public linearBar: IgxLinearProgressBarComponent;
 }
 
 @Component({
@@ -484,8 +481,7 @@ class InitLinearProgressBarComponent {
                             </igx-linear-bar>
                         </div>` })
 class LinearBarComponent {
-    @ViewChild(IgxLinearProgressBarComponent) public progressbar: IgxLinearProgressBarComponent;
-    @ViewChild('linearBar') public linearBar;
+    @ViewChild(IgxLinearProgressBarComponent, { static: true }) public progressbar: IgxLinearProgressBarComponent;
 
     public value: string | number = 30;
     public max = 100;

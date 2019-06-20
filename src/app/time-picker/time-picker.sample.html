@@ -90,7 +90,7 @@
                         <igx-input-group>
                             <input #dropDownTarget igxInput [value]="displayTime" (blur)="onBlur(dropDownTarget.value, value)"/>
                             <igx-suffix>
-                                <igx-icon (click)="openDialog()">access_time</igx-icon>
+                                <igx-icon (click)="openDialog(dropDownTarget)">access_time</igx-icon>
                             </igx-suffix>
                         </igx-input-group>
                     </ng-template>
@@ -106,7 +106,7 @@
                         <igx-input-group>
                             <input #target igxInput [value]="displayValue" (blur)="onBlur(target.value, value)"/>
                             <igx-suffix>
-                                <igx-icon (click)="openDialog()">access_time</igx-icon>
+                                <igx-icon (click)="openDialog(target)">access_time</igx-icon>
                             </igx-suffix>
                         </igx-input-group>
                     </ng-template>

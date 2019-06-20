@@ -33,7 +33,6 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
-import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { DisplayDensity } from '../../core/density';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
@@ -56,7 +55,8 @@ describe('IgxGrid - Filtering actions', () => {
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule
+            ]
         })
             .compileComponents();
     }));
@@ -1574,7 +1574,6 @@ describe('IgxGrid - Filtering actions', () => {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const datePicker = filterUIRow.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
-        expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
 });
 
