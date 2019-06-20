@@ -162,14 +162,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.focus();
     }
 
-    public isValueSelected(value: string): boolean {
-        if (this.expressionUI.expression.searchVal) {
-            return this.expressionUI.expression.searchVal === value;
-        } else {
-            return false;
-        }
-    }
-
     public onValuesInput(eventArgs) {
         this.expressionUI.expression.searchVal = this.transformValue(eventArgs.target.value);
     }
