@@ -532,9 +532,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Input()
     public isSpinLoop = true;
 
-    /**
-    *@hidden
-    */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
@@ -799,17 +796,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings),
+            outlet: this.outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
+            outlet: this.outlet
         };
-
-        if (this.outlet !== undefined) {
-            this._dropDownOverlaySettings.outlet = this.outlet;
-            this._modalOverlaySettings.outlet = this.outlet;
-        }
 
         this._overlayService.onOpening.pipe(
             filter((overlay) => overlay.id === this._componentID),
