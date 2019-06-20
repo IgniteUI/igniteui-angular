@@ -473,7 +473,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         });
 
         it('should allow navigating up', async () => {
-            grid.verticalScrollContainer.addScrollTop(5000);
+            grid.verticalScrollContainer.addScrollTop(5100);
 
             await wait(200);
             fix.detectChanges();
@@ -621,8 +621,8 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
         });
 
-        it('should allow navigating first/last cell in column with down/up and Cntr key.', async () => {
-            grid.verticalScrollContainer.addScrollTop(5000);
+        it('should allow navigating first/last cell in column with down/up and Ctrl key.', async () => {
+            grid.verticalScrollContainer.addScrollTop(5100);
 
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -844,7 +844,6 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(target.focused).toBe(true);
         });
 
-
         it('Custom KB navigation: onGridKeydown should be emitted', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
@@ -858,7 +857,49 @@ describe('IgxGrid - Keyboard navigation', () => {
 
             expect(gridKeydown).toHaveBeenCalledTimes(1);
             expect(gridKeydown).toHaveBeenCalledWith({
-                targetType: 'dataCell', target: cell, cancel: false, event: new KeyboardEvent ('keydown') });
+                targetType: 'dataCell', target: cell, cancel: false, event: new KeyboardEvent('keydown')
+            });
+        });
+
+        it('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
+            fix.componentInstance.columns = fix.componentInstance.generateCols(100, 50);
+            fix.componentInstance.data = fix.componentInstance.generateData(100);
+
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            grid.primaryKey = '0';
+            grid.rowEditable = true;
+            grid.columns.every(c => c.editable = true);
+
+            grid.getColumnByName('2').pinned = true;
+            grid.getColumnByName('3').pinned = true;
+            grid.getColumnByName('3').editable = false;
+            grid.getColumnByName('0').editable = false;
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.navigateTo(0, 99);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
+            const cell = rows[0].querySelectorAll('igx-grid-cell')[0];
+            cell.dispatchEvent(new Event('focus'));
+            UIInteractions.triggerKeyDownEvtUponElem('F2', cell, true);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(grid.crudService.cell.column.header).toBe('2');
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell, true);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(grid.crudService.cell.column.header).toBe('1');
         });
     });
 
@@ -1390,7 +1431,8 @@ describe('IgxGrid - Keyboard navigation', () => {
 
             expect(gridKeydown).toHaveBeenCalledTimes(1);
             expect(gridKeydown).toHaveBeenCalledWith({
-                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent ('keydown') });
+                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent('keydown')
+            });
 
             rowEl.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: false }));
             await wait(DEBOUNCETIME);
@@ -1398,7 +1440,8 @@ describe('IgxGrid - Keyboard navigation', () => {
 
             expect(gridKeydown).toHaveBeenCalledTimes(2);
             expect(gridKeydown).toHaveBeenCalledWith({
-                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent ('keydown') });
+                targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent('keydown')
+            });
         });
 
     });

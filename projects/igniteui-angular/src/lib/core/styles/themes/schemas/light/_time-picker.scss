@@ -1,3 +1,5 @@
+@import '../shape/time-picker';
+
 ////
 /// @group schemas
 /// @access private
@@ -20,7 +22,7 @@
 ///
 /// @see $default-palette
 
-$_light-time-picker: (
+$_light-time-picker: extend((
     text-color: (
         igx-color: 'surface',
         hexrgba: (),
@@ -60,4 +62,4 @@ $_light-time-picker: (
     modal-elevation: 24,
 
     dropdown-elevation: 8
-);
+), $_default-shape-time-picker);

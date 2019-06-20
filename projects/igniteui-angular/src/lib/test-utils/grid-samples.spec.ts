@@ -231,7 +231,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -599,7 +599,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
@@ -835,12 +835,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth = null) {
+     public generateCols(numCols: number, defaultColWidth: number = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
             });
         }
         return cols;
@@ -894,8 +894,6 @@ export class SelectionWithTransactionsComponent extends BasicGridComponent {
 }
 
 export class CustomFilter extends IgxFilteringOperand {
-    private static _instance: CustomFilter;
-
     private constructor () {
         super();
         this.operations = [{
@@ -906,10 +904,6 @@ export class CustomFilter extends IgxFilteringOperand {
             },
             iconName: 'custom'
         }];
-    }
-
-    public static instance(): CustomFilter {
-        return this._instance || (this._instance = new this());
     }
 }
 @Component({
