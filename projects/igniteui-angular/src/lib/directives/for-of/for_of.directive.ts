@@ -260,9 +260,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected set scrollPosition(val: number) {
         this._scrollPosition = val;
-        if (this.igxForScrollOrientation === 'horizontal') {
+        if (this.igxForScrollOrientation === 'horizontal' && this.hvh) {
             this.hvh.instance.elementRef.nativeElement.scrollLeft = val;
-        } else {
+        } else if (this.vh) {
             this.vh.instance.elementRef.nativeElement.scrollTop = val;
         }
     }
@@ -1086,6 +1086,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        if (this.dc.instance.notVirtual) {
+            this._scrollPosition = 0;
+        }
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
             this.hScroll.style.width = this.igxForContainerSize + 'px';
