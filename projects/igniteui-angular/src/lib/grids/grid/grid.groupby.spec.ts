@@ -2528,7 +2528,7 @@ describe('IgxGrid - GroupBy', () => {
         });
     }));
 
-    fit('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
+    it('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();

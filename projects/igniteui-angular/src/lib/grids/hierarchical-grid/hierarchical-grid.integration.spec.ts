@@ -39,7 +39,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     }));
 
     describe('MCH', () => {
-        fit('should allow declaring column groups.', fakeAsync(/** row toggle rAF */() => {
+        it('should allow declaring column groups.', fakeAsync(/** row toggle rAF */() => {
             const expectedColumnGroups = 1;
             const expectedLevel = 1;
 
