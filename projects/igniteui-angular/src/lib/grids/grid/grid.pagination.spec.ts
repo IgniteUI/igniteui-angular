@@ -210,18 +210,18 @@ describe('IgxGrid - Grid Paging', () => {
         vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
         // onPagingDone should be emitted only if we have a change in the page number
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
-        verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
+        verifyGridPager(fix, 5, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
-        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(506);
+        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
 
         // Change page size to be negative
         grid.perPage = -7;
         await wait();
         fix.detectChanges();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
-        verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
+        verifyGridPager(fix, 5, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
-        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(506);
+        expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
     }));
 
     it('change paging with button', () => {
