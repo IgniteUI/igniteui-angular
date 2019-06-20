@@ -2466,7 +2466,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                const select = fix.debugElement.query(By.css('.igx-paginator > select'));
+                const select = fix.debugElement.query(By.css('.igx-paginator > igx-select')).nativeElement;
 
                 cell.inEditMode = true;
                 // cell.update('IG');
@@ -2480,7 +2480,10 @@ describe('IgxGrid Component Tests', () => {
                 expect(overlayContent).toBeTruthy();
                 expect(rowEditingBannerElement).toBeTruthy();
                 // Change page size
-                select.triggerEventHandler('change', { target: { value: 10 } });
+                select.click();
+                fix.detectChanges();
+                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+                selectList.children[2].nativeElement.click();
                 tick(16);
                 fix.detectChanges();
                 // refresh collections
@@ -2501,7 +2504,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
                 let cell = grid.getCellByColumn(3, 'ProductName');
-                const select = fix.debugElement.query(By.css('.igx-paginator > select'));
+                const select = fix.debugElement.query(By.css('.igx-paginator > igx-select')).nativeElement;
                 const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
 
                 cell.inEditMode = true;
@@ -2516,7 +2519,10 @@ describe('IgxGrid Component Tests', () => {
                 expect(rowEditingBannerElement).toBeTruthy();
 
                 // Change page size
-                select.triggerEventHandler('change', { target: { value: 2 } });
+                select.click();
+                fix.detectChanges();
+                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+                selectList.children[0].nativeElement.click();
                 tick(16);
                 fix.detectChanges();
 
@@ -3710,33 +3716,6 @@ describe('IgxGrid Component Tests', () => {
                     fix.detectChanges();
                     expect(overlayContent.style.display).toEqual('');
                 }));
-        });
-
-        describe('Selector should display random numbers from perpage', () => {
-            configureTestSuite();
-            beforeEach(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        IgxGridRowEditingComponent
-                    ],
-                    imports: [
-                        NoopAnimationsModule, IgxGridModule]
-                }).compileComponents();
-            }));
-
-            it('Custom items perpage should be shown correctly in the select', async () => {
-                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-                fix.detectChanges();
-
-                const select = fix.debugElement.query(By.css('select')).nativeElement;
-                const options = select.options;
-                const option0 = options[0].value;
-                const option1 = options[1].value;
-                const option2 = options[2].value;
-                expect(option0).toBe('5');
-                expect(option1).toBe('7');
-                expect(option2).toBe('10');
-            });
         });
     });
 

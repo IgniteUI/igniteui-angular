@@ -1244,7 +1244,7 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
     if (pagerText != null) {
         expect(gridElement.querySelector('.igx-paginator')).toBeDefined();
-        expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(1);
+        expect(gridElement.querySelectorAll('.igx-paginator > igx-select').length).toEqual(1);
         expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
