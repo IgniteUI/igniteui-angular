@@ -5028,7 +5028,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             // Verify 'Select All' checkbox is checked.
             let selectAllCheckbox = visibleListItems[0].querySelector('igx-checkbox');
             expect(selectAllCheckbox.classList.contains('igx-checkbox--checked')).toBe(true);
-n
+
             // Uncheck second, third and fourth list items.
             const secondListItemCbInput = visibleListItems[1].querySelector('.igx-checkbox__input');
             const thirdListItemCbInput = visibleListItems[2].querySelector('.igx-checkbox__input');
