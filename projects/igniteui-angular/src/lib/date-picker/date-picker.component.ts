@@ -532,6 +532,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Input()
     public isSpinLoop = true;
 
+    /**
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
