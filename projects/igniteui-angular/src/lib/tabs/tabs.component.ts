@@ -247,6 +247,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this.hasContentTabs) {
             const theTabsArray = this.tabs.toArray();
             if (this.selectedIndex !== -1 && theTabsArray[this.selectedIndex] !== undefined) {
+                theTabsArray[this.selectedIndex].isSelected = false;
                 this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
             }
             this.selectedIndex = args.tab.index;
