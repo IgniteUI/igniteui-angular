@@ -435,8 +435,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
-            if ((focusedElement && this.inputGroup.nativeElement.contains(focusedElement) &&
-                 !focusedElement.localName.includes('prefix'))) {
+            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement)) &&
+                this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
         });
@@ -537,12 +537,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 });
             }
             this.expression = expression;
+
+            if (this.input) {
+                this.input.nativeElement.focus();
+            }
         } else if (this.expression === expression) {
             this.resetExpression();
-        }
-
-        if (this.input) {
-            this.input.nativeElement.focus();
         }
     }
 
