@@ -49,7 +49,7 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_SCROLL_START_CLASS = '.igx-grid__filtering-row-scroll-start';
 const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
-fdescribe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
