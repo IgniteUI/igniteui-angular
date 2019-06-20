@@ -835,12 +835,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth = null) {
+     public generateCols(numCols: number, defaultColWidth: number = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
             });
         }
         return cols;
