@@ -162,7 +162,7 @@
         justify-content: flex-end;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-        padding: map-get($grid-toolbar-padding, 'cosy');
+        padding: map-get($grid-toolbar-padding, 'comfortable');
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         height: map-get($grid-toolbar-height, 'comfortable');
@@ -295,6 +295,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        > div {
+            display: flex;
+            align-items: center;
+        }
     }
 
     %igx-grid-toolbar__dropdown {

@@ -1,3 +1,5 @@
+@import '../shape/grid-summary';
+
 ////
 /// @group schemas
 /// @access private
@@ -18,7 +20,7 @@
 ///
 /// @see $default-palette
 
-$_light-grid-summary: (
+$_light-grid-summary: extend((
     background-color: inherit,
     label-color: (
         igx-color: ('primary', 500)
@@ -38,4 +40,4 @@ $_light-grid-summary: (
     label-hover-color: (
         igx-color: ('primary', 700)
     )
-);
+), $_default-shape-grid-summary);
