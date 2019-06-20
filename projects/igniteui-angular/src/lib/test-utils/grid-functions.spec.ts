@@ -288,8 +288,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
-        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+        debugElement.componentInstance.elementRef.nativeElement.dispatchEvent(new Event('click'));
     }
 
     /* Search-related members */
