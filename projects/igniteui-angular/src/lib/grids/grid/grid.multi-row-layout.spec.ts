@@ -812,7 +812,7 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('100px 200px 100px');
     });
 
-    it('should disregard column groups if multi-column layouts are also defined.', () => {
+    fit('should disregard column groups if multi-column layouts are also defined.', () => {
         const fixture = TestBed.createComponent(ColumnLayoutAndGroupsTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
