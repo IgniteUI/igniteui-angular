@@ -17,7 +17,6 @@
 ///
 /// @prop {Map} $sorted-header-color [igx-color: ('grays', 900)] - The sorted table header text color.
 /// @prop {Map} $sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
-/// @prop {Map} $sorted-header-icon-hover-color [igx-color: ('secondary', 600)] - The sorted table header icon hover color.
 ///
 /// @prop {Number} header-border-width [1px] - The border width used for header borders.
 /// @prop {String} header-border-style [solid] - The border style used for header borders.
@@ -105,10 +104,6 @@ $_light-grid: extend((
 
     sorted-header-icon-color: (
         igx-color: ('secondary', 500)
-    ),
-
-    sorted-header-icon-hover-color: (
-        igx-color: ('secondary', 600)
     ),
 
     header-border-width: 1px,
@@ -255,7 +250,8 @@ $_light-grid: extend((
     ),
 
     drop-area-icon-color: (
-        igx-color: ('grays', 500)
+        igx-color: ('grays', 500),
+        hexrgba: ()
     ),
 
     drop-area-background: (

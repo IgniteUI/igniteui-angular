@@ -17,13 +17,12 @@
 /// @param {String} $header-border-style [null] - The border style used for header borders.
 /// @param {Color} $header-border-color [null] - The color used for header borders.
 ///
-/// @param {Color} $sortable-header-hover-color [null] - The sortable table header hover text color.
-/// @param {Color} $sortable-header-hover-icon-color [null] - The sortable table header hover icon color.
-/// @param {Color} $sortable-header-icon-hover-color [null] - The sortable table header icon hover color.
+/// @param {Color} $sortable-header-hover-color [null] - The text color of the header when hovered.
+/// @param {Color} $sortable-header-hover-icon-color [null] - The sort icon color when hovering the header.
+/// @param {Color} $sortable-header-icon-hover-color [null] - The sort icon color when hovering the icon.
 ///
-/// @param {Color} $sorted-header-color [null] - The sorted table header text color.
-/// @param {Color} $sorted-header-icon-color [null] - The sorted table header icon color.
-/// @param {Color} $sorted-header-icon-hover-color [null] - The sorted table header icon color on color.
+/// @param {Color} $sorted-header-color [null] - The text color of the header when sorted and hovered.
+/// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
 ///
 /// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
 /// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
@@ -110,7 +109,6 @@
 
     $sorted-header-color: null,
     $sorted-header-icon-color: null,
-    $sorted-header-icon-hover-color: null,
 
     $content-background: null,
     $content-text-color: null,
@@ -193,7 +191,7 @@
     $theme: apply-palette($grid-schema, $palette);
 
     $drop-area-border-radius: round-borders(
-        if($drop-area-border-radius, $drop-area-border-radius, map-get($grid-schema, 'border-radius')),0 ,16px
+        if($drop-area-border-radius, $drop-area-border-radius, map-get($grid-schema, 'drop-area-border-radius')), 0, 16px
     );
 
 
@@ -211,16 +209,12 @@
         $ghost-header-text-color: text-contrast($ghost-header-background);
     }
 
-    @if not($header-text-color) and $header-background {
-        $header-text-color: text-contrast($header-background);
+    @if $header-background and alpha($header-background) < 1 {
+        $header-background: hexrgba($header-background, igx-color($palette, 'surface'));
     }
 
-    @if not($sorted-header-icon-hover-color) and $sorted-header-icon-color {
-        @if luminance($sorted-header-icon-color) < .5 {
-            $sorted-header-icon-hover-color: lighten-color($sorted-header-icon-color, 15%);
-        } @else {
-            $sorted-header-icon-hover-color: darken-color($sorted-header-icon-color, 15%);
-        }
+    @if not($header-text-color) and $header-background {
+        $header-text-color: text-contrast($header-background);
     }
 
     @if not($sortable-header-hover-color) and $sorted-header-color {
@@ -341,23 +335,27 @@
         $drop-area-text-color: text-contrast($drop-area-background)
     }
 
+    @if not($drop-area-icon-color) and $drop-area-background {
+        $drop-area-icon-color: text-contrast($drop-area-background)
+    }
+
     @if not($filtering-header-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-header-background: hexrgba(lighten-color($header-background, 15%));
+            $filtering-header-background: hexrgba(lighten-color($header-background, 5%));
         } @else {
-            $filtering-header-background: hexrgba(darken-color($header-background, 15%));
+            $filtering-header-background: hexrgba(darken-color($header-background, 5%));
         }
     }
 
     @if not($filtering-header-text-color) and $filtering-header-background {
-        $filtering-header-text-color: text-contrast(hexrgba($filtering-header-background));
+        $filtering-header-text-color: text-contrast($filtering-header-background);
     }
 
     @if not($filtering-row-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-row-background: hexrgba(lighten-color($header-background, 15%));
+            $filtering-row-background: hexrgba(lighten-color($header-background, 5%));
         } @else {
-            $filtering-row-background: hexrgba(darken-color($header-background, 15%));
+            $filtering-row-background: hexrgba(darken-color($header-background, 5%));
         }
     }
 
@@ -399,7 +397,6 @@
 
         sorted-header-color: $sorted-header-color,
         sorted-header-icon-color: $sorted-header-icon-color,
-        sorted-header-icon-hover-color: $sorted-header-icon-hover-color,
 
         ghost-header-text-color: $ghost-header-text-color,
         ghost-header-icon-color: $ghost-header-icon-color,
@@ -1290,7 +1287,7 @@
             color: --var($theme, 'sorted-header-icon-color');
 
             &:hover {
-                color: --var($theme, 'sorted-header-icon-hover-color');
+                color: --var($theme, 'sortable-header-icon-hover-color');
             }
         }
     }

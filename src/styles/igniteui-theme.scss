@@ -17,7 +17,11 @@
     color: $igx-foreground-color;
 
     @include scrollbar-love();
-    @include igx-theme($default-palette);
+    @include igx-theme($default-palette, $legacy-support: false);
+
+    $grid-theme: igx-grid-theme($header-background: orange);
+
+    @include igx-grid($grid-theme);
 
     .nav-header {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
@@ -58,7 +62,22 @@
     color: $igx-foreground-color;
 
     @include scrollbar-love(lighten($igx-background-color, 15%));
-    @include igx-dark-theme($green-palette);
+    @include igx-dark-theme($green-palette, $legacy-support: false);
+
+    $grid-theme: igx-grid-theme(
+        $schema: $dark-schema,
+        $palette: igx-palette(
+            $primary: orange,
+            $secondary: royalblue,
+            $grays: #fff,
+            $surface: #222
+        ),
+        $header-background: royalblue,
+        $filtering-header-background: white,
+        $filtering-row-background: white
+    );
+
+    @include igx-grid($grid-theme);
 
     .nav-header {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
