@@ -641,7 +641,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(1);
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for Angular');
     }));
-  
+
     it('Should throw descriptive error when filter() is called without condition', fakeAsync(() => {
         expect(() => {
             grid.filter('Downloads', 100);
