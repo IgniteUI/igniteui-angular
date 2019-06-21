@@ -385,12 +385,6 @@ export class IgxFilteringService implements OnDestroy {
         return this.grid.filteredData;
     }
 
-    public get sortedData() {
-        const sortData = new IgxGridSortingPipe((this.grid as any).gridAPI)
-            .transform(this.grid.data, this.grid.sortingExpressions, this.gridId, 0);
-        return sortData;
-    }
-
     /**
      * Scrolls to a filterCell.
      */
