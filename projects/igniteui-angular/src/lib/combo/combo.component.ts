@@ -32,7 +32,7 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -67,6 +67,15 @@ enum DataTypes {
     COMPLEX = 'complex',
     PRIMARYKEY = 'valueKey'
 }
+
+/**
+ * @hidden
+ */
+const ItemHeights = {
+    'comfortable': 48,
+    'cosy': 32,
+    'compact': 28,
+};
 
 export enum IgxComboState {
     /**
@@ -130,6 +139,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
+    private _itemHeight = null;
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
@@ -600,7 +610,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public itemHeight = 48;
+    public get itemHeight(): number {
+        if (this._itemHeight === null || this._itemHeight === undefined) {
+            return ItemHeights[this.displayDensity];
+        }
+        return this._itemHeight;
+    }
+
+    public set itemHeight(val: number) {
+        this._itemHeight = val;
+    }
 
     /**
      * @hidden @internal
