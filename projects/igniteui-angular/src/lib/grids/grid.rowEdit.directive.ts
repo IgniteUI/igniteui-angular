@@ -1,6 +1,5 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxGridComponent } from './grid';
 
 /** @hidden */
 @Directive({
@@ -32,7 +31,7 @@ export class IgxRowEditTabStopDirective {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxGridComponent)) private grid: IgxGridComponent,
+        @Inject(forwardRef(() => IgxGridBaseComponent)) private grid: IgxGridBaseComponent,
         public element: ElementRef) {
     }
 
