@@ -231,7 +231,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -599,7 +599,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
@@ -835,12 +835,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth = null) {
+     public generateCols(numCols: number, defaultColWidth: number = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
             });
         }
         return cols;
@@ -939,6 +939,70 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     }
 }
 
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+        <ng-template igxExcelStyleSortingTemplate><div class="esf-custom-sorting">Sorting Template</div></ng-template>
+        <ng-template igxExcelStyleHidingTemplate><div class="esf-custom-hiding">Hiding Template</div></ng-template>
+        <ng-template igxExcelStyleMovingTemplate><div class="esf-custom-moving">Moving Template</div></ng-template>
+        <ng-template igxExcelStylePinningTemplate><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+                    [filterable]="filterable" [resizable]="resizable" dataType="date" [filterCellTemplate]="filterTemplate">
+        </igx-column>
+    </igx-grid>
+    <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
+        <div class="custom-filter" style="flex-grow: 1;">
+            <igx-input-group class="filter-input" type="box">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input #input igxInput tabindex="0" placeholder="Filter..." />
+                <igx-suffix tabindex="0">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+        </div>
+    </ng-template>
+    `
+})
+export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+}
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" width="500px" [allowFiltering]="true">

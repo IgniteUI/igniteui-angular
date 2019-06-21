@@ -77,7 +77,7 @@
                 </ng-template>
             </ng-container>
             <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'  [igxForSizePropName]='"calcWidth"' #headerContainer>
+                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'  [igxForSizePropName]='"calcPixelWidth"' #headerContainer>
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
             </div>
@@ -110,7 +110,7 @@
                 </igx-grid-groupby-row>
             </ng-template>
             <ng-template #summary_template>
-                <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [indentation]="groupingExpressions.length" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
+                <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
                 </igx-grid-summary-row>
             </ng-template>
             <ng-template [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template'
@@ -129,7 +129,7 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
-    <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight' *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [indentation]="groupingExpressions.length" [index]="0" class="igx-grid__summaries"  #summaryRow>
+    <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight' *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0" class="igx-grid__summaries"  #summaryRow>
     </igx-grid-summary-row>
     <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight' [style.width.px]="scrollWidth"></div>
 </div>

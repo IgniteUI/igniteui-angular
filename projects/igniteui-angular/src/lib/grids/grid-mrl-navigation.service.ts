@@ -127,9 +127,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     nextCell = row.cells.find(currCell => currCell.column === nextElementColumn);
                     if (this.grid.rowEditable && this.isRowInEditMode(row.index)) {
                         if (dir === 'next') {
-                            this.moveNextEditable(nextCell.nativeElement, selectedNode);
+                            this.moveNextEditable(row.index, selectedNode.layout.columnVisibleIndex);
                         } else {
-                            this.movePreviousEditable(nextCell.nativeElement, selectedNode);
+                            this.movePreviousEditable(row.index, selectedNode.layout.columnVisibleIndex);
                         }
                         return;
                     }
@@ -139,10 +139,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             } else {
                 if (this.grid.rowEditable && this.isRowInEditMode(row.index)) {
                     if (dir === 'next') {
-                        this.moveNextEditable(nextCell.nativeElement, { row: row.index, column: selectedNode.layout.columnVisibleIndex});
+                        this.moveNextEditable(row.index, selectedNode.layout.columnVisibleIndex);
                     } else {
-                        this.movePreviousEditable(nextCell.nativeElement,
-                             { row: row.index, column: selectedNode.layout.columnVisibleIndex});
+                        this.movePreviousEditable(row.index, selectedNode.layout.columnVisibleIndex);
                     }
                     return;
                 }

@@ -410,7 +410,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('Summaries', () => {
-        const INDENT_LEVEL_CLASS = 'igx-grid__row-indentation--level-1';
+        const SUMMARIES_MARGIN_CLASS = '.igx-grid__summaries-patch';
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -421,13 +421,9 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
+            const summaryRowIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
             expect(summaryRow.children.length).toEqual(2);
-            expect(summaryRow.children[0].tagName.toLowerCase()).toEqual('div');
-            expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
-            expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
-
-            // there should be indentation of the summaries
-            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(true);
+            expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
@@ -444,10 +440,36 @@ describe('IgxHierarchicalGrid Integration', () => {
             const childGridDebugElement = childGrids[0].query(By.css('igx-hierarchical-grid'));
             const grandChild = childGridDebugElement.query(By.css('igx-hierarchical-grid')).componentInstance;
             const grandChildSummaryRow = grandChild.summariesRowList.first.nativeElement;
+            const childSummaryRowIndentation = grandChildSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
             expect(grandChildSummaryRow.children.length).toEqual(1);
-            // there should be no indentation of the summaries of the leaf grid
-            expect(grandChildSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) === -1).toBe(true);
+            expect(childSummaryRowIndentation).toBeNull();
+        }));
+
+        it('should size summaries with row selectors for parent and children grids correctly.', fakeAsync(/** row toggle rAF */() => {
+            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const rootExpander =  hierarchicalGrid.dataRowList.toArray()[0].expander;
+            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
+            const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+
+            expect(rootSummaryRow.children.length).toEqual(2);
+            expect(rootSummaryIndentation.offsetWidth)
+                .toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            const expander =  childGrid.dataRowList.toArray()[0].expander;
+
+            // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
+            const summaryRow = childGrid.summariesRowList.first.nativeElement;
+            const childSummaryIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+
+            expect(summaryRow.children.length).toEqual(2);
+            expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
         }));
 
         it('should render summaries for column inside a column group.', fakeAsync(/** row toggle rAF */() => {
