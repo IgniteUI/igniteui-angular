@@ -150,6 +150,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         } else {
             // end of layout reached
             if (this.isRowInEditMode(row.index)) {
+                //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
                 if (dir === 'next') {
                     this.grid.rowEditTabs.first.element.nativeElement.focus();
                 } else {
@@ -504,14 +506,15 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { rowTop, rowBottom, topOffset };
     }
 
-    public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: () => void) {
+    public performHorizontalScrollToCell(
+        rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: (params?) => void, params?: any) {
         const scrollPos = this.getChildColumnScrollPositions(visibleColumnIndex);
         const hScroll = this.horizontalScroll(rowIndex);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 if (cb) {
-                    cb();
+                    cb(params);
                 } else {
                     this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
                 }

@@ -1510,10 +1510,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
-     /**
-     * Emitted when start dragging a row.
-     * Return the dragged row.
-    */
+    /**
+    * Emitted when start dragging a row.
+    * Return the dragged row.
+   */
     @Output()
     public onRowDragStart = new EventEmitter<IRowDragStartEventArgs>();
 
@@ -1714,9 +1714,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
-        /**
-     * @hidden
-     */
+    /**
+ * @hidden
+ */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
     public verticalScroll: IgxGridForOfDirective<any>;
 
@@ -1868,7 +1868,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get firstEditableColumnIndex(): number {
-        const index = [...this.pinnedColumns, ...this.unpinnedColumns].filter(e => !e.columnGroup).findIndex(e => e.editable);
+        const index = this.navigation.gridOrderedColumns.findIndex(e => e.editable);
         return index !== -1 ? index : null;
     }
 
@@ -1876,7 +1876,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get lastEditableColumnIndex(): number {
-        const orderedColumns = [...this.pinnedColumns, ...this.unpinnedColumns].filter(e => !e.columnGroup);
+        const orderedColumns = this.navigation.gridOrderedColumns;
         const index = orderedColumns.reverse().findIndex(e => e.editable);
         return index !== -1 ? orderedColumns.length - 1 - index : null;
     }
@@ -2719,8 +2719,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
 
         this.columnList.changes
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
     /**
@@ -3405,7 +3405,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
         if (this.hasColumnLayouts) {
-            this.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
 
         const args = {
@@ -4203,7 +4203,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
         if (!width) {
-            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
         if (this.hasVerticalSroll()) {
@@ -4220,8 +4220,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._ngAfterViewInitPassed) { return false; }
         const isScrollable = this.verticalScrollContainer.isScrollable();
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
-        this.verticalScrollContainer.igxForOf.length > 0 &&
-        isScrollable);
+            this.verticalScrollContainer.igxForOf.length > 0 &&
+            isScrollable);
     }
 
     /**
@@ -4462,9 +4462,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.columnList.forEach((col) => {
                 if (col.columnLayout) {
                     const layoutSize = col.children ?
-                     col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
-                     1;
-                     this._multiRowLayoutRowSize = Math.max(layoutSize, this._multiRowLayoutRowSize);
+                        col.children.reduce((acc, val) => Math.max(val.rowStart + val.gridRowSpan - 1, acc), 1) :
+                        1;
+                    this._multiRowLayoutRowSize = Math.max(layoutSize, this._multiRowLayoutRowSize);
                 }
             });
         }
@@ -4775,8 +4775,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
 
     setSelection(range: GridSelectionRange): void {
-        const startNode =  { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
-        const endNode =  { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
+        const startNode = { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
+        const endNode = { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
 
         this.selectionService.pointerState.node = startNode;
         this.selectionService.selectRange(endNode, this.selectionService.pointerState);
@@ -4867,7 +4867,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
         if (rowIndex < 0 || rowIndex > this.verticalScrollContainer.igxForOf.length - 1
-            ||  (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+            || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
         this.wheelHandler();
@@ -4877,76 +4877,76 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
             if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
                 this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                     () => { this.executeCallback(rowIndex, visibleColIndex, cb); } );
+                    () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
             } else {
                 this.executeCallback(rowIndex, visibleColIndex, cb);
             }
         } else {
             this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                 () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
+                () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
         }
     }
 
-     /**
-     * Returns `ICellPosition` which defines the next cell,
-     * according to the current position, that match specific criteria.
-     * You can pass callback function as a third parameter of `getPreviousCell` method.
-     * The callback function accepts IgxColumnComponent as a param
-     * ```typescript
-     *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
+    /**
+    * Returns `ICellPosition` which defines the next cell,
+    * according to the current position, that match specific criteria.
+    * You can pass callback function as a third parameter of `getPreviousCell` method.
+    * The callback function accepts IgxColumnComponent as a param
+    * ```typescript
+    *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
+    * ```
+    * @memberof IgxGridBaseComponent
+    */
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
-            callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        callback: (IgxColumnComponent) => boolean = null): ICellPosition {
         const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
 
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
-            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+            return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
         }
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
-                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
+            columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
-                .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
-            return {rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+                return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return {rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+                return { rowIndex: this.getNextDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
             }
         }
     }
 
-     /**
-     * Returns `ICellPosition` which defines the previous cell,
-     * according to the current position, that match specific criteria.
-     * You can pass callback function as a third parameter of `getPreviousCell` method.
-     * The callback function accepts IgxColumnComponent as a param
-     * ```typescript
-     *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
+    /**
+    * Returns `ICellPosition` which defines the previous cell,
+    * according to the current position, that match specific criteria.
+    * You can pass callback function as a third parameter of `getPreviousCell` method.
+    * The callback function accepts IgxColumnComponent as a param
+    * ```typescript
+    *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
+    * ```
+    * @memberof IgxGridBaseComponent
+    */
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
-            callback: (IgxColumnComponent) => boolean = null): ICellPosition {
-        const columns =  this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
+        callback: (IgxColumnComponent) => boolean = null): ICellPosition {
+        const columns = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0);
 
         if (!this.isValidPosition(currRowIndex, curVisibleColIndex)) {
-            return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+            return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
         }
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
-                                columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
+            columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
         if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
-                .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
-            return {rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex};
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
         } else {
             if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
-                return {rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex};
+                return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return {rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0]};
+                return { rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
             }
         }
     }
@@ -4954,7 +4954,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
         let targetType, target;
-        const row =  this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        const row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
@@ -4988,7 +4988,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     private getNextDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) {return currentRowIndex; }
+        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) { return currentRowIndex; }
 
         const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
@@ -5001,7 +5001,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
             colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
-                return true;
+            return true;
         }
         return false;
     }
@@ -5011,10 +5011,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public wheelHandler(isScroll = false) {
         if (document.activeElement &&
-        // tslint:disable-next-line:no-bitwise
+            // tslint:disable-next-line:no-bitwise
             (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-        // tslint:disable-next-line:no-bitwise
-            (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
+                // tslint:disable-next-line:no-bitwise
+                (document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (document.activeElement as HTMLElement).blur();
         }
     }
@@ -5078,7 +5078,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
-            this.lastSearchInfo = {...this.lastSearchInfo};
+            this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column);
@@ -5182,7 +5182,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof(row) !== 'number') {
+        if (this.paging && typeof (row) !== 'number') {
             const rowIndex = this.filteredSortedData.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
@@ -5195,11 +5195,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                    typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
@@ -5466,12 +5466,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected _restoreVirtState(row) {
-         // check virtualization state of data record added from cache
-         // in case state is no longer valid - update it.
-         const rowForOf = row.virtDirRow;
-         const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
-         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
+        // check virtualization state of data record added from cache
+        // in case state is no longer valid - update it.
+        const rowForOf = row.virtDirRow;
+        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+        const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
         }

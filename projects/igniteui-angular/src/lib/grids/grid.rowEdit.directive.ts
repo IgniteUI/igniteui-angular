@@ -1,6 +1,6 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridComponent } from './grid';
 
 /** @hidden */
 @Directive({
@@ -32,10 +32,8 @@ export class IgxRowEditTabStopDirective {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) private grid: IgxGridBaseComponent,
-        public element: ElementRef,
-        @Inject(forwardRef(() => IgxGridNavigationService)) private navigationService: IgxGridNavigationService) {
-        this.navigationService.grid = grid;
+        @Inject(forwardRef(() => IgxGridComponent)) private grid: IgxGridComponent,
+        public element: ElementRef) {
     }
 
     @HostListener('keydown.Tab', [`$event`])
@@ -55,7 +53,7 @@ export class IgxRowEditTabStopDirective {
         const activeNode = this.grid.selectionService.activeElement;
         //  on right click activeNode is deleted, so we may have no one
         if (activeNode) {
-            const cell = this.navigationService.getCellElementByVisibleIndex(activeNode.row, activeNode.column);
+            const cell = this.grid.navigation.getCellElementByVisibleIndex(activeNode.row, activeNode.column);
             cell.focus();
         }
     }
@@ -67,15 +65,15 @@ export class IgxRowEditTabStopDirective {
      */
     private move(event: KeyboardEvent) {
         event.preventDefault();
-        const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
+        const cellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         ////  this will not work if targetCell is null and we have multi row layout
         // const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === cellIndex);
         // const scrollIndex = this.grid.hasColumnLayouts ? targetCell.column.parent.visibleIndex : targetIndex;
-        if (!this.navigationService.isColumnFullyVisible(targetIndex)) {
-            this.navigationService.performHorizontalScrollToCell(
-                this.grid.rowInEditMode.index, targetIndex, false, this.activateCell, targetIndex);
+        if (!this.grid.navigation.isColumnFullyVisible(cellIndex)) {
+            this.grid.navigation.performHorizontalScrollToCell(
+                this.grid.rowInEditMode.index, cellIndex, false, this.activateCell, { cellIndex, grid: this.grid });
         } else {
-            this.activateCell(targetIndex);
+            this.activateCell({ cellIndex, grid: this.grid });
         }
     }
 
@@ -83,8 +81,8 @@ export class IgxRowEditTabStopDirective {
      * Sets the cell in edit mode and focus its native element
      * @param cellIndex index of the cell to activate
      */
-    private activateCell(cellIndex: number): void {
-        const cell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === cellIndex);
+    private activateCell(params: { cellIndex: number, grid: IgxGridBaseComponent }): void {
+        const cell = params.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === params.cellIndex);
         cell.setEditMode(true);
         cell.nativeElement.focus();
     }
