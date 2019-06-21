@@ -128,11 +128,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             'igx-grid__th--filtering': this.isFiltered
         };
 
-        Object.entries(classList).forEach(([className, value]) => {
-            if (value) {
+        for (const className of Object.keys(classList)) {
+            if (classList[className]) {
                 defaultClasses.push(className);
             }
-        });
+        }
         return defaultClasses.join(' ');
     }
 
