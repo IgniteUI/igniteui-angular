@@ -46,9 +46,11 @@ import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { showMessage } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
+let warningShown1 = false;
+let warningShown2 = false;
 
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
@@ -421,7 +423,6 @@ export class IgxTimePickerComponent implements
      *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
      * ```
      */
-    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxTimePickerComponent>();
 
@@ -435,7 +436,6 @@ export class IgxTimePickerComponent implements
      * @deprecated Use 'onClosed' instead.
      * Emitted when a timePicker is being closed.
      */
-    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
     public onClose = new EventEmitter<IgxTimePickerComponent>();
 
@@ -794,6 +794,7 @@ export class IgxTimePickerComponent implements
                 this.onClosed.emit(this);
 
                 // TODO: remove this line after deprecating 'onClose'
+                warningShown2 = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, warningShown2);
                 this.onClose.emit(this);
             });
 
@@ -801,6 +802,7 @@ export class IgxTimePickerComponent implements
                 this.onOpened.emit(this);
 
                 // TODO: remove this line after deprecating 'onOpen'
+                warningShown1 = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, warningShown1);
                 this.onOpen.emit(this);
             });
 
