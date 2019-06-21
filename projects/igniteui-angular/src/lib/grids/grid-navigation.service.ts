@@ -46,7 +46,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnRightEdgeVisible(columnIndex: number) {
-        let forOfDir = this.forOfDir();
+        const forOfDir = this.forOfDir();
         if (this.isColumnPinned(columnIndex, forOfDir)) {
             return true;
         }
@@ -55,7 +55,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnLeftEdgeVisible(columnIndex: number) {
-        let forOfDir = this.forOfDir();
+        const forOfDir = this.forOfDir();
         if (this.isColumnPinned(columnIndex, forOfDir)) {
             return true;
         }
