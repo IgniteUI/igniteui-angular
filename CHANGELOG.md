@@ -1,7 +1,25 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 8.0.1
+
+### New Features
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+
 ## 8.0.0
+- `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
+    ```scss
+        $light-round-input: extend($_light-input-group, $_round-shape-input-group);
+    ```
+There are also prebuilt schema presets for all components (light-round/dark-round and light-square/dark-square), namely `$light-round-schema, $light-dark-schema, $light-square-schema, $dark-square-schema`;
 - `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
     - `#emptyTemplate`
     - `#headerTemplate`
@@ -47,6 +65,8 @@ All notable changes for each version of this project will be documented in this 
           </igx-list-item>
         </igx-list>
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
 
 ## 7.3.4
 - `IgxGrid` - summaries
@@ -86,6 +106,15 @@ All notable changes for each version of this project will be documented in this 
     - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
     - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
 - New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevalance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ### Bug Fixing
 - igx-input: Top of Japanese characters get cut off in Density Compact mode #4752
@@ -235,6 +264,15 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ### New features
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ### Bug Fixes
 - In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562

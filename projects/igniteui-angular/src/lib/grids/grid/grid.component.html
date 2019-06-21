@@ -100,7 +100,7 @@
         | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
                 <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>

@@ -1,3 +1,5 @@
+@import '../shape/tabs';
+
 ////
 /// @group schemas
 /// @access private
@@ -28,7 +30,7 @@
 /// @see $default-palette
 
 
-$_light-tabs: (
+$_light-tabs: extend((
     item-text-color: (
         igx-color: ('grays', 700)
     ),
@@ -80,4 +82,4 @@ $_light-tabs: (
     button-ripple-color: (
         igx-color: ('grays', 100)
     )
-);
+), $_default-shape-tabs);
