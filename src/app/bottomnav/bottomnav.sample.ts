@@ -1,11 +1,11 @@
-import { AfterViewInit,
-        Component,
-        ElementRef,
-        NgModule,
-        QueryList,
-        Renderer2,
-        ViewChild,
-        ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    QueryList,
+    Renderer2,
+    ViewChildren
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -14,9 +14,8 @@ import { Router, RouterModule } from '@angular/router';
     templateUrl: 'bottomnav.sample.html'
 })
 export class BottomNavSampleComponent implements AfterViewInit {
-
     @ViewChildren('tabbarEl')
-    tabbar: QueryList<ElementRef>;
+    private tabbar: QueryList<ElementRef>;
 
     options = {};
 
@@ -75,13 +74,13 @@ export class BottomNavSampleComponent implements AfterViewInit {
 
     route(event) {
         if (event.panel.index === 2) {
-            this.router.navigate(['/bottom-navigation/tabbar', { outlets: { tabPanelOutlet: ['tabbarInnerPath'] } }]);
+            this.router.navigate(['/bottom-navigation', { outlets: { tabPanelOutlet: ['tabContentPath'] } }]);
         }
     }
 
     ngAfterViewInit() {
         this.tabbar.map((e) => {
-            menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
+            const menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
             this.renderer.setStyle(menubar, 'position', 'absolute');
         });
     }
