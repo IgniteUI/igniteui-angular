@@ -17,11 +17,6 @@
 /// @param {String} $header-border-style [null] - The border style used for header borders.
 /// @param {Color} $header-border-color [null] - The color used for header borders.
 ///
-/// @param {Color} $sortable-header-hover-color [null] - The text color of the header when hovered.
-/// @param {Color} $sortable-header-hover-icon-color [null] - The sort icon color when hovering the header.
-/// @param {Color} $sortable-header-icon-hover-color [null] - The sort icon color when hovering the icon.
-///
-/// @param {Color} $sorted-header-color [null] - The text color of the header when sorted and hovered.
 /// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
 ///
 /// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
@@ -103,11 +98,6 @@
     $header-border-style: null,
     $header-border-color: null,
 
-    $sortable-header-hover-color: null,
-    $sortable-header-hover-icon-color:null,
-    $sortable-header-icon-hover-color: null,
-
-    $sorted-header-color: null,
     $sorted-header-icon-color: null,
 
     $content-background: null,
@@ -215,10 +205,6 @@
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
-    }
-
-    @if not($sortable-header-hover-color) and $sorted-header-color {
-        $sortable-header-hover-color: $sorted-header-color;
     }
 
     @if not($header-border-color) and $header-background {
@@ -391,11 +377,6 @@
         header-border-style: $header-border-style,
         header-border-color: $header-border-color,
 
-        sortable-header-hover-color: $sortable-header-hover-color,
-        sortable-header-hover-icon-color: $sortable-header-hover-icon-color,
-        sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
-
-        sorted-header-color: $sorted-header-color,
         sorted-header-icon-color: $sorted-header-icon-color,
 
         ghost-header-text-color: $ghost-header-text-color,
@@ -739,6 +720,7 @@
             align-items: center;
             flex-grow: 1;
             border-bottom: $grid-header-border;
+
         }
 
         %grid-cell-display {
@@ -1193,36 +1175,10 @@
         transition: color 250ms ease-in-out;
     }
 
-    %igx-grid__th--sortable {
-        cursor: pointer;
-
-        %grid-cell-header-title {
-            cursor: pointer;
-        }
-
-        &:hover {
-            color: --var($theme, 'sortable-header-hover-color');
-
-            .sort-icon {
-                opacity: 1;
-            }
-        }
-    }
-
     %grid-cell-header--filtering {
         background: --var($theme, 'filtering-header-background');
         color: --var($theme, 'filtering-header-text-color');
         z-index: 3;
-    }
-
-    %igx-grid__th--filtrable {
-        cursor: pointer;
-
-        &:hover {
-            %grid-cell-header-title {
-                cursor: pointer;
-            }
-        }
     }
 
     %grid-cell-header--cosy {
@@ -1243,6 +1199,8 @@
         flex-grow: 1; /* hey IE, the text should take most of the space */
         align-self: flex-end;
         line-height: map-get($grid-header-height, 'comfortable') / $grid-head-fs;
+        opacity: .7;
+        transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
     }
 
     %grid-cell-header-title--cosy {
@@ -1271,16 +1229,38 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
-            color: --var($theme, 'sortable-header-hover-icon-color');
+        }
+    }
 
-            &:hover {
-                color: --var($theme, 'sortable-header-icon-hover-color');
+    %igx-grid__th--sortable {
+        &:hover {
+            cursor: pointer;
+
+            %grid-cell-header-title {
+                cursor: pointer;
+                opacity: 1;
+            }
+
+            .sort-icon {
+                opacity: .7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
     }
 
     %igx-grid__th--sorted {
-        color: --var($theme, 'sorted-header-color');
+        %grid-cell-header-title {
+            opacity: 1;
+        }
+
+        &:hover{
+            .sort-icon {
+                opacity: 1;
+            }
+        }
 
         .sort-icon {
             opacity: 1;
@@ -1288,6 +1268,47 @@
 
             &:hover {
                 color: --var($theme, 'sortable-header-icon-hover-color');
+            }
+        }
+    }
+
+    %igx-grid__th--filtrable {
+        %grid-cell-header-title {
+            opacity: .7;
+        }
+
+        &%igx-grid__th--sortable {
+            &:hover {
+                .sort-icon {
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    %igx-grid__th--filtrable-open {
+        &%igx-grid__th--sortable,
+        &%igx-grid__th--sorted
+        {
+            %grid-cell-header-title {
+                color: --var($theme, 'filtering-header-text-color');
+                opacity: .7;
+            }
+
+            &:hover {
+                cursor: default;
+
+                %grid-cell-header-title {
+                    cursor: default;
+                    color: --var($theme, 'filtering-header-text-color');
+                    opacity: .7;
+                }
+
+                .sort-icon {
+                    cursor: pointer;
+                }
             }
         }
     }
