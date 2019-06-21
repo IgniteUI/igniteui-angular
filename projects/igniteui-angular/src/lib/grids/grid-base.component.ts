@@ -101,9 +101,9 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
-export let warningShown = false;
-export function isWarningShown(val: boolean) {
-    warningShown = val;
+export let onFocusChangeWarningShown = false;
+export function setOnFocusChangeWarningShown(val: boolean) {
+    onFocusChangeWarningShown = val;
 }
 
 export interface IGridCellEventArgs {

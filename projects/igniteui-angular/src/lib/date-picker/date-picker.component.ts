@@ -58,8 +58,8 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import { showMessage } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
-let warningShown1 = false;
-let warningShown2 = false;
+let onOpenWarningShown = false;
+let onCloseWarningShown = false;
 
 /**
  * This interface is used to provide information about date picker reference and its current value
@@ -1196,8 +1196,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._onTouchedCallback();
         this.onOpened.emit(this);
 
-        // TODO: remove this line after deprecating 'onOpen'
-        warningShown1 = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, warningShown1);
+        // TODO: remove these two lines after deprecating 'onOpen'
+        onOpenWarningShown = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, onOpenWarningShown);
         this.onOpen.emit(this);
 
         if (this.calendar) {
@@ -1210,8 +1210,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._componentID = null;
         this.onClosed.emit(this);
 
-        // TODO: remove this line after deprecating 'onClose'
-        warningShown2 = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, warningShown2);
+        // TODO: remove these two lines after deprecating 'onClose'
+        onCloseWarningShown = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, onCloseWarningShown);
         this.onClose.emit(this);
 
         if (this.getEditElement()) {

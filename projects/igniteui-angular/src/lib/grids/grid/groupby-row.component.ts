@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable, isWarningShown, warningShown } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable, onFocusChangeWarningShown, setOnFocusChangeWarningShown } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { showMessage } from '../../core/deprecateDecorators';
@@ -211,7 +211,8 @@ export class IgxGridGroupByRowComponent {
             return;
         }
         // TODO: to be deleted when onFocusChange event is removed #4054
-        isWarningShown(showMessage('onFocusChange event is deprecated. Use onGridKeydown event instead.', warningShown));
+        setOnFocusChangeWarningShown(
+            showMessage(`'onFocusChange' @Output property is deprecated. Use 'onGridKeydown' instead.`, onFocusChangeWarningShown));
         const args = { cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) { return; }

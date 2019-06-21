@@ -49,8 +49,8 @@ import { InteractionMode } from '../core/enums';
 import { showMessage } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
-let warningShown1 = false;
-let warningShown2 = false;
+let onOpenWarningShown = false;
+let onCloseWarningShown = false;
 
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
@@ -793,16 +793,16 @@ export class IgxTimePickerComponent implements
 
                 this.onClosed.emit(this);
 
-                // TODO: remove this line after deprecating 'onClose'
-                warningShown2 = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, warningShown2);
+                // TODO: remove these two lines after deprecating 'onClose'
+                onCloseWarningShown = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, onCloseWarningShown);
                 this.onClose.emit(this);
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.onOpened.emit(this);
 
-                // TODO: remove this line after deprecating 'onOpen'
-                warningShown1 = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, warningShown1);
+                // TODO: remove these two lines after deprecating 'onOpen'
+                onOpenWarningShown = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, onOpenWarningShown);
                 this.onOpen.emit(this);
             });
 
