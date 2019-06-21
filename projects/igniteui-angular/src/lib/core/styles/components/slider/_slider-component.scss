@@ -56,6 +56,12 @@
         }
     }
 
+    @include e(thumb, $m: pressed) {
+        .dot {
+            @extend %igx-thumb-dot--pressed !optional;
+        }
+    }
+
     @include m(disabled) {
         @extend %igx-slider-display !optional;
 
