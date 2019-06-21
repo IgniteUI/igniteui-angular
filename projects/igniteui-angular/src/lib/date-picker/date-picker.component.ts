@@ -56,9 +56,11 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { showMessage } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
+let warningShown1 = false;
+let warningShown2 = false;
 
 /**
  * This interface is used to provide information about date picker reference and its current value
@@ -551,7 +553,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
-    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
     public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
@@ -573,7 +574,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
-    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
     public onClose = new EventEmitter<IgxDatePickerComponent>();
 
@@ -1181,6 +1181,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.onOpened.emit(this);
 
         // TODO: remove this line after deprecating 'onOpen'
+        warningShown1 = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, warningShown1);
         this.onOpen.emit(this);
 
         if (this.calendar) {
@@ -1194,6 +1195,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.onClosed.emit(this);
 
         // TODO: remove this line after deprecating 'onClose'
+        warningShown2 = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, warningShown2);
         this.onClose.emit(this);
 
         if (this.getEditElement()) {

@@ -75,7 +75,6 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
@@ -101,6 +100,11 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
+
+export let warningShown = false;
+export function isWarningShown(val: boolean) {
+    warningShown = val;
+}
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -1491,7 +1495,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @deprecated you should use onGridKeydown event
      */
     @Output()
-    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     /**
