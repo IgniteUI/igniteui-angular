@@ -1,3 +1,4 @@
+@import '../shape/bottom-nav';
 ////
 /// @group schemas
 /// @access private
@@ -12,7 +13,7 @@
 /// @prop {number} elevation [8] - The elevation level of the bar.
 /// @see $default-palette
 
-$_light-bottom-nav: (
+$_light-bottom-nav: extend((
     background: #fff,
 
     idle-item-color: (
@@ -24,4 +25,4 @@ $_light-bottom-nav: (
     ),
 
     elevation: 8
-);
+), $_default-shape-bottom-nav);
