@@ -260,8 +260,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected set scrollPosition(val: number) {
         this._scrollPosition = val;
-        if (this.igxForScrollOrientation === 'horizontal' && this.hvh) {
-            this.hvh.instance.elementRef.nativeElement.scrollLeft = val;
+        if (this.igxForScrollOrientation === 'horizontal' && this.hScroll) {
+            this.hScroll.scrollLeft = val;
         } else if (this.vh) {
             this.vh.instance.elementRef.nativeElement.scrollTop = val;
         }
