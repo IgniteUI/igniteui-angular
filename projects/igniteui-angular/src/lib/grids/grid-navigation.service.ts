@@ -611,14 +611,15 @@ export class IgxGridNavigationService {
             });
     }
 
-    public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: () => void) {
+    public performHorizontalScrollToCell(
+        rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: (params?) => void, params?: any) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         this.grid.nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
                 if (cb) {
-                    cb();
+                    cb(params);
                 } else {
                     this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus({ preventScroll: true });
                 }
