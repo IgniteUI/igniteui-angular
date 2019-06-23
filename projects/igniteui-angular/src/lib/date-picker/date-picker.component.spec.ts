@@ -280,7 +280,7 @@ describe('IgxDatePicker', () => {
 
         const buttons = document.getElementsByClassName('igx-button--flat');
         expect(buttons.length).toEqual(1);
-        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
+        expect((buttons[0] as HTMLElement).innerText).toBe('TEST');
     });
 
     it('Retemplated calendar in date picker - dropdown mode', () => {
@@ -302,7 +302,7 @@ describe('IgxDatePicker', () => {
 
         const buttons = document.getElementsByClassName('igx-button--flat');
         expect(buttons.length).toEqual(1);
-        expect((buttons[0]as HTMLElement).innerText).toBe('TEST');
+        expect((buttons[0] as HTMLElement).innerText).toBe('TEST');
     });
 
     it('locale propagate calendar value (de-DE)', () => {
@@ -429,7 +429,7 @@ describe('IgxDatePicker', () => {
         UIInteractions.clickElement(target);
         fixture.detectChanges();
 
-        let year = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[1];
+        let year = document.getElementsByClassName('igx-calendar-picker__date')[1];
         year.dispatchEvent(new Event('click'));
         tick();
         fixture.detectChanges();
@@ -440,8 +440,8 @@ describe('IgxDatePicker', () => {
         tick();
         fixture.detectChanges();
 
-        year = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[1];
-        expect(year.innerText).toBe(expectedResult);
+        year = document.getElementsByClassName('igx-calendar-picker__date')[1];
+        expect((year as HTMLElement).innerText).toBe(expectedResult);
     }));
 
     it('#3595 - Should be able to change month', fakeAsync(() => {
@@ -456,7 +456,7 @@ describe('IgxDatePicker', () => {
         tick(200);
         fixture.detectChanges();
 
-        let month = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[0];
+        let month = document.getElementsByClassName('igx-calendar-picker__date')[0];
         month.dispatchEvent(new Event('click'));
         tick(200);
         fixture.detectChanges();
@@ -468,8 +468,8 @@ describe('IgxDatePicker', () => {
         tick(200);
         fixture.detectChanges();
 
-        month = fixture.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[0];
-        expect(month.innerText.trim()).toBe(expectedResult.trim());
+        month = document.getElementsByClassName('igx-calendar-picker__date')[0];
+        expect((month as HTMLElement).innerText.trim()).toBe(expectedResult.trim());
     }));
 
     describe('Drop-down opening', () => {
@@ -718,11 +718,11 @@ describe('IgxDatePicker', () => {
             const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
             expect(dropDown).toBeDefined();
 
-            const selectedSpans = dom.nativeElement.getElementsByClassName('igx-calendar__date--selected');
+            const selectedSpans = document.getElementsByClassName('igx-calendar__date--selected');
             expect(selectedSpans.length).toBe(1);
-            expect(selectedSpans[0].innerText.trim()).toBe('20');
+            expect((selectedSpans[0] as HTMLElement).innerText.trim()).toBe('20');
 
-            const dateHeader = dom.nativeElement.getElementsByClassName('igx-calendar-picker__date');
+            const dateHeader = document.getElementsByClassName('igx-calendar-picker__date');
             expect(dateHeader.length).toBe(2);
             const month = dateHeader[0].innerHTML.trim();
             const year = dateHeader[1].innerHTML.trim();
