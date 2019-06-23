@@ -643,8 +643,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     private focusNextRow(elem, visibleColumnIndex, grid, isSummary?) {
         const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-        if (grid.navigation.isColumnRightEdgeVisible(visibleColumnIndex) &&
-            grid.navigation.isColumnLeftEdgeVisible(visibleColumnIndex)) {
+        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex)) {
             const cell =
                 elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             const closestScrollableGrid = this.getNextScrollableDown(grid).grid;
@@ -669,8 +668,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     private focusPrevRow(elem, visibleColumnIndex, grid, inChild?, isSummary?) {
-        if (grid.navigation.isColumnRightEdgeVisible(visibleColumnIndex) &&
-            grid.navigation.isColumnLeftEdgeVisible(visibleColumnIndex)) {
+        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex)) {
             const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
             const cells = elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             let cell = cells[cells.length - 1];

@@ -47,7 +47,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnRightEdgeVisible(columnIndex: number) {
-        const forOfDir = this.forOfDir();
+        const forOfDir: IgxForOfDirective<any> = this.forOfDir();
         if (this.isColumnPinned(columnIndex, forOfDir)) {
             return true;
         }
@@ -74,7 +74,7 @@ export class IgxGridNavigationService {
         return forOfDir;
     }
 
-    private isColumnPinned(columnIndex: number, forOfDir: any): boolean {
+    private isColumnPinned(columnIndex: number, forOfDir: IgxForOfDirective<any>): boolean {
         const horizontalScroll = forOfDir.getHorizontalScroll();
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === columnIndex);
         return (!horizontalScroll.clientWidth || column.pinned);
@@ -437,13 +437,12 @@ export class IgxGridNavigationService {
             return;
         }
 
+        if (this.isRowInEditMode(rowIndex)) {
+            this.moveNextEditable(rowIndex, visibleColumnIndex);
+            return;
+        }
+
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
-            if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
-                //  TODO: make gridAPI visible for internal use and remove cast to any
-                (this.grid as any).gridAPI.submit_value();
-                this.grid.rowEditTabs.first.element.nativeElement.focus();
-                return;
-            }
             const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
                 this.grid.rowList.find(row => row.index === rowIndex + 1) :
                 this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
@@ -457,10 +456,6 @@ export class IgxGridNavigationService {
         } else {
             const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummaryRow);
             if (cell) {
-                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
-                    this.moveNextEditable(rowIndex, visibleColumnIndex);
-                    return;
-                }
                 this.onKeydownArrowRight(cell, selectedNode);
             }
         }
@@ -555,18 +550,12 @@ export class IgxGridNavigationService {
             return;
         }
 
-        if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+        if (this.isRowInEditMode(rowIndex)) {
             this.movePreviousEditable(rowIndex, visibleColumnIndex);
             return;
         }
 
         if (visibleColumnIndex === 0) {
-            if (this.isRowInEditMode(rowIndex) && this.grid.rowEditTabs.length) {
-                //  TODO: make gridAPI visible for internal use and remove cast to any
-                (this.grid as any).gridAPI.submit_value();
-                this.grid.rowEditTabs.last.element.nativeElement.focus();
-                return;
-            }
             if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
             } else {
