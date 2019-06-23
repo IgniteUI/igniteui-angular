@@ -4,6 +4,7 @@ import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { ISelectionNode } from '../core/grid-selection';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -63,8 +64,8 @@ export class IgxGridNavigationService {
         return this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(index);
     }
 
-    private forOfDir() {
-        let forOfDir;
+    private forOfDir(): IgxForOfDirective<any> {
+        let forOfDir: IgxForOfDirective<any>;
         if (this.grid.dataRowList.length > 0) {
             forOfDir = this.grid.dataRowList.first.virtDirRow;
         } else {

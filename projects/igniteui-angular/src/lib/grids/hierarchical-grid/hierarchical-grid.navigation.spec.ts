@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, QueryList} from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -464,7 +464,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
@@ -509,7 +509,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
