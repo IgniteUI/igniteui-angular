@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { Component, ViewChild, QueryList} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
