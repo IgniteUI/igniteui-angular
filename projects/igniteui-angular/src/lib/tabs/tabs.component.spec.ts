@@ -118,6 +118,55 @@ describe('IgxTabs', () => {
         tick();
     }));
 
+    it('should set/get properties on panels through tabs', () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabsComp = fixture.componentInstance.tabs;
+        const iconValues = ['library_music', 'video_library', 'library_books'];
+        const labelValues = ['Tab1', 'Tab2', 'Tab3'];
+        const disabledValues = [true, false, true];
+
+        fixture.detectChanges();
+
+        const tabs = tabsComp.tabs.toArray();
+        const groups = tabsComp.groups.toArray();
+
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].icon = iconValues[i];
+            tabs[i].label = labelValues[i];
+            tabs[i].disabled = disabledValues[i];
+            fixture.detectChanges();
+            expect(groups[i].icon).toBe(iconValues[i]);
+            expect(groups[i].label).toBe(labelValues[i]);
+            expect(groups[i].disabled).toBe(disabledValues[i]);
+        }
+    });
+
+    it('should set/get selection on panels through tabs', () => {
+        const fixture = TestBed.createComponent(TabsTestComponent);
+        const tabsComp = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
+        const tabs = tabsComp.tabs.toArray();
+        const groups = tabsComp.groups.toArray();
+
+        tabs[0].isSelected = true;
+        expect(groups[0].isSelected).toBe(true);
+        expect(groups[1].isSelected).toBe(false);
+        expect(groups[2].isSelected).toBe(false);
+
+        tabs[1].isSelected = true;
+        fixture.detectChanges();
+        expect(groups[0].isSelected).toBe(false);
+        expect(groups[1].isSelected).toBe(true);
+        expect(groups[2].isSelected).toBe(false);
+
+        tabs[2].isSelected = true;
+        fixture.detectChanges();
+        expect(groups[0].isSelected).toBe(false);
+        expect(groups[1].isSelected).toBe(false);
+        expect(groups[2].isSelected).toBe(true);
+    });
+
     it('should select/deselect tabs', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;

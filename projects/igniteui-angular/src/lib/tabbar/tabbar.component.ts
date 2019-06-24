@@ -329,7 +329,7 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
      * this.tabPanel.isSelected = true;
      * ```
      * ```typescript
-     * let isSelected =  this.tabPanelIsSelected;
+     * let isSelected =  this.tabPanel.isSelected;
      * ```
      * @memberof IgxTabPanelComponent
      */
