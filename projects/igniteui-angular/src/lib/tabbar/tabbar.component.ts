@@ -262,6 +262,11 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     private _itemStyle = 'igx-tab-panel';
 
     /**
+     *@hidden
+     */
+    private _isSelected = false;
+
+    /**
      * Sets/gets the `label` of the tab panel.
      * ```html
      * <igx-tab-panel [label] = "'Tab panel label'"><igx-tab-panel>
@@ -329,7 +334,18 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
      * @memberof IgxTabPanelComponent
      */
     @HostBinding('class.igx-bottom-nav__panel--selected')
-    public isSelected = false;
+    public get isSelected(): boolean {
+        return this._isSelected;
+    }
+    public set isSelected(newValue: boolean) {
+        if (this._isSelected !== newValue) {
+            if (newValue) {
+                this.select();
+            } else {
+                this._isSelected = newValue;
+            }
+        }
+    }
 
     /**
      * Gets the `itemStyle` of the tab panel.
@@ -442,7 +458,7 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
             return;
         }
 
-        this.isSelected = true;
+        this._isSelected = true;
         this._tabBar.onTabSelected.emit({ tab: this._tabBar.tabs.toArray()[this.index], panel: this });
     }
 }

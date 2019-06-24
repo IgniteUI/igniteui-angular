@@ -104,6 +104,55 @@ describe('TabBar', () => {
         }
     });
 
+    it('should set/get properties on panels through tabs', () => {
+        const fixture = TestBed.createComponent(TabBarTestComponent);
+        const tabbar = fixture.componentInstance.tabbar;
+        const iconValues = ['library_music', 'video_library', 'library_books'];
+        const labelValues = ['Tab1', 'Tab2', 'Tab3'];
+        const disabledValues = [true, false, true];
+
+        fixture.detectChanges();
+
+        const tabs = tabbar.tabs.toArray();
+        const panels = tabbar.panels.toArray();
+
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].icon = iconValues[i];
+            tabs[i].label = labelValues[i];
+            tabs[i].disabled = disabledValues[i];
+            fixture.detectChanges();
+            expect(panels[i].icon).toBe(iconValues[i]);
+            expect(panels[i].label).toBe(labelValues[i]);
+            expect(panels[i].disabled).toBe(disabledValues[i]);
+        }
+    });
+
+    it('should set/get selection on panels through tabs', () => {
+        const fixture = TestBed.createComponent(TabBarTestComponent);
+        const tabbar = fixture.componentInstance.tabbar;
+        fixture.detectChanges();
+
+        const tabs = tabbar.tabs.toArray();
+        const panels = tabbar.panels.toArray();
+
+        tabs[0].isSelected = true;
+        expect(panels[0].isSelected).toBe(true);
+        expect(panels[1].isSelected).toBe(false);
+        expect(panels[2].isSelected).toBe(false);
+
+        tabs[1].isSelected = true;
+        fixture.detectChanges();
+        expect(panels[0].isSelected).toBe(false);
+        expect(panels[1].isSelected).toBe(true);
+        expect(panels[2].isSelected).toBe(false);
+
+        tabs[2].isSelected = true;
+        fixture.detectChanges();
+        expect(panels[0].isSelected).toBe(false);
+        expect(panels[1].isSelected).toBe(false);
+        expect(panels[2].isSelected).toBe(true);
+    });
+
     it('should select/deselect tabs', () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;
@@ -403,11 +452,14 @@ class TemplatedTabBarTestComponent {
                 <router-outlet></router-outlet>
             </div>
             <igx-bottom-nav>
-                <igx-tab label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                <igx-tab label="Tab 1" icon="library_music"
+                    routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
                 </igx-tab>
-                <igx-tab label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
+                <igx-tab label="Tab 2" icon="video_library"
+                    routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
                 </igx-tab>
-                <igx-tab label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
+                <igx-tab label="Tab 3" icon="library_books"
+                    routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
                 </igx-tab>
             </igx-bottom-nav>
         </div>
@@ -422,11 +474,11 @@ class TabBarRoutingTestComponent {
     template: `
         <div #wrapperDiv>
             <igx-bottom-nav>
-                <igx-tab label="Tab 1">
+                <igx-tab label="Tab 1" icon="library_music">
                 </igx-tab>
-                <igx-tab label="Tab 2" [isSelected]="true">
+                <igx-tab label="Tab 2" icon="video_library" [isSelected]="true">
                 </igx-tab>
-                <igx-tab label="Tab 3">
+                <igx-tab label="Tab 3" icon="library_books">
                 </igx-tab>
             </igx-bottom-nav>
         </div>
