@@ -1281,39 +1281,12 @@
         %grid-cell-header-title {
             opacity: .7;
         }
-
-        &%igx-grid__th--sortable {
-            &:hover {
-                .sort-icon {
-                    &:hover {
-                        opacity: 1;
-                    }
-                }
-            }
-        }
     }
 
-    %igx-grid__th--filtrable-open {
-        &%igx-grid__th--sortable,
-        &%igx-grid__th--sorted
-        {
-            %grid-cell-header-title {
-                color: --var($theme, 'filtering-header-text-color');
-                opacity: .7;
-            }
-
+    %igx-grid__th--filtrable-sortable {
+        .sort-icon {
             &:hover {
-                cursor: default;
-
-                %grid-cell-header-title {
-                    cursor: default;
-                    color: --var($theme, 'filtering-header-text-color');
-                    opacity: .7;
-                }
-
-                .sort-icon {
-                    cursor: pointer;
-                }
+                opacity: 1;
             }
         }
     }
