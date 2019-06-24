@@ -43,7 +43,7 @@
 
 <ng-container *ngIf="!column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <igx-grid-header [igxColumnMovingDrag]="column" [dragGhostHost]="grid.igxFilteringOverlayOutlet" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.grid.id" [column]="column"></igx-grid-header>
+    <igx-grid-header [igxColumnMovingDrag]="column" [dragGhostHost]="grid.outletDirective.nativeElement" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.grid.id" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid__th-resize-handle"
           [igxResizeHandle]="column"
