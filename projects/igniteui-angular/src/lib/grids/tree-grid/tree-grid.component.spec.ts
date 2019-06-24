@@ -78,8 +78,7 @@ describe('IgxTreeGrid Component Tests ', () => {
                 tick(16);
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).not.toBeNull();
-                expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
+                expect(defaultHeight).toBeNull();
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(grid.rowList.length).toEqual(6);
         }));
@@ -97,7 +96,7 @@ describe('IgxTreeGrid Component Tests ', () => {
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
                 expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThan(330);
+                expect(defaultHeightNum).toBeLessThanOrEqual(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(grid.rowList.length).toEqual(11);
         }));

@@ -1,3 +1,5 @@
+@import '../shape/navdrawer';
+
 ////
 /// @group schemas
 /// @access private
@@ -19,18 +21,21 @@
 /// @prop {map} item-hover-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover text color.
 /// @prop {map} item-hover-icon-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover icon color.
 /// @prop {map} elevation [16] - The elevation level of the drawer, between 0 - 24.
-/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for navdrawer component.
+/// @prop {Number} border-radius [.16667] - The border radius fraction, between 0 - 36 to be used for the navdrawer component.
+/// @prop {Number} item-border-radius [.16667] - The border radius fraction, between 0 - 24 to be used for the navdrawer item.
 ///
 /// @see $default-palette
 
-$_light-navdrawer: (
+$_light-navdrawer: extend((
     background: (
         igx-color: 'surface'
     ),
 
+    border-color: rgba(0, 0, 0, .14),
+
     border-radius: 0,
 
-    border-color: rgba(0, 0, 0, .14),
+    item-border-radius: .16667,
 
     item-header-text-color: (
         igx-color: 'surface',
@@ -82,4 +87,4 @@ $_light-navdrawer: (
     ),
 
     elevation: 16
-);
+), $_default-shape-navdrawer);
