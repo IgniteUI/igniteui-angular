@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
 import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxToastPosition, IgxForOfDirective } from 'igniteui-angular';
@@ -24,15 +24,21 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public totalItemCount = 0;
   public prevRequest: any;
   public startIndex = 0;
-  public itemHeight = 48;
+  public itemHeight = 40;
   public itemsMaxHeight = 320;
+  public density = 'comfortable';
+  public displayDensities = [
+    { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+    { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+    { label: 'compact', selected: this.density === 'compact', togglable: true }
+  ];
 
   constructor(protected remoteService: RemoteService, protected cdr: ChangeDetectorRef) {
     this.remoteService.urlBuilder = (state) => {
       const chunkSize = state.chunkSize || Math.floor(this.itemsMaxHeight / this.itemHeight) + 1;
       return `${this.remoteService.url}?$count=true&$skip=${state.startIndex}&$top=${chunkSize}`;
     };
-    this.localItems = Array.apply(null, {length: 2000}).map((e, i) => ({
+    this.localItems = Array.apply(null, { length: 2000 }).map((e, i) => ({
       name: `Item ${i + 1}`,
       id: i
     }));
@@ -44,16 +50,16 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
 
   public ngOnInit() {
     this.itemsAsync = this.remoteService.remoteData;
-}
+  }
 
-public ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.remoteService.getData(this.remoteVirtDir.state, (data) => {
         this.remoteVirtDir.totalItemCount = data['@odata.count'];
         this.remoteVirtDir.igxForItemSize = this.itemHeight;
     });
-}
+  }
 
-public dataLoading(evt: IForOfState) {
+  public dataLoading(evt: IForOfState) {
     if (this.prevRequest) {
         this.prevRequest.unsubscribe();
     }
@@ -69,5 +75,5 @@ public dataLoading(evt: IForOfState) {
           this.loadingToast.hide();
           this.cdr.detectChanges();
     });
-}
+  }
 }
