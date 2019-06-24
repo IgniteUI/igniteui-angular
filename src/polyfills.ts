@@ -21,9 +21,6 @@
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 import 'classlist.js';  // Run `npm install --save classlist.js`.
 
-/** Adding ES7 polyfills for Object for IE11. */
-import 'core-js/es7/object';
-
 /**
  * Web Animations `@angular/platform-browser/animations`
  * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.
