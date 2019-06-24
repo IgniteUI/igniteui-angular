@@ -16,6 +16,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -168,6 +169,37 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+        }));
+
+        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
+            hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
+            fixture.detectChanges();
+            hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const lastRowCells = rows[rows.length - 1].queryAll(By.directive(IgxHierarchicalGridCellComponent));
+
+            lastRowCells[1].nativeElement.click();
+            fixture.detectChanges();
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+            fixture.detectChanges();
+
+            let childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(1);
         }));
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(/** row toggle rAF */() => {
