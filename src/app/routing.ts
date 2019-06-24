@@ -5,7 +5,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChipsSampleComponent} from './chips/chips.sample';
+import { ChipsSampleComponent } from './chips/chips.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
@@ -48,6 +48,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
@@ -144,6 +145,10 @@ const appRoutes = [
         component: DropDownSampleComponent
     },
     {
+        path: 'dropDown-density',
+        component: DisplayDensityDropDownComponent
+    },
+    {
         path: 'virtual-dropdown',
         component: DropDownVirtualComponent
     },
@@ -238,7 +243,10 @@ const appRoutes = [
     },
     {
         path: 'bottom-navigation',
-        component: BottomNavSampleComponent
+        component: BottomNavSampleComponent,
+        children: [
+            { path: 'tabContentPath', component: CustomContentComponent, outlet: 'tabPanelOutlet' }
+        ]
     },
     {
         path: 'tabs',
