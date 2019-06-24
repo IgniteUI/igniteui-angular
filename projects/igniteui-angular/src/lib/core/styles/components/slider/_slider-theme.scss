@@ -148,7 +148,7 @@
         align-items: center;
         flex-direction: column;
         outline: none;
-        top: -#{rem($slider-thumb-radius) + rem($slider-label-height)};
+        top: -#{rem($slider-thumb-radius)};
         margin-left: -#{rem($slider-thumb-radius)};
 
         &:focus %igx-thumb-dot::after {
@@ -159,11 +159,12 @@
     }
 
     %igx-thumb-label {
-        position: relative;
+        position: absolute;
         display: flex;
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
+        top: -#{rem($slider-thumb-height)};
         pointer-events: none;
         min-width: rem($slider-label-width);
         height: rem($slider-label-height);
