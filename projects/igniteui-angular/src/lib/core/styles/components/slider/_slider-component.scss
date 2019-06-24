@@ -83,6 +83,7 @@
         @each $t in $thumbs {
             @include e(thumb-#{$t}) {
                 @extend %igx-thumb-display !optional;
+                @extend %igx-thumb--disabled !optional;
 
                 .label {
                     @extend %igx-thumb-label !optional;

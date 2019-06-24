@@ -156,6 +156,16 @@
             /* 32 / 40 */
             transform: scale(.8);
         }
+
+        &:hover %igx-thumb-label {
+            opacity: 1;
+        }
+    }
+
+    %igx-thumb--disabled {
+        &:hover %igx-thumb-label {
+            opacity: 0;
+        }
     }
 
     %igx-thumb-label {
