@@ -372,6 +372,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
+            this._applyChanges();
+            this._updateScrollOffset();
+            this.onDataChanged.emit();
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
