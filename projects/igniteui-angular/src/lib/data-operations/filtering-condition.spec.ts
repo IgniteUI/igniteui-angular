@@ -1,7 +1,8 @@
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand } from './filtering-condition';
+    IgxBooleanFilteringOperand,
+    IgxFilteringOperand} from './filtering-condition';
 
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
@@ -138,4 +139,23 @@ describe('Unit testing FilteringCondition', () => {
         expect(!f.condition('notNull').logic(null) && f.condition('notNull').logic(undefined) && f.condition('notNull').logic(false))
             .toBeTruthy('notNull');
     });
+    it('tests custom conditions', () => {
+        const f = CustomFilter.instance();
+        expect(f.condition('Custom').logic('Asd', 'asd')).toBeFalsy();
+        expect(f.condition('Custom').logic('Asd', 'Asd')).toBeTruthy();
+    });
 });
+
+class CustomFilter extends IgxFilteringOperand {
+    private constructor() {
+        super();
+        this.append({
+            name: 'Custom',
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
+                return value === searchVal;
+            },
+            isUnary: false,
+            iconName: 'starts_with'
+        });
+    }
+}

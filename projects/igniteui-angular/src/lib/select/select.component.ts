@@ -1,7 +1,7 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional, Inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -19,6 +19,7 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** @hidden @internal */
 @Directive({
@@ -64,17 +65,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public cssClass = false;
 
     /** @hidden @internal */
-    @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
 
     /** @hidden @internal */
-    @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
+    @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
 
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective)) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) label: IgxLabelDirective;
 
     /** @hidden @internal */
     public allowItemsFocus = false;
@@ -118,7 +119,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets input placeholder.
      *
      */
-    @Input() public placeholder = '';
+    @Input() public placeholder;
     /**
      * An @Input property that disables the `IgxSelectComponent`.
      * ```html
@@ -181,7 +182,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *  </igx-select>
      * ```
      */
-    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
+    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef, static: true })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */
@@ -198,8 +199,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr, selection);
+        protected selection: IgxSelectionAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     /** @hidden @internal */

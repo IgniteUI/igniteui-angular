@@ -1,12 +1,12 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, DropPosition } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-sample',
     templateUrl: 'grid-mrl.sample.html'
 })
 export class GridMRLSampleComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     width = null;
     cols: Array<any> = [
@@ -21,6 +21,9 @@ export class GridMRLSampleComponent {
             columns: this.cols
         }
     ];
+
+    public density = 'compact';
+    public displayDensities;
     data = [
         // tslint:disable:max-line-length
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -51,8 +54,31 @@ export class GridMRLSampleComponent {
         { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
         { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
     ];
+
+    constructor() {
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
+    }
+
     hideGroup() {
         const col = this.grid.getColumnByName('group2');
         col.hidden = !col.hidden;
+    }
+    pinGroup() {
+        const col = this.grid.getColumnByName('group2');
+        col.pinned = !col.pinned;
+    }
+
+    moveGroup() {
+        const col1 = this.grid.getColumnByName('group2');
+        const col2 = this.grid.getColumnByName('group1');
+        this.grid.moveColumn(col2, col1);
     }
 }

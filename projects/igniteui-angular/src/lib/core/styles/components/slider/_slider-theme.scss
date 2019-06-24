@@ -134,7 +134,7 @@
         width: 100%;
         height: inherit;
         background: --var($theme, 'track-color');
-        transform-origin: 0 0 0;
+        transform-origin: left center;
         transform: scaleX(0);
     }
 

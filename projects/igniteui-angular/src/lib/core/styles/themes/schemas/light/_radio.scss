@@ -1,3 +1,5 @@
+@import '../shape/radio';
+
 ////
 /// @group schemas
 /// @access private
@@ -14,7 +16,7 @@
 ///
 /// @see $default-palette
 
-$_light-radio: (
+$_light-radio: extend((
     name: 'igx-radio',
 
     label-color: (
@@ -32,4 +34,4 @@ $_light-radio: (
     disabled-color: (
         igx-color: ('grays', 400)
     )
-);
+), $_default-shape-radio);
