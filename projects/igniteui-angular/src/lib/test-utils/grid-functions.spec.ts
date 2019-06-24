@@ -288,7 +288,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        debugElement.componentInstance.elementRef.nativeElement.dispatchEvent(new Event('click'));
+        UIInteractions.clickElement(debugElement.componentInstance.elementRef);
     }
 
     /* Search-related members */
