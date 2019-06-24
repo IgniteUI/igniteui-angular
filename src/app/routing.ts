@@ -47,6 +47,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
@@ -136,6 +137,10 @@ const appRoutes = [
     {
         path: 'dropDown',
         component: DropDownSampleComponent
+    },
+    {
+        path: 'dropDown-density',
+        component: DisplayDensityDropDownComponent
     },
     {
         path: 'drag-drop',
