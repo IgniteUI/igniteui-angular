@@ -1,5 +1,6 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChildren
+    ChangeDetectorRef, Component, ElementRef, Inject, QueryList, OnDestroy, AfterViewInit, ContentChild, ContentChildren, Optional,
+    forwardRef
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -14,6 +15,7 @@ import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** @hidden */
 @Component({
@@ -27,8 +29,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService) {
-        super(elementRef, cdr, selection);
+        protected comboAPI: IgxComboAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     protected get scrollContainer() {

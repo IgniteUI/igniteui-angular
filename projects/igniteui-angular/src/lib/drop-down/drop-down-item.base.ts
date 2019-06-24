@@ -97,6 +97,22 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__item--cosy')
+    public get itemStyleCosy() {
+        return this.dropDown.displayDensity === 'cosy' && !this.isHeader;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__item--compact')
+    public get itemStyleCompact() {
+        return this.dropDown.displayDensity === 'compact' && !this.isHeader;
+    }
+
+    /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
      * ```typescript
@@ -195,6 +211,22 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @Input()
     @HostBinding('class.igx-drop-down__header')
     public isHeader: boolean;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__header--cosy')
+    public get headerClassCosy() {
+        return this.isHeader && this.dropDown.displayDensity === 'cosy';
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__header--compact')
+    public get headerClassCompact() {
+        return this.isHeader && this.dropDown.displayDensity === 'compact';
+    }
 
     /**
      * Sets/gets if the given item is disabled

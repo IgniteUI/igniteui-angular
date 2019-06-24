@@ -24,6 +24,14 @@
         @extend %igx-drop-down__item !optional;
     }
 
+    @include e(item, $m: cosy) {
+        @extend %igx-drop-down__item--cosy !optional;
+    }
+
+    @include e(item, $m: compact) {
+        @extend %igx-drop-down__item--compact !optional;
+    }
+
     @include e(item, $m: focused) {
         @extend %igx-drop-down__item--focused !optional;
     }
@@ -42,6 +50,14 @@
 
     @include e(header) {
         @extend %igx-drop-down__header !optional;
+    }
+
+    @include e(header, $m: cosy) {
+        @extend %igx-drop-down__header--cosy !optional;
+    }
+
+    @include e(header, $m: compact) {
+        @extend %igx-drop-down__header--compact !optional;
     }
 
     @include e(group) {

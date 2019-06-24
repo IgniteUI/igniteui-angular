@@ -12,6 +12,8 @@ import {
     ViewChild,
     EventEmitter,
     Output,
+    Optional,
+    Inject
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -24,7 +26,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { OverlaySettings } from '../services';
-
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -173,8 +175,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr);
+        protected selection: IgxSelectionAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, _displayDensityOptions);
     }
 
     /**
