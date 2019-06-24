@@ -2208,23 +2208,22 @@ describe('IgxGrid Component Tests', () => {
                 let currentEditCell: IgxGridCellComponent;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
-                grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
-                await wait(300);
+                await wait();
 
                 // go to first editable cell
-                targetCell.onKeydownEnterEditMode();
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', targetCell.nativeElement, true);
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 // change first editable cell value
                 targetCell.editValue = '500';
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 // go to Done
                 fixture.componentInstance.moveNext(true);
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 let overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(overlayText.textContent.trim()).toBe('You have 1 changes in this row');
@@ -2234,12 +2233,12 @@ describe('IgxGrid Component Tests', () => {
                 const cancelButtonElement = bannerRowElement.firstElementChild;
                 cancelButtonElement.focus();
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 // go to last editable cell
-                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true }));
+                UIInteractions.triggerKeyDownWithBlur('tab', document.activeElement, true, false, true);
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
                 expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
@@ -2248,12 +2247,12 @@ describe('IgxGrid Component Tests', () => {
                 // change last editable cell value
                 targetCell.editValue = 'No test';
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 // move to Cancel
                 fixture.componentInstance.moveNext(false);
                 fixture.detectChanges();
-                await wait(300);
+                await wait();
 
                 overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(overlayText.textContent.trim()).toBe('You have 2 changes in this row');
