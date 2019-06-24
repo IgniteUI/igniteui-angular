@@ -16,12 +16,13 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         const result = [];
 
-        Object.entries(cssClasses).forEach(([cssClass, callbackOrValue]) => {
+        for (const cssClass of Object.keys(cssClasses)) {
+            const callbackOrValue = cssClasses[cssClass];
             const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
-        });
+        }
 
         return result.join(' ');
     }

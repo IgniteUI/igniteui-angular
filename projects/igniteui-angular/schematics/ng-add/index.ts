@@ -3,26 +3,10 @@ import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspace } from '../utils/dependency-handler';
 
-import * as os from 'os';
 import { addResetCss } from './add-normalize';
 import { getWorkspace } from '@schematics/angular/utility/config';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
-/**
- *  ES7 `Object.entries` needed for igxGrid to render in IE.
- * - https://github.com/IgniteUI/igniteui-cli/issues/344
- */
-function addIgxGridSupportForIe(polyfillsData: string): string {
-  const targetImportPattern = /import \'classlist.js\';.*/;
-  const targetImport = targetImportPattern.exec(polyfillsData);
-  const lineToAdd = 'import \'core-js/es7/object\';';
-  const comment = '/** ES7 `Object.entries` needed for igxGrid to render in IE. */';
-  if (!polyfillsData.includes(lineToAdd)) {
-    return polyfillsData.replace(targetImportPattern, `${targetImport}${os.EOL}${os.EOL}${comment}${os.EOL}${lineToAdd}`);
-  }
-
-  return polyfillsData;
-}
 
 /**
  * Checks whether a property exists in the angular workspace.
@@ -58,7 +42,6 @@ function enableWebAnimationsAndGridSupport(tree: Tree, targetFile: string, polyf
   polyfillsData = polyfillsData.replace(webAnimationsLine,
     webAnimationsLine.substring(3, webAnimationsLine.length));
 
-  polyfillsData = addIgxGridSupportForIe(polyfillsData);
   tree.overwrite(targetFile, polyfillsData);
 }
 

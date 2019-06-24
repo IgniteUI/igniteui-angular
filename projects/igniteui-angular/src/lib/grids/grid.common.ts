@@ -96,6 +96,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                 debounceTime(DEBOUNCE_TIME),
                 takeUntil(this.destroy$)
             ).subscribe(() => {
+                this.colResizingService.isColumnResizing = false;
                 this.colResizingService.showResizer = false;
                 this.column.grid.cdr.detectChanges();
             });
@@ -504,7 +505,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     get isDropTarget(): boolean {
-        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable && !this.cms.column.disablePinning;
+        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable &&
+            ((!this._column.pinned && this.cms.column.disablePinning) || !this.cms.column.disablePinning);
     }
 
     get horizontalScroll(): any {

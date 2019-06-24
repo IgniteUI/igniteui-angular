@@ -38,9 +38,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
     public index: number;
 
     @Input()
-    public indentation = 0;
-
-    @Input()
     public firstCellIndentation = -1;
 
     @HostBinding('attr.data-rowIndex')
@@ -58,7 +55,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
     /**
      * @hidden
      */
-    @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
+    @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,

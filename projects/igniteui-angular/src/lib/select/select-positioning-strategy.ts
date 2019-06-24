@@ -48,7 +48,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
-        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff }px`;
+        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff}px`;
         this.deltaY = CURRENT_POSITION_Y -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top - this.itemTextToInputTextDiff;
     }
@@ -163,6 +163,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
+        const selectItemPaddingHorizontal = 24;
         const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
@@ -170,7 +171,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.itemTextPadding = numericLeftPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
+        contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
         this.deltaX = START.X - numericLeftPadding - numericTextIndent;
         const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
         const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
@@ -197,7 +198,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                         if (currentScroll === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
-                        // (more than 5 items) and current scroll
+                            // (more than 5 items) and current scroll
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                             return;

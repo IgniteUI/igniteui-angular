@@ -38,7 +38,7 @@ export class IgxColumnResizingService {
 
         // Column height multiplier in case there are Column Layouts. The resizer height need to take into account rowStart.
         let columnHeightMultiplier = 1;
-        if (this.column.parent && this.column.parent.columnLayout) {
+        if (this.column.columnLayoutChild) {
             columnHeightMultiplier = this.column.grid.multiRowLayoutRowSize - this.column.rowStart + 1;
         }
 

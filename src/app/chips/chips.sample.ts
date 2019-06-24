@@ -55,19 +55,19 @@ export class ChipsSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
     public chipsAreaTo: IgxChipsAreaComponent;
 
-    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
     public chipsAreaCc: IgxChipsAreaComponent;
 
-    @ViewChild('dropTo', { read: ElementRef })
+    @ViewChild('dropTo', { read: ElementRef, static: true })
     public dropTo: ElementRef;
 
-    @ViewChild('dropCc', { read: ElementRef })
+    @ViewChild('dropCc', { read: ElementRef, static: true })
     public dropCc: ElementRef;
 
     constructor(public cdr: ChangeDetectorRef) { }
