@@ -202,9 +202,13 @@ export interface IGridDataBindable {
 export interface IRowDragEndEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    animation: boolean;
 }
 
-export interface IRowDragStartEventArgs extends IRowDragEndEventArgs, CancelableEventArgs { }
+export interface IRowDragStartEventArgs extends CancelableEventArgs {
+    owner: IgxDragDirective;
+    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+ }
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -546,6 +550,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.allRowsSelected = false;
             this.deselectAllRows();
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 
@@ -565,6 +570,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._rowDrag = val;
         if (this.gridAPI.grid && this.columnList) {
             this.calculateGridSizes();
+            this.cdr.markForCheck();
         }
     }
 
@@ -596,9 +602,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        if (val && (this.primaryKey === undefined || this.primaryKey === null)) {
-            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
-        }
         this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
@@ -629,6 +632,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
+            this._autoSize = false;
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
                     this.reflow();
@@ -2517,6 +2521,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
+    protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
     private _horizontalForOfs;
@@ -2533,7 +2538,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private _columnWidth: string;
 
-    private _defaultTargetRecordNumber = 10;
+    protected _defaultTargetRecordNumber = 10;
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -2716,7 +2721,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.columnListDiffer.diff(this.columnList);
         this.markForCheck();
         this.resetCaches();
-        this._derivePossibleHeight();
 
         this.columnList.changes
         .pipe(takeUntil(this.destroy$))
@@ -2727,8 +2731,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetColumnsVisibleIndexCache() {
-        this.columnList.forEach(column => column.resetVisibleIndex());
+    public resetColumnsCaches() {
+        this.columnList.forEach(column => column.resetCaches());
     }
 
     /**
@@ -2768,7 +2772,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public resetCaches() {
         this.resetForOfCache();
-        this.resetColumnsVisibleIndexCache();
+        this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
         this._columnGroups = this.columnList.some(col => col.columnGroup);
@@ -2844,6 +2848,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
 
+        this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
+            this.calculateGridHeight();
+            $event.containerSize = this.calcHeight;
+        });
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
@@ -3038,7 +3046,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     get summariesMargin() {
-        return this.rowSelectable || this.rowDraggable ? this.featureColumnsWidth : 0;
+        return this.featureColumnsWidth;
     }
 
     /**
@@ -3639,7 +3647,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param ignoreCase
      * @memberof IgxGridBaseComponent
      */
-    public filterGlobal(value: any, condition?, ignoreCase?) {
+    public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
 
@@ -3722,13 +3730,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
-    public clearSummaryCache(args?) {
-    }
-
-    /**
-     * @hidden
-     */
     public refreshGridState(args?) {
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
@@ -3774,13 +3775,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public reflow() {
         this.calculateGridSizes();
-    }
-
-    /**
-     * @hidden
-     */
-    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
-    public recalculateSummaries() {
     }
 
     /**
@@ -3987,27 +3981,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    protected get isPercentHeight() {
+    public get isPercentHeight() {
         return this._height && this._height.indexOf('%') !== -1;
-    }
-
-    /**
-     * @hidden
-     * Sets this._height
-     */
-    protected _derivePossibleHeight() {
-        if (!this.isPercentHeight || !this._height || !this.isAttachedToDom || this.rowBasedHeight === 0) {
-            return;
-        }
-        if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
-            const viewPortHeight = document.documentElement.clientHeight;
-            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
-        }
     }
 
     /**
@@ -4034,8 +4011,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
-        return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
+        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    /**
+     * @hidden @internal
+     * The rowHeight input is bound to min-height css prop of rows that adds a 1px border in all cases
+     */
+    public get renderedRowHeight(): number {
+        return this.rowHeight + 1;
     }
 
     /**
@@ -4043,21 +4028,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        this._derivePossibleHeight();
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
                 (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
         this.summariesHeight = 0;
-        if (!this._height) {
-            this.calcHeight = null;
-            if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
-                this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
-            }
-            return;
-        }
-
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
             this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         }
@@ -4095,33 +4071,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         return pagingHeight;
     }
+
     /**
      * @hidden
      */
-    protected _calculateGridBodyHeight() {
+    protected _calculateGridBodyHeight(): number {
+        if (!this._height) {
+            return null;
+        }
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
+        let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        let gridHeight;
+        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+            this.summariesHeight + pagingHeight + groupAreaHeight + footerBordersAndScrollbars +
+            this.scr.nativeElement.clientHeight;
 
         if (this.isPercentHeight) {
             /*height in %*/
-            if (computed.getPropertyValue('height').indexOf('%') === -1 ) {
-                gridHeight = parseInt(computed.getPropertyValue('height'), 10);
-            } else {
-                return this.defaultTargetBodyHeight;
+            if (!this.nativeElement.parentElement ||
+                this.nativeElement.parentElement.clientHeight === renderedHeight) {
+                /* parent element is sized by the rendered elements which means
+                the grid should attempt a content-box style rendering */
+                this._autoSize = true;
             }
+            if (this._autoSize || computed.getPropertyValue('height').indexOf('%') !== -1) {
+                const bodyHeight = this.getDataBasedBodyHeight();
+                return bodyHeight > 0 ? bodyHeight : null;
+            }
+            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
         } else {
             gridHeight = parseInt(this._height, 10);
         }
-        const height = Math.abs(gridHeight - toolbarHeight -
-                this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight -
-                groupAreaHeight - footerBordersAndScrollbars -
-                this.scr.nativeElement.clientHeight);
+        const height = Math.abs(gridHeight - renderedHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
@@ -4244,6 +4229,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        return !this.data || (this.data.length < this._defaultTargetRecordNumber) ?
+            0 : this.defaultTargetBodyHeight;
+    }
+
+    /**
      * @hidden
      */
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
@@ -4294,8 +4287,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetCaches();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.cdr.detectChanges();
         this.resetCaches();
+        this.cdr.detectChanges();
         this.calculateGridHeight();
 
         if (this.rowEditable) {
@@ -5035,7 +5028,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.calcWidth;
+        return col.field + col._calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {

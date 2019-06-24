@@ -1,8 +1,28 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 8.0.1
+
+- **General**
+    - Importing ES7 polyfill for Object (`'core-js/es7/object'`) for IE is no longer required.
+
+### New Features
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ## 8.0.0
+- `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
+    ```scss
+        $light-round-input: extend($_light-input-group, $_round-shape-input-group);
+    ```
+There are also prebuilt schema presets for all components (light-round/dark-round and light-square/dark-square), namely `$light-round-schema, $light-dark-schema, $light-square-schema, $dark-square-schema`;
 - `IgxCombo`: Removed the following deprecated (since 6.2.0) template selectors:
     - `#emptyTemplate`
     - `#headerTemplate`
@@ -14,10 +34,46 @@ All notable changes for each version of this project will be documented in this 
     - `openDialog()` now has an optional `[target: HTMLElement]` parameter. It's used in `mode="dropdown"` and the drop down container is positioned according to the provided target.
     - The custom drop down template target is no longer marked with `#dropDownTarget`, instead it's provided as an `HTMLElement` to the `openDialog()` method.
     - By default, the `igxDatePicker` drop down target is changed from the `igxInput` element to the `igxInputGroup` element.
+    - `onClosing` event is added.
+    - **Breaking Change** `onOpen` event is renamed to `onOpened`.
+    - **Breaking Change** `onClose` event is renamed to `onClosed`.
+    - **Behavioral Change** - action buttons are now available in the dropdown mode.
+    - **Feature** `igxDatePicker` and `igxTimePicker` now provide the ability for adding custom action buttons. Read up more information in [igxDatePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md) or [igxTimePicker ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/time-picker/README.md)
+- `IgxToggleAction` / `IgxTooltip`: Removed the deprecated `closeOnOutsideClick` Input that has been superseded by `overlaySettings` in 6.2.0.
 
+- `IgxList` - The list component has been refactored. It now includes several new supporting directives:
+    - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+    - `igxListAction` - Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+    - `igxListLine` - Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+    - `igxListLineTitle` - Use it to mark the target as list title which will be automatically formatted as a list-item title;
+    - `igxListLineSubTitle` - Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
+
+    ```html
+        <igx-list>
+            <igx-list-item [isHeader]="true">List items</igx-list-item>
+            <igx-list-item>
+              <igx-avatar igxListThumbnail></igx-avatar>
+              <h1 igxListLineTitle>List item title</h1>
+              <h3 igxListLineSubTitle>List item subtitle</h3>
+              <igx-icon igxListAction>info</igx-icon>
+            </igx-list-item>
+        </igx-list>
+
+        <igx-list>
+          <igx-list-item [isHeader]="true">List items</igx-list-item>
+          <igx-list-item>
+            <igx-avatar igxListThumbnail></igx-avatar>
+            <span igxListLine>Some content</span>
+            <igx-icon igxListAction>info</igx-icon>
+          </igx-list-item>
+        </igx-list>
+    ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
 
 ## 7.3.4
-
+- `IgxGrid` - summaries
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
 
@@ -42,6 +98,27 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - action buttons are now available in the dropdown mode.
     - **Feature** `IgxDatePickerComponent` now provides the ability for adding custom action buttons. Read up more information in the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/date-picker/README.md)
 
+- Excel-Style Filtering and Quick Filtering user interfaces now display the date picker's calendar in a dropdown.
+- `IgxCard` - The card component has been refactored. It now includes several new supporting components/directives:
+    - `igxCardHeaderTitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card title;
+    - `igxCardHeaderSubtitle` - tag your headings placed in the `igx-card-header` container to be displayed as a card subtitle;
+    - `igxCardThumbnail` - tag anything placed in the `igx-card-header` as a thumb to be placed to the left of your titles;
+    - `igx-card-header` - the card header can now detect and automatically position `igx-avatar`s placed in it;
+    - `igx-card-media` - wrap images or videos that will be automatically sized for you;
+    - `igx-card-actions` - the card actions can now detect and automatically position all `igxButton`s placed in it;
+    - The card has a new `type` property. It can be set to `outlined` to get the new outlined card look;
+    - The card has a new `horizontal` property. When set to true, the layout will become horizontally aligned;
+- New Directive `igx-divider` - The igx-divider is a thin, configurable line that groups content in lists and layouts.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevalance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+
 ### Bug Fixing
 - igx-input: Top of Japanese characters get cut off in Density Compact mode #4752
 - When no condition is provided, filter() method of grid throws undescriptive error #4897
@@ -65,7 +142,7 @@ All notable changes for each version of this project will be documented in this 
 - `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
     ```
-        @include igx-core($print-layout: false); 
+        @include igx-core($print-layout: false);
     ```
 
 - `Pager`
@@ -95,6 +172,11 @@ In order to turn them off, you need to pass an argument and set it to `false`
 - Group comparer is not taken into consideration when column is dragged to grouped area #4663
 
 ## 7.3.1
+`igx-core()` now includes some styles for printing layout. In order to turn them off, you need to pass an argument and set it to `false`
+
+```
+@include igx-core($print-layout: false);
+```
 - `IgxGrid` Custom keyboard navigation
     - `onFocusChange` event is deprecated.
     - `onGridKeydown` event is exposed which is emitted when `keydown` is triggered over element inside grid's body
@@ -139,7 +221,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - **Feature** Grid components now supports [Grid Row Dragging ](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Dragging). It lets users pass the data of a grid record on to another surface, which has been configured to process/render this data. It can be enabled by using the `rowDraggable` input of the grid.
 
     - **Feature** The Excel Style Filter dialog and its sub-dialogs now have a display density based on the `displayDensity` input of their respective grid.
-- `igxTreeGrid` 
+- `igxTreeGrid`
     - **Feature** The `IgxTreeGridComponent` now supports loading child rows on demand using the newly added `loadChildrenOnDemand` and `hasChildrenKey` input properties.
 - `IgxListComponent`
     - **Feature** The `IgxListComponent` now provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). It can be set by using the `displayDensity` input of the list.
@@ -185,6 +267,15 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ### New features
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ### Bug Fixes
 - In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562
@@ -223,9 +314,9 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ## 7.2.9
 `igx-core()` now includes some styles for printing layout.
 In order to turn them off, you need to pass an argument and set it to `false`
-  
+
 ```
- @include igx-core($print-layout: false); 
+ @include igx-core($print-layout: false);
 ```
 
 - `Pager`
@@ -243,7 +334,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
 - [igx-grid] some cells don't go into edit state or selected state when resizing window. #4746
 - igx-tree-grid when no data in grid pagination shows wrong #4666
 - ElasticPositionStrategy should resize shown element with Center/Middle directions #4564
-- ESF custom dialog new filter not fully visible #4639 
+- ESF custom dialog new filter not fully visible #4639
 - igx-grid: row virtualization doesn't work when setting height in percent if you fetch and bind data after initial rendering. #3949
 - Grid height is calculated wrongly as grid width narrows #4745
 - [igx-grid][IE11] filtering problems with IME mode. #4636

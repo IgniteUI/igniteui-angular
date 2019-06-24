@@ -164,19 +164,16 @@
 /// Generates CSS variables for a given palette.
 /// @access public
 /// @param {Map} $palette - The igx palette to use to generate css variables for.
-/// @param {string} $scope [null] - The scope of the generated css variables.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
-///   @include css-vars-from-palette($default-palette, ':root');
+///   @include css-vars-from-palette($default-palette);
 ///
 /// @requires {mixin} css-vars-from-palette
-@mixin igx-palette-vars($palette, $scope: null) {
-    @if $scope == null {
+@mixin igx-palette-vars($palette) {
+    $scope: if(is-root(), ':root', '&');
+
+    #{$scope} {
         @include css-vars-from-palette($palette);
-    } @else {
-        #{$scope} {
-            @include css-vars-from-palette($palette);
-        }
     }
 }
 
@@ -212,7 +209,7 @@
     $prefix: map-get($theme, 'name');
 
     @each $key, $value in $theme {
-        @if $key != 'name' and $key != 'palette' {
+        @if $key != 'name' and $key != 'palette' and type-of($value) != 'map' {
             --#{$prefix}-#{$key}: #{$value};
         }
     }
