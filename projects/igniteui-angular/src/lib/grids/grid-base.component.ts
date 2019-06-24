@@ -5413,7 +5413,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const columnindex = cell ? cell.column.index : -1;
+        const columnIndex = cell ? cell.column.index : -1;
         const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
@@ -5427,9 +5427,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.endRowTransaction(commit, row);
 
-        const currentCell = this.gridAPI.get_cell_by_index(ri, columnindex);
-        if (currentCell && event) {
-            currentCell.nativeElement.focus();
+        if (event) {
+            const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
+            if (currentCell) {
+                currentCell.nativeElement.focus();
+            } else {
+                //  if focus is on the row edit buttons the cell is null, there is not cell in edit mode
+                //  in this case we should use activeElement from selection service and focus it if there is one
+                const activeElement = this.gridAPI.grid.selectionService.activeElement;
+                if (activeElement) {
+                    const currentCellElement =
+                        this.gridAPI.grid.navigation.getCellElementByVisibleIndex(activeElement.row, activeElement.column);
+                    currentCellElement.focus();
+                }
+            }
         }
     }
     /**

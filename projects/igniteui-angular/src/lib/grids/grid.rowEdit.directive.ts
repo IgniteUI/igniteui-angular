@@ -26,6 +26,8 @@ export class IgxRowEditActionsDirective { }
     selector: `[igxRowEditTabStop]`
 })
 export class IgxRowEditTabStopDirective {
+    private currentCellIndex: number;
+
     private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
@@ -64,15 +66,15 @@ export class IgxRowEditTabStopDirective {
      */
     private move(event: KeyboardEvent) {
         event.preventDefault();
-        const cellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
+        this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         ////  this will not work if targetCell is null and we have multi row layout
         // const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === cellIndex);
         // const scrollIndex = this.grid.hasColumnLayouts ? targetCell.column.parent.visibleIndex : targetIndex;
-        if (!this.grid.navigation.isColumnFullyVisible(cellIndex)) {
+        if (!this.grid.navigation.isColumnFullyVisible(this.currentCellIndex)) {
             this.grid.navigation.performHorizontalScrollToCell(
-                this.grid.rowInEditMode.index, cellIndex, false, this.activateCell, { cellIndex, grid: this.grid });
+                this.grid.rowInEditMode.index, this.currentCellIndex, false, this.activateCell);
         } else {
-            this.activateCell({ cellIndex, grid: this.grid });
+            this.activateCell();
         }
     }
 
@@ -80,10 +82,10 @@ export class IgxRowEditTabStopDirective {
      * Sets the cell in edit mode and focus its native element
      * @param cellIndex index of the cell to activate
      */
-    private activateCell(params: { cellIndex: number, grid: IgxGridBaseComponent }): void {
-        const cell = params.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === params.cellIndex);
+    private activateCell = (): void => {
+        const cell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === this.currentCellIndex);
         cell.setEditMode(true);
         cell.nativeElement.focus();
+        this.currentCellIndex = -1;
     }
-
 }
