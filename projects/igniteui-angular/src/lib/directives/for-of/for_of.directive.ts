@@ -373,7 +373,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
             this._applyChanges();
-            this._updateScrollOffset();
             this.onDataChanged.emit();
         }
         const containerSize = 'igxForContainerSize';
