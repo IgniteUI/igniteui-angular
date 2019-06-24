@@ -73,7 +73,7 @@ export class DatePickerSampleComponent {
 
     public changeDate(event) {
         const input = event.target.value;
-        const parsedDate = (input !== '') ? new Date(input) : '';
+        const parsedDate = (input !== '') ? new Date(formatDate(input, this.retemplatedDP.format, this.retemplatedDP.locale)) : '';
         this.retemplatedDP.value = parsedDate;
     }
 
