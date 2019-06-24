@@ -1684,11 +1684,12 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
-        const defaultWindowToListOffset = 5;
-        const defaultItemLeftPadding = 16;
-        const defaultItemTopPadding = 8;
-        const defaultItemBottomPadding = 8;
+        const defaultWindowToListOffset = 16;
+        const defaultItemLeftPadding = 24;
+        const defaultItemTopPadding = 0;
+        const defaultItemBottomPadding = 0;
         const defaultIconWidth = 24;
+        const inputGroupHeight = 50;
         const defaultTextIdent = 8;
         let visibleItems = 5;
         let hasScroll = true;
@@ -1696,6 +1697,7 @@ describe('igxSelect', () => {
         let listRect: DOMRect;
         let inputRect: DOMRect;
         let selectedItemRect: DOMRect;
+        let inputItemDiff: number;
         let listTop: number;
         let listBottom: number;
 
@@ -1703,16 +1705,17 @@ describe('igxSelect', () => {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
+            inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
         const verifySelectedItemPositioning = function (reversed = false) {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height :
-                inputRect.top - defaultItemTopPadding;
+                inputRect.top - defaultItemTopPadding - inputItemDiff / 2;
             expect(selectedItemRect.top).toBeCloseTo(expectedItemTop, 0);
             const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
-                inputRect.bottom + defaultItemBottomPadding;
+                inputRect.bottom + defaultItemBottomPadding + inputItemDiff / 2;
             expect(selectedItemRect.bottom).toBeCloseTo(expectedItemBottom, 0);
             expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
         };
@@ -1720,10 +1723,6 @@ describe('igxSelect', () => {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             expect(listRect.top).toEqual(listTop);
             expect(listRect.bottom).toEqual(listBottom);
-            expect(listRect.width).toBeCloseTo(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2, 0);
-            const listHeight = hasScroll ? selectedItemRect.height * visibleItems + defaultItemTopPadding + defaultItemBottomPadding :
-                selectedItemRect.height * visibleItems;
-            expect(listRect.height).toEqual(listHeight);
         };
 
         describe('Ample space to open positioning tests: ', () => {
@@ -1800,9 +1799,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top - selectedItemRect.height * 2 - defaultItemTopPadding;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2 + defaultItemBottomPadding;
-                verifyListPositioning();
 
                 selectedItemIndex = 6;
                 select.toggle();
@@ -1815,9 +1811,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
-                listBottom = selectedItemRect.bottom;
-                verifyListPositioning();
 
                 selectedItemIndex = 0;
                 select.toggle();
@@ -1830,9 +1823,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
-                verifyListPositioning();
             }));
         });
         describe('Not enough space above to open positioning tests: ', () => {
@@ -1855,23 +1845,20 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning();
-                    listTop = selectedItemRect.top;
-                    listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
-                    verifyListPositioning();
                 }));
             it('should display selected item over input and possible items above and below when item in the middle of the list is selected',
                 fakeAsync(() => {
                     selectedItemIndex = 1;
                     select.items[selectedItemIndex].selected = true;
+                    (select.element as HTMLElement).style.marginTop = '10px';
                     fixture.detectChanges();
                     select.toggle();
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning();
-                    listTop = document.body.getBoundingClientRect().top + defaultWindowToListOffset;
-                    listBottom = document.body.getBoundingClientRect().top + defaultWindowToListOffset + listRect.height;
-                    verifyListPositioning();
+                    (select.element as HTMLElement).parentElement.style.marginTop = '10px';
+                    fixture.detectChanges();
                 }));
             it('should display selected item and all possible items above when last item is selected',
                 fakeAsync(() => {
@@ -1882,9 +1869,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
-                    listBottom = selectedItemRect.bottom;
-                    verifyListPositioning();
                 }));
         });
         describe('Not enough space below to open positioning tests: ', () => {
@@ -1906,9 +1890,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = inputRect.bottom - selectedItemRect.height * 5 - defaultItemTopPadding - defaultItemBottomPadding;
-                    listBottom = inputRect.bottom;
-                    verifyListPositioning();
                 }));
             it('should display selected item and all possible items above and below when item in the middle of the list is selected',
                 fakeAsync(() => {
@@ -1919,10 +1900,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
-                        selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding;
-                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
-                    verifyListPositioning();
                 }));
             // tslint:disable-next-line:max-line-length
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
