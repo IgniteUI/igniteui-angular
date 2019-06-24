@@ -9,7 +9,8 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    TemplateRef} from '@angular/core';
+    TemplateRef
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
@@ -91,6 +92,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return !this.fromHandler && this._isActiveLabel;
     }
 
+
+    @HostBinding('class.igx-slider__thumb--pressed')
+    public get thumbPressedClass() {
+        return this.isActive && this._isActiveLabel;
+    }
+
     public get nativeElement() {
         return this._elementRef.nativeElement;
     }
@@ -105,7 +112,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this._destroy$;
     }
 
-    constructor (private _elementRef: ElementRef) { }
+    constructor(private _elementRef: ElementRef) { }
 
     /**
      * @hidden

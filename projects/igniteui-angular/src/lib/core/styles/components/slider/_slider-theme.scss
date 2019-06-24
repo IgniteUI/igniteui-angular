@@ -252,7 +252,7 @@
         }
 
         &::after {
-            background: --var($theme, 'disabled-thumb-color');
+            transform: scale(0);
         }
     }
 
@@ -260,7 +260,9 @@
         &::before {
             border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
         }
+    }
 
+    %igx-thumb-dot--pressed {
         &::after {
             opacity: .24 !important;
             /* 48 / 40 */
