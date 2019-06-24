@@ -3,6 +3,9 @@
 All notable changes for each version of this project will be documented in this file.
 ## 8.0.1
 
+- **General**
+    - Importing ES7 polyfill for Object (`'core-js/es7/object'`) for IE is no longer required.
+
 ### New Features
 - `IgxDropDown` now supports `DisplayDensity`.
     - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)

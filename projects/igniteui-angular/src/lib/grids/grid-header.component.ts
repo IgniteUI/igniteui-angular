@@ -69,11 +69,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'igx-grid__th--sorted': this.sorted
         };
 
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
+        for (const klass of Object.keys(classList)) {
+            if (classList[klass]) {
                 defaultClasses.push(klass);
             }
-        });
+        }
         return defaultClasses.join(' ');
     }
 
