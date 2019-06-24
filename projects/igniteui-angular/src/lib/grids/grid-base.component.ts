@@ -5413,11 +5413,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const columnIndex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
+
+        const columnIndex = cell ? cell.column.index : -1;
+        const ri = row ? row.index : -1;
 
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
@@ -5428,16 +5429,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.endRowTransaction(commit, row);
 
         if (event) {
-            const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-            if (currentCell) {
+            if (cell) {
+                const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
                 currentCell.nativeElement.focus();
             } else {
-                //  if focus is on the row edit buttons the cell is null, there is not cell in edit mode
-                //  in this case we should use activeElement from selection service and focus it if there is one
-                const activeElement = this.gridAPI.grid.selectionService.activeElement;
-                if (activeElement) {
-                    const currentCellElement =
-                        this.gridAPI.grid.navigation.getCellElementByVisibleIndex(activeElement.row, activeElement.column);
+                // when there's no cell in edit mode (focus is on the row edit buttons), use last active
+                const node = this.gridAPI.grid.selectionService.activeElement;
+                if (node) {
+                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(node.row, node.column);
                     currentCellElement.focus();
                 }
             }
