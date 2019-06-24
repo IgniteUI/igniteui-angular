@@ -251,20 +251,24 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      * @internal
      */
-    protected get scrollPosition(): number {
-        return this._scrollPosition;
+    public get scrollPosition(): number {
+        return this.getScrollPosition();
     }
     /**
      * @hidden
      * @internal
      */
-    protected set scrollPosition(val: number) {
+    public set scrollPosition(val: number) {
         this._scrollPosition = val;
         if (this.igxForScrollOrientation === 'horizontal' && this.hScroll) {
             this.hScroll.scrollLeft = val;
         } else if (this.vh) {
             this.vh.instance.elementRef.nativeElement.scrollTop = val;
         }
+    }
+
+    public getScrollPosition(): number {
+        return this._scrollPosition;
     }
 
     /**
@@ -1095,8 +1099,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
+        const virt = this.dc.instance.notVirtual;
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
-        if (this.dc.instance.notVirtual) {
+        if (virt !== this.dc.instance.notVirtual) {
             this._scrollPosition = 0;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
@@ -1320,10 +1325,18 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @internal
      */
     protected cacheScrollPosition(scroll) {
-        if (this.syncService.isMaster) {
-            this._scrollPosition = this.igxForScrollOrientation === 'horizontal' ?
-                scroll.scrollLeft : scroll.scrollTop;
+        if (this.syncService.isMaster(this)) {
+            super.cacheScrollPosition(scroll);
+        } else {
+            this._scrollPosition = this.syncService.scrollPosition(this.igxForScrollOrientation);
         }
+    }
+
+    public getScrollPosition(): number {
+        if (this.syncService.isMaster(this)) {
+            return this._scrollPosition;
+        }
+        return this.syncService.scrollPosition(this.igxForScrollOrientation);
     }
 
     protected getItemSize(item) {
