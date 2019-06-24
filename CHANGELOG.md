@@ -129,6 +129,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+- `IgxTransactionService` commit and delete transaction by id - `commit` and `clear` methods of `IgxTransactionService` accept now optional `id` parameter. If `id` is provided to `commit` method only transactions for provided `id`. When `id` is provided to `clear` method all transactions for provided `id` will be removed from transactions log. Additionally both `commit` and `clear` when `id` is provided will remove all the actions in undo stack related to the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834
