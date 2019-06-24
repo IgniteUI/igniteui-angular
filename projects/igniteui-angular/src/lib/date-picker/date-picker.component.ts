@@ -533,8 +533,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public isSpinLoop = true;
 
     /**
-    *@hidden
-    */
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
@@ -641,12 +649,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         */
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
-
-    /**
-    * @hidden
-    */
-    @ViewChild('datePickerOutlet', { read: ElementRef })
-    public outletDirective: ElementRef;
 
     /*
      * @hidden
@@ -814,19 +816,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             closeAnimation: fadeOut
         };
 
-        const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
         this._dropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings),
-            outlet: outlet
+            outlet: this.outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
-            outlet: outlet
+            outlet: this.outlet
         };
 
         this._overlayService.onOpening.pipe(

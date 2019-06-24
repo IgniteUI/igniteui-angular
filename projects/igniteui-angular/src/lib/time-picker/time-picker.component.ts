@@ -345,7 +345,15 @@ export class IgxTimePickerComponent implements
     public mode = InteractionMode.Dialog;
 
     /**
-     *@hidden
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-time-picker [outlet]="outlet"></igx-time-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
@@ -1088,7 +1096,7 @@ export class IgxTimePickerComponent implements
         }
         date.setSeconds(0);
         if (((this.showHoursList && this.selectedHour !== '12') || (!this.showHoursList && this.selectedHour <= '11')) &&
-                this.selectedAmPm === 'PM') {
+            this.selectedAmPm === 'PM') {
             date.setHours(date.getHours() + 12);
         }
         if (!this.showHoursList && this.selectedAmPm === 'AM' && this.selectedHour > '11') {
@@ -1121,8 +1129,8 @@ export class IgxTimePickerComponent implements
             amPM = sections[sections.length - 1];
 
             if (((this.showHoursList && date.getHours().toString() !== '12') ||
-                    (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
-                        date.setHours(date.getHours() + 12);
+                (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
+                date.setHours(date.getHours() + 12);
             }
 
             if (!this.showHoursList && amPM === 'AM' && date.getHours().toString() > '11') {
@@ -1762,18 +1770,18 @@ export class IgxTimePickerComponent implements
 
             if (this.showMinutesList &&
                 ((this.showHoursList && MINUTES_POS.indexOf(cursor) !== -1) || (!this.showHoursList && HOURS_POS.indexOf(cursor) !== -1))) {
-                    this.value = this._spinMinutes(currentVal, mDelta, sign);
+                this.value = this._spinMinutes(currentVal, mDelta, sign);
             }
 
             if (this.showAmPmList) {
                 if (((!this.showHoursList || !this.showMinutesList) && MINUTES_POS.indexOf(cursor) !== -1) ||
-                    (this.showHoursList && this.showMinutesList &&  AMPM_POS.indexOf(cursor) !== -1)) {
+                    (this.showHoursList && this.showMinutesList && AMPM_POS.indexOf(cursor) !== -1)) {
 
-                        const sections = this.displayValue.split(/[\s:]+/);
-                        sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
-                        currentVal.setHours(currentVal.getHours() + (sign * 12));
+                    const sections = this.displayValue.split(/[\s:]+/);
+                    sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
+                    currentVal.setHours(currentVal.getHours() + (sign * 12));
 
-                        this.value = currentVal;
+                    this.value = currentVal;
                 }
             }
 
