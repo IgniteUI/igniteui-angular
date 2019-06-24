@@ -24,6 +24,9 @@
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
 ///
+/// @param {border-radius} border-radius-track [null] - The border radius used for switch track.
+/// @param {border-radius} border-radius-thumb [null] - The border radius used for switch thumb.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -53,12 +56,22 @@
 
     $resting-shadow: null,
     $hover-shadow: null,
-    $disabled-shadow: null
+    $disabled-shadow: null,
+
+    $border-radius-track: null,
+    $border-radius-thumb: null
 ) {
     $name: 'igx-switch';
     $switch-schema: map-get($schema, $name);
-
     $theme: apply-palette($switch-schema, $palette);
+
+    $border-radius-track: round-borders(
+        if($border-radius-track, $border-radius-track, map-get($switch-schema, 'border-radius-track')), 0, 7px
+    );
+
+    $border-radius-thumb: round-borders(
+        if($border-radius-thumb, $border-radius-thumb, map-get($switch-schema, 'border-radius-thumb')), 0, 10px
+    );
 
     @if not($resting-shadow) {
         $resting-elevation: map-get($switch-schema, 'resting-elevation');
@@ -94,6 +107,9 @@
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
         disabled-shadow: $disabled-shadow,
+
+        border-radius-track:$border-radius-track,
+        border-radius-thumb:$border-radius-thumb
     ));
 }
 
@@ -110,14 +126,10 @@
 /// @requires --var
 @mixin igx-switch($theme) {
     @include igx-root-css-vars($theme);
-
     @include scale-in-out($start-scale: .9);
-
-    // @debug $theme;
 
     $switch-width: 36px ;
     $switch-height: 14px ;
-    $switch-radius: 100px ;
 
     $switch-thumb-width: 20px ;
     $switch-thumb-height: $switch-thumb-width ;
@@ -155,7 +167,7 @@
         align-items: center;
         width: $switch-width;
         height: $switch-height;
-        border-radius: $switch-radius;
+        border-radius: --var($theme, 'border-radius-track');
         background: --var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
@@ -176,7 +188,7 @@
         width: $switch-thumb-width;
         height: $switch-thumb-height;
         min-width: $switch-thumb-width;
-        border-radius: 50%;
+        border-radius: --var($theme, 'border-radius-thumb');
         background: --var($theme, 'thumb-off-color');
         box-shadow: --var($theme, 'resting-shadow');
         transition: $input-transition;
@@ -208,7 +220,6 @@
         left: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
-        border-radius: $ripple-radius;
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);

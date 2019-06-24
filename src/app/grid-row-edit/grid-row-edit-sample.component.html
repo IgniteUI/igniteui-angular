@@ -95,7 +95,7 @@
                     (onRowEditCancel)="rowEditCancel($event)" (onRowEditEnter)="rowEditEnter($event)"
                     (onCellEditEnter)="cellEnterEditMode($event)" (onCellEdit)="cellEditDone($event)"
                     (onCellEditCancel)="cellEditCancel($event)">
-                    <igx-column width="100px" [editable]="false">
+                    <igx-column width="100px" [editable]="false" [groupable]="true">
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
