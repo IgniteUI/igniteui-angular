@@ -88,6 +88,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -100,11 +101,6 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
-
-export let onFocusChangeWarningShown = false;
-export function setOnFocusChangeWarningShown(val: boolean) {
-    onFocusChangeWarningShown = val;
-}
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -1495,7 +1491,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @deprecated you should use onGridKeydown event
      */
     @Output()
-    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
+    public get onFocusChange(): EventEmitter<IFocusChangeEventArgs> {
+        return this._onFocusChange;
+    }
+
+    public set onFocusChange(val: EventEmitter<IFocusChangeEventArgs>) {
+        this._onFocusChange = val;
+    }
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
@@ -2538,6 +2541,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
 
     protected _defaultTargetRecordNumber = 10;
+    protected _onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;

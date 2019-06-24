@@ -56,11 +56,9 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { showMessage } from '../core/deprecateDecorators';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
-let onOpenWarningShown = false;
-let onCloseWarningShown = false;
 
 /**
  * This interface is used to provide information about date picker reference and its current value
@@ -553,8 +551,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
+    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
-    public onOpen = new EventEmitter<IgxDatePickerComponent>();
+    public get onOpen(): EventEmitter<IgxDatePickerComponent> {
+        return this._onOpen;
+    }
+
+    public set onOpen(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onOpen = val;
+    }
 
     /**
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
@@ -574,8 +579,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *<igx-date-picker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
      */
+    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
-    public onClose = new EventEmitter<IgxDatePickerComponent>();
+    public get onClose(): EventEmitter<IgxDatePickerComponent> {
+        return this._onClose;
+    }
+
+    public set onClose(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onClose = val;
+    }
 
     /**
      *An event that is emitted after the `IgxDatePickerComponent` is closed.
@@ -735,6 +747,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _defaultDropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
+    private _onOpen = new EventEmitter<IgxDatePickerComponent>();
+    private _onClose = new EventEmitter<IgxDatePickerComponent>();
 
     /**
     * @hidden
@@ -1180,9 +1194,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._onTouchedCallback();
         this.onOpened.emit(this);
 
-        // TODO: remove these two lines after deprecating 'onOpen'
-        onOpenWarningShown = showMessage(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`, onOpenWarningShown);
-        this.onOpen.emit(this);
+        // TODO: remove this line after deprecating 'onOpen'
+        this._onOpen.emit(this);
 
         if (this.calendar) {
             this._focusCalendarDate();
@@ -1194,8 +1207,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._componentID = null;
         this.onClosed.emit(this);
 
-        // TODO: remove these two lines after deprecating 'onClose'
-        onCloseWarningShown = showMessage(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`, onCloseWarningShown);
+        // TODO: remove this line after deprecating 'onClose'
         this.onClose.emit(this);
 
         if (this.getEditElement()) {

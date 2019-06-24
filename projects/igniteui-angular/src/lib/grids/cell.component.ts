@@ -20,7 +20,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable, setOnFocusChangeWarningShown, onFocusChangeWarningShown } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 
@@ -893,10 +893,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // TODO: to be deleted when onFocusChange event is removed #4054
-        setOnFocusChangeWarningShown(
-            showMessage(`'onFocusChange' @Output property is deprecated. Use 'onGridKeydown' instead.`, onFocusChangeWarningShown));
         const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid.onFocusChange.emit(args);
+        this.grid._onFocusChange.emit(args);
         if (args.cancel) {
             return;
         }
