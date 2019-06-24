@@ -1,3 +1,4 @@
+@import '../shape/banner';
 ////
 /// @group schemas
 /// @access private
@@ -13,7 +14,7 @@
 /// @property {Map} banner-illustration-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The color used banner illustration.
 /// @see $default-palette
 
-$_light-banner: (
+$_light-banner: extend((
     banner-background: (
         igx-color: 'surface'
     ),
@@ -33,4 +34,4 @@ $_light-banner: (
         text-contrast: (),
         rgba: .87
     )
-);
+),$_default-shape-banner);

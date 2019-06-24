@@ -68,12 +68,13 @@ export class IgxRowEditTabStopDirective {
         const horizontalScroll = this.grid.parentVirtDir.getHorizontalScroll();
         const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
+        const scrollIndex = this.grid.hasColumnLayouts ? targetCell.column.parent.visibleIndex : targetIndex;
         if (!targetCell ||
-            !this.navigationService.isColumnFullyVisible(targetIndex)
-            || !this.navigationService.isColumnLeftFullyVisible(targetIndex)) {
+            !this.navigationService.isColumnFullyVisible(scrollIndex)
+            || !this.navigationService.isColumnLeftFullyVisible(scrollIndex)) {
             this.focusNextCell(this.grid.rowInEditMode.index, targetIndex);
             horizontalScroll.scrollLeft =
-            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(targetIndex));
+            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(scrollIndex));
         } else {
             targetCell.nativeElement.focus();
         }

@@ -24,9 +24,9 @@ export class OverlayAnimationSampleComponent {
         closeOnOutsideClick: true
     };
 
-    @ViewChild('audiToggle') public audiToggle: IgxToggleDirective;
-    @ViewChild('bmwToggle') public bmwToggle: IgxToggleDirective;
-    @ViewChild('mercedesToggle') public mercedesToggle: IgxToggleDirective;
+    @ViewChild('audiToggle', { static: true }) public audiToggle: IgxToggleDirective;
+    @ViewChild('bmwToggle', { static: true }) public bmwToggle: IgxToggleDirective;
+    @ViewChild('mercedesToggle', { static: true }) public mercedesToggle: IgxToggleDirective;
 
     public mouseenter(ev) {
         const openAnimationMetaData: AnimationMetadata[] = [

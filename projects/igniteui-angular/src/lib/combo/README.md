@@ -233,6 +233,10 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
+## Display Density
+**igx-combo** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
 
 ## API
 

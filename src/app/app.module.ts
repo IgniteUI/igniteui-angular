@@ -66,6 +66,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
@@ -93,6 +94,8 @@ import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample'
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
+import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+
 
 
 
@@ -113,6 +116,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DisplayDensityDropDownComponent,
     DropDownVirtualComponent,
     DragDropSampleComponent,
     ComboSampleComponent,
@@ -157,6 +161,7 @@ const components = [
     GridColumnGroupsSampleComponent,
     GridMRLSampleComponent,
     GridMRLConfigSampleComponent,
+    GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,

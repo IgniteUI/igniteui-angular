@@ -67,16 +67,16 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
-    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
+    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent, static: true })
     protected inputGroupConditions: IgxInputGroupComponent;
 
-    @ViewChild('inputValues', { read: IgxInputDirective })
+    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
     protected inputValuesDirective: IgxInputDirective;
 
-    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
+    @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })
     protected dropdownConditions: IgxDropDownComponent;
 
-    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent, static: false })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
     protected get inputValuesElement() {
@@ -164,14 +164,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.expressionUI.expression.condition = this.getCondition(value);
 
         this.focus();
-    }
-
-    public isValueSelected(value: string): boolean {
-        if (this.expressionUI.expression.searchVal) {
-            return this.expressionUI.expression.searchVal === value;
-        } else {
-            return false;
-        }
     }
 
     public onValuesInput(eventArgs) {

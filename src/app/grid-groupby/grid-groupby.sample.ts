@@ -13,7 +13,7 @@ import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'pro
     templateUrl: 'grid-groupby.sample.html'
 })
 export class GridGroupBySampleComponent implements OnInit {
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
     public hideGroupedColumns = false;
     public columns: Array<any>;

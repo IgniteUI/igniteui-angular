@@ -3,7 +3,6 @@ import {
     AfterViewInit, Component, ElementRef, EventEmitter,
     HostBinding, Input, NgModule, OnInit, Output, Renderer2,
     ViewChild,
-    Directive,
     TemplateRef,
     ContentChild,
     AfterContentInit,
@@ -15,67 +14,17 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IgxSliderThumbModule, IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject, merge, concat } from 'rxjs';
+import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
+import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SliderHandle,
+    IgxThumbFromTemplateDirective,
+    IgxThumbToTemplateDirective,
+    IRangeSliderValue,
+    SliderType,
+    ISliderValueChangeEventArgs
+} from './slider.common';
 
-/**
- * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
- *
- *```html
- * <igx-slider>
- *  <ng-template igxSliderThumbFrom let-value let-labels>{{value}}</ng-template>
- * </igx-slider>
- * ```
- *
- * @context {@link IgxSliderComponent.context}
- */
-@Directive({
-    selector: '[igxSliderThumbFrom]'
-})
-export class IgxThumbFromTemplateDirective {}
-
-/**
- * Template directive that allows you to set a custom template representing the upper label value of the {@link IgxSliderComponent}
- *
- * ```html
- * <igx-slider>
- *  <ng-template igxSliderThumbTo let-value let-labels>{{value}}</ng-template>
- * </igx-slider>
- * ```
- *
- * @context {@link IgxSliderComponent.context}
- */
-@Directive({
-    selector: '[igxSliderThumbTo]'
-})
-export class IgxThumbToTemplateDirective {}
-
-export enum SliderType {
-    /**
-     * Slider with single thumb.
-     */
-    SLIDER,
-    /**
-     *  Range slider with multiple thumbs, that can mark the range.
-     */
-    RANGE
-}
-
-export enum SliderHandle {
-    FROM,
-    TO
-}
-
-export interface IRangeSliderValue {
-    lower: number;
-    upper: number;
-}
-
-export interface ISliderValueChangeEventArgs {
-    oldValue: number | IRangeSliderValue;
-    value: number | IRangeSliderValue;
-}
 
 const noop = () => {
 };
@@ -142,13 +91,13 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @ViewChild('track')
+    @ViewChild('track', { static: true })
     private track: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ticks')
+    @ViewChild('ticks', { static: true })
     private ticks: ElementRef;
 
     /**
@@ -178,13 +127,13 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef })
+    @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef, static: false })
     public thumbFromTemplateRef: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef })
+    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef, static: true })
     public thumbToTemplateRef: TemplateRef<any>;
 
     /**
@@ -554,15 +503,14 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set lowerBound(value: number) {
-        if (value >= this.upperBound) {
-            this._lowerBound = this.minValue;
+        if (value >= this.upperBound || (this.labelsViewEnabled && value < 0)) {
             return;
         }
 
         this._lowerBound = this.valueInRange(value, this.minValue, this.maxValue);
 
         // Refresh time travel zone.
-        this._pMin = 0;
+        this._pMin = this.valueToFraction(this._lowerBound) || 0;
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -593,14 +541,13 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set upperBound(value: number) {
-        if (value <= this.lowerBound) {
-            this._upperBound = this.maxValue;
+        if (value <= this.lowerBound || (this.labelsViewEnabled && value > this.labels.length - 1)) {
             return;
         }
 
         this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
         // Refresh time travel zone.
-        this._pMax = 1;
+        this._pMax = this.valueToFraction(this._upperBound) || 1;
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -862,8 +809,8 @@ export class IgxSliderComponent implements
      * let labelView = this.slider.labelsViewEnabled;
      *```
      */
-    public get labelsViewEnabled() {
-        return this.labels && this.labels.length > 1;
+    public get labelsViewEnabled(): boolean {
+        return !!(this.labels && this.labels.length > 1);
     }
 
     /**
@@ -1240,9 +1187,9 @@ export class IgxSliderComponent implements
  * @hidden
  */
 @NgModule({
-    declarations: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective],
-    exports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective],
-    imports: [CommonModule, IgxSliderThumbModule]
+    declarations: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IgxSliderThumbComponent],
+    exports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IgxSliderThumbComponent],
+    imports: [CommonModule]
 })
 export class IgxSliderModule {
 }

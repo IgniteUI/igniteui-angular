@@ -61,7 +61,7 @@
                 <input #input
                        igxInput
                        tabindex="0"
-                       (click)="openDatePicker(openDialog)"
+                       (click)="expression.condition.isUnary ? noop() : openDialog(dropDownTarget.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
                        [value]="value | igxdate: filteringService.grid.locale"

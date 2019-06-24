@@ -86,7 +86,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownHiding = this.grid.toolbar.columnHidingDropdown;
      * ```
      */
-    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
+    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent, static: false })
     public columnHidingDropdown: IgxDropDownComponent;
 
     /**
@@ -95,7 +95,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingUI = this.grid.toolbar.columnHidingUI;
      * ```
      */
-    @ViewChild(IgxColumnHidingComponent)
+    @ViewChild(IgxColumnHidingComponent, { static: false })
     public columnHidingUI: IgxColumnHidingComponent;
 
     /**
@@ -104,7 +104,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingButton = this.grid.toolbar.columnHidingButton;
      * ```
      */
-    @ViewChild('columnHidingButton')
+    @ViewChild('columnHidingButton', { static: false })
     public columnHidingButton;
 
     /**
@@ -113,7 +113,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportDropdown = this.grid.toolbar.exportDropdown;
      * ```
      */
-    @ViewChild('exportDropdown', { read: IgxDropDownComponent })
+    @ViewChild('exportDropdown', { read: IgxDropDownComponent, static: false })
     public exportDropdown: IgxDropDownComponent;
 
     /**
@@ -122,7 +122,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportBtn = this.grid.toolbar.exportButton;
      * ```
      */
-    @ViewChild('btnExport')
+    @ViewChild('btnExport', { static: false })
     public exportButton;
 
     /**
@@ -131,7 +131,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownPinning = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent, static: false })
     public columnPinningDropdown: IgxDropDownComponent;
 
     /**
@@ -140,7 +140,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningUI = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild(IgxColumnPinningComponent)
+    @ViewChild(IgxColumnPinningComponent, { static: false })
     public columnPinningUI: IgxColumnPinningComponent;
 
     /**
@@ -149,7 +149,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningButton = this.grid.toolbar.columnPinningButton;
      * ```
      */
-    @ViewChild('columnPinningButton')
+    @ViewChild('columnPinningButton', { static: false })
     public columnPinningButton;
 
     /**

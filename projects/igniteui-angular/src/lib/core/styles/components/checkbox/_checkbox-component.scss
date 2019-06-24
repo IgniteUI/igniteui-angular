@@ -40,6 +40,10 @@
         @extend %cbx-label-pos--before !optional;
     }
 
+    @include e(composite-wrapper) {
+        @extend %cbx-composite-wrapper !optional;
+    }
+
     @include e(composite) {
         @extend %cbx-composite !optional;
     }
