@@ -297,6 +297,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         if (this.parentIsland) {
             this.getGridsForIsland(this.key).forEach(grid => {
                 this.cleanGridState(grid);
+                grid.hgridAPI.unsetChildRowIsland(this);
             });
             this.parentIsland.rowIslandAPI.unsetChildRowIsland(this);
         } else {
