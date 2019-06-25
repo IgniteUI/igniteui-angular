@@ -1515,16 +1515,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
     /**
-    * Emitted when start dragging a row.
-    * Return the dragged row.
-   */
+     * Emitted when start dragging a row.
+     * Return the dragged row.
+     */
     @Output()
     public onRowDragStart = new EventEmitter<IRowDragStartEventArgs>();
 
     /**
      * Emitted when dropping a row.
      * Return the dropped row.
-    */
+     */
     @Output()
     public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
@@ -1719,8 +1719,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
     /**
- * @hidden
- */
+     * @hidden
+     */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
     public verticalScroll: IgxGridForOfDirective<any>;
 
