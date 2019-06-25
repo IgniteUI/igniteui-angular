@@ -70,10 +70,15 @@ The ***igx-drop-down-item-group*** component can be used inside of the ***igx-dr
 
 ***NOTE:*** The ***igx-drop-down-item-group*** tag can be used for grouping of ***igx-drop-down-item*** only an will forfeit any other content passed to it. 
 
-### API Summary
+## Display Density
+**igx-drop-down** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' css properties, most notably heights, padding, font-size.
+
+# API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
 
-#### Inputs
+## Inputs
 The following inputs are available in the **igx-drop-down** component:
 
 | Name | Type | Description |
@@ -86,7 +91,7 @@ The following inputs are available in the **igx-drop-down** component:
 
 <div class="divider--half"></div>
 
-#### Outputs
+## Outputs
 The following outputs are available in the **igx-drop-down** component:
 
 | Name | Cancelable | Description | Parameters
@@ -97,7 +102,7 @@ The following outputs are available in the **igx-drop-down** component:
 | `onClosing` | true | Emitted before the dropdown is closed. |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
-#### Methods
+## Methods
 The following methods are available in the **igx-drop-down** component:
 
 | Signature | Description |
@@ -107,7 +112,7 @@ The following methods are available in the **igx-drop-down** component:
 | `open()` | Opens the dropdown. |
 | `close()` | Closes the dropdown. |
 
-#### Getters
+## Getters
 The following getters are available on the **igx-drop-down** component:
 
 | Name | Type | Description |
@@ -121,7 +126,7 @@ The following getters are available on the **igx-drop-down** component:
 
 The following table summarizes some of the useful **igx-drop-down-item** component inputs, outputs and methods.
 
-#### Inputs
+## Inputs
 The following inputs are available in the **igx-drop-down-item** component:
 
 | Name | Type | Description |
@@ -133,7 +138,7 @@ The following inputs are available in the **igx-drop-down-item** component:
 | `focused` | boolean| Defines if the given item is focused. |
 | `value` | any | The value of the drop-down item. |
 
-#### Getters
+## Getters
 The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |

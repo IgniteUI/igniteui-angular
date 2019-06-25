@@ -554,15 +554,14 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set lowerBound(value: number) {
-        if (value >= this.upperBound) {
-            this._lowerBound = this.minValue;
+        if (value >= this.upperBound || (this.labelsViewEnabled && value < 0)) {
             return;
         }
 
         this._lowerBound = this.valueInRange(value, this.minValue, this.maxValue);
 
         // Refresh time travel zone.
-        this._pMin = 0;
+        this._pMin = this.valueToFraction(this._lowerBound) || 0;
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -593,14 +592,13 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set upperBound(value: number) {
-        if (value <= this.lowerBound) {
-            this._upperBound = this.maxValue;
+        if (value <= this.lowerBound || (this.labelsViewEnabled && value > this.labels.length - 1)) {
             return;
         }
 
         this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
         // Refresh time travel zone.
-        this._pMax = 1;
+        this._pMax = this.valueToFraction(this._upperBound) || 1;
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -862,8 +860,8 @@ export class IgxSliderComponent implements
      * let labelView = this.slider.labelsViewEnabled;
      *```
      */
-    public get labelsViewEnabled() {
-        return this.labels && this.labels.length > 1;
+    public get labelsViewEnabled(): boolean {
+        return !!(this.labels && this.labels.length > 1);
     }
 
     /**
