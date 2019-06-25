@@ -31,6 +31,17 @@ All notable changes for each version of this project will be documented in this 
         </igx-list>
     ```
 
+### New Features
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+
 ## 7.3.4
 - `IgxGrid` - summaries
     - `clearSummaryCache()` and `recalculateSummaries()` methods are now removed from the IgxGrid API, beacause they are no longer needed; summaries are updated when some change is perform and the summary cache is cleared automatically when needed;
@@ -118,6 +129,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+- `IgxTransactionService` commit and delete transaction by id - `commit` and `clear` methods of `IgxTransactionService` accept now optional `id` parameter. If `id` is provided to `commit` method only transactions for provided `id`. When `id` is provided to `clear` method all transactions for provided `id` will be removed from transactions log. Additionally both `commit` and `clear` when `id` is provided will remove all the actions in undo stack related to the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834
@@ -202,6 +214,15 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ### New features
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ### Bug Fixes
 - In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562
