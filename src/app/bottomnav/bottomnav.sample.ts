@@ -11,9 +11,8 @@ import { AfterViewInit,
     templateUrl: 'bottomnav.sample.html'
 })
 export class BottomNavSampleComponent implements AfterViewInit {
-
     @ViewChildren('tabbarEl')
-    tabbar: QueryList<ElementRef>;
+    private tabbar: QueryList<ElementRef>;
 
     options = {};
 
@@ -72,7 +71,7 @@ export class BottomNavSampleComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.tabbar.map((e) => {
-            menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
+            const menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
             this.renderer.setStyle(menubar, 'position', 'absolute');
         });
     }

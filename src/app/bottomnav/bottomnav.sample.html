@@ -1,6 +1,7 @@
 <div class="sample-wrapper">
-    <app-page-header title="Tabbar">
-        Allows the user to navigate between different content displayed in one view. Supports 3 to 5 panels identified with an icon
+    <app-page-header title="Bottom Navigation">
+        Allows the user to navigate between different content displayed in one view. Supports 3 to 5 panels identified
+        with an icon
         and/or text.
     </app-page-header>
     <div class="sample-content">
@@ -10,35 +11,48 @@
                     <igx-tab-panel icon="phone">
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
-                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
-                                        <p igxListLineTitle>{{contact.text}}</p>
-                                        <span igxListLineSubTitle>{{contact.phone}}</span>
-                                    <igx-icon igxListAction>phone</igx-icon>
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
+                                *ngFor="let contact of contacts">
+                                <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                <p igxListLineTitle>{{contact.text}}</p>
+                                <span igxListLineSubTitle>{{contact.phone}}</span>
+                                <igx-icon igxListAction>phone</igx-icon>
                             </igx-list-item>
                         </igx-list>
                     </igx-tab-panel>
                     <igx-tab-panel icon="supervisor_account">
                         <div class="tab-content">
                             <h3>Tab 2 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
+                                ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
+                                lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
+                                lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
+                                a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
+                                diam.
                                 Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
                         </div>
                     </igx-tab-panel>
                     <igx-tab-panel icon="format_list_bulleted">
                         <div class="tab-content">
                             <h3>Tab 3 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
+                                ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
+                                lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
+                                lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
+                                a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
+                                diam.
                                 Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
                         </div>
                     </igx-tab-panel>
@@ -53,12 +67,18 @@
                     <igx-tab-panel label="Movies" icon="local_movies">
                         <div class="tab-content">
                             <h3>Tab 1 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula. Donec
-                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
-                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
-                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id lacus
-                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
-                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
+                                ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
+                                lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
+                                lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
+                                a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
+                                diam.
                                 Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
                         </div>
                     </igx-tab-panel>
@@ -66,13 +86,20 @@
                     <igx-tab-panel label="favorite" icon="favorite">
                         <div class="tab-content">
                             <h3>Tab 2 Content</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio. Praesent
-                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus cursus
-                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum, pharetra
-                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper nunc.
-                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum, libero
-                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In hendrerit,
-                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis leo.
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio.
+                                Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus
+                                cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum,
+                                pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper
+                                nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum,
+                                libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In
+                                hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis
+                                leo.
                                 Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
                         </div>
                     </igx-tab-panel>
@@ -90,7 +117,6 @@
                                 volutpat. Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. </p>
                         </div>
                     </igx-tab-panel>
-
                 </igx-bottom-nav>
             </div>
         </article>
