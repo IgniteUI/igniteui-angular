@@ -666,6 +666,23 @@
     subgroup encapsulates children of each
     thead item and group.
     */
+    %grid-thead-item {
+        display: flex;
+        flex-flow: column nowrap;
+
+        %grid-thead-title {
+            flex: 0 0 auto;
+        }
+
+        %grid-thead-group {
+            flex: 1 1 auto;
+        }
+
+        %grid-cell-header {
+            flex: 1 1 auto;
+        }
+    }
+
     %grid-thead-item,
     %grid-thead-subgroup {
         position: relative;
@@ -1146,6 +1163,7 @@
         font-size: $grid-head-fs;
         font-weight: $grid-head-fw;
         min-width: 0;
+        height: auto;
         padding: map-get($grid-header-padding, 'comfortable');
         border-right: $grid-header-border;
         outline-style: none;
