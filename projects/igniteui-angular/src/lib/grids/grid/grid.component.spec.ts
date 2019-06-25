@@ -589,7 +589,8 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridDefaultRenderingComponent,
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
-                    IgxGridFormattingComponent
+                    IgxGridFormattingComponent,
+                    IgxGridFixedContainerHeightComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -978,6 +979,31 @@ describe('IgxGrid Component Tests', () => {
             expect(defaultHeightNum).toBe(330);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+        }));
+
+        it(`should render grid with correct height when parent container\'s height is set
+            and the total row height is smaller than parent height #1861`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.paging = true;
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it(`should render grid with correct height when height is in percent and the
+            sum height of all rows is lower than parent height #1858`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
@@ -4204,6 +4230,20 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public density = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
+}
+
+@Component({
+    template:
+        `<div style="height:300px">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
+                [paging]="paging" [perPage]="pageSize">
+            </igx-grid>
+        </div>`
+})
+export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
 }
 
 @Component({
