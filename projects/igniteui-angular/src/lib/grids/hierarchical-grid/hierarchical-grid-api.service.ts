@@ -14,6 +14,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
     }
 
     unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
+        this.childGrids.delete(rowIsland.key);
         this.childRowIslands.delete(rowIsland.key);
         this.destroyMap.delete(rowIsland.key);
     }
