@@ -1673,12 +1673,12 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
-            expect(combo.itemHeight).toEqual(48); // Default value for itemHeight
-            expect(combo.itemsMaxHeight).toEqual(480); // Default value for itemsMaxHeight
+            expect(combo.itemHeight).toEqual(40); // Default value for itemHeight
+            expect(combo.itemsMaxHeight).toEqual(400); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTENT));
-            expect(dropdownList.nativeElement.clientHeight).toEqual(480);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(400);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(40);
 
             combo.itemHeight = 48;
             tick();
@@ -3162,6 +3162,24 @@ describe('igxCombo', () => {
             expect(document.getElementsByClassName(CSS_CLASS_INPUT_COMFORTABLE).length).toBe(2);
             expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
             expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+        }));
+        it('Should scale items container depending on displayDensity (itemHeight * 10)', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const combo = fixutre.componentInstance.combo;
+            combo.toggle();
+            tick();
+            fixutre.detectChanges();
+            expect(combo.itemsMaxHeight).toEqual(320);
+            fixutre.componentInstance.density = DisplayDensity.compact;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.itemsMaxHeight).toEqual(280);
+            fixutre.componentInstance.density = DisplayDensity.comfortable;
+            tick();
+            fixutre.detectChanges();
+            expect(combo.itemsMaxHeight).toEqual(400);
         }));
     });
 });
