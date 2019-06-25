@@ -67,9 +67,6 @@ export class IgxRowEditTabStopDirective {
     private move(event: KeyboardEvent) {
         event.preventDefault();
         this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        ////  this will not work if targetCell is null and we have multi row layout
-        // const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === cellIndex);
-        // const scrollIndex = this.grid.hasColumnLayouts ? targetCell.column.parent.visibleIndex : targetIndex;
         if (!this.grid.navigation.isColumnFullyVisible(this.currentCellIndex)) {
             this.grid.navigation.performHorizontalScrollToCell(
                 this.grid.rowInEditMode.index, this.currentCellIndex, false, this.activateCell);
@@ -84,8 +81,8 @@ export class IgxRowEditTabStopDirective {
      */
     private activateCell = (): void => {
         const cell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === this.currentCellIndex);
-        cell.setEditMode(true);
         cell.nativeElement.focus();
+        cell.setEditMode(true);
         this.currentCellIndex = -1;
     }
 }
