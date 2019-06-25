@@ -212,7 +212,7 @@ export class IgxGridSelectionService {
     selection = new Map<number, Set<number>>();
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
-    _selectionRange: Range;
+    _selectionRange = new Range();
 
 
     /**
@@ -474,8 +474,8 @@ export class IgxGridSelectionService {
         if (this.pointerState.shift) {
             this.clearTextSelection();
             this.restoreTextSelection();
-            emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
+            emitter.emit(this.generateRange(node, this.pointerState));
             return true;
         }
 
