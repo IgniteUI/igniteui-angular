@@ -345,7 +345,15 @@ export class IgxTimePickerComponent implements
     public mode = InteractionMode.Dialog;
 
     /**
-     *@hidden
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-time-picker [outlet]="outlet"></igx-time-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
