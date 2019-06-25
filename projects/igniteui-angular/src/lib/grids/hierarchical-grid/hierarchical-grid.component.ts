@@ -398,21 +398,33 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     ngAfterContentInit() {
         this.updateColumnList(false);
+        this.childLayoutList.notifyOnChanges();
+        this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
+        .subscribe((change) => this.onRowIslandChange(change));
         super.ngAfterContentInit();
+    }
+
+    protected onRowIslandChange(change) {
+        if (this.parent) {
+            this.childLayoutKeys = this.parentIsland.children.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        } else {
+            this.childLayoutKeys = this.childLayoutList.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        }
+        this.cdr.detectChanges();
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         this.updateColumnList();
-        super.onColumnsChanged(change);
+        const cols = change.filter(c => c.grid === this);
+        if (cols.length > 0) {
+            this.columnList.reset(cols);
+            super.onColumnsChanged(this.columnList);
+        }
     }
 
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => {
-            if (!layout.rootGrid && !this.parent) {
-                // If the layout doesn't have rootGrid set and this is the root, set it
-                layout.rootGrid = this;
-            }
             return layout.columnList.toArray();
         });
         const colsArray = [].concat.apply([], nestedColumns);
