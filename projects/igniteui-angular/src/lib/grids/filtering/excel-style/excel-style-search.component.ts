@@ -32,16 +32,16 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
-    @ViewChild('input', { read: IgxInputDirective })
+    @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
-    constructor() {}
+    constructor() { }
 
     public ngAfterViewInit() {
         requestAnimationFrame(() => {
@@ -76,7 +76,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     }
 
     public get itemSize() {
-        let itemSize = '48px';
+        let itemSize = '40px';
         switch (this.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
             case DisplayDensity.compact: itemSize = '24px'; break;

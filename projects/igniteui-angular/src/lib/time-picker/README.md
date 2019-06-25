@@ -68,43 +68,17 @@ mode = InteractionMode.DropDown;
 </igx-time-picker>
 ```
 
-In order to re-template the TimePicker in `dropdown` mode, you should either mark an element with `dropDownTarget` template reference variable or set the overlaySettings appropriately:
+In order to re-template the TimePicker in `dropdown` mode, you should pass the drop down target element to the `openDialog` method in order to position the drop down container accordingly:
 
 ```html
 <igx-time-picker [mode]="'dropdown'">
     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
-        <igx-input-group (click)="openDialog()" #dropDownTarget> 
+        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget> 
             <label igxLabel>Time</label>
             <input igxInput [value]="displayTime"/>
         </igx-input-group>
     </ng-template>
 </igx-time-picker>
-```
-or
-
-```html
-<igx-time-picker>
-    <ng-template igxTimePickerTemplate [overlaySettings]="myOverlaySettings" let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
-        <igx-input-group (click)="openDialog()" #myTarget> 
-            <label igxLabel>Time</label>
-            <input igxInput [value]="displayTime"/>
-        </igx-input-group>
-    </ng-template>
-</igx-time-picker>
-```
-```typescript
-    myOverlaySettings = {
-        modal: false,
-        closeOnOutsideClick: true,
-        positionStrategy: new AutoPositionStrategy()
-    };
-
-    @ViewChild('myTarget')
-    public target: IgxInputDirective;
-
-    ngAfterViewInit() {
-        this.myOverlaySettings.positionStrategy.settings.target = this.target.nativeElement;
-    }
 ```
 
 The TimePicker action buttons could be retemplated.
@@ -170,3 +144,4 @@ List of time-flags:
 | `scrollHourIntoView` | `(item: string)` | `void` | Scrolls a hour item into view. |
 | `scrollMinuteIntoView` | `(item: string)` | `void` | Scrolls a minute item into view. |
 | `scrollAmPmIntoView` | `(item: string)` | `void` | Scrolls a period item into view. |
+| `openDialog` | `target?: HTMLElement` | `void` | Opens the dialog or drop down, depending on the mode. |

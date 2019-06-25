@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
@@ -8,7 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('IgxTreeGrid - Sorting', () => {
+describe('IgxTreeGrid - Sorting ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -26,6 +26,7 @@ describe('IgxTreeGrid - Sorting', () => {
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);
         fix.detectChanges();
+        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
     }));
 

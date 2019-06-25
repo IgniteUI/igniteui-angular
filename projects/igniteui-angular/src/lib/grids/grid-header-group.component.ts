@@ -85,13 +85,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild(IgxGridHeaderComponent)
+    @ViewChild(IgxGridHeaderComponent, { static: false })
     public headerCell: IgxGridHeaderComponent;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxGridFilteringCellComponent)
+    @ViewChild(IgxGridFilteringCellComponent, { static: false })
     public filterCell: IgxGridFilteringCellComponent;
 
     /**
@@ -128,11 +128,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             'igx-grid__th--filtering': this.isFiltered
         };
 
-        Object.entries(classList).forEach(([className, value]) => {
-            if (value) {
+        for (const className of Object.keys(classList)) {
+            if (classList[className]) {
                 defaultClasses.push(className);
             }
-        });
+        }
         return defaultClasses.join(' ');
     }
 
@@ -221,7 +221,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     constructor(private cdr: ChangeDetectorRef,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-                private element: ElementRef,
+                public element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 }

@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -61,13 +61,13 @@ describe('Excel Exporter', () => {
 
         it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
-            TestMethods.testRawData(currentGrid, async (grid) => {
+            await TestMethods.testRawData(currentGrid, async (grid) => {
                 await exportAndVerify(grid, options, actualData.simpleGridData);
             });
         });
 
         it('should honor \'ignoreFiltering\' option.', async () => {
-            const result = TestMethods.createGridAndFilter();
+            const result = await TestMethods.createGridAndFilter();
             const fix = result.fixture;
             const grid = result.grid;
             expect(grid.rowList.length).toEqual(1);
@@ -85,7 +85,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should honor filter criteria changes.', async () => {
-            const result = TestMethods.createGridAndFilter();
+            const result = await TestMethods.createGridAndFilter();
             const fix = result.fixture;
             const grid = result.grid;
             expect(grid.rowList.length).toEqual(1);
@@ -105,6 +105,7 @@ describe('Excel Exporter', () => {
         it('should honor \'ignoreColumnsVisibility\' option.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             grid.columns[0].hidden = true;
@@ -125,6 +126,7 @@ describe('Excel Exporter', () => {
         it('should honor columns visibility changes.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             options.ignoreColumnsOrder = true;
@@ -159,6 +161,8 @@ describe('Excel Exporter', () => {
         it('should honor columns declaration order.', async () => {
             const fix = TestBed.createComponent(ReorderedColumnsComponent);
             fix.detectChanges();
+            await wait();
+
             const grid = fix.componentInstance.grid;
 
             const wrapper = await getExportedData(grid, options);
@@ -166,7 +170,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should honor \'ignorePinning\' option.', async () => {
-            const result = TestMethods.createGridAndPinColumn([1]);
+            const result = await TestMethods.createGridAndPinColumn([1]);
             const fix = result.fixture;
             const grid = result.grid;
 
@@ -185,7 +189,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should honor pinned state changes.', async () => {
-            const result = TestMethods.createGridAndPinColumn([1]);
+            const result = await TestMethods.createGridAndPinColumn([1]);
             const fix = result.fixture;
             const grid = result.grid;
 
@@ -201,6 +205,7 @@ describe('Excel Exporter', () => {
         it('should honor applied sorting.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
@@ -217,6 +222,7 @@ describe('Excel Exporter', () => {
         it('should honor changes in applied sorting.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
@@ -242,6 +248,7 @@ describe('Excel Exporter', () => {
         it('should export all columns with the width specified in options.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             grid.columns[1].hidden = true;
@@ -259,6 +266,7 @@ describe('Excel Exporter', () => {
         it('should export all rows with the height specified in options.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -274,6 +282,7 @@ describe('Excel Exporter', () => {
         it('should fire \'onColumnExport\' for each grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -295,6 +304,7 @@ describe('Excel Exporter', () => {
         it('should fire \'onColumnExport\' for each visible grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -319,6 +329,7 @@ describe('Excel Exporter', () => {
         it('should not export columns when \'onColumnExport\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -335,6 +346,7 @@ describe('Excel Exporter', () => {
         it('should fire \'onRowExport\' for each grid row.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             const data = SampleTestData.personJobData();
@@ -355,6 +367,7 @@ describe('Excel Exporter', () => {
         it('should not export rows when \'onRowExport\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -371,6 +384,7 @@ describe('Excel Exporter', () => {
         it('shouldn\'t affect grid sort expressions', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             grid.columns[1].header = 'My header';
@@ -390,6 +404,7 @@ describe('Excel Exporter', () => {
         it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
 
@@ -425,6 +440,7 @@ describe('Excel Exporter', () => {
         it('should export columns without header', async () => {
             const fix = TestBed.createComponent(GridWithEmtpyColumnsComponent);
             fix.detectChanges();
+            await wait();
 
             const grid = fix.componentInstance.grid;
             // Verify the data without formatting
@@ -442,12 +458,13 @@ describe('Excel Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(() => {
+        beforeEach(async(() => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('should export tree grid as displayed with all groups expanded.', async () => {
             await exportAndVerify(treeGrid, options, actualData.treeGridData);
@@ -640,5 +657,5 @@ describe('Excel Exporter', () => {
 export class GridWithEmtpyColumnsComponent {
     public data = SampleTestData.personJobDataFull();
 
-    @ViewChild('grid1') public grid: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 }

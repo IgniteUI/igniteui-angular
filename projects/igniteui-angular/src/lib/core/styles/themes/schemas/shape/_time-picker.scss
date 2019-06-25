@@ -1,0 +1,14 @@
+$_default-shape-time-picker: (
+    border-radius: .2,
+    active-item-border-radius: .75,
+);
+
+$_round-shape-time-picker: (
+    border-radius: 1,
+    active-item-border-radius: 1,
+);
+
+$_square-shape-time-picker: (
+    border-radius: 0%,
+    active-item-border-radius: 0%,
+);

@@ -30,8 +30,8 @@ const complex = [{
 })
 export class ComboSampleComponent implements OnInit {
     private width = '160px';
-    @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
@@ -39,7 +39,7 @@ export class ComboSampleComponent implements OnInit {
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';
-    @ViewChild('customItemTemplate', {read: TemplateRef})
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 

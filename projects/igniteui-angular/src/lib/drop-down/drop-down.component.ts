@@ -12,7 +12,9 @@ import {
     ContentChild,
     AfterViewInit,
     Output,
-    EventEmitter
+    EventEmitter,
+    Optional,
+    Inject
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -27,7 +29,7 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
 import { OverlaySettings } from '../services';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
-
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -54,10 +56,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective, static: false })
     protected virtDir: IgxForOfDirective<any>;
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
 
     /**
@@ -213,8 +215,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr);
+        protected selection: IgxSelectionAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, _displayDensityOptions);
     }
 
     /**
@@ -452,7 +455,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     ngAfterViewInit() {
         if (this.virtDir) {
-            this.virtDir.igxForItemSize = 32;
+            this.virtDir.igxForItemSize = 28;
         }
     }
 

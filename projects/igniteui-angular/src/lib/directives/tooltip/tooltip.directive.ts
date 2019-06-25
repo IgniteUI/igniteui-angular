@@ -199,9 +199,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     private checkOutletAndOutsideClick() {
-        if (this.closeOnOutsideClick !== undefined) {
-            this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
-        }
         if (this.outlet) {
             this._overlayDefaults.outlet = this.outlet;
         }

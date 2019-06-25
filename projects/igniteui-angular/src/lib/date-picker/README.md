@@ -77,11 +77,11 @@ The default DatePicker input group could be retemplated.
 </igx-date-picker>
 ```
 
-In order to re-template a date picker in `dropdown` mode, an element should be marked with `dropDownTarget` id to be used as a target for the calendar dropdown.
+In order to re-template a date picker in `dropdown` mode, you should pass the drop down target element to the `openDialog` method in order to position the drop down container accordingly:
 ```html
 <igx-date-picker>
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
-        <igx-input-group (click)="openDialog()" #dropDownTarget> 
+        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget> 
             <label igxLabel>Date</label>
             <input igxInput [value]="displayData"/>
         </igx-input-group>
@@ -144,3 +144,4 @@ The DatePicker action buttons could be retemplated.
 | `selectDate` | `date: Date` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
 | `deselectDate` | `void` | Deselects the calendar date and clear input field value. |
 | `triggerTodaySelection` | `void` | Selects today's date in calendar and change the input field value. |
+| `openDialog` | `target?: HTMLElement` | `void` | Opens the dialog or drop down, depending on the mode. |

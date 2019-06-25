@@ -35,7 +35,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
     public cells: QueryList<IgxHierarchicalGridCellComponent>;
 
-    @ViewChild('expander', { read: ElementRef })
+    @ViewChild('expander', { read: ElementRef, static: false })
     public expander: ElementRef;
 
     /**

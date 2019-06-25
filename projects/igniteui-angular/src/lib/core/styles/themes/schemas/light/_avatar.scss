@@ -1,3 +1,5 @@
+@import '../shape/avatar';
+
 ////
 /// @group schemas
 /// @access private
@@ -12,7 +14,7 @@
 /// @property {Map} initials-color [igx-color: ('grays', 800)] - The text color used for avatars of type initials.
 /// @property {Color} image-background [transparent] - The background color used for avatars of type image.
 /// @see $default-palette
-$_light-avatar: (
+$_light-avatar: extend((
     icon-background: (
         igx-color: ('grays', 400)
     ),
@@ -30,4 +32,4 @@ $_light-avatar: (
     ),
 
     image-background: transparent
-);
+),$_default-shape-avatar);

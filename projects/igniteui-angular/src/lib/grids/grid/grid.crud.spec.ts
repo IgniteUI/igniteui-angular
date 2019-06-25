@@ -362,6 +362,7 @@ describe('IgxGrid - CRUD operations', () => {
     template: `
         <igx-grid
             [data]="data"
+            [height]="null"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
             (onCellEdit)="editDone($event)"
@@ -380,7 +381,7 @@ export class DefaultCRUDGridComponent {
     public rowsAdded = 0;
     public rowsDeleted = 0;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public rowAdded(event) {
