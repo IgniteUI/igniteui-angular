@@ -76,8 +76,8 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public getState(id: any): S {
-        return this._states.get(id);
+    public getState(id: any, pending: boolean = false): S {
+        return pending ? this._pendingStates.get(id) : this._states.get(id);
     }
 
     /**

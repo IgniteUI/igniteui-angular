@@ -90,9 +90,10 @@ export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Returns the state of the record with provided id
      * @param id The id of the record
+     * @param pending Should get pending state
      * @returns State of the record if any
      */
-    getState(id: any): S;
+    getState(id: any, pending?: boolean): S;
 
     /**
      * Returns value of the required id including all uncommitted changes
