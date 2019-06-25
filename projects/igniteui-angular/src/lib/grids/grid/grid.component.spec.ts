@@ -3774,6 +3774,43 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.selectedRows()).toEqual([4]);
             }));
+
+            fit('Should not log transaction when exit edit mode on row with state and with no changes', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                tick(16);
+
+                const grid = fixture.componentInstance.grid;
+                const trans = grid.transactions;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const updateValue = 'Chaiiii';
+                cell.setEditMode(true);
+                tick(16);
+
+                cell.editValue = updateValue;
+                tick(16);
+                fixture.detectChanges();
+
+                grid.endEdit(true);
+                tick(16);
+                fixture.detectChanges();
+
+                expect(trans.getTransactionLog().length).toBe(1);
+
+                cell.setEditMode(true);
+                tick(16);
+
+                cell.editValue = updateValue;
+                tick(16);
+                fixture.detectChanges();
+
+                grid.endEdit(true);
+                tick(16);
+                fixture.detectChanges();
+
+                // should not log new transaction as there is no change in the row's cells
+                expect(trans.getTransactionLog().length).toBe(1);
+            }));
         });
 
         describe('Row Editing - Grouping', () => {
