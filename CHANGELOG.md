@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.3.7
+ - **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
+
 ## 7.3.5
 - `IgxList` - The list component has been refactored. It now includes several new supporting directives:
     - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
@@ -20,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
               <igx-icon igxListAction>info</igx-icon>
             </igx-list-item>
         </igx-list>
-        
+
         <igx-list>
           <igx-list-item [isHeader]="true">List items</igx-list-item>
           <igx-list-item>
