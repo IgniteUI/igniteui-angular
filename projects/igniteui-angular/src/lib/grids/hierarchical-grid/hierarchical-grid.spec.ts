@@ -858,6 +858,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
 });
 
 describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
+    configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     beforeEach(async(() => {
