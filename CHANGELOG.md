@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 8.0.2
+- **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
 ## 8.0.1
 
 ### New Features
