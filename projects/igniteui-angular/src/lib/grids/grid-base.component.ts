@@ -5435,12 +5435,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (event) {
             if (cell) {
                 const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-                currentCell.nativeElement.focus();
+                if (currentCell) {
+                    currentCell.nativeElement.focus();
+                }
             } else {
                 // when there's no cell in edit mode (focus is on the row edit buttons), use last active
-                const node = this.gridAPI.grid.selectionService.activeElement;
-                if (node) {
-                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(node.row, node.column);
+                const activeCell = this.gridAPI.grid.selectionService.activeElement;
+                if (activeCell) {
+                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(activeCell.row, activeCell.column);
                     currentCellElement.focus();
                 }
             }
