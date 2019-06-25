@@ -63,36 +63,6 @@
     .nav-header {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
     }
-
-    $my-list: igx-list-theme(
-        $schema: $dark-schema,
-
-        $item-background: #cf2d5a,
-        //$item-background-hover: #ffff9d,
-        //$item-background-active: #9a0000,
-
-        //$item-text-color: #e8ff2e,
-        //$item-text-color-hover: #e8ff2e,
-        //$item-text-color-active: #e8ff2e,
-
-        //$item-title-color: red,
-        //$item-title-color-hover: red,
-        //$item-title-color-active: red,
-
-        //$item-subtitle-color: orange,
-        //$item-subtitle-color-hover: orange,
-        //$item-subtitle-color-active: orange,
-
-        //$item-action-color: purple,
-        //$item-action-color-hover: purple,
-        //$item-action-color-active: purple,
-
-        //$item-thumbnail-color: #61ecff,
-        //$item-thumbnail-color-hover: #61ecff,
-        //$item-thumbnail-color-active: #61ecff
-    );
-
-    @include igx-list($my-list);
 }
 
 @media print {
