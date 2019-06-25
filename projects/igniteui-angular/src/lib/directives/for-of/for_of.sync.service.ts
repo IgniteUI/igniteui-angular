@@ -45,4 +45,11 @@ export class IgxForOfSyncService {
     public chunkSize(dir: string): number {
         return this._master.get(dir).state.chunkSize;
     }
+
+    /**
+     * @hidden
+     */
+    public scrollPosition(dir: string): number {
+        return this._master.get(dir).scrollPosition;
+    }
 }
