@@ -54,7 +54,9 @@ export class IgxRowEditTabStopDirective {
         const activeNode = this.grid.selectionService.activeElement;
         //  on right click activeNode is deleted, so we may have no one
         if (activeNode) {
-            const cell = this.grid.navigation.getCellElementByVisibleIndex(activeNode.row, activeNode.column);
+            const cell = this.grid.navigation.getCellElementByVisibleIndex(
+                activeNode.row,
+                activeNode.layout ? activeNode.layout.columnVisibleIndex : activeNode.column);
             cell.focus();
         }
     }

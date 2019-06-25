@@ -5442,7 +5442,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 // when there's no cell in edit mode (focus is on the row edit buttons), use last active
                 const activeCell = this.gridAPI.grid.selectionService.activeElement;
                 if (activeCell) {
-                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(activeCell.row, activeCell.column);
+                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(
+                        activeCell.row,
+                        activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column);
                     if (currentCellElement) {
                         currentCellElement.focus();
                     }
