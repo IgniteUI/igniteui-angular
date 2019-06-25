@@ -101,7 +101,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForItemSize: any;
+    get igxForItemSize(): any {
+        return this._igxForItemSize;
+    }
+
+    set igxForItemSize(value) {
+        this._igxForItemSize = value;
+        if (this.dc) {
+            this.initSizesCache(this.igxForOf);
+            this._applyChanges();
+            this.onDataChanged.emit();
+        }
+    }
 
     /**
      * @hidden
@@ -185,6 +196,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected heightCache = [];
     private _adjustToIndex;
     private MAX_PERF_SCROLL_DIFF = 4;
+    private _igxForItemSize;
 
     protected get sizesCache(): number[] {
         return this._sizesCache;
@@ -372,8 +384,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
-            this._applyChanges();
-            this.onDataChanged.emit();
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
