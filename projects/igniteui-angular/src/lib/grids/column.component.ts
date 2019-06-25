@@ -668,6 +668,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Sets the header template.
+     * Note that the column header height is fixed and any content bigger than it will be cut off.
      * ```html
      * <ng-template #headerTemplate>
      *   <div style = "background-color:black" (click) = "changeColor(val)">
