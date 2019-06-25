@@ -72,7 +72,7 @@ enum DataTypes {
  * @hidden
  */
 const ItemHeights = {
-    'comfortable': 48,
+    'comfortable': 42,
     'cosy': 32,
     'compact': 28,
 };
@@ -1523,13 +1523,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         this.searchValue = '';
+        this.comboInput.nativeElement.focus();
     }
 
     /**
      * @hidden @internal
      */
     public handleClosed() {
-        this.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }
 }
