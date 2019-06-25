@@ -73,7 +73,7 @@ enum DataTypes {
  * @hidden
  */
 const ItemHeights = {
-    'comfortable': 42,
+    'comfortable': 48,
     'cosy': 32,
     'compact': 28,
 };
