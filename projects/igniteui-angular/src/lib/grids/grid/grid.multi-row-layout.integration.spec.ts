@@ -1107,7 +1107,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 640px 80px 100px 200px');
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });
 });
