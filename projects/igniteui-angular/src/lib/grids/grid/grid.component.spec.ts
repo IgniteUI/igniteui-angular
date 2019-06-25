@@ -3775,7 +3775,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.selectedRows()).toEqual([4]);
             }));
 
-            fit('Should not log transaction when exit edit mode on row with state and with no changes', fakeAsync(() => {
+            it('Should not log transaction when exit edit mode on row with state and with no changes', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
                 tick(16);
