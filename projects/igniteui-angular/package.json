@@ -75,10 +75,10 @@
         "@angular/core": "^8.0.0",
         "@angular/animations": "^8.0.0",
         "@angular/forms": "^8.0.0",
-        "web-animations-js": "^2.3.1"
+        "web-animations-js": "github:angular/web-animations-js#release_pr208"
     },
     "devDependencies": {
-        "igniteui-cli": "~4.1.0"
+        "igniteui-cli": "~4.2.0"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"

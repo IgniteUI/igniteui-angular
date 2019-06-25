@@ -184,7 +184,10 @@ const appRoutes = [
     },
     {
         path: 'bottom-navigation',
-        component: BottomNavSampleComponent
+        component: BottomNavSampleComponent,
+        children: [
+            { path: 'tabContentPath', component: CustomContentComponent, outlet: 'tabPanelOutlet' }
+        ]
     },
     {
         path: 'tabs',
