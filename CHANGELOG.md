@@ -1,6 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 8.0.2
+
+### New Features
+- `IgxBottomNavigation` - now supports an `igx-tab` declaration mode. When in this mode, panels declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items.
+    - You are allowed to customize tab items with labels, icons and even templates.
+- `IgxTabs` now supports an `igx-tab-item` declaration mode. When in this mode, groups declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items.
+    - You are allowed to customize tab items with labels, icons and even templates.
+
 ## 8.0.1
 
 - **General**
