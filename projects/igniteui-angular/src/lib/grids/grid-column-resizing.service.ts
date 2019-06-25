@@ -53,8 +53,7 @@ export class IgxColumnResizingService {
      * Returns the minimal possible width to which the column can be resized.
      */
     get restrictResizeMin(): number {
-        const columnLayoutMultiplier = this.column.grid.hasColumnLayouts ? this.column.gridColumnSpan : 1;
-        const actualMinWidth = parseFloat(this.column.minWidth) * columnLayoutMultiplier;
+        const actualMinWidth = parseFloat(this.column.minWidth);
         const minWidth = actualMinWidth < parseFloat(this.column.width) ? actualMinWidth : parseFloat(this.column.width);
 
         return this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width - minWidth;
@@ -166,8 +165,7 @@ export class IgxColumnResizingService {
         const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
 
-        const columnLayoutMultiplier = column.grid.hasColumnLayouts ? column.gridColumnSpan : 1;
-        const actualMinWidth = parseFloat(column.minWidth) * columnLayoutMultiplier;
+        const actualMinWidth = parseFloat(column.minWidth);
         return actualMinWidth < currentColWidth ? actualMinWidth : currentColWidth;
     }
 
