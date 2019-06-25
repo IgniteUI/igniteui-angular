@@ -13,6 +13,11 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         this.destroyMap.set(rowIsland.key, new Subject<boolean>());
     }
 
+    unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
+        this.childRowIslands.delete(rowIsland.key);
+        this.destroyMap.delete(rowIsland.key);
+    }
+
     getChildRowIsland(key: string) {
         return this.childRowIslands.get(key);
     }
