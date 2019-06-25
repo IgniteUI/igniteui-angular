@@ -154,8 +154,6 @@ export class IgxGridNavigationService {
         if (visibleColumnIndex === 0) {
             return;
         }
-        //  TODO: extract this in focusPrevCell and call the new method
-        //  TODO: do the same in movePreviousEditable
         const index = this.getColumnUnpinnedIndex(visibleColumnIndex - 1);
         if (!element.previousElementSibling && this.grid.pinnedColumns.length && index === - 1) {
             element.parentNode.previousElementSibling.focus({ preventScroll: true });
