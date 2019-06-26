@@ -4,7 +4,7 @@ import {
     AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
     Injector, OnInit, AfterViewInit, OnDestroy
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { IgxDropDownItemBase } from '../drop-down/index';
@@ -123,26 +123,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input() public placeholder;
 
-    private _required = false;
-    /**
-     * Sets/gets whether item selection is required.
-     * If not set, `required` will have value `false`.
-     * ```html
-     * <igx-select [required] = "true"></igx-select>
-     * ```
-     * ```typescript
-     * let isRequired =  this.select.required;
-     */
-    public get required() {
-        return this._required;
-    }
-    @Input()
-    public set required(value: boolean) {
-        if (typeof value === 'boolean') {
-            this.inputGroup.isRequired = value;
-            this._required = value;
-        }
-    }
 
     /**
      * An @Input property that disables the `IgxSelectComponent`.
@@ -328,6 +308,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         super.navigate(direction, currentIndex);
     }
 
+    protected manageRequiredAsterisk(): void {
+        if (this.ngControl && this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+            const synchOrAsyncValidation = this.ngControl.control.validator ? this.ngControl.control.validator({} as AbstractControl) :
+                this.ngControl.control.asyncValidator({} as AbstractControl);
+            this.inputGroup.isRequired = synchOrAsyncValidation && synchOrAsyncValidation.required;
+            this.cdr.markForCheck();
+        }
+    }
     private setSelection(item: IgxDropDownItemBase) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));
@@ -349,14 +337,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     protected onStatusChanged() {
-            if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             if (this.inputGroup.isFocused) {
-                    this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-                } else {
+                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
                 this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         }
+        this.manageRequiredAsterisk();
     }
     /**
      * @hidden @internal
@@ -371,9 +360,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public ngAfterViewInit() {
         if (this.ngControl) {
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this.manageRequiredAsterisk();
         }
-        this.inputGroup.isRequired = this.required;
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
     }
 
     /**
@@ -381,7 +370,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public ngOnDestroy() {
         this.selection.clear(this.id);
-
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
