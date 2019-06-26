@@ -23,6 +23,14 @@ export enum IgxInputState {
     INVALID
 }
 
+// 'change' | 'blur' | 'submit'
+export enum IgxValidationTrigger {
+    INPUT = 'input',
+    CHANGE = 'change',
+    BLUR = 'blur',
+    SUBMIT = 'submit'
+}
+
 @Directive({
     selector: '[igxInput]',
     exportAs: 'igxInput'
@@ -30,6 +38,7 @@ export enum IgxInputState {
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
+    private _validateOn = IgxValidationTrigger.INPUT;
 
     constructor(
         public inputGroup: IgxInputGroupBase,
@@ -127,6 +136,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.nativeElement.hasAttribute('required');
     }
 
+    @Input()
+    public get validateOn() {
+        return this._validateOn;
+    }
+
+    public set validateOn(value: IgxValidationTrigger) {
+        this._validateOn = value;
+    }
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -167,20 +184,29 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         this._valid = IgxInputState.INITIAL;
-        if (this.ngControl) {
-            if (!this.ngControl.valid) {
+        // if (this._validateOn === IgxValidationTrigger.BLUR) {
+            if (this.ngControl) {
+                if (!this.ngControl.valid) {
+                    this._valid = IgxInputState.INVALID;
+                }
+            } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
                 this._valid = IgxInputState.INVALID;
             }
-        } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
-            this._valid = IgxInputState.INVALID;
-        }
+        // }
     }
     /**
      *@hidden
      */
     @HostListener('input')
     public onInput() {
-        this.checkValidity();
+        this.checkValidity(IgxValidationTrigger.INPUT);
+    }
+    /**
+     *@hidden
+     */
+    @HostListener('change')
+    public onChange() {
+        this.checkValidity(IgxValidationTrigger.CHANGE);
     }
     /**
      *@hidden
@@ -336,8 +362,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this._valid = value;
     }
 
-    private checkValidity() {
-        if (!this.ngControl && this._hasValidators()) {
+    private checkValidity(validationTrigger = IgxValidationTrigger.INPUT) {
+        if (this._validateOn === validationTrigger && !this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }

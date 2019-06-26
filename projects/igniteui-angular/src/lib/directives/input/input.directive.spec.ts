@@ -3,8 +3,9 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
-import { IgxInputDirective, IgxInputState } from './input.directive';
+import { IgxInputDirective, IgxInputState, IgxValidationTrigger } from './input.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -225,7 +226,88 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
     });
 
-    it('should style required input with two-way databinding correctly.', () => {
+    it('Should update invalid style onInput by default.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective));
+
+        UIInteractions.sendInput(inputElement, '1');
+        fixture.detectChanges();
+
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+
+        UIInteractions.sendInput(inputElement, '');
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    }));
+
+    it('Should update invalid style onChange when validateOn=\'change\'.', () => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        igxInput.validateOn = IgxValidationTrigger.CHANGE;
+        fixture.detectChanges();
+
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective));
+
+        UIInteractions.sendInput(inputElement, '1');
+        fixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        UIInteractions.sendInput(inputElement, '');
+        fixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        dispatchInputEvent('change', inputElement.nativeElement, fixture);
+
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        UIInteractions.sendInput(inputElement, '1');
+        fixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        dispatchInputEvent('change', inputElement.nativeElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('Should update invalid style onBlur when validateOn=\'blur\'.', () => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        igxInput.validateOn = IgxValidationTrigger.BLUR;
+        fixture.detectChanges();
+
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective));
+        UIInteractions.sendInput(inputElement, '1');
+        fixture.detectChanges();
+
+        UIInteractions.sendInput(inputElement, '');
+        fixture.detectChanges();
+        dispatchInputEvent('change', inputElement.nativeElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        dispatchInputEvent('blur', inputElement.nativeElement, fixture);
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        UIInteractions.sendInput(inputElement, '1');
+        fixture.detectChanges();
+        dispatchInputEvent('change', inputElement.nativeElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        dispatchInputEvent('blur', inputElement.nativeElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    });
+
+    it('Should style required input with two-way databinding correctly.', () => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -679,7 +761,7 @@ class RequiredInputComponent {
 
 @Component({ template: `<igx-input-group #igxInputGroup>
                             <label for="test" igxLabel>Test</label>
-                            <input name="test" #igxInput type="text" igxInput [(ngModel)]="user.firstName" required="required" />
+                            <input name="test" #igxInput type="text" igxInput [(ngModel)]="user.firstName" required="required"/>
                         </igx-input-group>` })
 class RequiredTwoWayDataBoundInputComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
