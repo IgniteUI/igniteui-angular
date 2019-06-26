@@ -45,6 +45,26 @@
         }
     }
 
+    @include e(item-thumbnail) {
+        @extend %igx-list__item-thumbnail !optional;
+    }
+
+    @include e(item-actions) {
+        @extend %igx-list__item-actions !optional;
+    }
+
+    @include e(item-lines) {
+        @extend %igx-list__item-lines !optional;
+    }
+
+    @include e(item-line-title) {
+        @extend %igx-list__item-line-title !optional;
+    }
+
+    @include e(item-line-subtitle) {
+        @extend %igx-list__item-line-subtitle !optional;
+    }
+
     @include e(empty) {
         @extend %igx-list !optional;
         @extend %igx-list-empty !optional;
@@ -65,6 +85,14 @@
     @include m(compact) {
         @extend %igx-list !optional;
 
+        @include e(item-thumbnail) {
+            @extend %igx-list__item-thumbnail--compact !optional;
+        }
+
+        @include e(item-actions) {
+            @extend %igx-list__item-actions--compact !optional;
+        }
+
         @include e(empty) {
             @include b(message) {
                 @extend %igx-list-empty-message--compact !optional;
@@ -82,6 +110,14 @@
 
     @include m(cosy) {
         @extend %igx-list !optional;
+
+        @include e(item-thumbnail) {
+            @extend %igx-list__item-thumbnail--cosy !optional;
+        }
+
+        @include e(item-actions) {
+            @extend %igx-list__item-actions--cosy !optional;
+        }
 
         @include e(empty) {
             @include b(message) {

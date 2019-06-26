@@ -30,13 +30,15 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
-    IgxFilteringOperand } from '../data-operations/filtering-condition';
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
+import { DisplayDensity } from '../core/displayDensity';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -292,8 +294,13 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set width(value: string) {
         if (value) {
+            this._calcWidth = null;
+            this.calcPixelWidth = NaN;
             this.widthSetByUser = true;
             this._width = value;
+            if (this.grid) {
+                this.cacheCalcWidth();
+            }
         }
     }
 
@@ -303,6 +310,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public get calcWidth(): any {
         return this.getCalcWidth();
     }
+
+    private _calcWidth = null;
+    public calcPixelWidth: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -328,7 +338,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public minWidth = this.defaultMinWidth;
+    public set minWidth(value: string) {
+        const minVal = parseFloat(value);
+        if (Number.isNaN(minVal)) { return; }
+        this._defaultMinWidth = value;
+
+    }
+    public get minWidth(): string {
+        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -590,7 +608,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get defaultMinWidth(): string {
-        return this._defaultMinWidth;
+        if (!this.grid) { return '80'; }
+        switch (this.grid.displayDensity) {
+            case DisplayDensity.cosy:
+                return '64';
+            case DisplayDensity.compact:
+                return '56';
+            default:
+                return '80';
+        }
     }
     /**
      * The reference to the `igx-grid` owner.
@@ -998,7 +1024,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '80';
+    protected _defaultMinWidth = '';
     /**
      *@hidden
      */
@@ -1032,8 +1058,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public resetVisibleIndex() {
+    public resetCaches() {
         this._vIndex = NaN;
+        if (this.grid) {
+            this.cacheCalcWidth();
+        }
     }
 
     /**
@@ -1475,16 +1504,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public getCalcWidth(): any {
-        const colWidth = this.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * (this.grid.calcWidth - this.grid.featureColumnsWidth);
-        } else if (!colWidth) {
-            // no width
-            return this.defaultWidth || this.grid.getPossibleColumnWidth();
-        } else {
-            return this.width;
+        if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
+            return this._calcWidth;
         }
+        this.cacheCalcWidth();
+        return this._calcWidth;
     }
 
     /**
@@ -1521,7 +1545,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.headerCell) {
             let headerCell;
             if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+                headerCell = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
                     .map((child) => getNodeSizeViaRange(range, child)));
             } else {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
@@ -1573,8 +1597,26 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     *@hidden
-    */
+     * @hidden
+     * @internal
+     */
+    protected cacheCalcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            this._calcWidth = parseInt(colWidth, 10) / 100 * (this.grid.calcWidth - this.grid.featureColumnsWidth);
+        } else if (!colWidth) {
+            // no width
+            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            this._calcWidth = this.width;
+        }
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     * @hidden
+     */
     public populateVisibleIndexes() { }
 }
 
@@ -1640,16 +1682,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public set filters(classRef: any) { }
-    /**
-     * Gets the default minimum `width` of the column group.
-     * ```typescript
-     * let defaultMinWidth = this.columnGroup.defaultMinWidth;
-     * ```
-     * @memberof IgxColumnGroupComponent
-     */
-    get defaultMinWidth(): string {
-        return this._defaultMinWidth;
-    }
+
     /**
      * Returns a reference to the body template.
      * ```typescript

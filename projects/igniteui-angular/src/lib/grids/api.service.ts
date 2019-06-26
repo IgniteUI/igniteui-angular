@@ -65,7 +65,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     // TODO: Refactor
     public escape_editMode() {
         this.grid.crudService.end();
-        this.grid.refreshSearch();
     }
 
     // TODO: Refactor
@@ -133,12 +132,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         cell.editValue = value;
 
-        const valueInTransactions = this.grid.transactions.getAggregatedValue(cell.id.rowID, true);
-        if (valueInTransactions) {
-            cell.value = valueInTransactions[cell.column.field];
-            cell.rowData = valueInTransactions;
-        }
-
         const args = cell.createEditEventArgs();
 
 
@@ -154,6 +147,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
+
+        const valueInTransactions = this.grid.transactions.getAggregatedValue(cell.id.rowID, true);
+        if (valueInTransactions) {
+            cell.value = valueInTransactions[cell.column.field];
+            cell.rowData = valueInTransactions;
+        }
+
         this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
         if (this.grid.primaryKey === cell.column.field) {
@@ -310,6 +310,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public filter_global(term, condition, ignoreCase) {
+        if (!condition) {
+            return;
+        }
+
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         grid.endEdit(false);
@@ -318,11 +322,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         filteringTree.filteringOperands = [];
-        if (condition) {
-            for (const column of grid.columns) {
-                this.prepare_filtering_expression(filteringTree, column.field, term,
-                    condition, ignoreCase || column.filteringIgnoreCase);
-            }
+        for (const column of grid.columns) {
+            this.prepare_filtering_expression(filteringTree, column.field, term,
+                condition, ignoreCase || column.filteringIgnoreCase);
         }
 
         grid.filteringExpressionsTree = filteringTree;
