@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 8.0.2
+- **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
 ## 8.0.1
 
 - **General**
@@ -16,6 +24,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
     - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
 - `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+- `IgxChip`
+    - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
+    - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
 
 ## 8.0.0
 - `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
@@ -70,6 +81,7 @@ There are also prebuilt schema presets for all components (light-round/dark-roun
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
 
 ## 7.3.4
 - `IgxGrid` - summaries
