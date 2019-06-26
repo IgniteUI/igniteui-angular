@@ -234,7 +234,7 @@ export enum GridKeydownTargetType {
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, OnChanges, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
-    private _init = true;
+    protected _init = true;
 
     public get scrollWidth() {
         return this._scrollWidth;
