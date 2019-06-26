@@ -24,6 +24,7 @@ const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
 const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
@@ -446,6 +447,7 @@ describe('igxSelect', () => {
     describe('Form tests: ', () => {
         it('Should properly initialize when used as a reactive form control - with validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
@@ -453,27 +455,34 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
             expect(selectComp.collapsed).toEqual(false);
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
 
             selectComp.selectItem(selectComp.items[4]);
             expect(selectComp.value).toEqual('Option 5');
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.value = 'Option 1';
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
         it('Should properly initialize when used as a reactive form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const formGroup: FormGroup = fix.componentInstance.reactiveForm;
@@ -483,25 +492,31 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
         }));
 
         it('Should properly initialize when used as a form control - with validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
@@ -511,50 +526,60 @@ describe('igxSelect', () => {
             fix.detectChanges();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeNull();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
             expect(selectComp.collapsed).toEqual(false);
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
 
             selectComp.selectItem(selectComp.items[4]);
             expect(selectComp.value).toEqual('Option 5');
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.value = 'Option 1';
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
         it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
             selectFormReference.clearValidators();
-            selectComp.required = false;
-
             expect(selectFormReference).toBeDefined();
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeUndefined();
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
+            expect(inputGroupWithRequiredAsterisk).toBeNull;
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
     });
