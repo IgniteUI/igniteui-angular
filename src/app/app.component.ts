@@ -114,6 +114,11 @@ export class AppComponent implements OnInit {
             name: 'DropDown - Virtual'
         },
         {
+            link: '/dropDown-density',
+            icon: 'horizontal_split',
+            name: 'DropDown - Density'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -340,7 +345,7 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Tree Grid Load On Demand'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     directiveLinks = [
         {
@@ -378,7 +383,7 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Virtual-For Directive'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     styleLinks = [
         {
@@ -396,7 +401,7 @@ export class AppComponent implements OnInit {
             icon: 'font_download',
             name: 'Typography'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.registerFontSetAlias('fa-solid', 'fa');

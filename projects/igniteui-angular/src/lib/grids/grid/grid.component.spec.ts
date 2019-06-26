@@ -39,6 +39,7 @@ describe('IgxGrid Component Tests', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CLASS = '.igx-grid__td';
     const BANNER = 'igx-banner';
+    const BANNER_TEXT = 'igx-banner__text';
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -121,7 +122,7 @@ describe('IgxGrid Component Tests', () => {
             });
         }));
 
-        it('should initialize grid with remove virtualization', async () => {
+        it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             await wait(16);
@@ -151,6 +152,7 @@ describe('IgxGrid Component Tests', () => {
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.grid.height = null;
             fix.detectChanges();
             tick(16);
 
@@ -588,7 +590,8 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridDefaultRenderingComponent,
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
-                    IgxGridFormattingComponent
+                    IgxGridFormattingComponent,
+                    IgxGridFixedContainerHeightComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -910,6 +913,7 @@ describe('IgxGrid Component Tests', () => {
         it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             const grid = fix.componentInstance.grid;
+            fix.componentInstance.data = fix.componentInstance.fullData;
             fix.componentInstance.outerWidth = 800;
             fix.componentInstance.outerHeight = 600;
             fix.componentInstance.grid.width = '50%';
@@ -924,6 +928,7 @@ describe('IgxGrid Component Tests', () => {
 
         it('should render 10 records if height is unset and parent container\'s height is unset', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();
             tick(16);
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -933,8 +938,9 @@ describe('IgxGrid Component Tests', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         }));
 
-        it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
+        it('should render pixel height when one is set and parent container\'s height is unset', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.fullData;
             fix.componentInstance.grid.height = '700px';
             fix.detectChanges();
             tick(16);
@@ -949,12 +955,13 @@ describe('IgxGrid Component Tests', () => {
             there are fewer than 10 records in the data view`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+            fix.componentInstance.data = fix.componentInstance.semiData;
             fix.detectChanges();
             tick(16);
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).not.toBeNull();
-            expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
+            expect(defaultHeight).toBeNull();
+            expect(fix.debugElement.query(By.css(TBODY_CLASS))
+                .nativeElement.getBoundingClientRect().height).toBeGreaterThan(200);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(5);
         }));
@@ -963,16 +970,230 @@ describe('IgxGrid Component Tests', () => {
             display density is changed`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
             fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
             tick(16);
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(320);
+            expect(defaultHeightNum).toBe(330);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+        }));
+
+        it(`should render grid with correct height when parent container\'s height is set
+            and the total row height is smaller than parent height #1861`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.paging = true;
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it(`should render grid with correct height when height is in percent and the
+            sum height of all rows is lower than parent height #1858`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
+
+                tick();
+                fix.detectChanges();
+                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+        }));
+
+        it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        }));
+
+        it('should keep auto-sizing if initial data is set to empty array that is then filled', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.fullData.forEach(record => {
+                fix.componentInstance.data.push(record);
+            });
+            fix.componentInstance.grid.cdr.markForCheck();
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        }));
+
+        it(`should not render with calcHeight null at any point when loading data and
+            auto-sizing is required and initial data is empty`, async () => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+            fix.detectChanges();
+            await wait(500);
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
+
+        it('should keep auto-sizing if initial data is set to small array that is then filled', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.semiData;
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        }));
+
+        it(`should render with calcHeight null if initial data is small but then
+            auto-size when it is filled`, async () => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.semiData;
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+            fix.detectChanges();
+            await wait(500);
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
+
+        it('should keep default height when filtering', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            let defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            fix.componentInstance.grid.filter('ID', 'ALFKI', IgxStringFilteringOperand.instance().condition('equals'));
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        }));
+
+        it('should not keep default height when lower the amount of bound data', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            fix.componentInstance.grid.data = fix.componentInstance.semiData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+        }));
+
+        it('should not keep auto-sizing when changing height', async () => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            await wait();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            let defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            fix.componentInstance.grid.height = '400px';
+            await wait();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBeLessThan(400);
+            expect(defaultHeightNum).toBeGreaterThan(300);
+            expect(fix.componentInstance.grid.calcHeight).toBeLessThan(400);
+            expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(300);
+        });
+
+        it('should not auto-size when changing height is determinable', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.outerHeight = 800;
+            tick();
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            let defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBeLessThan(800);
+            expect(defaultHeightNum).toBeGreaterThan(700);
+            expect(fix.componentInstance.grid.calcHeight).toBeLessThan(800);
+            expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(700);
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            tick();
+            fix.detectChanges();
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeNull();
+            expect(defaultHeightNum).toBeLessThan(800);
+            expect(defaultHeightNum).toBeGreaterThan(700);
+            expect(fix.componentInstance.grid.calcHeight).toBeLessThan(800);
+            expect(fix.componentInstance.grid.calcHeight).toBeGreaterThan(700);
+            fix.componentInstance.data = fix.componentInstance.fullData;
         }));
 
         it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
@@ -2007,6 +2228,60 @@ describe('IgxGrid Component Tests', () => {
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should update row changes when focus overlay buttons on tabbing`, (async() => {
+                let currentEditCell: IgxGridCellComponent;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                fixture.detectChanges();
+                await wait();
+
+                // go to first editable cell
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', targetCell.nativeElement, true);
+                fixture.detectChanges();
+                await wait();
+
+                // change first editable cell value
+                targetCell.editValue = '500';
+                fixture.detectChanges();
+                await wait();
+
+                // go to Done
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                await wait();
+
+                let overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
+                expect(overlayText.textContent.trim()).toBe('You have 1 changes in this row');
+
+                // focus Cancel
+                const bannerRowElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+                const cancelButtonElement = bannerRowElement.firstElementChild;
+                cancelButtonElement.focus();
+                fixture.detectChanges();
+                await wait();
+
+                // go to last editable cell
+                UIInteractions.triggerKeyDownWithBlur('tab', document.activeElement, true, false, true);
+                fixture.detectChanges();
+                await wait();
+
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(currentEditCell.column.field).toEqual('Test');
+
+                // change last editable cell value
+                targetCell.editValue = 'No test';
+                fixture.detectChanges();
+                await wait();
+
+                // move to Cancel
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                await wait();
+
+                overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
+                expect(overlayText.textContent.trim()).toBe('You have 2 changes in this row');
             }));
         });
 
@@ -3176,7 +3451,7 @@ describe('IgxGrid Component Tests', () => {
                 tick(16);
                 fixture.detectChanges();
 
-                let overlayText: HTMLElement = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
+                let overlayText: HTMLElement = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(0);
                 fixture.componentInstance.cellInEditMode.editValue = 'Spiro';
                 fixture.componentInstance.moveNext(true);
@@ -3184,7 +3459,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
 
                 cell = grid.getCellByColumn(0, 'ReorderLevel');
-                overlayText = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
+                overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(1);
 
                 fixture.componentInstance.buttons.last.element.nativeElement.click();
@@ -3732,7 +4007,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(500);
+            expect(grid.calcHeight).toBe(510);
             tab.tabs.toArray()[2].select();
             await wait(100);
             fix.detectChanges();
@@ -3797,7 +4072,7 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
-            expect(grid.calcHeight).toBe(200);
+            expect(grid.calcHeight).toBe(204);
             tab.tabs.toArray()[4].select();
             await wait(100);
             fix.detectChanges();
@@ -3807,7 +4082,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator'));
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(200);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
     });
@@ -3968,7 +4243,9 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         </div>`
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
-    public data = [
+    public data = [];
+
+    public fullData = [
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste' },
         { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados' },
         { 'ID': 'ANTON', 'CompanyName': 'Antonio Moreno Taquería' },
@@ -3998,12 +4275,30 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
         { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.' }
     ];
 
+    public get semiData(): any[] {
+        return this.fullData.slice(0, 5);
+    }
+
     public height = null;
     public paging = false;
     public pageSize = 5;
     public density = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
+}
+
+@Component({
+    template:
+        `<div style="height:300px">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
+                [paging]="paging" [perPage]="pageSize">
+            </igx-grid>
+        </div>`
+})
+export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
 }
 
 @Component({

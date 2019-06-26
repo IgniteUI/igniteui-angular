@@ -464,7 +464,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
@@ -509,7 +509,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
@@ -1038,8 +1038,8 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`
