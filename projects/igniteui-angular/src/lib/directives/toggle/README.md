@@ -99,7 +99,6 @@ Providing reference from custom component which has already been registered into
 | `igxToggleAction`| `IToggleView` \| `string` | Determines the target that have to be controled. |
 | `overlaySettings` | `OverlaySettings`| Passes `igxOverlay` settings for applicable targets (`igxToggle`) that control positioning, interaction and scroll behavior.
 | `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| Determines where the target overlay element should be attached. Shortcut for `overlaySettings.outlet`.
-| `closeOnOutsideClick`| `Boolean` | **Deprecated.** Determines if passed Component/Directive have to be closed when it is clicked outside. |
 
 # IgxOverlayOutlet Directive
 

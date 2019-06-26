@@ -2,7 +2,8 @@ import { IgxInputDirective, IgxInputState } from './../directives/input/input.di
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
     AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
-    Injector, OnInit, AfterViewInit, OnDestroy
+    Injector, OnInit, AfterViewInit, OnDestroy, Inject
+
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -21,6 +22,7 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** @hidden @internal */
 @Directive({
@@ -204,8 +206,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Optional() private _injector: Injector) {
-        super(elementRef, cdr, selection);
+
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        private _injector: Injector) {
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     /** @hidden @internal */

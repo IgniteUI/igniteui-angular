@@ -1,0 +1,128 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+@import '../light/avatar';
+@import '../light/badge';
+@import '../light/banner';
+@import '../light/bottom-nav';
+@import '../light/button';
+@import '../light/button-group';
+@import '../light/calendar';
+@import '../light/card';
+@import '../light/carousel';
+@import '../light/checkbox';
+@import '../light/chip';
+@import '../light/column-hiding';
+@import '../light/combo';
+@import '../light/dialog';
+@import '../light/divider';
+@import '../light/drop-down';
+@import '../light/expansion-panel';
+@import '../light/grid';
+@import '../light/grid-filtering';
+@import '../light/grid-pagination';
+@import '../light/grid-summary';
+@import '../light/grid-toolbar';
+@import '../light/icon';
+@import '../light/input-group';
+@import '../light/list';
+@import '../light/navbar';
+@import '../light/navdrawer';
+@import '../light/overlay';
+@import '../light/progress';
+@import '../light/radio';
+@import '../light/ripple';
+@import '../light/slider';
+@import '../light/snackbar';
+@import '../light/switch';
+@import '../light/tabs';
+@import '../light/time-picker';
+@import '../light/toast';
+@import '../light/tooltip';
+
+/// The default light schema for all components.
+/// @type {Map}
+/// @property {Map} igx-avatar [$_light-avatar]
+/// @property {Map} igx-badge [$_light-badge]
+/// @property {Map} igx-banner [$_light-banner]
+/// @property {Map} igx-bottom-nav [$_light-bottom-nav]
+/// @property {Map} igx-button [$_light-button]
+/// @property {Map} igx-button-group [$_light-button-group]
+/// @property {Map} igx-calendar [$_light-calendar]
+/// @property {Map} igx-card [$_light-card]
+/// @property {Map} igx-carousel [$_light-carousel]
+/// @property {Map} igx-checkbox [$_light-checkbox]
+/// @property {Map} igx-chip [$_light-chip]
+/// @property {Map} igx-column-hiding [$_light-column-hiding]
+/// @property {Map} igx-combo [$_light-combo]
+/// @property {Map} igx-dialog [$_light-dialog]
+/// @property {Map} igx-divider [$_light-divider]
+/// @property {Map} igx-drop-down [$_light-drop-down]
+/// @property {Map} igx-expansion-panel [$_light-expansion-panel]
+/// @property {Map} igx-grid [$_light-grid]
+/// @property {Map} igx-grid-filtering [$_light-grid-filtering]
+/// @property {Map} igx-grid-paginator [$_light-grid-pagination]
+/// @property {Map} igx-grid-summary [$_light-grid-summary]
+/// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
+/// @property {Map} igx-icon [$_light-icon]
+/// @property {Map} igx-input-group [$_light-input-group]
+/// @property {Map} igx-list [$_light-list]
+/// @property {Map} igx-navbar [$_light-navbar]
+/// @property {Map} igx-navdrawer [$_light-navdrawer]
+/// @property {Map} igx-overlay [$_light-overlay]
+/// @property {Map} igx-progress-linear [$_light-progress-linear]
+/// @property {Map} igx-progress-circular [$_light-progress-circular]
+/// @property {Map} igx-radio [$_light-radio]
+/// @property {Map} igx-ripple [$_light-ripple]
+/// @property {Map} igx-slider [$_light-slider]
+/// @property {Map} igx-snackbar [$_light-snackbar]
+/// @property {Map} igx-switch [$_light-switch]
+/// @property {Map} igx-tabs [$_light-tabs]
+/// @property {Map} igx-time-picker [$_light-time-picker]
+/// @property {Map} igx-toast [$_light-toast]
+/// @property {Map} igx-tooltip [$_light-tooltip]
+
+$light-round-schema: (
+    igx-avatar: extend($_light-avatar, $_round-shape-avatar),
+    igx-badge: extend($_light-badge, $_round-shape-badge),
+    igx-banner: extend($_light-banner, $_round-shape-banner),
+    igx-bottom-nav: extend($_light-bottom-nav, $_round-shape-bottom-nav),
+    igx-button: extend($_light-button, $_round-shape-button),
+    igx-button-group: extend($_light-button-group, $_round-shape-button-group),
+    igx-calendar: extend($_light-calendar, $_round-shape-calendar),
+    igx-card: extend($_light-card, $_round-shape-card),
+    igx-carousel: extend($_light-carousel, $_round-shape-carousel),
+    igx-checkbox: extend($_light-checkbox, $_round-shape-checkbox),
+    igx-chip: extend($_light-chip, $_round-shape-chip),
+    igx-column-hiding: extend($_light-column-hiding, $_round-shape-column-hiding),
+    igx-combo: extend($_light-combo, $_round-shape-combo),
+    igx-dialog: extend($_light-dialog, $_round-shape-dialog),
+    igx-divider: extend($_light-divider, $_round-shape-divider),
+    igx-drop-down: extend($_light-drop-down, $_round-shape-drop-down),
+    igx-expansion-panel: extend($_light-expansion-panel, $_round-shape-expansion-panel),
+    igx-grid: extend($_light-grid, $_round-shape-grid),
+    igx-grid-filtering: extend($_light-grid-filtering, $_round-shape-grid-filtering),
+    igx-grid-paginator: extend($_light-grid-pagination, $_round-shape-grid-pagination),
+    igx-grid-summary: extend($_light-grid-summary, $_round-shape-grid-summary),
+    igx-grid-toolbar: extend($_light-grid-toolbar, $_round-shape-tooltip),
+    igx-icon: extend($_light-icon, $_round-shape-icon),
+    igx-input-group: extend($_light-input-group, $_round-shape-input-group),
+    igx-list: extend($_light-list, $_round-shape-list),
+    igx-navbar: extend($_light-navbar, $_round-shape-navbar),
+    igx-navdrawer: extend($_light-navdrawer, $_round-shape-navdrawer),
+    igx-overlay: extend($_light-overlay, $_round-shape-overlay),
+    igx-linear-bar: extend($_light-progress-linear, $_default-shape-progress),
+    igx-circular-bar: extend($_light-progress-circular, $_default-shape-progress),
+    igx-radio: extend($_light-radio, $_round-shape-radio),
+    igx-ripple: extend($_light-ripple, $_round-shape-ripple),
+    igx-slider: extend($_light-slider, $_round-shape-slider),
+    igx-snackbar: extend($_light-snackbar, $_round-shape-snackbar),
+    igx-switch: extend($_light-switch, $_round-shape-switch),
+    igx-tabs: extend($_light-tabs, $_round-shape-tabs),
+    igx-time-picker: extend($_light-time-picker, $_round-shape-time-picker),
+    igx-toast: extend($_light-toast, $_round-shape-toast),
+    igx-tooltip: extend($_light-tooltip, $_round-shape-tooltip)
+);
