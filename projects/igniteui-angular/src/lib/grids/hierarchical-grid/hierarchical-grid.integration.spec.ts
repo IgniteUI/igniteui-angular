@@ -87,7 +87,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.reflow();
             fixture.detectChanges();
 
-        let firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        let firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             firstRow.nativeElement.children[0].click();
             fixture.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
@@ -114,7 +114,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+            firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
             await wait(100);
@@ -483,7 +483,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
-            const rootExpander =  hierarchicalGrid.dataRowList.toArray()[0].expander;
+            const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
             const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
@@ -555,8 +555,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -570,8 +570,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeFalsy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(15);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -582,8 +582,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
