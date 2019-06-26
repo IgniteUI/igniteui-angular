@@ -4478,6 +4478,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
+        this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
