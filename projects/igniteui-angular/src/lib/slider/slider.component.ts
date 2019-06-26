@@ -858,12 +858,12 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public writeValue(value: any): void {
+    public writeValue(value: IRangeSliderValue | number): void {
         if (!value) {
             return;
         }
 
-        this.value = value;
+        this.normalizeByStep(value);
     }
 
     /**
@@ -1000,7 +1000,6 @@ export class IgxSliderComponent implements
         if (!this.isRange && this.value === this.upperBound) {
             this.value = this.lowerBound;
         }
-
     }
 
     private calculateStepDistance() {
@@ -1133,6 +1132,22 @@ export class IgxSliderComponent implements
 
     private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {
         return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), pMin, pMax);
+    }
+
+    /**
+     * @hidden
+     * Normalizе the value when two-way data bind is used and {@link this.step} is set.
+     * @param value
+     */
+    private normalizeByStep(value: IRangeSliderValue | number) {
+        if (this.isRange) {
+            this.value =  {
+                lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
+                upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).lower % this.step)
+            };
+        } else {
+            this.value = (value as number) - ((value as number) % this.step);
+        }
     }
 
     private updateTrack() {
