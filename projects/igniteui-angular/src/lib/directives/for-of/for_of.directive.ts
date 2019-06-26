@@ -667,7 +667,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const view = this._embeddedViews[i];
             const rNode = view.rootNodes.find((node) => node.nodeType === Node.ELEMENT_NODE);
             if (rNode) {
-                const h = Math.max(rNode.offsetHeight, parseInt(this.igxForItemSize, 10));
+                const h = rNode.offsetHeight ? rNode.offsetHeight : parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
@@ -1308,6 +1308,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             size = parseInt(this.igxForItemSize, 10) || 0;
             if (item && item.summaries) {
                 size = item.max;
+            } else if (item && item.groups && item.height) {
+                size = item.height;
             }
         } else {
             size = parseInt(item[dimension], 10) || 0;
