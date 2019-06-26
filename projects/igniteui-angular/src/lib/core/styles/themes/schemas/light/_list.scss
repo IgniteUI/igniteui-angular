@@ -21,21 +21,21 @@
 /// @property {Map} item-text-color-hover [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
 /// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: (), rgba: .74] - The active list item text color.
 ///
-/// @property {Map} item-title-color [currentColor] - The list item title color.
-/// @property {Map} item-title-color-hover [currentColor] - The list item title hover color.
-/// @property {Map} item-title-color-active [currentColor] - The list item title active color.
+/// @property {Color} item-title-color [currentColor] - The list item title color.
+/// @property {Color} item-title-color-hover [currentColor] - The list item title hover color.
+/// @property {Color} item-title-color-active [currentColor] - The list item title active color.
 ///
-/// @property {Map} item-subtitle-color [currentColor] - The list item subtitle color.
-/// @property {Map} item-subtitle-color-hover [currentColor] - The list item subtitle hover color.
-/// @property {Map} item-subtitle-color-active [currentColor] - The list item subtitle active color.
+/// @property {Color} item-subtitle-color [currentColor] - The list item subtitle color.
+/// @property {Color} item-subtitle-color-hover [currentColor] - The list item subtitle hover color.
+/// @property {Color} item-subtitle-color-active [currentColor] - The list item subtitle active color.
 ///
-/// @property {Map} item-action-color [currentColor] - The list item action color.
-/// @property {Map} item-action-color-hover [currentColor] - The list item action hover color.
-/// @property {Map} item-action-color-active [currentColor] - The list item action active color.
+/// @property {Color} item-action-color [currentColor] - The list item action color.
+/// @property {Color} item-action-color-hover [currentColor] - The list item action hover color.
+/// @property {Color} item-action-color-active [currentColor] - The list item action active color.
 ///
-/// @property {Map} item-thumbnail-color [currentColor] - The list item thumbnail color.
-/// @property {Map} item-thumbnail-color-hover [currentColor] - The list item thumbnail hover color.
-/// @property {Map} item-thumbnail-color-active [currentColor] - The list item thumbnail active color.
+/// @property {Color} item-thumbnail-color [currentColor] - The list item thumbnail color.
+/// @property {Color} item-thumbnail-color-hover [currentColor] - The list item thumbnail hover color.
+/// @property {Color} item-thumbnail-color-active [currentColor] - The list item thumbnail active color.
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
