@@ -124,13 +124,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     public set data(value: any[]) {
         this._data = value;
-        if (this._ngAfterViewInitPassed &&
-            this.calcHeight === null &&
-            this.isPercentHeight) {
-            /* the body should be auto-sized in this case before igxFor renders the whole data */
-            const bodyHeight = this.defaultTargetBodyHeight;
-            this.calcHeight = bodyHeight > 0 ? bodyHeight : null;
-        }
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -694,7 +687,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 defaultExpanded: this.groupsExpanded
             };
 
-            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
         } else {
             return null;
         }

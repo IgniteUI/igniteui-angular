@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-
 @import 'mixins';
 @import 'app-palettes';
 @import 'app-layout';
@@ -36,5 +35,41 @@
 
     .igniteui-logo__rocket {
         fill: rgba(white, .38);
+    }
+}
+
+@media print {
+    html,
+    body,
+    app-root {
+        min-height: 100vh;
+        min-width: 100vw;
+        margin: 0;
+        display: block;
+        background: transparent !important;
+    }
+
+    .sample-content,
+    .sample-column,
+    .wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .sample-header,
+    .sample-description,
+    .sample-title,
+    .no-print,
+    .igx-nav-drawer,
+    .form-title {
+        display: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        background-color: #fff !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #fff !important;
     }
 }

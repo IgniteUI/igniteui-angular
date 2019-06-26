@@ -5,7 +5,7 @@
 
     <div class="sample-content">
         <article class="grid-row-edit-wrapper">
-            <h4>Grid with rowEditing and without transactions</h4>
+            <h4 class="sample-title">Grid with rowEditing and without transactions</h4>
             <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
                 <igx-column width="100px">
                     <ng-template igxCell let-cell="cell" let-val>
@@ -27,7 +27,7 @@
             </igx-grid>
         </article>
         <article class="grid-row-edit-wrapper">
-            <h4>Grid with rowEditing and with transactions</h4>
+            <h4 class="sample-title">Grid with rowEditing and with transactions</h4>
             <div>
                 <igx-checkbox class="properties-toggle" [(ngModel)]="pinFlag">Pinned Columns</igx-checkbox>
                 <igx-checkbox class="properties-toggle" [(ngModel)]="hideFlag">Hidden Columns</igx-checkbox>
@@ -35,7 +35,7 @@
                 <igx-checkbox class="properties-toggle" [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()">Custom
                     Template</igx-checkbox>
             </div>
-            <div>
+            <div class="no-print">
                 <label>Cell Update API</label>
                 <div class="properties-input">
                     <label>
@@ -64,7 +64,7 @@
                 <button igxButton class="igx-button--raised" (click)="updateCell(update_value, update_row, update_column)">Update</button>
             </div>
             <div>
-                <h4>Log Grid Edit Events</h4>
+                <h4 class="sample-title">Log Grid Edit Events</h4>
                 <div>
                     <igx-switch [(ngModel)]="events.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
                     <igx-switch [(ngModel)]="events.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div>
-                <h4>Cancel Grid Edit Events</h4>
+                <h4 class="sample-title">Cancel Grid Edit Events</h4>
                 <div>
                     <igx-switch [(ngModel)]="cancel.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
                     <igx-switch [(ngModel)]="cancel.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
@@ -171,7 +171,7 @@
             <button (click)="openCommitDialog('gridRowEditTransaction')">Commit</button>
         </article>
         <article class="grid-row-edit-wrapper">
-            <h4>Grid without row editing neither transactions</h4>
+            <h4 class="sample-title">Grid without row editing neither transactions</h4>
             <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                 <igx-column width="100px">
                     <ng-template igxCell let-cell="cell" let-val>
@@ -205,7 +205,7 @@
             </igx-grid>
         </article>
         <article class="grid-row-edit-wrapper">
-            <h4>Grid without row editing and with transactions</h4>
+            <h4 class="sample-title">Grid without row editing and with transactions</h4>
             <app-grid-with-transactions>
                 <igx-grid #gridTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                     <igx-column>
@@ -232,7 +232,7 @@
             <button (click)="openCommitDialog('gridTransaction')">Commit</button>
         </article>
         <article class="grid-row-edit-wrapper">
-            <h4>Performance grid with transactions and row edit</h4>
+            <h4 class="sample-title">Performance grid with transactions and row edit</h4>
             <app-grid-with-transactions>
                 <igx-grid #gridPerformance [primaryKey]="'ID'" [data]="performanceData" [rowEditable]="true" [width]="'1200px'"
                     [height]="'800px'" [rowSelectable]="true">

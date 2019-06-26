@@ -1,0 +1,50 @@
+@import 'grid-print';
+
+@mixin igx-print-layout {
+    @media print {
+        * {
+            background-color: transparent !important;
+            color: #000 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        a[href^='http']::after {
+            content: '[' attr(href) ']';
+            color: blue;
+        }
+
+        @include igx-grid-print();
+
+        %igx-bottom-nav-menu,
+        %igx-group-display,
+        %igx-ripple-display,
+        %igx-slider-display,
+        %igx-snackbar-display,
+        %form-group-display,
+        %cbx-display,
+        %radio-display,
+        %tooltip-display,
+        %igx-toast-display,
+        %igx-navbar-display,
+        %vhelper-display,
+        %igx-button--flat,
+        %igx-button--raised,
+        %igx-button--fab,
+        %igx-button--icon,
+        %igx-button--disabled,
+        %igx-tabs__header,
+        %switch-display,
+        %grid-tbody-scrollbar,
+        %grid__cbx-selection,
+        %circular-display,
+        %linear-display,
+        .igx-carousel__indicators,
+        .igx-carousel__arrow--prev,
+        .igx-carousel__arrow--next{
+            display: none !important;
+        }
+    }
+}
+

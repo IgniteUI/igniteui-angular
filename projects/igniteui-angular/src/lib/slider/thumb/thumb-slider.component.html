@@ -1,0 +1,9 @@
+<span class="label">
+    <ng-container *ngTemplateOutlet="templateRef ? templateRef : thumbFromDefaultTemplate; context: context"></ng-container>
+</span>
+<span class="dot"></span>
+
+
+<ng-template #thumbFromDefaultTemplate>
+    {{ value }}
+</ng-template>

@@ -26,7 +26,7 @@
         [cellTemplate]="col.bodyTemplate">
     </igx-grid-cell>
 </ng-container>
-<ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+<ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
     <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--number]="col.dataType === 'number'"
