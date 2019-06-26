@@ -134,7 +134,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         const args = cell.createEditEventArgs();
 
-
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
             return args;
@@ -146,12 +145,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
-        }
-
-        const valueInTransactions = this.grid.transactions.getAggregatedValue(cell.id.rowID, true);
-        if (valueInTransactions) {
-            cell.value = valueInTransactions[cell.column.field];
-            cell.rowData = valueInTransactions;
         }
 
         this.grid.summaryService.clearSummaryCache(args);
