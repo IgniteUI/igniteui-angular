@@ -13,7 +13,6 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
-import { showMessage } from '../../core/deprecateDecorators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
