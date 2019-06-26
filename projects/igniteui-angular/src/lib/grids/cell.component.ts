@@ -22,7 +22,7 @@ import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
-import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
