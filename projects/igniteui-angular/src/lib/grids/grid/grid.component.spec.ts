@@ -2238,7 +2238,7 @@ describe('IgxGrid Component Tests', () => {
                 // go to last editable cell
                 UIInteractions.triggerKeyDownWithBlur('tab', document.activeElement, true, false, true);
                 fixture.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
 
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
                 expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
