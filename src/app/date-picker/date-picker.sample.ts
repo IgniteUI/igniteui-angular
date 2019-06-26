@@ -2,9 +2,9 @@ import { Component, ViewChild, PipeTransform, Pipe, OnInit } from '@angular/core
 import { IgxDatePickerComponent, DateRangeType } from 'igniteui-angular';
 import { DatePipe, formatDate } from '@angular/common';
 
-// import { registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 // import localeDE from '@angular/common/locales/de';
-// import localeJA from '@angular/common/locales/ja';
+import localeJA from '@angular/common/locales/ja';
 
 @Component({
     selector: 'app-date-picker-sample',
@@ -48,7 +48,7 @@ export class DatePickerSampleComponent {
     }
 
     constructor() {
-        // registerLocaleData(localeJA);
+        registerLocaleData(localeJA);
         // registerLocaleData(localeDE);
         const date1 = new Date();
         date1.setDate(8);
@@ -73,7 +73,17 @@ export class DatePickerSampleComponent {
 
     public changeDate(event) {
         const input = event.target.value;
-        const parsedDate = (input !== '') ? new Date(formatDate(input, this.retemplatedDP.format, this.retemplatedDP.locale)) : '';
+        const dateParts = input.split(new RegExp('[^0-9]', 'g')).filter((part) => part !== '');
+
+        let date = '';
+        for (let i = 0; i < dateParts.length; i++) {
+            date += dateParts[i];
+            if (i !== dateParts.length - 1) {
+                date += '/';
+            }
+        }
+
+        const parsedDate = (date !== '') ? new Date(formatDate(date, this.retemplatedDP.format, this.retemplatedDP.locale)) : '';
         this.retemplatedDP.value = parsedDate;
     }
 
