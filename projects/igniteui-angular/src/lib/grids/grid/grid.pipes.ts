@@ -125,7 +125,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
-    public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
+    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
 
         if (!this.gridAPI.grid.paging) {
             return collection;
@@ -136,10 +136,7 @@ export class IgxGridPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const result: IGroupByResult = {
-            data: DataUtil.page(cloneArray(collection.data), state),
-            metadata: DataUtil.page(cloneArray(collection.metadata), state)
-        };
+        const result = DataUtil.page(cloneArray(collection), state);
         this.gridAPI.grid.pagingState = state;
         return result;
     }
