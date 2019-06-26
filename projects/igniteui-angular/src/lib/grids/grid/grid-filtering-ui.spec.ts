@@ -4033,13 +4033,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
             expect(productNameCol.pinned).toBe(true);
 
-            // Try move 'ProductName' one step to the left. (should not move since it's already first)
-            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
-            tick(100);
-            fix.detectChanges();
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
-            expect(productNameCol.pinned).toBe(true);
+            // Try move 'ProductName' one step to the left. (Button should be disabled since it's already first)
+            const moveComponent = GridFunctions.getExcelFilteringMoveComponent(fix);
+            const btnMoveLeft: any = moveComponent.querySelectorAll('button')[0];
+            expect(btnMoveLeft.classList.contains('igx-button--disabled')).toBe(true);
 
             // Move 'ProductName' two steps to the right. (should move)
             GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
