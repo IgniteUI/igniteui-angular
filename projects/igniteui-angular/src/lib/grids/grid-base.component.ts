@@ -4342,6 +4342,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this._columnGroups = this.columnList.some(col => col.columnGroup);
+        this._maxLevelHeaderDepth = null;
         this.reinitPinStates();
     }
 
