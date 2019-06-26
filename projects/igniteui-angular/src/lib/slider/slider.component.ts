@@ -9,7 +9,8 @@ import {
     OnDestroy,
     HostListener,
     ViewChildren,
-    QueryList
+    QueryList,
+    ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -329,6 +330,10 @@ export class IgxSliderComponent implements
      */
     public set disabled(disable: boolean) {
         this._disabled = disable;
+
+        if (this._hasViewInit) {
+            this.preventThumbFocusWhenDisabled();
+        }
     }
 
     /**
@@ -621,7 +626,7 @@ export class IgxSliderComponent implements
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
 
-    constructor(private renderer: Renderer2, private _el: ElementRef) { }
+    constructor(private renderer: Renderer2, private _el: ElementRef, private _cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -655,14 +660,6 @@ export class IgxSliderComponent implements
     @HostListener('focus')
     public onFocus() {
         this.toggleThumbLabels();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('blur')
-    public onBlur() {
-        this.hideThumbLabels();
     }
 
     /**
@@ -831,6 +828,7 @@ export class IgxSliderComponent implements
         this._hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
         this.setTickInterval(this.labels);
+        this.preventThumbFocusWhenDisabled();
 
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
@@ -953,6 +951,10 @@ export class IgxSliderComponent implements
      */
     public onThumbChange() {
         this.toggleThumbLabels();
+    }
+
+    public onHoverChange(state: boolean) {
+        return state ? this.showThumbLabels() : this.hideThumbLabels();
     }
 
     private swapThumb(value: IRangeSliderValue) {
@@ -1087,9 +1089,9 @@ export class IgxSliderComponent implements
             return;
         }
 
-        this.thumbTo.showThumbLabel();
+        this.thumbTo.showThumbIndicators();
         if (this.thumbFrom) {
-            this.thumbFrom.showThumbLabel();
+            this.thumbFrom.showThumbIndicators();
         }
     }
 
@@ -1098,15 +1100,29 @@ export class IgxSliderComponent implements
             return;
         }
 
-        this.thumbTo.hideThumbLabel();
+        this.thumbTo.hideThumbIndicators();
         if (this.thumbFrom) {
-            this.thumbFrom.hideThumbLabel();
+            this.thumbFrom.hideThumbIndicators();
         }
     }
 
     private toggleThumbLabels() {
         this.showThumbLabels();
         this.hideThumbLabels();
+    }
+
+    private preventThumbFocusWhenDisabled() {
+        if (!this._disabled) {
+            return;
+        }
+
+        if (this.isRange) {
+            this.thumbFrom.tabindex = -1;
+        }
+
+        this.thumbTo.tabindex = -1;
+
+        this._cdr.detectChanges();
     }
 
     private closestTo(goal: number, positions: number[]): number {

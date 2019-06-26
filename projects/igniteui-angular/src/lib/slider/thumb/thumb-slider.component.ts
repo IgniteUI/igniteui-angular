@@ -9,8 +9,7 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    TemplateRef
-} from '@angular/core';
+    TemplateRef} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
@@ -26,7 +25,14 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     private _timer;
     private _isActiveLabel = false;
+    private _isPressed = false;
     private _destroy$ = new Subject<boolean>();
+
+    private get thumbPositionX() {
+        const thumbBounderies = this.nativeElement.getBoundingClientRect();
+        const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
+        return thumbBounderies.left + thumbCenter;
+    }
 
     public isActive = false;
 
@@ -52,9 +58,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public step: number;
 
     @Input()
-    public fromHandler: boolean;
-
-    @Input()
     public templateRef: TemplateRef<any>;
 
     @Input()
@@ -69,50 +72,49 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Output()
     public onChange = new EventEmitter<any>();
 
+    @Output()
+    public onHoverChange = new EventEmitter<boolean>();
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
+    @HostBinding('attr.z-index')
+    public zIndex = 0;
+
     @HostBinding('class.igx-slider__thumb-from')
     public get thumbFromClass() {
-        return this.fromHandler;
+        return this.type === SliderHandle.FROM;
     }
 
     @HostBinding('class.igx-slider__thumb-to')
     public get thumbToClass() {
-        return !this.fromHandler;
+        return this.type === SliderHandle.TO;
     }
 
     @HostBinding('class.igx-slider__thumb-from--active')
     public get thumbFromActiveClass() {
-        return this.fromHandler && this._isActiveLabel;
+        return this._isActiveLabel;
     }
 
     @HostBinding('class.igx-slider__thumb-to--active')
     public get thumbToActiveClass() {
-        return !this.fromHandler && this._isActiveLabel;
+        return this._isActiveLabel;
     }
-
 
     @HostBinding('class.igx-slider__thumb--pressed')
     public get thumbPressedClass() {
-        return this.isActive && this._isActiveLabel;
+        return this.isActive && this._isPressed;
     }
 
     public get nativeElement() {
         return this._elementRef.nativeElement;
     }
 
-    private get thumbPositionX() {
-        const thumbBounderies = this.nativeElement.getBoundingClientRect();
-        const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
-        return thumbBounderies.left + thumbCenter;
-    }
-
     public get destroy(): Subject<boolean> {
         return this._destroy$;
     }
 
-    constructor(private _elementRef: ElementRef) { }
+    constructor (private _elementRef: ElementRef) { }
 
     /**
      * @hidden
@@ -131,6 +133,16 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         this._destroy$.next(true);
         this._destroy$.complete();
+    }
+
+    @HostListener('pointerenter')
+    public onPinterEnter() {
+        this.onHoverChange.emit(true);
+    }
+
+    @HostListener('pointerleave')
+    public onPointerLeave() {
+        this.onHoverChange.emit(false);
     }
 
     @HostListener('keydown', ['$event'])
@@ -155,19 +167,20 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @HostListener('blur')
     public onBlur() {
         this.isActive = false;
+        this.zIndex = 0;
     }
 
     @HostListener('focus')
     public onFocusListener() {
         this.isActive = true;
+        this.zIndex = 1;
     }
 
-    public showThumbLabel() {
+    /**
+     * Show thumb label and ripple.
+     */
+    public showThumbIndicators() {
         if (this.disabled) {
-            return;
-        }
-
-        if (this.continuous) {
             return;
         }
 
@@ -175,21 +188,19 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
             clearTimeout(this._timer);
         }
 
-        this._isActiveLabel = true;
+        this.toggleThumbIndicators(true);
     }
 
-
-    public hideThumbLabel() {
+    /**
+     * Hide thumb label and ripple.
+     */
+    public hideThumbIndicators() {
         if (this.disabled) {
             return;
         }
 
-        if (this.continuous) {
-            return;
-        }
-
         this._timer = setTimeout(
-            () => this._isActiveLabel = false,
+            () =>  this.toggleThumbIndicators(false),
             this.thumbLabelVisibilityDuration
         );
     }
@@ -217,5 +228,13 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     private stepToProceed(scaleX, stepDist) {
         return Math.round(scaleX / stepDist) * this.step;
+    }
+
+    private toggleThumbIndicators(visible: boolean) {
+        this._isPressed = visible;
+
+        if (!this.continuous) {
+            this._isActiveLabel = visible;
+        }
     }
 }
