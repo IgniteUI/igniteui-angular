@@ -7,13 +7,16 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" />
-    <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" />
-
+    {{#ifCond settings.localize '===' 'en'}}
+        <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" />
+    {{else}}
+        <link rel="canonical" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" />
+    {{/ifCond}}
     <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en" />
     <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="en-us" />
     <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja" />
     <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'jp'}}{{url}}" hreflang="ja-jp" />
+    <link rel="alternate" href="{{getConfigData 'typedoc_default_url' 'en'}}{{url}}" hreflang="x-default" />
 
     <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/layout.css">
     <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/animate-custom.css">

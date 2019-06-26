@@ -273,7 +273,7 @@ function testGroupBy() {
             // sort
             let res = DataUtil.sort(data, [expr]);
             // first group pipe
-            let gres = DataUtil.group(res, state, groupRecords);
+            let gres = DataUtil.group(res, state, null, groupRecords);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);
@@ -291,7 +291,7 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
             // first group pipe
-            gres = DataUtil.group(sorted, state, groupRecords);
+            gres = DataUtil.group(sorted, state, null, groupRecords);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);

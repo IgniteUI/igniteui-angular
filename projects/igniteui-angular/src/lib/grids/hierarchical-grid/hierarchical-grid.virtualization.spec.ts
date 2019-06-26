@@ -308,21 +308,21 @@ describe('IgxHierarchicalGrid Virtualization', () => {
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
+        expect(scrHeight + 1).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
 
         // expand
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
+        expect(scrHeight + 1 ).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
 
         // collapse
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
+        expect(scrHeight + 1).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
     });
 
     it('should update context information correctly for child grid container after scrolling',  async() => {
@@ -354,7 +354,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(959);
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(958);
                 done();
             }
         );
