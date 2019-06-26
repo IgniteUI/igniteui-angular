@@ -15,6 +15,14 @@
             @extend %grid-excel-menu !optional;
         }
 
+        @include e(menu, $m: 'cosy') {
+            @extend %grid-excel-menu--cosy !optional;
+        }
+
+        @include e(menu, $m: 'compact') {
+            @extend %grid-excel-menu--compact !optional;
+        }
+
         @include e(icon) {
             @extend %grid-excel-icon !optional;
         }
@@ -44,16 +52,8 @@
             @extend %grid-excel-sort !optional;
         }
 
-        @include e(sort, $m: compact) {
-            @extend %grid-excel-sort--compact !optional;
-        }
-
         @include e(move) {
             @extend %grid-excel-move !optional;
-        }
-
-        @include e(move, $m: compact) {
-            @extend %grid-excel-move--compact !optional;
         }
 
         @include e(move-buttons) {
@@ -91,6 +91,14 @@
 
         @include e(secondary) {
             @extend %grid-excel-menu__secondary !optional;
+        }
+
+        @include e(secondary, $m: 'cosy') {
+            @extend %grid-excel-menu__secondary--cosy !optional;
+        }
+
+        @include e(secondary, $m: 'compact') {
+            @extend %grid-excel-menu__secondary--compact !optional;
         }
 
         @include e(secondary-header) {
