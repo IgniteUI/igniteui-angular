@@ -56,6 +56,12 @@
         }
     }
 
+    @include e(thumb, $m: hovered) {
+        .dot {
+            @extend %igx-thumb-dot--active !optional;
+        }
+    }
+
     @include e(thumb, $m: pressed) {
         .dot {
             @extend %igx-thumb-dot--pressed !optional;

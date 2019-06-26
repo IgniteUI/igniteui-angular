@@ -156,16 +156,6 @@
             /* 32 / 40 */
             transform: scale(.8);
         }
-
-        &:hover  {
-            %igx-thumb-label {
-                opacity: 1;
-            }
-
-            %igx-thumb-dot::before {
-                border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
-            }
-        }
     }
 
     %igx-thumb--disabled {
