@@ -78,6 +78,13 @@ const ItemHeights = {
     'compact': 28,
 };
 
+/**
+ * @hidden
+ * The default number of items that should be in the combo's
+ * drop-down list if no `[itemsMaxHeight]` is specified
+ */
+const itemsInContainer = 10;
+
 export enum IgxComboState {
     /**
      * Combo with initial state.
@@ -654,7 +661,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @Input()
     public get itemsMaxHeight(): number {
         if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
-            return this.itemHeight * 10;
+            return this.itemHeight * itemsInContainer;
         }
         return this._itemsMaxHeight;
     }
