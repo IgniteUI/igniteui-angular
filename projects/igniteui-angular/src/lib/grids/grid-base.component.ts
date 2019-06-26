@@ -202,9 +202,13 @@ export interface IGridDataBindable {
 export interface IRowDragEndEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    animation: boolean;
 }
 
-export interface IRowDragStartEventArgs extends IRowDragEndEventArgs, CancelableEventArgs { }
+export interface IRowDragStartEventArgs extends CancelableEventArgs {
+    owner: IgxDragDirective;
+    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+ }
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -4474,6 +4478,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
+        this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
