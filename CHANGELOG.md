@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.3.7
+ - **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
+
 ## 7.3.5
 - `IgxList` - The list component has been refactored. It now includes several new supporting directives:
     - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
@@ -20,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
               <igx-icon igxListAction>info</igx-icon>
             </igx-list-item>
         </igx-list>
-        
+
         <igx-list>
           <igx-list-item [isHeader]="true">List items</igx-list-item>
           <igx-list-item>
@@ -129,6 +137,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+- `IgxTransactionService` commit and delete transaction by id - `commit` and `clear` methods of `IgxTransactionService` accept now optional `id` parameter. If `id` is provided to `commit` method only transactions for provided `id`. When `id` is provided to `clear` method all transactions for provided `id` will be removed from transactions log. Additionally both `commit` and `clear` when `id` is provided will remove all the actions in undo stack related to the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834
