@@ -312,12 +312,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             totalSize = this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
+            this.state.chunkSize = this._calculateChunkSize();
             if (this.hScroll) {
                 this._scrollPosition = this.hScroll.scrollLeft;
-                this.state.startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache, 0);
+                this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
+                    this.igxForOf.length - this.state.chunkSize);
             }
-            this.state.chunkSize = this._calculateChunkSize();
-            for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
+            for (let i = this.state.startIndex; i < this.state.startIndex + this.state.chunkSize &&
+                    this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
