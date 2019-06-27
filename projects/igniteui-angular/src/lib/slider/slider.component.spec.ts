@@ -13,7 +13,7 @@ const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({

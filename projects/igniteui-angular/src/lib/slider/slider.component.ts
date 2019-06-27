@@ -77,7 +77,7 @@ export class IgxSliderComponent implements
     private _upperBound?: number;
     private _lowerValue?: number;
     private _upperValue?: number;
-    private _countinuous = false;
+    private _continuous = false;
     private _disabled = false;
     private _step = 1;
 
@@ -332,7 +332,7 @@ export class IgxSliderComponent implements
         this._disabled = disable;
 
         if (this._hasViewInit) {
-            this.preventThumbFocusWhenDisabled();
+            this.changeThumbFocusableState(disable);
         }
     }
 
@@ -348,7 +348,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public get continuous(): boolean {
-        return this._countinuous;
+        return this._continuous;
     }
 
     /**
@@ -364,7 +364,8 @@ export class IgxSliderComponent implements
             return;
         }
 
-        this._countinuous = continuous;
+        this._continuous = continuous;
+        this.setTickInterval(null);
     }
 
     /**
@@ -828,7 +829,7 @@ export class IgxSliderComponent implements
         this._hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
         this.setTickInterval(this.labels);
-        this.preventThumbFocusWhenDisabled();
+        this.changeThumbFocusableState(this.disabled);
 
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
@@ -837,6 +838,7 @@ export class IgxSliderComponent implements
             const t = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
             this.positionHandle(t, this.lowerValue);
             this.subscribeTo(t, this.thumbChanged.bind(this));
+            this.changeThumbFocusableState(this.disabled);
         });
     }
 
@@ -1065,10 +1067,6 @@ export class IgxSliderComponent implements
     }
 
     private setTickInterval(labels) {
-        if (this.continuous) {
-            return;
-        }
-
         let interval;
         const trackProgress = 100;
         if (this.labelsViewEnabled) {
@@ -1080,7 +1078,9 @@ export class IgxSliderComponent implements
                 (trackProgress / ((trackRange / this.step)) * 10) / 10
                 : null;
         }
-        this.renderer.setStyle(this.ticks.nativeElement, 'background', this.generateTickMarks('white', interval));
+
+        const renderCallbackExecution = !this.continuous ? this.generateTickMarks('white', interval) : null;
+        this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 
     private showThumbLabels() {
@@ -1110,16 +1110,14 @@ export class IgxSliderComponent implements
         this.hideThumbLabels();
     }
 
-    private preventThumbFocusWhenDisabled() {
-        if (!this._disabled) {
-            return;
-        }
+    private changeThumbFocusableState(state: boolean) {
+        const value = state ? -1 : 1;
 
         if (this.isRange) {
-            this.thumbFrom.tabindex = -1;
+            this.thumbFrom.tabindex = value;
         }
 
-        this.thumbTo.tabindex = -1;
+        this.thumbTo.tabindex = value;
 
         this._cdr.detectChanges();
     }
@@ -1143,7 +1141,7 @@ export class IgxSliderComponent implements
         if (this.isRange) {
             this.value =  {
                 lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
-                upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).lower % this.step)
+                upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
             };
         } else {
             this.value = (value as number) - ((value as number) % this.step);
