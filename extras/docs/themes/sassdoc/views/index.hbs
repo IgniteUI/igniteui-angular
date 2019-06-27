@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="{{getLang}}">
+<html lang="{{lang}}">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Ignite UI for Angular | Sass Documentation</title>
 
-        <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'en'}}" />
-        <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'jp'}}" />
-
+        {{#ifCond lang '==' 'en'}}
+            <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'en'}}" />
+        {{else}}
+            <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'jp'}}" />
+        {{/ifCond}}
         <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en" />
         <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en-us" />
         <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja" />
         <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja-jp" />
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="x-default" />
+
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/layout.css">
@@ -54,6 +58,7 @@
     <!-- End Google Tag Manager (noscript) -->
 
         {{> header}}
+        <div>{{getLang}}</div>
 
         <script src="assets/js/versioning/tag-versions.req.js"></script>
     {{!
