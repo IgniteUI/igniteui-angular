@@ -2407,7 +2407,7 @@ class IgxSelectAffixComponent {
 `
 })
 class IgxSelectReactiveFormComponent {
-    @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
+    @ViewChild('selectReactive', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
     reactiveForm: FormGroup;
     public items: string[] = [
@@ -2473,9 +2473,9 @@ class IgxSelectReactiveFormComponent {
 `
 })
 class IgxSelectTemplateFormComponent {
-    @ViewChild('selectInForm', { read: IgxSelectComponent, static: true })
+    @ViewChild('selectInForm', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
-    @ViewChild(NgForm, { static: true }) ngForm: NgForm;
+    @ViewChild(NgForm) ngForm: NgForm;
 
     model = {
         option: null
