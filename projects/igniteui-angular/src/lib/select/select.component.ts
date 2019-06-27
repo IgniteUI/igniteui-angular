@@ -312,10 +312,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-            const synchOrAsyncValidation = this.ngControl.control.validator ? this.ngControl.control.validator({} as AbstractControl) :
-                this.ngControl.control.asyncValidator({} as AbstractControl);
-            this.inputGroup.isRequired = synchOrAsyncValidation && synchOrAsyncValidation.required;
+        if (this.ngControl && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
             this.cdr.markForCheck();
         }
     }
