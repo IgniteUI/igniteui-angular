@@ -3512,6 +3512,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public addRow(data: any): void {
+        // If row editing is enabled and there is a row in edit mode
+        if (this.rowEditable && this.crudService.row) {
+            // Commit all pending transactions
+            this.transactions.endPending(true);
+        }
+
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
