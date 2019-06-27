@@ -28,7 +28,7 @@ export enum IgxValidationTrigger {
     INPUT = 'input',
     CHANGE = 'change',
     BLUR = 'blur',
-    SUBMIT = 'submit'
+    SUBMIT = 'submit' // Maybe we should get rid of 'submit', it doesn't make much sense on an input.
 }
 
 @Directive({
@@ -184,15 +184,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         this._valid = IgxInputState.INITIAL;
-        // if (this._validateOn === IgxValidationTrigger.BLUR) {
-            if (this.ngControl) {
-                if (!this.ngControl.valid) {
-                    this._valid = IgxInputState.INVALID;
-                }
-            } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
+        if (this.ngControl) {
+            if (!this.ngControl.valid) {
                 this._valid = IgxInputState.INVALID;
             }
-        // }
+        } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
+            this._valid = IgxInputState.INVALID;
+        }
     }
     /**
      *@hidden
