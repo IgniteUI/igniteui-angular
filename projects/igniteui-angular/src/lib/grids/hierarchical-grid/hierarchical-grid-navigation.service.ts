@@ -357,7 +357,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
         const isInRowEditMode = this.grid.rowEditable && this.grid.getRowByIndex(rowIndex).inEditMode;
         if (isInRowEditMode) {
-            super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
+            super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
             return;
         }
         if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent && !isSummary) {

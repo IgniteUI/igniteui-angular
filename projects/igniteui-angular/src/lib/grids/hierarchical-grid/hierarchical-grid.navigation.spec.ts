@@ -1050,11 +1050,11 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
         await wait(50);
         fixture.detectChanges();
 
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
         await wait(50);
         fixture.detectChanges();
 
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab'}));
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
         await wait(50);
         fixture.detectChanges();
 
