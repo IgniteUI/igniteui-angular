@@ -45,6 +45,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
+const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
