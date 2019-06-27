@@ -771,7 +771,7 @@ describe('IgxGrid - GroupBy', () => {
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
         expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
-            .toEqual(origScrollHeight - 204);
+            .toEqual(origScrollHeight - 202);
 
         grRows[0].toggle();
         tick();

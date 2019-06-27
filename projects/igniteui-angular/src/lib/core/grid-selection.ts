@@ -197,7 +197,7 @@ export class IgxGridSelectionService {
     selection = new Map<number, Set<number>>();
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
-    _selectionRange = new Range();
+    _selectionRange: Range;
 
 
     /**
@@ -497,7 +497,7 @@ export class IgxGridSelectionService {
     restoreTextSelection(): void {
         const selection = window.getSelection();
         if (!selection.rangeCount) {
-            selection.addRange(this._selectionRange);
+            selection.addRange(this._selectionRange || document.createRange());
         }
     }
 
