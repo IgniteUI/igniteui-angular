@@ -252,7 +252,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @internal
      */
     public get scrollPosition(): number {
-        return this.getScrollPosition();
+        return this._scrollPosition;
     }
     /**
      * @hidden
@@ -265,15 +265,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else if (this.vh) {
             this.vh.instance.elementRef.nativeElement.scrollTop = val;
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     * Overridable function that the getter calls
-     */
-    public getScrollPosition(): number {
-        return this._scrollPosition;
     }
 
     /**
@@ -322,7 +313,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             totalSize = this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
             if (this.hScroll) {
-                this.cacheScrollPosition(this.hScroll);
+                this._scrollPosition = this.hScroll.scrollLeft;
                 this.state.startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache, 0);
             }
             this.state.chunkSize = this._calculateChunkSize();
@@ -677,15 +668,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (prevStartIndex !== this.state.startIndex) {
             this.onChunkLoad.emit(this.state);
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected cacheScrollPosition(scroll) {
-        this._scrollPosition = this.igxForScrollOrientation === 'horizontal' ?
-            scroll.scrollLeft : scroll.scrollTop;
     }
 
     /**
@@ -1334,29 +1316,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected get itemsDimension() {
         return this.igxForScrollOrientation === 'horizontal' ? this.igxForSizePropName : 'height';
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected cacheScrollPosition(scroll) {
-        if (this.syncService.isMaster(this)) {
-            super.cacheScrollPosition(scroll);
-        } else {
-            this._scrollPosition = this.syncService.scrollPosition(this.igxForScrollOrientation);
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getScrollPosition(): number {
-        if (this.syncService.isMaster(this)) {
-            return this._scrollPosition;
-        }
-        return this.syncService.scrollPosition(this.igxForScrollOrientation);
     }
 
     protected getItemSize(item) {
