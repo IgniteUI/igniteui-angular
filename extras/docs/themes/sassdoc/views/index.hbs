@@ -8,13 +8,14 @@
 
         {{#ifCond lang '==' 'en'}}
             <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'en'}}" />
-            <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en" />
-            <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en-us" />
         {{else}}
             <link rel="canonical" href="{{baseURl 'sassdoc_default_url' 'jp'}}" />
-            <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja" />
-            <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja-jp" />
         {{/ifCond}}
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en" />
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="en-us" />
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja" />
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'jp'}}" hreflang="ja-jp" />
+        <link rel="alternate" href="{{baseURl 'sassdoc_default_url' 'en'}}" hreflang="x-default" />
 
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
