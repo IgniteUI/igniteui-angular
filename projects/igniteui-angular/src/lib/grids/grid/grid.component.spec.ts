@@ -1550,6 +1550,37 @@ describe('IgxGrid Component Tests', () => {
             expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: updateRowData }, oldRowData);
             expect(grid.data[2]).toBe(oldRowData);
         }));
+
+        it(`Should be able to add a row if another row is in edit mode`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+            tick(16);
+
+            const grid = fixture.componentInstance.grid;
+            const rowCount = grid.rowList.length;
+            grid.rowEditable = true;
+            fixture.detectChanges();
+
+            const targetRow = fixture.debugElement.query(By.css(`${CELL_CLASS}:last-child`));
+            targetRow.nativeElement.dispatchEvent(new Event('focus'));
+            flush();
+            fixture.detectChanges();
+            targetRow.triggerEventHandler('dblclick', {});
+            flush();
+            fixture.detectChanges();
+
+            grid.addRow({
+                ProductID: 1000,
+                ProductName: 'New Product',
+                InStock: true,
+                UnitsInStock: 1,
+                OrderDate: new Date()
+            });
+            fixture.detectChanges();
+            tick(16);
+
+            expect(grid.rowList.length).toBeGreaterThan(rowCount);
+        }));
     });
 
     describe('IgxGrid - Row Editing', () => {
