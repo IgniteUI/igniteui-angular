@@ -2569,7 +2569,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
             });
 
-            if (this.rowEditable && this.rowEditingOverlay) {
+            if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
             this.disableTransitions = false;
@@ -5302,7 +5302,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+        if (!this.rowEditable || !this.rowEditingOverlay || this.rowEditingOverlay.collapsed) {
             return;
         }
         if (!row) {
