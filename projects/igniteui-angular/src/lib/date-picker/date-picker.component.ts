@@ -51,7 +51,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -1254,6 +1254,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _setLocaleToDate(value: Date): string {
+        if (isIE()) {
+            // this is a workaround fixing the following IE11 issue:
+            // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
+            // precedes each portion that comprises the total date... For more information read this article:
+            // tslint:disable-next-line: max-line-length
+            // https://www.csgpro.com/blog/2016/08/a-bad-date-with-internet-explorer-11-trouble-with-new-unicode-characters-in-javascript-date-strings/
+            const localeDateStrIE = new Date(value.getFullYear(), value.getMonth(), value.getDate(),
+                value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
+            return localeDateStrIE.toLocaleDateString(this.locale);
+        }
+
         return value.toLocaleDateString(this.locale);
     }
 
