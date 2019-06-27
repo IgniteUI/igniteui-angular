@@ -687,7 +687,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 defaultExpanded: this.groupsExpanded
             };
 
-            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
         } else {
             return null;
         }
