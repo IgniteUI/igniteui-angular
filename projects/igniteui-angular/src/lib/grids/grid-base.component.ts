@@ -2569,7 +2569,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
             });
 
-            if (this.rowEditable) {
+            if (this.rowEditable && this.rowEditingOverlay) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
             this.disableTransitions = false;
