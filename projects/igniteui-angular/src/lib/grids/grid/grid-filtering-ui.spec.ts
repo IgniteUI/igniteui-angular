@@ -1610,7 +1610,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
 
-    it('Should commit the filter when click on filter chip', async () => {
+    it('Should not select all filter chips when switching columns', async () => {
         let filterValue = 'a';
         const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
         filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
@@ -1656,17 +1656,6 @@ describe('IgxGrid - Filtering actions', () => {
         filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[0].componentInstance.selected).toBeFalsy();
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
-
-        
-        //  filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
-        // fix.detectChanges();
-        // await wait(16);
-        // expect(filterChip.componentInstance.selected).toBeTruthy();
-
-        //  filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
-        // fix.detectChanges();
-        // await wait(16);
-        // expect(filterChip.componentInstance.selected).toBeFalsy();
     });
 });
 
