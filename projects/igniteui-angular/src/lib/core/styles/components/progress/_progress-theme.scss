@@ -248,12 +248,14 @@
     %circular-display {
         display: inline-flex;
         flex: 1 1 auto;
+        width: rem(32px);
+        height: rem(32px);
 
         svg {
             width: 100%;
             height: 100%;
-            min-width: 24px;
-            min-height: 24px;
+            min-width: inherit;
+            min-height: inherit;
         }
     }
 
