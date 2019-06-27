@@ -4208,15 +4208,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 675).toBe(true,
+            expect(scrollbar.scrollTop >= 610 && scrollbar.scrollTop <= 615).toBe(true,
                 'search scrollbar has incorrect scrollTop');
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(288, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(12, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -5474,14 +5474,12 @@ function verifySortMoveDisplayDensity(gridNativeElement: HTMLElement, expectedDi
     const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
 
     // Get container of sort component and its header and buttons.
-    const sortContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__sort--compact' : 'igx-excel-filter__sort';
-    const sortContainer = excelMenu.querySelector('.' + sortContainerClass);
+    const sortContainer = excelMenu.querySelector('.igx-excel-filter__sort');
     const sortHeaderRect = sortContainer.querySelector('header').getBoundingClientRect();
     const sortButtons = sortContainer.querySelectorAll('.igx-button--flat');
 
     // Get container of move component and its header and buttons.
-    const moveContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__move--compact' : 'igx-excel-filter__move';
-    const moveContainer = excelMenu.querySelector('.' + moveContainerClass);
+    const moveContainer = excelMenu.querySelector('.igx-excel-filter__move');
     const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
     const moveButtons = moveContainer.querySelectorAll('.igx-button--flat');
 
