@@ -449,7 +449,7 @@ describe('igxSelect', () => {
     describe('Form tests: ', () => {
         it('Should properly initialize when used as a reactive form control - with validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
@@ -484,7 +484,7 @@ describe('igxSelect', () => {
         }));
         it('Should properly initialize when used as a reactive form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const formGroup: FormGroup = fix.componentInstance.reactiveForm;
@@ -518,7 +518,7 @@ describe('igxSelect', () => {
 
         it('Should properly initialize when used as a form control - with validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
@@ -555,7 +555,7 @@ describe('igxSelect', () => {
         }));
         it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
