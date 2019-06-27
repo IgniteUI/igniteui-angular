@@ -1257,7 +1257,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private _setLocaleToDate(value: Date): string {
         if (isIE()) {
-            // the replace() is a workaround fixing the following IE11 issue:
+            // this is a workaround fixing the following IE11 issue:
             // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
             // precedes each portion that comprises the total date... For more information read this article:
             // tslint:disable-next-line: max-line-length
