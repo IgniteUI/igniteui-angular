@@ -257,6 +257,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const virt = this.grid.verticalScrollContainer;
         const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
             this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
+        const isInRowEditMode = this.grid.rowEditable && this.grid.getRowByIndex(rowIndex).inEditMode;
+        if (isInRowEditMode) {
+            super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow);
+            return;
+        }
         if (!nextIsDataRow && !(isLastDataRow && hasSummaries) && isLastColumn && !isSummaryRow) {
             // navigating in child, next is not summary
             const childContainer = this.getChildGridRowContainer();
@@ -350,6 +355,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
+        const isInRowEditMode = this.grid.rowEditable && this.grid.getRowByIndex(rowIndex).inEditMode;
+        if (isInRowEditMode) {
+            super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
+            return;
+        }
         if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent && !isSummary) {
             if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
