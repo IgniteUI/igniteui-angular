@@ -45,10 +45,16 @@ Now you can set `minWindth` for a column to a value smaller than `defaultMinWidt
     - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
     - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
     - Available display densities are `compact`, `cosy` and `comfortable` (default)
-    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+    - **Behavioral Change** - default `igx-drop-down-item` height is now `40px` (down from `48px`)
 - `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - **Behavioral Changes**
+    - `[itemHeight]` defaults to `40` (`[displayDensity]` default is `comfortable`)
+    - `[itemsMaxHeight]` defaults to `10 * itemHeight`.
+    - Changing `[displayDensity]` or `[itemHeight]` affect the drop-down container height if `[itemsMaxHeight]` is not provided
     - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
-- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+- `IgxSelect`
+    - Setting `[displayDensity]` now also affects the select's items
+    - **Behavioral Change** - default `igx-select-item` height is now `40px` (down from `48px`)
 
 ## 7.3.4
 - `IgxGrid` - summaries
