@@ -3,16 +3,18 @@
 </igx-grid-toolbar>
 
 <ng-template #defaultPager let-api>
-    <div>
-        <label>Items Per Page</label>
-        <igx-select [(ngModel)]="api.perPage" displayDensity="compact" type="box">
-            <igx-select-item [value]="val"
-                *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">
-                {{val}}
-            </igx-select-item>
-        </igx-select>
+    <div class="igx-grid-paginator__select">
+        <label class="igx-grid-paginator__label">Items per page</label>
+        <div class="igx-grid-paginator__select-input">
+            <igx-select [(ngModel)]="api.perPage" [displayDensity]="displayDensity" type="border">
+                <igx-select-item [value]="val"
+                                 *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">
+                    {{val}}
+                </igx-select-item>
+            </igx-select>
+        </div>
     </div>
-    <div>
+    <div class="igx-grid-paginator__pager">
         <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple
             igxRippleCentered="true">
             <igx-icon fontSet="material">first_page</igx-icon>
@@ -196,7 +198,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalRecords" #paginator>
+<div [ngClass]="paginatorClass()" *ngIf="paging && totalRecords" #paginator>
     <ng-container
         *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
