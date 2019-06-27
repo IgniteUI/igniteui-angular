@@ -54,6 +54,7 @@ import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
+    private _filterable = true;
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -130,7 +131,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = true;
+    public get filterable() {
+        return this._filterable;
+    }
+    public set filterable(val) {
+        this._filterable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
