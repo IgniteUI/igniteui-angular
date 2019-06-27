@@ -494,24 +494,24 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
         }));
@@ -564,24 +564,24 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeUndefined();
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.selectItem(selectComp.items[4]);
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             document.documentElement.dispatchEvent(new Event('click'));
             expect(selectComp.collapsed).toEqual(true);
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
-            expect(inputGroupWithRequiredAsterisk).toBeNull;
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         }));
     });
