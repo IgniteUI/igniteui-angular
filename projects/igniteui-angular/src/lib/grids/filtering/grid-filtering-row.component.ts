@@ -77,10 +77,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     set column(val) {
         if (val) {
+            const initial = this._column === null;
             this._column = val;
 
             this.expressionsList = this.filteringService.getExpressions(this._column.field);
-           this.expressionsList.forEach(ex => ex.isSelected = false);
+            if (!initial) {
+                this.expressionsList.forEach(ex => ex.isSelected = false);
+            }
 
             this.resetExpression();
 
