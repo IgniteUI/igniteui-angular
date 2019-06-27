@@ -560,7 +560,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
-    public onOpen = new EventEmitter<IgxDatePickerComponent>();
+    public get onOpen(): EventEmitter<IgxDatePickerComponent> {
+        return this._onOpen;
+    }
+
+    public set onOpen(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onOpen = val;
+    }
 
     /**
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
@@ -582,7 +588,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
-    public onClose = new EventEmitter<IgxDatePickerComponent>();
+    public get onClose(): EventEmitter<IgxDatePickerComponent> {
+        return this._onClose;
+    }
+
+    public set onClose(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onClose = val;
+    }
 
     /**
      *An event that is emitted after the `IgxDatePickerComponent` is closed.
@@ -743,6 +755,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
+    private _onOpen = new EventEmitter<IgxDatePickerComponent>();
+    private _onClose = new EventEmitter<IgxDatePickerComponent>();
 
     /**
     * @hidden
@@ -1198,7 +1212,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.onOpened.emit(this);
 
         // TODO: remove this line after deprecating 'onOpen'
-        this.onOpen.emit(this);
+        this._onOpen.emit(this);
 
         if (this.calendar) {
             this._focusCalendarDate();
