@@ -1032,6 +1032,34 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
         expect(secondChildCell.selected).toBe(true);
         expect(secondChildCell.focused).toBe(true);
     }));
+
+    it('should navigate to Cancel button when there is row in edit mode', async () => {
+        hierarchicalGrid.primaryKey = 'ID';
+        fixture.detectChanges();
+
+        hierarchicalGrid.columnList.forEach((c) => {
+            if (c.field !== hierarchicalGrid.primaryKey) {
+                c.editable = true; }});
+        fixture.detectChanges();
+
+        hierarchicalGrid.rowEditable = true;
+        fixture.detectChanges();
+
+        const cell = hierarchicalGrid.getCellByColumn(0, 'Col2');
+        (hierarchicalGrid.getRowByIndex(0) as any).toggle();
+        await wait(50);
+        fixture.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        await wait(50);
+        fixture.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab'}));
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(document.activeElement.innerHTML).toEqual('Cancel');
+    });
 });
 
 @Component({
