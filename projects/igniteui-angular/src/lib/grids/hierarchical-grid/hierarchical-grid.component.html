@@ -6,7 +6,7 @@
     <div class="igx-grid-paginator__select">
         <label class="igx-grid-paginator__label">Items per page</label>
         <div class="igx-grid-paginator__select-input">
-            <igx-select [(ngModel)]="api.perPage" [displayDensity]="displayDensity" type="border">
+            <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
                 <igx-select-item [value]="val"
                                  *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">
                     {{val}}
@@ -171,7 +171,7 @@
     </div>
 </div>
 
-<div [ngClass]="paginatorClass()" *ngIf="paging && totalRecords" #paginator>
+<div [ngClass]="paginatorClassName()" *ngIf="paging && totalRecords" #paginator>
     <ng-container
         *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
