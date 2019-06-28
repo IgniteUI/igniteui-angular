@@ -63,6 +63,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private _column = null;
     private isKeyPressed = false;
     private isComposing = false;
+    private _cancelChipClick = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -516,6 +517,21 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             // if it has been focused and then set to readonly.
             requestAnimationFrame(() => this.input.nativeElement.focus());
         }
+    }
+
+
+    public onChipPointerdown(args, chip: IgxChipComponent) {
+        const activeElement = document.activeElement;
+        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+    }
+
+    public onChipClick(args, chip: IgxChipComponent) {
+        if (this._cancelChipClick) {
+            return;
+        }
+
+        this._cancelChipClick = false;
+        chip.selected = !chip.selected;
     }
 
     /**
