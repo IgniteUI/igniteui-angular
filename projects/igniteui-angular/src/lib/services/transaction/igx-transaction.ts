@@ -55,7 +55,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public getTransactionLog(id?: any): T[] {
-        if (id) {
+        if (id !== undefined) {
             return this._transactions.filter(t => t.id === id);
         }
         return [...this._transactions];
@@ -76,8 +76,8 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public getState(id: any): S {
-        return this._states.get(id);
+    public getState(id: any, pending: boolean = false): S {
+        return pending ? this._pendingStates.get(id) : this._states.get(id);
     }
 
     /**
@@ -135,36 +135,38 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public commit(data: any[]): void {
-        this._states.forEach((s: S) => {
-            const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
-            switch (s.type) {
-                case TransactionType.ADD:
-                    data.push(s.value);
-                    break;
-                case TransactionType.DELETE:
-                    if (0 <= index && index < data.length) {
-                        data.splice(index, 1);
-                    }
-                    break;
-                case TransactionType.UPDATE:
-                    if (0 <= index && index < data.length) {
-                        data[index] = this.updateValue(s);
-                    }
-                    break;
+    public commit(data: any[], id?: any): void {
+        if (id !== undefined) {
+            const state = this.getState(id);
+            if (state) {
+                this.updateRecord(data, state);
             }
-        });
-        this.clear();
+        } else {
+            this._states.forEach((s: S) => {
+                this.updateRecord(data, s);
+            });
+        }
+        this.clear(id);
     }
 
     /**
      * @inheritdoc
      */
-    public clear(): void {
-        this._transactions = [];
-        this._states.clear();
+    public clear(id?: any): void {
+        if (id !== undefined) {
+            this._transactions = this._transactions.filter(t => t.id !== id);
+            this._states.delete(id);
+            //  Undo stack is an array of actions. Each action is array of transaction like objects
+            //  We are going trough all the actions. For each action we are filtering out transactions
+            //  with provided id. Finally if any action ends up as empty array we are removing it from
+            //  undo stack
+            this._undoStack = this._undoStack.map(a => a.filter(t => t.transaction.id !== id)).filter(a => a.length > 0);
+        } else {
+            this._transactions = [];
+            this._states.clear();
+            this._undoStack = [];
+        }
         this._redoStack = [];
-        this._undoStack = [];
         this.onStateUpdate.emit();
     }
 
@@ -318,6 +320,30 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     states.delete(id);
                 }
             }
+        }
+    }
+
+    /**
+     * Updates state related record in the provided data
+     * @param data Data source to update
+     * @param state State to update data from
+     */
+    protected updateRecord(data: any[], state: S) {
+        const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(state.recordRef || {}));
+        switch (state.type) {
+            case TransactionType.ADD:
+                data.push(state.value);
+                break;
+            case TransactionType.DELETE:
+                if (0 <= index && index < data.length) {
+                    data.splice(index, 1);
+                }
+                break;
+            case TransactionType.UPDATE:
+                if (0 <= index && index < data.length) {
+                    data[index] = this.updateValue(state);
+                }
+                break;
         }
     }
 }
