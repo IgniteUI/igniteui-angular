@@ -362,10 +362,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.dc.instance.scrollContainer = this.hScroll;
                 });
             }
-
-            const scrollOffset = this.scrollPosition -
-                (this.sizesCache && this.sizesCache.length ? this.sizesCache[this.state.startIndex] : 0);
-            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+            this._updateHScrollOffset();
         }
     }
 
@@ -1088,9 +1085,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
-        const virt = this.dc.instance.notVirtual;
+        const prevNotVirtual = this.dc.instance.notVirtual;
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
-        if (virt !== this.dc.instance.notVirtual) {
+        if (prevNotVirtual && prevNotVirtual !== this.dc.instance.notVirtual) {
             this._scrollPosition = 0;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
