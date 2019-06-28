@@ -50,8 +50,7 @@
                     'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
                 }">
                 <igx-icon role="button" fontSet="material"
-                    [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">
-                    unfold_less</igx-icon>
+                    [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
             </div>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
