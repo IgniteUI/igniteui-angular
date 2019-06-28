@@ -265,8 +265,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const virt = this.grid.verticalScrollContainer;
         const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
             this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
-        const currentRow = this.grid.getRowByIndex(rowIndex);
-        if (currentRow && currentRow.inEditMode) {
+        if (this.grid.rowInEditMode) {
             super.performTab(currentRowEl, selectedNode);
             return;
         }
@@ -366,8 +365,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummary = selectedNode.isSummaryRow;
-        const row = this.grid.getRowByIndex(rowIndex);
-        if (row && row.inEditMode) {
+        if (this.grid.rowInEditMode) {
             super.performShiftTabKey(currentRowEl, selectedNode);
             return;
         }
