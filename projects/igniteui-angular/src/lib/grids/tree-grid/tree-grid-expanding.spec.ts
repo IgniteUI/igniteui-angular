@@ -424,7 +424,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             fix.detectChanges();
 
             const tGrid: HTMLElement = treeGrid.nativeElement;
-            const paginator = tGrid.querySelectorAll('.igx-paginator > button');
+            const paginator = tGrid.querySelectorAll('.igx-grid-paginator__pager > button');
             paginator[2].dispatchEvent(new Event('click'));
             fix.detectChanges();
             // Verify current page
@@ -817,7 +817,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             expect(treeGrid.totalPages).toBe(2);
 
             const tGrid: HTMLElement = treeGrid.nativeElement;
-            const paginator = tGrid.querySelectorAll('.igx-paginator > button');
+            const paginator = tGrid.querySelectorAll('.igx-grid-paginator__pager > button');
             paginator[3].dispatchEvent(new Event('click'));
             fix.detectChanges();
             // Verify current page
@@ -1243,12 +1243,12 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
 
     if (pagerText != null) {
-        expect(gridElement.querySelector('.igx-paginator')).toBeDefined();
-        expect(gridElement.querySelectorAll('.igx-paginator > igx-select').length).toEqual(1);
-        expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch(pagerText);
+        expect(gridElement.querySelector('.igx-grid-paginator__pager')).toBeDefined();
+        expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
+        expect(gridElement.querySelector('.igx-grid-paginator__pager > span').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
-        const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+        const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
         expect(pagingButtons.length).toEqual(4);
         expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
         expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);

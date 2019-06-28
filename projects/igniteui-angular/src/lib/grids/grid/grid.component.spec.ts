@@ -2650,7 +2650,7 @@ describe('IgxGrid Component Tests', () => {
                 const gridElement: HTMLElement = grid.nativeElement;
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+                const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
 
                 expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
 
@@ -2680,7 +2680,7 @@ describe('IgxGrid Component Tests', () => {
                 const gridElement: HTMLElement = grid.nativeElement;
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+                const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
 
                 expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
 
@@ -2711,7 +2711,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+                const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
 
                 cell.inEditMode = true;
                 cell.update('IG');
@@ -2741,7 +2741,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                const select = fix.debugElement.query(By.css('.igx-paginator > igx-select')).nativeElement;
+                const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
 
                 cell.inEditMode = true;
                 // cell.update('IG');
@@ -2779,8 +2779,8 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 const gridElement: HTMLElement = grid.nativeElement;
                 let cell = grid.getCellByColumn(3, 'ProductName');
-                const select = fix.debugElement.query(By.css('.igx-paginator > igx-select')).nativeElement;
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+                const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
+                const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
 
                 cell.inEditMode = true;
                 tick(16);
@@ -4063,12 +4063,12 @@ describe('IgxGrid Component Tests', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator'));
+            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(147);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(126);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
         it('IgxTabs: should initialize a grid with correct height when height = 100%', async () => {
@@ -4086,10 +4086,10 @@ describe('IgxGrid Component Tests', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator'));
+            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
-            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
+            expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
     });
 });
