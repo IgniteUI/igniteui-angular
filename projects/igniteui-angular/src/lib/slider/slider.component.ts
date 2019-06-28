@@ -640,18 +640,23 @@ export class IgxSliderComponent implements
             return;
         }
 
+        const activeThumb = this.thumbFrom.isActive ? this.thumbFrom : this.thumbTo;
+        activeThumb.nativeElement.setPointerCapture($event.pointerId);
+
         this.showThumbLabels();
     }
 
     /**
      * @hidden
      */
-    @HostListener('pointerup')
-    public onPointerUp() {
+    @HostListener('pointerup', ['$event'])
+    public onPointerUp($event) {
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
 
+        const activeTumb = this.thumbFrom.isActive ? this.thumbFrom : this.thumbTo;
+        activeTumb.nativeElement.releasePointerCapture($event.pointerId);
         this.hideThumbLabels();
     }
 
