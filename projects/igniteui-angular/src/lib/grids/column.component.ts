@@ -55,6 +55,7 @@ import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi
 })
 export class IgxColumnComponent implements AfterContentInit {
     private _filterable = true;
+    private _groupable = false;
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -105,7 +106,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public groupable = false;
+    public get groupable() {
+        return this._groupable;
+    }
+    public set groupable(val) {
+        this._groupable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is editable.
      * Default value is `false`.
