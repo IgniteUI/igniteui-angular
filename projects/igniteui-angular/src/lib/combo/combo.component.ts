@@ -73,10 +73,17 @@ enum DataTypes {
  * @hidden
  */
 const ItemHeights = {
-    'comfortable': 48,
+    'comfortable': 40,
     'cosy': 32,
     'compact': 28,
 };
+
+/**
+ * @hidden
+ * The default number of items that should be in the combo's
+ * drop-down list if no `[itemsMaxHeight]` is specified
+ */
+const itemsInContainer = 10;
 
 export enum IgxComboState {
     /**
@@ -141,6 +148,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _data = [];
     private _filteredData = [];
     private _itemHeight = null;
+    private _itemsMaxHeight = null;
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
@@ -651,7 +659,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     @Input()
-    public itemsMaxHeight = 480;
+    public get itemsMaxHeight(): number {
+        if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
+            return this.itemHeight * itemsInContainer;
+        }
+        return this._itemsMaxHeight;
+    }
+
+    public set itemsMaxHeight(val: number) {
+        this._itemsMaxHeight = val;
+    }
 
     /**
      * Configures the drop down list width
@@ -1596,13 +1613,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         this.searchValue = '';
+        this.comboInput.nativeElement.focus();
     }
 
     /**
      * @hidden @internal
      */
     public handleClosed() {
-        this.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }
 }
