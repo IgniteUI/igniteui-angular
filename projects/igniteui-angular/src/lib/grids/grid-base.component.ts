@@ -4481,6 +4481,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
+        this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
@@ -4513,9 +4514,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        if (this.hasColumnGroups) {
-            this._pinnedColumns = this.columnList.filter((c) => c.pinned);
-        }
+        this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
+        this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
