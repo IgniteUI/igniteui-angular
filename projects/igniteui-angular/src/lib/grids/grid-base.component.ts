@@ -633,6 +633,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             this._autoSize = false;
+            this.nativeElement.style.height = value;
         }
     }
 
@@ -646,7 +647,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @WatchChanges()
     @HostBinding('style.width')
     @Input()
-    width = '100%';
+    get width() {
+        return this._width;
+    }
+    set width(value) {
+        if (this._width !== value) {
+            this._width = value;
+            this.nativeElement.style.width = value;
+        }
+    }
 
     /**
      * Returns the width of the header of the `IgxGridComponent`.
@@ -2491,6 +2500,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
     private _height = '100%';
+    private _width = '100%';
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
@@ -3981,6 +3991,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     column.defaultWidth = columnWidthCombined + 'px';
                 } else {
                     column.defaultWidth = this._columnWidth;
+                    column.resetCaches();
                 }
             });
             this.resetCachedWidths();
