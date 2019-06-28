@@ -1,5 +1,5 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, getViewportRect, getTargetRect } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
@@ -7,7 +7,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const targetRect = getTargetRect(this.settings);
+        const targetRect = Util.getTargetRect(this.settings);
         const contentElementRect = contentElement.getBoundingClientRect();
         if (initialCall) {
             const connectedFit: ConnectedFit = {};
@@ -15,7 +15,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.contentElementRect = contentElementRect;
             this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
             this.settings = Object.assign({}, this._initialSettings);
-            connectedFit.viewPortRect = getViewportRect(document);
+            connectedFit.viewPortRect = Util.getViewportRect(document);
             this.updateViewPortFit(connectedFit);
             if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
                 this.fitInViewport(contentElement, connectedFit);
