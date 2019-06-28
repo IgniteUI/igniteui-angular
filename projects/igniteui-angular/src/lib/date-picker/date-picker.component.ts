@@ -51,7 +51,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -534,8 +534,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public isSpinLoop = true;
 
     /**
-    *@hidden
-    */
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
@@ -553,7 +561,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
-    public onOpen = new EventEmitter<IgxDatePickerComponent>();
+    public get onOpen(): EventEmitter<IgxDatePickerComponent> {
+        return this._onOpen;
+    }
+
+    public set onOpen(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onOpen = val;
+    }
 
     /**
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
@@ -575,7 +589,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
-    public onClose = new EventEmitter<IgxDatePickerComponent>();
+    public get onClose(): EventEmitter<IgxDatePickerComponent> {
+        return this._onClose;
+    }
+
+    public set onClose(val: EventEmitter<IgxDatePickerComponent>) {
+        this._onClose = val;
+    }
 
     /**
      *An event that is emitted after the `IgxDatePickerComponent` is closed.
@@ -630,12 +650,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         */
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
-
-    /**
-    * @hidden
-    */
-    @ViewChild('datePickerOutlet', { read: ElementRef, static: true })
-    public outletDirective: ElementRef;
 
     /*
      * @hidden
@@ -735,6 +749,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _defaultDropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
     private _transformedDate;
+    private _onOpen = new EventEmitter<IgxDatePickerComponent>();
+    private _onClose = new EventEmitter<IgxDatePickerComponent>();
 
     /**
     * @hidden
@@ -794,19 +810,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             closeAnimation: fadeOut
         };
 
-        const outlet = (this.outlet !== undefined) ? this.outlet : this.outletDirective;
         this._defaultDropDownOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings),
-            outlet: outlet
+            outlet: this.outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
-            outlet: outlet
+            outlet: this.outlet
         };
 
         this._overlayService.onOpening.pipe(
@@ -1181,7 +1196,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.onOpened.emit(this);
 
         // TODO: remove this line after deprecating 'onOpen'
-        this.onOpen.emit(this);
+        this._onOpen.emit(this);
 
         if (this.calendar) {
             this._focusCalendarDate();
@@ -1239,6 +1254,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _setLocaleToDate(value: Date): string {
+        if (isIE()) {
+            // this is a workaround fixing the following IE11 issue:
+            // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
+            // precedes each portion that comprises the total date... For more information read this article:
+            // tslint:disable-next-line: max-line-length
+            // https://www.csgpro.com/blog/2016/08/a-bad-date-with-internet-explorer-11-trouble-with-new-unicode-characters-in-javascript-date-strings/
+            const localeDateStrIE = new Date(value.getFullYear(), value.getMonth(), value.getDate(),
+                value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
+            return localeDateStrIE.toLocaleDateString(this.locale);
+        }
+
         return value.toLocaleDateString(this.locale);
     }
 
