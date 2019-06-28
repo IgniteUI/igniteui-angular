@@ -245,6 +245,20 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 0, 3, 2, 3);
         });
 
+        it('Should return correct ranges from `getSelectedRanges` on shfit + click in the event handler', () => {
+            const firstCell = grid.getCellByColumn(3, 'HireDate');
+            const secondCell = grid.getCellByColumn(1, 'ID');
+
+            const sub = grid.onRangeSelection.subscribe(_ => {
+                expect(grid.selectedCells.length).toEqual(12);
+                const range = grid.getSelectedRanges()[0];
+                HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd, range.columnStart, range.columnEnd);
+                HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            });
+            HelperUtils.selectCellsRangeWithShiftKeyNoWait(fix, firstCell, secondCell);
+            sub.unsubscribe();
+        });
+
         it('Should be able to select range with Shift key when first cell is not visible', (async () => {
             const firstCell = grid.getCellByColumn(1, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();

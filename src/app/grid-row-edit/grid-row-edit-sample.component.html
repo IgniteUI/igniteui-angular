@@ -159,8 +159,8 @@
                     </ng-template>
                     <!-- https://github.com/angular/angular/issues/16643 -->
                     <ng-template igxRowEditActions let-endEdit>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(true)">Apply</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Apply</button>
                     </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>
