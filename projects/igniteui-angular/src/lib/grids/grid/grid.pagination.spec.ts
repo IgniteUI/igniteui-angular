@@ -459,7 +459,7 @@ describe('IgxGrid - Grid Paging', () => {
 
         testOptions(expectedOptions);
 
-        grid.perPage = 5;
+        grid.perPage = 25;
         fix.detectChanges();
 
         testOptions(defaultExpectedOptions);
