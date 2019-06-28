@@ -88,11 +88,12 @@ export class IgxGridTransactionPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
-    name: 'filterUniqueOptions',
+    name: 'paginatorOptions',
     pure: true,
 })
-export class IgxGridUniqueOptionsPipe implements PipeTransform {
+export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     public transform(values: Array<number>) {
         return Array.from(new Set([...values])).sort((a, b) => a - b);
     }
