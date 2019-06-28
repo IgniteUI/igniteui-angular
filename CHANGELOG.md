@@ -32,6 +32,7 @@ Now you can set `minWindth` for a column to a value smaller than `defaultMinWidt
 - `IgxChip`
     - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
     - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
+- `IgxTransaction` - `getState` accepts one optional parameter `pending` of `boolean` type. When `true` is provided `getState` will return `state` from pending states. By default `getState` is set to `false`.
 
 ## 8.0.0
 - `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:

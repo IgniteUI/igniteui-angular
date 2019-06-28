@@ -229,7 +229,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         if (rowInEditMode) {
+            const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);
+            if (!hasChanges) {
+                return args;
+            }
         }
 
         if (!args.newValue) {
