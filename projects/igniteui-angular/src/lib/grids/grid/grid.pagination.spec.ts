@@ -441,8 +441,8 @@ describe('IgxGrid - Grid Paging', () => {
     }));
 
     it('should display custom numbers in select from perPage', () => {
-        const expectedOptions = [30, 5, 10, 15, 25, 50, 100, 500];
-        const defaultExpectedOptions = [5, 5, 10, 15, 25, 50, 100, 500];
+        const expectedOptions = [3, 5, 10, 15, 25, 50, 100, 500];
+        const defaultExpectedOptions = [5, 10, 15, 25, 50, 100, 500];
 
         const fix = TestBed.createComponent(PagingComponent);
         const grid = fix.componentInstance.grid;
