@@ -257,8 +257,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const virt = this.grid.verticalScrollContainer;
         const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
             this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
-        const currentRow = this.grid.getRowByIndex(rowIndex);
-        if (currentRow && currentRow.inEditMode) {
+        if (this.grid.rowInEditMode) {
             super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow);
             return;
         }
@@ -355,8 +354,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
-    const row = this.grid.getRowByIndex(rowIndex);
-        if (row && row.inEditMode) {
+        if (this.grid.rowInEditMode) {
             super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
             return;
         }

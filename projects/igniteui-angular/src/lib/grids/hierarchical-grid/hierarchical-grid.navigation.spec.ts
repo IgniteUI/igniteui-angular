@@ -682,7 +682,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
        expect(document.activeElement.tagName.toLowerCase()).toBe('igx-hierarchical-grid-cell');
     });
 
-    it('should navigate to Cancel button when there is row in edit mode', async () => {
+    it('should navigate to Done button when row in edit mode on shift + tab', async () => {
         hierarchicalGrid.columnList.forEach((c) => {
             if (c.field !== hierarchicalGrid.primaryKey) {
                 c.editable = true; }});
