@@ -291,6 +291,12 @@ export class IgxSliderComponent implements
     @Input()
     public set step(step: number) {
         this._step = step;
+
+        if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
+            this.normalizeByStep(this.value);
+            this.setTickInterval(this.labels);
+        }
     }
 
     /**
@@ -657,6 +663,7 @@ export class IgxSliderComponent implements
 
         const activeTumb = this.thumbFrom.isActive ? this.thumbFrom : this.thumbTo;
         activeTumb.nativeElement.releasePointerCapture($event.pointerId);
+
         this.hideThumbLabels();
     }
 
