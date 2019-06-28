@@ -4,7 +4,7 @@
 
 <ng-template #defaultPager let-api>
     <div class="igx-grid-paginator__select">
-        <label class="igx-grid-paginator__label">Items per page</label>
+        <label class="igx-grid-paginator__label">{{ resourceStrings.igx_grid_paginator_label }}</label>
         <div class="igx-grid-paginator__select-input">
             <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
                 <igx-select-item [value]="val"

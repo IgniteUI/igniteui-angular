@@ -2995,14 +2995,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     public paginatorSelectDisplayDensity(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return DisplayDensity.compact;
-            case DisplayDensity.compact:
-                return DisplayDensity.compact;
-            default:
-                return DisplayDensity.cosy;
+        if (this.displayDensity === DisplayDensity.cosy || this.displayDensity === DisplayDensity.compact) {
+            return DisplayDensity.compact;
         }
+        return DisplayDensity.cosy;
     }
 
     /**
