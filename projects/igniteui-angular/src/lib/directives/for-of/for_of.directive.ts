@@ -309,10 +309,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.instance._viewContainer.element.nativeElement.style.touchAction = 'none';
         }
         if (this.igxForOf && this.igxForOf.length) {
-            this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             totalSize = this.initSizesCache(this.igxForOf);
             this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
             this.state.chunkSize = this._calculateChunkSize();
+            this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.hScroll) {
                 this._scrollPosition = this.hScroll.scrollLeft;
                 this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
@@ -1087,7 +1087,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         const prevNotVirtual = this.dc.instance.notVirtual;
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
-        if (prevNotVirtual && prevNotVirtual !== this.dc.instance.notVirtual) {
+        if (!prevNotVirtual && prevNotVirtual !== this.dc.instance.notVirtual) {
             this._scrollPosition = 0;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
