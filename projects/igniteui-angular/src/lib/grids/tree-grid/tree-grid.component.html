@@ -8,7 +8,7 @@
         <div class="igx-grid-paginator__select-input">
             <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
                 <igx-select-item [value]="val"
-                                 *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | filterUniqueOptions">
+                                 *ngFor="let val of [api.perPage, 5 , 10, 15, 25, 50, 100, 500] | paginatorOptions">
                     {{val}}
                 </igx-select-item>
             </igx-select>
