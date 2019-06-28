@@ -646,7 +646,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        const activeThumb = this.thumbFrom.isActive ? this.thumbFrom : this.thumbTo;
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
 
         this.showThumbLabels();
@@ -661,8 +661,8 @@ export class IgxSliderComponent implements
             return;
         }
 
-        const activeTumb = this.thumbFrom.isActive ? this.thumbFrom : this.thumbTo;
-        activeTumb.nativeElement.releasePointerCapture($event.pointerId);
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideThumbLabels();
     }

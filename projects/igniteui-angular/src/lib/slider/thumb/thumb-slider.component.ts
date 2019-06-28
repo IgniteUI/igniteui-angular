@@ -174,7 +174,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public onFocusListener() {
         this.isActive = true;
         this.zIndex = 1;
-        this.onChange.emit();
     }
 
     /**
