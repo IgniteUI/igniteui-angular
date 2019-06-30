@@ -207,6 +207,10 @@
         @extend %igx-grid__th--filtrable !optional;
     }
 
+    @include e(th, $mods: (filtrable, sortable)) {
+        @extend %igx-grid__th--filtrable-sortable !optional;
+    }
+
     @include e(th, $m: sorted) {
         @extend %igx-grid__th--sorted !optional;
     }
