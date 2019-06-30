@@ -145,15 +145,15 @@
     $grid-toolbar-fs: rem(16px);
 
     $grid-toolbar-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 rem(16px) 0 rem(24px),
+        cosy: 0 rem(12px) 0 rem(16px),
+        compact: 0 rem(8px) 0 rem(12px)
     );
 
     $grid-toolbar-height: (
-        comfortable: rem(56px),
-        cosy: rem(48px),
-        compact: rem(48px)
+        comfortable: rem(58px),
+        cosy: rem(52px),
+        compact: rem(44px)
     );
 
     %igx-grid-toolbar {
@@ -299,6 +299,7 @@
         > div {
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
     }
 
