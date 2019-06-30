@@ -241,6 +241,21 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
         });
 
+        it('should apply the changes when itemSize is changed.', () => {
+            const firstRecChildren = displayContainer.children[0].children;
+            for (let i = 0; i < firstRecChildren.length; i++) {
+                expect(firstRecChildren[i].clientHeight)
+                    .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
+            }
+
+            fix.componentInstance.itemSize = '100px';
+            fix.detectChanges();
+            for (let i = 0; i < firstRecChildren.length; i++) {
+                expect(firstRecChildren[i].clientHeight)
+                    .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
+            }
+        });
+
         it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', async () => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
             expect(() => {
@@ -1226,8 +1241,8 @@ export class EmptyVirtualComponent {
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
-                [igxForItemSize]='"50px"'>
-                <div [style.display]="'flex'" [style.height]="rowData.height || '50px'">
+                [igxForItemSize]='itemSize'>
+                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
                     <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
                     <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
@@ -1250,6 +1265,7 @@ export class VerticalVirtualComponent {
         { field: '5', width: '100px' }
     ];
     public data = [];
+    public itemSize = '50px';
 
     @ViewChild('container') public container;
 
