@@ -499,7 +499,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
@@ -544,7 +544,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
-        const parentRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
         parentCell.nativeElement.focus();
