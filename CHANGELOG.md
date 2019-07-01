@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.3.7
+ - **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
+
 ## 7.3.5
 - `IgxList` - The list component has been refactored. It now includes several new supporting directives:
     - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
@@ -20,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
               <igx-icon igxListAction>info</igx-icon>
             </igx-list-item>
         </igx-list>
-        
+
         <igx-list>
           <igx-list-item [isHeader]="true">List items</igx-list-item>
           <igx-list-item>
@@ -37,10 +45,16 @@ All notable changes for each version of this project will be documented in this 
     - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
     - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
     - Available display densities are `compact`, `cosy` and `comfortable` (default)
-    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+    - **Behavioral Change** - default `igx-drop-down-item` height is now `40px` (down from `48px`)
 - `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - **Behavioral Changes**
+    - `[itemHeight]` defaults to `40` (`[displayDensity]` default is `comfortable`)
+    - `[itemsMaxHeight]` defaults to `10 * itemHeight`.
+    - Changing `[displayDensity]` or `[itemHeight]` affect the drop-down container height if `[itemsMaxHeight]` is not provided
     - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
-- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+- `IgxSelect`
+    - Setting `[displayDensity]` now also affects the select's items
+    - **Behavioral Change** - default `igx-select-item` height is now `40px` (down from `48px`)
 
 ## 7.3.4
 - `IgxGrid` - summaries
