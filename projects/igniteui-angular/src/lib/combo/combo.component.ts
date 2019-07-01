@@ -1613,13 +1613,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         this.searchValue = '';
+        this.comboInput.nativeElement.focus();
     }
 
     /**
      * @hidden @internal
      */
     public handleClosed() {
-        this.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }
 }
