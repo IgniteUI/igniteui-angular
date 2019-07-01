@@ -324,12 +324,10 @@
     @if not($drop-area-icon-color) and $drop-area-background {
         $drop-area-icon-color: text-contrast($drop-area-background)
     }
-
+    
     @if not($filtering-header-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-header-background: hexrgba(lighten-color($header-background, 5%));
-        } @else {
-            $filtering-header-background: hexrgba(darken-color($header-background, 5%));
+            $filtering-header-background: lighten-color($header-background, 25%);
         }
     }
 
@@ -339,9 +337,7 @@
 
     @if not($filtering-row-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-row-background: hexrgba(lighten-color($header-background, 15%));
-        } @else {
-            $filtering-row-background: hexrgba(darken-color($header-background, 15%));
+            $filtering-row-background: lighten-color($header-background, 25%);
         }
     }
 
