@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 8.0.2
+- **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
 ## 8.0.1
 
 - **General**
@@ -12,10 +20,19 @@ All notable changes for each version of this project will be documented in this 
     - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
     - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
     - Available display densities are `compact`, `cosy` and `comfortable` (default)
-    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+    - **Behavioral Change** - default `igx-drop-down-item` height is now `40px` (down from `48px`)
 - `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - **Behavioral Changes**
+    - `[itemHeight]` defaults to `40` (`[displayDensity]` default is `comfortable`)
+    - `[itemsMaxHeight]` defaults to `10 * itemHeight`.
+    - Changing `[displayDensity]` or `[itemHeight]` affect the drop-down container height if `[itemsMaxHeight]` is not provided
     - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
 - `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
+    - **Behavioral Change** - default `igx-select-item` height is now `40px` (down from `48px`)
+- `IgxChip`
+    - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
+    - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
+- `IgxTransaction` - `getState` accepts one optional parameter `pending` of `boolean` type. When `true` is provided `getState` will return `state` from pending states. By default `getState` is set to `false`.
 
 ## 8.0.0
 - `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
@@ -70,6 +87,7 @@ There are also prebuilt schema presets for all components (light-round/dark-roun
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** The **condition** parameter of the `filterGlobal` method is no longer optional. When the filterGlobal method is called with an invalid condition, it will not clear the existing filters for all columns.
+
 
 ## 7.3.4
 - `IgxGrid` - summaries
@@ -183,6 +201,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+    - `IgxTransactionService` now can `commit` and `clear` transaction(s) by record id with an optional parameter. The `commit` method will apply to the data all transactions for the provided `id`. The `clear` method will remove all transactions for the `id` from the transactions log. Additionally both will remove all actions from the undo stack matching the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834

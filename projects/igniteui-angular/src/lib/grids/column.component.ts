@@ -38,6 +38,7 @@ import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.c
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
+import { DisplayDensity } from '../core/displayDensity';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -357,7 +358,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public minWidth = this.defaultMinWidth;
+    public set minWidth(value: string) {
+        const minVal = parseFloat(value);
+        if (Number.isNaN(minVal)) { return; }
+        this._defaultMinWidth = value;
+
+    }
+    public get minWidth(): string {
+        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -632,7 +641,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get defaultMinWidth(): string {
-        return this._defaultMinWidth;
+        if (!this.grid) { return '80'; }
+        switch (this.grid.displayDensity) {
+            case DisplayDensity.cosy:
+                return '64';
+            case DisplayDensity.compact:
+                return '56';
+            default:
+                return '80';
+        }
     }
     /**
      * The reference to the `igx-grid` owner.
@@ -1040,7 +1057,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '80';
+    protected _defaultMinWidth = '';
     /**
      *@hidden
      */
@@ -1698,16 +1715,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public set filters(classRef: any) { }
-    /**
-     * Gets the default minimum `width` of the column group.
-     * ```typescript
-     * let defaultMinWidth = this.columnGroup.defaultMinWidth;
-     * ```
-     * @memberof IgxColumnGroupComponent
-     */
-    get defaultMinWidth(): string {
-        return this._defaultMinWidth;
-    }
+
     /**
      * Returns a reference to the body template.
      * ```typescript

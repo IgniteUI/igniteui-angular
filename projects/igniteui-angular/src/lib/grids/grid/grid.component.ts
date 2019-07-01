@@ -409,9 +409,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     @Output()
     public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
 
-    @Output()
-    public onFocusChange = new EventEmitter<IGridFocusChangeEventArgs>();
-
     /**
      * @hidden
      */
