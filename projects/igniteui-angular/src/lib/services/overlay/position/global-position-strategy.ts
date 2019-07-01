@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, cloneInstance } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, Util } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
 /**
@@ -58,7 +58,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
     /** @inheritdoc */
     clone(): IPositionStrategy {
-        return cloneInstance(this);
+        return Util.cloneInstance(this);
     }
 }
 

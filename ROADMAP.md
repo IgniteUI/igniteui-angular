@@ -4,13 +4,15 @@
 
 ## Milestone 8 (Due by July, 2019) 
 
-1. Grid Multi-Row Layout keyboard nav #4708
-2. Angular 8 compatibility #4908
-3. Display density for Drop Downs #2960
+1. **[DONE]** Grid Multi-Row Layout keyboard nav [#4708](https://github.com/IgniteUI/igniteui-angular/issues/4708) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0), [7.3.4](https://github.com/IgniteUI/igniteui-angular/releases/tag/7.3.4)
+2. **[DONE]** Angular 8 compatibility [#4908](https://github.com/IgniteUI/igniteui-angular/issues/4908) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0)
+3. **[DONE]** Display density for Drop Downs [#2960](https://github.com/IgniteUI/igniteui-angular/issues/2960) Released in [8.0.1](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.1), [7.3.4](https://github.com/IgniteUI/igniteui-angular/releases/tag/7.3.4), [7.2.12](https://github.com/IgniteUI/igniteui-angular/releases/tag/7.2.12)
 4. Slider custom labels #4594
 5. Copy data from the igxGrid #4907
-6. BottomNav and Tabs integration with router outlet container #4297
-7. Date/Time pickers action buttons customization #4647
+6. BottomNav and Tabs integration with router outlet container [#4297](https://github.com/IgniteUI/igniteui-angular/issues/4297)
+7. **[DONE]** Date/Time pickers action buttons customization [#4647](https://github.com/IgniteUI/igniteui-angular/issues/4647) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0)
+8. **[DONE]** Square and oval presets in theming [#4964](https://github.com/IgniteUI/igniteui-angular/issues/4964) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0)
+9. Grid column group header templates [#3344](https://github.com/IgniteUI/igniteui-angular/issues/3344)
 
 
 ## Going down the road
