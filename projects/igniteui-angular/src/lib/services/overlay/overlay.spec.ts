@@ -24,9 +24,9 @@ import {
     OverlaySettings,
     Point,
     OverlayEventArgs,
-    OverlayCancelableEventArgs
+    OverlayCancelableEventArgs,
+    Util
 } from './utilities';
-import * as utilities from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
@@ -547,7 +547,7 @@ describe('igxOverlay', () => {
         }));
 
         // TODO: refactor utilities to include all exported methods in a class
-        xit('fix for #1799 - content div should reposition on window resize.', fakeAsync(() => {
+        it('fix for #1799 - content div should reposition on window resize.', fakeAsync(() => {
             const rect: ClientRect = {
                 bottom: 50,
                 height: 0,
@@ -556,7 +556,7 @@ describe('igxOverlay', () => {
                 top: 50,
                 width: 0
             };
-            const getPointSpy = spyOn(utilities, 'getTargetRect').and.returnValue(rect);
+            const getPointSpy = spyOn(Util, 'getTargetRect').and.returnValue(rect);
             const fix = TestBed.createComponent(FlexContainerComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
