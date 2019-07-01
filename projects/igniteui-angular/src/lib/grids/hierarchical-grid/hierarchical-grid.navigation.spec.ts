@@ -295,6 +295,41 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(currScrTop).toBeGreaterThanOrEqual(childGrid.rowHeight * 5);
     }));
 
+    it('should not lose focus when pressing Ctrl+ArrowDown is pressed at the bottom row(expended) in a child grid.', (async () => {
+        hierarchicalGrid.height = '600px';
+        hierarchicalGrid.width = '800px';
+        fixture.componentInstance.rowIsland.height = '400px';
+        await wait();
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        childGrid.data = childGrid.data.slice(0, 5);
+        await wait();
+        fixture.detectChanges();
+
+        childGrid.dataRowList.toArray()[4].expander.nativeElement.click();
+        await wait();
+        fixture.detectChanges();
+
+        const childCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
+        childCell.nativeElement.focus();
+        fixture.detectChanges();
+
+        childCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
+        fixture.detectChanges();
+        await wait();
+        fixture.detectChanges();
+
+        const childLastRowCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
+        expect(childLastRowCell.selected).toBe(true);
+        expect(childLastRowCell.columnIndex).toBe(0);
+        expect(childLastRowCell.rowIndex).toBe(4);
+        expect(document.activeElement).toEqual(childLastRowCell.nativeElement);
+
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        expect(currScrTop).toEqual(0);
+    }));
+
     it('should allow navigating to top in child grid when child grid target row moves outside the parent view port.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(100);
