@@ -68,8 +68,11 @@
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
+/// @prop {number} drop-area-border-radius - The border radius fraction, between 0-1 to be used for drop area.
 /// @see $default-palette
 $_light-grid: (
+    drop-area-border-radius: 1,
+
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #fff
