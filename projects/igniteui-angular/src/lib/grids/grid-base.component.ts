@@ -5428,7 +5428,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const columnindex = cell ? cell.column.index : -1;
+        const columnIndex = cell ? cell.column.index : -1;
         const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
@@ -5444,14 +5444,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (event) {
             if (cell) {
-                const columnVisibleIndex =
-                    this.selectionService.activeElement.layout ?
-                        this.selectionService.activeElement.layout.columnVisibleIndex :
-                        cell.column.visibleIndex;
-                // if cell is not fully visible scroll to it and focus it
+                const vi = this.selectionService.activeElement.layout ?
+                    this.selectionService.activeElement.layout.columnVisibleIndex :
+                    cell.column.visibleIndex;
+
+                    // if cell is not fully visible scroll to it and focus it
                 // else focus the cell
-                if (!this.navigation.isColumnFullyVisible(columnVisibleIndex)) {
-                    this.navigation.performHorizontalScrollToCell(ri, columnVisibleIndex, false);
+                if (!(this.navigation.isColumnFullyVisible(vi) && this.navigation.isColumnLeftFullyVisible(vi))) {
+                    this.navigation.performHorizontalScrollToCell(ri, vi, false);
                 } else {
                     const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
                     currentCell.nativeElement.focus();
