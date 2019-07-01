@@ -19,6 +19,10 @@
     }
 }
 
+.navdrawer-ellipsis {
+    @include ellipsis();
+}
+
 #igniteui-demo-app {
     @include fade-in-fwd();
 
