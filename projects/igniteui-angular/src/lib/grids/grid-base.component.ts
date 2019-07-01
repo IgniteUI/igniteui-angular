@@ -5463,8 +5463,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (event) {
             if (cell) {
-                const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-                if (currentCell) {
+                const columnVisibleIndex =
+                    this.selectionService.activeElement.layout ?
+                        this.selectionService.activeElement.layout.columnVisibleIndex :
+                        cell.column.visibleIndex;
+                // if cell is not fully visible scroll to it and focus it
+                // else focus the cell
+                if (!this.navigation.isColumnFullyVisible(columnVisibleIndex)) {
+                    this.navigation.performHorizontalScrollToCell(ri, columnVisibleIndex, false);
+                } else {
+                    const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
                     currentCell.nativeElement.focus();
                 }
             } else {
