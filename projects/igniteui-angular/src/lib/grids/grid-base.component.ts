@@ -208,7 +208,7 @@ export interface IRowDragEndEventArgs {
 export interface IRowDragStartEventArgs extends CancelableEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
- }
+}
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -2991,6 +2991,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    public paginatorClassName(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid-paginator--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid-paginator--compact';
+            default:
+                return 'igx-grid-paginator';
+        }
+    }
+
+    public paginatorSelectDisplayDensity(): string {
+        if (this.displayDensity === DisplayDensity.comfortable) {
+            return DisplayDensity.cosy;
+        }
+        return DisplayDensity.compact;
+    }
+
     /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * The width is 80% of the total grid width.
@@ -4523,7 +4541,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected reinitPinStates() {
         this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
-        this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+            this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
