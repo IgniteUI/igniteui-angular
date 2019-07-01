@@ -17,6 +17,7 @@
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
+/// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $default-palette
@@ -37,7 +38,8 @@
     $empty-color: null,
     $fill-color: null,
     $tick-color: null,
-    $disabled-color: null
+    $disabled-color: null,
+    $border-radius-ripple:null
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: map-get($schema, $name);
@@ -47,6 +49,11 @@
         if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')),0 ,10px
     );
 
+    $border-radius-ripple: round-borders(
+        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')),0 ,24px
+    );
+
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -55,7 +62,8 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
-        border-radius: $border-radius
+        border-radius: $border-radius,
+        border-radius-ripple: $border-radius-ripple
     ));
 }
 
@@ -245,7 +253,7 @@
         right: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
         width: $ripple-size;
         height: $ripple-size;
-        border-radius: $ripple-radius;
+        border-radius: --var($theme, 'border-radius-ripple');
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
