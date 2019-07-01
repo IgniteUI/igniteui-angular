@@ -2816,6 +2816,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
+                    this._autoSize = false;
                     this.reflow();
                     this._observer.disconnect();
                     this._observer = null;
