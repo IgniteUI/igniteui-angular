@@ -894,7 +894,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         // TODO: to be deleted when onFocusChange event is removed #4054
         const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid.onFocusChange.emit(args);
+        this.grid._onFocusChange.emit(args);
         if (args.cancel) {
             return;
         }
