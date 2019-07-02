@@ -64,6 +64,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private _column = null;
     private isKeyPressed = false;
     private isComposing = false;
+    private _cancelChipClick = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -364,7 +365,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
+
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
             const expression = this.expressionsList[index].expression;
@@ -521,6 +524,21 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             // if it has been focused and then set to readonly.
             requestAnimationFrame(() => this.input.nativeElement.focus());
         }
+    }
+
+
+    public onChipPointerdown(args, chip: IgxChipComponent) {
+        const activeElement = document.activeElement;
+        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+    }
+
+    public onChipClick(args, chip: IgxChipComponent) {
+        if (this._cancelChipClick) {
+            return;
+        }
+
+        this._cancelChipClick = false;
+        chip.selected = !chip.selected;
     }
 
     /**
