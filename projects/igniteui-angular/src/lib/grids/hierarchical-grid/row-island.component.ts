@@ -308,7 +308,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
 
     private cleanGridState(grid) {
         grid.childGridTemplates.forEach((tmpl) => {
-            tmpl.owner.cleanCache();
+            tmpl.owner.cleanView(tmpl.context.templateID);
         });
         grid.childGridTemplates.clear();
     }
