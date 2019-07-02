@@ -442,6 +442,14 @@
         @extend %igx-grid__filtering-row !optional;
     }
 
+    @include e(filtering-row, $m: cosy) {
+        @extend %igx-grid__filtering-row--cosy !optional;
+    }
+
+    @include e(filtering-row, $m: compact) {
+        @extend %igx-grid__filtering-row--compact !optional;
+    }
+
     @include e(filtering-row-buttons) {
         @extend %igx-grid__filtering-row-buttons !optional;
     }

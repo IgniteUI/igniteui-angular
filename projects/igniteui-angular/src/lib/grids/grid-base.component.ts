@@ -208,7 +208,7 @@ export interface IRowDragEndEventArgs {
 export interface IRowDragStartEventArgs extends CancelableEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
- }
+}
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -2530,6 +2530,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
+    protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2988,6 +2989,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             default:
                 return 48;
         }
+    }
+
+    public paginatorClassName(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid-paginator--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid-paginator--compact';
+            default:
+                return 'igx-grid-paginator';
+        }
+    }
+
+    public paginatorSelectDisplayDensity(): string {
+        if (this.displayDensity === DisplayDensity.comfortable) {
+            return DisplayDensity.cosy;
+        }
+        return DisplayDensity.compact;
     }
 
     /**
@@ -4035,10 +4054,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
+            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
+            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
+                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
+            }
+            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4519,7 +4541,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected reinitPinStates() {
         this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
-        this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+            this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
