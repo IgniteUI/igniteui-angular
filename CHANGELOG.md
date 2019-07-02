@@ -32,6 +32,7 @@ Now you can set `minWindth` for a column to a value smaller than `defaultMinWidt
 - `IgxChip`
     - `hideBaseOnDrag` input is added that allow the chip base that stays at place to be visible while dragging it.
     - `animateOnRelease` input is added that allows to disable the animation that returns the chip when the chip is released somewhere.
+- `IgxTransaction` - `getState` accepts one optional parameter `pending` of `boolean` type. When `true` is provided `getState` will return `state` from pending states. By default `getState` is set to `false`.
 
 ## 8.0.0
 - `Theming`: Add component schemas for completely round and completely square variations. Can be mixed with the existing light and dark component schemas. For instance:
@@ -200,6 +201,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+    - `IgxTransactionService` now can `commit` and `clear` transaction(s) by record id with an optional parameter. The `commit` method will apply to the data all transactions for the provided `id`. The `clear` method will remove all transactions for the `id` from the transactions log. Additionally both will remove all actions from the undo stack matching the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834

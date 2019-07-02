@@ -4,9 +4,9 @@
 <button igxButton="raised" (click)="logTransactionsIsland1()">RI1 Transactions</button>
 <div class="wrapper">
         <igx-hierarchical-grid #grid1 [data]="remoteData" [rowEditable]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false"
-                [height]="'800px'" [width]="'100%'" #hGrid>
+                [height]="'800px'" [width]="'500px'"  [expandChildren]='true' #hGrid>
                 <igx-column field="CustomerID"></igx-column>
-                <igx-column field="CompanyName"></igx-column>
+                <igx-column field="CompanyName" ></igx-column>
                 <igx-column field="ContactName"></igx-column>
                 <igx-column field="ContactTitle"></igx-column>
                 <igx-column field="Country"></igx-column>
@@ -15,7 +15,7 @@
                         [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)"
                         [rowEditable]="true">
                         <igx-column field="MyID"></igx-column>
-                        <igx-column field="OrderID"></igx-column>
+                        <igx-column field="OrderID"  [hasSummary]="true"></igx-column>
                         <igx-column field="OrderDate" [dataType]='"date"'></igx-column>
                         <igx-column field="ShipCountry"></igx-column>
                         <igx-column field="ShipCity"></igx-column>
