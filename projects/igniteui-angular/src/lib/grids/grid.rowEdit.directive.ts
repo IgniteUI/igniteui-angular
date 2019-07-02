@@ -1,7 +1,6 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first, tap } from 'rxjs/operators';
-import { IgxGridNavigationService } from './grid-navigation.service';
 
 /** @hidden */
 @Directive({
@@ -32,17 +31,11 @@ export class IgxRowEditTabStopDirective {
         return this.grid.rowEditTabs;
     }
 
-    private grid: IgxGridBaseComponent;
-    private navigationService: IgxGridNavigationService;
-
     constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) grid,
-        public element: ElementRef,
-        @Inject(forwardRef(() => IgxGridNavigationService)) navigationService) {
-            this.grid = grid;
-            this.navigationService = navigationService;
-            this.navigationService.grid = grid;
+        @Inject(forwardRef(() => IgxGridBaseComponent)) private grid: IgxGridBaseComponent,
+        public element: ElementRef) {
         }
+
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
@@ -69,11 +62,11 @@ export class IgxRowEditTabStopDirective {
         const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
         if (!targetCell ||
-            !this.navigationService.isColumnFullyVisible(targetIndex)
-            || !this.navigationService.isColumnLeftFullyVisible(targetIndex)) {
+            !this.grid.navigation.isColumnFullyVisible(targetIndex)
+            || !this.grid.navigation.isColumnLeftFullyVisible(targetIndex)) {
             this.focusNextCell(this.grid.rowInEditMode.index, targetIndex);
             horizontalScroll.scrollLeft =
-            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(targetIndex));
+            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.grid.navigation.getColumnUnpinnedIndex(targetIndex));
         } else {
             targetCell.nativeElement.focus();
         }
