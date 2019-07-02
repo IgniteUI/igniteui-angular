@@ -5428,7 +5428,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
@@ -5443,9 +5442,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (event) {
             if (cell) {
+                const ri = row ? row.index : -1;
                 const vi = cell.column.visibleIndex;
                 this.navigateTo(ri, vi, (c) => {
-                    if (c.target) {
+                    if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
                         c.target.nativeElement.focus();
                     }
                 });
