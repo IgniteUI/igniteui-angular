@@ -2,13 +2,13 @@
     [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
-<ng-template #defaultPager let-api>
+<!-- <ng-template #defaultPager let-api>
     <div class="igx-grid-paginator__select">
         <label class="igx-grid-paginator__label">{{ resourceStrings.igx_grid_paginator_label }}</label>
         <div class="igx-grid-paginator__select-input">
             <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
                 <igx-select-item [value]="val"
-                                 *ngFor="let val of [api.perPage, 5, 10, 15, 25, 50, 100, 500] | paginatorOptions">
+                    *ngFor="let val of [api.perPage, 5, 10, 15, 25, 50, 100, 500] | paginatorOptions">
                     {{val}}
                 </igx-select-item>
             </igx-select>
@@ -33,7 +33,7 @@
             <igx-icon fontSet="material">last_page</igx-icon>
         </button>
     </div>
-</ng-template>
+</ng-template> -->
 
 <div [style.width.px]='outerWidth' class="igx-grid__grouparea"
     *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
@@ -198,11 +198,17 @@
     </div>
 </div>
 
-<div [ngClass]="paginatorClassName()" *ngIf="paging && totalRecords" #paginator>
-    <ng-container
-        *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
+<div #paginator>
+    <ng-container *ngTemplateOutlet="footerTemplate ? footerTemplate : defaultPaginator">
     </ng-container>
 </div>
+
+<ng-template #defaultPaginator>
+    <igx-paginator *ngIf="paging && totalRecords" [ngClass]="paginatorClassName()" [displayDensity]="displayDensity" (selectChange)="updatePerPage($event)"
+        (pageChange)="updateCurrentPage($event)" [totalRecords]="data.length" [perPage]="perPage" [selectOptions]="[3,6,10,24]"
+    >
+    </igx-paginator>
+</ng-template>
 
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
