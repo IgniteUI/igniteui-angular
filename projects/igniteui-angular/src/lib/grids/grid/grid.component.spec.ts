@@ -4588,7 +4588,7 @@ export class IgxGridInsideIgxTabsComponent {
     public grid5: IgxGridComponent;
     @ViewChild('grid6', { read: IgxGridComponent })
     public grid6: IgxGridComponent;
-    @ViewChild(IgxTabsComponent, { read: IgxTabsComponen })
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
     public tabs: IgxTabsComponent;
 
     public columns = [
