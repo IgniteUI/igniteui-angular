@@ -23,12 +23,13 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    Optional
+    Optional,
+    HostListener
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first, filter } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -89,6 +90,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -101,6 +103,12 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
+
+export interface IGridClipboardEvent {
+    type: string;
+    data: any[];
+    cancel: boolean;
+}
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -1535,6 +1543,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
+     * TODO: Write doc
+     */
+    @Output()
+    onGridCopy = new EventEmitter<IGridClipboardEvent>();
+
+    /**
      * @hidden
      */
     @ViewChild(IgxGridColumnResizerComponent, { static: false })
@@ -2356,6 +2370,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * TODO: Write doc
+     */
+    @Input()
+    clipboardOptions = {
+        enabled: true,
+        copyHeaders: true,
+        separator: '\t'
+    };
+
+    /**
      * @hidden
      */
     public rowEditMessage;
@@ -2619,6 +2643,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
+        if (event.ctrlKey && key === 'c' && this.clipboardOptions.enabled) {
+            isIE() ? this.copyHandler(null, true) : this.document.execCommand('copy');
+        }
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
             event.preventDefault();
             if (key === 'pagedown') {
@@ -4886,6 +4913,39 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('copy', ['$event'])
+    public copyHandler(event, ie11 = false) {
+        if (!this.clipboardOptions.enabled) {
+            return;
+        }
+        const data = this.getSelectedData();
+        const ev = { type: 'copy', data, cancel: false } as IGridClipboardEvent;
+        this.onGridCopy.emit(ev);
+
+        if (ev.cancel) {
+             return;
+        }
+
+        const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
+        let result = transformer.prepareData();
+
+        if (!this.clipboardOptions.copyHeaders) {
+            result = result.substring(result.indexOf('\n') + 1);
+        }
+
+        if (ie11) {
+            (window as any).clipboardData.setData('Text', result);
+            return;
+        }
+
+        event.preventDefault();
+        event.clipboardData.setData('text/plain', result);
     }
 
     /**
