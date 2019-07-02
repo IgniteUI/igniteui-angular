@@ -66,53 +66,7 @@ export class DataUtil {
     public static group<T>(data: T[], state: IGroupingState, grid: any = null, groupsRecords: any[] = []): IGroupByResult {
         const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
-        return grouping.groupBy(data, state.expressions, grid, groupsRecords);
-    }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
-        if (state.expressions.length === 0) {
-            return groupData.data;
-        }
-        return this.restoreGroupsIterative(groupData, state);
-    }
-    private static restoreGroupsIterative(groupData: IGroupByResult, state: IGroupingState): any[] {
-        const metadata = groupData.metadata;
-        const result = [], added = [];
-        let chain: any[];
-        let i = 0, j;
-        let pointer: IGroupByRecord;
-        let expanded: boolean;
-        for (i = 0; i < metadata.length;) {
-            chain = [metadata[i]];
-            pointer = metadata[i].groupParent;
-            // break off if the parent is already added
-            while (pointer && added[0] !== pointer) {
-                chain.push(pointer);
-                if (added[0] && added[0].level === pointer.level) {
-                    added.shift();
-                }
-                pointer = pointer.groupParent;
-            }
-            for (j = chain.length - 1; j >= 0; j--) {
-                result.push(chain[j]);
-                added.unshift(chain[j]);
-                const hierarchy = this.getHierarchy(chain[j]);
-                const expandState: IGroupByExpandState = state.expansion.find((s) =>
-                    this.isHierarchyMatch(s.hierarchy || [{ fieldName: chain[j].expression.fieldName, value: chain[j].value }], hierarchy));
-                expanded = expandState ? expandState.expanded : state.defaultExpanded;
-                if (!expanded) {
-                    break;
-                }
-            }
-            added.shift();
-            j = Math.max(j, 0);
-            const start = chain[j].records.findIndex(r => r === groupData.data[i]);
-            const end = Math.min(metadata.length - i + start, chain[j].records.length);
-            if (expanded) {
-                result.push(...chain[j].records.slice(start, end));
-            }
-            i += end - start;
-        }
-        return result;
+        return grouping.groupBy(data, state, grid, groupsRecords);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {

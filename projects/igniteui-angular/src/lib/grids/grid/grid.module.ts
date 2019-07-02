@@ -8,8 +8,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import {
     IgxGridPagingPipe,
-    IgxGridPostGroupingPipe,
-    IgxGridPreGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe
 } from './grid.pipes';
@@ -30,8 +29,7 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
-    IgxGridPreGroupingPipe,
-    IgxGridPostGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
@@ -44,8 +42,7 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
     IgxGridCommonModule,
-    IgxGridPreGroupingPipe,
-    IgxGridPostGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,

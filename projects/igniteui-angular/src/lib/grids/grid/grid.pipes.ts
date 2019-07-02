@@ -44,10 +44,10 @@ export class IgxGridSortingPipe implements PipeTransform {
  *@hidden
  */
 @Pipe({
-    name: 'gridPreGroupBy',
+    name: 'gridGroupBy',
     pure: true
 })
-export class IgxGridPreGroupingPipe implements PipeTransform {
+export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
@@ -82,42 +82,6 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
  *@hidden
  */
 @Pipe({
-    name: 'gridPostGroupBy',
-    pure: true
-})
-export class IgxGridPostGroupingPipe implements PipeTransform {
-    private gridAPI: IgxGridAPIService;
-
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
-    }
-
-    public transform(collection: IGroupByResult, expression: IGroupingExpression | IGroupingExpression[],
-        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, pipeTrigger: number): any[] {
-
-        const state = { expressions: [], expansion: [], defaultExpanded };
-        const grid: IgxGridComponent = this.gridAPI.grid;
-        state.expressions = grid.groupingExpressions;
-
-        if (!state.expressions.length) {
-            return collection.data;
-        }
-
-        state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupsExpanded;
-
-        return DataUtil.restoreGroups({
-            data: cloneArray(collection.data),
-            metadata: cloneArray(collection.metadata)
-        }, state);
-    }
-}
-
-/**
- *@hidden
- */
-@Pipe({
     name: 'gridPaging',
     pure: true
 })
@@ -125,7 +89,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
-    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
+    public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
         if (!this.gridAPI.grid.paging) {
             return collection;
@@ -136,7 +100,10 @@ export class IgxGridPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const result = DataUtil.page(cloneArray(collection), state);
+        const result = {
+            data: DataUtil.page(cloneArray(collection.data), state),
+            metadata: DataUtil.page(cloneArray(collection.metadata), state)
+        };
         this.gridAPI.grid.pagingState = state;
         return result;
     }

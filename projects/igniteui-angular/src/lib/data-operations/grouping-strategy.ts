@@ -1,6 +1,7 @@
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression } from './sorting-expression.interface';
 import { IgxSorting } from './sorting-strategy';
+import { IGroupingState } from './groupby-state.interface';
 
 export interface IGroupByResult {
     data: any[];
@@ -8,9 +9,9 @@ export interface IGroupByResult {
 }
 
 export class IgxGrouping extends IgxSorting {
-    public groupBy(data: any[], expressions: ISortingExpression[], grid?: any, groupsRecords?: any[]): IGroupByResult {
+    public groupBy(data: any[], state: IGroupingState, grid?: any, groupsRecords?: any[]): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
-        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata, grid, groupsRecords);
+        const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords);
         return {
             data: grouping,
             metadata: metadata

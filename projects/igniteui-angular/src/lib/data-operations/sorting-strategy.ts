@@ -2,6 +2,9 @@ import { cloneArray } from '../core/utils';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { IGroupingExpression } from './grouping-expression.interface';
+import { IGroupingState } from './groupby-state.interface';
+import { DataUtil } from './data-util';
+import { IGroupByExpandState } from './groupby-expand-state.interface';
 
 export interface ISortingStrategy {
     sort: (data: any[],
@@ -129,8 +132,10 @@ export class IgxSorting {
         }
         return data;
     }
-    protected groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
+    protected groupDataRecursive<T>(data: T[], state: IGroupingState, level: number,
         parent: IGroupByRecord, metadata: IGroupByRecord[], grid: any = null, groupsRecords: any[] = []): T[] {
+        const expressions = state.expressions;
+        const expansion = state.expansion;
         let i = 0;
         let result = [];
         while (i < data.length) {
@@ -149,12 +154,20 @@ export class IgxSorting {
             } else {
                 groupsRecords.push(groupRow);
             }
-            if (level < expressions.length - 1) {
-                result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow, metadata, grid, groupsRecords));
-            } else {
-                for (const groupItem of group) {
-                    metadata.push(groupRow);
-                    result.push(groupItem);
+            const hierarchy = DataUtil.getHierarchy(groupRow);
+            const expandState: IGroupByExpandState = expansion.find((s) =>
+                DataUtil.isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+            const expanded = expandState ? expandState.expanded : state.defaultExpanded;
+            result.push(groupRow);
+            metadata.push(null);
+            if (expanded) {
+                if (level < expressions.length - 1) {
+                    result = result.concat(this.groupDataRecursive(group, state, level + 1, groupRow, metadata, grid, groupsRecords));
+                } else {
+                    for (const groupItem of group) {
+                        metadata.push(groupRow);
+                        result.push(groupItem);
+                    }
                 }
             }
             i += group.length;
