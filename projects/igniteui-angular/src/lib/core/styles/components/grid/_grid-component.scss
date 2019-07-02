@@ -207,6 +207,10 @@
         @extend %igx-grid__th--filtrable !optional;
     }
 
+    @include e(th, $mods: (filtrable, sortable)) {
+        @extend %igx-grid__th--filtrable-sortable !optional;
+    }
+
     @include e(th, $m: sorted) {
         @extend %igx-grid__th--sorted !optional;
     }
@@ -436,6 +440,14 @@
 
     @include e(filtering-row) {
         @extend %igx-grid__filtering-row !optional;
+    }
+
+    @include e(filtering-row, $m: cosy) {
+        @extend %igx-grid__filtering-row--cosy !optional;
+    }
+
+    @include e(filtering-row, $m: compact) {
+        @extend %igx-grid__filtering-row--compact !optional;
     }
 
     @include e(filtering-row-buttons) {
