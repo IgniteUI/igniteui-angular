@@ -1,4 +1,12 @@
+::ng-deep .igx-list__item-actions .igx-icon {
+    cursor: pointer;
+}
+
 ::ng-deep .igx-list__item-actions .igx-icon.favorite {
+    color: orange;
+}
+
+::ng-deep .igx-list__item-content:hover .igx-list__item-actions .igx-icon.favorite {
     color: orange;
 }
 
@@ -40,4 +48,8 @@
     width: 100%;
     padding-left: 10px;
     align-items: center;
+}
+
+.list-sample {
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .26), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .08);
 }
