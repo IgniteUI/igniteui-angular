@@ -1397,11 +1397,24 @@ describe('IgxGrid - multi-column headers', () => {
         genInfoColGroup.headerTemplate = headerTemplate;
         fixture.detectChanges();
 
-        const headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
+        let headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
         expect(headerSpans.length).toBe(2);
         headerSpans.forEach(headerSpan => {
             expect(headerSpan.nativeElement.textContent).toMatch('Dynamic column group template');
         });
+
+        locationColGroup.headerTemplate = null;
+        fixture.detectChanges();
+
+        headerSpans = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
+        expect(headerSpans.length).toBe(1);
+        headerSpans.forEach(headerSpan => {
+            expect(headerSpan.nativeElement.textContent).toMatch('Dynamic column group template');
+        });
+        headerSpans = fixture.debugElement.queryAll(By.css('.col-group-template'));
+        expect(headerSpans.length).toBe(0);
+        headerSpans = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
+        expect(headerSpans[1].nativeElement.textContent).toBe('Location');
     }));
 });
 
