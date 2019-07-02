@@ -3888,6 +3888,25 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(47);
         });
+
+        it('IgxTabs: should initialize a grid with correct height height = 100% when parent has height', async () => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+            await wait(16);
+
+            const grid = fix.componentInstance.grid6;
+            const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(510);
+            tab.tabs.toArray()[5].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            expect(grid.calcHeight).toBe(230);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
+            expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
+        });
     });
 });
 
@@ -4541,6 +4560,19 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         </igx-column>
         </igx-grid>
       </igx-tabs-group>
+      <igx-tabs-group label="Tab 6">
+      <div style='height:300px;'>
+      <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+       >
+      <igx-column
+          *ngFor="let column of columns"
+          [field]="column.field"
+          [header]="column.field"
+      >
+      </igx-column>
+      </igx-grid>
+      </div>
+    </igx-tabs-group>
     </igx-tabs>
   </div>
     `
@@ -4554,7 +4586,9 @@ export class IgxGridInsideIgxTabsComponent {
     public grid4: IgxGridComponent;
     @ViewChild('grid5', { read: IgxGridComponent })
     public grid5: IgxGridComponent;
-    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
+    @ViewChild('grid6', { read: IgxGridComponent })
+    public grid6: IgxGridComponent;
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponen })
     public tabs: IgxTabsComponent;
 
     public columns = [
