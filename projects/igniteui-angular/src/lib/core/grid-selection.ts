@@ -524,13 +524,4 @@ export class IgxGridSelectionService {
             selection.addRange(this._selectionRange || document.createRange());
         }
     }
-
-    _moveSelectionChrome(node: Node) {
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        const range = new Range();
-        range.selectNode(node);
-        range.collapse(true);
-        selection.addRange(range);
-    }
 }
