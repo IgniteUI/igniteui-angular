@@ -87,3 +87,14 @@ export class IgxGridTransactionPipe implements PipeTransform {
         return collection;
     }
 }
+
+/** @hidden */
+@Pipe({
+    name: 'paginatorOptions',
+    pure: true,
+})
+export class IgxGridPaginatorOptionsPipe implements PipeTransform {
+    public transform(values: Array<number>) {
+        return Array.from(new Set([...values])).sort((a, b) => a - b);
+    }
+}
