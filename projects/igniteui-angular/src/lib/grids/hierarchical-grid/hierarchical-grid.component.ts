@@ -471,7 +471,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 }
             });
         }
+        if (this.parent && this.selectionService.activeElement) {
+            // in case selection is in destroyed child grid, selection should be cleared.
+            this._clearSeletionHighlights();
+        }
         super.ngOnDestroy();
+    }
+
+    private _clearSeletionHighlights() {
+        [this.rootGrid, ...this.rootGrid.getChildGrids(true)].forEach(grid => {
+            grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
     }
 
     /**
