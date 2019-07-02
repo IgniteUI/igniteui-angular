@@ -86,10 +86,12 @@
          <igx-chips-area #chipsArea>
             <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
                 <igx-chip #chip id='chip'
+                    (pointerdown)="onChipPointerdown($event, chip)"
+                    (click)="onChipClick($event, chip)"
                     (onSelection)="onChipSelected($event, item.expression)"
                     (keydown)="onChipKeyDown($event, chip)"
                     (onRemove)="onChipRemoved($event, item)"
-                    [selectable]="true"
+                    [selectable]="false"
                     [selected]="item.isSelected"
                     [displayDensity]="'cosy'"
                     [removable]="true">

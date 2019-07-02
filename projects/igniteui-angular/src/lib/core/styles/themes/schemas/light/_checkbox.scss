@@ -13,7 +13,8 @@
 /// @prop {Map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
 /// @prop {Map} fill-color [igx-color: ('secondary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
-/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for checkbox date.
+/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-10 to be used for checkbox.
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
 /// @see $default-palette
 $_light-checkbox: extend((
     tick-color: #fff,

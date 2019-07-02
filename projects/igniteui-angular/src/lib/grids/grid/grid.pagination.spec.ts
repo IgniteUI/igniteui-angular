@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
-import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent, PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -30,7 +30,7 @@ describe('IgxGrid - Grid Paging', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-        const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+        const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
 
         expect(grid.paging).toBeTruthy();
 
@@ -132,8 +132,11 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 3, '1', '1 of 4', []);
 
         // Change page size
-        const select = fix.debugElement.query(By.css('.igx-paginator > select'));
-        select.triggerEventHandler('change', { target: { value: 10 } });
+        const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
+        select.click();
+        fix.detectChanges();
+        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+        selectList.children[2].nativeElement.click();
 
         tick();
         fix.detectChanges();
@@ -266,15 +269,15 @@ describe('IgxGrid - Grid Paging', () => {
         const grid = fix.componentInstance.grid;
         fix.detectChanges();
 
-        let paginator = grid.nativeElement.querySelector('.igx-paginator');
+        let paginator = grid.nativeElement.querySelector('.igx-grid-paginator__pager');
         expect(paginator).toBeNull();
 
         grid.paging = !grid.paging;
-        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        paginator = grid.nativeElement.querySelector('.igx-grid-paginator__pager');
         expect(paginator !== null).toBeTruthy();
 
         grid.paging = !grid.paging;
-        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        paginator = grid.nativeElement.querySelector('.igx-grid-paginator__pager');
         expect(paginator).toBeNull();
     });
 
@@ -357,7 +360,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.totalPages).toBe(1);
 
         // Add new row
-        grid.addRow({ID: 1, Name: 'Test Name',  JobTitle: 'Test Job Title'});
+        grid.addRow({ ID: 1, Name: 'Test Name', JobTitle: 'Test Job Title' });
         fix.detectChanges();
         verifyGridPager(fix, 3, '8', '1 of 2', [true, true, false, false]);
         expect(grid.totalPages).toBe(2);
@@ -367,9 +370,9 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 1, '1', '2 of 2', []);
 
         // Add new rows on second page
-        grid.addRow({ID: 2, Name: 'Test Name',  JobTitle: 'Test Job Title'});
-        grid.addRow({ID: 3, Name: 'Test Name',  JobTitle: 'Test Job Title'});
-        grid.addRow({ID: 4, Name: 'Test Name',  JobTitle: 'Test Job Title'});
+        grid.addRow({ ID: 2, Name: 'Test Name', JobTitle: 'Test Job Title' });
+        grid.addRow({ ID: 3, Name: 'Test Name', JobTitle: 'Test Job Title' });
+        grid.addRow({ ID: 4, Name: 'Test Name', JobTitle: 'Test Job Title' });
         fix.detectChanges();
         verifyGridPager(fix, 3, '1', '2 of 3', [false, false, false, false]);
         expect(grid.totalPages).toBe(3);
@@ -410,7 +413,7 @@ describe('IgxGrid - Grid Paging', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-
+        tick(16);
         verifyGridPager(fix, 3, '1', '1 of 4', [true, true, false, false]);
 
         // Filter out all records
@@ -418,7 +421,7 @@ describe('IgxGrid - Grid Paging', () => {
         tick();
         fix.detectChanges();
 
-        const paginator = '.igx-paginator.igx-grid-paginator';
+        const paginator = '.igx-grid-paginator__pager';
         expect(gridElement.querySelector(paginator)).toBeNull();
 
         grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('greaterThan'));
@@ -437,7 +440,32 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelector(paginator)).not.toBeNull();
     }));
 
-    function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
+    it('should display custom numbers in select from perPage', () => {
+        const expectedOptions = [3, 5, 10, 15, 25, 50, 100, 500];
+        const defaultExpectedOptions = [5, 10, 15, 25, 50, 100, 500];
+
+        const fix = TestBed.createComponent(PagingComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        function testOptions(expectedResults) {
+            const options = fix.debugElement.query(By.css('igx-select')).nativeElement.querySelectorAll('igx-select-item');
+            let option;
+            options.forEach((el, index) => {
+                option = Number(el.textContent.trim());
+                expect(option).toBe(expectedResults[index]);
+            });
+        }
+
+        testOptions(expectedOptions);
+
+        grid.perPage = 25;
+        fix.detectChanges();
+
+        testOptions(defaultExpectedOptions);
+    });
+
+    function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
         const disabled = 'igx-button--disabled';
         const grid = fix.componentInstance.grid;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
@@ -445,13 +473,13 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
         expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
 
-        if ( pagerText != null ) {
-            expect(gridElement.querySelector('.igx-paginator')).toBeDefined();
-            expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(1);
-            expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch(pagerText);
+        if (pagerText != null) {
+            expect(gridElement.querySelector('.igx-grid-paginator__pager')).toBeDefined();
+            expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
+            expect(gridElement.querySelector('.igx-grid-paginator__pager > span').textContent).toMatch(pagerText);
         }
-        if ( buttonsVisibility != null && buttonsVisibility.length === 4 ) {
-            const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+        if (buttonsVisibility != null && buttonsVisibility.length === 4) {
+            const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
             expect(pagingButtons.length).toEqual(4);
             expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
             expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);
