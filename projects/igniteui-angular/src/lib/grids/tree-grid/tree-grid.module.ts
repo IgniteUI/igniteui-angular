@@ -11,6 +11,7 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
+import { IgxSelectModule } from '../../select/index';
 
 /**
  * @hidden
@@ -40,7 +41,8 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxSelectModule
   ]
 })
 export class IgxTreeGridModule {

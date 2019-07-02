@@ -45,6 +45,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
+const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -1576,6 +1577,36 @@ describe('IgxGrid - Filtering actions', () => {
         const datePicker = filterUIRow.query(By.css('igx-date-picker'));
         expect(datePicker.componentInstance.mode).toBe('dropdown');
     }));
+
+    it('Should commit the filter when click on filter chip', async () => {
+        const filterValue = 'a';
+        const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    });
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
@@ -4178,15 +4209,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 675).toBe(true,
+            expect(scrollbar.scrollTop >= 610 && scrollbar.scrollTop <= 615).toBe(true,
                 'search scrollbar has incorrect scrollTop');
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(240, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(288, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(10, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(12, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -5444,14 +5475,12 @@ function verifySortMoveDisplayDensity(gridNativeElement: HTMLElement, expectedDi
     const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
 
     // Get container of sort component and its header and buttons.
-    const sortContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__sort--compact' : 'igx-excel-filter__sort';
-    const sortContainer = excelMenu.querySelector('.' + sortContainerClass);
+    const sortContainer = excelMenu.querySelector('.igx-excel-filter__sort');
     const sortHeaderRect = sortContainer.querySelector('header').getBoundingClientRect();
     const sortButtons = sortContainer.querySelectorAll('.igx-button--flat');
 
     // Get container of move component and its header and buttons.
-    const moveContainerClass = (expectedDisplayDensity === 'compact') ? 'igx-excel-filter__move--compact' : 'igx-excel-filter__move';
-    const moveContainer = excelMenu.querySelector('.' + moveContainerClass);
+    const moveContainer = excelMenu.querySelector('.igx-excel-filter__move');
     const moveHeaderRect = moveContainer.querySelector('header').getBoundingClientRect();
     const moveButtons = moveContainer.querySelectorAll('.igx-button--flat');
 
