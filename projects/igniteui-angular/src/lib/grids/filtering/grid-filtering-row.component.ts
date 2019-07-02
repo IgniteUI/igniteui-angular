@@ -365,7 +365,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
+
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
             const expression = this.expressionsList[index].expression;
