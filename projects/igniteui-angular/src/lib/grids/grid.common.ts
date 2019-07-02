@@ -505,7 +505,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     get isDropTarget(): boolean {
-        return this._column && this._column.grid.hasMovableColumns && this.cms.column && this.cms.column.movable &&
+        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable &&
             ((!this._column.pinned && this.cms.column.disablePinning) || !this.cms.column.disablePinning);
     }
 
@@ -533,6 +533,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragOver(event) {
+        const drag = event.detail.owner;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
+
         if (this.isDropTarget &&
             this.cms.column !== this.column &&
             this.cms.column.level === this.column.level &&
