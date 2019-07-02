@@ -685,6 +685,6 @@ function navigateToLastPage(fix) {
 
 function clickPagerButton(fix, button: number) {
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-    const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+    const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
     pagingButtons[button].dispatchEvent(new Event('click'));
 }
