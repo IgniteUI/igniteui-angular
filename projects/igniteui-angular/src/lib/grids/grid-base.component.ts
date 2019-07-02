@@ -4324,6 +4324,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
 
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.resetChipsArea();
+        }
+
         this.cdr.detectChanges();
         this.resetCaches();
         // in case scrollbar has appeared recalc to size correctly.
