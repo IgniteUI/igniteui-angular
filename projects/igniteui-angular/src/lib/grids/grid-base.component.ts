@@ -5450,9 +5450,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
 
-        const columnIndex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
-
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
@@ -5463,18 +5460,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (event) {
             if (cell) {
-                const columnVisibleIndex =
-                    this.selectionService.activeElement.layout ?
-                        this.selectionService.activeElement.layout.columnVisibleIndex :
-                        cell.column.visibleIndex;
-                // if cell is not fully visible scroll to it and focus it
-                // else focus the cell
-                if (!this.navigation.isColumnFullyVisible(columnVisibleIndex)) {
-                    this.navigation.performHorizontalScrollToCell(ri, columnVisibleIndex, false);
-                } else {
-                    const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-                    currentCell.nativeElement.focus();
-                }
+                const ri = row ? row.index : -1;
+                const vi = cell.column.visibleIndex;
+                this.navigateTo(ri, vi, (c) => {
+                    if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                        c.target.nativeElement.focus();
+                    }
+                });
             } else {
                 // when there's no cell in edit mode (focus is on the row edit buttons), use last active
                 const activeCell = this.gridAPI.grid.selectionService.activeElement;
