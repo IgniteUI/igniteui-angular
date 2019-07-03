@@ -1607,6 +1607,54 @@ describe('IgxGrid - Filtering actions', () => {
         await wait(16);
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
+
+    it('Should not select all filter chips when switching columns', async () => {
+        let filterValue = 'a';
+        const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+
+        filterValue = 'c';
+        sendInput(input, filterValue, fix);
+        fix.detectChanges();
+        await wait(16);
+
+        let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+        expect(filterChips[1]).toBeTruthy();
+        expect(filterChips[1].componentInstance.selected).toBeTruthy();
+
+        GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChips[1].componentInstance.selected).toBeFalsy();
+
+        let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
+        selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+
+        selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
+        selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+
+        filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+        expect(filterChips[0].componentInstance.selected).toBeFalsy();
+        expect(filterChips[1].componentInstance.selected).toBeFalsy();
+    });
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
