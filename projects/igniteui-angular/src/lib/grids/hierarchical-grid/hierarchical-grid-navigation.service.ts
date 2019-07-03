@@ -366,7 +366,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const visibleColumnIndex = selectedNode.column;
         const isSummary = selectedNode.isSummaryRow;
         if (this.grid.rowInEditMode) {
-            super.performTab(currentRowEl, selectedNode);
+            super.performShiftTabKey(currentRowEl, selectedNode);
             return;
         }
         if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent && !isSummary) {
