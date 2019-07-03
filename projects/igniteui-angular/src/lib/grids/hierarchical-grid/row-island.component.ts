@@ -293,6 +293,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
+        this._destroyed = true;
         this.rowIslandAPI.unset(this.id);
         if (this.parentIsland) {
             this.getGridsForIsland(this.key).forEach(grid => {
@@ -311,6 +312,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             tmpl.owner.cleanView(tmpl.context.templateID);
         });
         grid.childGridTemplates.clear();
+        grid.onRowIslandChange();
     }
 
     /**
