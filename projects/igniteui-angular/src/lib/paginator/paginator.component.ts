@@ -44,7 +44,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() public totalRecords: number;
+    @Input() 
+    public totalRecords: number;
 
     /**
     * An @Input property that sets cusom options in the select of the paginator
@@ -53,7 +54,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() public selectOptions = [5, 10, 15, 25, 50, 100, 500];
+    @Input() 
+    public selectOptions = [5, 10, 15, 25, 50, 100, 500];
 
     /**
     * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
@@ -63,7 +65,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() public perPage = 15;
+    @Input() 
+    public perPage = 15;
 
     /**
     * An @Input property, sets number of label of the select.
@@ -73,7 +76,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
+    @Input() 
+    public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
 
     /**
     * An @Input property sets the display density of `IgxPaginatorComponent`.
@@ -82,16 +86,19 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * <igx-paginator [displayDensity]="cozy"></igx-paginator>
     * ```
     */
-    @Input() public displayDensity = DisplayDensity.comfortable;
+    @Input() 
+    public displayDensity = DisplayDensity.comfortable;
 
     /**
      *An event that is emitted when the select in the `IgxPaginatorComponent` changes value.
     */
-    @Output() public selectChange = new EventEmitter<number>();
+    @Output() 
+    public selectChange = new EventEmitter<number>();
     /**
      *An event that is emitted when the paginating is used.
     */
-    @Output() public pageChange = new EventEmitter<number>();
+    @Output() 
+    public pageChange = new EventEmitter<number>();
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
