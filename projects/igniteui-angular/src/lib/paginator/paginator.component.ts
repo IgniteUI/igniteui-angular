@@ -44,7 +44,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() 
+    @Input()
     public totalRecords: number;
 
     /**
@@ -54,7 +54,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() 
+    @Input()
     public selectOptions = [5, 10, 15, 25, 50, 100, 500];
 
     /**
@@ -65,7 +65,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() 
+    @Input()
     public perPage = 15;
 
     /**
@@ -76,7 +76,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * ```
     * @memberof IgxPaginatorComponent
     */
-    @Input() 
+    @Input()
     public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
 
     /**
@@ -86,18 +86,18 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
     * <igx-paginator [displayDensity]="cozy"></igx-paginator>
     * ```
     */
-    @Input() 
+    @Input()
     public displayDensity = DisplayDensity.comfortable;
 
     /**
      *An event that is emitted when the select in the `IgxPaginatorComponent` changes value.
     */
-    @Output() 
+    @Output()
     public selectChange = new EventEmitter<number>();
     /**
      *An event that is emitted when the paginating is used.
     */
-    @Output() 
+    @Output()
     public pageChange = new EventEmitter<number>();
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -204,7 +204,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
         this.pageChange.emit(this.page);
     }
 }
-
 
 @NgModule({
     declarations: [IgxPaginatorComponent],
