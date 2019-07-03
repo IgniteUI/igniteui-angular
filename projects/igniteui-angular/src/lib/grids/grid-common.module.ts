@@ -23,6 +23,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
+import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -101,6 +102,7 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridDragSelectDirective,
         IgxGridColumnResizerComponent,
         IgxFilterCellTemplateDirective,
+        IgxGridFooterComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -161,7 +163,8 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridExcelStyleFilteringModule,
         IgxFilterCellTemplateDirective,
         IgxRowDragModule,
-        IgxPaginatorModule
+        IgxPaginatorModule,
+        IgxGridFooterComponent
     ],
     imports: [
         CommonModule,

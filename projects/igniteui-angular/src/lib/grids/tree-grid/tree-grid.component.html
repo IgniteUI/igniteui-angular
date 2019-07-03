@@ -8,7 +8,7 @@
         <div class="igx-grid-paginator__select-input">
             <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
                 <igx-select-item [value]="val"
-                                 *ngFor="let val of [api.perPage, 5, 10, 15, 25, 50, 100, 500] | paginatorOptions">
+                    *ngFor="let val of [api.perPage, 5, 10, 15, 25, 50, 100, 500] | paginatorOptions">
                     {{val}}
                 </igx-select-item>
             </igx-select>
@@ -151,11 +151,21 @@
     </div>
 </div>
 
-<div [ngClass]="paginatorClassName()" *ngIf="paging && totalRecords" #paginator>
-    <ng-container
-        *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
+<div #footer>
+    <ng-container ngProjectAs="igx-grid-footer">
+            <ng-content></ng-content>
+            <ng-container *ngTemplateOutlet="footerTemplate ? footerTemplate : defaultPaginator">
+            </ng-container>
     </ng-container>
 </div>
+
+<ng-template #defaultPaginator>
+    <igx-paginator *ngIf="paging && totalRecords" [displayDensity]="displayDensity"
+        (selectChange)="updatePerPage($event)" (pageChange)="updateCurrentPage($event)" [totalRecords]="processedExpandedFlatData.length"
+        [perPage]="perPage">
+    </igx-paginator>
+    <ng-content select="igx-grid-footer"></ng-content>
+</ng-template>
 
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
