@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -1161,6 +1161,45 @@ describe('IgxTreeGrid - Integration ', () => {
             tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
+        }));
+
+        it('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = (fix as ComponentFixture<IgxTreeGridRowEditingHierarchicalDSTransactionComponent>).componentInstance.treeGrid;
+            tick();
+            fix.detectChanges();
+
+            treeGrid.deleteRowById(147);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toBe(1);
+
+            treeGrid.addRow(treeGrid.data, 147);
+            tick();
+            fix.detectChanges();
+
+            expect(treeGrid.transactions.getTransactionLog().length).toBe(1);
+        }));
+
+        it('Should not add child row to deleted parent row - Flat DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = (fix as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            treeGrid.cascadeOnDelete = false;
+            tick();
+            fix.detectChanges();
+
+            treeGrid.deleteRowById(1);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toBe(1);
+
+            treeGrid.addRow(treeGrid.data, 1);
+            tick();
+            fix.detectChanges();
+
+            expect(treeGrid.transactions.getTransactionLog().length).toBe(1);
         }));
     });
 
