@@ -489,16 +489,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public paginationTemplate: TemplateRef<any>;
 
     /**
-     * You can provide a custom `ng-template` for the footer UI of the grid.
-     * ```html
-     * <igx-grid #grid [paging]="true" [footerTemplate]="myTemplate" [height]="'305px'"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    @Input()
-    public footerTemplate: TemplateRef<any>;
-
-    /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
      * By default it is disabled (false).
      * ```typescript
