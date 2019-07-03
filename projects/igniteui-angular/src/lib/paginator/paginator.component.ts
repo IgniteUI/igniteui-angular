@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, OnInit, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxSelectModule } from '../select/index';
@@ -13,11 +13,8 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
 })
-export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit {
-    /**
-     * @hidden
-     */
-    public page = 0;
+export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit, OnChanges {
+    
     /**
      * @hidden
      */
@@ -37,6 +34,11 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
         }
     }
 
+    /**
+     * @hidden
+     */
+    @Input() 
+    public page = 0;
     /**
     * An @Input property that sets the total records.
     * ```typescript
@@ -131,6 +133,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit 
             this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
         }
         this.totalPages = Math.ceil(this.totalRecords / this.perPage);
+    }
+    /**
+     * @hidden
+     */
+    public ngOnChanges(changes:any):void {
+        if(changes.perPage){
+            this.perPage = changes.perPage.currentValue;
+        }
+        if(changes.page){
+            this.page = changes.page.currentValue;
+        }
+        if(changes.totalRecords){
+            this.totalRecords = changes.totalRecords.currentValue;
+            this.totalPages = Math.ceil(this.totalRecords / this.perPage);
+        }
     }
      /**
      * Executes on change of select in  `IgxPaginatorComponent`.
