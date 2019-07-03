@@ -2125,6 +2125,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+    private _groupingMetadata = null;
     /**
      * @hidden
     */
@@ -5131,11 +5132,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns an array containing the filtered sorted data.
+     * Returns an array containing the result of the last data operation before paging.
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
-	 * @memberof IgxGridBaseComponent
+     * @memberof IgxGridBaseComponent
      */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
@@ -5143,6 +5144,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set filteredSortedData(value: any[]) {
         this._filteredSortedData = value;
         this.refreshSearch(true);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get groupingMetadata(): any[] {
+        return this._groupingMetadata;
+    }
+    set groupingMetadata(value: any[]) {
+        this._groupingMetadata = value;
     }
 
     /**
@@ -5320,13 +5331,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public isExpandedGroup(_group: IGroupByRecord): boolean {
         return undefined;
-    }
-
-    /**
-    * @hidden
-    */
-    protected getGroupByRecords(): IGroupByRecord[] {
-        return null;
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {

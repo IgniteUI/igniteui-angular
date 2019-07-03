@@ -34,7 +34,6 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions);
         }
-        grid.filteredSortedData = result;
 
         return result;
     }
@@ -61,20 +60,23 @@ export class IgxGridGroupingPipe implements PipeTransform {
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
+        let result: IGroupByResult;
 
         if (!state.expressions.length) {
             // empty the array without changing reference
             groupsRecords.splice(0, groupsRecords.length);
-            return {
+            result = {
                 data: collection,
                 metadata: collection
             };
+        } else {
+            state.expansion = grid.groupingExpansionState;
+            state.defaultExpanded = grid.groupsExpanded;
+            result = DataUtil.group(cloneArray(collection), state, grid, groupsRecords);
         }
-
-        state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupsExpanded;
-
-        return DataUtil.group(cloneArray(collection), state, grid, groupsRecords);
+        grid.filteredSortedData = result.data;
+        grid.groupingMetadata = result.metadata;
+        return result;
     }
 }
 

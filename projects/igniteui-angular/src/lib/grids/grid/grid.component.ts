@@ -699,23 +699,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    protected getGroupByRecords(): IGroupByRecord[] {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
-            const state = {
-                expressions: this.groupingExpressions,
-                expansion: this.groupingExpansionState,
-                defaultExpanded: this.groupsExpanded
-            };
-
-            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @hidden
-     */
     public onChipRemoved(event: IBaseChipEventArgs) {
         this.clearGrouping(event.owner.id);
     }
@@ -806,9 +789,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof(row) !== 'number') {
-            const groupByRecords = this.getGroupByRecords();
             const rowIndex = this.filteredSortedData.indexOf(row);
-            const groupByRecord = groupByRecords[rowIndex];
+            const groupByRecord = this.groupingMetadata[rowIndex];
 
             if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
                 this.toggleGroup(groupByRecord);

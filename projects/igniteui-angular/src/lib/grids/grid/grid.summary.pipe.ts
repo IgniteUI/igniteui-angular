@@ -44,7 +44,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
         if (collection.metadata.length && !grid.isGroupByRecord(collection.data[0]) &&
-            grid.isGroupByRecord(collection.metadata[0])) {
+            grid.isGroupByRecord(collection.metadata[0]) && summaryPosition === GridSummaryPosition.bottom) {
             const groups: Array<IGroupByRecord & ISkipRecord> = [];
             groups.push(collection.metadata[0]);
             while (groups[groups.length - 1].groupParent) {

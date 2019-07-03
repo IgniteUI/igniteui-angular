@@ -1148,9 +1148,9 @@ describe('IgxGrid - search API', () => {
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             highlight = fixNativeElement.querySelector('.' + component.activeClass);
 
-            expect(spans.length).toBe(3);
-            expect(highlight).toBe(spans[2]);
-            expect(grid.page).toBe(1);
+            expect(spans.length).toBe(2);
+            expect(highlight).toBe(spans[0]);
+            expect(grid.page).toBe(2);
 
             grid.findPrev('Software');
             grid.findPrev('Software');
@@ -1161,7 +1161,7 @@ describe('IgxGrid - search API', () => {
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             highlight = fixNativeElement.querySelector('.' + component.activeClass);
 
-            expect(spans.length).toBe(3);
+            expect(spans.length).toBe(1);
             expect(highlight).toBe(spans[0]);
             expect(grid.page).toBe(1);
         });

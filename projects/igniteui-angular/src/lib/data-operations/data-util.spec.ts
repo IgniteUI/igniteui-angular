@@ -264,7 +264,7 @@ function testGroupBy() {
         it('provides groupsRecords array', () => {
             const groupRecords = [];
             // sort
-            let res = DataUtil.sort(data, [expr]);
+            const res = DataUtil.sort(data, [expr]);
             // group by
             DataUtil.group(res, state, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
