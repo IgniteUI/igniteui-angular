@@ -1577,6 +1577,36 @@ describe('IgxGrid - Filtering actions', () => {
         expect(datePicker.componentInstance.mode).toBe('dropdown');
         expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
     }));
+
+    it('Should commit the filter when click on filter chip', async () => {
+        const filterValue = 'a';
+        const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        sendInput(input, filterValue, fix);
+
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        expect(filterChip).toBeTruthy();
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeTruthy();
+
+        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        fix.detectChanges();
+        await wait(16);
+        expect(filterChip.componentInstance.selected).toBeFalsy();
+    });
 });
 
 describe('IgxGrid - Filtering Row UI actions', () => {
