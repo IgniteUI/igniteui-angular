@@ -36,7 +36,7 @@ describe('IgxTabs', () => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
-                TabsTabsOnlyModeTestComponent],
+                TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         })
@@ -170,6 +170,8 @@ describe('IgxTabs', () => {
     it('should select/deselect tabs', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+
         let tabItems;
         let tab1: IgxTabItemComponent;
         let tab2: IgxTabItemComponent;
@@ -536,19 +538,19 @@ describe('IgxTabs', () => {
 
     });
 
-    describe('Tabs-only Mode Tests', () => {
+    describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
         let fixture;
         let tabsComp;
         let theTabs;
 
         beforeEach(async(() => {
-            fixture = TestBed.createComponent(TabsTabsOnlyModeTestComponent);
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
             theTabs = tabsComp.tabs.toArray();
         }));
 
-        it('should retain the correct initial selection status', () => {
+        it('should retain the correct initial selection set by the isSelected property', () => {
             expect(theTabs[0].isSelected).toBe(false);
             expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
 
@@ -557,6 +559,56 @@ describe('IgxTabs', () => {
 
             expect(theTabs[2].isSelected).toBe(false);
             expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+        });
+
+        it('should clear old selection and assign new selection after clicking on a tab item with an initial selection', () => {
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            expect(theTabs[1].isSelected).toBe(true);
+            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
+
+            expect(theTabs[2].isSelected).toBe(false);
+            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            UIInteractions.clickElement(theTabs[2].nativeTabItem);
+            fixture.detectChanges();
+
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            expect(theTabs[2].isSelected).toBe(true);
+            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
+        });
+
+    });
+
+    describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
+        let fixture;
+        let tabsComp;
+        let theTabs;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TabsTabsOnlyModeTest2Component);
+            tabsComp = fixture.componentInstance.tabs;
+            fixture.detectChanges();
+            theTabs = tabsComp.tabs.toArray();
+        }));
+
+        it('should retain the correct initial selection set by the selectedIndex property', () => {
+            fixture.detectChanges();
+
+            expect(theTabs[0].isSelected).toBe(false);
+            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            expect(theTabs[1].isSelected).toBe(false);
+            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+
+            expect(theTabs[2].isSelected).toBe(true);
+            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
         });
 
     });
@@ -785,7 +837,26 @@ class TabsRoutingTestComponent {
         </div>
     `
 })
-class TabsTabsOnlyModeTestComponent {
+class TabsTabsOnlyModeTest1Component {
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs selectedIndex="2">
+                <igx-tab-item label="Tab 1">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 2">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 3">
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+    `
+})
+class TabsTabsOnlyModeTest2Component {
     @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
 }
