@@ -14,7 +14,6 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
     templateUrl: 'paginator.component.html',
 })
 export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit, OnChanges {
-    
     /**
      * @hidden
      */
@@ -37,7 +36,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     /**
      * @hidden
      */
-    @Input() 
+    @Input()
     public page = 0;
     /**
     * An @Input property that sets the total records.
@@ -137,14 +136,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     /**
      * @hidden
      */
-    public ngOnChanges(changes:any):void {
-        if(changes.perPage){
+    public ngOnChanges(changes: any): void {
+        if (changes.perPage) {
             this.perPage = changes.perPage.currentValue;
         }
-        if(changes.page){
+        if (changes.page) {
             this.page = changes.page.currentValue;
         }
-        if(changes.totalRecords){
+        if (changes.totalRecords) {
             this.totalRecords = changes.totalRecords.currentValue;
             this.totalPages = Math.ceil(this.totalRecords / this.perPage);
         }
