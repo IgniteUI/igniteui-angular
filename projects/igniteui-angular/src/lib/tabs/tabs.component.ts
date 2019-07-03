@@ -69,8 +69,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     public set selectedIndex(index: number) {
-        this._selectedIndex = index;
-        this.setSelectedGroup();
+        const newIndex = typeof index !== 'number' ? parseInt(index, 10) : index;
+        if (this._selectedIndex !== newIndex) {
+            this._selectedIndex = newIndex;
+            this.setSelectedGroup();
+        }
     }
 
     /**
@@ -207,7 +210,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public offset = 0;
 
     private _groupChanges$: Subscription;
-    private _selectedIndex = 0;
+    private _selectedIndex = -1;
 
     /**
      * @hidden
@@ -246,7 +249,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public selectedGroupHandler(args) {
         if (this.hasContentTabs) {
             const theTabsArray = this.tabs.toArray();
-            if (this.selectedIndex !== -1 && theTabsArray[this.selectedIndex] !== undefined) {
+            if (this.selectedIndex !== -1 && this.selectedIndex !== args.tab.index && theTabsArray[this.selectedIndex] !== undefined) {
                 theTabsArray[this.selectedIndex].isSelected = false;
                 this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
             }
@@ -316,9 +319,16 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
-        if (this.hasContentTabs) {
-            // in content tabs mode no tab is selected by default
-            this._selectedIndex = -1;
+        if (this._selectedIndex === -1) {
+            this.tabs.forEach((t) => {
+                if (t.isSelected) {
+                    this._selectedIndex = t.index;
+                }
+            });
+        }
+
+        if (!this.hasContentTabs && (this.selectedIndex < 0 || this.selectedIndex >= this.groups.length)) {
+            this._selectedIndex = 0;
         }
 
         requestAnimationFrame(() => {
@@ -344,13 +354,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             if (this.hasContentTabs) {
                 if (this.selectedIndex < 0 || this.selectedIndex >= this.contentTabs.length) {
                     this.selectedIndicator.nativeElement.style.visibility = 'hidden';
-                }
-            } else {
-                if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
-                    this.selectGroupByIndex(0);
                 } else {
                     this.selectGroupByIndex(this.selectedIndex);
                 }
+            } else {
+                if (this.selectedIndex < 0 || this.selectedIndex >= this.groups.length) {
+                    this._selectedIndex = 0;
+                }
+                this.selectGroupByIndex(this.selectedIndex);
             }
         });
     }
