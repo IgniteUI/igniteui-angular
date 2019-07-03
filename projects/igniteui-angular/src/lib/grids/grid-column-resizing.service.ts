@@ -53,12 +53,8 @@ export class IgxColumnResizingService {
      * Returns the minimal possible width to which the column can be resized.
      */
     get restrictResizeMin(): number {
-        const columnLayoutMultiplier = this.column.grid.hasColumnLayouts ? this.column.gridColumnSpan : 1;
         const actualMinWidth = parseFloat(this.column.minWidth);
-        const defaultMinWidth = parseFloat(this.column.defaultMinWidth) * columnLayoutMultiplier;
-
-        let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
-        minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
+        const minWidth = actualMinWidth < parseFloat(this.column.width) ? actualMinWidth : parseFloat(this.column.width);
 
         return this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width - minWidth;
     }
@@ -109,8 +105,8 @@ export class IgxColumnResizingService {
             }
         } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
             this.column.width = parseFloat(this.column.maxWidth) + 'px';
-        } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
-            this.column.width = this.column.defaultMinWidth + 'px';
+        } else if (parseFloat(size) < parseFloat(this.column.minWidth)) {
+            this.column.width = this.column.minWidth + 'px';
         } else {
             this.column.width = size;
         }
@@ -169,11 +165,8 @@ export class IgxColumnResizingService {
         const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
 
-        const columnLayoutMultiplier = column.grid.hasColumnLayouts ? column.gridColumnSpan : 1;
         const actualMinWidth = parseFloat(column.minWidth);
-        const defaultMinWidth = parseFloat(column.defaultMinWidth) * columnLayoutMultiplier;
-        const colMinWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
-        return colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
+        return actualMinWidth < currentColWidth ? actualMinWidth : currentColWidth;
     }
 
     protected getColMaxWidth(column: IgxColumnComponent) {

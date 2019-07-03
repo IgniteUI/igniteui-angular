@@ -16,6 +16,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -86,7 +87,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.reflow();
             fixture.detectChanges();
 
-        let firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        let firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             firstRow.nativeElement.children[0].click();
             fixture.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
@@ -113,7 +114,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+            firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
             await wait(100);
@@ -168,6 +169,37 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+        }));
+
+        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
+            hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
+            fixture.detectChanges();
+            hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const lastRowCells = rows[rows.length - 1].queryAll(By.directive(IgxHierarchicalGridCellComponent));
+
+            lastRowCells[1].nativeElement.click();
+            fixture.detectChanges();
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+            fixture.detectChanges();
+
+            let childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(1);
         }));
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(/** row toggle rAF */() => {
@@ -451,7 +483,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
-            const rootExpander =  hierarchicalGrid.dataRowList.toArray()[0].expander;
+            const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
             const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
@@ -523,8 +555,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -533,13 +565,13 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
 
             // Go to next page
-            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-paginator > button');
+            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
             pagingButtons[2].dispatchEvent(new Event('click'));
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeFalsy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(15);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -550,8 +582,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));

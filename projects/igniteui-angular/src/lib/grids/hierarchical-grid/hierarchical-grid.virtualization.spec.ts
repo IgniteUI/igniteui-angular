@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from './index';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -32,7 +32,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     }));
 
     it('should retain expansion state when scrolling.', async () => {
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
         fixture.detectChanges();

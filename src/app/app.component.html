@@ -13,7 +13,7 @@
 
                 <span *ngFor="let item of componentLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material">{{item.icon}}</igx-icon>
-                    <span>{{item.name}}</span>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
 
                 <!--Directives-->
@@ -21,7 +21,7 @@
 
                 <span *ngFor="let item of directiveLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material">{{item.icon}}</igx-icon>
-                    <span>{{item.name}}</span>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
 
                 <!--Style guide-->
@@ -29,7 +29,7 @@
 
                 <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
                     <igx-icon fontSet="material">{{item.icon}}</igx-icon>
-                    <span>{{item.name}}</span>
+                    <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
             </nav>
         </ng-template>

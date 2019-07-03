@@ -44,9 +44,9 @@
                             <igx-icon igxListAction [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                     </igx-list-item>
                 </igx-list>
-                <button (click)="repopulateHandler()">Repopulate List</button>
                 <igx-toast #toast></igx-toast>
             </div>
+            <button igxButton="raised" (clsick)="repopulateHandler()">Repopulate List</button>
         </article>
 
     </section>
