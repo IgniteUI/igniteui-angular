@@ -600,6 +600,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     public addRow(data: any, parentRowID?: any) {
         if (parentRowID) {
+            super.endEdit(true);
             const parentRecord = this.records.get(parentRowID);
 
             if (!parentRecord) {
