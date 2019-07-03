@@ -436,7 +436,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         } else {
             this.childLayoutKeys = this.childLayoutList.filter(item => !(item as any)._destroyed).map((item) => item.key);
         }
-        this.cdr.detectChanges();
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
