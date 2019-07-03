@@ -3539,6 +3539,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public addRow(data: any): void {
+        // commit pending states prior to adding a row
+        this.endEdit(true);
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
