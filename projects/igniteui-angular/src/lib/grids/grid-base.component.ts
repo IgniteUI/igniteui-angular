@@ -3240,6 +3240,43 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns if the current page is the first page.
+     * ```typescript
+     * const firstPage = this.grid.isFirstPage;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    get isFirstPage(): boolean {
+        return this.page === 0;
+    }
+
+    /**
+     * Goes to the next page of the `IgxGridComponent`, if the grid is not already at the last page.
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public nextPage(): void {
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
+    }
+
+    /**
+     * Goes to the previous page of the `IgxGridComponent`, if the grid is not already at the first page.
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public previousPage(): void {
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
+    }
+
+    /**
      * Returns the total number of records.
      * Only functions when paging is enabled.
      * ```typescript
