@@ -128,9 +128,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
      * @hidden
      */
     public ngOnInit(): void {
-        if (!this.selectOptions.includes(this.perPage)) {
-            this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
-        }
+        this.perPage = parseInt(this.perPage.toString(), 10);
+        this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
         this.totalPages = Math.ceil(this.totalRecords / this.perPage);
     }
     /**
@@ -139,6 +138,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     public ngOnChanges(changes: any): void {
         if (changes.perPage) {
             this.perPage = changes.perPage.currentValue;
+            this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
         }
         if (changes.page) {
             this.page = changes.page.currentValue;
