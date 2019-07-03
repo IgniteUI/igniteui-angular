@@ -242,7 +242,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _isLoading = false;
     private _locale = null;
     private _observer: MutationObserver;
-    private _destroyed = false;
+    protected _destroyed = false;
     private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.

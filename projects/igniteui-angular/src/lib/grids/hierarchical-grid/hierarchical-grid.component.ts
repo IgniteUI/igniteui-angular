@@ -400,11 +400,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.updateColumnList(false);
         this.childLayoutList.notifyOnChanges();
         this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
-        .subscribe((change) => this.onRowIslandChange(change));
+        .subscribe(() => this.onRowIslandChange());
         super.ngAfterContentInit();
     }
 
-    protected onRowIslandChange(change) {
+    /**
+    * @hidden
+    */
+    public onRowIslandChange() {
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.filter(item => !(item as any)._destroyed).map((item) => item.key);
         } else {
