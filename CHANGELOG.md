@@ -8,6 +8,22 @@ All notable changes for each version of this project will be documented in this 
         - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
 
 ## 8.0.2
+- `igx-list-theme` now have some new parameters for styling.
+    - $item-background-hover - Change The list item hover background 
+    - $item-text-color-hover - Change The list item hover text color.
+    
+    - $item-subtitle-color - Change The list item subtitle color.
+    - $item-subtitle-color-hover - Change The list item hover subtitle color.
+    - $item-subtitle-color-active - Change The active list item subtitle color.
+    
+    - $item-action-color - Change The list item actions color.
+    - $item-action-color-hover - Change The list item hover actions color.
+    - $item-action-color-active - Change The active list item actions color.
+    
+    - $item-thumbnail-color - Change The list item thumbnail color.
+    - $item-thumbnail-color-hover - Change The list item hover thumbnail color.
+    - $item-thumbnail-color-active - Change The active list item thumbnail color.
+    
 - **Behavioral Change** default min column width is changed according the grid display density property:
     - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
     - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
