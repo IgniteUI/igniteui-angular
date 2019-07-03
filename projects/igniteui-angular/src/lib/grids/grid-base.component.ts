@@ -4166,7 +4166,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
 
-        if (this.showRowCheckboxes) {
+        if (this.headerCheckboxContainer) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
