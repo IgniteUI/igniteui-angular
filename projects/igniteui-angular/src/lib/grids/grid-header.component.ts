@@ -77,10 +77,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         return defaultClasses.join(' ');
     }
 
-    @HostBinding('style.height.px')
+    @HostBinding('style.height.rem')
     get height() {
         if (this.grid.hasColumnGroups) {
-            return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight;
+            return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
         }
         return null;
     }
