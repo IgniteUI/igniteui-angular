@@ -1,12 +1,9 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    QueryList,
-    Renderer2,
-    ViewChildren
-} from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { AfterViewInit,
+        Component,
+        ElementRef,
+        QueryList,
+        Renderer2,
+        ViewChildren } from '@angular/core';
 
 @Component({
     selector: 'app-bottomnav-sample',
@@ -70,13 +67,7 @@ export class BottomNavSampleComponent implements AfterViewInit {
         text: 'Marianne Taylor'
     }];
 
-    constructor(private router: Router, private renderer: Renderer2) { }
-
-    route(event) {
-        if (event.panel.index === 2) {
-            this.router.navigate(['/bottom-navigation', { outlets: { tabPanelOutlet: ['tabContentPath'] } }]);
-        }
-    }
+    constructor(private renderer: Renderer2) { }
 
     ngAfterViewInit() {
         this.tabbar.map((e) => {
