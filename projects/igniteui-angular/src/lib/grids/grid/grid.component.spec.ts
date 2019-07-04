@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
     OnInit, ViewChild, ViewChildren, QueryList, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1577,6 +1577,62 @@ describe('IgxGrid Component Tests', () => {
             expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: updateRowData }, oldRowData);
             expect(grid.data[2]).toBe(oldRowData);
         }));
+
+        it(`Should be able to add a row if another row is in edit mode`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+            tick(16);
+
+            const grid = fixture.componentInstance.grid;
+            const rowCount = grid.rowList.length;
+            grid.rowEditable = true;
+            fixture.detectChanges();
+
+            const targetRow = fixture.debugElement.query(By.css(`${CELL_CLASS}:last-child`));
+            targetRow.nativeElement.dispatchEvent(new Event('focus'));
+            flush();
+            fixture.detectChanges();
+            targetRow.triggerEventHandler('dblclick', {});
+            flush();
+            fixture.detectChanges();
+
+            grid.addRow({
+                ProductID: 1000,
+                ProductName: 'New Product',
+                InStock: true,
+                UnitsInStock: 1,
+                OrderDate: new Date()
+            });
+            fixture.detectChanges();
+            tick(16);
+
+            expect(grid.rowList.length).toBeGreaterThan(rowCount);
+        }));
+
+        it(`Should be able to add a row if a cell is in edit mode`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+            tick(16);
+
+            const grid = fixture.componentInstance.grid;
+            const rowCount = grid.rowList.length;
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            cell.inEditMode = true;
+            tick(16);
+            fixture.detectChanges();
+
+            grid.addRow({
+                ProductID: 1000,
+                ProductName: 'New Product',
+                InStock: true,
+                UnitsInStock: 1,
+                OrderDate: new Date()
+            });
+            fixture.detectChanges();
+            tick(16);
+
+            expect(grid.rowList.length).toBeGreaterThan(rowCount);
+        }));
     });
 
     describe('IgxGrid - Row Editing', () => {
@@ -1854,8 +1910,8 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            let fixture;
-            let grid;
+            let fixture: ComponentFixture<IgxGridWithEditingAndFeaturesComponent>;
+            let grid: IgxGridComponent;
 
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
@@ -2184,7 +2240,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.inEditMode).toEqual(true);
             }));
 
-            it(`Should skip non-editable columns when column when all column features are enabled`, fakeAsync(() => {
+            it(`Should skip non-editable columns when all column features are enabled`, fakeAsync(() => {
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
@@ -2282,6 +2338,34 @@ describe('IgxGrid Component Tests', () => {
 
                 overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(overlayText.textContent.trim()).toBe('You have 2 changes in this row');
+            }));
+
+            it(`Should focus last edited cell after click on editable buttons`, (async () => {
+                const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
+                targetCell.nativeElement.focus();
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Scroll the grid
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Focus done button
+                const rowEditingBannerElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+                const doneButtonElement = rowEditingBannerElement.lastElementChild;
+                doneButtonElement.focus();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(doneButtonElement);
+                doneButtonElement.click();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(targetCell.nativeElement);
             }));
         });
 
