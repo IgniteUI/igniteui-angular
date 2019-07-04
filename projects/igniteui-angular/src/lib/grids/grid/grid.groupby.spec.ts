@@ -769,9 +769,9 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        // verify scrollbar is updated - 4 rows x 51px are hidden.
         expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
-            .toEqual(origScrollHeight - 200);
+            .toEqual(origScrollHeight - 202);
 
         grRows[0].toggle();
         tick();
@@ -2527,6 +2527,51 @@ describe('IgxGrid - GroupBy', () => {
             expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
         });
     }));
+
+    it('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        grid.paging = false;
+        grid.columns[1].groupingComparer = function (a, b) {
+            if (a instanceof Date && b instanceof Date &&
+                a.getFullYear() === b.getFullYear()) {
+                return 0;
+            }
+            return DefaultSortingStrategy.instance().compareValues(a, b);
+        };
+        fix.detectChanges();
+
+        const firstColumn = fix.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[1];
+        const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
+
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+        await wait();
+
+        expect(async () => {
+            fix.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['_dragGhost'], 250, 30);
+            await wait();
+        }).not.toThrow();
+
+        fix.detectChanges();
+        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['_dragGhost'], 250, 30);
+        await wait();
+
+        const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));
+        const rows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+
+        expect(groupRows.length).toEqual(2);
+        expect(grid.groupsRecords.length).toEqual(2);
+        expect(grid.groupsRecords[1].records.length).toEqual(6);
+        for (let i = 0; i < grid.groupsRecords[1].records.length; i++) {
+            expect(grid.groupsRecords[1].records[i].ReleaseDate.getFullYear().toString()).toEqual('2019');
+        }
+    });
 
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;

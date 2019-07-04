@@ -3,6 +3,7 @@ import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
 import { DataType } from '../../data-operations/data-util';
 import { IgxGridSelectionService } from '../../core/grid-selection';
+import { SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,15 +65,23 @@ export class IgxSummaryCellComponent {
     dispatchEvent(event: KeyboardEvent) {
         // TODO: Refactor
         const key = event.key.toLowerCase();
-        if (!this.isKeySupportedInCell(key)) { return; }
-        event.preventDefault();
-        event.stopPropagation();
-        const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
-        this.selectionService.keyboardState.shift = shift && !(key === 'tab');
+        const shift = event.shiftKey;
 
-        if (ctrl && (key === 'arrowup' || key === 'arrowdown' || key === 'up'
-                        || key  === 'down'  || key === 'end' || key === 'home')) { return; }
+        if (!SUPPORTED_KEYS.has(key)) {
+            return;
+        }
+        event.stopPropagation();
+        const args = { targetType: 'summaryCell', target: this, event: event, cancel: false };
+        this.grid.onGridKeydown.emit(args);
+        if (args.cancel) {
+            return;
+        }
+        event.preventDefault();
+
+        if (!this.isKeySupportedInCell(key, ctrl)) { return; }
+
+        this.selectionService.keyboardState.shift = shift && !(key === 'tab');
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':
@@ -102,15 +111,11 @@ export class IgxSummaryCellComponent {
                 break;
             case 'arrowup':
             case 'up':
-                if (this.rowIndex !== 0) {
-                    this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
-                }
+                this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'arrowdown':
             case 'down':
-                if (this.rowIndex !== 0) {
-                    this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
-                }
+                this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
                 break;
         }
     }
@@ -131,7 +136,7 @@ export class IgxSummaryCellComponent {
     }
 
     get itemHeight() {
-        return this.column.grid.defaultRowHeight;
+        return this.column.grid.defaultSummaryHeight;
     }
 
     /**
@@ -146,10 +151,11 @@ export class IgxSummaryCellComponent {
         return summaryRows.find((sr) => sr.dataRowIndex === rowIndex).nativeElement;
     }
 
-    private isKeySupportedInCell(key) {
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
-
+    private isKeySupportedInCell(key, ctrl) {
+        if (ctrl) {
+           return ['arrowup', 'arrowdown', 'up', 'down', 'end', 'home'].indexOf(key) === -1;
+        }
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end', 'tab'].indexOf(key) !== -1;
     }
 
     public translateSummary(summary: IgxSummaryResult): string {

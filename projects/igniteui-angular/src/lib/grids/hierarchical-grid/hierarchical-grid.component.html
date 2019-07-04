@@ -43,11 +43,11 @@
                 </ng-template>
             </ng-container>
             <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'  [igxForSizePropName]='"calcWidth"' #headerContainer>
+                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'  [igxForSizePropName]='"calcPixelWidth"' #headerContainer>
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
         </div>
-        <igx-grid-filtering-row [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
+        <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
@@ -64,7 +64,7 @@
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
                 <ng-template
                 [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
                 [igxTemplateOutletContext]='getContext(rowData)'
@@ -123,7 +123,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator>
+<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalRecords" #paginator>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>

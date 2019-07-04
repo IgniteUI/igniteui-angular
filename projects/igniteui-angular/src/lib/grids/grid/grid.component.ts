@@ -302,7 +302,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public groupsExpanded = true;
 
     /**
-     * A hierarchical representation of the visible group by records.
+     * A hierarchical representation of the group by records.
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
@@ -687,7 +687,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                 defaultExpanded: this.groupsExpanded
             };
 
-            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
         } else {
             return null;
         }

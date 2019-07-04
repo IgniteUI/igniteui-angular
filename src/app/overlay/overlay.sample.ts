@@ -9,7 +9,6 @@ import {
     BlockScrollStrategy,
     CloseScrollStrategy,
     NoOpScrollStrategy,
-    IgxInputGroupModule,
     ElasticPositionStrategy,
     IgxDragDirective
 } from 'igniteui-angular';
@@ -34,12 +33,14 @@ export class OverlaySampleComponent implements OnInit {
     constructor(
         private cdr: ChangeDetectorRef
     ) {
-        for (let item = 0; item < 100; item++) {
+        for (let item = 0; item < this.itemsCount; item++) {
             this.items.push(`Item ${item}`);
         }
     }
 
     items = [];
+    itemsCount = 10;
+    dropDownWidth = 200;
 
     horizontalDirections = ['Left', 'Center', 'Right'];
     horizontalDirection = 'Center';
@@ -333,7 +334,7 @@ export class OverlaySampleComponent implements OnInit {
     public toggleDropDown() {
         if (this.igxDropDown.collapsed) {
             this.items = [];
-            for (let item = 0; item < 12; item++) {
+            for (let item = 0; item < this.itemsCount; item++) {
                 this.items.push(`Item ${item}`);
             }
             this.cdr.detectChanges();

@@ -38,11 +38,11 @@
                 </ng-template>
             </ng-container>
             <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' [igxForSizePropName]="'calcWidth'" #headerContainer>
+                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' [igxForSizePropName]="'calcPixelWidth'" #headerContainer>
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
     </div>
-    <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
+    <igx-grid-filtering-row #filteringRow *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
 </div>
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
@@ -61,7 +61,7 @@
         | treeGridPaging:page:perPage:id:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
                 <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
                 </igx-tree-grid-row>
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging" #paginator>
+<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalRecords" #paginator>
     <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
@@ -110,6 +110,13 @@
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
+</ng-template>
+
+<ng-template #defaultLoadingGrid>
+    <div class="igx-grid__loading">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>

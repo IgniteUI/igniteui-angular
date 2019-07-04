@@ -68,6 +68,45 @@ mode = InteractionMode.DropDown;
 </igx-time-picker>
 ```
 
+In order to re-template the TimePicker in `dropdown` mode, you should either mark an element with `dropDownTarget` template reference variable or set the overlaySettings appropriately:
+
+```html
+<igx-time-picker [mode]="'dropdown'">
+    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+        <igx-input-group (click)="openDialog()" #dropDownTarget> 
+            <label igxLabel>Time</label>
+            <input igxInput [value]="displayTime"/>
+        </igx-input-group>
+    </ng-template>
+</igx-time-picker>
+```
+or
+
+```html
+<igx-time-picker>
+    <ng-template igxTimePickerTemplate [overlaySettings]="myOverlaySettings" let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+        <igx-input-group (click)="openDialog()" #myTarget> 
+            <label igxLabel>Time</label>
+            <input igxInput [value]="displayTime"/>
+        </igx-input-group>
+    </ng-template>
+</igx-time-picker>
+```
+```typescript
+    myOverlaySettings = {
+        modal: false,
+        closeOnOutsideClick: true,
+        positionStrategy: new AutoPositionStrategy()
+    };
+
+    @ViewChild('myTarget')
+    public target: IgxInputDirective;
+
+    ngAfterViewInit() {
+        this.myOverlaySettings.positionStrategy.settings.target = this.target.nativeElement;
+    }
+```
+
 # API
 
 ###### Inputs

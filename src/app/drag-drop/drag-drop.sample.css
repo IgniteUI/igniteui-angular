@@ -6,7 +6,7 @@
 }
 
 .initialArea.dragOver {
-    background-color: #0080007d;
+    background-color: rgba(0, 128, 0, 0.7);
 }
 
 .draggableElem {
@@ -31,11 +31,10 @@
     display: flex;
     align-items: center;
     background-color: #c1c1c1;
-    background-image: url(http://globaltechled.com/wp-content/uploads/2014/11/Jail-Bars-1.png); 
     background-repeat: repeat-x;
-    background-size: 100px;
+    background-size: 190px;
 }
 
 .cageArea.dragOver {
-    background-color: #cd4343b5;
+    background-color: rgba(205, 67, 67, 0.7);
 }

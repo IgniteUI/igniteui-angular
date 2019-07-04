@@ -8,9 +8,9 @@ export interface IGroupByResult {
 }
 
 export class IgxGrouping extends IgxSorting {
-    public groupBy(data: any[], expressions: ISortingExpression[]): IGroupByResult {
+    public groupBy(data: any[], expressions: ISortingExpression[], grid?: any, groupsRecords?: any[]): IGroupByResult {
         const metadata: IGroupByRecord[] = [];
-        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata);
+        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata, grid, groupsRecords);
         return {
             data: grouping,
             metadata: metadata

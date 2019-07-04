@@ -16,7 +16,7 @@
                 </igx-input-group>
             </div>
             <div class="input-row">
-                <igx-combo class="input-container" [placeholder]="'Locations'"
+                <igx-combo #combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
                             (onSelectionChange)="handleSelectionChange($event)"
                             [data]="items"
@@ -68,16 +68,22 @@
             </ng-template>
         </div>
         <div>
-            <h4>Display Density</h4>
+            <h4 class="no-print">Display Density</h4>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === compact" (click)="setDensity(compact)">Compact</button>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
             <button igxButton="raised" [disabled]="igxCombo.displayDensity === comfortable" (click)="setDensity(comfortable)">Comfortable</button>
         </div>
         <div>
-            <h4>Search Input</h4>
+            <h4 class="no-print">Search Input</h4>
             <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch><br/>
             <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
         </div>
     </section>
     </div>
+    <button igxButton (click)="combo.itemHeight = 56">
+        Set ItemHeight to 56
+    </button>
+    <button igxButton (click)="combo.itemHeight = null">
+        Reset ItemHeight
+    </button>
 </div>

@@ -78,16 +78,27 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                 fromEvent(this.element.nativeElement, 'mousedown').pipe(
                     debounceTime(DEBOUNCE_TIME),
                     takeUntil(this.destroy$)
-                ).subscribe((event) => {
+                ).subscribe((event: MouseEvent) => {
 
                     if (this._dblClick) {
                         this._dblClick = false;
                         return;
                     }
 
-                    this._onResizeAreaMouseDown(event);
-                    this.column.grid.resizeLine.resizer.onMousedown(event);
+                    if (event.button === 0) {
+                        this._onResizeAreaMouseDown(event);
+                        this.column.grid.resizeLine.resizer.onMousedown(event);
+                    }
                 });
+            });
+
+            fromEvent(this.element.nativeElement, 'mouseup').pipe(
+                debounceTime(DEBOUNCE_TIME),
+                takeUntil(this.destroy$)
+            ).subscribe(() => {
+                this.colResizingService.isColumnResizing = false;
+                this.colResizingService.showResizer = false;
+                this.column.grid.cdr.detectChanges();
             });
         }
     }
@@ -114,13 +125,12 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
      * @hidden
      */
     private _onResizeAreaMouseDown(event) {
-        if (event.button === 0) {
-            this.colResizingService.column = this.column;
-            this.colResizingService.isColumnResizing = true;
-            this.colResizingService.startResizePos = event.clientX;
-            this.colResizingService.showResizer = true;
-            this.column.grid.cdr.detectChanges();
-        }
+        this.colResizingService.column = this.column;
+        this.colResizingService.isColumnResizing = true;
+        this.colResizingService.startResizePos = event.clientX;
+
+        this.colResizingService.showResizer = true;
+        this.column.grid.cdr.detectChanges();
     }
 }
 

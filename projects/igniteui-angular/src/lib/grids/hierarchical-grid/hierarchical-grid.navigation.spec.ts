@@ -647,6 +647,79 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
         expect(firstCell.focused).toBeTruthy();
     }));
+
+    it('should navigate to Cancel button when there is row in edit mode', async () => {
+        hierarchicalGrid.columnList.forEach((c) => {
+            if (c.field !== hierarchicalGrid.primaryKey) {
+                c.editable = true; }});
+        fixture.detectChanges();
+
+        hierarchicalGrid.rowEditable = true;
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.rowEditable).toBe(true);
+        const cellID = hierarchicalGrid.getCellByColumn(0, 'ID');
+        UIInteractions.triggerKeyDownEvtUponElem('end', cellID.nativeElement, true);
+        await wait(100);
+        fixture.detectChanges();
+
+        const cell = hierarchicalGrid.getCellByColumn(0, 'childData2');
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+        await wait(100);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+        await wait(100);
+        fixture.detectChanges();
+        const activeEl = document.activeElement;
+        expect(activeEl.innerHTML).toEqual('Cancel');
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', activeEl, true, false, true);
+        await wait(100);
+        fixture.detectChanges();
+
+       expect(document.activeElement.tagName.toLowerCase()).toBe('igx-hierarchical-grid-cell');
+    });
+
+    it('should navigate to Done button when row in edit mode on shift + tab', async () => {
+        hierarchicalGrid.columnList.forEach((c) => {
+            if (c.field !== hierarchicalGrid.primaryKey) {
+                c.editable = true; }});
+        fixture.detectChanges();
+        hierarchicalGrid.rowEditable = true;
+        await wait(50);
+        fixture.detectChanges();
+
+        hierarchicalGrid.getColumnByName('ID').hidden = true;
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.rowEditable).toBe(true);
+        hierarchicalGrid.navigateTo(2);
+        await wait(100);
+        fixture.detectChanges();
+
+        const cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+        cell.nativeElement.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+        await wait(100);
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+        await wait(100);
+        fixture.detectChanges();
+        const activeEl = document.activeElement;
+        expect(activeEl.innerHTML).toEqual('Done');
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', activeEl, true);
+        await wait(100);
+        fixture.detectChanges();
+
+       expect(document.activeElement.tagName.toLowerCase()).toBe('igx-hierarchical-grid-cell');
+    });
 });
 
 
@@ -1032,14 +1105,15 @@ describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
         expect(secondChildCell.selected).toBe(true);
         expect(secondChildCell.focused).toBe(true);
     }));
+
 });
 
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`

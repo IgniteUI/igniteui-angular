@@ -122,7 +122,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getConditionName(condition: IFilteringOperation) {
-        return condition ? condition.name : null;
+        return condition ? this.translateCondition(condition.name) : null;
     }
 
     public getInputWidth() {
@@ -160,14 +160,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.expressionUI.expression.condition = this.getCondition(value);
 
         this.focus();
-    }
-
-    public isValueSelected(value: string): boolean {
-        if (this.expressionUI.expression.searchVal) {
-            return this.expressionUI.expression.searchVal === value;
-        } else {
-            return false;
-        }
     }
 
     public onValuesInput(eventArgs) {

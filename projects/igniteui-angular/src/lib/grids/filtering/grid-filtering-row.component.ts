@@ -64,6 +64,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private _column = null;
     private isKeyPressed = false;
     private isComposing = false;
+    private _cancelChipClick = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -95,6 +96,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
+            this.showHideArrowButtons();
         } else {
             this.expression.searchVal = this.transformValue(val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
@@ -136,12 +138,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected operand: ElementRef;
 
     @ViewChild('closeButton')
-    protected closeButton: ElementRef;
+    public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -155,7 +157,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            event.preventDefault();
+            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
         }
     }
 
@@ -218,12 +220,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
-            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-            this.dropDownConditions.toggle(this._conditionsOverlaySettings);
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB && event.shiftKey) {
-            event.preventDefault();
-            event.stopPropagation();
+        } else if (event.key === KEYS.TAB) {
+            if (event.shiftKey) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else if (!this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            }
         }
     }
 
@@ -234,12 +239,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.isKeyPressed = true;
 
         if (this.column.dataType === DataType.Boolean) {
-            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
-            this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
-                return;
-            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+            if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
+                this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 event.stopPropagation();
                 return;
@@ -253,7 +254,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             this.commitInput();
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
-            this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
@@ -276,7 +276,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isEdge() || this.isKeyPressed) {
+        if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
             this.value = eventArgs.target.value;
         }
     }
@@ -299,7 +299,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean) {
+        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
+            this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
@@ -458,10 +459,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             });
         }
 
+        this.filteringService.isFilterRowVisible = false;
         this.filteringService.updateFilteringCell(this.column);
         this.filteringService.focusFilterCellChip(this.column, true);
 
-        this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
@@ -484,6 +485,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
+        this.commitInput();
     }
 
     /**
@@ -521,6 +523,21 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             // if it has been focused and then set to readonly.
             requestAnimationFrame(() => this.input.nativeElement.focus());
         }
+    }
+
+
+    public onChipPointerdown(args, chip: IgxChipComponent) {
+        const activeElement = document.activeElement;
+        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+    }
+
+    public onChipClick(args, chip: IgxChipComponent) {
+        if (this._cancelChipClick) {
+            return;
+        }
+
+        this._cancelChipClick = false;
+        chip.selected = !chip.selected;
     }
 
     /**
@@ -628,13 +645,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
-            const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
-            this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
+            if (this.filteringService.isFilterRowVisible) {
+                const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
+                this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
-            this.showArrows = this.chipsAreaWidth >= containerWidth;
+                this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
-            // TODO: revise the cdr.detectChanges() usage here
-            this.cdr.detectChanges();
+                // TODO: revise the cdr.detectChanges() usage here
+                this.cdr.detectChanges();
+            }
         });
     }
 
@@ -715,6 +734,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
+    /**
+    * @hidden
+    * Resets the chips area
+    * @memberof IgxGridFilteringRowComponent
+    */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
+    }
+
     private transform(offset: number) {
         requestAnimationFrame(() => {
             this.chipsArea.element.nativeElement.style.transform = `translate(${offset}px)`;
@@ -762,5 +792,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private filter() {
         this.filteringService.filterInternal(this.column.field);
+    }
+
+    private get isColumnFiltered() {
+        return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
     }
 }

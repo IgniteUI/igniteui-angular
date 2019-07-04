@@ -5,7 +5,11 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridWrappedInContComponent, IgxTreeGridAutoGenerateComponent } from '../../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridWrappedInContComponent,
+    IgxTreeGridAutoGenerateComponent,
+    IgxTreeGridDefaultLoadingComponent
+} from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid Component Tests', () => {
@@ -18,7 +22,8 @@ describe('IgxTreeGrid Component Tests', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
-                IgxTreeGridAutoGenerateComponent
+                IgxTreeGridAutoGenerateComponent,
+                IgxTreeGridDefaultLoadingComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
@@ -72,8 +77,7 @@ describe('IgxTreeGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).not.toBeNull();
-                expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
+                expect(defaultHeight).toBeNull();
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(grid.rowList.length).toEqual(6);
         }));
@@ -88,21 +92,21 @@ describe('IgxTreeGrid Component Tests', () => {
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
                 expect(defaultHeightNum).toBeGreaterThan(300);
-                expect(defaultHeightNum).toBeLessThan(330);
+                expect(defaultHeightNum).toBeLessThanOrEqual(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(grid.rowList.length).toEqual(11);
         }));
 
-        it('should display horizontal scroll bar when column width is set in %', async() => {
+        it('should display horizontal scroll bar when column width is set in %', async () => {
             fix.detectChanges();
 
             grid.columns[0].width = '50%';
-            grid.cdr.detectChanges();
+            grid.reflow();
             await wait(16);
 
             const horizontalScroll = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
             expect(horizontalScroll.style.width).toBe('785px');
-            expect(horizontalScroll.children[0].style.width).toBe('980px');
+            expect(horizontalScroll.children[0].style.width).toBe('800px');
         });
     });
 
@@ -118,6 +122,26 @@ describe('IgxTreeGrid Component Tests', () => {
 
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
         }));
+    });
+
+    describe('Loading Template', () => {
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
+            grid = fix.componentInstance.treeGrid;
+        }));
+
+        it('should auto-generate columns', async () => {
+            fix.detectChanges();
+            let circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
+            expect(circularBar).toBeTruthy();
+            expect(grid.dataRowList.length).toBe(0);
+
+            await wait(1000);
+            fix.detectChanges();
+            circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
+            expect(circularBar).toBeFalsy();
+            expect(grid.dataRowList.length).toBeGreaterThan(0);
+        });
     });
 
 });

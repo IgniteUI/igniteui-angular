@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule, IgxHierarchicalGridModule
-} from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -66,6 +65,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
@@ -109,6 +109,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DisplayDensityDropDownComponent,
     DragDropSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,
@@ -182,6 +183,7 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
+        IgxInputGroupModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,

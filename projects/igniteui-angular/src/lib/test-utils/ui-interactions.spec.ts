@@ -31,6 +31,11 @@ export class UIInteractions {
         elem.dispatchEvent(keyboardEvent);
     }
 
+    public static triggerKeyDownWithBlur(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
+        UIInteractions.triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey, shift, ctrl);
+        elem.dispatchEvent(new Event('blur'));
+    }
+
     public static findCellByInputElem(elem, focusedElem) {
         if (!focusedElem.parentElement) {
             return null;
@@ -101,6 +106,7 @@ export class UIInteractions {
             cancelable: true,
             pointerId: 1,
             buttons: 1,
+            button: eventName === 'pointerenter' ? -1 : 0,
             shiftKey: shift,
             ctrlKey: ctrl
         };
@@ -128,6 +134,12 @@ export class UIInteractions {
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
     }
 
+    public static simulateNonPrimaryClick(cell) {
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
+    }
+
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
@@ -138,6 +150,9 @@ export class UIInteractions {
     }
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
+        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
             resolve();

@@ -387,7 +387,7 @@ describe('IgxForOf directive -', () => {
 
         it('should scroll to wheel event correctly', async() => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
-            await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             await wait();
 
             const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
@@ -1104,7 +1104,7 @@ class DataGenerator {
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: j % 8 < 2 ? 100 : (j % 6 + 0.25) * 125
+                width: j % 8 < 2 ? 100 : Math.floor((j % 6 + 0.25) * 125)
             });
         }
 

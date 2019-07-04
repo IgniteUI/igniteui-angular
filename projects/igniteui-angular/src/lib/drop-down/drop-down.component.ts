@@ -12,6 +12,8 @@ import {
     ViewChild,
     EventEmitter,
     Output,
+    Optional,
+    Inject
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -24,11 +26,11 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { OverlaySettings } from '../services';
-
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /**
  * **Ignite UI for Angular DropDown** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
  *
  * The Ignite UI for Angular Drop Down displays a scrollable list of items which may be visually grouped and
  * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
@@ -173,8 +175,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr);
+        protected selection: IgxSelectionAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, _displayDensityOptions);
     }
 
     /**

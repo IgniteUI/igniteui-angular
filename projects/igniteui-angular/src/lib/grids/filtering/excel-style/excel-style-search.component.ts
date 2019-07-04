@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -23,7 +24,7 @@ export class IgxExcelStyleSearchComponent {
     public searchValue: any;
 
     @Input()
-    public data: any[];
+    public data: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -33,30 +34,23 @@ export class IgxExcelStyleSearchComponent {
 
     constructor() {}
 
-    get filterOptions() {
-        const fo = new IgxFilterOptions();
-        fo.key = 'value';
-        fo.inputValue = this.searchValue;
-        return fo;
-    }
-
     public clearInput() {
         this.searchValue = null;
     }
 
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        const selectAll = this.column.grid.resourceStrings.igx_grid_excel_select_all;
-        if (eventArgs.checkbox.value.value === selectAll) {
+        const selectedIndex = this.data.indexOf(eventArgs.checkbox.value);
+        if (selectedIndex === 0) {
             this.data.forEach(element => {
                 element.isSelected = eventArgs.checked;
                 this.data[0].indeterminate = false;
             });
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
-            if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === false)) {
+            if (!this.data.slice(1, this.data.length).find(el => el.isSelected === false)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = true;
-            } else if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === true)) {
+            } else if (!this.data.slice(1, this.data.length).find(el => el.isSelected === true)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = false;
             } else {

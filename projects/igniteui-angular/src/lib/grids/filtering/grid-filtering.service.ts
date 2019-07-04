@@ -150,7 +150,9 @@ export class IgxFilteringService implements OnDestroy {
             this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+            if (!expressionsTreeForColumn) {
+                throw new Error('Invalid condition or Expression Tree!');
+            } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
                 this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
@@ -191,7 +193,7 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
-    public filterGlobal(value: any, condition?, ignoreCase?) {
+    public filterGlobal(value: any, condition, ignoreCase?) {
         this.gridAPI.filter_global(value, condition, ignoreCase);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -372,14 +374,15 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    public get filteredData() {
-        return this.grid.filteredData;
+    /**
+     * Focus the close button in the filtering row.
+     */
+    public focusFilterRowCloseButton() {
+        this.grid.filteringRow.closeButton.nativeElement.focus();
     }
 
-    public get sortedData() {
-        const sortData = new IgxGridSortingPipe((this.grid as any).gridAPI)
-            .transform(this.grid.data, this.grid.sortingExpressions, this.gridId, 0);
-        return sortData;
+    public get filteredData() {
+        return this.grid.filteredData;
     }
 
     /**
@@ -452,6 +455,17 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
                                     operator: FilteringLogic,
                                     expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
@@ -461,18 +475,19 @@ export class IgxFilteringService implements OnDestroy {
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsList(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            }
+            if (expressionsUIs.length) {
+                expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
             }
         } else {
             const exprUI = new ExpressionUI();
             exprUI.expression = expressions as IFilteringExpression;
-            if (expressionsUIs.length !== 0) {
-                exprUI.beforeOperator = operator;
-            }
+            exprUI.afterOperator = operator;
 
             const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
             if (prevExprUI) {
-                prevExprUI.afterOperator = operator;
+                exprUI.beforeOperator = prevExprUI.afterOperator;
             }
 
             expressionsUIs.push(exprUI);

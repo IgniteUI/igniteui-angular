@@ -1,12 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { IgxTimePickerComponent, InteractionMode } from 'igniteui-angular';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositionStrategy } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.css'],
     templateUrl: 'time-picker.sample.html'
 })
-export class TimePickerSampleComponent {
+export class TimePickerSampleComponent implements AfterViewInit {
     max = '19:00';
     min = '09:00';
 
@@ -21,8 +21,21 @@ export class TimePickerSampleComponent {
 
     isRequired = true;
 
+    myOverlaySettings = {
+        modal: false,
+        closeOnOutsideClick: true,
+        positionStrategy: new AutoPositionStrategy()
+    };
+
     @ViewChild('tp', { read: IgxTimePickerComponent })
     public tp: IgxTimePickerComponent;
+
+    @ViewChild('target')
+    public target: IgxInputDirective;
+
+    ngAfterViewInit() {
+        this.myOverlaySettings.positionStrategy.settings.target = this.target.nativeElement;
+    }
 
     showDate(date) {
         return date ? date.toLocaleString() : 'Value is null.';
@@ -38,5 +51,13 @@ export class TimePickerSampleComponent {
 
     validationFailed(event) {
         console.log(event);
+    }
+
+    public onBlur(inputValue, timePickerValue) {
+        const parts = inputValue.split(":");
+
+        if (parts.length === 2) {
+            timePickerValue.setHours(parts[0], parts[1]);
+        }
     }
 }

@@ -280,17 +280,19 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         .not.toBe(-1);
     });
 
-    it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async() => {
+    it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
 
         fixture.componentInstance.data = [
-            {ID: 0, ChildLevels: 3,  ProductName: 'Product: A0 '},
-            {ID: 1, ChildLevels: 3,  ProductName: 'Product: A0 '},
-            {ID: 2, ChildLevels: 2,  ProductName: 'Product: A0 ' ,
-             childData: [
-                 { ID: 1, ChildLevels: 2,  ProductName: 'Product: A1',
-                 childData: fixture.componentInstance.generateData(100, 0)
-                }
-             ]
+            { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },
+            { ID: 1, ChildLevels: 3, ProductName: 'Product: A0 ' },
+            {
+                ID: 2, ChildLevels: 2, ProductName: 'Product: A0 ',
+                childData: [
+                    {
+                        ID: 1, ChildLevels: 2, ProductName: 'Product: A1',
+                        childData: fixture.componentInstance.generateData(100, 0)
+                    }
+                ]
             }];
         fixture.detectChanges();
 
@@ -306,21 +308,21 @@ describe('IgxHierarchicalGrid Virtualization', () => {
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+        expect(scrHeight + 1).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
 
         // expand
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+        expect(scrHeight + 1 ).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
 
         // collapse
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(scrHeight).toBe( 3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
+        expect(scrHeight + 1).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight);
     });
 
     it('should update context information correctly for child grid container after scrolling',  async() => {
@@ -352,20 +354,20 @@ describe('IgxHierarchicalGrid Virtualization', () => {
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(1184);
+                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(958);
                 done();
             }
         );
 
 
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(500);
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(510);
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
 
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(550);
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(561);
     });
 });
 
@@ -416,7 +418,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID">
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]="true" #rowIsland>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]="true" #rowIsland [height]="'400px'">
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>

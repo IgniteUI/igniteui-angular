@@ -15,7 +15,8 @@ import {
     Inject,
     ChangeDetectorRef,
     HostListener,
-    NgModuleRef
+    NgModuleRef,
+    AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -28,17 +29,15 @@ import {
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
+import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     OverlaySettings,
     IgxOverlayService,
-    VerticalAlignment,
-    HorizontalAlignment,
     PositionSettings,
-    ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy
 } from '../services/index';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
@@ -139,7 +138,7 @@ export enum PredefinedFormatOptions {
         }
     `]
 })
-export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, OnDestroy {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -768,8 +767,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     public ngOnInit(): void {
         this._positionSettings = {
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
             openAnimation: fadeIn,
             closeAnimation: fadeOut
         };
@@ -779,7 +776,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
-            positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+            positionStrategy: new AutoPositionStrategy(this._positionSettings),
             outlet: outlet
         };
 
@@ -813,6 +810,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.mask = DatePickerUtil.getMask(this.dateFormatParts);
             }
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit(): void {
+        if (this.mode === InteractionMode.DropDown && this.editableInput) {
+            fromEvent(this.editableInput.nativeElement, 'keydown').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroy$)
+            ).subscribe((res) => this.onKeyDown(res));
         }
     }
 
@@ -921,7 +930,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     }
 
                     dropDownOverlay.positionStrategy.settings.target = dropDownTarget;
-                    dropDownOverlay.positionStrategy.settings.verticalDirection = this._getDropDownVerticalAlignment(dropDownTarget);
                 }
 
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent, dropDownOverlay, this._moduleRef);
@@ -1216,21 +1224,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         requestAnimationFrame(() => {
             this.getEditElement().setSelectionRange(start, end);
         });
-    }
-
-    private _getDropDownVerticalAlignment(dropDownTarget: HTMLElement): VerticalAlignment {
-        const windowHeight = getViewportRect(document).height;
-        const inputGroupRect = dropDownTarget.getBoundingClientRect() as DOMRect;
-        const heightAbove = inputGroupRect.top + inputGroupRect.height;
-        const heightBelow = windowHeight - heightAbove;
-
-        if (heightBelow > this.calendarHeight) {
-            return VerticalAlignment.Bottom;
-        } else if (heightAbove > this.calendarHeight) {
-            return VerticalAlignment.Top;
-        } else {
-            return VerticalAlignment.Middle;
-        }
     }
 
     /**

@@ -72,5 +72,37 @@
                 </igx-time-picker>
             </div>
         </article>
+        <article class="timepicker-column">
+            <h4 class="sample-title">Templated Time Picker</h4>
+            <p class="sample-description">Time picker with dropdown mode</p>
+            <div class="preview">
+                <igx-time-picker [value]="today" format="HH:mm" mode="dropdown">
+                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+                        <igx-input-group>
+                            <input #dropDownTarget igxInput [value]="displayTime" (blur)="onBlur(dropDownTarget.value, value)"/>
+                            <igx-suffix>
+                                <igx-icon (click)="openDialog()">access_time</igx-icon>
+                            </igx-suffix>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-time-picker>
+            </div>
+        </article>
+        <article class="timepicker-column">
+            <h4 class="sample-title">Templated Time Picker</h4>
+            <p class="sample-description">Time picker with dropdown mode + overlay settings </p>
+            <div class="preview">
+                <igx-time-picker [value]="today" [overlaySettings]="myOverlaySettings" format="HH:mm" [mode]="'dropdown'">
+                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayValue="displayValue">
+                        <igx-input-group>
+                            <input #target igxInput [value]="displayValue" (blur)="onBlur(target.value, value)"/>
+                            <igx-suffix>
+                                <igx-icon (click)="openDialog()">access_time</igx-icon>
+                            </igx-suffix>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-time-picker>
+            </div>
+        </article>
     </section>
 </div>

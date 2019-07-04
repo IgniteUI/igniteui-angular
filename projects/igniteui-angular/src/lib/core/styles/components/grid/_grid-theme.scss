@@ -1904,6 +1904,15 @@
         }
     }
 
+    %filtering-scroll-mask {
+        display: block;
+        position: absolute;
+        content: '';
+        top: -2px;
+        bottom: -2px;
+        width: 10px;
+    }
+
     %igx-grid__filtering-scroll-start {
         width: 24px;
         height: 24px;
@@ -1913,12 +1922,9 @@
         z-index: 1;
 
         &::after {
-            position: absolute;
-            content: '';
-            left: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to right, white, transparent);
+            @extend %filtering-scroll-mask;
+            left: calc(100% + 6px);
+            background: linear-gradient(to right, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 
@@ -1931,12 +1937,9 @@
         z-index: 1;
 
         &::before {
-            position: absolute;
-            content: '';
-            right: calc(100% + 8px);
-            width: 10px;
-            height: 100%;
-            background: linear-gradient(to left, white, transparent);
+            @extend %filtering-scroll-mask;
+            right: calc(100% + 6px);
+            background: linear-gradient(to left, --var($theme, 'filtering-row-background'), transparent);
         }
     }
 

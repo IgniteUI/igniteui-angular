@@ -273,14 +273,14 @@ function testGroupBy() {
             // sort
             let res = DataUtil.sort(data, [expr]);
             // first group pipe
-            let gres = DataUtil.group(res, state);
+            let gres = DataUtil.group(res, state, null, groupRecords);
             // second group pipe
-            res = DataUtil.restoreGroups(gres, state, groupRecords);
+            res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
-            expect(groupRecords[0].groups).not.toBeDefined();
-            expect(groupRecords[1].groups).not.toBeDefined();
+            expect(groupRecords[0].groups.length).toEqual(0);
+            expect(groupRecords[1].groups.length).toEqual(0);
             const expr2 = {
                 fieldName: 'string',
                 dir: SortingDirection.Asc,
@@ -291,14 +291,45 @@ function testGroupBy() {
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
             // first group pipe
-            gres = DataUtil.group(sorted, state);
+            gres = DataUtil.group(sorted, state, null, groupRecords);
             // second group pipe
-            res = DataUtil.restoreGroups(gres, state, groupRecords);
+            res = DataUtil.restoreGroups(gres, state);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
             expect(groupRecords[0].groups.length).toEqual(3);
             expect(groupRecords[1].groups.length).toEqual(2);
+        });
+
+        it('produces correct mixed collapse/expand state for three groups', () => {
+            const expr2 = {
+                fieldName: 'string',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            };
+            const expr3 = {
+                fieldName: 'string',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            };
+            state.expressions.push(expr2);
+            state.expressions.push(expr3);
+            state.expansion.push({
+                expanded: true,
+                hierarchy: [{ fieldName: 'boolean', value: true }]
+            });
+            state.defaultExpanded = false;
+            // sort
+            const sorted = DataUtil.sort(data, [expr, expr2, expr3]);
+            // first group pipe
+            const gres = DataUtil.group(sorted, state);
+            // second group pipe
+            const res = DataUtil.restoreGroups(gres, state);
+            expect(res.length).toEqual(4);
+            expect(res[1].groups[0]).toEqual(res[2]);
+            expect(res[1].groups[1]).toEqual(res[3]);
         });
     });
 }
