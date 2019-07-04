@@ -139,6 +139,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
         if (changes.perPage) {
             this.perPage = changes.perPage.currentValue;
             this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
+            this.totalPages = Math.ceil(this.totalRecords / this.perPage);
         }
         if (changes.page) {
             this.page = changes.page.currentValue;

@@ -111,7 +111,6 @@ describe('IgxPaginator with custom settings', () => {
         fix.detectChanges();
         const paginator = fix.componentInstance.paginator;
 
-        // let totalRecords = paginator.totalRecords;
         let totalPages = paginator.totalPages;
         expect(totalPages).toBe(4);
 
