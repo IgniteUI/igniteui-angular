@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.1.0
+
+### New Features
+- `IgxBottomNav` now supports an `igx-tab` declaration mode. When in this mode, panels declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
+    - You are allowed to customize tab items with labels, icons and even templates.
+- `IgxTabs` now supports an `igx-tab-item` declaration mode. When in this mode, groups declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
+    - You are allowed to customize tab items with labels, icons and even templates.
+
 ## 8.0.2
 - `igx-list-theme` now have some new parameters for styling.
     - $item-background-hover - Change The list item hover background 
