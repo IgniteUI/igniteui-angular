@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
     OnInit, ViewChild, ViewChildren, QueryList, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1867,8 +1867,8 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            let fixture;
-            let grid;
+            let fixture: ComponentFixture<IgxGridWithEditingAndFeaturesComponent>;
+            let grid: IgxGridComponent;
 
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
@@ -2192,7 +2192,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.inEditMode).toEqual(true);
             }));
 
-            it(`Should skip non-editable columns when column when all column features are enabled`, fakeAsync(() => {
+            it(`Should skip non-editable columns when all column features are enabled`, fakeAsync(() => {
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
@@ -2236,6 +2236,34 @@ describe('IgxGrid Component Tests', () => {
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should focus last edited cell after click on editable buttons`, (async () => {
+                const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
+                targetCell.nativeElement.focus();
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Scroll the grid
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Focus done button
+                const rowEditingBannerElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+                const doneButtonElement = rowEditingBannerElement.lastElementChild;
+                doneButtonElement.focus();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(doneButtonElement);
+                doneButtonElement.click();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(targetCell.nativeElement);
             }));
         });
 
