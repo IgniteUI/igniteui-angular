@@ -107,6 +107,7 @@
     %date-picker--dropdown {
         display: flex;
         flex: 1 0 0;
+        flex-direction: column;
         box-shadow: igx-elevation($elevations, 3);
     }
 
