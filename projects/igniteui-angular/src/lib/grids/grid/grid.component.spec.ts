@@ -4104,7 +4104,7 @@ describe('IgxGrid Component Tests', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(138);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(126);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
@@ -4135,7 +4135,7 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridWrappedInContComponent
+                    IgxGridWithCustomFooterComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -4143,7 +4143,7 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         it('should be able to display custom content', () => {
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            const fix = TestBed.createComponent(IgxGridWithCustomFooterComponent);
             fix.detectChanges();
 
             const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
@@ -4302,12 +4302,22 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 
 @Component({
     template:
+        `<div>
+        <igx-grid #grid [data]="data" [displayDensity]="'compact'" [autoGenerate]="true"
+            [paging]="true" [perPage]="5">
+            <igx-grid-footer>
+            Custom content
+            </igx-grid-footer>
+        </igx-grid>
+        </div>`
+})
+export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
+}
+@Component({
+    template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
                 [paging]="paging" [perPage]="pageSize">
-                <igx-grid-footer>
-                    Custom content
-                </igx-grid-footer>
             </igx-grid>
         </div>`
 })
