@@ -1,5 +1,4 @@
 import {
-    NgModule,
     Component,
     Input,
     HostListener,
@@ -10,9 +9,9 @@ import {
     OnInit,
     OnDestroy,
     TemplateRef} from '@angular/core';
-import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -23,7 +22,6 @@ import { SliderHandle } from '../slider.common';
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
-    private _timer;
     private _isActiveLabel = false;
     private _isPressed = false;
     private _destroy$ = new Subject<boolean>();
@@ -93,12 +91,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.igx-slider__thumb-from--active')
     public get thumbFromActiveClass() {
-        return this._isActiveLabel;
+        return this.type === SliderHandle.FROM && this._isActiveLabel;
     }
 
     @HostBinding('class.igx-slider__thumb-to--active')
     public get thumbToActiveClass() {
-        return this._isActiveLabel;
+        return this.type === SliderHandle.TO && this._isActiveLabel;
     }
 
     @HostBinding('class.igx-slider__thumb--pressed')
@@ -180,14 +178,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
      * Show thumb label and ripple.
      */
     public showThumbIndicators() {
-        if (this.disabled) {
-            return;
-        }
-
-        if (this._timer !== null) {
-            clearTimeout(this._timer);
-        }
-
         this.toggleThumbIndicators(true);
     }
 
@@ -195,14 +185,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
      * Hide thumb label and ripple.
      */
     public hideThumbIndicators() {
-        if (this.disabled) {
-            return;
-        }
-
-        this._timer = setTimeout(
-            () =>  this.toggleThumbIndicators(false),
-            this.thumbLabelVisibilityDuration
-        );
+        this.toggleThumbIndicators(false);
     }
 
     private updateThumbValue(mouseX: number) {

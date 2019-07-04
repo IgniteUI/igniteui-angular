@@ -16,7 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject, merge } from 'rxjs';
+import { Subject, merge, Observable, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle,
     IgxThumbFromTemplateDirective,
@@ -84,7 +84,10 @@ export class IgxSliderComponent implements
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
 
-    private _destroy$ = new Subject<boolean>();
+    private _destroyer$ = new Subject<boolean>();
+    private _indicatorsDestroyer$ = new Subject<boolean>();
+    private _indicatorsTimer: Observable<any>;
+
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -648,9 +651,10 @@ export class IgxSliderComponent implements
 
         const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
+        this.showThumbsIndicators();
 
-        this.showThumbLabels();
     }
+
 
     /**
      * @hidden
@@ -661,10 +665,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
-        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
-
-        this.hideThumbLabels();
+        this.hideThumbsIndicators();
     }
 
     /**
@@ -685,12 +686,12 @@ export class IgxSliderComponent implements
 
     @HostListener('panstart')
     public onPanStart() {
-        this.showThumbLabels();
+        this.showThumbsIndicators();
     }
 
     @HostListener('panend')
     public onPanEnd() {
-        this.hideThumbLabels();
+        this.hideThumbsIndicators();
     }
 
     /**
@@ -846,7 +847,7 @@ export class IgxSliderComponent implements
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
 
-        this.thumbs.changes.pipe(takeUntil(this._destroy$)).subscribe(change => {
+        this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
             const t = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
             this.positionHandle(t, this.lowerValue);
             this.subscribeTo(t, this.thumbChanged.bind(this));
@@ -866,7 +867,11 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public ngOnDestroy() {
-        this._destroy$.next(true);
+        this._destroyer$.next(true);
+        this._destroyer$.complete();
+
+        this._indicatorsDestroyer$.next(true);
+        this._indicatorsDestroyer$.complete();
     }
 
     /**
@@ -968,7 +973,7 @@ export class IgxSliderComponent implements
     }
 
     public onHoverChange(state: boolean) {
-        return state ? this.showThumbLabels() : this.hideThumbLabels();
+        return state ? this.showThumbsIndicators() : this.hideThumbsIndicators();
     }
 
     private swapThumb(value: IRangeSliderValue) {
@@ -993,8 +998,6 @@ export class IgxSliderComponent implements
         }
 
         this.update(event.clientX);
-
-        event.preventDefault();
     }
 
     private updateLowerBoundAndMinTravelZone() {
@@ -1095,31 +1098,40 @@ export class IgxSliderComponent implements
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 
-    private showThumbLabels() {
+    private showThumbsIndicators() {
         if (this.disabled) {
             return;
+        }
+
+        if (this._indicatorsTimer) {
+            this._indicatorsDestroyer$.next(true);
+            this._indicatorsTimer = null;
         }
 
         this.thumbTo.showThumbIndicators();
         if (this.thumbFrom) {
             this.thumbFrom.showThumbIndicators();
         }
+
     }
 
-    private hideThumbLabels() {
+    private hideThumbsIndicators() {
         if (this.disabled) {
             return;
         }
 
-        this.thumbTo.hideThumbIndicators();
-        if (this.thumbFrom) {
-            this.thumbFrom.hideThumbIndicators();
-        }
+        this._indicatorsTimer = timer(this.thumbLabelVisibilityDuration);
+        this._indicatorsTimer.pipe(takeUntil(this._indicatorsDestroyer$)).subscribe(() => {
+            this.thumbTo.hideThumbIndicators();
+            if (this.thumbFrom) {
+                this.thumbFrom.hideThumbIndicators();
+            }
+        });
     }
 
     private toggleThumbLabels() {
-        this.showThumbLabels();
-        this.hideThumbLabels();
+        this.showThumbsIndicators();
+        this.hideThumbsIndicators();
     }
 
     private changeThumbFocusableState(state: boolean) {
@@ -1207,7 +1219,7 @@ export class IgxSliderComponent implements
     }
 
     private unsubscriber(thumb: IgxSliderThumbComponent) {
-        return merge(this._destroy$, thumb.destroy);
+        return merge(this._destroyer$, thumb.destroy);
     }
 
     private hasValueChanged(oldValue) {
