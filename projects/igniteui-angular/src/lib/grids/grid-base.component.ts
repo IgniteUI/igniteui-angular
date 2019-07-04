@@ -3493,6 +3493,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public addRow(data: any): void {
+        // commit pending states prior to adding a row
+        this.endEdit(true);
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
@@ -5428,8 +5430,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const columnindex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
@@ -5442,9 +5442,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.endRowTransaction(commit, row);
 
-        const currentCell = this.gridAPI.get_cell_by_index(ri, columnindex);
-        if (currentCell && event) {
-            currentCell.nativeElement.focus();
+        const activeCell = this.selectionService.activeElement;
+        if (event && activeCell) {
+            const rowIndex = activeCell.row;
+            const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
+            this.navigateTo(rowIndex, visibleColIndex, (c) => {
+                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                    c.target.nativeElement.focus();
+                }
+            });
         }
     }
     /**

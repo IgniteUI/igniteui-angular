@@ -146,10 +146,10 @@
                             </div>
                             <div class="igx-banner__actions">
                                 <div class="igx-banner__row">
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit()">Cancel</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(false, $event)">Cancel</button>
                                     <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                         Changes</button>
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(true)">Apply</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(true, $event)">Apply</button>
                                 </div>
                             </div>
                         </div>
@@ -159,8 +159,8 @@
                     </ng-template>
                     <!-- https://github.com/angular/angular/issues/16643 -->
                     <ng-template igxRowEditActions let-endEdit>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(true)">Apply</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Apply</button>
                     </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>
