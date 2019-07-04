@@ -730,6 +730,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
+    /**
+     * @hidden
+     * Resets the chips area
+     * @memberof IgxGridFilteringRowComponent
+     */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
+    }
+
     private transform(offset: number) {
         requestAnimationFrame(() => {
             this.chipsArea.element.nativeElement.style.transform = `translate(${offset}px)`;
