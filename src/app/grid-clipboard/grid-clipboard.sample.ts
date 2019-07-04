@@ -12,10 +12,13 @@ export class GridClipboardSampleComponent {
     options = {
         enabled: true,
         copyHeaders: true,
+        copyFormatters: true,
         separator: '\t'
     };
 
     constructor() {
         this.data = SAMPLE_DATA.slice(0);
     }
+
+    formatter = (value: any) => `** ${value} **`;
 }

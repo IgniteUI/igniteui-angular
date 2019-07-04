@@ -729,7 +729,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
     }
 
-    getSelectedData(): any[] {
+    getSelectedData(applyColumnFormatters = false): any[] {
         const source = [];
 
         const process = (record) => {
@@ -741,7 +741,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
 
         this.verticalScrollContainer.igxForOf.forEach(process);
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, applyColumnFormatters);
     }
 
     /**
