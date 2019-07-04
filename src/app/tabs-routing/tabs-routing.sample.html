@@ -1,0 +1,38 @@
+<div class="sample-wrapper">
+    <app-page-header title="Tabs">
+        This sample demonstrates how to use the IgxTabs component for routing navigation.
+    </app-page-header>
+
+    <div class="items-wrapper tabs-demo">
+        <div class="items-wrapper__item">
+            
+            <h3 class="sample-title">Routing sample</h3>
+            
+            <igx-tabs>
+                <igx-tab-item label="Tab 1" icon="folder"
+                    routerLink="/tabs-routing/view1"
+                    routerLinkActive #rla1="routerLinkActive"
+                    [isSelected]="rla1.isActive">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 2" icon="folder"
+                    routerLink="/tabs-routing/view2"
+                    routerLinkActive #rla2="routerLinkActive"
+                    [isSelected]="rla2.isActive">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 3" icon="folder"
+                    routerLink="/tabs-routing/view3"
+                    routerLinkActive #rla3="routerLinkActive"
+                    [isSelected]="rla3.isActive">
+                    <!-- <ng-template igxTab let-context>
+                        <span>{{context.label}}</span>
+                        <span>[Retemplated tab]</span>
+                    </ng-template> -->
+                </igx-tab-item>
+            </igx-tabs>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+
+        </div>
+    </div>
+</div>

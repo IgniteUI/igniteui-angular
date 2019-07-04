@@ -1,12 +1,10 @@
-<div>
+<div *ngIf="!hasContentTabs">
     <ng-content></ng-content>
 </div>
 <div #tablist class="{{itemStyle}}__menu {{itemStyle}}__menu--bottom" role="tablist" aria-orientation="horizontal">
-    <igx-tab *ngFor="let panel of panels" [id]="'igx-tab-' + panel.index" [attr.aria-label]="panel.label" [attr.aria-disabled]="panel.disabled"
-        [attr.aria-selected]="panel.isSelected" [attr.aria-controls]="'igx-tab-panel-'+ panel.index" [ngClass]="{
-                 'igx-bottom-nav__menu-item': !panel.isSelected && !panel.disabled,
-                 'igx-bottom-nav__menu-item--selected': panel.isSelected,
-                 'igx-bottom-nav__menu-item--disabled': panel.disabled
-             }" [relatedPanel]="panel" (click)="panel.select()" role="tab">
-    </igx-tab>
+    <ng-container *ngIf="!hasContentTabs">    
+        <igx-tab *ngFor="let panel of panels" [relatedPanel]="panel">
+        </igx-tab>
+    </ng-container>
+    <ng-content select="igx-tab"></ng-content>
 </div>

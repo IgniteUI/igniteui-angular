@@ -131,6 +131,7 @@
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
+        outline: 0;
     }
 
     %igx-bottom-nav-menu-item--disabled {
