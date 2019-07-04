@@ -159,7 +159,6 @@ export class IgxGridNavigationService {
         if (!element.previousElementSibling && this.grid.pinnedColumns.length && index === - 1) {
             element.parentNode.previousElementSibling.focus({ preventScroll: true });
         } else if (!this.isColumnLeftEdgeVisible(visibleColumnIndex - 1)) {
-        } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1, isSummary);
         } else {
