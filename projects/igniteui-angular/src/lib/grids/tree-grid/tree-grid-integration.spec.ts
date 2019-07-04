@@ -1163,7 +1163,7 @@ describe('IgxTreeGrid - Integration ', () => {
             expect(treeGrid.selectedRows()).toEqual([]);
         }));
 
-        fit('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
+        it('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             const grid = fixture.componentInstance.treeGrid;
             tick();
@@ -1176,7 +1176,7 @@ describe('IgxTreeGrid - Integration ', () => {
             expect(grid.transactions.getTransactionLog().length).toBe(1);
         }));
 
-        fit('Should not add child row to deleted parent row - Flat DS', fakeAsync(() => {
+        it('Should not add child row to deleted parent row - Flat DS', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
             grid.cascadeOnDelete = false;
