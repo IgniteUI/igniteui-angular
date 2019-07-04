@@ -54,12 +54,17 @@ export class UIInteractions {
         return row.triggerEventHandler('click', new Event('click'));
     }
 
+    /**
+     * Clicks an element - native or debug, by dispatching pointerdown, focus, pointerup and click events.
+     * @param element - Native or debug element.
+     */
     public static clickElement(element) {
-        const elementRect = element.nativeElement.getBoundingClientRect();
-        UIInteractions.simulatePointerEvent('pointerdown', element.nativeElement, elementRect.left, elementRect.top);
-        element.nativeElement.dispatchEvent(new Event('focus'));
-        UIInteractions.simulatePointerEvent('pointerup', element.nativeElement, elementRect.left, elementRect.top);
-        element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const elementRect = nativeElement.getBoundingClientRect();
+        UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
+        nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
