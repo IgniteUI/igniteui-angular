@@ -714,7 +714,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
     }
     private scrollGrid(grid, target, callBackFunc) {
-        grid.nativeElement.focus({preventScroll: true});
+        this.getFocusableGrid().nativeElement.focus({preventScroll: true});
         requestAnimationFrame(() => {
             if (typeof target === 'number') {
                 grid.verticalScrollContainer.addScrollTop(target);
