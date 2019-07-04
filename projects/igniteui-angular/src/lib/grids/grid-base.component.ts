@@ -105,7 +105,6 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 export interface IGridClipboardEvent {
-    type: string;
     data: any[];
     cancel: boolean;
 }
@@ -2376,6 +2375,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     clipboardOptions = {
         enabled: true,
         copyHeaders: true,
+        copyFormatters: true,
         separator: '\t'
     };
 
@@ -2643,9 +2643,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
-        if (event.ctrlKey && key === 'c' && this.clipboardOptions.enabled) {
-            isIE() ? this.copyHandler(null, true) : this.document.execCommand('copy');
-        }
+        // TODO: Move in a separate handler on the `grid body`.
+        // if (event.ctrlKey && key === 'c' && isIE()) {
+        //     this.copyHandler(null, true);
+        // }
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
             event.preventDefault();
             if (key === 'pagedown') {
@@ -4854,7 +4855,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.selectionService.ranges;
     }
 
-    extractDataFromSelection(source: any[]): any[] {
+    extractDataFromSelection(source: any[], applyColumnFormatters = false): any[] {
         let column: IgxColumnComponent;
         let record = {};
         const selectedData = [];
@@ -4875,7 +4876,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             for (const each of temp) {
                 column = visibleColumns[each];
                 if (column) {
-                    record[column.field] = source[row][column.field];
+                    record[column.field] = applyColumnFormatters && column.formatter ? column.formatter(source[row][column.field])
+                        : source[row][column.field];
                 }
             }
             if (Object.keys(record).length) {
@@ -4886,10 +4888,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return selectedData;
     }
 
-    getSelectedData() {
+    getSelectedData(applyColumnFormatters = false) {
         const source = this.verticalScrollContainer.igxForOf;
-
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, applyColumnFormatters);
     }
 
     /**
@@ -4913,7 +4914,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    // @HostListener('scroll', ['$event'])
     public scrollHandler(event) {
         this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
@@ -4925,13 +4925,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @HostListener('copy', ['$event'])
     public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled) {
+        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
             return;
         }
-        const data = this.getSelectedData();
-        const ev = { type: 'copy', data, cancel: false } as IGridClipboardEvent;
+
+        const data = this.getSelectedData(this.clipboardOptions.copyFormatters);
+        const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
         if (ev.cancel) {
@@ -4951,6 +4951,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         event.preventDefault();
+
+        /* Necessary for the hiearachical case but will probably have to
+           change how getSelectedData is propagated in the hiearachical grid
+        */
+        event.stopPropagation();
         event.clipboardData.setData('text/plain', result);
     }
 

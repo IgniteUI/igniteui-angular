@@ -93,7 +93,7 @@
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
 </div>
 
-<div igxGridBody class="igx-grid__tbody">
+<div igxGridBody (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)'>

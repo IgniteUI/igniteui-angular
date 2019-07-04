@@ -16,13 +16,19 @@
                 <div style="margin: 0 0.5rem" igxLayout igxLayoutJustify="space-between">
                     <igx-switch [(ngModel)]="options.enabled">Toggle grid copy behavior</igx-switch>
                     <igx-switch [(ngModel)]="options.copyHeaders">Toggle copying of header labels</igx-switch>
+                    <igx-switch [(ngModel)]="options.copyFormatters">Toggle copying column formatters</igx-switch>
                     <button (click)="grid.clearCellSelection()" igxButton="outlined">Clear grid selection</button>
                 </div>
             </div>
 
 
             <div style="width: 50wh; height: 50vh">
-                <igx-grid #grid [data]="data" [clipboardOptions]="options" [autoGenerate]="true"></igx-grid>
+                <igx-grid #grid [data]="data" primaryKey="ID"
+                    rowEditable="true"
+                    (onColumnInit)="$event.formatter = formatter"
+                    [clipboardOptions]="options"
+                    [autoGenerate]="true">
+                </igx-grid>
             </div>
 
             <div style="margin-top: 0.5rem">
