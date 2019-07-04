@@ -54,6 +54,11 @@ export class AppComponent implements OnInit {
             name: 'Bottom Navigation'
         },
         {
+            link: '/bottom-navigation-routing',
+            icon: 'tab',
+            name: 'Bottom Navigation Routing'
+        },
+        {
             link: '/buttonGroup',
             icon: 'group_work',
             name: 'Button Group'
@@ -307,6 +312,11 @@ export class AppComponent implements OnInit {
             link: '/tabs',
             icon: 'tab',
             name: 'Tabs'
+        },
+        {
+            link: '/tabs-routing',
+            icon: 'tab',
+            name: 'Tabs Routing'
         },
         {
             link: '/timePicker',
