@@ -237,7 +237,7 @@ export class IgxGridNavigationService {
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[0].focus();
         } else {
-            this.grid.nativeElement.focus({ preventScroll: true });
+           this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(0);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
@@ -257,7 +257,7 @@ export class IgxGridNavigationService {
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[cells.length - 1].focus();
         } else {
-            this.grid.nativeElement.focus({ preventScroll: true });
+           this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
@@ -277,7 +277,7 @@ export class IgxGridNavigationService {
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
         if (!rowElement.previousElementSibling ||
             rowElement.previousElementSibling.offsetTop < Math.abs(containerTopOffset)) {
-            this.grid.nativeElement.focus({ preventScroll: true });
+           this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(currentRowIndex - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
@@ -314,7 +314,7 @@ export class IgxGridNavigationService {
         const targetEndTopOffset = rowElement.nextElementSibling ?
             rowElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
             containerHeight + rowHeight;
-        this.grid.nativeElement.focus({ preventScroll: true });
+       this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
         if (containerHeight && containerHeight < targetEndTopOffset) {
             const nextIndex = currentRowIndex + 1;
             this.grid.verticalScrollContainer.scrollTo(nextIndex);
@@ -358,7 +358,7 @@ export class IgxGridNavigationService {
             if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
                 this.navigateTop(0);
             } else {
-                this.grid.nativeElement.focus({ preventScroll: true });
+               this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
                 this.horizontalScroll(this.grid.dataRowList.first.index).scrollTo(0);
                 this.grid.parentVirtDir.onChunkLoad
                     .pipe(first())
@@ -377,7 +377,7 @@ export class IgxGridNavigationService {
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);
         } else {
-            this.grid.nativeElement.focus({ preventScroll: true });
+           this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
@@ -593,7 +593,7 @@ export class IgxGridNavigationService {
 
     public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: () => void) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        this.grid.nativeElement.focus({ preventScroll: true });
+       this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
