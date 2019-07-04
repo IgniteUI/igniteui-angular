@@ -4129,6 +4129,29 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
     });
+
+    describe('IgxGrid - footer section', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWrappedInContComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should be able to display custom content', () => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
+
+            const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
+            const footerContent = footer.textContent.trim();
+
+            expect(footerContent).toEqual('Custom content');
+        });
+    });
 });
 
 @Component({
@@ -4282,6 +4305,9 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
                 [paging]="paging" [perPage]="pageSize">
+                <igx-grid-footer>
+                    Custom content
+                </igx-grid-footer>
             </igx-grid>
         </div>`
 })
