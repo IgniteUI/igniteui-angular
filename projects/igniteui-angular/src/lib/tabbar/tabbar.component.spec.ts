@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
-describe('TabBar', () => {
+describe('IgxBottomNav', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
@@ -31,187 +31,177 @@ describe('TabBar', () => {
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent],
             imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    it('should initialize igx-bottom-nav, igx-tab-panel and igx-tab', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        let panels: IgxTabPanelComponent[];
-        let tabs: IgxTabComponent[];
+    describe('IgxBottomNav Component with Panels Definitions', () => {
+        let fixture;
+        let tabbar;
 
-        fixture.detectChanges();
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TabBarTestComponent);
+            tabbar = fixture.componentInstance.tabbar;
+        }));
 
-        panels = tabbar.panels.toArray();
-        tabs = tabbar.tabs.toArray();
+        it('should initialize igx-bottom-nav, igx-tab-panel and igx-tab', () => {
+            let panels: IgxTabPanelComponent[];
+            let tabs: IgxTabComponent[];
 
-        expect(tabbar).toBeDefined();
-        expect(tabbar.id).toContain('igx-bottom-nav-');
-        expect(tabbar instanceof IgxBottomNavComponent).toBeTruthy();
-        expect(tabbar.panels instanceof QueryList).toBeTruthy();
-        expect(tabbar.panels.length).toBe(3);
-
-        for (let i = 0; i < tabbar.panels.length; i++) {
-            expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
-            expect(panels[i].relatedTab).toBe(tabs[i]);
-        }
-
-        expect(tabbar.tabs instanceof QueryList).toBeTruthy();
-        expect(tabbar.tabs.length).toBe(3);
-
-        for (let i = 0; i < tabbar.tabs.length; i++) {
-            expect(tabs[i] instanceof IgxTabComponent).toBeTruthy();
-            expect(tabs[i].relatedPanel).toBe(panels[i]);
-        }
-    });
-
-    it('should initialize default values of properties', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        let tabs;
-
-        expect(tabbar.selectedIndex).toBe(-1);
-        expect(tabbar.selectedTab).toBeUndefined();
-
-        fixture.componentInstance.tabSelectedHandler = () => {
-            expect(tabbar.selectedIndex).toBe(0);
-            expect(tabbar.selectedTab).toBe(tabs[0]);
-        };
-
-        fixture.detectChanges();
-
-        tabs = tabbar.tabs.toArray();
-        expect(tabs[0].disabled).toBeFalsy();
-        expect(tabs[1].disabled).toBeFalsy();
-    });
-
-    it('should initialize set/get properties', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        const icons = ['library_music', 'video_library', 'library_books'];
-        let tabs;
-        let panels;
-
-        fixture.detectChanges();
-
-        tabs = tabbar.tabs.toArray();
-        panels = tabbar.panels.toArray();
-
-        for (let i = 0; i < tabs.length; i++) {
-            expect(panels[i].label).toBe('Tab ' + (i + 1));
-            expect(panels[i].icon).toBe(icons[i]);
-        }
-    });
-
-    it('should set/get properties on panels through tabs', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        const iconValues = ['library_music', 'video_library', 'library_books'];
-        const labelValues = ['Tab1', 'Tab2', 'Tab3'];
-        const disabledValues = [true, false, true];
-
-        fixture.detectChanges();
-
-        const tabs = tabbar.tabs.toArray();
-        const panels = tabbar.panels.toArray();
-
-        for (let i = 0; i < tabs.length; i++) {
-            tabs[i].icon = iconValues[i];
-            tabs[i].label = labelValues[i];
-            tabs[i].disabled = disabledValues[i];
             fixture.detectChanges();
-            expect(panels[i].icon).toBe(iconValues[i]);
-            expect(panels[i].label).toBe(labelValues[i]);
-            expect(panels[i].disabled).toBe(disabledValues[i]);
-        }
-    });
+            panels = tabbar.panels.toArray();
+            tabs = tabbar.tabs.toArray();
 
-    it('should set/get selection on panels through tabs', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        fixture.detectChanges();
+            expect(tabbar).toBeDefined();
+            expect(tabbar.id).toContain('igx-bottom-nav-');
+            expect(tabbar instanceof IgxBottomNavComponent).toBeTruthy();
+            expect(tabbar.panels instanceof QueryList).toBeTruthy();
+            expect(tabbar.panels.length).toBe(3);
 
-        const tabs = tabbar.tabs.toArray();
-        const panels = tabbar.panels.toArray();
+            for (let i = 0; i < tabbar.panels.length; i++) {
+                expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
+                expect(panels[i].relatedTab).toBe(tabs[i]);
+            }
 
-        tabs[0].isSelected = true;
-        expect(panels[0].isSelected).toBe(true);
-        expect(panels[1].isSelected).toBe(false);
-        expect(panels[2].isSelected).toBe(false);
+            expect(tabbar.tabs instanceof QueryList).toBeTruthy();
+            expect(tabbar.tabs.length).toBe(3);
 
-        tabs[1].isSelected = true;
-        fixture.detectChanges();
-        expect(panels[0].isSelected).toBe(false);
-        expect(panels[1].isSelected).toBe(true);
-        expect(panels[2].isSelected).toBe(false);
+            for (let i = 0; i < tabbar.tabs.length; i++) {
+                expect(tabs[i] instanceof IgxTabComponent).toBeTruthy();
+                expect(tabs[i].relatedPanel).toBe(panels[i]);
+            }
+        });
 
-        tabs[2].isSelected = true;
-        fixture.detectChanges();
-        expect(panels[0].isSelected).toBe(false);
-        expect(panels[1].isSelected).toBe(false);
-        expect(panels[2].isSelected).toBe(true);
-    });
+        it('should initialize default values of properties', () => {
+            expect(tabbar.selectedIndex).toBe(-1);
+            expect(tabbar.selectedTab).toBeUndefined();
 
-    it('should select/deselect tabs', () => {
-        const fixture = TestBed.createComponent(TabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
-        let tabs;
-        let tab1: IgxTabComponent;
-        let tab2: IgxTabComponent;
+            fixture.componentInstance.tabSelectedHandler = () => {
+                expect(tabbar.selectedIndex).toBe(0);
+                expect(tabbar.selectedTab).toBe(tabs[0]);
+            };
 
-        expect(tabbar.selectedIndex).toBe(-1);
-        fixture.componentInstance.tabSelectedHandler = () => {
+            fixture.detectChanges();
+
+            const tabs = tabbar.tabs.toArray();
+            expect(tabs[0].disabled).toBeFalsy();
+            expect(tabs[1].disabled).toBeFalsy();
+        });
+
+        it('should initialize set/get properties', () => {
+            const icons = ['library_music', 'video_library', 'library_books'];
+
+            fixture.detectChanges();
+            const tabs = tabbar.tabs.toArray();
+            const panels = tabbar.panels.toArray();
+
+            for (let i = 0; i < tabs.length; i++) {
+                expect(panels[i].label).toBe('Tab ' + (i + 1));
+                expect(panels[i].icon).toBe(icons[i]);
+            }
+        });
+
+        it('should set/get properties on panels through tabs', () => {
+            const iconValues = ['library_music', 'video_library', 'library_books'];
+            const labelValues = ['Tab1', 'Tab2', 'Tab3'];
+            const disabledValues = [true, false, true];
+
+            fixture.detectChanges();
+            const tabs = tabbar.tabs.toArray();
+            const panels = tabbar.panels.toArray();
+
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].icon = iconValues[i];
+                tabs[i].label = labelValues[i];
+                tabs[i].disabled = disabledValues[i];
+                fixture.detectChanges();
+                expect(panels[i].icon).toBe(iconValues[i]);
+                expect(panels[i].label).toBe(labelValues[i]);
+                expect(panels[i].disabled).toBe(disabledValues[i]);
+            }
+        });
+
+        it('should set/get selection on panels through tabs', () => {
+            fixture.detectChanges();
+            const tabs = tabbar.tabs.toArray();
+            const panels = tabbar.panels.toArray();
+
+            tabs[0].isSelected = true;
+            expect(panels[0].isSelected).toBe(true);
+            expect(panels[1].isSelected).toBe(false);
+            expect(panels[2].isSelected).toBe(false);
+
+            tabs[1].isSelected = true;
+            fixture.detectChanges();
+            expect(panels[0].isSelected).toBe(false);
+            expect(panels[1].isSelected).toBe(true);
+            expect(panels[2].isSelected).toBe(false);
+
+            tabs[2].isSelected = true;
+            fixture.detectChanges();
+            expect(panels[0].isSelected).toBe(false);
+            expect(panels[1].isSelected).toBe(false);
+            expect(panels[2].isSelected).toBe(true);
+        });
+
+        it('should select/deselect tabs', () => {
+            expect(tabbar.selectedIndex).toBe(-1);
+            fixture.componentInstance.tabSelectedHandler = () => {
+                expect(tabbar.selectedIndex).toBe(0);
+                expect(tabbar.selectedTab).toBe(tab1);
+            };
+
+            fixture.detectChanges();
+            const tabs = tabbar.tabs.toArray();
+            const tab1: IgxTabComponent = tabs[0];
+            const tab2: IgxTabComponent = tabs[1];
+
+            fixture.componentInstance.tabSelectedHandler = () => { };
+
+            tab2.select();
+            fixture.detectChanges();
+
+            expect(tabbar.selectedIndex).toBe(1);
+            expect(tabbar.selectedTab).toBe(tab2);
+            expect(tabbar.selectedIndex).toBe(1);
+            expect(tab2.isSelected).toBeTruthy();
+            expect(tab1.isSelected).toBeFalsy();
+
+            tab1.select();
+            fixture.detectChanges();
+
             expect(tabbar.selectedIndex).toBe(0);
             expect(tabbar.selectedTab).toBe(tab1);
-        };
+            expect(tab1.isSelected).toBeTruthy();
+            expect(tab2.isSelected).toBeFalsy();
 
-        fixture.detectChanges();
-        tabs = tabbar.tabs.toArray();
-        tab1 = tabs[0];
-        tab2 = tabs[1];
+            // select disabled tab
+            tab2.relatedPanel.disabled = true;
+            tab2.select();
+            fixture.detectChanges();
 
-        fixture.componentInstance.tabSelectedHandler = () => { };
+            expect(tabbar.selectedIndex).toBe(0);
+            expect(tabbar.selectedTab).toBe(tab1);
+            expect(tab1.isSelected).toBeTruthy();
+            expect(tab2.isSelected).toBeFalsy();
+        });
 
-        tab2.select();
-        fixture.detectChanges();
-
-        expect(tabbar.selectedIndex).toBe(1);
-        expect(tabbar.selectedTab).toBe(tab2);
-        expect(tabbar.selectedIndex).toBe(1);
-        expect(tab2.isSelected).toBeTruthy();
-        expect(tab1.isSelected).toBeFalsy();
-
-        tab1.select();
-        fixture.detectChanges();
-
-        expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tab1);
-        expect(tab1.isSelected).toBeTruthy();
-        expect(tab2.isSelected).toBeFalsy();
-
-        // select disabled tab
-        tab2.relatedPanel.disabled = true;
-        tab2.select();
-        fixture.detectChanges();
-
-        expect(tabbar.selectedIndex).toBe(0);
-        expect(tabbar.selectedTab).toBe(tab1);
-        expect(tab1.isSelected).toBeTruthy();
-        expect(tab2.isSelected).toBeFalsy();
     });
 
-    it('should initialize igx-tab custom template', () => {
-        const fixture = TestBed.createComponent(TemplatedTabBarTestComponent);
-        const tabbar = fixture.componentInstance.tabbar;
+    describe('BottomNav Component with Custom Template', () => {
+        let fixture;
+        let tabbar;
 
-        fixture.detectChanges();
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TemplatedTabBarTestComponent);
+            tabbar = fixture.componentInstance.tabbar;
+        }));
 
-        const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
+        it('should initialize igx-tab custom template', () => {
+            fixture.detectChanges();
+            expect(tabbar.tabs.length).toBe(3);
+            tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
+        });
 
-        expect(tabbar.tabs.length).toBe(3);
-
-        tabbar.tabs.forEach((tab) => expect(tab.relatedPanel.customTabTemplate).toBeDefined());
     });
 
     describe('Routing Navigation Tests', () => {
