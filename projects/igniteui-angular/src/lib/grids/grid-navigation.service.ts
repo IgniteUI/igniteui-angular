@@ -9,7 +9,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 enum MoveDirection {
     LEFT = 'left',
     RIGHT = 'right'
-};
+}
 
 /** @hidden */
 @Injectable()
