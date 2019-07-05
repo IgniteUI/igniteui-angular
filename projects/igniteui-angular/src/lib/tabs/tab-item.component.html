@@ -1,10 +1,9 @@
-<ng-template #defaultTabTemplate>
-    <div *ngIf="relatedGroup.icon" class="igx-tabs__header-menu-item-icon">
-        <igx-icon fontSet="material">{{relatedGroup.icon}}</igx-icon>
+<ng-template #defaultTabTemplate let-context>
+    <div *ngIf="context.icon" class="igx-tabs__header-menu-item-icon">
+        <igx-icon fontSet="material">{{context.icon}}</igx-icon>
         <igx-badge [value]="changesCount" [hidden]="changesCount === 0"></igx-badge>
     </div>
-    <div *ngIf="relatedGroup.label" ngClass="igx-tabs__item-label">{{relatedGroup.label}}</div>
+    <div *ngIf="context.label" ngClass="igx-tabs__item-label">{{context.label}}</div>
 </ng-template>
-<ng-container
-    *ngTemplateOutlet="relatedGroup.customTabTemplate ? relatedGroup.customTabTemplate : defaultTabTemplate; context: { $implicit: relatedGroup }">
+<ng-container *ngTemplateOutlet="template; context: { $implicit: this.context }">
 </ng-container>

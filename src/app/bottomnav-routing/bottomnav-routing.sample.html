@@ -1,0 +1,40 @@
+<div class="sample-wrapper">
+        <app-page-header title="Tabbar">
+            This sample demonstrates how to use the IgxBottomNav component for routing navigation.
+        </app-page-header>
+        <div class="sample-content">
+            <article class="sample-column">
+                <div>
+                    <router-outlet></router-outlet>
+                </div>
+                <div class="tabbar-wrapper" #tabbarEl>
+                    <igx-bottom-nav>
+
+                        <igx-tab icon="phone" label="Dial"
+                            routerLink="/bottom-navigation-routing/view1"
+                            routerLinkActive #rla1="routerLinkActive"
+                            [isSelected]="rla1.isActive">
+                        </igx-tab>
+    
+                        <igx-tab icon="supervisor_account" label="Contacts"
+                            routerLink="/bottom-navigation-routing/view2"
+                            routerLinkActive #rla2="routerLinkActive"
+                            [isSelected]="rla2.isActive">
+                        </igx-tab>
+    
+                        <igx-tab icon="format_list_bulleted" label="Recent"
+                            routerLink="/bottom-navigation-routing/view3"
+                            routerLinkActive #rla3="routerLinkActive"
+                            [isSelected]="rla3.isActive">
+                            <!-- <ng-template igxTab let-context>
+                                <span>{{context.label}}</span>
+                                <span>[Retemplated tab]</span>
+                            </ng-template> -->
+                        </igx-tab>
+    
+                    </igx-bottom-nav>
+                </div>
+            </article>
+        </div>
+    </div>
+    
