@@ -2859,16 +2859,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
 
         let targetCell = grid.getCellByColumn(0, 'CompanyName');
-        targetCell.nativeElement.focus();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', targetCell.nativeElement, true);
+        await wait(50);
         fix.detectChanges();
-        targetCell.onKeydownEnterEditMode();
-        fix.detectChanges();
-        await wait(100);
 
         const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
         const doneButtonElement = rowEditingBannerElement.lastElementChild;
         const cancelButtonElement = rowEditingBannerElement.firstElementChild;
-
         // shift+tab into Done button
         UIInteractions.triggerKeyDownWithBlur('tab', targetCell.nativeElement, true, false, true);
         fix.detectChanges();
