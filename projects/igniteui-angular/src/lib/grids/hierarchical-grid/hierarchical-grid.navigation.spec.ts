@@ -352,6 +352,27 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1);
     }));
 
+    it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
+        hierarchicalGrid.verticalScrollContainer.scrollTo(3);
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
+        const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[0];
+        childLastRowCell.nativeElement.focus();
+        fixture.detectChanges();
+        childLastRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+        const childFirstRowCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(childFirstRowCell.selected).toBe(true);
+        expect(childFirstRowCell.columnIndex).toBe(0);
+        expect(childFirstRowCell.rowIndex).toBe(0);
+
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        expect(currScrTop).toBeGreaterThanOrEqual(2000);
+    }));
+
     it('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', (async () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
