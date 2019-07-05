@@ -11,6 +11,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTabs` now supports an `igx-tab-item` declaration mode. When in this mode, groups declarations are not accepted and tab items' content is not rendered.
     - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
     - You are allowed to customize tab items with labels, icons and even templates.
+- `IgxGrid`
+    - `IgxColumnGroup`
+        - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
 
 ## 8.0.2
 - `igx-list-theme` now have some new parameters for styling.
