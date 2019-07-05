@@ -2537,6 +2537,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
+        await wait();
 
         grid.paging = false;
         grid.columns[1].groupingComparer = function (a, b) {

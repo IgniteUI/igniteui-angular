@@ -1,56 +1,86 @@
-<igx-grid-toolbar [style.width.px]="outerWidth" role="rowgroup" *ngIf="showToolbar" [gridID]="id" [displayDensity]="displayDensity" #toolbar>
+<igx-grid-toolbar [style.width.px]="outerWidth" role="rowgroup" *ngIf="showToolbar" [gridID]="id"
+    [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
 <ng-template #defaultPager let-api>
-    <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
-        <igx-icon fontSet="material">first_page</igx-icon>
-    </button>
-    <button [disabled]="api.isFirstPage" (click)="api.previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
-        <igx-icon fontSet="material">chevron_left</igx-icon>
-    </button>
-    <span>{{ api.page + 1 }} of {{ api.totalPages }}</span>
-    <button [disabled]="api.isLastPage" (click)="api.nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
-        <igx-icon fontSet="material">chevron_right</igx-icon>
-    </button>
-        <button [disabled]="api.isLastPage" (click)="api.paginate(api.totalPages - 1)" igxButton="icon" igxRipple igxRippleCentered="true">
-        <igx-icon fontSet="material">last_page</igx-icon>
-    </button>
-    <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
-            <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
-    </select>
+    <div class="igx-grid-paginator__select">
+        <label class="igx-grid-paginator__label">{{ resourceStrings.igx_grid_paginator_label }}</label>
+        <div class="igx-grid-paginator__select-input">
+            <igx-select [(ngModel)]="api.perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border">
+                <igx-select-item [value]="val"
+                                 *ngFor="let val of [api.perPage, 5, 10, 15, 25, 50, 100, 500] | paginatorOptions">
+                    {{val}}
+                </igx-select-item>
+            </igx-select>
+        </div>
+    </div>
+    <div class="igx-grid-paginator__pager">
+        <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple
+            igxRippleCentered="true">
+            <igx-icon fontSet="material">first_page</igx-icon>
+        </button>
+        <button [disabled]="api.isFirstPage" (click)="api.previousPage()" igxButton="icon" igxRipple
+            igxRippleCentered="true">
+            <igx-icon fontSet="material">chevron_left</igx-icon>
+        </button>
+        <span>{{ api.page + 1 }} of {{ api.totalPages }}</span>
+        <button [disabled]="api.isLastPage" (click)="api.nextPage()" igxRipple igxRippleCentered="true"
+            igxButton="icon">
+            <igx-icon fontSet="material">chevron_right</igx-icon>
+        </button>
+        <button [disabled]="api.isLastPage" (click)="api.paginate(api.totalPages - 1)" igxButton="icon" igxRipple
+            igxRippleCentered="true">
+            <igx-icon fontSet="material">last_page</igx-icon>
+        </button>
+    </div>
 </ng-template>
 
-<div [style.width.px]='outerWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+<div [style.width.px]='outerWidth' class="igx-grid__grouparea"
+    *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
-                    (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                    <span>{{ getGroupByChipTitle(expr) }}</span>
-                    <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)"
+                [removable]="getColumnByName(expr.fieldName).groupable"
+                [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+                (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)"
+                (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null"
+                [disabled]='!getColumnByName(expr.fieldName).groupable'>
+                <span>{{ getGroupByChipTitle(expr) }}</span>
+                <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
-                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" >arrow_forward</igx-icon>
+                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
+                </igx-icon>
             </span>
         </ng-container>
-        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass" [attr.gridId]='this.id'>
+        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass"
+            [attr.gridId]='this.id'>
             <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
     </igx-chips-area>
 </div>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow>
+    <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="rowgroup"
+        [style.width.px]='calcWidth + 1' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth + 1'>
-            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
-            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
+                [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
+                class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
+            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
+                [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
+                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="groupingExpressions.length > 0">
-                <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" [ngClass]="{
+                <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
+                    [ngClass]="{
                     'igx-grid__header-indentation--no-border': rowSelectable || rowDraggable
                 }" #headerGroupContainer>
-                    <igx-icon *ngIf="groupsExpanded" role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()" [ngClass]="{
+                    <igx-icon *ngIf="groupsExpanded" role="button" class="igx-grid__group-expand-btn"
+                        (click)="toggleAllGroupRows()" [ngClass]="{
                         'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
                     }">unfold_less</igx-icon>
-                    <igx-icon *ngIf="!groupsExpanded" role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()"[ngClass]="{
+                    <igx-icon *ngIf="!groupsExpanded" role="button" class="igx-grid__group-expand-btn"
+                        (click)="toggleAllGroupRows()" [ngClass]="{
                         'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
                     }">unfold_more</igx-icon>
                 </div>
@@ -60,7 +90,9 @@
                     'igx-grid__drag-indicator--header': !rowSelectable
                 }" #headerDragContainer>
                     <div style="visibility: hidden;">
-                        <ng-container *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase"></ng-container>
+                        <ng-container
+                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
+                        </ng-container>
                     </div>
                 </div>
             </ng-container>
@@ -68,29 +100,43 @@
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)"
+                        disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)"
+                        [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
                 </ng-template>
             </ng-container>
-            <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'  [igxForSizePropName]='"calcPixelWidth"' #headerContainer>
-                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+            <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel"
+                [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
+                [igxForSizePropName]='"calcPixelWidth"' #headerContainer>
+                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)"
+                    [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
-            </div>
-            <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
+        </div>
+        <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible"
+            [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
-    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
+    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
+        id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
 </div>
 
 <div igxGridBody class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
+        (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
+        [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)'
+        (wheel)="wheelHandler()">
+        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
+            [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
+            class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
+            [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
+            class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
@@ -99,8 +145,10 @@
         | gridPaging:page:perPage:id:pipeTrigger
         | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
-        let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
-        [igxForContainerSize]='calcHeight' [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
+            [igxForContainerSize]='calcHeight'
+            [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
+            #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
                 <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
@@ -110,10 +158,12 @@
                 </igx-grid-groupby-row>
             </ng-template>
             <ng-template #summary_template>
-                <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
+                <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex"
+                    class="igx-grid__summaries--body" #summaryRow>
                 </igx-grid-summary-row>
             </ng-template>
-            <ng-template [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template'
+            <ng-template
+                [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
                 (onCachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
@@ -121,17 +171,23 @@
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
-    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth" [style.height.px]='calcHeight'>
-        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder ></ng-template>
+    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
+        id="right" class="igx-grid__scroll-on-drag-right"></span>
+    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
+        [style.height.px]='calcHeight'>
+        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
     </div>
 </div>
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
-    <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight' *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0" class="igx-grid__summaries"  #summaryRow>
+    <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
+        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
+        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0"
+        class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
-    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight' [style.width.px]="scrollWidth"></div>
+    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight'
+        [style.width.px]="scrollWidth"></div>
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
@@ -142,8 +198,9 @@
     </div>
 </div>
 
-<div class="igx-paginator igx-grid-paginator" *ngIf="paging && totalRecords" #paginator>
-    <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
+<div [ngClass]="paginatorClassName()" *ngIf="paging && totalRecords" #paginator>
+    <ng-container
+        *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPager; context: { $implicit: this }">
     </ng-container>
 </div>
 
@@ -169,7 +226,9 @@
 
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass">
-        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
+        <ng-container
+            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
+        </ng-container>
     </div>
 </div>
 
@@ -185,12 +244,16 @@
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">
-            <ng-container *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
+            </ng-container>
         </span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
-            <ng-container *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
+            </ng-container>
         </div>
     </div>
 </ng-template>
