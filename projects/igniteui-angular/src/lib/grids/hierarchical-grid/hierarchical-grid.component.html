@@ -147,7 +147,7 @@
 
 <ng-template #defaultPaginator>
     <igx-paginator *ngIf="paging && totalRecords" [displayDensity]="displayDensity"
-        (selectChange)="updatePerPage($event)" (pageChange)="updateCurrentPage($event)" [totalRecords]="data.length"
+        (selectChange)="updatePerPage($event)" (pageChange)="updateCurrentPage($event)" [totalRecords]="filteredData ? filteredData.length : data.length"
         [page]="page"
         [perPage]="perPage">
     </igx-paginator>
