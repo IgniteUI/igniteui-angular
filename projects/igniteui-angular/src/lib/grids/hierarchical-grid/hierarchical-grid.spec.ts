@@ -94,7 +94,7 @@ describe('Basic IgxHierarchicalGrid', () => {
 
         UIInteractions.clickElement(icon.el);
         fixture.detectChanges();
-        const rows = hierarchicalGrid.dataRowList.toArray();
+        const rows = hierarchicalGrid.dataRowList.toArray() as IgxHierarchicalRowComponent[];
         rows.forEach((r) => {
             expect(r.expanded).toBe(false);
         });
@@ -203,13 +203,13 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(row1.expanded).toBe(false);
         const expandIcons = fixture.debugElement.queryAll(By.css('#igx-icon-15'));
         expect(expandIcons.length).toBe(0);
-        let rows = hierarchicalGrid.dataRowList.toArray();
+        let rows = hierarchicalGrid.dataRowList.toArray() as IgxHierarchicalRowComponent[];
         rows.forEach((r) => {
             expect(r.expanded).toBe(false);
         });
         hierarchicalGrid.expandChildren = true;
         hierarchicalGrid.cdr.detectChanges();
-        rows = hierarchicalGrid.dataRowList.toArray();
+        rows = hierarchicalGrid.dataRowList.toArray() as IgxHierarchicalRowComponent[];
         rows.forEach((r) => {
             expect(r.expanded).toBe(true);
         });

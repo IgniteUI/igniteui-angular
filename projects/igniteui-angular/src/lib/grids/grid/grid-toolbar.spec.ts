@@ -427,7 +427,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
-        expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
+
+        expect(parseFloat(toolbar.offsetHeight)).toBe(58);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
@@ -436,7 +437,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
-        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        expect(parseFloat(toolbar.offsetHeight)).toBe(44);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
@@ -445,8 +446,11 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
-        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        expect(parseFloat(toolbar.offsetHeight)).toBe(52);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
+
+        grid.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
     }));
 
     it('display density is properly applied through the grid.', fakeAsync(() => {

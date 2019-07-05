@@ -408,9 +408,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     @Output()
     public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
 
-    @Output()
-    public onFocusChange = new EventEmitter<IGridFocusChangeEventArgs>();
-
     /**
      * @hidden
      */
@@ -625,10 +622,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     private _setGroupColsVisibility(value) {
-        this.groupingExpressions.forEach((expr) => {
-            const col = this.getColumnByName(expr.fieldName);
-            col.hidden = value;
-        });
+        if (this.columnList && !this.hasColumnLayouts) {
+            this.groupingExpressions.forEach((expr) => {
+                const col = this.getColumnByName(expr.fieldName);
+                col.hidden = value;
+            });
+        }
     }
 
     /**
@@ -867,7 +866,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     public ngDoCheck(): void {
         super.ngDoCheck();
-        if (this.groupingDiffer) {
+        if (this.groupingDiffer && this.columnList && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
             if (changes && this.columnList) {
                 changes.forEachAddedItem((rec) => {

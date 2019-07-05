@@ -230,7 +230,6 @@ export class DataUtil {
         childDataKey: any,
         primaryKey?: any,
         deleteRows: boolean = false): any[] {
-
         for (const transaction of transactions) {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);

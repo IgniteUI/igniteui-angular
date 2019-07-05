@@ -474,8 +474,8 @@ export class IgxGridSelectionService {
         if (this.pointerState.shift) {
             this.clearTextSelection();
             this.restoreTextSelection();
-            emitter.emit(this.generateRange(node, this.pointerState));
             this.addRangeMeta(node, this.pointerState);
+            emitter.emit(this.generateRange(node, this.pointerState));
             return true;
         }
 
@@ -521,7 +521,7 @@ export class IgxGridSelectionService {
     restoreTextSelection(): void {
         const selection = window.getSelection();
         if (!selection.rangeCount) {
-            selection.addRange(this._selectionRange);
+            selection.addRange(this._selectionRange || document.createRange());
         }
     }
 
