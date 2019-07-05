@@ -23,6 +23,14 @@ export class IgxFilteringOperand {
             logic: (target: any) => {
                 return target !== null;
             }
+        }, {
+            name: 'in',
+            isUnary: false,
+            iconName: 'is_in',
+            hidden: true,
+            logic: (target: any, searchVal: Set<any>) => {
+                return this.findValueInSet(target, searchVal);
+            }
         }];
     }
 
@@ -30,8 +38,12 @@ export class IgxFilteringOperand {
         return this._instance || (this._instance = new this());
     }
 
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(target);
+    }
+
     public conditionList(): string[] {
-        return this.operations.map((element) => element.name);
+        return this.operations.filter(f => !f.hidden).map((element) => element.name);
     }
 
     public condition(name: string): IFilteringOperation {
@@ -362,6 +374,10 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
     }
+
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
+    }
 }
 
 /**
@@ -532,6 +548,7 @@ export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
     iconName: string;
+    hidden?: boolean;
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 
@@ -548,28 +565,4 @@ export interface IDateParts {
     minutes: number;
     seconds: number;
     milliseconds: number;
-}
-
-/**
- * @hidden
- */
-export class InFilteringOperation implements IFilteringOperation {
-    name = 'in';
-    isUnary = false;
-    iconName = 'is_in';
-    logic = (target: any, searchVal: Set<any>) => {
-        return searchVal.has(target);
-    }
-}
-
-/**
- * @hidden
- */
-export class InDateFilteringOperation extends InFilteringOperation {
-    logic = (target: any, searchVal: Set<any>) => {
-        if (target instanceof Date) {
-            return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
-        }
-        return searchVal.has(target);
-    }
 }
