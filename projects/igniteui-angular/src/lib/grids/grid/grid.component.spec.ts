@@ -1921,6 +1921,7 @@ describe('IgxGrid Component Tests', () => {
                 grid = fixture.componentInstance.grid;
                 setupGridScrollDetection(fixture, grid);
             }));
+
             it(`Should jump from first editable columns to overlay buttons`, (async () => {
                 const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
@@ -2546,6 +2547,34 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
                 expect(cell.inEditMode).toBeFalsy();
+            }));
+
+            it(`Should exit row editing AND COMMIT on displayDensity change`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                const grid = fix.componentInstance.grid;
+                grid.displayDensity = DisplayDensity.comfortable;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.setEditMode(true);
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                let overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeTruthy();
+                expect(cell.editMode).toBeTruthy();
+
+                grid.displayDensity = DisplayDensity.cosy;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeFalsy();
+                expect(cell.editMode).toBeFalsy();
             }));
 
             it(`Should NOT exit row editing on click on non-editable cell in same row`, fakeAsync(() => {
