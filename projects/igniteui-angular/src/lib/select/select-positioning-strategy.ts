@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, getViewportRect } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, Util } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
@@ -32,7 +32,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private defaultWindowToListOffset = 5;
-    private viewPort = getViewportRect(document);
+    private viewPort = Util.getViewportRect(document);
     private deltaY: number;
     private deltaX: number;
     private itemTextPadding: number;
@@ -86,7 +86,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             TOP: elementContainer.top,
             BOTTOM: elementContainer.bottom,
         };
-        const viewPort = getViewportRect(document);
+        const viewPort = Util.getViewportRect(document);
         const documentElement = {
             TOP: viewPort.top,
             BOTTOM: viewPort.bottom

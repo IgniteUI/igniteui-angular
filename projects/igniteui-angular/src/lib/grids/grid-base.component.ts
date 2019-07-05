@@ -75,7 +75,6 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
@@ -89,6 +88,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -208,7 +208,7 @@ export interface IRowDragEndEventArgs {
 export interface IRowDragStartEventArgs extends CancelableEventArgs {
     owner: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
- }
+}
 
 export enum GridSummaryPosition {
     top = 'top',
@@ -1496,7 +1496,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
-    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+    public get onFocusChange(): EventEmitter<IFocusChangeEventArgs> {
+        return this._onFocusChange;
+    }
+
+    public set onFocusChange(val: EventEmitter<IFocusChangeEventArgs>) {
+        this._onFocusChange = val;
+    }
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
@@ -2524,6 +2530,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
+    protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2539,6 +2546,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
 
     protected _defaultTargetRecordNumber = 10;
+    protected _onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -2981,6 +2989,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             default:
                 return 48;
         }
+    }
+
+    public paginatorClassName(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid-paginator--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid-paginator--compact';
+            default:
+                return 'igx-grid-paginator';
+        }
+    }
+
+    public paginatorSelectDisplayDensity(): string {
+        if (this.displayDensity === DisplayDensity.comfortable) {
+            return DisplayDensity.cosy;
+        }
+        return DisplayDensity.compact;
     }
 
     /**
@@ -3486,6 +3512,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public addRow(data: any): void {
+        // commit pending states prior to adding a row
+        this.endEdit(true);
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
@@ -4028,10 +4056,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
+            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
+            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
+                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
+            }
+            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4295,6 +4326,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
 
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.resetChipsArea();
+        }
+
         this.cdr.detectChanges();
         this.resetCaches();
         // in case scrollbar has appeared recalc to size correctly.
@@ -4512,7 +4547,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected reinitPinStates() {
         this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
-        this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+            this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
@@ -5301,7 +5336,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+        if (!this.rowEditable || !this.rowEditingOverlay || this.rowEditingOverlay.collapsed) {
             return;
         }
         if (!row) {
@@ -5421,9 +5456,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
 
-        const columnIndex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
-
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
@@ -5432,24 +5464,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.endRowTransaction(commit, row);
 
-        if (event) {
-            if (cell) {
-                const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-                if (currentCell) {
-                    currentCell.nativeElement.focus();
+        const activeCell = this.selectionService.activeElement;
+        if (event && activeCell) {
+            const rowIndex = activeCell.row;
+            const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
+            this.navigateTo(rowIndex, visibleColIndex, (c) => {
+                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                    c.target.nativeElement.focus();
                 }
-            } else {
-                // when there's no cell in edit mode (focus is on the row edit buttons), use last active
-                const activeCell = this.gridAPI.grid.selectionService.activeElement;
-                if (activeCell) {
-                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(
-                        activeCell.row,
-                        activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column);
-                    if (currentCellElement) {
-                        currentCellElement.focus();
-                    }
-                }
-            }
+            });
         }
     }
     /**

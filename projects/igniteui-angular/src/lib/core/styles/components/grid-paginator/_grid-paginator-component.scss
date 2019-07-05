@@ -9,4 +9,30 @@
     @include register-component(str-slice($this, 2, -1));
 
     @extend %igx-grid-paginator !optional;
+
+    @include e(label) {
+        @extend %igx-grid-paginator__label !optional;
+    }
+
+    @include e(select) {
+        @extend %igx-grid-paginator__select !optional;
+    }
+
+    @include e(select-input) {
+        @extend %igx-grid-paginator__select-input !optional;
+    }
+
+    @include e(pager) {
+        @extend %igx-grid-paginator__pager !optional;
+    }
+
+    @include m(cosy) {
+        @extend %igx-grid-paginator !optional;
+        @extend %igx-grid-paginator--cosy !optional;
+    }
+
+    @include m(compact) {
+        @extend %igx-grid-paginator !optional;
+        @extend %igx-grid-paginator--compact !optional;
+    }
 }

@@ -19,6 +19,7 @@ import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxSelectModule } from '../../select/index';
 
 /**
  * @hidden
@@ -55,7 +56,8 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxSelectModule
   ]
 })
 export class IgxGridModule {
