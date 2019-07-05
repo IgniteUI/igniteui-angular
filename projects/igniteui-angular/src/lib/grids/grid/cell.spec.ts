@@ -298,7 +298,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe(87);
             });
 
-            it('edit template should be accourding column data type -- number', () => {
+            it('edit template should be according column data type -- number', () => {
                 const cell = grid.getCellByColumn(0, 'age');
                 const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
@@ -352,7 +352,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(parseFloat(cell.value)).toBe(expectedValue);
             });
 
-            it('edit template should be accourding column data type -- boolean', () => {
+            it('edit template should be according column data type -- boolean', () => {
                 const cell = grid.getCellByColumn(0, 'isActive');
                 const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
@@ -375,7 +375,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe(false);
             });
 
-            it('edit template should be accourding column data type -- date', () => {
+            it('edit template should be according column data type -- date', () => {
                 const cell = grid.getCellByColumn(0, 'birthday');
                 const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
                 const selectedDate = new Date('04/12/2017');
@@ -545,7 +545,6 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
             }));
-
 
             it('edit mode - leaves cell in edit mode on scroll', (async () => {
                 const cell = grid.getCellByColumn(0, 'firstName');
@@ -728,6 +727,25 @@ describe('IgxGrid - Cell component', () => {
                 expect(4).toBe(editCellID.columnID);
                 expect(1).toBe(editCellID.rowIndex);
             }));
+        });
+
+        fit(`Should exit edit mode when rowEditable changes`, () => {
+            const fixture = TestBed.createComponent(CellEditingTestComponent);
+            fixture.detectChanges();
+            const grid = fixture.componentInstance.grid;
+
+            const cell = grid.getCellByColumn(0, 'personNumber');
+            expect(cell.editMode).toBeFalsy();
+
+            cell.setEditMode(true);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+
+            grid.rowEditable = true;
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBeFalsy();
         });
     });
 
