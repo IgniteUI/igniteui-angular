@@ -2549,7 +2549,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
-            fit(`Should exit row editing AND COMMIT on displayDensity change`, fakeAsync(() => {
+            it(`Should exit row editing AND COMMIT on displayDensity change`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
                 tick(DEBOUNCETIME);
