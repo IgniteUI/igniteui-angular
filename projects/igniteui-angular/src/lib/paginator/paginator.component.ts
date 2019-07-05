@@ -1,6 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, OnInit, OnChanges, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
+import {
+    Component,
+    Input,
+    Output,
+    OnInit,
+    OnChanges,
+    NgModule,
+    Optional,
+    Inject,
+    EventEmitter,
+    HostBinding,
+    SimpleChanges
+} from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxSelectModule } from '../select/index';
@@ -81,16 +93,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
 
     /**
-    * An @Input property sets the display density of `IgxPaginatorComponent`.
-    * The default is 'comfortable'.
-    * ```html
-    * <igx-paginator [displayDensity]="cozy"></igx-paginator>
-    * ```
-    */
-    @Input()
-    public displayDensity = DisplayDensity.comfortable;
-
-    /**
      *An event that is emitted when the select in the `IgxPaginatorComponent` changes value.
     */
     @Output()
@@ -135,7 +137,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     /**
      * @hidden
      */
-    public ngOnChanges(changes: any): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.perPage) {
             this.perPage = changes.perPage.currentValue;
             this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);

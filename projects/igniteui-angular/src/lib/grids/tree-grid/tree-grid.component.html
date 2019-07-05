@@ -119,10 +119,8 @@
 </div>
 
 <div style="grid-row:none" #footer>
-    <ng-container ngProjectAs="igx-grid-footer">
-            <ng-content></ng-content>
-            <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPaginator">
-            </ng-container>
+    <ng-content select="igx-grid-footer"></ng-content>
+    <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPaginator">
     </ng-container>
 </div>
 
