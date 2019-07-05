@@ -50,3 +50,5 @@ $_light-slider: extend((
         igx-color: ('grays', 400)
     )
 ), $_default-shape-slider);
+
+$_fluent-slider: extend((), $_light-slider);

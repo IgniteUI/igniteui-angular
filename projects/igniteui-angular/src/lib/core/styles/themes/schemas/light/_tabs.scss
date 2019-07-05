@@ -83,3 +83,7 @@ $_light-tabs: extend((
         igx-color: ('grays', 100)
     )
 ), $_default-shape-tabs);
+
+$_fluent-tabs: extend((), $_light-tabs);
+
+

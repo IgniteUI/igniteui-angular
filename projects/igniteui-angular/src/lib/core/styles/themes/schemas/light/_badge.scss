@@ -32,3 +32,5 @@ $_light-badge: extend((
 
     elevation: 1
 ), $_default-shape-badge);
+
+$_fluent-badge: extend((), $_light-badge);

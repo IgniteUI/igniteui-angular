@@ -31,3 +31,5 @@ $_light-snackbar: extend((
 
     elevation: 4
 ), $_default-shape-snackbar);
+
+$_fluent-snackbar: extend((), $_light-snackbar);

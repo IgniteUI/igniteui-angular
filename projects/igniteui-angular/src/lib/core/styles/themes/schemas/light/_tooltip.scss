@@ -31,3 +31,5 @@ $_light-tooltip: extend((
 
     roundness: rem(4px)
 ), $_default-shape-tooltip);
+
+$_fluent-tooltip: extend((), $_light-tooltip);

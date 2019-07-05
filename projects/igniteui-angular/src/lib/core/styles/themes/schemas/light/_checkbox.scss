@@ -35,3 +35,9 @@ $_light-checkbox: extend((
         igx-color: ('grays', 400)
     )
 ), $_default-shape-checkbox);
+
+$_fluent-checkbox: extend((
+    fill-color: (
+        igx-color: ('primary', 500)
+    ),
+), $_light-checkbox);

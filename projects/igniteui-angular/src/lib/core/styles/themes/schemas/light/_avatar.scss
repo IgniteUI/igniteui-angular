@@ -33,3 +33,5 @@ $_light-avatar: extend((
 
     image-background: transparent
 ),$_default-shape-avatar);
+
+$_fluent-avatar: extend((), $_light-avatar);

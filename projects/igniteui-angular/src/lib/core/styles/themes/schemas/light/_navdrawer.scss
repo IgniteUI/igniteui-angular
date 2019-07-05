@@ -88,3 +88,5 @@ $_light-navdrawer: extend((
 
     elevation: 16
 ), $_default-shape-navdrawer);
+
+$_fluent-navdrawer: extend((), $_light-navdrawer);

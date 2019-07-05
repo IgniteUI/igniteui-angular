@@ -321,3 +321,7 @@ $_light-grid: extend((
         igx-color: ('grays', 200)
     )
 ), $_default-shape-grid);
+
+$_fluent-grid: extend((), $_light-grid);
+
+

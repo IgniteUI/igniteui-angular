@@ -35,3 +35,5 @@ $_light-banner: extend((
         rgba: .87
     )
 ),$_default-shape-banner);
+
+$_fluent-banner: extend((), $_light-banner);

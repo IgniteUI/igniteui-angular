@@ -41,3 +41,5 @@ $_light-grid-summary: extend((
         igx-color: ('primary', 700)
     )
 ), $_default-shape-grid-summary);
+
+$_fluent-grid-summary: extend((), $_light-grid-summary);

@@ -22,3 +22,6 @@ $_light-icon: extend((
 
     disabled-color: currentColor
 ), $_default-shape-icon);
+
+
+$_fluent-icon: extend((), $_light-icon);

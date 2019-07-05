@@ -26,3 +26,5 @@ $_light-bottom-nav: extend((
 
     elevation: 8
 ), $_default-shape-bottom-nav);
+
+$_fluent-bottom-nav: extend((), $_light-bottom-nav);

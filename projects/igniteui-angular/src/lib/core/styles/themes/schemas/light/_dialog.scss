@@ -33,3 +33,5 @@ $_light-dialog: extend((
 
     elevation: 24
 ), $_default-shape-dialog);
+
+$_fluent-dialog: extend((), $_light-dialog);

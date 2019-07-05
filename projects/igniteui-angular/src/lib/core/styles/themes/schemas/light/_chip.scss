@@ -92,3 +92,6 @@ $_light-chip: extend((
 
     focus-selected-border-color: transparent
 ), $_default-shape-chip);
+
+$_fluent-chip: extend((), $_light-chip);
+

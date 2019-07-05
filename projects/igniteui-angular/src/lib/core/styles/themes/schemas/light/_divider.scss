@@ -17,3 +17,5 @@ $_light-divider: extend((
         igx-color: ('grays', 300)
     )
 ), $_default-shape-divider);
+
+$_fluent-divider: extend((), $_light-divider);

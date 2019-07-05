@@ -53,3 +53,5 @@ $_light-grid-filtering: extend((
         igx-color: ('secondary', 500)
     )
 ), $_default-shape-grid-filtering);
+
+$_fluent-grid-filtering: extend((), $_light-grid-filtering);

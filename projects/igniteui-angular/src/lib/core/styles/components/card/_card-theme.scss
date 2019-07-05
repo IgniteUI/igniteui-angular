@@ -11,6 +11,7 @@
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The card background color.
 /// @param {Color} $outline-color [null] - The color of the outline for outlined type cards.
+/// @param {Color} $card-border-color [null] - The color of the card border.
 /// @param {Color} $header-text-color [null] - The text color of the card title.
 /// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
 /// @param {Color} $content-text-color [null] - The text color of the card content.
@@ -49,7 +50,8 @@
     $content-text-color: null,
     $actions-text-color: null,
     $resting-shadow: null,
-    $hover-shadow: null
+    $hover-shadow: null,
+    $card-border-color: null,
 ) {
     $name: 'igx-card';
     $card-schema: map-get($schema, $name);
@@ -102,7 +104,8 @@
         content-text-color: $content-text-color,
         actions-text-color: $actions-text-color,
         resting-shadow: $resting-shadow,
-        hover-shadow: $hover-shadow
+        hover-shadow: $hover-shadow,
+        card-border-color: $card-border-color
     ));
 }
 
@@ -139,6 +142,7 @@
         background: --var($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
+        border: 1px solid --var($theme, 'card-border-color');
 
         &:hover {
             box-shadow: --var($theme, 'hover-shadow');
@@ -147,7 +151,7 @@
 
     %igx-card--outlined {
         box-shadow: none;
-        border: 1px solid --var($theme, 'outline-color');
+        border-color: --var($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;

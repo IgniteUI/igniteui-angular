@@ -18,3 +18,5 @@ $_light-ripple: extend((
         igx-color: ('grays', 800)
     )
 ), $_default-shape-ripple);
+
+$_fluent-ripple: extend((), $_light-ripple);

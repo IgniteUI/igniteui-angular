@@ -69,3 +69,5 @@ $_light-switch: extend((
 
     disabled-elevation: 1
 ), $_default-shape-switch);
+
+$_fluent-switch: extend((), $_light-switch);

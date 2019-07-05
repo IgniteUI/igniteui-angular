@@ -17,3 +17,5 @@ $_light-overlay: extend((
         igx-color: ('grays', 500)
     )
 ), $_default-shape-overlay);
+
+$_fluent-overlay: extend((), $_light-overlay);

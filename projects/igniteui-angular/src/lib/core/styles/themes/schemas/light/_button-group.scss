@@ -73,4 +73,6 @@ $_light-button-group: extend((
     ),
 
     elevation: 2
-), $_default-shape-button-group);
+), $_fluent-shape-button-group);
+
+$_fluent-button-group: extend((), $_light-button-group);

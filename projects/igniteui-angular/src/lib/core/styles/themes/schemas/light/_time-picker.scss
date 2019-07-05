@@ -63,3 +63,5 @@ $_light-time-picker: extend((
 
     dropdown-elevation: 8
 ), $_default-shape-time-picker);
+
+$_fluent-time-picker: extend((), $_light-time-picker);

@@ -1,3 +1,4 @@
+// Default
 $_default-shape-button: (
     flat-border-radius: .2,
     raised-border-radius: .2,
@@ -20,4 +21,13 @@ $_square-shape-button: (
     outlined-border-radius: 0%,
     fab-border-radius: 0%,
     icon-border-radius: 0%,
+);
+
+// Fluent
+$_fluent-shape-button: (
+    flat-border-radius: 0,
+    raised-border-radius: 2px,
+    outlined-border-radius: 2px,
+    fab-border-radius: 1,
+    icon-border-radius: 0,
 );

@@ -31,3 +31,6 @@ $_light-combo: extend((
         rgba: .26
     )
 ), $_default-shape-combo);
+
+$_fluent-combo: extend((), $_light-combo);
+

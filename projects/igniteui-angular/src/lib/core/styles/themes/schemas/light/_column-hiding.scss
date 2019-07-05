@@ -17,3 +17,5 @@ $_light-column-hiding: extend((
         igx-color: ('primary', 500)
     )
 ), $_default-shape-column-hiding);
+
+$_fluent-column-hiding: extend((), $_light-column-hiding);

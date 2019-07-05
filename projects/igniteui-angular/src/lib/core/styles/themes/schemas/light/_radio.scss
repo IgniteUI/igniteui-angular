@@ -35,3 +35,6 @@ $_light-radio: extend((
         igx-color: ('grays', 400)
     )
 ), $_default-shape-radio);
+
+$_fluent-radio: extend((), $_light-radio);
+

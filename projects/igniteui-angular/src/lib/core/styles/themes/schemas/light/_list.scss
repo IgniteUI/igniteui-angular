@@ -111,3 +111,5 @@ $_light-list: extend((
 
     item-thumbnail-color-active: currentColor
 ), $_default-shape-list);
+
+$_fluent-list: extend((), $_light-list);

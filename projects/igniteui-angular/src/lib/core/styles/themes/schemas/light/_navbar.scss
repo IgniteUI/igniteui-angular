@@ -36,3 +36,5 @@ $_light-navbar: extend((
 
     elevation: 4
 ), $_default-shape-navbar);
+
+$_fluent-navbar: extend((), $_light-navbar);

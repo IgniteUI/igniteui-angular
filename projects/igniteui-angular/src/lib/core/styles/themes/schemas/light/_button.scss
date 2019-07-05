@@ -198,4 +198,105 @@ $_light-button: extend((
     fab-resting-elevation: 6,
     fab-hover-elevation: 12,
     fab-focus-elevation: 12
-), $_default-shape-button);
+), $_fluent-shape-button);
+
+$_fluent-button: extend($_light-button, (
+    flat-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    flat-hover-background: transparent,
+
+    flat-hover-text-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    flat-focus-background:(
+        igx-color:('grays', 100)
+    ),
+
+    flat-focus-text-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    outlined-outline-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    outlined-disabled-outline-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    outlined-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    outlined-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    outlined-hover-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    outlined-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    outlined-focus-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    raised-background: (
+        igx-color: ('primary', 500)
+    ),
+
+    raised-text-color: #fff,
+
+    raised-hover-background: (
+        igx-color: ('primary', 600)
+    ),
+
+
+    raised-hover-text-color: #fff,
+
+    raised-focus-background: (
+        igx-color: ('primary', 600)
+    ),
+
+    raised-focus-text-color: #fff,
+
+    fab-background: (
+        igx-color: ('primary', 500)
+    ),
+
+    fab-text-color: #fff,
+
+    fab-hover-background: (
+        igx-color: ('primary', 600)
+    ),
+
+    fab-hover-text-color: #fff,
+
+    fab-focus-background: (
+        igx-color: ('primary', 600)
+    ),
+
+    fab-focus-text-color: #fff,
+
+    icon-hover-background: (
+        igx-color: ('grays', 50)
+    ),
+
+    icon-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    raised-resting-elevation: 0,
+    raised-hover-elevation: 0,
+    raised-focus-elevation: 0,
+
+    fab-resting-elevation: 0,
+    fab-hover-elevation: 0,
+    fab-focus-elevation: 0
+));

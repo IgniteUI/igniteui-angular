@@ -33,3 +33,5 @@ $_light-carousel: extend((
     indicator-border-color: #fff,
     indicator-active-border-color: #fff
 ), $_default-shape-carousel);
+
+$_fluent-carousel: extend((), $_light-carousel);

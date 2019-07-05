@@ -46,3 +46,5 @@ $_light-expansion-panel: extend((
         igx-color: ('grays', 500)
     )
 ), $_default-shape-expansion-panel);
+
+$_fluent-expansion-panel: extend((), $_light-expansion-panel);

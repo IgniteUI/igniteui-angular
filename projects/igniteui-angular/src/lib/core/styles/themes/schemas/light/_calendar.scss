@@ -26,6 +26,7 @@
 /// @prop {Map} date-selected-background [igx-color: ('secondary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-contrast-color: ('secondary', 500)] - The text color for the selected date.
 /// @prop {Map} date-current-text-color [igx-color: ('secondary', 500)] - The text color for the current date.
+/// @prop {Map} date-current-bg-color [igx-color: (transparent] - The background color for the current date.
 /// @prop {Map} date-hover-background [igx-color: ('grays', 200)] - The hover date background color.
 /// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
@@ -118,6 +119,10 @@ $_light-calendar: extend((
         igx-color: ('secondary', 500)
     ),
 
+    date-current-bg-color: transparent,
+    date-current-bg-hover-color: transparent,
+    date-current-bg-focus-color: transparent,
+
     date-hover-background: (
         igx-color: ('grays', 200)
     ),
@@ -135,4 +140,20 @@ $_light-calendar: extend((
         hexrgba: (),
         rgba: .6
     )
-), $_default-shape-calendar);
+), $_fluent-shape-calendar);
+
+$_fluent-calendar: extend($_light-calendar, (
+    date-current-text-color: #fff,
+
+    date-current-bg-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    date-selected-background: (
+        igx-color: ('primary', 100)
+    ),
+
+    date-selected-text-color: (
+        igx-contrast-color: ('primary', 100)
+    ),
+));

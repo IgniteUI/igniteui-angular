@@ -52,6 +52,9 @@ $_light-progress-linear: extend((
     )
 ), $_default-shape-progress);
 
+$_fluent-progress-linear: extend((), $_light-progress-linear);
+
+
 /// Generates a light progress-circular schema.
 /// @type {Map}
 ///
@@ -74,3 +77,5 @@ $_light-progress-circular: extend((
         igx-color: ('grays', 700)
     )
 ), $_default-shape-progress);
+
+$_fluent-progress-circular: extend((), $_light-progress-circular);

@@ -24,3 +24,5 @@ $_light-grid-pagination: extend((
         igx-color: ('grays', 400)
     )
 ), $_default-shape-grid-pagination);
+
+$_fluent-grid-pagination: extend((), $_light-grid-pagination);

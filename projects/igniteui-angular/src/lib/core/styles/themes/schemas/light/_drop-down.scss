@@ -99,3 +99,5 @@ $_light-drop-down: extend((
 
     elevation: 8
 ), $_default-shape-drop-down);
+
+$_fluent-drop-down: extend((), $_light-drop-down);

@@ -291,6 +291,39 @@
     );
 }
 
+
+/// Creates a global theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-fluent-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+    $error: igx-color($palette, 'error');
+    $warn: igx-color($palette, 'warn');
+    $success: igx-color($palette, 'success');
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $warn,
+            $error,
+            $success,
+            $surface: if($surface != #fff, $surface, #fff),
+            $grays: #000
+        ),
+        $schema: $light-fluent-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
+}
+
 /// Creates a global theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.

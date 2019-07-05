@@ -81,3 +81,5 @@ $_light-grid-toolbar: extend((
         igx-color: ('grays', 600)
     )
 ), $_default-shape-grid-toolbar);
+
+$_fluent-grid-toolbar: extend((), $_light-grid-toolbar);
