@@ -274,7 +274,8 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childCell.rowIndex).toBe(0);
 
         const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
-        expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1);
+        const childGridOffset = childGrid.nativeElement.offsetTop;
+        expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1 + childGridOffset);
     }));
 
     it('should allow navigating to bottom in child grid when child grid target row moves outside the parent view port.', (async () => {
@@ -349,7 +350,8 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childFirstRowCell.rowIndex).toBe(0);
 
         const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
-        expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1);
+        const childGridOffset = childGrid.nativeElement.offsetTop;
+        expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1 + childGridOffset);
     }));
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
