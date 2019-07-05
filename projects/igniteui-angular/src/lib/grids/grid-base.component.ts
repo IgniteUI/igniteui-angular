@@ -2734,6 +2734,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
+                    this._autoSize = false;
                     this.reflow();
                     this._observer.disconnect();
                     this._observer = null;
@@ -4165,7 +4166,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
 
-        if (this.showRowCheckboxes) {
+        if (this.headerCheckboxContainer) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
