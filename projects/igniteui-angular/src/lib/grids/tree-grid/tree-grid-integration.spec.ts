@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -1156,6 +1156,33 @@ describe('IgxTreeGrid - Integration', () => {
             tick();
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
+        }));
+
+        it('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            tick();
+            fixture.detectChanges();
+
+            grid.deleteRowById(147);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+
+            expect(() => grid.addRow(grid.data, 147)).toThrow(Error(`Cannot add child row to deleted parent row`));
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+        }));
+
+        it('Should not add child row to deleted parent row - Flat DS', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            grid.cascadeOnDelete = false;
+            tick();
+            fixture.detectChanges();
+
+            grid.deleteRowById(1);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+
+            expect(() => grid.addRow(grid.data, 1)).toThrow(Error(`Cannot add child row to deleted parent row`));
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
         }));
     });
 
