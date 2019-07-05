@@ -2455,12 +2455,16 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
                 tick(DEBOUNCETIME);
 
+                let overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeTruthy();
                 expect(cell.editMode).toBeTruthy();
 
                 grid.displayDensity = DisplayDensity.cosy;
                 fix.detectChanges();
                 tick(DEBOUNCETIME);
 
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeFalsy();
                 expect(cell.editMode).toBeFalsy();
             }));
 
