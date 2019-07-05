@@ -2806,6 +2806,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
+                this.endEdit(true);
                 this.reflow();
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
