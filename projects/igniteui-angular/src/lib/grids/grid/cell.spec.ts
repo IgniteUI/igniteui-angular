@@ -729,7 +729,7 @@ describe('IgxGrid - Cell component', () => {
             }));
         });
 
-        fit(`Should exit edit mode when rowEditable changes`, () => {
+        it(`Should exit edit mode when rowEditable changes`, () => {
             const fixture = TestBed.createComponent(CellEditingTestComponent);
             fixture.detectChanges();
             const grid = fixture.componentInstance.grid;
