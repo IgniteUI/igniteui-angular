@@ -565,7 +565,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
 
             // Go to next page
-            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-paginator > button');
+            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
             pagingButtons[2].dispatchEvent(new Event('click'));
             fixture.detectChanges();
 
