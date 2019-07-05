@@ -20,6 +20,8 @@
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
 </ng-container>
 
+<ng-template #defaultColumn>{{column.header}}</ng-template>
+
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-title"
@@ -27,7 +29,10 @@
         [igxColumnMovingDrag]="column"
         [dragGhostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
-        [igxColumnMovingDrop]="column">{{ column.header }}</div>
+        [igxColumnMovingDrop]="column">
+        <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
+        </ng-container>
+    </div>
     <div class="igx-grid__thead-group">
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
