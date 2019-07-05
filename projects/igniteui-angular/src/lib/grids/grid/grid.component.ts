@@ -117,7 +117,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-     * @memberof IgxGridBaseComponent
+     * @memberof IgxGridComponent
     */
     @Input()
     public get data(): any[] {
@@ -168,7 +168,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * ```typescript
      * const gridVirtState = this.grid1.virtualizationState;
      * ```
-	 * @memberof IgxGridBaseComponent
+	 * @memberof IgxGridComponent
      */
     get virtualizationState() {
         return this.verticalScrollContainer.state;
@@ -183,11 +183,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     /**
      * Sets the total number of records in the data source.
-     * This property is required for remote grid virtualization to function when it is bound remotely as well.
+     * This property is required for remote grid virtualization to function when it is bound to remote data.
      * ```typescript
      * this.grid1.totalItemCount = 55;
      * ```
-	 * @memberof IgxGridBaseComponent
+	 * @memberof IgxGridComponent
      */
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
@@ -200,7 +200,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * ```typescript
      * const itemCount = this.grid1.totalItemCount;
      * ```
-	 * @memberof IgxGridBaseComponent
+	 * @memberof IgxGridComponent
      */
     get totalItemCount() {
         return this.verticalScrollContainer.totalItemCount;
