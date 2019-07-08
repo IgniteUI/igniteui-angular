@@ -107,18 +107,31 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public groupable = false;
     /**
-     * Sets/gets whether the column is editable.
+     * Gets whether the column is editable.
      * Default value is `false`.
      * ```typescript
      * let isEditable = this.column.editable;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get editable(): boolean {
+        const editableInRowEdit = this.grid && this.grid.rowEditable && this.field !== this.grid.primaryKey;
+        return this._editable !== undefined ? this._editable : editableInRowEdit;
+    }
+    /**
+     * Sets whether the column is editable.
+     * ```typescript
+     * this.column.editable = true;
      * ```
      * ```html
      * <igx-column [editable] = "true"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input()
-    public editable = null;
+    set editable(editable: boolean) {
+        this._editable = editable;
+    }
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `true`.
@@ -1042,6 +1055,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _hasSummary = false;
+    /**
+     * @hidden
+     */
+    protected _editable: boolean;
     /**
      *@hidden
      */
