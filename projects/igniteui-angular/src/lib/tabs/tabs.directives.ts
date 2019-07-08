@@ -96,7 +96,6 @@ export class IgxLeftButtonStyleDirective {
         }
         const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
         const offset = this.tabs.offset;
-
         if (offset === 0) {
             // Fix for IE 11, a difference is accumulated from the widths calculations.
             if (itemsContainerWidth - headerContainerWidth <= 1) {

@@ -607,7 +607,10 @@ export class IgxGridNavigationService {
                 if (cb) {
                     cb();
                 } else {
-                    this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus({ preventScroll: true });
+                    const cellElement = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary);
+                    if (cellElement) {
+                        cellElement.focus({ preventScroll: true });
+                    }
                 }
             });
         this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
