@@ -5,7 +5,6 @@ All notable changes for each version of this project will be documented in this 
 ## 8.1.0
 - `IgxChid`
     - **Behavioral Change** - paging now includes the group rows in the page size. You may find more information about the change in the [GroupBy Specification](https://github.com/IgniteUI/igniteui-angular/wiki/Group-By-Specification)
-    - **Behavioral Change** - the `filteredSortedData` property now returns group records along with data ones in an array representing the data view before paging is executed.
 
 ## 8.0.2
 - **Behavioral Change** default min column width is changed according the grid display density property:

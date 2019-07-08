@@ -1149,7 +1149,7 @@ describe('IgxGrid - search API', () => {
             highlight = fixNativeElement.querySelector('.' + component.activeClass);
 
             expect(spans.length).toBe(2);
-            expect(highlight).toBe(spans[0]);
+            expect(highlight).toBe(spans[1]);
             expect(grid.page).toBe(2);
 
             grid.findPrev('Software');
@@ -1175,7 +1175,7 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-            grid.perPage = 10;
+            grid.perPage = 16;
             grid.cdr.detectChanges();
             await wait();
             fix.detectChanges();
@@ -1193,7 +1193,7 @@ describe('IgxGrid - search API', () => {
             expect(highlight).toBe(spans[2]);
             expect(grid.page).toBe(0);
 
-            grid.perPage = 5;
+            grid.perPage = 8;
             fix.detectChanges();
 
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
@@ -1319,7 +1319,7 @@ describe('IgxGrid - search API', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
 
-            grid.perPage = 5;
+            grid.perPage = 8;
             grid.paging = true;
             fix.detectChanges();
 

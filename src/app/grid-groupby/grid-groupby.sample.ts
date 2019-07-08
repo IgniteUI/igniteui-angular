@@ -18,7 +18,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public hideGroupedColumns = false;
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
-    public summaryMode = 'rootLevelOnly';
+    public summaryMode = 'childLevelsOnly';
     public summaryModes = [];
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {

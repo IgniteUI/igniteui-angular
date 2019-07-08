@@ -590,6 +590,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     * Expands the specified group and all of its parent groups.
+     * ```typescript
+     * public groupRow: IGroupByRecord;
+     * this.grid.fullyExpandGroup(this.groupRow);
+     * ```
+     * @memberof IgxGridComponent
+     */
+    public fullyExpandGroup(groupRow: IGroupByRecord) {
+        this._fullyExpandGroup(groupRow);
+    }
+
+    /**
      * @hidden
      */
     public isGroupByRecord(record: any): boolean {
@@ -652,6 +664,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     protected _toggleGroup(groupRow: IGroupByRecord) {
         this._gridAPI.groupBy_toggle_group(groupRow);
+    }
+
+    /**
+     * @hidden
+     */
+    protected _fullyExpandGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_fully_expand_group(groupRow);
     }
 
     /**
@@ -789,15 +808,14 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof(row) !== 'number') {
-            const rowIndex = this.filteredSortedData.indexOf(row);
+            const rowIndex = this.groupingResult.indexOf(row);
             const groupByRecord = this.groupingMetadata[rowIndex];
-
-            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-                this.toggleGroup(groupByRecord);
+            if (groupByRecord) {
+                this._fullyExpandGroup(groupByRecord);
             }
         }
 
-        super.scrollTo(row, column);
+        super.scrollTo(row, column, this.groupingFlatResult);
     }
 
     /**

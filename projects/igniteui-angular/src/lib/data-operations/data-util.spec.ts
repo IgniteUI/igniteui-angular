@@ -7,7 +7,7 @@ import { DefaultSortingStrategy } from './sorting-strategy';
 import { cloneArray } from '../core/utils';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { DataUtil } from './data-util';
-import { IGroupByResult } from './grouping-strategy';
+import { IGroupByResult } from './grouping-result.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { FilteringStrategy } from './filtering-strategy';

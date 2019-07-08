@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../../data-operations/grouping-strategy';
+import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
@@ -34,6 +34,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions);
         }
+        grid.filteredSortedData = result;
 
         return result;
     }
@@ -61,6 +62,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
         const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
         let result: IGroupByResult;
+        const fullResult: IGroupByResult = { data: [], metadata: [] };
 
         if (!state.expressions.length) {
             // empty the array without changing reference
@@ -72,10 +74,11 @@ export class IgxGridGroupingPipe implements PipeTransform {
         } else {
             state.expansion = grid.groupingExpansionState;
             state.defaultExpanded = grid.groupsExpanded;
-            result = DataUtil.group(cloneArray(collection), state, grid, groupsRecords);
+            result = DataUtil.group(cloneArray(collection), state, grid, groupsRecords, fullResult);
         }
-        grid.filteredSortedData = result.data;
-        grid.groupingMetadata = result.metadata;
+        grid.groupingFlatResult = result.data;
+        grid.groupingResult = fullResult.data;
+        grid.groupingMetadata = fullResult.metadata;
         return result;
     }
 }

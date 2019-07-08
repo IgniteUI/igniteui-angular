@@ -2125,7 +2125,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
-    private _groupingMetadata = null;
     /**
      * @hidden
     */
@@ -2434,6 +2433,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public columnWidthSetByUser = false;
+
+    /**
+     * @hidden @internal
+     */
+    public groupingResult: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingMetadata: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingFlatResult: any[];
 
     abstract data: any[];
     abstract filteredData: any[];
@@ -5132,7 +5146,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns an array containing the result of the last data operation before paging.
+     * Returns an array containing the filtered sorted data.
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
@@ -5144,16 +5158,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set filteredSortedData(value: any[]) {
         this._filteredSortedData = value;
         this.refreshSearch(true);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get groupingMetadata(): any[] {
-        return this._groupingMetadata;
-    }
-    set groupingMetadata(value: any[]) {
-        this._groupingMetadata = value;
     }
 
     /**
@@ -5223,11 +5227,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollTo(row: any | number, column: any | number): void {
+    protected scrollTo(row: any | number, column: any | number, inCollection = this.filteredSortedData): void {
         let delayScrolling = false;
 
         if (this.paging && typeof (row) !== 'number') {
-            const rowIndex = this.filteredSortedData.indexOf(row);
+            const rowIndex = inCollection.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
             if (this.page !== page) {

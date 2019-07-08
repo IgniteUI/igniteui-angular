@@ -1,7 +1,8 @@
 import { IFilteringState } from './filtering-state.interface';
 
 import { IgxSorting, IgxDataRecordSorting } from './sorting-strategy';
-import { IGroupByResult, IgxGrouping } from './grouping-strategy';
+import { IgxGrouping } from './grouping-strategy';
+import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -63,10 +64,11 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grid: any = null, groupsRecords: any[] = []): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, grid: any = null,
+        groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
-        return grouping.groupBy(data, state, grid, groupsRecords);
+        return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {

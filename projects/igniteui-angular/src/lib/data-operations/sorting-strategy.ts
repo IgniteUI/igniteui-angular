@@ -5,6 +5,7 @@ import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { DataUtil } from './data-util';
 import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByResult } from './grouping-result.interface';
 
 export interface ISortingStrategy {
     sort: (data: any[],
@@ -133,7 +134,8 @@ export class IgxSorting {
         return data;
     }
     protected groupDataRecursive<T>(data: T[], state: IGroupingState, level: number,
-        parent: IGroupByRecord, metadata: IGroupByRecord[], grid: any = null, groupsRecords: any[] = []): T[] {
+        parent: IGroupByRecord, metadata: IGroupByRecord[], grid: any = null,
+        groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): T[] {
         const expressions = state.expressions;
         const expansion = state.expansion;
         let i = 0;
@@ -158,16 +160,24 @@ export class IgxSorting {
             const expandState: IGroupByExpandState = expansion.find((s) =>
                 DataUtil.isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
             const expanded = expandState ? expandState.expanded : state.defaultExpanded;
+            let recursiveResult;
             result.push(groupRow);
             metadata.push(null);
-            if (expanded) {
-                if (level < expressions.length - 1) {
-                    result = result.concat(this.groupDataRecursive(group, state, level + 1, groupRow, metadata, grid, groupsRecords));
-                } else {
-                    for (const groupItem of group) {
-                        metadata.push(groupRow);
-                        result.push(groupItem);
-                    }
+            fullResult.data.push(groupRow);
+            fullResult.metadata.push(null);
+            if (level < expressions.length - 1) {
+                recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow, metadata, grid, groupsRecords, fullResult);
+                if (expanded) {
+                    result = result.concat(recursiveResult);
+                }
+            } else {
+                for (const groupItem of group) {
+                    fullResult.metadata.push(groupRow);
+                    fullResult.data.push(groupItem);
+                }
+                if (expanded) {
+                    metadata.push(...fullResult.metadata.slice(fullResult.metadata.length - group.length));
+                    result.push(...fullResult.data.slice(fullResult.data.length - group.length));
                 }
             }
             i += group.length;
