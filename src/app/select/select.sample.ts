@@ -15,9 +15,9 @@ import {
 })
 export class SelectSampleComponent implements OnInit {
     @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
-    @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
+    @ViewChild('selectReactive', { read: IgxSelectComponent })
     public select: IgxSelectComponent;
-    @ViewChild('model', { read: IgxSelectComponent, static: true })
+    @ViewChild('model', { read: IgxSelectComponent })
     public selectFruits: IgxSelectComponent;
 
 
