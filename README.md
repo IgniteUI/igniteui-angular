@@ -181,7 +181,7 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 `npm install igniteui-angular`
 
 ## Contributing
-[General Naming and Coding Guidelines for Ignite UI for Angular](../../wiki//General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
+[General Naming and Coding Guidelines for Ignite UI for Angular](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
 
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
