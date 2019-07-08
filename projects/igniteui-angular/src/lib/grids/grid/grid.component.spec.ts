@@ -3496,7 +3496,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Column editable property', () => {
-            fit('Default column editable value is correct, when row editing is enabled', fakeAsync(() => {
+            it('Default column editable value is correct, when row editing is enabled', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
                 fixture.detectChanges();
                 tick();
@@ -3527,7 +3527,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(columns[4].editable).toBeFalsy();  // column.editable set to false
             }));
 
-            fit(`Default column editable value is correct, when row edititng is disabled`, fakeAsync(() => {
+            it(`Default column editable value is correct, when row edititng is disabled`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridTestComponent);
                 fixture.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
                 fixture.componentInstance.data = [
