@@ -246,7 +246,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _isLoading = false;
     private _locale = null;
     private _observer: MutationObserver;
-    private _destroyed = false;
+    protected _destroyed = false;
     private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
@@ -602,10 +602,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
         }
+        this._rowEditable = val;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -2807,6 +2808,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
+                this.endEdit(true);
                 this.reflow();
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
@@ -2824,6 +2826,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
+                    this._autoSize = false;
                     this.reflow();
                     this._observer.disconnect();
                     this._observer = null;
@@ -4326,6 +4329,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
 
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.resetChipsArea();
+        }
+
         this.cdr.detectChanges();
         this.resetCaches();
         // in case scrollbar has appeared recalc to size correctly.
@@ -5452,9 +5459,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
 
-        const columnIndex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
-
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
@@ -5463,24 +5467,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.endRowTransaction(commit, row);
 
-        if (event) {
-            if (cell) {
-                const currentCell = this.gridAPI.get_cell_by_index(ri, columnIndex);
-                if (currentCell) {
-                    currentCell.nativeElement.focus();
+        const activeCell = this.selectionService.activeElement;
+        if (event && activeCell) {
+            const rowIndex = activeCell.row;
+            const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
+            this.navigateTo(rowIndex, visibleColIndex, (c) => {
+                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                    c.target.nativeElement.focus();
                 }
-            } else {
-                // when there's no cell in edit mode (focus is on the row edit buttons), use last active
-                const activeCell = this.gridAPI.grid.selectionService.activeElement;
-                if (activeCell) {
-                    const currentCellElement = this.gridAPI.grid.navigation.getCellElementByVisibleIndex(
-                        activeCell.row,
-                        activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column);
-                    if (currentCellElement) {
-                        currentCellElement.focus();
-                    }
-                }
-            }
+            });
         }
     }
     /**
