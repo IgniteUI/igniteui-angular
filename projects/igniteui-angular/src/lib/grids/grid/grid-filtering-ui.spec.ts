@@ -2899,8 +2899,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
-            await wait(100);
             fix.detectChanges();
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2928,6 +2928,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             leftArrowButton.click();
             await wait(300);
             leftArrowButton.click();
+            fix.detectChanges();
             await wait(300);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
@@ -2935,6 +2936,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             leftArrowButton.click();
             await wait(300);
             leftArrowButton.click();
+            fix.detectChanges();
             await wait(300);
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
@@ -2943,6 +2945,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             rightArrowButton.click();
             await wait(300);
             rightArrowButton.click();
+            fix.detectChanges();
             await wait(300);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
@@ -2950,14 +2953,15 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             rightArrowButton.click();
             await wait(300);
             rightArrowButton.click();
+            fix.detectChanges();
             await wait(300);
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
         it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
             grid.width = '700px';
-            await wait(100);
             fix.detectChanges();
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2982,6 +2986,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             verifyChipVisibility(fix, 0, false);
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+            leftArrowButton.focus();
+            await wait(16);
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             await wait(300);
 
