@@ -1209,7 +1209,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
     private _updateHScrollOffset() {
         let scrollOffset = 0;
-  scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
+        scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
             this.scrollPosition - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
