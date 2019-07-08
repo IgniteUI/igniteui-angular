@@ -12,6 +12,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxRowIslandAPIService } from './row-island-api.service';
+import { IgxSelectModule } from '../../select/index';
 
 /**
  * @hidden
@@ -38,7 +39,8 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridModule
+    IgxGridModule,
+    IgxSelectModule
   ],
   providers: [
     IgxRowIslandAPIService,
