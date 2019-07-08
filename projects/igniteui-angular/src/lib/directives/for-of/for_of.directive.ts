@@ -1085,20 +1085,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
-        const prevNotVirtual = this.dc.instance.notVirtual;
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
             this.hScroll.style.width = this.igxForContainerSize + 'px';
             this.hScroll.children[0].style.width = totalWidth + 'px';
-            if (totalWidth <= this.igxForContainerSize) {
+            if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
             this.vh.instance.elementRef.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
             this.vh.instance.height = this._calcHeight();
-            if (this.vh.instance.height <= this.igxForContainerSize) {
+            if (this.vh.instance.height <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
             }
         }
