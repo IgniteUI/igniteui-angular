@@ -240,6 +240,24 @@
     @return $result;
 }
 
+/// Extends a Map object with the properties of other Maps objects.
+/// @access private
+/// @param {Map} $source-map - The source map to get extended.
+/// @param {Map} $maps - The maps extending the source map.
+/// @returns {Map} - Returns the $source-map map extended with the properties of the other maps.
+@function extend-many($source-map, $maps...) {
+    $result: $source-map;
+    $collection: ();
+
+    @each $map in $maps {
+        $collection: map-merge($collection, $map);
+    }
+
+    $result: map-merge($result, $collection);
+
+    @return $result;
+}
+
 /// Generates a Material-like color palette for a single color.
 /// @access private
 /// @group Palettes

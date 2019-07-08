@@ -198,9 +198,9 @@ $_light-button: extend((
     fab-resting-elevation: 6,
     fab-hover-elevation: 12,
     fab-focus-elevation: 12
-), $_fluent-shape-button);
+), $_default-shape-button);
 
-$_fluent-button: extend($_light-button, (
+$_fluent-button: extend-many($_light-button, (
     flat-text-color: (
         igx-color: ('grays', 900)
     ),
@@ -299,4 +299,4 @@ $_fluent-button: extend($_light-button, (
     fab-resting-elevation: 0,
     fab-hover-elevation: 0,
     fab-focus-elevation: 0
-));
+), $_fluent-shape-button);

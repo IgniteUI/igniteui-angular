@@ -151,4 +151,4 @@ $_light-input-group: extend((
     )
 ), $_default-shape-input-group);
 
-$_fluent-input-group: extend((), $_light-input-group);
+$_fluent-input-group: extend-many($_light-input-group, (), $_fluent-shape-input-group);
