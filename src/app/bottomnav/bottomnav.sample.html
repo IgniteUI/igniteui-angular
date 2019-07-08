@@ -62,7 +62,8 @@
 
         <article class="sample-column">
             <div class="tabbar-wrapper" #tabbarEl>
-                <igx-bottom-nav #tabbar (onTabSelected)="route($event)">
+                <igx-bottom-nav #tabbar>
+
                     <igx-tab-panel label="Movies" icon="local_movies">
                         <div class="tab-content">
                             <h3>Tab 1 Content</h3>
@@ -105,7 +106,15 @@
 
                     <igx-tab-panel label="watchlist" icon="list">
                         <div class="tab-content">
-                            <router-outlet name="tabPanelOutlet"></router-outlet>
+                            <h3>Tab 3 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id velit rutrum, accumsan ante a,
+                                semper nunc. Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam
+                                elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel
+                                massa. In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus
+                                nisl facilisis leo. Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique
+                                luctus.Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu
+                                nisl. Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus
+                                volutpat. Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. </p>
                         </div>
                     </igx-tab-panel>
                 </igx-bottom-nav>

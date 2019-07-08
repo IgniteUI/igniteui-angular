@@ -25,7 +25,17 @@ import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
 import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bottomnav.sample';
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
+import {
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
+import {
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
@@ -190,8 +200,26 @@ const appRoutes = [
         ]
     },
     {
+        path: 'bottom-navigation-routing',
+        component: BottomNavRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: BottomNavRoutingView1Component },
+            { path: 'view2', component: BottomNavRoutingView2Component },
+            { path: 'view3', component: BottomNavRoutingView3Component },
+        ]
+    },
+    {
         path: 'tabs',
         component: TabsSampleComponent
+    },
+    {
+        path: 'tabs-routing',
+        component: TabsRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: TabsRoutingView1Component },
+            { path: 'view2', component: TabsRoutingView2Component },
+            { path: 'view3', component: TabsRoutingView3Component },
+        ]
     },
     {
         path: 'timePicker',
