@@ -275,7 +275,7 @@ describe('Basic IgxHierarchicalGrid', () => {
         fixture.detectChanges();
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        expect(childGrid.calcWidth).toBe(370);
+        expect(childGrid.calcWidth - 370).toBeLessThan(3);
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
         fixture.componentInstance.width = '300px';
@@ -284,7 +284,7 @@ describe('Basic IgxHierarchicalGrid', () => {
         fixture.detectChanges();
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
-        expect(childGrid.calcWidth).toBe(170);
+        expect(childGrid.calcWidth - 170).toBeLessThan(3);
     });
 });
 
