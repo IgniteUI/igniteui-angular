@@ -1,6 +1,7 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit } from '@angular/core';
+import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -28,7 +29,8 @@ const complex = [{
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css']
 })
-export class ComboSampleComponent implements OnInit {
+export class ComboSampleComponent implements OnInit, AfterViewInit {
+    private overlaySettings: OverlaySettings[] = [null, null, null];
     private width = '160px';
     @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
     @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
@@ -121,6 +123,25 @@ export class ComboSampleComponent implements OnInit {
         this.igxCombo.onSearchInput.subscribe((e) => {
             console.log(e);
         });
+    }
+
+    ngAfterViewInit() {
+        this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
+        this.overlaySettings[1] = {
+            positionStrategy: new AutoPositionStrategy({ target: this.igxCombo.element,
+                verticalDirection: VerticalAlignment.Bottom, verticalStartPoint: VerticalAlignment.Bottom,
+                horizontalDirection: HorizontalAlignment.Right, horizontalStartPoint: HorizontalAlignment.Left }),
+            modal: true,
+            closeOnOutsideClick: true,
+        };
+        this.overlaySettings[2] = {
+            modal: true,
+            closeOnOutsideClick: true,
+        };
+    }
+
+    changeOverlaySettings(index: number) {
+        this.igxCombo.overlaySettings = this.overlaySettings[index];
     }
 
     changeItemTemplate() {

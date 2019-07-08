@@ -14,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`
     - `IgxColumnGroup`
         - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
+- `IgxCombo`
+    - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed
+    - This affects how the combo's drop-down list will be displayed in the overlay
 
 ## 8.0.2
 - `igx-list-theme` now have some new parameters for styling.

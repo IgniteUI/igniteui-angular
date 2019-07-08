@@ -78,12 +78,21 @@
             <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch><br/>
             <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
         </div>
+        <div>
+            <h4>Overlay Settings</h4>
+            <button igxButton="raised" (click)="changeOverlaySettings(1)">OverlaySettings 1</button>
+            <button igxButton="raised" (click)="changeOverlaySettings(2)">OverlaySettings 2</button>
+            <button igxButton="raised" (click)="changeOverlaySettings(0)">Initial</button>
+        </div>
+        <div>
+            <h4>Item Height</h4>
+            <button igxButton="raised" [disabled]="combo.itemHeight === 56" (click)="combo.itemHeight = 56">
+                Set ItemHeight to 56
+            </button>
+            <button igxButton="raised" [disabled]="combo.itemHeight === null" (click)="combo.itemHeight = null">
+                Reset ItemHeight
+            </button>
+        </div>
     </section>
     </div>
-    <button igxButton (click)="combo.itemHeight = 56">
-        Set ItemHeight to 56
-    </button>
-    <button igxButton (click)="combo.itemHeight = null">
-        Reset ItemHeight
-    </button>
 </div>

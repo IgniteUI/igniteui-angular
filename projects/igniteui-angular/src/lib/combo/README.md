@@ -265,6 +265,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
+|  `overlaySettings`       | gets/sets the combo drop-down list's overlay settings | OverlaySettings         |
 
 ### Getters
 | Name                     | Description                                       | Type                        |

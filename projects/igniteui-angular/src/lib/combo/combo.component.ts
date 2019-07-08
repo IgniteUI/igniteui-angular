@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, mergeObjects } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -41,22 +41,6 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { take } from 'rxjs/operators';
-
-/** Custom strategy to provide the combo with callback on initial positioning */
-class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
-    private _callback: () => void;
-    constructor(callback: () => void) {
-        super();
-        this._callback = callback;
-    }
-
-    position(contentElement, size, document?, initialCall?) {
-        if (initialCall) {
-            this._callback();
-        }
-        super.position(contentElement, size);
-    }
-}
 
 /**
  * @hidden
@@ -124,7 +108,7 @@ const noop = () => { };
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
- OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -148,10 +132,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _filteredData = [];
     private _itemHeight = null;
     private _itemsMaxHeight = null;
-    private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
-    private overlaySettings: OverlaySettings = {
+    private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true
@@ -170,6 +154,41 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
     protected virtDir: IgxForOfDirective<any>;
+
+    /**
+     * @Input property that sets custom OverlaySettings.
+     * ```html
+     * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
+     * ```
+     * ```typescript
+     *  // get
+     *  const settings: OverlaySettings = combo.overlaySettings;
+     *  // set
+     *  const customSettings = { positionStrategy: { settings: { target: myTarget } } };
+     *  combo.overlaySettings = customSettings;
+     * ```
+     */
+    @Input()
+    public set overlaySettings(val: OverlaySettings) {
+        if (val) {
+            const newSettings = val;
+            if (val.positionStrategy) {
+                newSettings.positionStrategy = val.positionStrategy.clone();
+                mergeObjects(newSettings.positionStrategy.settings, this._overlaySettings.positionStrategy.settings);
+            }
+            Object.assign(this._overlaySettings, val);
+        } else {
+            console.warn('Please provide valid overlay settings');
+        }
+    }
+
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings;
+    }
+
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
 
     /**
      * @hidden @internal
@@ -1249,9 +1268,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this.injector.get(NgControl, null);
-        this._positionCallback = () => this.dropdown.updateScrollPosition();
-        this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
-        this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
+        this.overlaySettings.positionStrategy.settings.target = this.element;
         this.selection.set(this.id, new Set());
     }
 
@@ -1263,7 +1280,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
-    }
+        }
     }
 
     /**
